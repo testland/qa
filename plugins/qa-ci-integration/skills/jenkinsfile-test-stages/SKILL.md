@@ -185,7 +185,7 @@ builds, and test reports plus notifications on every outcome.
   [references/environment-and-triggers.md](references/environment-and-triggers.md) -
   deeper stage recipes.
 - `github-actions-test-jobs`,
-  `gitlab-ci-test-jobs`,
-  `circleci-test-configs` -
-  alternatives.
+  `gitlab-ci-test-jobs` -
+  alternatives; CircleCI patterns live in `ci-test-job-conventions`
+  references/circleci.md.
 - `junit-xml-analysis` - JUnit XML parser.

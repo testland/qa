@@ -1,9 +1,0 @@
-{
-  "name": "testland/exploratory-tours-reference",
-  "description": "Pure-reference catalog of the seven exploratory testing tours from Whittaker's Exploratory Software Testing (2009): Feature, Money, Landmark, Intellectual, Bad-data, Configuration, and Garbage-collector's, each a themed mission with the signal it surfaces and a worked example. Use as the menu a charter author picks session themes from. Distinct from the mnemonic catalogs sfdpot-exploratory-heuristic (what to vary) and hiccupps-f-heuristic (oracles), and from session-based-test-management-reference, which manages the sessions.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.7.9"
-}

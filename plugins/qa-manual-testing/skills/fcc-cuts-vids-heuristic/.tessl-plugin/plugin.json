@@ -1,9 +1,0 @@
-{
-  "name": "testland/fcc-cuts-vids-heuristic",
-  "description": "Pure-reference catalog of Michael Kelly's FCC CUTS VIDS touring heuristic (2005): eleven tours - Feature, Complexity, Claims, Configuration, User, Testability, Scenario, Variability, Interoperability, Data, Structure - each a reconnaissance sweep that builds familiarity with an unfamiliar application. Use when onboarding onto a product or opening a first session on an unknown area, before a charter is scoped. Distinct from exploratory-tours-reference (Whittaker's seven tours, which frame a bug-hunting mission on a product the tester already knows), sfdpot-exploratory-heuristic (what to vary), hiccupps-f-heuristic (oracles), and crusspic-stmpl-heuristic (quality criteria).",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.7.7"
-}

@@ -109,7 +109,8 @@ doing a responsive pass or a per-release browser/device spot check has
 no checklist-shaped workflow.
 
 **Nearest existing components:** `browser-matrix-strategy-reference`,
-`compatibility-budget`, `test-execution-checklist` (qa-manual-testing).
+`compatibility-budget`, and the checklist format of
+`manual-test-script-author` (qa-manual-testing).
 
 **Differentiation axis:** matrix strategy decides *what* to cover;
 this produces the human-executable spot-check run for a release.
@@ -240,7 +241,8 @@ playwright.dev locators docs, testing-library query priority docs.
 
 - **Org-chart seats (`qa-roles`):** a Tier-1 agent for *scripted*
   manual execution (companion to `exploratory-charter-author`;
-  guides a human through a `test-execution-checklist` run and records
+  guides a human through a checklist run in `manual-test-script-author`'s
+  checklist format and records
   results), plus the previously-suggested
   `engineering-manager-quality-coach` and
   `release-manager-cutover-checklist` (note:

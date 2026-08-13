@@ -1,6 +1,6 @@
 ---
 name: ci-test-job-conventions
-description: "Pure-reference for cross-CI test workflow conventions - when to shard (and how many shards), retry policy (which failures are safe to retry), flake-quarantine integration, artifact retention, per-trigger cadence (per-PR vs per-merge vs nightly), concurrency-cancel patterns, per-job timeouts, secret management, and cross-CI portability. Use as the team's reference for CI test-workflow design across GitHub Actions / GitLab CI / Jenkins / CircleCI; per-CI reporting and per-language reporter / cache-key lookups live in references/."
+description: "Pure-reference for cross-CI test workflow conventions - when to shard (and how many shards), retry policy (which failures are safe to retry), flake-quarantine integration, artifact retention, per-trigger cadence (per-PR vs per-merge vs nightly), concurrency-cancel patterns, per-job timeouts, secret management, and cross-CI portability. Use as the team's reference for CI test-workflow design across GitHub Actions / GitLab CI / Jenkins / CircleCI; per-CI reporting and per-language reporter / cache-key lookups live in references/, as do the CircleCI test-config patterns (.circleci/config.yml workflows, test splitting, orbs, contexts - references/circleci.md)."
 ---
 
 # ci-test-job-conventions
@@ -224,14 +224,17 @@ stays a decision surface:
 - **Reporting + cache lookups** - JUnit XML support per CI, default
   reporters per language, and per-language cache-key recommendations:
   [references/junit-and-cache-lookups.md](references/junit-and-cache-lookups.md).
+- **CircleCI test configs** - `.circleci/config.yml` workflows, executors,
+  timing-based test splitting, orbs, insights, contexts:
+  [references/circleci.md](references/circleci.md).
 
 ## References
 
 - `github-actions-test-jobs`,
   `gitlab-ci-test-jobs`,
-  `jenkinsfile-test-stages`,
-  `circleci-test-configs` - 
+  `jenkinsfile-test-stages` - 
   per-CI implementation skills.
+- CircleCI patterns: [references/circleci.md](references/circleci.md).
 - `flaky-test-quarantine` - flake handling.
 - `junit-xml-analysis` - JUnit XML parser.
 - `e2e-suite-budget` - when to refactor instead of shard more.

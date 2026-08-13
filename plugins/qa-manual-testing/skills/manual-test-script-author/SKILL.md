@@ -1,6 +1,6 @@
 ---
 name: manual-test-script-author
-description: "Builds stakeholder-readable scripted manual test cases from a feature spec - emits either a step-table format (preconditions / steps / expected result / actual / pass-fail / notes) for spreadsheet review or a Gherkin Given/When/Then format for BDD-aware teams. Each script is self-contained (no implicit team knowledge), single-scenario (one happy + N edge per script), and includes the data setup the tester needs without being a developer. Use when a feature can't be (or shouldn't be) fully automated and a human tester needs an executable script - UAT, regression baselines, certification testing, exploratory follow-up scripts."
+description: "Builds stakeholder-readable scripted manual test cases from a feature spec in four formats: a step-table (preconditions / steps / expected result / actual / pass-fail / notes) for spreadsheet review, a Gherkin Given/When/Then format for BDD-aware teams, a business-language UAT script with acceptance-criteria mapping and contractual sign-off (references/uat-format.md), and a one-line-per-item execution checklist for smoke / on-call / bug-bash / compliance sweeps (references/checklist-format.md). Each script is self-contained (no implicit team knowledge), single-scenario (one happy + N edge per script), and includes the data setup the tester needs without being a developer. Use when a feature can't be (or shouldn't be) fully automated and a human tester needs an executable script or checklist - UAT sign-off rounds, regression baselines, certification testing, deploy smoke checklists, exploratory follow-up scripts."
 ---
 
 # manual-test-script-author
@@ -17,11 +17,16 @@ Not every test should (or can) be automated. Some need a human:
 - **First-pass exploration follow-up** - a script formalizing what
   exploratory testing surfaced.
 
-This skill builds those scripts in two interchangeable formats: a
-step-table for spreadsheet review or Gherkin for BDD-aware teams.
+This skill builds those scripts in four formats: a step-table for
+spreadsheet review, Gherkin for BDD-aware teams, a business-language
+UAT script for stakeholder sign-off
+([references/uat-format.md](references/uat-format.md)), and a focused
+execution checklist for smoke / on-call / compliance sweeps
+([references/checklist-format.md](references/checklist-format.md)).
 
 For session-based exploratory tests (where the script doesn't
-predetermine steps), use a charter-driven exploratory session instead.
+predetermine steps), use `exploratory-testing` - the charter-driven
+sibling skill - instead.
 
 ## When to use
 
@@ -128,6 +133,25 @@ Feature: Apply promo code at checkout
 
 Same content as Format A, different shape. Pick based on the
 team's tooling: spreadsheets prefer A; Cucumber / Behat prefer B.
+
+### Format C - UAT script (stakeholder sign-off)
+
+When the runner is a business stakeholder and sign-off is the contractual
+gate (B2B contracts, regulated industries, customer acceptance as the
+payment trigger), use the UAT format: one script per user journey,
+business language only, an acceptance-criteria verification table, and a
+tester + stakeholder sign-off block. Full format, the business-language
+translation table, and the three-tasks scoping rule:
+[references/uat-format.md](references/uat-format.md).
+
+### Format D - focused execution checklist
+
+When the need is a fast human-runnable sweep (a per-deploy production
+smoke, an on-call first-pass, a bug-bash kickoff, a periodic compliance
+record), a full step-table is overkill: use the checklist format - 10-30
+one-line `[ ] feature: action → observable outcome` items grouped by
+flow, with a per-group time budget and versioned files. Full format and
+scoping table: [references/checklist-format.md](references/checklist-format.md).
 
 ## Step 4 - Single-scenario discipline
 
@@ -239,7 +263,7 @@ Turn each failure into a structured bug-reproduction package.
   animation looked broken").
 - **Coverage of edge cases.** Manual scripts cover what the author
   imagined; exploratory testing catches what the author didn't - 
-  pair with charter-driven exploratory testing.
+  pair with `exploratory-testing` (charter-driven sessions).
 
 ## References
 
@@ -248,5 +272,8 @@ Turn each failure into a structured bug-reproduction package.
   depending on project context."
 - `acceptance-criteria-extractor` - upstream: emits Gherkin from a story; this skill turns Gherkin
   into a tester-runnable script.
-- `uat-script-author` - sibling:
-  same shape, scoped to UAT.
+- UAT script format (business language, AC mapping, sign-off):
+  [references/uat-format.md](references/uat-format.md).
+- Execution checklist format (smoke / on-call / bug-bash / compliance):
+  [references/checklist-format.md](references/checklist-format.md).
+- `exploratory-testing` - the session-based exploratory sibling.

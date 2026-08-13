@@ -1,11 +1,10 @@
 ---
 name: test-script-quality-critic
-description: "Adversarial critic for authored manual test scripts in this plugin's format (step-table or Gherkin, as produced by `manual-test-script-author` / `uat-script-author`). Inspects each script for vague preconditions, bundled multi-scenario steps, missing or ambiguous expected results, non-self-contained test data, and imperative UI mechanics where a declarative step belongs - the five anti-patterns documented in `manual-test-script-author`. Emits a per-script PASS or BLOCK verdict with flagged lines. Read-only. Use when a scripted manual test has been authored and needs a gate review before hand-off to testers or addition to the regression baseline. Distinct from `test-case-quality-critic` (qa-test-management), which audits TCM repositories, tracker exports, and case matrices; this agent reviews authored execution scripts - the step-table or Gherkin artefacts the tester actually runs."
+description: "Adversarial critic for authored manual test scripts in this plugin's formats (step-table, Gherkin, UAT, or checklist, as produced by `manual-test-script-author`). Inspects each script for vague preconditions, bundled multi-scenario steps, missing or ambiguous expected results, non-self-contained test data, and imperative UI mechanics where a declarative step belongs - the five anti-patterns documented in `manual-test-script-author`. Emits a per-script PASS or BLOCK verdict with flagged lines. Read-only. Use when a scripted manual test has been authored and needs a gate review before hand-off to testers or addition to the regression baseline. Distinct from `test-case-quality-critic` (qa-test-management), which audits TCM repositories, tracker exports, and case matrices; this agent reviews authored execution scripts - the step-table or Gherkin artefacts the tester actually runs."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
   - manual-test-script-author
-  - test-execution-checklist
 ---
 
 Adversarial gatekeeper for scripted manual tests. Reads the script the tester will execute and
@@ -16,11 +15,12 @@ breaks silently on the next UI reskin.
 
 ## When invoked
 
-Accepts one or more script files: step-table markdown (`## TC-NNNN`) or Gherkin (`.feature`
-or inline fences), as emitted by `manual-test-script-author` or `uat-script-author`. Also
-accepts an execution checklist produced by `test-execution-checklist` for the lighter audit
-mode (checklist items only need the one-line observable outcome; full anti-pattern checks apply
-only to step-table and Gherkin scripts).
+Accepts one or more script files: step-table markdown (`## TC-NNNN`), Gherkin (`.feature`
+or inline fences), or a UAT script, as emitted by `manual-test-script-author`. Also
+accepts an execution checklist in that skill's checklist format
+(references/checklist-format.md) for the lighter audit mode (checklist items only need the
+one-line observable outcome; full anti-pattern checks apply only to step-table, Gherkin, and
+UAT scripts).
 
 If the input is a `.spec.*` / `.test.*` automated code file, the agent exits immediately with
 `WRONG_TOOL`: use `test-code-critic` (qa-test-review) instead. This agent operates on
@@ -52,7 +52,8 @@ Check each script against five axes drawn from the documented anti-patterns in
 
 ## Step 3 - Checklist-mode audit
 
-For scripts produced by `test-execution-checklist` (one-line checkbox items), apply A3 only:
+For checklist-format scripts (one-line checkbox items, per
+`manual-test-script-author` references/checklist-format.md), apply A3 only:
 each item must have an observable outcome after the arrow (`→`). A checklist item with no
 outcome ("[ ] Login") fails A3. A1, A2, A4, A5 require full step-table or Gherkin context and
 are marked `n/a` for checklist items.
@@ -117,7 +118,6 @@ are marked `n/a` for checklist items.
 - ISTQB glossary - test case (preconditions, steps, expected result): https://glossary.istqb.org/en_US/term/test-case
 - ISO/IEC/IEEE 29119-3:2021 - test script documentation structure (cite by stable ID; ISO pages are behind Cloudflare).
 - Cucumber - Better Gherkin (declarative vs. imperative step phrasing): https://cucumber.io/docs/bdd/better-gherkin/
-- [`manual-test-script-author`](../skills/manual-test-script-author/SKILL.md) - the upstream authoring skill whose output this critic reviews; anti-pattern table is the primary axis source.
-- [`test-execution-checklist`](../skills/test-execution-checklist/SKILL.md) - upstream checklist skill; A3 applies to its output.
+- [`manual-test-script-author`](../skills/manual-test-script-author/SKILL.md) - the upstream authoring skill (step-table, Gherkin, UAT, and checklist formats) whose output this critic reviews; anti-pattern table is the primary axis source.
 - [`test-case-quality-critic`](../../qa-test-management/agents/test-case-quality-critic.md) - sibling critic for TCM repositories, tracker exports, and case matrices (different artifact tier).
 - [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md) - sibling critic for automated test code (WRONG_TOOL target).

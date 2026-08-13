@@ -237,9 +237,9 @@ Secrets configured in **Project Settings → CI/CD → Variables**
 
 - GitLab CI/CD docs at `docs.gitlab.com/ee/ci/`.
 - `github-actions-test-jobs`,
-  `jenkinsfile-test-stages`,
-  `circleci-test-configs` - 
+  `jenkinsfile-test-stages` - 
   alternatives.
-- `ci-test-job-conventions` - cross-CI conventions.
+- `ci-test-job-conventions` - cross-CI conventions; CircleCI patterns
+  live in its references/circleci.md.
 - `junit-xml-analysis` - JUnit XML parser.
 - `cobertura-analysis` - Cobertura parser (GitLab's native coverage format).

@@ -1,0 +1,9 @@
+{
+  "name": "testland/exploratory-testing",
+  "description": "Session-based exploratory testing per the Bachs' SBTM: authoring charters (Explore X with Y to discover Z), running time-boxed sessions (60-90 min), logging session sheets with TBS metrics, and closing with the PROOF session debrief (Past, Results, Outlook, Obstacles, Feelings). Bundles the classic exploration heuristics as references: Whittaker's seven test tours (Feature, Money, Landmark, Intellectual, Bad-data, Configuration, Garbage collector's), Kelly's FCC CUTS VIDS recon tours, Bach's SFDPOT what-to-vary catalog, Bolton's HICCUPPS-F oracle heuristic, and Bach's CRUSSPIC STMPL quality criteria - plus a ready-to-fill charter-card template and a session-sheet review checklist. Use when planning, chartering, running, debriefing, or reviewing an exploratory testing session, or when picking a test tour, heuristic, or oracle mid-session. For scripted manual test cases, use manual-test-script-author instead.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

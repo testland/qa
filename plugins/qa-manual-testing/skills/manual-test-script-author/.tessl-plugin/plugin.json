@@ -1,9 +1,9 @@
 {
   "name": "testland/manual-test-script-author",
-  "description": "Builds stakeholder-readable scripted manual test cases from a feature spec - emits either a step-table format (preconditions / steps / expected result / actual / pass-fail / notes) for spreadsheet review or a Gherkin Given/When/Then format for BDD-aware teams. Each script is self-contained (no implicit team knowledge), single-scenario (one happy + N edge per script), and includes the data setup the tester needs without being a developer. Use when a feature can't be (or shouldn't be) fully automated and a human tester needs an executable script - UAT, regression baselines, certification testing, exploratory follow-up scripts.",
+  "description": "Builds stakeholder-readable scripted manual test cases from a feature spec in four formats: a step-table (preconditions / steps / expected result / actual / pass-fail / notes) for spreadsheet review, a Gherkin Given/When/Then format for BDD-aware teams, a business-language UAT script with acceptance-criteria mapping and contractual sign-off (references/uat-format.md), and a one-line-per-item execution checklist for smoke / on-call / bug-bash / compliance sweeps (references/checklist-format.md). Each script is self-contained (no implicit team knowledge), single-scenario (one happy + N edge per script), and includes the data setup the tester needs without being a developer. Use when a feature can't be (or shouldn't be) fully automated and a human tester needs an executable script or checklist - UAT sign-off rounds, regression baselines, certification testing, deploy smoke checklists, exploratory follow-up scripts.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.7.3"
+  "version": "1.7.4"
 }

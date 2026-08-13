@@ -1,9 +1,0 @@
-{
-  "name": "testland/circleci-test-configs",
-  "description": "Configures CircleCI test workflows - `.circleci/config.yml` with workflows, jobs, executors, parallelism (test splitting), orbs (reusable shared config), insights for analytics, contexts for per-team secrets. Use for CircleCI-hosted CI when the team values its parallelism + insights features.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.1.8"
-}

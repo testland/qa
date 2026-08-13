@@ -1,6 +1,6 @@
 ---
 name: bug-bash-facilitator
-description: "Builds a structured bug-bash session - pre-bash kit (charter, test-data prep, environment setup, sign-up sheet), in-bash structure (role rotation across cohorts, shared backlog board, real-time triage), scoring rubric (severity weighting, novelty bonus), and a post-bash same-day wrap-up authored by the facilitator (not a standalone debrief: for post-session writeups without a live bash, use manual-test-debrief). Use when a team needs a coordinated multi-tester sweep before a release or after a major change - converts an ad-hoc \"everyone test for an hour\" into a recorded, comparable session with deliverables."
+description: "Builds a structured bug-bash session - pre-bash kit (charter, test-data prep, environment setup, sign-up sheet), in-bash structure (role rotation across cohorts, shared backlog board, real-time triage), scoring rubric (severity weighting, novelty bonus), and a post-bash same-day wrap-up authored by the facilitator (not a standalone debrief: for post-session writeups without a live bash, use the PROOF debrief in exploratory-testing). Use when a team needs a coordinated multi-tester sweep before a release or after a major change - converts an ad-hoc \"everyone test for an hour\" into a recorded, comparable session with deliverables."
 ---
 
 # bug-bash-facilitator
@@ -248,7 +248,7 @@ triage) but it broadens coverage.
 
 ## References
 
-- `exploratory-tours-reference` - the heuristics menu the cohorts pick from.
-- `manual-test-debrief` - the
-  PROOF debrief format the bug-bash debrief inherits from.
+- `exploratory-testing` - the tours menu the cohorts pick from
+  (references/tours.md) and the PROOF debrief format the bug-bash
+  debrief inherits from (references/debrief.md).
 - `synthetic-data-tool-selector` - used in the test-data-prep step.

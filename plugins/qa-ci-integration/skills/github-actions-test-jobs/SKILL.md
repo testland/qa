@@ -249,9 +249,9 @@ their JUnit report.
   steps; YAML in `.github/workflows/`.
 - [references/services-and-reporting.md](references/services-and-reporting.md) - service container + JUnit reporting recipes.
 - `gitlab-ci-test-jobs`,
-  `jenkinsfile-test-stages`,
-  `circleci-test-configs` -
+  `jenkinsfile-test-stages` -
   per-platform alternatives.
-- `ci-test-job-conventions` - cross-CI conventions.
+- `ci-test-job-conventions` - cross-CI conventions; CircleCI patterns
+  live in its references/circleci.md.
 - `junit-xml-analysis` - downstream JUnit XML parser.
 - `flaky-test-quarantine` - preferred over retries.

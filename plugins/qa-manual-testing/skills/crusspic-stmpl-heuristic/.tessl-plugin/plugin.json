@@ -1,9 +1,0 @@
-{
-  "name": "testland/crusspic-stmpl-heuristic",
-  "description": "Pure-reference catalog of James Bach's CRUSSPIC STMPL heuristic - thirteen quality criteria (quality attributes / non-functional requirements) a tester can evaluate a system against. CRUSSPIC: Capability, Reliability, Usability, Security, Scalability, Performance, Installability, Compatibility. STMPL: Supportability, Testability, Maintainability, Portability, Localizability. Use when checking a product's quality attributes or non-functional requirements, or picking which quality characteristics a test session evaluates - a checklist for judging product quality holistically; complementary to the ISO/IEC 25010 software product-quality model.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.7.8"
-}

@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 656 components**
+**89 plugins · 644 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -142,9 +142,9 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.9.0 | 14 skills + 3 agents | 17 |
-| [qa-ci-integration](plugins/qa-ci-integration/) | 1.1.11 | 5 skills + 1 agents | 6 |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.16 | 5 skills + 1 agents | 6 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.9.0 | 5 skills + 1 agents | 6 |
+| [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.10 | 4 skills + 0 agents | 4 |
 

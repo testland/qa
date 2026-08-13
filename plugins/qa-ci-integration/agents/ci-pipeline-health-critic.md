@@ -8,7 +8,6 @@ skills:
   - github-actions-test-jobs
   - gitlab-ci-test-jobs
   - jenkinsfile-test-stages
-  - circleci-test-configs
 ---
 
 # ci-pipeline-health-critic
