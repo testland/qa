@@ -12,12 +12,12 @@ metadata:
 Game performance QA verifies that a build meets its declared budgets across
 every target SKU before milestone sign-off or platform-cert submission.
 The performance category (category 4 in the
-game-test-categories-reference)
+platform-cert-overview-reference test-category taxonomy)
 covers frame-time, memory, GPU, thermal, and battery axes. This skill covers
 the two dominant engine stacks: Unity and Unreal Engine.
 
 **Frame-time budget anchors** (from
-game-test-categories-reference):
+platform-cert-overview-reference):
 
 | Target frame rate | Frame-time budget |
 |---|---|

@@ -130,5 +130,5 @@ CI pipelines typically split the test run into:
   comparison.
 
 For a sketch of how internal QA categories
-(`game-test-categories-reference`) map to Unreal's flags, see the
-category reference.
+(the test-category taxonomy in `platform-cert-overview-reference`) map to
+Unreal's flags, see that reference.

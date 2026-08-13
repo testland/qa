@@ -1,9 +1,9 @@
 {
   "name": "testland/xcuitest-suite",
-  "description": "Authors XCUIest UI tests for iOS / iPadOS / tvOS - uses the three-class XCUIApplication / XCUIElement / XCUIElementQuery pattern, sets accessibility identifiers on production code, runs via `xcodebuild test` with destination, parses the `xcresult` bundle. Use when an iOS app needs UI tests in Apple's first-party framework (no external runtime; native to Xcode).",
+  "description": "Authors XCUIest UI tests for iOS / iPadOS / tvOS and macOS desktop apps - uses the three-class XCUIApplication / XCUIElement / XCUIElementQuery pattern, sets accessibility identifiers on production code, runs via `xcodebuild test` with destination, parses the `xcresult` bundle. The macOS desktop delta (platform=macOS destination flags, TCC privacy-permission resets, per-device performance baselines) is in references/macos.md. Use when an iOS or macOS app needs UI tests in Apple's first-party framework (no external runtime; native to Xcode).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.3"
+  "version": "1.4.4"
 }

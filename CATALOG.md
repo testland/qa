@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 507 components**
+**89 plugins · 493 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -30,14 +30,14 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-desktop](plugins/qa-desktop/) | 1.3.0 | 8 skills + 4 agents | 12 |
-| [qa-game](plugins/qa-game/) | 1.4.15 | 8 skills + 3 agents | 11 |
-| [qa-mobile](plugins/qa-mobile/) | 1.5.0 | 8 skills + 3 agents | 11 |
-| [qa-embedded](plugins/qa-embedded/) | 1.4.0 | 7 skills + 3 agents | 10 |
+| [qa-mobile](plugins/qa-mobile/) | 1.5.0 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.8.0 | 6 skills + 2 agents | 8 |
+| [qa-game](plugins/qa-game/) | 1.5.0 | 7 skills + 1 agents | 8 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.6.0 | 6 skills + 1 agents | 7 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
+| [qa-embedded](plugins/qa-embedded/) | 1.4.0 | 6 skills + 1 agents | 7 |
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.0 | 6 skills + 1 agents | 7 |
+| [qa-desktop](plugins/qa-desktop/) | 1.3.0 | 5 skills + 1 agents | 6 |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.0 | 6 skills + 0 agents | 6 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.16 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.0 | 2 skills + 0 agents | 2 |

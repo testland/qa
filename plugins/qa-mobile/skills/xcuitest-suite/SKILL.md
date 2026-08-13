@@ -1,6 +1,6 @@
 ---
 name: xcuitest-suite
-description: "Authors XCUIest UI tests for iOS / iPadOS / tvOS - uses the three-class XCUIApplication / XCUIElement / XCUIElementQuery pattern, sets accessibility identifiers on production code, runs via `xcodebuild test` with destination, parses the `xcresult` bundle. Use when an iOS app needs UI tests in Apple's first-party framework (no external runtime; native to Xcode). Same framework as xctest-mac-desktop (in the qa-desktop plugin); the axis is target platform - that one is macOS desktop apps."
+description: "Authors XCUIest UI tests for iOS / iPadOS / tvOS and macOS desktop apps - uses the three-class XCUIApplication / XCUIElement / XCUIElementQuery pattern, sets accessibility identifiers on production code, runs via `xcodebuild test` with destination, parses the `xcresult` bundle. The macOS desktop delta (platform=macOS destination flags, TCC privacy-permission resets, per-device performance baselines) is in references/macos.md. Use when an iOS or macOS app needs UI tests in Apple's first-party framework (no external runtime; native to Xcode)."
 ---
 
 # xcuitest-suite
@@ -33,6 +33,14 @@ If the app is React Native, see
 `detox-testing`. For cross-platform
 Appium-style coverage, see
 `appium-testing`.
+
+## macOS desktop apps
+
+The same framework tests macOS desktop apps (AppKit, SwiftUI, Catalyst) - every
+step below carries over. The macOS delta - `-destination 'platform=macOS'`
+flags, TCC privacy-permission resets (`tccutil reset`), per-device performance
+baselines, and headless-runner constraints - is in
+[references/macos.md](references/macos.md).
 
 ## Step 1 - Add a UI test target
 
@@ -216,6 +224,8 @@ GitHub Actions provides `macos-15` runners with Xcode pre-installed.
 - [xcui][xcui] - Apple's XCUITest fundamentals: three-class
   pattern (XCUIApplication / XCUIElement / XCUIElementQuery),
   Query→Synthesize→Assert, `continueAfterFailure = NO` default.
+- [references/macos.md](references/macos.md) - the macOS desktop delta
+  (destination flags, TCC permissions, CI, per-device baselines).
 - `espresso-suite` - Android sibling.
 - `appium-testing` - cross-platform
   alternative when iOS + Android share tests.

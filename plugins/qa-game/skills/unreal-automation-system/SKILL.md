@@ -31,10 +31,9 @@ This file is the decision surface.
 
 Composes with:
 
-- `game-test-categories-reference`
-  for the canonical six categories Unreal's five categories map to.
 - `platform-cert-overview-reference`
-  for cert-gated requirements automation tests should cover.
+  for the canonical six test categories Unreal's five categories map
+  to, and for cert-gated requirements automation tests should cover.
 - `multiplayer-state-machine-coverage`
   for replication / dedicated-server state coverage authored as
   automation tests.
@@ -213,9 +212,7 @@ spec, plus a menu-close UI check.
   [references/authoring-macros-and-apis.md](references/authoring-macros-and-apis.md).
 - Running, report parsing, and CI wiring:
   [references/running-and-reporting.md](references/running-and-reporting.md).
-- Category mapping:
-  `game-test-categories-reference`.
-- Cert-gated requirements:
+- Category mapping + cert-gated requirements:
   `platform-cert-overview-reference`.
 - Replication / dedicated-server coverage:
   `multiplayer-state-machine-coverage`.

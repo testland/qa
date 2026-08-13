@@ -24,7 +24,7 @@ covered by `unity-test-framework`). The two share only a name.
 Composes with:
 
 - `ceedling-build-runner` - the build orchestration that calls `generate_test_runner.rb` and stitches Unity + CMock + the test binary.
-- `cmock-reference` - the CMock-generated mocks Unity asserts against.
+- ceedling-build-runner's references/cmock.md - the CMock-generated mocks Unity asserts against.
 - `qemu-system-test-runner` - for running the cross-built binary on a virtual Cortex-M.
 - `embedded-coverage-strategy-reference` - for the gcov / llvm-cov instrumentation.
 
@@ -277,7 +277,7 @@ canonical `ceedling test:all` + JUnit XML flow.
   tests should run tests serially on the test thread.
 - **No GoogleMock-style matchers.** Mocks live in CMock; matcher
   expressivity is per
-  `cmock-reference`.
+  ceedling-build-runner's references/cmock.md.
 - **`TEST_ASSERT_EQUAL_FLOAT` precision is configurable but
   global.** `UNITY_FLOAT_PRECISION` applies to every float
   compare in the suite; per-test precision needs `_WITHIN`.
@@ -300,8 +300,7 @@ Cited inline. Foundational documents:
 - Unity game-engine Test Framework (separate tool; see `unity-test-framework`) - 
   [docs.unity3d.com/Packages/com.unity.test-framework@latest](https://docs.unity3d.com/Packages/com.unity.test-framework@latest).
 - Sibling skills:
-  `ceedling-build-runner`,
-  `cmock-reference`,
+  `ceedling-build-runner` (CMock semantics in its references/cmock.md),
   `googletest-embedded-arm`,
   `qemu-system-test-runner`,
   `embedded-coverage-strategy-reference`.

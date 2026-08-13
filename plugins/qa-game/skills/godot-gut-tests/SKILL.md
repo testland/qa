@@ -25,9 +25,8 @@ Compatibility (per the GUT README):
 
 Composes with:
 
-- `game-test-categories-reference`
-  for the canonical six categories GUT tests map to.
 - `platform-cert-overview-reference`
+  for the canonical six test categories GUT tests map to, and
   for cert-gated requirements GUT tests should cover where the
   title ships to Xbox / PlayStation / Switch via Godot exports.
 - `gameplay-recording-replay`

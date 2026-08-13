@@ -1,6 +1,6 @@
 ---
 name: electron-playwright
-description: "Authors Playwright `_electron` tests for packaged Electron desktop apps - launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from ordinary browser page automation: this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite."
+description: "Authors Playwright `_electron` tests for packaged Electron desktop apps - launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from ordinary browser page automation: this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Includes the legacy Spectron reference and Spectron-to-Playwright migration shopping list (references/spectron-migration.md). Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite, or when migrating a deprecated Spectron suite."
 metadata:
   keywords: "electron, playwright, desktop, main-process, renderer"
 ---
@@ -30,15 +30,16 @@ patterns (Page Object, accessibility-first locators, trace viewer) carry over.
 
 [pwelectronapp]: https://playwright.dev/docs/api/class-electronapplication
 
-For legacy Spectron suites, see `electron-spectron`; for the strategic frame,
-`desktop-test-strategy-reference`.
+For legacy Spectron suites, see
+[references/spectron-migration.md](references/spectron-migration.md); for the
+strategic frame, `desktop-test-strategy-reference`.
 
 ## When to use
 
 - New Electron desktop app - pick Playwright `_electron` as the
   modern default per [electrontest][electrontest].
-- Existing Electron suite still on Spectron - see migration shopping
-  list in `electron-spectron`.
+- Existing Electron suite still on Spectron - see the migration shopping
+  list in [references/spectron-migration.md](references/spectron-migration.md).
 - Tests need to assert **main-process** state (e.g.,
   `app.isPackaged`, `BrowserWindow` count, IPC channel payloads) in
   addition to renderer DOM.
@@ -267,7 +268,7 @@ GitHub-hosted runners are display-capable out of the box. Full workflow:
 | Running Electron tests with default `workers > 1` | GPU / user-data directory collisions; flaky launches | `workers: 1` (Step 7) |
 | Forgetting `xvfb-run` on hosted Linux CI | "Failed to initialize display" launch failure | `xvfb-run --auto-servernum` wrapper (Step 10) |
 | Probing main-process modules from `window.evaluate()` | `window.evaluate()` runs in the renderer; doesn't see main-process globals | Use `electronApp.evaluate()` ([pwelectronapp][pwelectronapp]) |
-| Mixing Spectron and Playwright assertions in the same suite | Two driver lifecycles compete for the same Electron process | Migrate file-by-file per `electron-spectron` |
+| Mixing Spectron and Playwright assertions in the same suite | Two driver lifecycles compete for the same Electron process | Migrate file-by-file per [references/spectron-migration.md](references/spectron-migration.md) |
 | Asserting on Electron internal IDs (`__electron_id`) for locators | Internal; changes between Electron versions | Use accessibility-first locators (`getByRole` / `getByLabel`) per `playwright-testing` |
 
 ## Limitations
@@ -296,8 +297,8 @@ GitHub-hosted runners are display-capable out of the box. Full workflow:
 - Playwright `_electron` API - [pwelectron][pwelectron].
 - Playwright `ElectronApplication` API - [pwelectronapp][pwelectronapp].
 - Electron Automated Testing tutorial - [electrontest][electrontest].
-- Sibling skill: `electron-spectron` - 
-  legacy migration reference.
+- Legacy migration reference:
+  [references/spectron-migration.md](references/spectron-migration.md).
 - Strategic frame:
   `desktop-test-strategy-reference`.
 - Web-side neighbour:

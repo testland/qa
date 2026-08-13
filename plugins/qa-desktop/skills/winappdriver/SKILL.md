@@ -1,6 +1,6 @@
 ---
 name: winappdriver
-description: "Authors and runs Windows UI tests against WinAppDriver, Microsoft's W3C-WebDriver service for UWP / WPF / WinForms / Win32 apps: installing + launching `WinAppDriver.exe` on `127.0.0.1:4723`, declaring `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities, finding elements by `AccessibilityId` / `Name` / `ClassName`, and Windows-runner CI. Use when driving a native Windows app from a Selenium-style client (C#, Java, Python, Ruby, JS); for the actively-maintained Appium 2.x wrapper over the same server use appium-windows-driver, for a C#-only FlaUI client use flaui-tests, and to choose among Windows desktop drivers first use desktop-test-strategy-reference."
+description: "Authors and runs Windows UI tests against the WinAppDriver UIA surface via both invocation paths - the direct Microsoft W3C-WebDriver service (installing + launching `WinAppDriver.exe` on `127.0.0.1:4723`, `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities) and the actively-maintained Appium 2.x wrapper (`appium driver install windows`, `appium:` prefixed capabilities, `windows:` gestures, PowerShell prerun/postrun hooks). Covers UWP / WPF / WinForms / Win32 apps, `AccessibilityId` / `Name` / `ClassName` locators, and Windows-runner CI. Use when driving a native Windows app from a Selenium-style client (C#, Java, Python, Ruby, JS) - directly when no Appium install is wanted, via Appium when the stack already runs Appium for iOS / Android / Mac2; for a C#-only FlaUI client use flaui-tests, and to choose among Windows desktop drivers first use desktop-test-strategy-reference."
 metadata:
   keywords: "windows, winappdriver, uia, webdriver, wpf, uwp"
 ---
@@ -24,14 +24,14 @@ accessibility tree described in
 "Windows Presentation Foundation (WPF)", and "Classic Windows (Win32)
 apps".
 
-The driver is a **Microsoft-maintained service**, distinct from the
-Appium ecosystem's wrapper around it - see
-`appium-windows-driver` for the
-Appium proxy that sits in front of `WinAppDriver.exe` and adds
-gestures, multi-window helpers, and PowerShell hooks. Pick this skill
-when you want to talk to `WinAppDriver.exe` directly from a Selenium
-client; pick `appium-windows-driver` when you want the Appium feature
-surface.
+The same UIA surface has **two invocation paths**: talking to the
+Microsoft-maintained `WinAppDriver.exe` service directly from a Selenium
+client, or going through the Appium ecosystem's actively-maintained Node.js
+proxy that sits in front of it and adds gestures, multi-window helpers, and
+PowerShell hooks. This skill covers both - the direct path in the sections
+below, the Appium path in "Invoking via Appium". Go direct when no Appium
+(or Node.js) install is wanted on the test host; go via Appium when the
+project already runs Appium for other platforms.
 
 ## When to use
 
@@ -144,6 +144,72 @@ locator table. The full method-to-attribute mapping and the other
 locator strategies are in
 [references/locators-and-ci.md](references/locators-and-ci.md).
 
+## Invoking via Appium
+
+Per the [appium-windows-driver repository][awd], "Appium Windows Driver is a
+test automation tool for Windows devices and acts as a proxy to Microsoft's
+WinAppDriver server." The Node.js driver itself is actively maintained while
+the underlying service is described on the
+[Appium ecosystem drivers page][appiumdrivers] as "has not been maintained
+since 2022" - which is why the wrapper ships a built-in installer to pin a
+known-good WinAppDriver version. Same UIA surface, same locator semantics;
+what Appium adds: `windows:` gestures (`scroll` / `clickAndDrag` / `keys` /
+`launchApp`), multi-window session switching, and `appium:prerun` /
+`appium:postrun` PowerShell hooks.
+
+[awd]: https://github.com/appium/appium-windows-driver
+
+Install and launch ([awd][awd]):
+
+```bash
+npm install -g appium
+appium driver install windows
+appium driver run windows install-wad   # pins + installs WinAppDriver.exe
+appium --port 4723
+```
+
+Session capabilities carry the `appium:` vendor prefix required by
+Appium 2.x for non-W3C-standard caps ([awd][awd]):
+
+```json
+{
+  "platformName": "windows",
+  "appium:automationName": "windows",
+  "appium:app": "C:\\Windows\\System32\\notepad.exe",
+  "appium:appArguments": "MyTestFile.txt"
+}
+```
+
+`platformName` and `appium:automationName` must both be `windows`
+(case-insensitive); `appium:appTopLevelWindow` attaches to an existing
+window by hex handle; `appium:prerun` / `appium:postrun` run short,
+non-interactive PowerShell around the session ([awd][awd]). Python client:
+
+```python
+from appium import webdriver
+from appium.options.windows import WindowsOptions
+from selenium.webdriver.common.by import By
+
+options = WindowsOptions()
+options.platform_name = 'windows'
+options.automation_name = 'windows'
+options.app = r'C:\Windows\System32\notepad.exe'
+
+driver = webdriver.Remote('http://127.0.0.1:4723', options=options)
+editor = driver.find_element(By.NAME, 'Text editor')
+editor.send_keys('Hello from Appium Windows')
+driver.quit()
+```
+
+Appium-path traps: omitting the `appium:` prefix (session rejected); legacy
+`automationName: WinAppDriver` (use `windows`); hand-installing a random
+WinAppDriver MSI instead of `install-wad` (version mismatch with the proxy);
+hard-coding `appTopLevelWindow` (hex handle is per-launch); `windows: scroll`
+with positive `deltaY` to scroll down (negative scrolls down). The gestures
+API, multi-window flows, PowerShell hook recipes, and the Appium-path CI
+workflow are in
+[references/gestures-hooks-and-ci.md](references/gestures-hooks-and-ci.md).
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -164,8 +230,10 @@ locator strategies are in
   [Appium ecosystem driver page][appiumdrivers] which states the
   upstream "has not been maintained since 2022"). The latest
   official release per [wad][wad] is v1.2.1 (2020-11-05). For new
-  projects on actively-maintained tooling, see
-  `appium-windows-driver`.
+  projects on actively-maintained tooling, prefer the Appium 2.x
+  invocation path above; NovaWindows is referenced on
+  [appiumdrivers][appiumdrivers] as "a drop-in replacement for the
+  partially unmaintained Windows driver" for new heavy use.
 
 [appiumdrivers]: https://appium.io/docs/en/latest/ecosystem/drivers/
 
@@ -190,11 +258,12 @@ locator strategies are in
 - WinAppDriver authoring guide - [wadauth][wadauth].
 - Appium ecosystem drivers page (maintenance status note) -
   [appiumdrivers][appiumdrivers].
+- appium-windows-driver README - [awd][awd].
 - Deep reference (locator-strategy table, `Inspect.exe` discovery,
   custom service bindings, attach-to-running-window, CI wiring):
   [references/locators-and-ci.md](references/locators-and-ci.md).
-- Sibling skill:
-  `appium-windows-driver` - the
-  Appium proxy in front of WinAppDriver.
+- Deep reference (Appium `windows:` gestures, multi-window sessions,
+  PowerShell hooks, Appium-path CI):
+  [references/gestures-hooks-and-ci.md](references/gestures-hooks-and-ci.md).
 - Strategic frame:
   `desktop-test-strategy-reference`.

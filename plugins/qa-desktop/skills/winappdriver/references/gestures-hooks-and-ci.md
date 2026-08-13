@@ -1,8 +1,9 @@
 # Appium Windows driver - gestures, hooks, and CI
 
-Deep reference for `appium-windows-driver` SKILL.md. Consult when adding
-Windows-specific gestures, multi-window flows, PowerShell session hooks, or
-wiring the driver into CI on a Windows runner.
+Deep reference for the "Invoking via Appium" section of
+[SKILL.md](../SKILL.md). Consult when adding Windows-specific gestures,
+multi-window flows, PowerShell session hooks, or wiring the Appium-wrapped
+driver into CI on a Windows runner.
 
 [awd]: https://github.com/appium/appium-windows-driver
 
@@ -117,6 +118,7 @@ jobs:
         with: { name: junit, path: reports/ }
 ```
 
-Same hosted-vs-self-hosted runner caveats as `winappdriver` - UIA
-requires an interactive desktop session, so Session-0 Windows
-containers won't work without extra display setup.
+Same hosted-vs-self-hosted runner caveats as the direct service
+([SKILL.md](../SKILL.md) Limitations) - UIA requires an interactive desktop
+session, so Session-0 Windows containers won't work without extra display
+setup.

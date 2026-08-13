@@ -24,9 +24,8 @@ emits a fixture list + a go / no-go gate.
 
 Composes with:
 
-- `game-test-categories-reference` - multiplayer testing is a cross-axis over functional /
-  compliance / compatibility / performance.
-- `platform-cert-overview-reference` - the matrix maps onto Xbox **XR-067 (MPSD session state)**,
+- `platform-cert-overview-reference` - multiplayer testing is a cross-axis over functional /
+  compliance / compatibility / performance; the matrix maps onto Xbox **XR-067 (MPSD session state)**,
   **XR-064 (joinable sessions)**, **XR-115 (controller / user
   add and remove)**, and **XR-074 (loss of connectivity)**, all
   cited inline below from the

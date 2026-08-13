@@ -29,10 +29,9 @@ the **v1.4** manual snapshot for durable URLs. Both describe the same package.
 
 Composes with:
 
-- `game-test-categories-reference`
-  for what category of test each Unity test belongs to (functional
-  /  performance / etc.).
 - `platform-cert-overview-reference`
+  for what category of test each Unity test belongs to (functional
+  / performance / etc.), and
   for cert-gated requirements UTF tests should cover (XR-001
   Title Stability, XR-074 Service Loss, XR-115 Controller add /
   remove).

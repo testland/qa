@@ -1,6 +1,6 @@
 ---
 name: ceedling-build-runner
-description: "Author and run the Ceedling build system for C unit testing - the canonical build orchestration on top of Unity (assertions) + CMock (mocks) + CException (exceptions). Covers ceedling new project scaffolding, the project.yml schema (:project / :paths / :files / :defines / :flags / :tools / :test_runner / :cmock / :unity / :cexception / :gcov / :plugins), the task surface (ceedling test:all, ceedling test:{name}, ceedling test:pattern, ceedling test:path, ceedling release, ceedling clean / clobber, ceedling gcov:all, ceedling module:create, ceedling environment, ceedling dumpconfig), JUnit XML output via the report_tests_pretty_stdout / report_tests_junit_xml plugins, gcov plugin integration, host vs cross-build flow, and CI wiring. Use when a C project wants the standard ThrowTheSwitch trio bundled by one build command. For the Unity assertion API see unity-test-framework-c; for CMock semantics see cmock-reference."
+description: "Author and run the Ceedling build system for C unit testing - the canonical build orchestration on top of Unity (assertions) + CMock (mocks) + CException (exceptions). Covers ceedling new scaffolding, the project.yml schema (:project / :paths / :files / :defines / :flags / :tools / :test_runner / :cmock / :unity / :cexception / :gcov / :plugins), the task surface (test:all, test:{name}, test:pattern, test:path, release, clean / clobber, gcov:all, module:create, environment, dumpconfig), JUnit XML via the report_tests_* plugins, gcov integration, host vs cross-build flow, and CI wiring. CMock semantics - the generated Expect / Ignore / IgnoreArg / ReturnThruPtr / AddCallback / Stub / ExpectAndThrow family, cmock.yml :plugins, mock naming, tearDown verification, strict-vs-ignore matching - are in references/cmock.md. Use when a C project wants the ThrowTheSwitch trio bundled by one build command, or when authoring / reading CMock mocks. For the Unity assertion API see unity-test-framework-c."
 metadata:
   keywords: "ceedling, unity, cmock, cexception, c, embedded, rake, throwtheswitch"
 ---
@@ -14,8 +14,8 @@ This skill covers the Ceedling build orchestration - the
 tasks, per
 [throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
 For the Unity assertion API see `unity-test-framework-c`; for
-CMock's generated mock API see `cmock-reference`; for cross-target
-run see `qemu-system-test-runner`; for coverage see
+CMock's generated mock API see [references/cmock.md](references/cmock.md);
+for cross-target run see `qemu-system-test-runner`; for coverage see
 `embedded-coverage-strategy-reference`.
 
 ## When to use
@@ -227,9 +227,10 @@ Cited inline. Foundational documents:
 - Ceedling repository - [github.com/ThrowTheSwitch/Ceedling](https://github.com/ThrowTheSwitch/Ceedling).
 - Ceedling overview - [www.throwtheswitch.org/ceedling](https://www.throwtheswitch.org/ceedling).
 - Ceedling docs (project.yml + task reference) - [throwtheswitch.github.io/Ceedling/latest](https://throwtheswitch.github.io/Ceedling/latest/).
+- CMock semantics (generated API surface, cmock.yml plugins,
+  lifecycle, matching modes): [references/cmock.md](references/cmock.md).
 - Sibling skills:
   `unity-test-framework-c`,
-  `cmock-reference`,
   `embedded-coverage-strategy-reference`,
   `qemu-system-test-runner`,
   `googletest-embedded-arm`.

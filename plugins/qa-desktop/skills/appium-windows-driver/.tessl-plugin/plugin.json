@@ -1,9 +1,0 @@
-{
-  "name": "testland/appium-windows-driver",
-  "description": "Authors and runs Appium 2.x tests against the Windows driver, the actively-maintained Node.js proxy in front of Microsoft's WinAppDriver: `appium driver install windows`, capabilities (`platformName: windows`, `appium:automationName: windows`, `appium:app`, `appium:appTopLevelWindow`, `appium:appArguments`), Windows gestures (`windows: scroll` / `clickAndDrag` / `keys`), PowerShell prerun/postrun hooks, and CI. Use when the stack already uses Appium for iOS / Android / Mac2 and Windows fits the existing client + capability model; to drive WinAppDriver directly from a Selenium-style client use winappdriver, and for a C#-only FlaUI client use flaui-tests.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.16"
-}

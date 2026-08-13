@@ -97,7 +97,7 @@ Per `CeedlingPacket.md`, the canonical top-level sections. Copy-paste template:
 - `:defines` splits test-only vs release-only `-D` symbols (`UNITY_INCLUDE_DOUBLE` is a test-only define).
 - `:tools` is where a cross-build overrides the compiler to `arm-none-eabi-gcc`.
 - `:unity` sets Unity build-time defines, e.g. `UNITY_INT_WIDTH=16` for 16-bit MCUs.
-- `:cmock` plugin list - see `cmock-reference`.
+- `:cmock` plugin list - see [cmock.md](cmock.md).
 - `:cexception` type override; default is `int`, some MCUs prefer `signed char`.
 - `:gcov` report formats: `HtmlDetailed`, `Cobertura`, `SonarQube`.
 

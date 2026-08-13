@@ -1,6 +1,6 @@
 ---
 name: desktop-test-strategy-reference
-description: "Pure-reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend (WinAppDriver, Appium-Windows, XCUIApplication, AT-SPI clients), the cross-toolkit Electron + Qt paths, and a per-OS decision matrix with accessibility-first locator strategy. Deep operational detail (per-OS asynchronous-wait hierarchies, parallel-test policy, foreground-lock / UAC / TCC / AT-SPI elevation hazards, and the high-DPI / per-monitor test matrix) lives in references/. Use when choosing how to test or automate a desktop GUI application (desktop app testing, GUI automation, automate desktop UI) on Windows, macOS, or Linux - the strategic reference before picking a desktop test stack, ahead of the per-tool implementation skills."
+description: "Reference catalog of desktop GUI test strategies across Windows, macOS, and Linux. Defines the three accessibility-tree backends (Microsoft UI Automation on Windows, Apple Accessibility / XCTest on macOS, AT-SPI on Linux), the wrapper-tools that drive each backend, the cross-toolkit Electron + Qt paths, the project-marker detection table plus one-driver-per-app decision table (FlaUI / WinAppDriver / electron-playwright / QtTest / XCUITest / AT-SPI), an accessibility-first locator strategy, and a desktop test-review hazard checklist (screen-object encapsulation, locator stability, explicit waits, STA / foreground-lock / elevation). Deep operational detail (per-OS async-wait hierarchies, parallel-test policy, UAC / TCC / AT-SPI elevation hazards, the high-DPI matrix) lives in references/. Use when choosing how to test or automate a desktop GUI application on Windows, macOS, or Linux, or when reviewing an existing desktop UI test suite - the strategic reference ahead of the per-tool implementation skills."
 metadata:
   keywords: "desktop, ui-automation, xctest, at-spi, electron, qt"
 ---
@@ -157,8 +157,9 @@ Playwright - the entry point is the packaged binary, not a URL. The
 **Playwright `_electron` API** (`electron-playwright` SKILL in this
 plugin) launches the packaged binary, exposes the main process as a
 typed `ElectronApplication` handle, and returns Chromium-window
-pages for the renderer. Legacy alternative (deprecated 2021):
-Spectron - covered as a legacy reference in `electron-spectron`.
+pages for the renderer. Legacy alternative (deprecated 2022):
+Spectron - migration path in `electron-playwright`'s
+references/spectron-migration.md.
 
 ### Qt
 
@@ -185,14 +186,66 @@ Qt's `QAccessible`) are the path. See `qt-test-framework` SKILL.
 
 Cross-references to per-tool SKILLs:
 
-- `winappdriver` - WinAppDriver against UIA
-- `appium-windows-driver` - Appium-Windows driver (newer
-  WinAppDriver wrapping)
-- `xctest-mac-desktop` - XCTest UI for macOS
-- `at-spi-linux` - AT-SPI via dogtail / pyatspi
+- `winappdriver` - the Windows UIA WebDriver service, covering both the
+  direct Selenium-client path and the Appium 2.x invocation path
+- `xcuitest-suite` (qa-mobile plugin) - XCTest UI; its
+  references/macos.md covers the macOS desktop delta
+- AT-SPI on Linux - driven via dogtail / pyatspi clients (no dedicated
+  skill; the backend and bootstrap are covered in this reference)
 - `qt-test-framework` - QtTest in-process
-- `electron-playwright` - Playwright `_electron` API
-- `electron-spectron` - legacy reference for migrations
+- `electron-playwright` - Playwright `_electron` API; its
+  references/spectron-migration.md covers legacy Spectron migrations
+
+## Choosing a driver
+
+To pick one driver for a concrete app, first infer the app type from the
+project file - never from a bare directory name or README:
+
+| Signal in project file | Inferred app type |
+|---|---|
+| `*.csproj` containing `<UseWPF>true</UseWPF>` or `<TargetFramework>...-windows</TargetFramework>` + `PresentationFramework` reference | `wpf` |
+| `*.csproj` containing `<UseWindowsForms>true</UseWindowsForms>` | `winforms` |
+| `*.csproj` containing `<TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>` + UWP namespaces | `uwp` |
+| `*.csproj` targeting `net48` / older with no UseWPF/UseWindowsForms | `win32` (managed Win32) |
+| `package.json` with `"electron"` in `dependencies` or `devDependencies` | `electron` |
+| `*.pro` file OR `CMakeLists.txt` with `find_package(Qt6)` / `find_package(Qt5)` | `qt` |
+| `*.xcodeproj` / `Package.swift` targeting macOS | `macos-native` |
+| `*.in` / `configure.ac` referencing GTK / GLib | `linux-gtk` |
+| Avalonia or .NET MAUI references | `cross-platform-unknown` (host OS dictates the driver) |
+
+Then apply the decision table - one primary driver per app; a secondary
+fallback only where two are co-equal defensible (UWP, Win32, Qt):
+
+| App type | Recommended driver | Why | Read next |
+|---|---|---|---|
+| `wpf` | **FlaUI** (UIA3) | .NET-native, idiomatic C# API, no HTTP hop; UIA3 is preferred for WPF per the FlaUI README | `flaui-tests` |
+| `winforms` | **FlaUI** (UIA2) | Managed `System.Windows.Automation` has better legacy WinForms compatibility per the FlaUI README | `flaui-tests` |
+| `uwp` / Store App | **FlaUI** (UIA3) OR **WinAppDriver** | FlaUI when the test stack is .NET; WinAppDriver when cross-language clients are required | `flaui-tests` or `winappdriver` |
+| `win32` | **FlaUI** (UIA3) OR **WinAppDriver** | Either works; FlaUI for .NET test stack, WinAppDriver for Java / Python / Ruby clients | `flaui-tests` or `winappdriver` |
+| `electron` | **electron-playwright** | Drives main + renderer from one Playwright suite via `_electron.launch` | `electron-playwright` |
+| `qt` (Windows / Linux) | **qt-test-framework** in-process; **WinAppDriver** (Windows) or **AT-SPI** (Linux) out-of-process | First-party in-process tests use QtTest; out-of-process driving needs a UIA / AT-SPI client | `qt-test-framework` |
+| `macos-native` | **XCUITest** | Apple's first-party UI test harness, accessibility-tree backed | `xcuitest-suite` (qa-mobile) + its references/macos.md |
+| `linux-gtk` / `linux-qt` | **AT-SPI** (dogtail / Accerciser) | The canonical Linux accessibility-tree backend | the AT-SPI sections of this reference |
+| `cross-platform-unknown` (Avalonia / MAUI) | Per-platform per row above | Avalonia / MAUI render via the host OS's UI toolkit, so the OS dictates the driver | per-platform skill |
+
+Two constraints that flip or qualify a recommendation:
+
+- **Elevation (Windows).** If the SUT requires admin privileges, the driver
+  session itself must run elevated - UAC's secure desktop is outside the
+  accessibility tree, so a non-elevated WinAppDriver / FlaUI session sees the
+  entire elevated UI as empty ([WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306),
+  [#2033](https://github.com/microsoft/WinAppDriver/issues/2033)). Signals:
+  `<requestedExecutionLevel level="requireAdministrator" />` in `app.manifest`;
+  README "Run as administrator."
+- **Cross-OS Electron.** `electron-playwright` is the same driver across
+  Windows / macOS / Linux (`_electron.launch()` + `electronApp.evaluate()` per
+  the [Playwright ElectronApplication API](https://playwright.dev/docs/api/class-electronapplication));
+  only the CI bootstrap differs per OS (see
+  [references/platform-hazards-and-dpi.md](references/platform-hazards-and-dpi.md)).
+
+Never mix UIA2 and UIA3 in the same FlaUI test process (unsupported per the
+FlaUI README), and never emit one recommendation for "cross-platform desktop"
+without a per-OS breakout - each OS has a different accessibility backend.
 
 ## Locator strategy across backends
 
@@ -235,8 +288,8 @@ Cross-references for the upstream + downstream slots:
   `qa-visual-regression` for
   desktop screenshot comparison patterns.
 - CI integration - desktop runners cost more than web runners;
-  see the `winappdriver` and `xctest-mac-desktop` SKILLs for
-  GitHub-hosted vs self-hosted considerations.
+  see `winappdriver` and qa-mobile's `xcuitest-suite`
+  (references/macos.md) for GitHub-hosted vs self-hosted considerations.
 
 ## Operating the tests - deep references
 
@@ -249,6 +302,27 @@ companion references:
 - **Platform hazards + high-DPI** - foreground-lock, UAC secure
   desktop, macOS TCC prompts, AT-SPI session enablement, and the
   per-monitor DPI test matrix: [references/platform-hazards-and-dpi.md](references/platform-hazards-and-dpi.md).
+
+## Review hazards - desktop test-code checklist
+
+When reviewing an existing desktop UI test suite or a PR that touches desktop
+test files, walk these four axes. For generic, framework-agnostic test-file
+conventions (AAA, naming, magic numbers, assertion quality), use the
+`test-code-critic` agent in qa-test-review - this checklist covers only the
+desktop-specific hazards.
+
+| Axis | What to flag |
+|---|---|
+| **Screen-object encapsulation** | Raw locator calls (`FindByAccessibilityId`, `FindFirstChild`, `XCUIApplication().descendants`, `findElementByAccessibilityId`) inside a test method instead of behind a Screen Object class (Pattern 7 in qa-test-review's `object-model-patterns`) |
+| **Locator stability** | `FindByName` / `By.Name` where an AutomationId is available (per [Microsoft Learn - Use the AutomationID Property][msautoid], `AutomationIdProperty` "uniquely identifies a UI Automation element from its siblings"); XPath deeper than 2 levels; integer-index child navigation (`GetChildren()[2]`, `childAtIndex(1)`); locators composed from runtime string interpolation |
+| **Explicit waits over sleep** | Any `Thread.Sleep` / `Task.Delay` / `time.sleep` in a test or screen-object body - replace with the per-OS retry primitive (FlaUI `Retry.WhileNull` / `WhileFalse` per the [FlaUI Retry wiki](https://github.com/FlaUI/FlaUI/wiki/Retry), XCTest `waitForExistence(timeout:)`, AT-SPI polling helper) - see [references/async-waits-and-concurrency.md](references/async-waits-and-concurrency.md) |
+| **Platform hazards** | UIA event subscription from the test's main thread (STA threading); keyboard input without a preceding `app.Activate()` / `window.Focus()` (foreground-lock); elevation-requiring launches without an elevated-session note (UAC / TCC); AT-SPI tests that skip the `gsettings` + `Xvfb` / `dbus-launch` bootstrap - see [references/platform-hazards-and-dpi.md](references/platform-hazards-and-dpi.md) |
+
+[msautoid]: https://learn.microsoft.com/en-us/dotnet/framework/ui-automation/use-the-automationid-property
+
+Hard-reject signal: a new test file where every element lookup is by Name or
+index (zero AutomationId / accessibilityIdentifier usage) - locale-dependent
+and structurally fragile; assign stable identifiers before authoring tests.
 
 ## Anti-patterns
 
@@ -269,8 +343,8 @@ companion references:
   pages - automated fetches return the SPA shell only. This
   reference cites Apple's stable-archive `testing_with_xcode` chapter
   ([appleuit][appleuit]) for prose; per-API surface (XCUIApplication,
-  XCUIElement) is treated as a stable identifier in the
-  `xctest-mac-desktop` SKILL.
+  XCUIElement) is treated as a stable identifier in qa-mobile's
+  `xcuitest-suite` SKILL.
 - **No single cross-platform driver.** Tools that claim to be one
   (Appium across Windows + macOS + Linux desktop) are thin facades
   over the per-OS backends - coverage gaps follow the underlying
@@ -298,9 +372,9 @@ companion references:
   foreground / elevation hazards + high-DPI matrix in
   [references/platform-hazards-and-dpi.md](references/platform-hazards-and-dpi.md).
 - Per-tool implementation SKILLs:
-  `winappdriver`, `appium-windows-driver`, `xctest-mac-desktop`,
-  `at-spi-linux`, `qt-test-framework`, `electron-playwright`,
-  `electron-spectron`.
+  `winappdriver` (direct + Appium invocation), `qt-test-framework`,
+  `electron-playwright` (incl. Spectron migration), and qa-mobile's
+  `xcuitest-suite` (references/macos.md for the macOS desktop delta).
 - Web-side neighbour:
   `playwright-testing` - DOM-driving for browser apps (the contrast surface for
   desktop drivers).

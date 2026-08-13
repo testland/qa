@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-embedded",
   "version": "1.4.0",
-  "description": "Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, gcov coverage, QEMU system emulation, plus the embedded-test-author agent that emits one new unit test per spec mapped to the detected framework",
+  "description": "Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling with CMock mocks, gcov coverage, QEMU system emulation, plus the embedded-test-author agent that detects the framework and execution path, scaffolds the harness when none exists, and emits one new unit test per spec",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

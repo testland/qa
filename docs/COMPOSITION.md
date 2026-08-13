@@ -174,7 +174,6 @@ material that lives in skills.
 | Agent | Preloads |
 |---|---|
 | `playwright-codegen-reviewer` | `test-code-conventions` *(qa-test-review)* |
-| `selenium-grid-orchestrator` | (none) |
 
 ## Cross-plugin preload edges
 
@@ -188,7 +187,8 @@ Most agents preload skills from their own plugin. The 20 documented cross-plugin
 | `qa-roles/test-architect` | `qa-test-impact-analysis` | `regression-suite-selector` | Architect reads change-set shape; needs the selector's heuristics for pyramid recommendations. |
 | `qa-test-review/framework-architecture-auditor` | `qa-test-data` | `test-data-patterns` | Cross-framework audit covers fixture / data-factory patterns documented in qa-test-data. |
 | `qa-web-e2e/playwright-codegen-reviewer` | `qa-test-review` | `test-code-conventions` | Codegen output is reviewed against the same selector / assertion hygiene rules. |
-| `qa-desktop/desktop-test-author` (Tier 4 / Wave 1) | `qa-unit-tests-net` | `xunit-tests`, `nunit-tests`, `mstest-tests` | Desktop tests for .NET stacks compose into one of the three NET framework idioms. |
+| `qa-desktop/desktop-test-author` (Tier 4 / Wave 1) | `qa-unit-tests-net` | `dotnet-unit-tests` | Desktop tests for .NET stacks compose into the xUnit / NUnit / MSTest umbrella idioms. |
+| `qa-desktop/desktop-test-author` | `qa-mobile` | `xcuitest-suite` | macOS desktop authoring uses the XCUITest skill (its references/macos.md carries the desktop delta). |
 | `qa-unit-tests-net/dotnet-test-author` (Tier 4 / Wave 1) | `qa-test-data` | `bogus-data` | .NET Bogus library is the canonical typed test-data factory for .NET. |
 | `qa-unit-tests-js/js-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `faker-data`, `msw-handlers` | Faker.js for fake data; MSW for HTTP mocking - both load-bearing for JS unit tests. |
 | `qa-unit-tests-jvm/jvm-test-author` (Tier 4 / Wave 2) | `qa-test-data` | `pairwise-test-case-generator` | JUnit5 `@ParameterizedTest`, TestNG `@DataProvider`, Spock `where:` - language-agnostic generator. |

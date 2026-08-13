@@ -1,6 +1,6 @@
 ---
 name: flaui-tests
-description: "Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3). Covers the `FlaUI.Core` / `FlaUI.UIA2` / `FlaUI.UIA3` NuGet packages, `Application.Launch` / `Application.Attach` lifecycles, `ConditionFactory` + `FindFirstDescendant` locator patterns, `Retry` waits, and xUnit / NUnit / MSTest harness integration. Use when the test stack is C# / .NET-first and the team wants idiomatic in-process UIA calls rather than the HTTP/JSON wire protocol of `winappdriver` or the Appium proxy layer of `appium-windows-driver`."
+description: "Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3). Covers the `FlaUI.Core` / `FlaUI.UIA2` / `FlaUI.UIA3` NuGet packages, `Application.Launch` / `Application.Attach` lifecycles, `ConditionFactory` + `FindFirstDescendant` locator patterns, `Retry` waits, and xUnit / NUnit / MSTest harness integration. Use when the test stack is C# / .NET-first and the team wants idiomatic in-process UIA calls rather than the HTTP/JSON wire protocol of `winappdriver` (direct or Appium-wrapped)."
 metadata:
   keywords: "flaui, uia, dotnet, windows, wpf, winforms"
 ---
@@ -22,24 +22,20 @@ v5.0.0 released February 2025; MIT-licensed and actively maintained
 
 [msuia2]: https://learn.microsoft.com/dotnet/framework/ui-automation/ui-automation-overview
 
-### Disambiguation - FlaUI vs winappdriver vs appium-windows-driver
+### Disambiguation - FlaUI vs winappdriver
 
 FlaUI is a **.NET library** that links into the test process and
-calls UIA directly. By contrast:
-
-- `winappdriver` is a Microsoft-maintained
-  **HTTP/JSON service** that exposes a W3C-WebDriver endpoint on
-  `127.0.0.1:4723`; tests speak Selenium-style protocol over the wire
-  and the driver is language-agnostic.
-- `appium-windows-driver` is an
-  Appium 2.x proxy that sits in front of `WinAppDriver.exe` and adds
-  gestures / multi-window helpers.
+calls UIA directly. By contrast, `winappdriver` is an
+**HTTP/JSON service** that exposes a W3C-WebDriver endpoint on
+`127.0.0.1:4723`; tests speak Selenium-style protocol over the wire,
+the driver is language-agnostic, and it can be invoked either
+directly or through the Appium 2.x wrapper (gestures / multi-window
+helpers / PowerShell hooks - both paths in that skill).
 
 Pick FlaUI when the test stack is already C# / .NET-first and you
 want in-process UIA calls without an HTTP hop. Pick `winappdriver`
-when you need a Selenium client in another language. Pick
-`appium-windows-driver` when you want the Appium feature surface on
-top of WinAppDriver.
+when you need a Selenium client in another language or the Appium
+feature surface.
 
 ## When to use
 
@@ -337,9 +333,9 @@ itself ships both packages.
 ## Limitations
 
 - **Windows-only.** UIA is a Windows-specific API per [msuia2][msuia2].
-  No macOS / Linux equivalent - see
-  `xctest-mac-desktop` and
-  `at-spi-linux`.
+  No macOS / Linux equivalent - for those OSes see the
+  `desktop-test-strategy-reference` matrix (XCTest via qa-mobile's
+  `xcuitest-suite`; AT-SPI on Linux).
 - **Requires an interactive desktop session.** UIA cannot drive
   Session-0 / headless Windows containers. `windows-latest` GitHub
   runners are interactive by default; self-hosted containers need
@@ -367,7 +363,6 @@ itself ships both packages.
 - Microsoft Learn - UI Automation Overview - [msuia2][msuia2].
 - Sibling skills:
   `winappdriver`,
-  `appium-windows-driver`,
   `desktop-test-strategy-reference`.
 - Composing harness:
   `dotnet-unit-tests` (qa-unit-tests-net).

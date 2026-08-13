@@ -1,23 +1,27 @@
 # qa-desktop
 
-Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework). Includes desktop-driver-selector, desktop-test-scaffolder, and desktop-test-author agents for cross-driver orchestration.
+Desktop application testing across Windows (FlaUI, WinAppDriver - direct or Appium-invoked), macOS (XCTest UI via qa-mobile's xcuitest-suite), Linux (AT-SPI), Electron (Playwright _electron API, incl. Spectron migration), and Qt (QtTest framework). The desktop-test-author agent detects the driver, scaffolds a fresh test project when none exists, and authors per-flow tests.
+
+Choosing a driver for a concrete app - project-marker detection plus the
+one-driver-per-app decision table - lives in
+[desktop-test-strategy-reference](skills/desktop-test-strategy-reference/SKILL.md),
+alongside the desktop test-review hazard checklist.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| skill | desktop-test-strategy-reference | Pure-reference catalog of desktop GUI test strategies across Windows (UIA), macOS (XCTest + Accessibility), Linux (AT-SPI), Electron, and Qt |
-| skill | electron-spectron | Legacy reference for the deprecated Spectron framework; documents migration path to Playwright `_electron` |
-| skill | electron-playwright | Authors Playwright `_electron` tests for packaged Electron apps; drives main process + renderer windows from one suite |
-| skill | flaui-tests | Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3) with idiomatic C# API |
-| skill | winappdriver | Authors and runs UI tests against Microsoft WinAppDriver (W3C WebDriver for UWP, WPF, WinForms, and Win32 apps on Windows 10) |
-| skill | appium-windows-driver | Authors Appium 2.x tests against the Windows driver - the Node.js proxy in front of WinAppDriver with `windows:` gestures and PowerShell hooks |
-| skill | qt-test-framework | Authors and runs Qt Test - the first-party C++ in-process unit + GUI test framework for Qt 6 with QTEST_MAIN, QSignalSpy, and QBENCHMARK |
-| skill | xctest-mac-desktop | Authors XCTest UI + unit tests for macOS apps with XCUIApplication / XCUIElement queries and `xcodebuild test` CI integration |
-| agent | desktop-driver-selector | Reads a target desktop project (`csproj` / `package.json` / `.pro` / `CMakeLists.txt`) and emits one driver recommendation (FlaUI / WinAppDriver / electron-playwright / QtTest / XCUITest / AT-SPI) plus rationale |
-| agent | desktop-test-scaffolder | Scaffolds a fresh desktop test project - test project file, driver-init module, one screen-object skeleton, and a CI workflow tagged for the matching Windows / macOS / Linux runner |
-| agent | desktop-test-author | Authors one desktop UI test for one user flow given a spec + target app + chosen driver; composes FlaUI / WinAppDriver / Appium-Windows / electron-playwright / QtTest skills with xUnit / NUnit / MSTest harnesses |
-| agent | desktop-test-reviewer | Adversarial read-only reviewer for existing desktop UI test files (WPF, WinForms, Electron, Qt, macOS); checks screen-object encapsulation, AutomationId locator stability, explicit-wait usage, and OS-platform hazards (STA threading, foreground-lock, UAC/TCC elevation); emits BLOCK or PASS |
+| skill | [desktop-test-strategy-reference](skills/desktop-test-strategy-reference/SKILL.md) | Reference catalog of desktop GUI test strategies across Windows (UIA), macOS (XCTest + Accessibility), Linux (AT-SPI), Electron, and Qt - including the project-marker driver decision table and the desktop test-review hazard checklist (screen-object encapsulation, locator stability, explicit waits, STA / foreground-lock / elevation) |
+| skill | [electron-playwright](skills/electron-playwright/SKILL.md) | Authors Playwright `_electron` tests for packaged Electron apps; drives main process + renderer windows from one suite; includes the legacy Spectron reference + migration shopping list in references/spectron-migration.md |
+| skill | [flaui-tests](skills/flaui-tests/SKILL.md) | Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3) with idiomatic C# API |
+| skill | [winappdriver](skills/winappdriver/SKILL.md) | Authors and runs UI tests against the WinAppDriver UIA surface via both invocation paths - the direct Microsoft W3C-WebDriver service and the actively-maintained Appium 2.x wrapper (`windows:` gestures, PowerShell hooks) |
+| skill | [qt-test-framework](skills/qt-test-framework/SKILL.md) | Authors and runs Qt Test - the first-party C++ in-process unit + GUI test framework for Qt 6 with QTEST_MAIN, QSignalSpy, and QBENCHMARK |
+| agent | [desktop-test-author](agents/desktop-test-author.md) | Authors desktop UI tests end to end: detects the app type + driver via the strategy reference's decision table, scaffolds a fresh test project when none exists (driver-init fixture, screen-object skeleton with INPUT NEEDED markers, per-OS CI bootstrap), then authors one test file per user-flow spec composing the driver skills with xUnit / NUnit / MSTest harnesses |
+
+macOS XCTest UI testing lives in qa-mobile's
+[xcuitest-suite](../qa-mobile/skills/xcuitest-suite/SKILL.md) - same framework
+as iOS; the macOS desktop delta (destination flags, TCC permissions) is its
+references/macos.md.
 
 ## Install
 

@@ -24,7 +24,8 @@ and emits events directly into the `QObject` event queue. It does **not** go
 through the OS accessibility tree (per `desktop-test-strategy-reference`), so it
 cannot drive a Qt app from a *separate* process. For out-of-process Qt driving
 see `winappdriver` (Windows via UIA after `QAccessible` is enabled),
-`xctest-mac-desktop` (macOS), and `at-spi-linux` (Linux).
+qa-mobile's `xcuitest-suite` with its references/macos.md (macOS), and the
+AT-SPI sections of `desktop-test-strategy-reference` (Linux).
 
 ## When to use
 
@@ -294,9 +295,8 @@ executables with no X / Wayland session. Full workflow:
 - QTest namespace reference - [qtns][qtns].
 - Qt Test module index - [qtidx][qtidx].
 - Sibling out-of-process Qt drivers:
-  `winappdriver`,
-  `xctest-mac-desktop`,
-  `at-spi-linux`.
+  `winappdriver` (Windows), qa-mobile's `xcuitest-suite` (macOS),
+  AT-SPI per `desktop-test-strategy-reference` (Linux).
 - Strategic frame:
   `desktop-test-strategy-reference`.
 - Downstream:
