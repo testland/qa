@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 443 components**
+**89 plugins · 433 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -131,10 +131,10 @@ _LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.4.0 | 7 skills + 2 agents | 9 |
-| [qa-ml-models](plugins/qa-ml-models/) | 1.3.6 | 7 skills + 2 agents | 9 |
-| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.4.0 | 4 skills + 3 agents | 7 |
-| [qa-search-relevance](plugins/qa-search-relevance/) | 1.2.5 | 6 skills + 1 agents | 7 |
-| [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.3.0 | 3 skills + 1 agents | 4 |
+| [qa-ml-models](plugins/qa-ml-models/) | 1.4.0 | 6 skills + 0 agents | 6 |
+| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.4.0 | 3 skills + 2 agents | 5 |
+| [qa-search-relevance](plugins/qa-search-relevance/) | 1.3.0 | 4 skills + 1 agents | 5 |
+| [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.3.0 | 1 skills + 0 agents | 1 |
 
 ## Tooling
 

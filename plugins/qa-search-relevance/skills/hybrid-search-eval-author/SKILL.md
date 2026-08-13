@@ -242,9 +242,8 @@ index rebuild, fusion-weight update, reranker version bump).
 - `vector-search-recall-tests` -
   recall@k and HNSW tuning for the vector stage in isolation
 - `elasticsearch-relevance-tests` -
-  term-based relevance metrics for BM25-only pipelines
-- `opensearch-relevance-tests` -
-  term-based relevance metrics for OpenSearch BM25-only pipelines
+  term-based relevance metrics for BM25-only pipelines (per-engine
+  OpenSearch and Solr deltas in its references/)
 
 ## References
 

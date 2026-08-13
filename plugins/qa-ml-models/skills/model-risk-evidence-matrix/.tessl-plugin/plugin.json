@@ -1,9 +1,9 @@
 {
   "name": "testland/model-risk-evidence-matrix",
-  "description": "Assigns a machine learning model to a low, medium, or high risk tier from what its predictions decide about people, then derives the fairness and explainability evidence that tier must produce: group metrics per declared sensitive feature, intersectional breakdowns with per-cell counts, vulnerability scan categories, a drift monitoring plan, and per-prediction explanation logs. Supplies conventional demographic parity difference bands, a per-vulnerability-category blocking table, and evidence rules that mark a bundle incomplete or self-contradicting. Use when a model release candidate is up for promotion and someone must decide which fairness artifacts are mandatory rather than nice to have, or when a model card declares a risk tier and the attached evidence bundle has to be checked against what that tier demands.",
+  "description": "Assigns an ML model to a low, medium, or high risk tier from what its predictions decide about people, then derives the fairness and explainability evidence that tier must produce: group metrics per declared sensitive feature, intersectional breakdowns with per-cell counts, vulnerability scan categories, a drift monitoring plan, and per-prediction explanation logs. Supplies conventional demographic parity difference bands, a per-vulnerability-category blocking table, evidence rules marking a bundle incomplete or self-contradicting, and a fairness gating workflow that walks a candidate's model card + evidence bundle to a promote / needs-work / block verdict with refuse rules; a reference covers producing the explanation records with Alibi Explain. Use when a model release candidate is up for promotion and someone must decide which fairness artifacts are mandatory, when a declared risk tier's evidence bundle must be checked against what the tier demands, or when the evidence review must gate the promotion.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.6"
+  "version": "1.3.7"
 }

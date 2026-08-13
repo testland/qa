@@ -1,9 +1,0 @@
-{
-  "name": "testland/nbval-tests",
-  "description": "Validate Jupyter notebooks via the `pytest --nbval` plugin - re-execute cells and compare outputs to stored results. Cover the strict path (output match required), `--nbval-lax` (failure-only), `--sanitize-with` for dynamic outputs, and per-cell controls (`#NBVAL_SKIP`, `#NBVAL_IGNORE_OUTPUT`, `#NBVAL_RAISES_EXCEPTION`). Use when a repo ships `.ipynb` files as tutorials, docs, or analyses that must keep producing the same outputs after a dependency upgrade or source change.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.6"
-}

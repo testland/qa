@@ -1,11 +1,8 @@
----
-name: alibi-explainability
-description: "Generates model explanations with Alibi Explain - Anchors, Integrated Gradients, Kernel/Tree SHAP, ALE, Counterfactual Instances. Wires explainer.fit + explainer.explain into model-evaluation pipelines so that every flagged prediction ships with a \"why\" record auditors can reason about. Use when a model decision must be explainable to an auditor, regulator, or affected user, or when a support team cannot answer why a specific prediction was made."
-metadata:
-  keywords: "alibi, explainability, interpretability, counterfactual, shap, integrated-gradients"
----
+# Alibi Explain - producing the explanation evidence
 
-# alibi-explainability
+How to produce the per-prediction explanation artifacts the matrix
+requires (Step 2 row 6, rule R2) with Alibi Explain - Anchors,
+Integrated Gradients, Kernel/Tree SHAP, ALE, Counterfactual Instances.
 
 Alibi Explain provides explanation algorithms answering: *"How do
 predictions change with feature inputs? Which features matter for a

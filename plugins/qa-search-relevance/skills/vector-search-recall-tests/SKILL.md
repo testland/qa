@@ -240,9 +240,9 @@ catch in test.
   HNSW parameters (M, ef_construct, ef), recall vs latency tradeoff
 - [Weaviate Python client docs] - v4 `near_vector` query and the
   collection-level `ef` (`Reconfigure.VectorIndex.hnsw`) config
-- `elasticsearch-relevance-tests`,
-  `opensearch-relevance-tests` - 
+- `elasticsearch-relevance-tests` - 
   classic IR-metrics relevance tests for term-based retrieval
+  (Elasticsearch, OpenSearch, Solr)
 
 [ANN-Benchmarks docs]: https://ann-benchmarks.com/
 [Qdrant search docs]: https://qdrant.tech/documentation/concepts/search/

@@ -1,11 +1,8 @@
----
-name: nbval-tests
-description: "Validate Jupyter notebooks via the `pytest --nbval` plugin - re-execute cells and compare outputs to stored results. Cover the strict path (output match required), `--nbval-lax` (failure-only), `--sanitize-with` for dynamic outputs, and per-cell controls (`#NBVAL_SKIP`, `#NBVAL_IGNORE_OUTPUT`, `#NBVAL_RAISES_EXCEPTION`). Use when a repo ships `.ipynb` files as tutorials, docs, or analyses that must keep producing the same outputs after a dependency upgrade or source change."
-metadata:
-  keywords: "nbval, jupyter, notebook-testing, pytest, regression-testing"
----
+# nbval - notebook output regression
 
-# nbval-tests
+The output-regression stage of the pipeline (SKILL.md Step 4) in tool
+depth: strict vs lax mode, per-cell controls, sanitize config, and
+discovery.
 
 nbval is a pytest plugin that validates Jupyter notebooks by
 re-executing cells and comparing outputs against stored results,

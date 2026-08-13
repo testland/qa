@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob, Bash(jq *), Bash(curl *)"
 model: sonnet
 skills:
   - elasticsearch-relevance-tests
-  - opensearch-relevance-tests
   - vector-search-recall-tests
 ---
 
@@ -200,8 +199,9 @@ Refuse ✅ when:
 
 ## References
 
-- [`elasticsearch-relevance-tests`](../skills/elasticsearch-relevance-tests/SKILL.md),
-  [`opensearch-relevance-tests`](../skills/opensearch-relevance-tests/SKILL.md),
+- [`elasticsearch-relevance-tests`](../skills/elasticsearch-relevance-tests/SKILL.md)
+  (with its [OpenSearch](../skills/elasticsearch-relevance-tests/references/opensearch.md)
+  and [Solr](../skills/elasticsearch-relevance-tests/references/solr.md) deltas) and
   [`vector-search-recall-tests`](../skills/vector-search-recall-tests/SKILL.md) - 
   preloaded sister skills providing per-engine eval format
 - Splainer (per-doc rank explanation) - github.com/o19s/splainer-search

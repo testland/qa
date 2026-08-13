@@ -1,9 +1,0 @@
-{
-  "name": "testland/input-domain-coverage-audit",
-  "description": "Audits a test file's input-domain coverage per entry point across three axes: equivalence partitioning (clustering the literal values the tests actually pass, to infer which partitions are exercised), boundary value analysis (recorded n/a when the entry point declares no bound), and error/negative-path coverage (classifying every matcher as positive or negative and computing the negative-assertion ratio). Emits a PASS / SHALLOW / N/A verdict per axis per entry point, with the evidence that produced it. Owns whether the test data spans the input space, not whether an individual assertion is specific enough: matcher specificity belongs to `test-code-conventions`. Use when a test file's cases all look alike - every argument the same shape, every response a success, no thrown-error case - and the suite needs a defensible answer on whether it exercises more than one equivalence class before it is approved.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.8"
-}

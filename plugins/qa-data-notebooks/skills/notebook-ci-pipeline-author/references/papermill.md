@@ -1,11 +1,8 @@
----
-name: papermill-tests
-description: "Use Papermill to parameterize and execute notebooks in CI as regression tests - `papermill input.ipynb output.ipynb -p alpha 0.6` (CLI) or `pm.execute_notebook(...)` (Python API). Use when notebooks must run as parameterized regression jobs in CI."
-metadata:
-  keywords: "papermill, jupyter, notebook-testing, parameterized-execution, regression-testing"
----
+# Papermill - parameterized notebook execution
 
-# papermill-tests
+The execution stage of the pipeline (SKILL.md Step 3) in tool depth:
+the `parameters` cell tag, CLI + Python API, parameter flags, sweeps,
+and regression-test wiring.
 
 Papermill executes notebooks programmatically with injected
 parameters, producing an output notebook with results. Per the

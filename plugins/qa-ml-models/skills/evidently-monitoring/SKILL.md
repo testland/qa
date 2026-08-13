@@ -1,6 +1,6 @@
 ---
 name: evidently-monitoring
-description: "Use Evidently OSS (100+ evaluation metrics, declarative testing API) to detect data drift, target drift, and model-performance regression, wired into CI as a gate (a Report run with include_tests) and into production monitoring as a continuous check; reports as HTML + JSON for both human review and pipeline assertions. Use when you need a drift or quality gate, or a scheduled monitoring job, for a tabular ML model. Built on the Evidently API specifically: for DeepChecks-based validation suites use deepchecks-tests instead."
+description: "Use Evidently OSS (100+ evaluation metrics, declarative testing API) to detect data drift, target drift, and model-performance regression, wired into CI as a gate (a Report run with include_tests) and into production monitoring as a continuous check; reports as HTML + JSON for both human review and pipeline assertions. Includes a drift-alert triage playbook: classify the fired alert's signal, rank root-cause hypotheses (upstream schema change, pipeline bug, training-serving skew, seasonality, genuine population shift), and pick rollback, retrain, quarantine, or alert re-tuning. Use when you need a drift or quality gate, a scheduled monitoring job, or a structured triage of a fired drift alert, for a tabular ML model. Built on the Evidently API specifically: for DeepChecks-based validation suites use deepchecks-tests instead."
 metadata:
   keywords: "evidently, data-drift, model-monitoring, drift-detection, production-monitoring"
 ---
@@ -145,6 +145,69 @@ if any(t.get("status") in ("FAIL", "ERROR") for t in result.dict()["tests"]):
 ```
 
 Pair with a scheduler (Airflow / Prefect / cron / Argo Workflows).
+
+## Step 7 - Triage a fired drift alert
+
+When the Step 6 job pages, triage the alert before acting - never jump straight
+to retrain or rollback.
+
+**Parse the alert envelope.** Read the JSON report (`report.dict()` returns the
+run as a dictionary per
+[Evidently output formats](https://docs.evidentlyai.com/docs/library/output_formats)).
+Each column is scored by a drift method against a threshold; defaults are PSI
+and Jensen-Shannon divergence at threshold 0.1, KS and chi-square at p-value
+0.05, per
+[Evidently customization docs](https://docs.evidentlyai.com/metrics/customize_data_drift).
+Dataset-level drift triggers when the share of drifted columns reaches
+`drift_share`: "By default, Dataset Drift is detected if at least 50% of
+columns drift" per [Evidently drift preset]. Note which columns drifted and
+which stat test fired.
+
+**Classify the drift signal:**
+
+| Signal | Look for |
+|---|---|
+| Broad feature drift (many columns) | Schema/ETL change or population shift |
+| Single-column drift, especially an ID or timestamp | Pipeline bug or upstream encoding change |
+| Target/prediction drift without feature drift | Concept drift or label-pipeline failure |
+| Drift that aligns with calendar (weekend, holiday, season) | Seasonality - not a model failure |
+| Drift only in serving data, not in a held-out eval set | Training-serving skew |
+
+**Rank root-cause hypotheses** (default likelihood order in practice; adjust on
+the signal evidence) and act per hypothesis:
+
+1. **Upstream schema change** - a feed column renamed, retyped, or dropped.
+   Diff the upstream schema against a reference snapshot; fix the feature
+   pipeline; re-run the report before returning the model to live traffic.
+2. **Pipeline bug** - a join key, fill-value, or preprocessing step changed.
+   Check deploy timestamps against drift onset; roll back the coinciding
+   deploy; quarantine predictions from the affected window; add a per-column
+   CI drift gate for the affected column.
+3. **Training-serving skew** - the live feature path diverges from the
+   training path (different imputation or aggregation window). Align serving
+   feature code with the training job, then regenerate the reference dataset
+   from the corrected serving path.
+4. **Seasonality** - known calendar or business-cycle effect. Corroborate with
+   a year-over-year window or business calendar first; then widen the affected
+   columns' thresholds (or switch stat test) via per-column configuration per
+   [Evidently customization docs](https://docs.evidentlyai.com/metrics/customize_data_drift),
+   and document the pattern as a known-good deviation.
+5. **Genuine population shift** - the data-generating process changed (new
+   product line, user segment, regulation). Retrain on a window that includes
+   the new population; re-run the fairness gating workflow in
+   `model-risk-evidence-matrix` on the retrained candidate (fairness metrics
+   shift with population); update the reference dataset only after successful
+   promotion.
+
+**Triage discipline:**
+
+- Cite the report data (columns, stat tests, onset timestamp) behind every
+  hypothesis; no rollback or quarantine call without the columns and onset
+  time that substantiate it.
+- Never classify an alert as seasonality without corroborating evidence
+  (year-over-year window, business calendar, or a prior documented pattern).
+- Never retrain before ruling out hypotheses 1-3: retraining on drifted input
+  without fixing the upstream cause embeds the bug in the new model.
 
 ## Worked example
 

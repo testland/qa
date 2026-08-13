@@ -1,6 +1,6 @@
 ---
 name: model-based-test-graph-author
-description: "Build-an-X workflow for model-based testing (MBT) per the canonical definition - authors a state-machine model of the SUT (states + transitions + guards + actions), validates the model is connected and complete, and feeds the model to a test generator (manual / AI / dedicated MBT tool) that produces test paths covering each transition. Per Wikipedia (en.wikipedia.org/wiki/Model-based_testing): MBT \"leverages model-based design for designing and possibly executing tests.\" Use when a complex stateful flow (checkout, onboarding, multi-step wizard) needs systematic coverage that ad-hoc tests miss."
+description: "Build-an-X workflow for model-based testing (MBT) per the canonical definition - authors a state-machine model of the SUT (states + transitions + guards + actions), validates the model is connected and complete, and runs the full graph-to-suite pipeline: pick a coverage criterion, generate covering paths, bridge each path into an acceptance-criterion entry ai-test-generator consumes, and assemble the generated tests into a suite file with confidence tiers and a curation note routing to ai-test-curator before merge. Per Wikipedia (en.wikipedia.org/wiki/Model-based_testing): MBT \"leverages model-based design for designing and possibly executing tests.\" Use when a complex stateful flow (checkout, onboarding, multi-step wizard) needs systematic coverage that ad-hoc tests miss, or when the whole model-to-suite pipeline should run in one coordinated pass."
 ---
 
 # model-based-test-graph-author
@@ -211,6 +211,73 @@ input:
 The LLM generates test code per path; review each generated test
 before merge. The model constrains the LLM - better than free-form
 generation.
+
+## Pipeline - graph to assembled suite in one pass
+
+To run the whole MBT pipeline in one coordinated pass (model, paths,
+generated tests, assembled suite), follow these steps. Required inputs: a
+stateful SUT description (flow name + observable states + trigger events),
+an acceptance-criteria source (spec file, user stories, or inline list),
+and the target test framework (`playwright`, `jest`, `pytest`, etc.).
+Missing any of the three - stop and ask; a state machine cannot be built
+from nothing, and generation without structured input is unacceptable
+hallucination risk.
+
+Per [GraphWalker](https://graphwalker.github.io/): "A model is a graph,
+which is a set of vertices and edges. From a model, GraphWalker will
+generate a path through it. A model has a start element, and a generator
+which rules how the path is generated, and associated stop condition."
+The pipeline automates that full cycle.
+
+1. **Build and validate the model** (steps 1-3 above). Write it to
+   `models/<flow>.yaml`. If validation fails - unreachable states or
+   dead-end non-final states remain - fix the model before generating
+   anything.
+2. **Choose a coverage criterion.** Per [mbt-wiki][mbt]: "test criteria
+   are needed to guide the selection of a finite, appropriate number of
+   test cases." Default to transition coverage; honor a stricter request
+   (`state`, `all-pairs`) and document the choice in the suite header.
+3. **Bridge the paths into generator input.** The path list
+   (`generated/paths.json`) and `ai-test-generator` do not share a format:
+   the generator consumes an `acceptance_criteria` list (entries with
+   `id`, `description`, `inputs`, `expected`), not a model or path list.
+   Skipping this bridge is the most common way the pipeline silently
+   produces nothing. Map each path to exactly one entry: `id` is the path
+   id, `description` is the transition sequence as a sentence, `inputs`
+   are the trigger events and guard values along the path, and
+   `expected.final_state` is the path's terminal observable state:
+
+   ```yaml
+   # input/<flow>-mbt.yaml  (derived from generated/paths.json)
+   spec_source: "models/<flow>.yaml"
+   acceptance_criteria:
+     - id: AC-PATH-1
+       description: "empty_cart -> add_item -> ... -> confirmed (happy path)"
+       inputs:
+         events: [add_item, enter_shipping, enter_payment, place_order]
+         guards: { item_in_stock: true, payment_valid: true }
+       expected:
+         final_state: confirmed
+     - id: AC-PATH-2
+       description: "... -> payment_fails -> retry_payment -> confirmed"
+       inputs:
+         events: [add_item, enter_shipping, enter_payment, place_order, retry_payment]
+         guards: { payment_valid: false }
+       expected:
+         final_state: confirmed
+   ```
+
+   Feed the bridged file to `ai-test-generator` and tier the output by
+   confidence score (high / medium / low).
+4. **Assemble the suite.** Write `tests/mbt-<flow>.spec.<ext>` with a
+   header comment recording: model file path, coverage criterion, path
+   count, confidence breakdown (N high / M medium / K low), generation
+   date, and status `PENDING curation`. Emit low-confidence tests with an
+   inline `// REVIEW: low confidence` marker.
+5. **Close with the curation note.** Never treat the generated tests as
+   merge-ready: print the suite path, model path, criterion, path count,
+   and confidence breakdown, then route to `ai-test-curator` before merge -
+   low-confidence tests (score below 50) require manual review or rewrite.
 
 ## Anti-patterns
 

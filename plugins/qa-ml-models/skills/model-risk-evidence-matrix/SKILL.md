@@ -1,6 +1,6 @@
 ---
 name: model-risk-evidence-matrix
-description: "Assigns a machine learning model to a low, medium, or high risk tier from what its predictions decide about people, then derives the fairness and explainability evidence that tier must produce: group metrics per declared sensitive feature, intersectional breakdowns with per-cell counts, vulnerability scan categories, a drift monitoring plan, and per-prediction explanation logs. Supplies conventional demographic parity difference bands, a per-vulnerability-category blocking table, and evidence rules that mark a bundle incomplete or self-contradicting. Use when a model release candidate is up for promotion and someone must decide which fairness artifacts are mandatory rather than nice to have, or when a model card declares a risk tier and the attached evidence bundle has to be checked against what that tier demands."
+description: "Assigns an ML model to a low, medium, or high risk tier from what its predictions decide about people, then derives the fairness and explainability evidence that tier must produce: group metrics per declared sensitive feature, intersectional breakdowns with per-cell counts, vulnerability scan categories, a drift monitoring plan, and per-prediction explanation logs. Supplies conventional demographic parity difference bands, a per-vulnerability-category blocking table, evidence rules marking a bundle incomplete or self-contradicting, and a fairness gating workflow that walks a candidate's model card + evidence bundle to a promote / needs-work / block verdict with refuse rules; a reference covers producing the explanation records with Alibi Explain. Use when a model release candidate is up for promotion and someone must decide which fairness artifacts are mandatory, when a declared risk tier's evidence bundle must be checked against what the tier demands, or when the evidence review must gate the promotion."
 ---
 
 # model-risk-evidence-matrix
@@ -255,7 +255,53 @@ counterfactuals find "what minimal change to features is required to reclassify
 the current prediction"
 ([Alibi Explain](https://docs.seldon.ai/alibi-explain/)).
 A global feature-importance chart does not satisfy R2, because the ECOA
-requirement in Step 1 is a reason for *this* applicant's decision.
+requirement in Step 1 is a reason for *this* applicant's decision. Producing
+the explanation records themselves - explainer selection, the fit/explain
+interface, and audit-log persistence - is covered in
+[references/alibi-explainability.md](references/alibi-explainability.md).
+
+## Step 9 - Gate a promotion on the matrix (fairness gating)
+
+The matrix doubles as a promotion gate. Given a release candidate's model card
+(risk tier, sensitive features, training data source, intended use) and its
+evidence bundle (Fairlearn `MetricFrame.by_group` numbers, vulnerability scan
+JSON, drift monitoring plan, explanation samples), walk the steps above in
+order and return one verdict: **promote**, **needs-work**, or **block**.
+
+1. **Re-tier the model** (Step 1), including the three escalation triggers.
+   Gate against the re-derived tier, never the declared one.
+2. **Check the sensitive-feature declaration.** `jq '.sensitive_features'
+   model_card.json` - present, non-empty, and not `["none"]` for medium/high
+   (rule R1).
+3. **Read the group fairness numbers.** Name the metric precisely (Step 3) and
+   apply the DPD verdict bands, the band-owner requirement, and the four-field
+   waiver rule (Step 5).
+4. **Verify intersectional evidence with per-cell counts** (Step 6, rule R6).
+5. **Triage the vulnerability scan** against the blocking table (Step 7).
+6. **Check the drift monitoring plan** names a reference dataset, a schedule,
+   and an alert route (rule R4).
+7. **For high tier, verify per-prediction explanation logs** exist for at least
+   one positive and one negative prediction class, with non-empty data and
+   metadata (rule R2).
+8. **Emit the verdict**: the Step 2 coverage matrix with a status per artifact,
+   the rules that fired, the unowned decisions, and the list of artifacts that
+   would close the bundle.
+
+**Refuse-to-promote rules.** Never emit **promote** while any of these holds:
+
+- Tier is medium/high and `sensitive_features` is missing or `["none"]` (R1).
+- Tier is high and per-prediction explanation logging is absent (R2).
+- Any DPD > 0.10 with neither mitigation provenance nor a waiver carrying all
+  four required fields (R3).
+- The model card claims production drift monitoring but no schedule, reference
+  dataset, or alert route exists (R4).
+- The vulnerability scan reports data leakage (R5).
+- Intersectional analysis is missing, or lacks per-cell counts, for a
+  medium/high tier (R6).
+
+The gate verdict is about the evidence, not the model: **promote** means the
+bundle is complete and internally consistent for the tier. The release decision
+itself stays with the accountable owner named in Step 5.
 
 ## Worked example
 

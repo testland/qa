@@ -1,27 +1,21 @@
----
-name: solr-relevance-tests
-description: "Tests Apache Solr search relevance by querying a test core, asserting ranking and score expectations, uploading LTR feature stores and models via the `/schema/feature-store` and `/schema/model-store` REST APIs, using `debugQuery` for per-document score explain, tuning eDisMax parameters (`qf`, `pf`, `mm`, `bq`), and computing judgment-driven nDCG checks against pinned corpora. Use when the search stack runs Apache Solr (enterprise, SolrCloud, or embedded) and you need a pre-deploy relevance gate or LTR model verification."
-metadata:
-  keywords: "solr, relevance-testing, learning-to-rank, edismax, judgment-list, search-quality, ltr, ndcg"
----
-
-# solr-relevance-tests
+# Apache Solr delta - LTR, debugQuery, and external nDCG
 
 Apache Solr is the primary Elasticsearch/OpenSearch alternative in enterprise
 search. Unlike the ES/OS `_rank_eval` endpoint, Solr has no single built-in
 IR-metrics endpoint: relevance testing is assembled from `debugQuery` score
 explain, the Learning To Rank (LTR) contrib module, eDisMax tuning, and a
-test harness that computes nDCG externally. This skill covers that assembly.
+test harness that computes nDCG externally. This reference covers that
+assembly.
 
-Nearest neighbors and differentiation:
+Engine differentiation within this skill:
 
-| Skill | Engine | Differentiation axis |
+| Engine | Where | Differentiation axis |
 |---|---|---|
-| `elasticsearch-relevance-tests` | Elasticsearch | Built-in `_rank_eval` endpoint; no LTR store API |
-| `opensearch-relevance-tests` | OpenSearch | ES-fork + neural search; different LTR surface |
-| **`solr-relevance-tests`** | Apache Solr | `debugQuery` explain, LTR feature/model store REST, eDisMax `qf`/`pf`/`mm` tuning |
+| Elasticsearch | main SKILL.md | Built-in `_rank_eval` endpoint; no LTR store API |
+| OpenSearch | [opensearch.md](opensearch.md) | ES-fork + neural search; different LTR surface |
+| **Apache Solr** | this reference | `debugQuery` explain, LTR feature/model store REST, eDisMax `qf`/`pf`/`mm` tuning |
 
-## When to use
+## When this delta applies
 
 - Production stack runs Apache Solr (standalone or SolrCloud) and you need
   a pre-deploy gate before changing query config, schema, or analyzers.
@@ -47,17 +41,8 @@ shift relevance baselines silently.
 
 ## Step 2 - Build the judgment list
 
-Same 4-point scale as `elasticsearch-relevance-tests`:
-0 = irrelevant, 1 = somewhat, 2 = relevant, 3 = highly relevant.
-
-```csv
-query,doc_id,rating
-"running shoes",SKU-1234,3
-"running shoes",SKU-5678,2
-"running shoes",SKU-9999,0
-"red dress",SKU-2222,3
-```
-
+Same CSV format and 4-point scale as the main skill's Step 1
+(0 = irrelevant, 1 = somewhat, 2 = relevant, 3 = highly relevant).
 Collect judgments via query logs + click data, domain SME review, or
 [Quepid](https://github.com/o19s/quepid) (open source judgment UI with
 Solr support).
@@ -351,8 +336,8 @@ jobs:
 - [Solr debugQuery reference]: https://solr.apache.org/guide/solr/latest/query-guide/common-query-parameters.html
 - [Solr eDisMax reference]: https://solr.apache.org/guide/solr/latest/query-guide/edismax-query-parser.html
 - [Solr CLI reference]: https://solr.apache.org/guide/solr/latest/deployment-guide/solr-control-script-reference.html
-- `elasticsearch-relevance-tests` - sister skill (built-in `_rank_eval`)
-- `opensearch-relevance-tests` - ES-fork with neural search
+- The main `elasticsearch-relevance-tests` SKILL.md - built-in `_rank_eval`
+- [opensearch.md](opensearch.md) - ES-fork with neural search
 - `vector-search-recall-tests` - vector/dense retrieval analogue
 - [Quepid](https://github.com/o19s/quepid) - judgment authoring UI with Solr support
 

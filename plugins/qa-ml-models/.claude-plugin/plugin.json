@@ -1,11 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-ml-models",
-  "version": "1.3.6",
-  "description": "ML model testing: 7 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, alibi-explainability, model-performance-regression-gate, model-risk-evidence-matrix) and 2 agents (model-fairness-reviewer, data-drift-incident-responder). Covers tabular + NLP + vision validation, drift monitoring, group fairness, and per-prediction explainability.",
+  "version": "1.4.0",
+  "description": "ML model testing: 6 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, model-performance-regression-gate, model-risk-evidence-matrix). Covers tabular + NLP + vision validation, drift monitoring with alert triage, group fairness with a risk-tiered promotion gate, and per-prediction explainability.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-ml-models",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "ml-models", "fairness", "drift-detection", "giskard", "deepchecks", "evidently", "fairlearn", "alibi", "explainability"]
+  "keywords": ["qa", "testing", "ml-models", "fairness", "drift-detection", "giskard", "deepchecks", "evidently", "fairlearn", "explainability"]
 }

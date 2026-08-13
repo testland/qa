@@ -1,6 +1,6 @@
 ---
 name: notebook-ci-pipeline-author
-description: "Wires the papermill-tests, nbval-tests, and testbook-tests skills into a single working GitHub Actions CI pipeline: parameterized execution (papermill) -> output regression (nbval) -> function unit tests (testbook) -> artifact upload (executed .ipynb + HTML report). Use when a team has notebook tests spread across the three tools but assembles the pipeline manually and needs a single authoritative workflow file with output stripping (nbstripout), pip caching, and structured failure reporting."
+description: "The single home for Jupyter notebook testing: wires parameterized execution (papermill), output regression (nbval), function-level unit tests (testbook), output stripping (nbstripout), and artifact upload into one working GitHub Actions CI pipeline, with per-tool depth for papermill (parameters tag, CLI/API, sweeps) and nbval (strict/lax modes, per-cell markers, sanitize config) in references/. Includes a notebook PR review checklist covering untested notebooks, --nbval-lax misuse, hardcoded credentials, non-deterministic output cells, missing parameters tags, and committed outputs, with BLOCK / WARN / INFO severities and a BLOCK-or-PASS verdict. Use when notebooks must run as parameterized regression jobs in CI, when a repo ships .ipynb files whose outputs must stay stable, or when a PR that adds or modifies notebooks needs a structured quality review."
 metadata:
   keywords: "notebook-ci, papermill, nbval, testbook, github-actions, nbstripout, jupyter, pipeline"
 ---
@@ -10,15 +10,18 @@ metadata:
 Composes the three notebook testing tools into one GitHub Actions pipeline:
 papermill executes parameterized notebooks, nbval validates output
 regression, testbook runs function-level unit tests, and nbstripout
-gates committed output. Each tool is documented individually in
-`papermill-tests`, `nbval-tests`, and `testbook-tests`; this skill
-covers only the wiring and integration decisions.
+gates committed output. Per-tool depth lives in
+[references/papermill.md](references/papermill.md) (parameterized
+execution) and [references/nbval.md](references/nbval.md) (output
+regression); this SKILL.md covers the wiring and integration decisions,
+plus the PR review checklist for notebook changes.
 
 ## When to use
 
 Teams using all three tools but assembling the pipeline by hand:
 no consistent artifact naming, no shared caching, duplicate install
-steps, no HTML report on failure.
+steps, no HTML report on failure. Also: any PR that adds or modifies
+`.ipynb` files and needs the review checklist below.
 
 ## Hard-reject conditions
 
@@ -106,6 +109,9 @@ fully-rendered output notebook:
 
 Use `-p` for numeric/boolean parameters and `-r` for string parameters
 to prevent type-coercion surprises per the [Papermill execute docs].
+Full papermill depth - parameter flags, Python API, matrix sweeps,
+regression-test wiring - is in
+[references/papermill.md](references/papermill.md).
 Store the output path (`artifacts/analysis-executed.ipynb`) in an env
 var shared across stages:
 
@@ -142,7 +148,9 @@ replace: MEMORY-ADDR
 
 Pin per-cell markers on cells that emit timestamps or large floats:
 `# NBVAL_IGNORE_OUTPUT`. Use `# NBVAL_RAISES_EXCEPTION` to validate
-expected error paths.
+expected error paths. Full nbval depth - strict vs lax mode, all
+per-cell controls, sanitize patterns, discovery - is in
+[references/nbval.md](references/nbval.md).
 
 ## Step 5 - Stage 3: testbook function unit tests
 
@@ -219,6 +227,49 @@ Steps 1-7 assemble into one workflow file. The full assembled YAML is in
 it to `.github/workflows/notebook-ci.yml` and adjust the notebook path,
 papermill parameters, and test path to match the repo.
 
+## Step 9 - Review checklist for notebook PRs
+
+When a PR adds or modifies `.ipynb` files, walk each notebook through
+six checks and emit a finding table with a verdict. Every finding must
+trace to an observable file pattern or a cited source, never intuition.
+
+1. **Untested notebooks.** Cross-reference `conftest.py`, `pytest.ini`,
+   CI workflow YAML, and `tests/`. Each notebook needs at least one of:
+   an `--nbval` / `--nbval-lax` CI step, a testbook test file referencing
+   it, or a papermill execution step. No coverage = UNTESTED.
+2. **`--nbval-lax` misuse.** `--nbval-lax` "collects notebooks and runs
+   them, failing if there is an error" but skips output comparison unless
+   cells carry `#NBVAL_CHECK_OUTPUT`
+   ([nbval docs](https://nbval.readthedocs.io/en/latest/)). Flag when the
+   notebook is a regression test (its purpose is validating outputs) AND
+   no cell carries the marker; fix is strict `--nbval` or adding markers
+   to load-bearing cells.
+3. **Hardcoded credentials.** Scan source cells for API-key assignments
+   (`api_key =`, `token =`, `password =`, `secret =`), connection strings
+   (`://user:pass@`), and long base64 blobs in string literals - and scan
+   cell **outputs** too (secrets echoed in `stream` / `execute_result`
+   blocks are equally dangerous and often missed). A match is a match; do
+   not judge intent.
+4. **Non-deterministic output cells.** Stored outputs containing
+   timestamps, memory addresses, UUIDs, or floats with > 4 significant
+   figures, with no `#NBVAL_IGNORE_OUTPUT` marker and no `--sanitize-with`
+   config in CI, produce spurious diffs or false failures.
+5. **`parameters` tag.** For papermill-executed notebooks, exactly one
+   cell must carry the `parameters` tag; with no tag, papermill inserts
+   `injected-parameters` at the top, potentially before imports
+   ([Papermill parameterize docs](https://papermill.readthedocs.io/en/latest/usage-parameterize.html)).
+   Flag zero tags (MISSING-PARAMS-TAG) and multiple tags
+   (AMBIGUOUS-PARAMS-TAG).
+6. **Committed outputs.** Any code cell with a non-empty `outputs` array,
+   in a repo without an nbstripout hook, bloats diffs and causes merge
+   conflicts per [nbstripout README] - flag COMMITTED-OUTPUTS. With the
+   hook configured, the flag means the PR bypassed it.
+
+Severity: **BLOCK** = credentials, untested; **WARN** = lax misuse,
+committed outputs, non-deterministic outputs; **INFO** = params-tag
+findings. Verdict is BLOCK if any BLOCK-severity finding is present,
+PASS otherwise.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -245,6 +296,10 @@ papermill parameters, and test path to match the repo.
 
 ## References
 
+- [references/papermill.md](references/papermill.md) - papermill in tool
+  depth: parameters tag, CLI + Python API, sweeps, regression wiring
+- [references/nbval.md](references/nbval.md) - nbval in tool depth:
+  strict/lax, per-cell controls, sanitize config, discovery
 - [Papermill execute docs] - Python API, CLI flags, parameter types,
   `papermill_description` TQDM integration
 - [nbval docs] - strict/lax modes, per-cell markers, sanitize config

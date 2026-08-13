@@ -1,18 +1,11 @@
----
-name: opensearch-relevance-tests
-description: "Author OpenSearch relevance tests with Search Relevance Workbench (judgment lists, query sets, experiments), `_rank_eval` API (Elasticsearch-fork-compatible), and hybrid BM25 + neural ranking eval. Reuse Elasticsearch judgment list format; document the differences (neural search query DSL, hybrid weighting via `neural_query_enricher`). Use when an OpenSearch index turns on neural or hybrid search, or when a move off Elasticsearch has to prove relevance parity between the two clusters."
-metadata:
-  keywords: "opensearch, search-relevance, rank-eval, neural-search, hybrid-search"
----
-
-# opensearch-relevance-tests
+# OpenSearch delta - Workbench, neural, and hybrid relevance tests
 
 Per the [OpenSearch search-relevance docs], `_rank_eval` is
 Elasticsearch-fork-compatible. The OpenSearch-specific surfaces
 worth testing: neural search, hybrid query, and the Search
 Relevance Workbench UI.
 
-## When to use
+## When this delta applies
 
 - Team standardized on OpenSearch (often AWS shops, often migrated
   from Elasticsearch ≤ 7.10).
@@ -20,73 +13,32 @@ Relevance Workbench UI.
 - Migration test between Elasticsearch and OpenSearch - relevance
   parity must hold.
 
-## Step 1 - Reuse judgment list format
+## Step 1 - Reuse the judgment list format and `_rank_eval`
 
-OpenSearch's `_rank_eval` accepts the same JSON as Elasticsearch's.
-See `elasticsearch-relevance-tests`
-Step 1 for judgment list format + sourcing patterns. The CSV
-`(query, doc_id, rating)` schema is reusable.
+OpenSearch's `_rank_eval` accepts the same JSON as Elasticsearch's -
+endpoint + metrics identical per the [OpenSearch search-relevance
+docs]. The main skill's Step 1 judgment list (CSV
+`(query, doc_id, rating)` on the 4-point scale) and Step 3 request
+body are reusable verbatim against an OpenSearch cluster. One extra
+sourcing option exists here: the Search Relevance Workbench's
+pairwise judgment UI + bulk import (Step 3 below).
 
-A judgment is `(query, doc_id, rating)` on a 4-point scale:
-0 = irrelevant, 1 = somewhat, 2 = relevant, 3 = highly relevant.
-
-```csv
-query,doc_id,rating
-"running shoes",sku-1234,3
-"running shoes",sku-5678,2
-"running shoes",sku-9999,0
-"red dress",sku-2222,3
-```
-
-Sourcing patterns:
-
-| Source | Method |
-|---|---|
-| Query logs + click data | Click model (clicked = ≥1, multi-click = ≥2) |
-| Search Relevance Workbench | Pairwise judgment UI + bulk import (Step 3) |
-| Quepid (open source) | Interactive UI for judges to rate per-query results |
-| Splainer | Diagnose why a doc ranked where it did |
-| Domain SMEs | High-stakes queries; manual rating |
-
-Each CSV row becomes one entry in the per-query `ratings` array of
-the `_rank_eval` request body in Step 2.
-
-## Step 2 - Submit `_rank_eval` request
-
-```http
-POST products/_rank_eval
-{
-  "requests": [
-    {
-      "id": "running_shoes",
-      "request": { "query": { "match": { "name": "running shoes" } } },
-      "ratings": [
-        { "_index": "products", "_id": "sku-1234", "rating": 3 }
-      ]
-    }
-  ],
-  "metric": { "dcg": { "k": 10, "normalize": true } }
-}
-```
-
-Endpoint + metrics identical to Elasticsearch (per the [OpenSearch
-search-relevance docs]).
-
-## Step 3 - Search Relevance Workbench
+## Step 2 - Search Relevance Workbench
 
 Per the [OpenSearch search-relevance docs], the Search Relevance
 Workbench plugin (UI in OpenSearch Dashboards) provides:
 
 - **Query Set Management** - group queries logically (e.g., "head
   queries", "long-tail queries").
-- **Judgment management** - pairwise UI for judges + bulk import.
+- **Judgment management** - pairwise UI for judges + bulk import
+  (an extra judgment source beyond the main skill's Step 1 table).
 - **Experiments** - run query-template A/B against the same
   judgment list; compare metric scores side-by-side.
 
 Workbench experiments are the easiest pre-tuning baseline-and-compare
 workflow.
 
-## Step 4 - Neural search query
+## Step 3 - Neural search query
 
 OpenSearch supports k-NN vector search natively. Test setup:
 
@@ -140,7 +92,7 @@ def test_neural_recall_at_10():
 
 Pair with `vector-search-recall-tests` for HNSW parameter tuning.
 
-## Step 5 - Hybrid (BM25 + neural)
+## Step 4 - Hybrid (BM25 + neural)
 
 ```http
 POST my_index/_search?search_pipeline=hybrid_pipeline
@@ -184,20 +136,12 @@ def test_hybrid_weight_change_shifts_results():
     assert bm25_heavy_results != neural_heavy_results
 ```
 
-## Step 6 - Per-query metric regression (same as ES)
+## Step 5 - Per-query metric regression (same as ES)
 
-```python
-def test_no_query_drops_more_than_10_percent():
-    current = rank_eval(judgments)
-    baseline = json.loads(Path("tests/baseline-os.json").read_text())
+Identical to the main skill's Step 5 - run it against the OpenSearch
+cluster with its own pinned baseline file (e.g. `tests/baseline-os.json`).
 
-    for q_id, baseline_entry in baseline["details"].items():
-        current_score = current["details"][q_id]["metric_score"]
-        delta = current_score - baseline_entry["metric_score"]
-        assert delta >= -0.10, f"{q_id} dropped {delta:.2f}"
-```
-
-## Step 7 - ES → OS migration parity test
+## Step 6 - ES → OS migration parity test
 
 Run the same judgment list against both clusters; metric scores
 should be within ε:
@@ -217,10 +161,10 @@ should match. Differences point to subtle config drift.
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Test only BM25 path when neural enabled | Neural regression slips silently | Step 4 + Step 5 |
+| Test only BM25 path when neural enabled | Neural regression slips silently | Step 3 + Step 4 |
 | Use neural without warm-up for tests | Cold cache → flaky latency tests | Warm before measuring |
-| Set hybrid weights without testing both extremes | Subtle BM25/neural balance change ships | Step 5 |
-| Skip migration parity test | OS deviation from ES surfaces in prod | Step 7 |
+| Set hybrid weights without testing both extremes | Subtle BM25/neural balance change ships | Step 4 |
+| Skip migration parity test | OS deviation from ES surfaces in prod | Step 6 |
 | Trust default analyzers across ES/OS | Subtle stemmer differences | Pin analyzer config |
 
 ## Limitations
@@ -237,8 +181,8 @@ should match. Differences point to subtle config drift.
 ## References
 
 - [OpenSearch search-relevance docs] - workbench, neural, hybrid
-- `elasticsearch-relevance-tests` - 
-  sister skill (compatible Rank Eval API + judgment format)
+- The main `elasticsearch-relevance-tests` SKILL.md - compatible Rank
+  Eval API + judgment format
 - `vector-search-recall-tests` - 
   vector search precision/recall tooling
 

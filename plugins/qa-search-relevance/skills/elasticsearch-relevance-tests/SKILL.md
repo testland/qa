@@ -1,6 +1,6 @@
 ---
 name: elasticsearch-relevance-tests
-description: "Author Elasticsearch relevance regression tests using the Ranking Evaluation API (`POST {index}/_rank_eval`) - judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring. Use before changing analyzers, synonyms, boosts, or query templates on an Elasticsearch index that serves user-facing search, so the NDCG / MRR baseline is captured first."
+description: "Author search-engine relevance regression tests for Elasticsearch, OpenSearch, and Apache Solr. Core workflow on the Elasticsearch Ranking Evaluation API (`POST {index}/_rank_eval`) - judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring. Per-engine references cover the OpenSearch delta (Search Relevance Workbench, neural query DSL, hybrid BM25 + neural pipelines, ES-to-OS migration parity) and the Apache Solr delta (no _rank_eval: debugQuery score explain, LTR feature/model store REST, eDisMax qf/pf/mm tuning, external nDCG harness). Use before changing analyzers, synonyms, boosts, or query templates on an Elasticsearch, OpenSearch, or Solr index that serves user-facing search, so the NDCG / MRR baseline is captured first."
 metadata:
   keywords: "elasticsearch, rank-eval, relevance-testing, judgment-list, search-quality"
 ---
@@ -10,6 +10,18 @@ metadata:
 Per the [Elasticsearch Rank Eval API], the `_rank_eval` endpoint
 "evaluates search result quality across typical queries using
 relevance metrics."
+
+## Engine routing
+
+This skill is the single home for term-based engine relevance testing.
+The core `_rank_eval` workflow below is authored against Elasticsearch;
+the per-engine deltas live in references:
+
+| Engine | Where | Delta |
+|---|---|---|
+| Elasticsearch | this SKILL.md | Built-in `_rank_eval`; the canonical workflow |
+| OpenSearch | [references/opensearch.md](references/opensearch.md) | `_rank_eval`-compatible fork; Search Relevance Workbench, neural query DSL, hybrid BM25 + neural pipelines, ES-to-OS migration parity |
+| Apache Solr | [references/solr.md](references/solr.md) | No `_rank_eval`; `debugQuery` explain, LTR feature/model store REST, eDisMax tuning, external nDCG harness |
 
 ## When to use
 
@@ -188,8 +200,10 @@ authoring live in
 - [Elasticsearch Rank Eval API] - request/response schema, metrics
 - Quepid (judgment authoring UI) - github.com/o19s/quepid
 - Splainer (debug per-doc ranking) - github.com/o19s/splainer-search
-- `opensearch-relevance-tests` - 
-  sister skill (compatible API)
+- [references/opensearch.md](references/opensearch.md) - 
+  OpenSearch delta (compatible API; Workbench, neural, hybrid)
+- [references/solr.md](references/solr.md) - 
+  Apache Solr delta (LTR, debugQuery, external nDCG)
 - `vector-search-recall-tests` - 
   vector search analogue
 

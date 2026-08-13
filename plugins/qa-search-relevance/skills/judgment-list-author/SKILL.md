@@ -7,8 +7,8 @@ metadata:
 
 # judgment-list-author
 
-Related skills (`elasticsearch-relevance-tests`,
-`opensearch-relevance-tests`, `vector-search-recall-tests`) all require a
+Related skills (`elasticsearch-relevance-tests` - covering Elasticsearch,
+OpenSearch, and Solr - and `vector-search-recall-tests`) all require a
 judgment list - a set of `(query, document_id, grade)` triples that define what
 "relevant" means for your product. No automated metric creates that
 corpus. This skill does.
@@ -239,8 +239,8 @@ exceeds 20%, schedule a re-judging session.
 
 ## Output format
 
-The judgment list consumed by `elasticsearch-relevance-tests` and
-`opensearch-relevance-tests` is a JSON array:
+The judgment list consumed by `elasticsearch-relevance-tests` (for both
+Elasticsearch and OpenSearch rank eval) is a JSON array:
 
 ```json
 [
@@ -304,8 +304,7 @@ after mapping `doc_id` to the index's `_id` field.
 - [Cohen's kappa, Wikipedia] - kappa formula, Landis and Koch (1977)
   thresholds: https://en.wikipedia.org/wiki/Cohen%27s_kappa
 - `elasticsearch-relevance-tests` -
-  consumes judgment lists for `_rank_eval`
-- `opensearch-relevance-tests` -
-  consumes judgment lists for OpenSearch rank eval
+  consumes judgment lists for `_rank_eval` (Elasticsearch and
+  OpenSearch) and the Solr nDCG harness
 - `vector-search-recall-tests` -
   consumes judgment lists for recall@k evaluation

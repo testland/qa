@@ -1,9 +1,0 @@
-{
-  "name": "testland/opensearch-relevance-tests",
-  "description": "Author OpenSearch relevance tests with Search Relevance Workbench (judgment lists, query sets, experiments), `_rank_eval` API (Elasticsearch-fork-compatible), and hybrid BM25 + neural ranking eval. Reuse Elasticsearch judgment list format; document the differences (neural search query DSL, hybrid weighting via `neural_query_enricher`). Use when an OpenSearch index turns on neural or hybrid search, or when a move off Elasticsearch has to prove relevance parity between the two clusters.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.4"
-}
