@@ -250,9 +250,9 @@ report as the PR evolves.
   skill consumes.
 - `lcov-analysis` - LCOV + Cobertura
   parser this skill consumes.
-- `jest-coverage-analysis`,
-  `jacoco-analysis`,
-  `coverage-py-analysis` - 
+- `jacoco-analysis`,
+  `coverage-py-analysis`, and
+  `js-unit-tests` (qa-unit-tests-js) for Jest/Vitest - 
   language-specific parsers; convert to LCOV / Cobertura before
   feeding this skill.
 - `test-coverage-targeter` - downstream skill that reads the same data to suggest which

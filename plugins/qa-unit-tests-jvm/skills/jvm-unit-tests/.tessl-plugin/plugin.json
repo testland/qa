@@ -1,0 +1,9 @@
+{
+  "name": "testland/jvm-unit-tests",
+  "description": "JVM unit testing (Java / Kotlin / Scala / Groovy) with JUnit 5 (Jupiter) as the primary framework - annotations (`@Test` / `@ParameterizedTest` / source providers), lifecycle hooks (`@BeforeAll` / `@BeforeEach`), extension model (`@ExtendWith` + Mockito/Spring), display names, conditional execution, parallel-execution config, JaCoCo coverage, and Maven Surefire / Gradle CI. Includes a per-language framework decision table (Java → JUnit 5, Kotlin → Kotest, Groovy → Spock, Scala → ScalaTest, legacy → TestNG; always match an existing build convention) and test-authoring conventions (framework detection from pom.xml / build.gradle / build.sbt, path conventions, no fabricated methods). References cover Kotest spec styles, Spock given/when/then + data tables, TestNG DataProviders + suites, ScalaTest styles + Matchers, and the AssertJ fluent-assertion catalog. Use for any JVM unit-test task: choosing or configuring a framework, writing or parameterizing tests, wiring coverage and CI.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

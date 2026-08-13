@@ -73,7 +73,7 @@ Per language tool:
 - Cobertura: parse `<line branch="true" condition-coverage="50% (1/2)"/>`;
   use the Cobertura reference in `lcov-analysis`.
 - Jest JSON `b` field: arrays of arm hit counts; uncovered = 0.
-  Use `jest-coverage-analysis`.
+  Use `js-unit-tests` (qa-unit-tests-js).
 - JaCoCo XML: parse `<counter type="BRANCH" missed="N" covered="M"/>`
   per method, then read source lines for context.
   Use `jacoco-analysis`.
@@ -340,9 +340,9 @@ it into specific file:line test targets.
   >50), the warning that "reducing the cyclomatic complexity of
   code is not proven to reduce the number of errors or bugs".
 - `lcov-analysis` (LCOV + Cobertura),
-  `jest-coverage-analysis`,
   `jacoco-analysis`,
-  `coverage-py-analysis` - 
+  `coverage-py-analysis`, and
+  `js-unit-tests` (qa-unit-tests-js) for Jest/Vitest - 
   upstream parsers this skill consumes.
 - `coverage-diff-reporter` - 
   sibling reporter; the diff identifies what regressed, the

@@ -249,8 +249,8 @@ For per-test app launch (slower but isolates state), put `Launch` /
 `Close` in the test method itself; for per-class launch (faster but
 shared state), use `IClassFixture` (xUnit) / `[OneTimeSetUp]` (NUnit)
 / `[ClassInitialize]` (MSTest). Pair authoring conventions with
-`xunit-tests`, `nunit-tests`, or `mstest-tests`
-(in the qa-unit-tests-net plugin) for the matching harness idioms.
+`dotnet-unit-tests` (in the qa-unit-tests-net plugin) for the
+matching harness idioms.
 
 ### STA threading
 
@@ -369,5 +369,5 @@ itself ships both packages.
   `winappdriver`,
   `appium-windows-driver`,
   `desktop-test-strategy-reference`.
-- Composing harnesses:
-  `xunit-tests`, `nunit-tests`, `mstest-tests`.
+- Composing harness:
+  `dotnet-unit-tests` (qa-unit-tests-net).

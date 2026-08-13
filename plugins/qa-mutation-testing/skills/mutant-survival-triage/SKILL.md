@@ -1,6 +1,6 @@
 ---
 name: mutant-survival-triage
-description: "Normalizes a surviving-mutant record across StrykerJS, PIT, mutmut, and Mull into one shape, classifies why it survived (missing case, weak assertion, equivalent mutant, unreachable code, flaky killer), applies per-mutator heuristics for conditional-boundary, arithmetic-operator, statement-removal, and constant mutations, and drafts the specific test that would kill it. Treats equivalence as a judgment call, because deciding whether a mutant is equivalent to the original is undecidable in general, so a residual survivor rate is expected rather than a defect. Use when a mutation run has finished and the report lists surviving mutants that nobody has yet explained or turned into concrete test cases."
+description: "Normalizes a surviving-mutant record across StrykerJS, PIT, mutmut, and Mull into one shape, classifies why it survived (missing case, weak assertion, equivalent mutant, unreachable code, flaky killer), applies per-mutator heuristics for conditional-boundary, arithmetic-operator, statement-removal, and constant mutations, and drafts the specific test that would kill it. Includes the full read-only investigation workflow: take a mutation report (Stryker JSON / PIT XML / mutmut output / Mull JSON) plus the repo at the same commit, read each survivor's mutated line and covering tests, classify, and propose - never auto-rewriting tests. Treats equivalence as a judgment call, because deciding whether a mutant is equivalent to the original is undecidable in general, so a residual survivor rate is expected rather than a defect. Use when a mutation run has finished and the report lists surviving mutants (typically 5+) that nobody has yet explained or turned into concrete test cases."
 ---
 
 # mutant-survival-triage
@@ -19,6 +19,28 @@ the mutant to killed.
 mutate globs, picking a mutation-score threshold, or wiring a build gate. Those
 are per-tool configuration decisions and are settled before a report exists.
 This work starts at the report and ends at a test proposal a human writes.
+
+## Running the triage as an investigation
+
+Inputs: a mutation report (Stryker JSON, PIT XML, mutmut output, Mull JSON)
+and the source repo at the same commit. For each surviving mutant: read the
+report entry, the mutated line with its surrounding context, and the tests
+that executed the line without killing it (`git log` / `git blame` help date
+the line and its tests); then classify (Step 2) and propose (Step 4).
+
+Ground rules for the investigation - it is read-only:
+
+- **Never auto-rewrite tests.** Recommendation only; the team writes the test
+  (or accepts the equivalent-mutant explanation).
+- **Never mark a mutant equivalent without surfacing the reasoning.** The
+  reviewer must be able to disagree (Step 5).
+- **Skip code under mutation-suppression pragmas** (e.g. mutmut's
+  `# pragma: no mutate`) - the team explicitly opted out.
+
+Downstream hand-offs: weak-assertion survivors → `test-code-critic`
+(qa-test-review, assertion dimension); flaky-killer survivors →
+`parallel-isolation-checker` (qa-flake-triage); "where to add tests" rather
+than "what to test" → `test-coverage-targeter` (qa-test-reporting).
 
 ## Step 1 - Normalize the survivor into one record
 

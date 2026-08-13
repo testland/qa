@@ -1,0 +1,9 @@
+{
+  "name": "testland/js-unit-tests",
+  "description": "JavaScript/TypeScript unit testing with Jest and Vitest as co-primary frameworks - install, config (`jest.config.js` / `vite.config.ts` test block), mocking (`jest.fn`/`jest.mock`/`jest.spyOn`, `vi.fn`/`vi.mock`/`vi.spyOn`, `__mocks__/`, fake timers), coverage (Istanbul/babel vs v8 providers, `coverageThreshold` gating), watch mode, and CI (`jest --ci`, `vitest run`, JUnit XML). Includes framework choice (Vite project → Vitest, otherwise Jest; always match an existing convention), test-authoring conventions (framework detection from package.json + config files, ESM vs CJS, no fabricated exports), and references for Mocha maintenance, Jasmine/Karma-to-Jest migration via jest-codemods, and deep Jest/Vitest coverage analysis. Use for any JS/TS unit-test task: setting up a framework, writing or mocking tests, gating coverage, or wiring CI.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

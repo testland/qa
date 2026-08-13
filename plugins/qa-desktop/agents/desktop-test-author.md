@@ -1,6 +1,6 @@
 ---
 name: desktop-test-author
-description: "Action-taking agent that, given a user-flow spec + a target desktop app + a chosen driver, authors one desktop UI test file plus any new screen-object additions. Composes the eight qa-desktop driver skills (Windows: flaui-tests, winappdriver, appium-windows-driver; Electron: electron-playwright, electron-spectron; Qt: qt-test-framework; macOS: xctest-mac-desktop; Linux: at-spi-linux) plus desktop-test-strategy-reference, with the .NET xunit-tests / nunit-tests / mstest-tests harness skills from `qa-unit-tests-net`. Distinct from `qa-shift-left/spec-to-suite-orchestrator` (language-agnostic, multi-stage workflow producing a project skeleton): narrower platform (desktop only); output is one test file per spec; defers driver + framework choice to upstream selector agents. Use when adding a new per-flow desktop test to an existing test project."
+description: "Action-taking agent that, given a user-flow spec + a target desktop app + a chosen driver, authors one desktop UI test file plus any new screen-object additions. Composes the eight qa-desktop driver skills (Windows: flaui-tests, winappdriver, appium-windows-driver; Electron: electron-playwright, electron-spectron; Qt: qt-test-framework; macOS: xctest-mac-desktop; Linux: at-spi-linux) plus desktop-test-strategy-reference, with the .NET dotnet-unit-tests harness skill (xUnit / NUnit / MSTest) from `qa-unit-tests-net`. Distinct from `qa-shift-left/spec-to-suite-orchestrator` (language-agnostic, multi-stage workflow producing a project skeleton): narrower platform (desktop only); output is one test file per spec; defers driver + framework choice to upstream selector agents. Use when adding a new per-flow desktop test to an existing test project."
 tools: "Read, Write, Edit, Grep, Glob, Bash(dotnet test *), Bash(npm test *)"
 model: inherit
 skills:
@@ -12,9 +12,7 @@ skills:
   - qt-test-framework
   - xctest-mac-desktop
   - desktop-test-strategy-reference
-  - xunit-tests
-  - nunit-tests
-  - mstest-tests
+  - dotnet-unit-tests
 ---
 
 ## When invoked
@@ -64,7 +62,7 @@ Never emit `Thread.Sleep` / `Task.Delay` / `time.sleep` between actions.
 
 ### Step 3 - Identify the assertion target
 
-Per [`xunit-tests`](../../qa-unit-tests-net/skills/xunit-tests/SKILL.md) / [`nunit-tests`](../../qa-unit-tests-net/skills/nunit-tests/SKILL.md) / [`mstest-tests`](../../qa-unit-tests-net/skills/mstest-tests/SKILL.md): assert on observable state, not on internal flags. Acceptable shapes: window title change (`Assert.Equal("Invoices", window.Title)`), element presence (`Assert.NotNull(window.FindFirstDescendant(...))`), element text. Refuse `Assert.True(true)` smoke asserts.
+Per [`dotnet-unit-tests`](../../qa-unit-tests-net/skills/dotnet-unit-tests/SKILL.md) (xUnit / NUnit / MSTest): assert on observable state, not on internal flags. Acceptable shapes: window title change (`Assert.Equal("Invoices", window.Title)`), element presence (`Assert.NotNull(window.FindFirstDescendant(...))`), element text. Refuse `Assert.True(true)` smoke asserts.
 
 ### Step 4 - Emit ONE test file
 
@@ -159,5 +157,5 @@ The agent emits the `LoginTests.cs` block above plus three new `LoginScreen` pro
 
 - **Pick the driver before authoring** → [`desktop-driver-selector`](desktop-driver-selector.md).
 - **Scaffold the whole test project from zero** → [`desktop-test-scaffolder`](desktop-test-scaffolder.md).
-- **Pick the .NET test framework if not yet decided** → upstream `dotnet-test-framework-selector` (qa-unit-tests-net).
+- **Pick the .NET test framework if not yet decided** → the Choosing section of `dotnet-unit-tests` (qa-unit-tests-net).
 - **Review the emitted test against assertion-quality conventions** → `test-code-critic` (qa-test-review).

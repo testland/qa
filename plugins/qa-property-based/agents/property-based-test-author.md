@@ -1,6 +1,6 @@
 ---
 name: property-based-test-author
-description: "Action-taking agent that authors ONE property-based test per invariant - picks tool via property-based-tool-selector (or accepts an override), then emits a fast-check / Hypothesis / jqwik / proptest / QuickCheck property using the chosen library's arbitraries / strategies / generators. Encodes the invariant (roundtrip, idempotence, conservation, monotonicity, commutativity) as a property the framework can shrink against. Sibling of the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one property-based test that encodes a stated invariant."
+description: "Action-taking agent that authors ONE property-based test per invariant - picks the tool from the plugin README's per-language decision table (or accepts an override), then emits a fast-check / Hypothesis / jqwik / proptest property using the chosen library's arbitraries / strategies / generators. Encodes the invariant (roundtrip, idempotence, conservation, monotonicity, commutativity) as a property the framework can shrink against. Sibling of the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one property-based test that encodes a stated invariant."
 tools: "Read, Write, Edit, Grep, Glob, Bash(npm test *), Bash(pytest *), Bash(mvn test *), Bash(./mvnw test *), Bash(cargo test *)"
 model: inherit
 skills:
@@ -16,7 +16,7 @@ Sibling of the per-language unit-test authors in `qa-unit-tests-{net,js,jvm,pyth
 
 ## When invoked
 
-Required: target function/method + a stated **invariant** ("for all valid inputs X, P(X) holds"). Optional: tool override (one of fast-check / Hypothesis / jqwik / proptest / QuickCheck - if not given, invoke [`property-based-tool-selector`](property-based-tool-selector.md) first); project root path.
+Required: target function/method + a stated **invariant** ("for all valid inputs X, P(X) holds"). Optional: tool override (one of fast-check / Hypothesis / jqwik / proptest - if not given, resolve it in Step 1); project root path.
 
 Missing function OR missing invariant → refuses. **"Test the function" is NOT an invariant** - refuses.
 
@@ -24,7 +24,7 @@ Missing function OR missing invariant → refuses. **"Test the function" is NOT 
 
 ### Step 1 - Pick tool if not provided
 
-If the tool is not supplied, invoke [`property-based-tool-selector`](property-based-tool-selector.md) against the project root first. Halt and pass control back if the selector refuses.
+If the tool is not supplied, detect the language from project markers and apply the plugin README's decision table: `package.json` → fast-check; `pyproject.toml` / `setup.py` → Hypothesis; `pom.xml` / `build.gradle*` → jqwik (JUnit 5 platform required); `Cargo.toml` → proptest. No markers and no language declared, or a language outside the table (Haskell, Erlang, Elixir, Go, .NET, Ruby, Swift) → halt and flag that the plugin doesn't cover it.
 
 ### Step 2 - Classify the invariant
 
@@ -75,7 +75,7 @@ Write the property. Emit a markdown summary with: chosen tool, invariant family,
 
 ## Hand-off targets
 
-- **Tool pick if not yet decided** → [`property-based-tool-selector`](property-based-tool-selector.md).
+- **Tool pick if not yet decided** → the per-language decision table in the plugin README (Step 1).
 - **Per-tool authoring + CI** → the chosen tool's SKILL.md.
-- **Unit tests for single-example cases** → `qa-unit-tests-{net,js,jvm,python,go-rust}` per-language test authors.
+- **Unit tests for single-example cases** → the `qa-unit-tests-{net,js,jvm,python,go-rust}` per-language umbrella skills.
 - **Test code review** → `qa-test-review/test-code-conventions`.

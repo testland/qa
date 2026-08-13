@@ -1,0 +1,9 @@
+{
+  "name": "testland/python-unit-tests",
+  "description": "Python unit testing with pytest as the primary framework - fixtures (`@pytest.fixture` scopes, `conftest.py`), `@pytest.mark.parametrize` table-driven tests, markers (`skip` / `xfail` / custom with `--strict-markers`), `pyproject.toml` config, mocking via pytest-mock, coverage gating with pytest-cov (`--cov-fail-under`), parallel runs with pytest-xdist, and CI wiring - plus stdlib `unittest` (TestCase, unittest.mock, discovery) and `doctest` (docstring examples, directives) as references. Includes framework choice (pytest for new code; match an existing unittest convention; doctest only for documented examples) and test-authoring conventions (framework detection from pyproject.toml/setup.cfg/tox.ini, layout matching, no fabricated attributes). Use for any Python unit-test task: setting up pytest, writing fixtures or parametrized tests, mocking, gating coverage, wiring CI, or maintaining unittest/doctest suites. For async tests, see pytest-asyncio-patterns.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

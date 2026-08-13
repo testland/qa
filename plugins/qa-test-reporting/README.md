@@ -1,6 +1,6 @@
 # qa-test-reporting
 
-Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV + Cobertura, Allure), build-an-X PR reporters (coverage delta, run-summary narrative), the test-management-sync umbrella (TestRail / Xray / Zephyr) plus Currents analytics, per-language coverage analyzers (Jest, JaCoCo, coverage.py), and a risk-weighted coverage-targeting heuristic with a coverage debt ledger.
+Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV + Cobertura, Allure), build-an-X PR reporters (coverage delta, run-summary narrative), the test-management-sync umbrella (TestRail / Xray / Zephyr) plus Currents analytics, per-language coverage analyzers (JaCoCo, coverage.py; Jest/Vitest coverage lives in qa-unit-tests-js), and a risk-weighted coverage-targeting heuristic with a coverage debt ledger.
 
 ## Components
 
@@ -12,7 +12,6 @@ Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV + Cober
 | Skill | [coverage-diff-reporter](skills/coverage-diff-reporter/SKILL.md) | Build-an-X PR comment with per-file coverage delta vs main; sticky-comment update; new / regressed / improved / deleted classification. |
 | Skill | [currents-integration](skills/currents-integration/SKILL.md) | Wire Currents.dev test analytics into Playwright (`@currents/playwright`); record-key + project-id config; trace / video / screenshot streaming. |
 | Skill | [test-management-sync](skills/test-management-sync/SKILL.md) | Sync automated results to test management: vendor-independent push-results workflow with TestRail worked example; full TestRail / Xray / Zephyr Scale vendor specifics in references/. |
-| Skill | [jest-coverage-analysis](skills/jest-coverage-analysis/SKILL.md) | Configure Jest `coverageProvider` (babel/v8), `coverageReporters` (lcov/cobertura/json/html), per-file `coverageThreshold`, `collectCoverageFrom`. |
 | Skill | [jacoco-analysis](skills/jacoco-analysis/SKILL.md) | Configure JaCoCo for JVM; agent + report + check goals; six counters; rule structure (element / counter / value / minimum); LCOV / Cobertura conversion. |
 | Skill | [coverage-py-analysis](skills/coverage-py-analysis/SKILL.md) | Configure coverage.py for Python; `coverage run` + `combine` for parallel; `.coveragerc` `source` / `omit` / `branch` / `fail_under`; xml / lcov / json / html output. |
 | Skill | [test-coverage-targeter](skills/test-coverage-targeter/SKILL.md) | Build-an-X risk-weighted "what to test next" recommendation; cyclomatic complexity + churn for risk; pyramid layer for cost; top 5 - 10 targets; plus the weekly coverage debt ledger (falling / stale / orphan files). |

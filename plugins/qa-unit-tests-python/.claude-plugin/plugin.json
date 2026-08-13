@@ -2,10 +2,10 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-python",
   "version": "1.3.0",
-  "description": "Python unit testing per-framework wrappers: 4 skills (pytest-tests, unittest-tests, doctest-tests, nose2-tests, pytest-asyncio-patterns) plus 1 A2 agent (python-test-author) that authors one unit test per spec by detecting pytest / unittest / doctest / nose2 from pyproject.toml / setup.cfg / tox.ini / existing test files. Per-framework lifecycle (configure / run / mock / coverage / CI).",
+  "description": "Python unit testing: 2 skills - the python-unit-tests umbrella covering pytest (fixtures / parametrize / markers / config / mocking / coverage / CI), framework choice, and authoring conventions with stdlib unittest and doctest as references, plus the standalone pytest-asyncio-patterns skill for async testing.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-python",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "unit-tests", "python", "pytest", "unittest", "doctest", "nose2"]
+  "keywords": ["qa", "testing", "unit-tests", "python", "pytest", "unittest", "doctest", "pytest-asyncio"]
 }

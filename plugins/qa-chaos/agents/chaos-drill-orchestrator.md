@@ -18,7 +18,7 @@ A workflow-orchestrator agent - drives a full chaos drill across four stages (pr
 
 Distinct from [`chaos-experiment-author`](../skills/chaos-experiment-author/SKILL.md) (authors ONE experiment file in isolation). This agent runs the full drill, with abort-on-blast-radius-exceeded guarantees.
 
-Sibling of the Tier 4 tool-selector family (mutation-tool-selector, load-test-tool-selector, etc.) but **not** a selector - chaos runner choice is usually pre-determined by the platform (Chaos Mesh / Litmus on Kubernetes; Gremlin / Toxiproxy on bare-metal / mixed).
+Sibling of the Tier 4 tool-selector family (api-test-tool-selector, web-e2e-framework-selector, etc.) but **not** a selector - chaos runner choice is usually pre-determined by the platform (Chaos Mesh / Litmus on Kubernetes; Gremlin / Toxiproxy on bare-metal / mixed).
 
 ## When invoked
 

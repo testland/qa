@@ -1,0 +1,9 @@
+{
+  "name": "testland/rust-unit-tests",
+  "description": "Rust unit testing with the built-in `cargo test` harness - `#[test]` in `#[cfg(test)] mod tests` blocks, `assert_eq!` / `assert_ne!` / `assert!` macros, `#[should_panic(expected)]`, `Result<(), E>` test returns, integration tests in `tests/`, doc tests in `///` comments, runner flags (`--test-threads=1`, `--nocapture`, `--ignored`), `#[ignore]` marking, coverage via cargo-llvm-cov / tarpaulin, and Criterion benchmarks on stable. Includes framework choice (stdlib `#[test]` is the default; rstest for 4+ parameterized case pairs or shared fixtures via references) and test-authoring conventions (inline `#[cfg(test)]` placement, assertion-macro selection, async runtime requirements). References cover rstest parametrize + fixtures and Rust mocking with mockall (`#[automock]` / `mock!`). Use for any Rust unit-test task: writing tests, testing panics or Results, doc tests, coverage gates, benchmarks, or CI wiring.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

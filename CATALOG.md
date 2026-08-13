@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 631 components**
+**89 plugins · 603 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -15,7 +15,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 |---|---|---|---:|
 | [qa-test-data](plugins/qa-test-data/) | 1.3.10 | 12 skills + 2 agents | 14 |
 | [qa-process](plugins/qa-process/) | 1.11.0 | 12 skills + 1 agents | 13 |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.5.0 | 11 skills + 2 agents | 13 |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.5.0 | 10 skills + 2 agents | 12 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.15 | 7 skills + 4 agents | 11 |
 | [qa-hiring](plugins/qa-hiring/) | 1.4.2 | 5 skills + 1 agents | 6 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.2.5 | 4 skills + 2 agents | 6 |
@@ -37,14 +37,14 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.0 | 8 skills + 3 agents | 11 |
 | [qa-embedded](plugins/qa-embedded/) | 1.4.0 | 7 skills + 3 agents | 10 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.6.0 | 7 skills + 2 agents | 9 |
-| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.0 | 6 skills + 2 agents | 8 |
-| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.0 | 6 skills + 2 agents | 8 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
-| [qa-property-based](plugins/qa-property-based/) | 1.2.16 | 4 skills + 3 agents | 7 |
-| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.0 | 5 skills + 2 agents | 7 |
-| [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.0 | 4 skills + 2 agents | 6 |
-| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.2.0 | 4 skills + 1 agents | 5 |
-| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.3.0 | 4 skills + 1 agents | 5 |
+| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.0 | 6 skills + 0 agents | 6 |
+| [qa-property-based](plugins/qa-property-based/) | 1.2.16 | 4 skills + 2 agents | 6 |
+| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.0 | 2 skills + 0 agents | 2 |
+| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.3.0 | 2 skills + 0 agents | 2 |
+| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.2.0 | 1 skills + 0 agents | 1 |
+| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.0 | 1 skills + 0 agents | 1 |
+| [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.0 | 1 skills + 0 agents | 1 |
 
 ## Quality engineering
 

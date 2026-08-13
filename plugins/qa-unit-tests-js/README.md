@@ -1,7 +1,8 @@
 # qa-unit-tests-js
 
-JS/TS unit testing per-framework wrappers + orchestrator agent. Five
-framework skills + 1 agent.
+JS/TS unit testing in one umbrella skill: Jest and Vitest as co-primary
+frameworks, with Mocha maintenance, Jasmine/Karma-to-Jest migration, and
+deep coverage analysis as bundled references.
 
 Per-framework lifecycle scope (configure / run / mock / coverage /
 CI). Does **not** duplicate `qa-test-review` (test code hygiene); for
@@ -12,11 +13,7 @@ that plugin instead.
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [jest-tests](skills/jest-tests/SKILL.md) | Meta-built batteries-included; built-in `expect` + snapshot + mocking + coverage; `--ci` flag for safe CI runs |
-| Skill | [vitest-tests](skills/vitest-tests/SKILL.md) | Vite-native; Jest-compatible API; in-source testing; browser-mode; `--typecheck` flag for type validation |
-| Skill | [mocha-tests](skills/mocha-tests/SKILL.md) | Pluggable runner pairable with Chai/Sinon/nyc/c8; BDD + TDD interfaces; `--parallel` since Mocha 8 |
-| Skill | [jasmine-tests](skills/jasmine-tests/SKILL.md) | Original BDD-style; legacy AngularJS heritage; built-in matchers + spies; pairs with Karma (legacy); migration-to-Jest path documented |
-| Agent | [js-test-author](agents/js-test-author.md) | Authors one JS/TS unit test given a target module + behavior spec; detects framework + Faker + MSW from package.json; emits idiomatic Jest/Vitest/Mocha/Jasmine/AVA test file |
+| Skill | [js-unit-tests](skills/js-unit-tests/SKILL.md) | Jest + Vitest install / config / mocking / coverage / watch / CI, framework choice (Vite → Vitest, else Jest; match existing convention), and test-authoring conventions; references cover Mocha, Jasmine-to-Jest migration via jest-codemods, and Jest/Vitest coverage deep-dive |
 
 ## Install
 

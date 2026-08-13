@@ -1,6 +1,6 @@
 ---
 name: pytest-asyncio-patterns
-description: "Configures and runs async Python tests with pytest-asyncio: installs the plugin, selects asyncio_mode (auto vs strict), scopes event loops (function/class/module/session), writes async fixtures with @pytest_asyncio.fixture, mocks coroutines with AsyncMock, and tests FastAPI (httpx.AsyncClient + ASGITransport) and aiohttp (aiohttp_client fixture) applications. Use when a Python project contains async def test_ functions, FastAPI/aiohttp endpoints, or any asyncio-based code that needs pytest integration. Do NOT use for general pytest fixture design, parametrize patterns, or conftest.py structure without an asyncio-specific problem (event-loop scoping, mode config, AsyncMock, ASGI client): use pytest-tests for those."
+description: "Configures and runs async Python tests with pytest-asyncio: installs the plugin, selects asyncio_mode (auto vs strict), scopes event loops (function/class/module/session), writes async fixtures with @pytest_asyncio.fixture, mocks coroutines with AsyncMock, and tests FastAPI (httpx.AsyncClient + ASGITransport) and aiohttp (aiohttp_client fixture) applications. Use when a Python project contains async def test_ functions, FastAPI/aiohttp endpoints, or any asyncio-based code that needs pytest integration. Do NOT use for general pytest fixture design, parametrize patterns, or conftest.py structure without an asyncio-specific problem (event-loop scoping, mode config, AsyncMock, ASGI client): use python-unit-tests for those."
 metadata:
   keywords: "pytest, asyncio, async, fastapi, aiohttp, httpx, AsyncMock, event-loop, async-fixtures"
 ---
@@ -17,7 +17,7 @@ coroutine tests are collected but never awaited. It provides the
 async-aware fixtures with configurable event-loop scoping, and works with
 FastAPI/Starlette (via `httpx.AsyncClient`) and aiohttp (via pytest-aiohttp).
 
-Nearest neighbor: `pytest-tests` covers the full framework but treats async
+Nearest neighbor: `python-unit-tests` covers the full framework but treats async
 in one paragraph. This skill covers the asyncio path end to end: modes, loop
 scoping, async fixtures, `AsyncMock`, and framework client patterns.
 
@@ -249,4 +249,4 @@ Firing FastAPI lifespan events (`asgi-lifespan`), the aiohttp
 - [fastapi.tiangolo.com async tests](https://fastapi.tiangolo.com/advanced/async-tests/) - ASGITransport + AsyncClient pattern
 - [docs.aiohttp.org testing](https://docs.aiohttp.org/en/stable/testing.html) - aiohttp_client fixture
 - [anyio.readthedocs.io testing](https://anyio.readthedocs.io/en/stable/testing.html) - anyio backend parametrization
-- `pytest-tests` - full pytest framework (fixtures, parametrize, coverage, CI)
+- `python-unit-tests` - full pytest framework (fixtures, parametrize, coverage, CI)

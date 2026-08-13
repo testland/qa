@@ -268,7 +268,7 @@ The agent emits a summary of every file written:
 ### Next step
 Run `npx playwright install --with-deps chromium` then `npx playwright test`.
 Hand off to **spec-to-e2e-test-scaffolder** (qa-web-e2e) to generate further
-spec files, or to **js-test-author** (qa-unit-tests-js) for unit layer coverage.
+spec files, or to **js-unit-tests** (qa-unit-tests-js) for unit layer coverage.
 ```
 
 ## Anti-patterns
@@ -287,8 +287,8 @@ driver handle, mechanic-named methods) are catalogued in
 generates the harness when no E2E infrastructure exists. For repos with
 an existing framework, use `framework-architecture-auditor` (qa-test-review).
 For writing the actual tests once the harness is in place, use
-`spec-to-e2e-test-scaffolder` (qa-web-e2e) or the per-language
-`*-test-author` agents.
+`spec-to-e2e-test-scaffolder` (qa-web-e2e) or the per-language unit-test
+umbrella skills (qa-unit-tests-*).
 
 ## Limitations
 
@@ -311,13 +311,13 @@ After the harness is in place:
 - **Write E2E specs** (Playwright) →
   [`spec-to-e2e-test-scaffolder`](../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md)
 - **Write JS/TS unit tests** →
-  [`js-test-author`](../../qa-unit-tests-js/agents/js-test-author.md)
+  [`js-unit-tests`](../../qa-unit-tests-js/skills/js-unit-tests/SKILL.md)
 - **Write Python unit tests** →
-  [`python-test-author`](../../qa-unit-tests-python/agents/python-test-author.md)
+  [`python-unit-tests`](../../qa-unit-tests-python/skills/python-unit-tests/SKILL.md)
 - **Write .NET unit tests** →
-  [`dotnet-test-author`](../../qa-unit-tests-net/agents/dotnet-test-author.md)
+  [`dotnet-unit-tests`](../../qa-unit-tests-net/skills/dotnet-unit-tests/SKILL.md)
 - **Write JVM unit tests** →
-  [`jvm-test-author`](../../qa-unit-tests-jvm/agents/jvm-test-author.md)
+  [`jvm-unit-tests`](../../qa-unit-tests-jvm/skills/jvm-unit-tests/SKILL.md)
 - **Review framework choice before scaffolding** →
   [`web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md)
 

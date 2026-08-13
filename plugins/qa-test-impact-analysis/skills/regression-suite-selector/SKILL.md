@@ -25,9 +25,9 @@ git diff, and a safe fallback policy - without vendor tooling.
   bottleneck.
 - A nightly / pre-release full run exists and can serve as the safety
   net for selection misses.
-- The team has coverage instrumentation (`lcov-analysis`,
-  `jest-coverage-analysis`, etc., in the qa-test-reporting
-  plugin) - the per-test → source map is computable from it.
+- The team has coverage instrumentation (`lcov-analysis`, etc., in
+  the qa-test-reporting plugin, or `js-unit-tests` in
+  qa-unit-tests-js) - the per-test → source map is computable from it.
 
 If the build is a Bazel / Pants / Buck monorepo, the selection
 already comes from the build graph (Step 5) and this skill is

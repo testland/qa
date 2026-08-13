@@ -180,8 +180,8 @@ coverage report --fail-under=80
 Or per the `.coveragerc` `[report] fail_under = 80` setting. Exit
 code is non-zero if total coverage is below; CI fails.
 
-For per-file gates (the same pattern as `jest-coverage-analysis`),
-parse the JSON output:
+For per-file gates (the same pattern as Jest's `coverageThreshold`,
+see `js-unit-tests` in qa-unit-tests-js), parse the JSON output:
 
 ```python
 # scripts/per_file_gate.py
