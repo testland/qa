@@ -1,12 +1,11 @@
 ---
 name: grpc-service-reviewer
-description: "Adversarial read-only reviewer for new or changed gRPC services. Inspects proto definitions, implementation, and test files for five gap categories: missing status-code assertions (per grpc-status-code-mapping-reference), absent deadline/timeout tests, buf lint and buf breaking not wired into CI, untested streaming RPCs, and no mock harness for client-side tests. Emits a ranked findings table and a BLOCK or PASS verdict. Use when reviewing a PR that adds or modifies a gRPC service (proto + impl + tests) before merge."
+description: "Adversarial read-only reviewer for new or changed gRPC services. Inspects proto definitions, implementation, and test files for five gap categories: missing status-code assertions (per the status-code catalog in grpc-streaming-test-author), absent deadline/timeout tests, buf lint and buf breaking not wired into CI, untested streaming RPCs, and no mock harness for client-side tests. Emits a ranked findings table and a BLOCK or PASS verdict. Use when reviewing a PR that adds or modifies a gRPC service (proto + impl + tests) before merge."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - grpc-mock
-  - grpc-status-code-mapping-reference
-  - protobuf-versioning-strategy-reference
+  - grpc-streaming-test-author
   - buf-cli-lint-breaking-build
 ---
 
@@ -30,8 +29,9 @@ gRPC library): `INVALID_ARGUMENT`, `NOT_FOUND`, `ALREADY_EXISTS`,
 `FAILED_PRECONDITION`, `ABORTED`, `OUT_OF_RANGE`, `DATA_LOSS`.
 For each `status.Errorf` / `context.abort` / `obs.onError(Status.X)`
 call in the diff, verify a matching test asserts on `status.Code()`
-(not on the error-message string - per
-[`grpc-status-code-mapping-reference`](../skills/grpc-status-code-mapping-reference/SKILL.md)).
+(not on the error-message string - per the status-code catalog in
+[`grpc-streaming-test-author`](../skills/grpc-streaming-test-author/SKILL.md),
+references/status-codes.md).
 Flag every application-emitted status code that has no test coverage.
 
 ### Check 2 - Deadline / timeout tests
@@ -115,7 +115,7 @@ no findings, emit `**Verdict: PASS**` with a one-line confirmation.
 ## Refuse-to-proceed rules
 
 - **Hard-reject.** If invoked without preloaded skills, halt
-  and instruct the caller to preload the four required skills.
+  and instruct the caller to preload the three required skills.
 - Refuse to emit PASS if any HIGH finding is unresolved.
 - Refuse to propose code fixes; report findings and recommended
   actions only.

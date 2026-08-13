@@ -1,6 +1,6 @@
 ---
 name: graphql-n-plus-one-remediation
-description: "Traces a GraphQL resolver tree to locate the N+1 pattern (one parent query returns N rows, then a child field resolver fires once per row), classifies every child field resolver as safe or N+1 risk, and applies one of three fixes: per-request DataLoader batching, eager projection in the parent resolver, or selection-set-aware prefetch. Use when a list-returning resolver is added or changed in review, when a connection-pool exhaustion or slow-query alert traces back to GraphQL traffic, or when a resolver trace shows a child field resolved once per parent row."
+description: "Detects and fixes the GraphQL N+1 pattern: scans a repo, PR diff, or schema type for list-returning resolvers (grep-driven detection workflow), traces the resolver tree to locate the fan-out (one parent query returns N rows, then a child field resolver fires once per row), classifies every child field resolver as safe or N+1 risk, and applies one of three fixes: per-request DataLoader batching, eager projection in the parent resolver, or selection-set-aware prefetch. Use when reviewing a PR that adds or changes a list-returning resolver, when a connection-pool exhaustion or slow-query alert traces back to GraphQL traffic, or when a resolver trace shows a child field resolved once per parent row."
 ---
 
 # graphql-n-plus-one-remediation
@@ -58,6 +58,27 @@ Not owned:
 - **SQL-level fan-out.** A resolver that looks batched in JavaScript can
   still emit per-row SQL underneath. Confirm at the database layer with
   a query-log or slow-query analysis.
+
+## Step 0: Detection workflow (repo scan)
+
+When the input is a repo, PR diff, or schema type rather than a known
+resolver, locate the candidates first. Input modes:
+
+- A specific resolver file or directory (`resolvers/post.ts`).
+- A PR diff (`git diff main...HEAD --name-only -- '*resolvers*'`).
+- A schema type (`User`) - find all resolvers on that type.
+
+Grep for list-returning resolvers and entry points:
+
+```bash
+grep -rn "resolve:.*=>" resolvers/
+grep -rn "Query: {\|Mutation: {" resolvers/  # entry points
+grep -rn "\[.*\]" schema/                     # list-typed fields in schema
+```
+
+Enumerate every resolver that returns a list **and** every field resolver
+on the types in those lists, then continue with Step 1. SQL-level fan-out
+beneath the ORM hands off to `db-query-plan-analyzer`.
 
 ## Step 1: Map the parent and child pairs
 

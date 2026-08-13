@@ -1,6 +1,6 @@
 ---
 name: stripe-test-cards-and-webhooks
-description: "Wraps Stripe API testing patterns: test-mode initialization, the canonical test cards (4242 success; 4000 0000 0000 0002 declined; 4000 0027 6000 3184 3DS challenge per 3ds-test-flow-reference), the Stripe CLI webhook flow (`stripe listen --forward-to`), the Stripe CLI fixture commands (`stripe trigger payment_intent.succeeded`), and the webhook signature verification (Stripe-Signature header + HMAC-SHA256). Use when testing Stripe-integrated code."
+description: "Wraps Stripe API testing patterns: test-mode initialization, the canonical test cards (4242 success; 4000 0000 0000 0002 declined; 4000 0027 6000 3184 3DS challenge per the 3DS flows reference in payment-flow-states-reference), the Stripe CLI webhook flow (`stripe listen --forward-to`), the Stripe CLI fixture commands (`stripe trigger payment_intent.succeeded`), and the webhook signature verification (Stripe-Signature header + HMAC-SHA256). Use when testing Stripe-integrated code."
 ---
 
 # stripe-test-cards-and-webhooks
@@ -17,8 +17,8 @@ deterministically produce success / decline / 3DS challenge.
 
 - Tests for code that integrates Stripe.
 - Verifying webhook handling.
-- 3DS challenge flow tests per
-  `3ds-test-flow-reference`.
+- 3DS challenge flow tests per the 3DS flows reference in
+  `payment-flow-states-reference`.
 
 ## Authoring
 
@@ -168,7 +168,7 @@ jobs:
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Mocking Stripe SDK directly | Loses signature verification, error mapping | Test against real test-mode API |
-| Hardcoded test cards in many tests | Update breakage when Stripe changes | Per `3ds-test-flow-reference`, use named constants |
+| Hardcoded test cards in many tests | Update breakage when Stripe changes | Use named constants for the card PANs |
 | Skip webhook signature verification | Webhook replay attack | Always verify |
 | Tests without idempotency key | Retried tests duplicate-create | Always set idempotency |
 | Mix prod + test keys | Real money risk | Strict per-env key separation |
@@ -197,15 +197,10 @@ jobs:
   [docs.stripe.com/webhooks/signatures](https://docs.stripe.com/webhooks/signatures).
 - Stripe CLI:
   [docs.stripe.com/stripe-cli](https://docs.stripe.com/stripe-cli).
-- Companion catalogs:
-  `payment-flow-states-reference`,
-  `3ds-test-flow-reference`,
-  `pci-dss-scope-reference`.
-- Sibling SDKs:
-  `adyen-test-mode`,
-  `paypal-sandbox`,
-  `braintree-test-cards`.
-- Builders:
-  `refund-test-matrix-builder`,
-  `chargeback-flow-test-author`,
-  `payment-webhook-replay`.
+- Companion catalog:
+  `payment-flow-states-reference` (state machines + 3DS flows);
+  PCI scope: `pci-dss-control-test-author` (qa-compliance).
+- Other gateways:
+  `payment-gateway-sandboxes` (Adyen / PayPal / Braintree).
+- Builder:
+  `payment-flow-test-author` (refunds, disputes, webhook replay).

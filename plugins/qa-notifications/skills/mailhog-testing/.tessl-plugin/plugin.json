@@ -1,9 +1,0 @@
-{
-  "name": "testland/mailhog-testing",
-  "description": "Captures and asserts SMTP email in tests with MailHog, the Go-based dev mailbox (SMTP sink on `1025`, web UI + JSON API on `8025`, single Go binary or Docker), reading captured mail via APIv2 (`/api/v2/messages`, `/api/v2/search`) and injecting failures with the Jim chaos monkey. Use when a project already runs MailHog to test password-reset, verification, or notification emails; for new projects prefer Mailpit (richer API, active maintenance) - migration path in references.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.10"
-}

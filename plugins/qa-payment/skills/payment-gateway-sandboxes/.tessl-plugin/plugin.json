@@ -1,0 +1,9 @@
+{
+  "name": "testland/payment-gateway-sandboxes",
+  "description": "Wraps the vendor-generic payment-gateway sandbox pattern - test credentials, sandbox base URLs / environment switches, deterministic test-card matrices, and gateway-native webhook simulators - with per-gateway references for Adyen test mode, PayPal Sandbox, and Braintree sandbox. Use when testing code integrated with Adyen, PayPal, or Braintree; for Stripe use stripe-test-cards-and-webhooks (one-time payments) or stripe-subscription-billing-test-author (recurring billing).",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

@@ -1,6 +1,6 @@
 ---
 name: flag-coverage-gap-detector
-description: "Read-only adversarial critic that scans code for flag-evaluation call sites (isEnabled / getBooleanValue / variation / variationDetail) and identifies flag branches whose OFF path, FALLTHROUGH path, or non-default variants have no corresponding test exercising them. Emits a ranked list of untested flag branches and an overall coverage-gap verdict. Use after adding or changing a feature flag to confirm test coverage exists for every reachable branch - distinct from stale-flag-detector (which finds flags whose AGE or rollout state suggests removal) and flag-state-coverage-builder (which BUILDS a new coverage matrix from scratch); this agent audits what is already in the test suite against what branches the production code actually reaches."
+description: "Read-only adversarial critic that scans code for flag-evaluation call sites (isEnabled / getBooleanValue / variation / variationDetail) and identifies flag branches whose OFF path, FALLTHROUGH path, or non-default variants have no corresponding test exercising them. Emits a ranked list of untested flag branches and an overall coverage-gap verdict. Use after adding or changing a feature flag to confirm test coverage exists for every reachable branch - distinct from stale-flag-detector (which finds flags whose AGE or rollout state suggests removal) and feature-flag-test-matrix-reference (whose workflow BUILDS a new coverage matrix from scratch); this agent audits what is already in the test suite against what branches the production code actually reaches."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
@@ -138,7 +138,7 @@ before proceeding.
 - Branch coverage strategies:
   [`feature-flag-test-matrix-reference`](../skills/feature-flag-test-matrix-reference/SKILL.md)
   (preloaded) - per-flag isolation, pairwise, kill-switch test categories
-- Sibling agents:
-  [`stale-flag-detector`](./stale-flag-detector.md) (age/rollout-based removal),
-  [`flag-state-coverage-builder`](../skills/flag-state-coverage-builder/SKILL.md)
-  (builds matrix from scratch)
+- Sibling agent:
+  [`stale-flag-detector`](./stale-flag-detector.md) (age/rollout-based removal);
+  matrix building from scratch is the workflow section of
+  [`feature-flag-test-matrix-reference`](../skills/feature-flag-test-matrix-reference/SKILL.md)

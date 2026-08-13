@@ -1,6 +1,6 @@
 ---
 name: mqtt-tests
-description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients - QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter. Use when a product speaks MQTT on the wire and QoS 1 / 2 redelivery, retained-message state, or LWT behavior needs a broker-backed test - including smoke-testing a new broker auth / ACL / persistence config."
+description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients - QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter. Also carries STOMP-over-WebSocket + AMQP 0-9-1 broker testing (Spring / RabbitMQ frame, ack-mode, and exchange/binding tests via Testcontainers) in references/stomp-amqp.md. Use when a product speaks MQTT, STOMP, or AMQP on the wire and QoS 1 / 2 redelivery, retained-message state, LWT, ack-mode, or broker-topology behavior needs a broker-backed test - including smoke-testing a new broker auth / ACL / persistence config."
 metadata:
   keywords: "mqtt, mqtt-v5, iot, mosquitto, paho-mqtt, realtime-protocols"
 ---
@@ -196,9 +196,11 @@ the message would have been lost - the exact regression this test guards.
 ## References
 
 - [MQTT v5.0 spec] - QoS, retained, LWT, shared subscriptions, $SYS
+- STOMP over WebSocket + AMQP 0-9-1 broker testing:
+  [references/stomp-amqp.md](references/stomp-amqp.md)
 - `websocket-tests` - alternative
   for browser-side bidirectional
-- `webhook-replay-tests` - HTTP
+- `webhook-delivery-tester` (qa-notifications) - HTTP
   alternative for at-least-once delivery
 
 [MQTT v5.0 spec]: https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html

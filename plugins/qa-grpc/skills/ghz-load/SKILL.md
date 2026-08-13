@@ -152,8 +152,7 @@ Status code distribution:
   [DeadlineExceeded] 17 responses
 ```
 
-Per
-`grpc-status-code-mapping-reference`,
+Per the status-code catalog in `grpc-streaming-test-author` (references/status-codes.md),
 any non-`OK` is a flag for investigation.
 
 ### JSON output for CI consumption
@@ -274,7 +273,7 @@ review of distribution shape (long tail, bimodal, etc.).
 | Single-payload load test | Misses cache / branch-prediction noise | Vary `-d` payloads via `-D <file>` |
 | Compare summary across runs without statistical context | Single-run noise → false regressions | Run N=3 times; compare distributions, not single numbers |
 | `--insecure` against TLS-required services | Connection failure dominates results | Match prod TLS config |
-| Treating non-OK as transport failure | Status codes have meaning per grpc-status-code-mapping-reference | Inspect distribution; classify per AIP-194 |
+| Treating non-OK as transport failure | Status codes have meaning per AIP-194 | Inspect distribution; classify per grpc-streaming-test-author references/status-codes.md |
 | Load-testing on shared CI runner | Other jobs perturb CPU; noisy | Dedicated runner or isolate via Docker resource limits |
 
 ## Limitations
@@ -299,7 +298,7 @@ review of distribution shape (long tail, bimodal, etc.).
 - ghz install:
   [ghz.sh/docs/install](https://ghz.sh/docs/install).
 - Status code interpretation:
-  `grpc-status-code-mapping-reference`.
+  `grpc-streaming-test-author` (references/status-codes.md).
 - Streaming load (sibling):
   `grpc-streaming-test-author`.
 - Other load tools (cross-plugin, HTTP-focused; ghz is gRPC-specific):

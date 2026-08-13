@@ -1,6 +1,6 @@
 ---
 name: server-sent-events-tests
-description: "Test Server-Sent Events (SSE) flows, one-way server-to-client push only (not bidirectional, use websocket-tests for client-to-server messaging): `EventSource` API on the browser side (`onmessage`, `onerror`, `readyState` 0/1/2), event stream format (`data:`, `event:`, `id:`, `retry:`), `Last-Event-ID` reconnect-with-replay header, content-type `text/event-stream`, and HTTP/1.1 connection-pool limits. Use Playwright for browser-side, raw HTTP client for server-side stream tests. Use when a feature pushes updates over `text/event-stream` and the reconnect interval, `Last-Event-ID` replay, or per-origin connection ceiling has no coverage."
+description: "Test Server-Sent Events (SSE) flows, one-way server-to-client push only (not bidirectional, use websocket-tests for client-to-server messaging): `EventSource` API on the browser side (`onmessage`, `onerror`, `readyState` 0/1/2), event stream format (`data:`, `event:`, `id:`, `retry:`), `Last-Event-ID` reconnect-with-replay header, content-type `text/event-stream`, and HTTP/1.1 connection-pool limits. Use Playwright for browser-side, raw HTTP client for server-side stream tests; k6 load testing (concurrent-stream capacity, connection churn, HTTP/1.1 vs HTTP/2 ceiling) lives in references/sse-load.md. Use when a feature pushes updates over `text/event-stream` and the reconnect interval, `Last-Event-ID` replay, per-origin connection ceiling, or concurrent-stream capacity has no coverage."
 metadata:
   keywords: "sse, server-sent-events, eventsource, one-way-streaming, realtime-protocols"
 ---
@@ -131,9 +131,11 @@ are in [references/sse-test-recipes.md](references/sse-test-recipes.md).
 ## References
 
 - [WHATWG SSE spec] - EventSource API, stream format, replay, retry
+- SSE load testing (k6 concurrent-stream capacity, churn, HTTP/1.1 vs
+  HTTP/2): [references/sse-load.md](references/sse-load.md)
 - `websocket-tests` - bidirectional
   alternative
-- `grpc-streaming-tests` - typed
+- `grpc-streaming-test-author` (qa-grpc) - typed
   RPC streaming alternative
 
 [WHATWG SSE spec]: https://html.spec.whatwg.org/multipage/server-sent-events.html

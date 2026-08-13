@@ -1,9 +1,0 @@
-{
-  "name": "testland/adyen-test-mode",
-  "description": "Wraps Adyen test-mode patterns: test-API-key initialization, the canonical Adyen test cards (Visa 4111 1111 1111 1111; 5454 5454 5454 5454 3DS frictionless; 4917 6100 0000 0000 3DS 2 challenge), the per-flow result codes (Authorised / Refused / Pending / RedirectShopper / Error), the HMAC-SHA256 webhook validation, and notifications-vs-API duality (Adyen separates synchronous API calls from asynchronous notifications). Use when testing Adyen-integrated code.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.3"
-}

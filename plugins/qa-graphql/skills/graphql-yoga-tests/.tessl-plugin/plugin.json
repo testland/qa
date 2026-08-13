@@ -1,9 +1,9 @@
 {
   "name": "testland/graphql-yoga-tests",
-  "description": "Tests a GraphQL Yoga server (the-guild.dev runtime) with `yoga.fetch()` for in-process, no-network request simulation of queries and mutations, `@graphql-tools/executor-http` for subscription and incremental-delivery (streaming) tests, auth-header pass-through, and production-config gates for disabled introspection and persisted operations. Use to test a GraphQL Yoga server, write Yoga query, mutation, or subscription tests, or check its production plugin config; for a different runtime harness use apollo-server-tests, mercurius-tests, or hasura-tests instead, not this skill.",
+  "description": "Tests a GraphQL Yoga server (the-guild.dev runtime) with `yoga.fetch()` for in-process, no-network request simulation of queries and mutations, `@graphql-tools/executor-http` for subscription and incremental-delivery (streaming) tests, auth-header pass-through, and production-config gates for disabled introspection and persisted operations; also carries the Mercurius (Fastify GraphQL plugin) in-process `app.inject()` testing patterns in references/mercurius.md. Use to test a GraphQL Yoga or Mercurius server, write query, mutation, or subscription tests, or check production plugin config; for other runtimes use apollo-server-tests or hasura-tests instead, not this skill.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.5"
+  "version": "1.4.6"
 }

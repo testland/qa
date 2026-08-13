@@ -1,6 +1,6 @@
 ---
 name: mailpit-testing
-description: "Configures and runs Mailpit - modern dev-mailbox server for SMTP testing with built-in REST API for assertions; default SMTP `1025` + Web UI `8025`; ships single static binary or multi-architecture Docker images; features Chaos mode (configurable SMTP errors for resilience testing), message tagging (manual + auto via filters and plus-addressing), search filters. Use when the user develops email-sending code locally / in CI and needs SMTP capture with programmatic test assertions, or when migrating from MailHog (which Mailpit succeeds)."
+description: "The email-testing home: configures and runs Mailpit - modern dev-mailbox server for SMTP testing with built-in REST API for assertions; default SMTP `1025` + Web UI `8025`; Chaos mode (configurable SMTP errors for resilience testing), message tagging, search filters. Carries the end-to-end email-flow workflow (multipart body, link-rewrite resolution, unsubscribe per RFC 8058, bounce + complaint webhooks) in references/email-flows.md and the legacy MailHog capture patterns + migration path in references/mailhog-legacy.md. Use when developing or testing email-sending code locally / in CI - SMTP capture, full-flow assertions, or migrating an existing MailHog deployment."
 ---
 
 # mailpit-testing
@@ -34,8 +34,12 @@ mid-2020s; new projects start with Mailpit by default.
   attachments).
 - The team needs Chaos mode to test app resilience to SMTP errors
   (bounce, timeout, rate-limit).
+- The full email flow needs coverage beyond capture - headers,
+  multipart body, links, unsubscribe, bounces - per
+  [references/email-flows.md](references/email-flows.md).
 - Migrating from MailHog (Mailpit is API-compatible at the SMTP
-  layer + has a richer REST API).
+  layer + has a richer REST API) - per
+  [references/mailhog-legacy.md](references/mailhog-legacy.md).
 
 ## Step 1 - Install
 
@@ -220,7 +224,8 @@ steps:
 - [mp-docs][mp-docs] - official documentation
 - [mp-gh][mp-gh] - repository, install commands, ports
 - mailpit.axllent.org/docs/api-v1/ - REST API reference
-- `mailhog-testing` - predecessor; use
-  Mailpit for new work
-- `email-flow-test-author` - 
-  build-an-X for the full email-sending workflow
+- End-to-end email-flow workflow (headers, multipart, links,
+  unsubscribe, bounces): [references/email-flows.md](references/email-flows.md)
+- MailHog (legacy) capture + migration:
+  [references/mailhog-legacy.md](references/mailhog-legacy.md)
+  (+ [references/migrating-to-mailpit.md](references/migrating-to-mailpit.md))

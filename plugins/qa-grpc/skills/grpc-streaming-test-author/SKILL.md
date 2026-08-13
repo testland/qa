@@ -1,6 +1,6 @@
 ---
 name: grpc-streaming-test-author
-description: "Workflow-driven skill that builds gRPC streaming-RPC test suites from a proto definition. Classifies each RPC by pattern (unary, server-streaming, client-streaming, bidi), then emits the required categories per pattern - ordering preservation, completion semantics (server close after stream end, client half-close), cancellation, deadline handling, partial-stream failure. Produces skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end). Use when adding tests for a new streaming RPC or auditing a suite for uncovered categories. Different test surface from grpc-interceptor-test-author (interceptor layer) and grpc-mock (harness); for wire-level streaming semantics use grpc-streaming-tests, not this."
+description: "The single gRPC-streaming test home: builds streaming-RPC test suites from a proto definition. Classifies each RPC by pattern (unary, server-streaming, client-streaming, bidi), then emits the required categories per pattern - ordering preservation, completion semantics (server close after stream end, client half-close), cancellation, deadline handling, partial-stream failure. Produces skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end); carries the 17-code gRPC status catalog (retry semantics per AIP-194, grpc-gateway HTTP mapping) in references/status-codes.md and the wire-level / live-server streaming patterns (deadline propagation, server-side cancellation, metadata, ghz load) in references/wire-level-testing.md. Use when adding tests for a new or existing streaming RPC, auditing a suite for uncovered categories, or asserting status-code behavior. Different test surface from grpc-mock (the in-process harness itself)."
 ---
 
 # grpc-streaming-test-author
@@ -18,8 +18,9 @@ Step 1 classifies each RPC by pattern.
 This skill walks through producing a comprehensive test suite
 from the proto file. It composes
 `grpc-mock` for the test harness and
-`grpc-status-code-mapping-reference`
-for status-code assertions.
+[references/status-codes.md](references/status-codes.md)
+for status-code assertions; live-server (non-bufconn) patterns are in
+[references/wire-level-testing.md](references/wire-level-testing.md).
 
 ## When to use
 
@@ -28,9 +29,9 @@ for status-code assertions.
   pattern's required category covered?
 - Investigating a streaming-RPC bug - minimal repro from the
   test matrix.
-- PR review of changes to streaming RPCs (the
-  `protobuf-versioning-strategy-reference`
-  rules on `stream` changes are subtle).
+- PR review of changes to streaming RPCs (the proto-evolution
+  rules on `stream` changes are subtle - per `buf-cli-lint-breaking-build`
+  references/versioning-strategy.md).
 
 ## Step 1 - Classify each RPC
 
@@ -47,7 +48,7 @@ service Chat {
 
 | RPC | Pattern | Required test categories |
 |---|---|---|
-| `Send` | unary | success, every status code per `grpc-status-code-mapping-reference` |
+| `Send` | unary | success, every status code per [references/status-codes.md](references/status-codes.md) |
 | `Subscribe` | server-stream | success, ordering, server-side close after N messages, server-side mid-stream error, client-side cancel mid-stream, deadline-exceeded mid-stream |
 | `Upload` | client-stream | success, server completes before client finishes, server-side error mid-upload, client-side cancel before send, empty stream |
 | `Conversation` | bidi | success, ordering per direction, client closes send while still receiving, server closes send while still receiving, both close, deadline mid-conversation, error mid-conversation |
@@ -101,7 +102,7 @@ def test_subscribe_propagates_error_mid_stream(stub_with_fake):
     events_iter = stub_with_fake.Subscribe(SubReq())
     # Receive first event OK
     next(events_iter)
-    # Subsequent receive fails with INTERNAL per grpc-status-code-mapping-reference
+    # Subsequent receive fails with INTERNAL per references/status-codes.md
     with pytest.raises(grpc.RpcError) as exc:
         next(events_iter)
     assert exc.value.code() == grpc.StatusCode.INTERNAL
@@ -203,8 +204,7 @@ isn't covered.
 
 ## Streaming evolution - version-safety reminder
 
-Per
-`protobuf-versioning-strategy-reference`,
+Per the versioning-strategy reference in `buf-cli-lint-breaking-build`,
 changing an RPC's streaming pattern is **always breaking**:
 
 ```diff
@@ -227,7 +227,7 @@ catches this with `FILE` or `PACKAGE` category.
 | Test asserts on the last message only | Misses ordering bugs in earlier messages | Collect entire stream, assert on the full sequence |
 | `time.sleep` to wait for server messages | Race-prone; flakes in CI | Use channel close / iterator exhaustion as completion signal |
 | Cancellation test sleeps then cancels | Race: server may finish before cancel | Inject a controllable blocker in the fake server |
-| No deadline-exceeded test | Production deadlines surface in mid-stream | Always include - per `grpc-status-code-mapping-reference`, `DEADLINE_EXCEEDED` is its own code |
+| No deadline-exceeded test | Production deadlines surface in mid-stream | Always include - per [references/status-codes.md](references/status-codes.md), `DEADLINE_EXCEEDED` is its own code |
 | Mock at interface level for streaming | Skips marshalling + ordering | In-process server only for streaming |
 | Bidi test where client and server are deterministic-interleaved | Misses race conditions inherent in "operate independently" | One test per direction + one test with concurrent send/recv |
 | Don't `CloseSend()` in client-streaming tests | Server waits forever | Always close the send side explicitly |
@@ -237,7 +237,8 @@ catches this with `FILE` or `PACKAGE` category.
 - **Wire-level fault injection.** Partial-byte cutoffs and
   middlebox-induced disconnects aren't reachable through
   bufconn / InProcessServer. For these, use toxiproxy + a real
-  server.
+  server; live-server patterns in
+  [references/wire-level-testing.md](references/wire-level-testing.md).
 - **Backpressure semantics differ per stack.** Go bufconn buffer
   size affects when `Send` blocks; Java `StreamObserver` is
   push-based; Python is iterator-pull. Tests are stack-specific.
@@ -255,12 +256,11 @@ catches this with `FILE` or `PACKAGE` category.
 - gRPC core concepts (four streaming patterns):
   [grpc.io/docs/what-is-grpc/core-concepts/](https://grpc.io/docs/what-is-grpc/core-concepts/).
 - Status-code assertions:
-  `grpc-status-code-mapping-reference`.
+  [references/status-codes.md](references/status-codes.md).
+- Wire-level / live-server streaming patterns:
+  [references/wire-level-testing.md](references/wire-level-testing.md)
+  (+ [references/status-codes-metadata-load.md](references/status-codes-metadata-load.md)).
 - Test harness:
   `grpc-mock`.
-- Proto evolution rules:
-  `protobuf-versioning-strategy-reference`.
-- Breaking-change detection:
-  `buf-cli-lint-breaking-build`.
-- Sibling wire-level streaming patterns:
-  `grpc-streaming-tests`.
+- Proto evolution rules + breaking-change detection:
+  `buf-cli-lint-breaking-build` (references/versioning-strategy.md).

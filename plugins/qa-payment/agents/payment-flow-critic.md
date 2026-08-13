@@ -5,7 +5,7 @@ tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - payment-flow-states-reference
-  - pci-dss-scope-reference
+  - pci-dss-control-test-author
 ---
 
 Adversarial read-only critic of payment-integration code. Does not modify
@@ -32,7 +32,7 @@ files. Emits a per-finding verdict and BLOCK or PASS.
    verification method.
 
 4. **PAN / CVV in logs or code** - Critical. Per PCI DSS v4.0 §3.2.1 (from
-   preloaded `pci-dss-scope-reference`): CVV storage is prohibited
+   preloaded `pci-dss-control-test-author`, references/pci-scope.md): CVV storage is prohibited
    post-authorisation; full PAN cleartext is prohibited at rest. Grep for
    `[0-9]{16}`, `cvv`, `cvc`, `cardNumber`, `pan` in log statements, DB
    writes, and variable assignments.

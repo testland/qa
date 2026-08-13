@@ -1,9 +1,0 @@
-{
-  "name": "testland/grpc-interceptor-test-author",
-  "description": "Authors unit tests for gRPC interceptor logic: Go grpc.UnaryServerInterceptor/UnaryClientInterceptor, Java ServerInterceptor/ClientInterceptor, and grpc-js client interceptors. Covers auth (Unauthenticated on bad token), retry (backoff on Unavailable), logging/tracing (metadata extraction + propagation), error-mapping (status translation), and chained interceptor ordering - by calling the interceptor directly with a spy handler, no live backend. Use when a gRPC interceptor is written or modified. Different test surface from grpc-streaming-test-author (multi-message stream sequences) and grpc-mock (service handler logic) - use those, not this, for streams or handlers.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.12"
-}

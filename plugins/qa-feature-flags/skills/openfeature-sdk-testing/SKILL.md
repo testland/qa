@@ -1,8 +1,8 @@
 ---
 name: openfeature-sdk-testing
-description: "Wraps OpenFeature (CNCF vendor-neutral SDK abstraction) testing patterns: the InMemoryProvider for hermetic tests without network calls, provider registration via OpenFeature.setProvider, the getBooleanValue/getBooleanDetails evaluation API with EvaluationDetails (value, variant, reason, errorCode), hooks for evaluation side-effects, and evaluation context for targeting-rule tests. Covers TypeScript, Java, and Python SDKs. Use when writing tests for code that resolves feature flags through the OpenFeature SDK regardless of the underlying flag management platform."
+description: "Wraps OpenFeature (CNCF vendor-neutral SDK abstraction) testing patterns: the InMemoryProvider for hermetic tests without network calls, provider registration via OpenFeature.setProvider, the getBooleanValue/getBooleanDetails evaluation API with EvaluationDetails (value, variant, reason, errorCode), hooks for evaluation side-effects, and evaluation context for targeting-rule tests. Covers TypeScript, Java, and Python SDKs, plus per-vendor hermetic-bootstrap references for Unleash (bootstrap toggles), Flagsmith (offline LocalFileHandler), and GrowthBook (initSync payload). Use when writing tests for code that resolves feature flags through the OpenFeature SDK or the Unleash / Flagsmith / GrowthBook native SDKs; LaunchDarkly has its own skill (launchdarkly-testing)."
 metadata:
-  keywords: "openfeature, feature-flags, cncf, hermetic-tests, in-memory-provider"
+  keywords: "openfeature, feature-flags, cncf, hermetic-tests, in-memory-provider, unleash, flagsmith, growthbook"
 ---
 
 # openfeature-sdk-testing
@@ -17,11 +17,16 @@ defaults) is exercised in full; only the data source is swapped. Per
 [openfeature.dev/docs/reference/concepts/provider](https://openfeature.dev/docs/reference/concepts/provider),
 "an application integrator can register one provider at a time."
 
-**Differentiation from sibling skills:**
-`launchdarkly-testing`, `unleash-testing`, `flagsmith-testing`, and
-`growthbook-testing` wrap each vendor's own `TestData`/bootstrap API.
-This skill covers the vendor-neutral OpenFeature layer teams adopt when
-they want to keep application code decoupled from a specific provider.
+**Scope:** this skill is the SDK-testing umbrella. The body covers the
+vendor-neutral OpenFeature layer teams adopt to keep application code
+decoupled from a specific provider; the vendor-native hermetic-bootstrap
+patterns (each an offline data-source variant of the same idea) live in
+references/: [references/unleash.md](references/unleash.md) (bootstrap
+toggles + custom strategies), [references/flagsmith.md](references/flagsmith.md)
+(offline LocalFileHandler + default_flag_handler), and
+[references/growthbook.md](references/growthbook.md) (initSync payload +
+inline experiments). LaunchDarkly's TestData source has enough distinct
+surface for its own skill: `launchdarkly-testing`.
 
 ## When to use
 
@@ -212,9 +217,9 @@ the entire test run without asserting each flag individually.
 
 - `InMemoryProvider` does not replicate production targeting rules.
   To test that a real provider evaluates a segment correctly, write an
-  integration test against that provider's native test harness. Consult
-  the sibling skills (`launchdarkly-testing`, `unleash-testing`, etc.)
-  for those patterns.
+  integration test against that provider's native test harness -
+  `launchdarkly-testing`, or the vendor references in references/
+  (unleash.md, flagsmith.md, growthbook.md).
 - Client-side OpenFeature SDKs (`@openfeature/web-sdk`) use a
   different `setContext` pattern; this skill targets server-side SDKs.
 - Hook `before` stages can modify the evaluation context in some SDK
@@ -248,14 +253,15 @@ the entire test run without asserting each flag individually.
   [github.com/open-feature/python-sdk](https://github.com/open-feature/python-sdk/blob/main/README.md)
 - Java / Python SDK code and spec tables:
   [references/multi-language-and-spec.md](references/multi-language-and-spec.md)
-- Companion catalogs:
-  `feature-flag-test-matrix-reference`,
-  `flag-state-coverage-builder`
-- Vendor-specific skills:
-  `launchdarkly-testing`,
-  `unleash-testing`,
-  `flagsmith-testing`,
-  `growthbook-testing`
+- Vendor-native SDK testing:
+  [references/unleash.md](references/unleash.md),
+  [references/flagsmith.md](references/flagsmith.md) (+
+  [references/flagsmith-modes.md](references/flagsmith-modes.md)),
+  [references/growthbook.md](references/growthbook.md)
+- Companion catalog:
+  `feature-flag-test-matrix-reference`
+- Vendor-specific skill:
+  `launchdarkly-testing`
 - Cross-plugin:
   `feature-flag-test-harness`,
   `ab-test-validity-checklist`

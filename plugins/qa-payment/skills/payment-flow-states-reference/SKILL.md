@@ -1,6 +1,6 @@
 ---
 name: payment-flow-states-reference
-description: "Pure-reference catalog of payment lifecycle state machines across Stripe, Adyen, PayPal, and Braintree: canonical states (created / requires_action / processing / succeeded / requires_capture / canceled / failed), authorisation vs capture, asynchronous webhook states, and refund / dispute / chargeback transitions. Use when designing tests for payment flows or auditing state-handling code; this is the state model, not a builder - to author suites on it use refund-test-matrix-builder (refunds), chargeback-flow-test-author (disputes), or payment-webhook-replay (webhook replay)."
+description: "Pure-reference catalog of payment lifecycle state machines across Stripe, Adyen, PayPal, and Braintree: canonical states (created / requires_action / processing / succeeded / requires_capture / canceled / failed), authorisation vs capture, asynchronous webhook states, refund / dispute / chargeback transitions, and the 3-D Secure (EMVCo 3DS 2.x) frictionless / challenge flow paths with per-gateway 3DS test cards (references/3ds-flows.md). Use when designing tests for payment flows, auditing state-handling code, or covering a 3DS round-trip; this is the state model, not a builder - to author suites on it use payment-flow-test-author (refunds, disputes, webhook replay)."
 ---
 
 # payment-flow-states-reference
@@ -115,7 +115,7 @@ mutating call.
 | Surface | Test |
 |---|---|
 | Created → succeeded (happy path) | Standard test-card; assert each state observed |
-| Requires-action (3DS) | Initiate with a challenge test card ([Stripe](https://docs.stripe.com/testing#regulatory-cards) `4000 0027 6000 3184`, [Adyen](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers) `4917 6100 0000 0000`); assert `requires_action` / `RedirectShopper` with `next_action.type = redirect_to_url`; complete the issuer-hosted challenge; confirm and assert `succeeded`. Repeat with a frictionless card (Stripe `4000 0000 0000 3055`) - must reach `succeeded` with no challenge. Per `3ds-test-flow-reference` |
+| Requires-action (3DS) | Initiate with a challenge test card ([Stripe](https://docs.stripe.com/testing#regulatory-cards) `4000 0027 6000 3184`, [Adyen](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers) `4917 6100 0000 0000`); assert `requires_action` / `RedirectShopper` with `next_action.type = redirect_to_url`; complete the issuer-hosted challenge; confirm and assert `succeeded`. Repeat with a frictionless card (Stripe `4000 0000 0000 3055`) - must reach `succeeded` with no challenge. Per [references/3ds-flows.md](references/3ds-flows.md) |
 | Failed (insufficient funds) | Use insufficient-funds test card; assert state |
 | Cancelled before capture | Manual-capture + cancel; assert state |
 | Webhook idempotency | Replay webhook twice; assert idempotent handling |
@@ -154,14 +154,12 @@ mutating call.
   Braintree state machines, webhook / refund / dispute detail, with their
   provider-doc citations):
   [references/payment-state-machines.md](references/payment-state-machines.md).
-- Companion catalogs:
-  `3ds-test-flow-reference`,
-  `pci-dss-scope-reference`.
+- 3DS 2.x flow paths (frictionless / challenge, SCA under PSD2, per-step test
+  surface): [references/3ds-flows.md](references/3ds-flows.md); per-gateway
+  3DS test cards: [references/gateway-test-cards.md](references/gateway-test-cards.md).
+- PCI DSS scope catalog: `pci-dss-control-test-author` (in the qa-compliance
+  plugin) and its references/pci-scope.md.
 - Consumed by:
   `stripe-test-cards-and-webhooks`,
-  `adyen-test-mode`,
-  `paypal-sandbox`,
-  `braintree-test-cards`,
-  `refund-test-matrix-builder`,
-  `chargeback-flow-test-author`,
-  `payment-webhook-replay`.
+  `payment-gateway-sandboxes`,
+  `payment-flow-test-author`.

@@ -1,6 +1,6 @@
 ---
 name: hasura-tests
-description: "Wraps Hasura GraphQL Engine testing patterns: docker-compose test instance, the metadata API for declarative schema/permission setup, x-hasura-role and x-hasura-user-id session headers for role-based permission tests, the v1/graphql endpoint via curl/HTTPie/native HTTP clients, and the role-by-table-by-operation permission-matrix pattern. Use for a metadata-driven Hasura engine where row-level permissions dominate; for a code-first server runtime harness use graphql-yoga-tests, apollo-server-tests, or mercurius-tests instead, not this skill."
+description: "Wraps Hasura GraphQL Engine testing patterns: docker-compose test instance, the metadata API for declarative schema/permission setup, x-hasura-role and x-hasura-user-id session headers for role-based permission tests, the v1/graphql endpoint via curl/HTTPie/native HTTP clients, and the role-by-table-by-operation permission-matrix pattern. Use for a metadata-driven Hasura engine where row-level permissions dominate; for a code-first server runtime harness use graphql-yoga-tests (Mercurius in its references) or apollo-server-tests instead, not this skill."
 ---
 
 # hasura-tests
@@ -65,7 +65,7 @@ services:
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
       HASURA_GRAPHQL_ADMIN_SECRET: test-secret
-      HASURA_GRAPHQL_DISABLE_INTROSPECTION_PUBLIC_API: "true"  # per introspection-attack-surface-reference
+      HASURA_GRAPHQL_DISABLE_INTROSPECTION_PUBLIC_API: "true"  # per graphql-complexity-limit-tester references/introspection.md
       HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
 ```
 
@@ -226,12 +226,10 @@ jobs:
 - Hasura metadata API:
   [hasura.io/docs/2.0/api-reference/metadata-api/index/](https://hasura.io/docs/2.0/api-reference/metadata-api/index/).
 - Introspection control:
-  `introspection-attack-surface-reference`.
+  `graphql-complexity-limit-tester` (references/introspection.md).
 - Cross-plugin (tenant isolation):
   `cross-tenant-data-leak-tests`,
   `rls-reference`.
 - Sibling frameworks:
   `apollo-server-tests`,
-  `graphql-yoga-tests`,
-  `mercurius-tests`,
-  `pothos-builder-tests`.
+  `graphql-yoga-tests`.

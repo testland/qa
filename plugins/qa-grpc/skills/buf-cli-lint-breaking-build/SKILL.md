@@ -1,6 +1,6 @@
 ---
 name: buf-cli-lint-breaking-build
-description: "Wraps the buf CLI for protobuf PR gating: `buf build` (compile .proto), `buf lint` (STANDARD rules: snake_case fields, Service suffix), `buf breaking --against {ref}` (detect wire/codegen breakage vs a git/BSR baseline), and `buf format`. Use as the CI proto-lint + breaking-change gate, or to debug a breaking failure by rule ID (e.g. FIELD_NO_DELETE_UNLESS_NUMBER_RESERVED) and pick the FILE/PACKAGE/WIRE_JSON/WIRE ruleset per consumer. This is the detection TOOL that enforces the rules; for the catalog of what is breaking and why use protobuf-versioning-strategy-reference, and for cross-service schema contract testing use protobuf-compat-checking - not this."
+description: "Wraps the buf CLI for protobuf PR gating: `buf build` (compile .proto), `buf lint` (STANDARD rules: snake_case fields, Service suffix), `buf breaking --against {ref}` (detect wire/codegen breakage vs a git/BSR baseline), and `buf format`. Use as the CI proto-lint + breaking-change gate, or to debug a breaking failure by rule ID (e.g. FIELD_NO_DELETE_UNLESS_NUMBER_RESERVED) and pick the FILE/PACKAGE/WIRE_JSON/WIRE ruleset per consumer. This is the detection TOOL that enforces the rules and carries the catalog of what is breaking and why (field-number reservation, wire-safe vs wire-incompatible changes, oneof/map constraints, the four buf categories) in references/versioning-strategy.md; for cross-service schema contract testing use protobuf-compat-checking - not this."
 ---
 
 # buf-cli-lint-breaking-build
@@ -10,9 +10,9 @@ description: "Wraps the buf CLI for protobuf PR gating: `buf build` (compile .pr
 Wraps three buf CLI commands - `build`, `lint`, `breaking` - as the
 proto-PR gate, per
 [buf.build/docs/cli/quickstart/](https://buf.build/docs/cli/quickstart/).
-Pairs with
-`protobuf-versioning-strategy-reference`
-for the catalog of what counts as breaking and why.
+The catalog of what counts as breaking and why lives in
+[references/versioning-strategy.md](references/versioning-strategy.md)
+(+ [references/buf-breaking-rules.md](references/buf-breaking-rules.md)).
 
 ## When to use
 
@@ -48,7 +48,7 @@ lint:
     - STANDARD
 breaking:
   use:
-    - FILE          # default; choose per protobuf-versioning-strategy-reference
+    - FILE          # default; choose per references/versioning-strategy.md
 ```
 
 `STANDARD` is the recommended lint rule set; it enforces
@@ -57,7 +57,7 @@ conventions like "Field name should be lower_snake_case" and
 
 The choice of `breaking.use` (FILE / PACKAGE / WIRE_JSON / WIRE)
 follows the per-deployment-model logic in
-`protobuf-versioning-strategy-reference`.
+[references/versioning-strategy.md](references/versioning-strategy.md).
 
 ### Configure `buf.gen.yaml` (codegen)
 
@@ -178,7 +178,7 @@ the failure PR-comment:
 | Skipping `buf breaking` on PR | Subtle wire breakage merges; consumers crash at deploy time | Always gate; never `--ignore` blanket |
 | Comparing against the PR's own merge base | Self-baseline; no detection | Use `".git#branch=main"` |
 | `fetch-depth: 1` in CI | git can't reach baseline → buf errors | `fetch-depth: 0` |
-| `breaking.use: WIRE` for codegen consumers | Generated code break (rename) passes; consumer build fails | Use `FILE` or `PACKAGE` per protobuf-versioning-strategy-reference |
+| `breaking.use: WIRE` for codegen consumers | Generated code break (rename) passes; consumer build fails | Use `FILE` or `PACKAGE` per references/versioning-strategy.md |
 | Adding `--ignore` to suppress a real violation | Silent regression | Use proper reserved + deprecation instead |
 | Lint set `MINIMAL` for new projects | Misses snake_case + service-suffix conventions early | Use `STANDARD` from day 1 |
 | One `buf.yaml` per proto file | Doesn't compose; lint runs N times | One `buf.yaml` at module root |
@@ -187,7 +187,7 @@ the failure PR-comment:
 ## Limitations
 
 - **Semantic vs wire breakage.** Per
-  `protobuf-versioning-strategy-reference`,
+  [references/versioning-strategy.md](references/versioning-strategy.md),
   buf detects binary/codegen breakage. Semantic meaning changes
   ("field now means net price, not gross") are undetectable.
 - **No cross-service compatibility.** This is single-service
@@ -206,10 +206,11 @@ the failure PR-comment:
   [buf.build/docs/cli/quickstart/](https://buf.build/docs/cli/quickstart/).
 - buf breaking rules:
   [buf.build/docs/breaking/rules](https://buf.build/docs/breaking/rules).
-- Companion catalog:
-  `protobuf-versioning-strategy-reference`.
+- Versioning + breaking-change catalog:
+  [references/versioning-strategy.md](references/versioning-strategy.md)
+  (+ [references/buf-breaking-rules.md](references/buf-breaking-rules.md)).
 - Status code vocabulary:
-  `grpc-status-code-mapping-reference`.
+  `grpc-streaming-test-author` (references/status-codes.md).
 - Sibling tools:
   `ghz-load`,
   `grpcurl-cli`,

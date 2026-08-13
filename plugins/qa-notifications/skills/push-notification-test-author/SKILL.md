@@ -1,6 +1,6 @@
 ---
 name: push-notification-test-author
-description: "Build-an-X for push notification tests (push notifications, web push, FCM / APNs push messages) across Web Push (RFC 8030 / VAPID), Apple Push Notification Service (APNs), and Firebase Cloud Messaging (FCM) - covers subscription handshake, payload encryption, badge / sound / click-action assertions, expired-subscription cleanup, silent-vs-alert, and topic-vs-targeted routing. Use when authoring tests for any push notification flow."
+description: "Build-an-X for push notification tests (push notifications, web push, FCM / APNs push messages) across Web Push (RFC 8030 / VAPID), Apple Push Notification Service (APNs), and Firebase Cloud Messaging (FCM) - covers subscription handshake, payload encryption, badge / sound / click-action assertions, expired-subscription cleanup, silent-vs-alert, and topic-vs-targeted routing; also carries the in-app notification test workflow (WebSocket / SSE / Firebase-listener delivery, read-unread state, multi-session fan-out, offline-then-reconnect) in references/in-app.md. Use when authoring tests for any push or in-app notification flow."
 ---
 
 # push-notification-test-author
@@ -171,6 +171,7 @@ An e-commerce app sends a Web Push "order shipped" notification and must clean u
 ## References
 
 - [references/platform-test-patterns.md](references/platform-test-patterns.md) - full Web Push / APNs / FCM test-pattern code
+- [references/in-app.md](references/in-app.md) - in-app notification workflow (WebSocket / SSE / Firebase listeners, unread state, fan-out, reconnect); Firebase listener patterns in [references/firebase-listener-tests.md](references/firebase-listener-tests.md)
 - IETF RFC 8030 - Web Push Protocol
 - IETF RFC 8291 - Message Encryption for Web Push
 - IETF RFC 8292 - VAPID for Web Push
@@ -179,7 +180,7 @@ An e-commerce app sends a Web Push "order shipped" notification and must clean u
 - web.dev/explore/notifications - Push API + Notifications API
 - npmjs.com/package/web-push - Node.js web-push library
 - pypi.org/project/apns2 - Python APNs HTTP/2 library
-- `email-flow-test-author`,
+- `mailpit-testing` (email flows in its references),
   `sms-test-author` - sister channels
 - `appium-testing`,
   `xcuitest-suite`,

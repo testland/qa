@@ -174,7 +174,7 @@ test('app sends auth frame on open', async ({ page }) => {
 - [RFC 6455] - WebSocket protocol (handshake, frames, close codes)
 - `server-sent-events-tests` - 
   one-way push alternative
-- `grpc-streaming-tests` - typed
+- `grpc-streaming-test-author` (qa-grpc) - typed
   RPC streaming alternative
 
 [RFC 6455]: https://datatracker.ietf.org/doc/html/rfc6455

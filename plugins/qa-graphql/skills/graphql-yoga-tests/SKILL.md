@@ -1,6 +1,6 @@
 ---
 name: graphql-yoga-tests
-description: "Tests a GraphQL Yoga server (the-guild.dev runtime) with `yoga.fetch()` for in-process, no-network request simulation of queries and mutations, `@graphql-tools/executor-http` for subscription and incremental-delivery (streaming) tests, auth-header pass-through, and production-config gates for disabled introspection and persisted operations. Use to test a GraphQL Yoga server, write Yoga query, mutation, or subscription tests, or check its production plugin config; for a different runtime harness use apollo-server-tests, mercurius-tests, or hasura-tests instead, not this skill."
+description: "Tests a GraphQL Yoga server (the-guild.dev runtime) with `yoga.fetch()` for in-process, no-network request simulation of queries and mutations, `@graphql-tools/executor-http` for subscription and incremental-delivery (streaming) tests, auth-header pass-through, and production-config gates for disabled introspection and persisted operations; also carries the Mercurius (Fastify GraphQL plugin) in-process `app.inject()` testing patterns in references/mercurius.md. Use to test a GraphQL Yoga or Mercurius server, write query, mutation, or subscription tests, or check production plugin config; for other runtimes use apollo-server-tests or hasura-tests instead, not this skill."
 ---
 
 # graphql-yoga-tests
@@ -216,10 +216,10 @@ jobs:
   [the-guild.dev/graphql/yoga-server/docs/features/testing](https://the-guild.dev/graphql/yoga-server/docs/features/testing).
 - Disable-introspection plugin:
   [the-guild.dev/graphql/yoga-server/docs](https://the-guild.dev/graphql/yoga-server/docs).
-- Companion catalogs:
-  `introspection-attack-surface-reference`,
-  `persisted-query-strategy-reference`.
+- Mercurius (Fastify) testing patterns:
+  [references/mercurius.md](references/mercurius.md).
+- Attack-surface hardening (introspection + persisted-query catalogs):
+  `graphql-complexity-limit-tester`.
 - Sibling frameworks:
   `apollo-server-tests`,
-  `mercurius-tests`,
-  `pothos-builder-tests`.
+  `hasura-tests`.

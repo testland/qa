@@ -1,9 +1,9 @@
 {
   "name": "testland/webhook-delivery-tester",
-  "description": "Build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) - HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks).",
+  "description": "The single webhook-testing home, sender AND receiver: build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) - HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity - plus inbound capture-and-replay hardening (runtime-signed fixtures, tampered-payload and future-timestamp rejection, key-rotation acceptance, sanitized production captures) in references/inbound-replay.md. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks), including payment and realtime integrations.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.13"
+  "version": "1.2.14"
 }

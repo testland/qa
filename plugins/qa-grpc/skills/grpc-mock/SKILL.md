@@ -1,6 +1,6 @@
 ---
 name: grpc-mock
-description: "Wraps gRPC server-mocking patterns for client-side tests: Go bufconn (in-memory net.Listener via google.golang.org/grpc/test/bufconn) + mockgen-generated interface mocks, Python pytest-grpc fixtures + unittest.mock patching of stubs, JVM grpc-mock library / in-process gRPC server (InProcessServerBuilder), Node @grpc/grpc-js fake server with NewServer-on-port-0. Use when writing client-side tests that need a controllable gRPC server response (success cases, error cases per grpc-status-code-mapping-reference, timeouts, and single-response error injection) without spinning up a real backend. For multi-message streaming-sequence tests (server-streaming, bidi), use grpc-streaming-test-author instead. Distinct from grpcurl-cli (ad-hoc CLI invocation against a real server) and ghz-load (perf against a real server)."
+description: "Wraps gRPC server-mocking patterns for client-side tests: Go bufconn (in-memory net.Listener via google.golang.org/grpc/test/bufconn) + mockgen-generated interface mocks, Python pytest-grpc fixtures + unittest.mock patching of stubs, JVM grpc-mock library / in-process gRPC server (InProcessServerBuilder), Node @grpc/grpc-js fake server with NewServer-on-port-0. Also carries the interceptor-layer test patterns (Go / Java / grpc-js auth, retry, logging, error-mapping, chained ordering via a spy handler) in references/interceptors.md. Use when writing client-side tests that need a controllable gRPC server response (success cases, error cases, timeouts, single-response error injection) without spinning up a real backend, or when testing a gRPC interceptor. For multi-message streaming-sequence tests (server-streaming, bidi), use grpc-streaming-test-author instead. Distinct from grpcurl-cli (ad-hoc CLI invocation against a real server) and ghz-load (perf against a real server)."
 ---
 
 # grpc-mock
@@ -8,9 +8,11 @@ description: "Wraps gRPC server-mocking patterns for client-side tests: Go bufco
 ## Overview
 
 Mocking a gRPC server lets client-side tests exercise success
-paths, every `grpc.StatusCode` per
-`grpc-status-code-mapping-reference`,
-timeouts, and streaming sequences without a real backend.
+paths, every `grpc.StatusCode` (per the status-code catalog in
+`grpc-streaming-test-author`, references/status-codes.md),
+timeouts, and streaming sequences without a real backend. The
+in-process harness is also the substrate for interceptor tests -
+see [references/interceptors.md](references/interceptors.md).
 
 Three approaches dominate, picked by language:
 
@@ -105,8 +107,8 @@ func TestGetUser_NotFound(t *testing.T) {
 }
 ```
 
-Per
-`grpc-status-code-mapping-reference`:
+Per the status-code catalog in `grpc-streaming-test-author`
+(references/status-codes.md):
 assert on `status.Code()`, not on error message strings.
 
 ### Go: gomock / mockgen (interface mock)
@@ -288,8 +290,8 @@ Per-language test runners; no separate harness needed.
 Test failures point to:
 
 - **Wrong status code** - fix server-side error mapping or
-  test expectation per
-  `grpc-status-code-mapping-reference`.
+  test expectation per the status-code catalog in
+  `grpc-streaming-test-author` (references/status-codes.md).
 - **Marshalling errors** - proto definition / generated code
   drift; regenerate via `buf-cli-lint-breaking-build`.
 - **Timeout** - server not responding; fake handler hung;
@@ -318,7 +320,7 @@ server goroutines often surface races.
 | Hard-coded ports (`8080`) in tests | Port conflicts in parallel CI | Use bufconn (Go), `[::]:0` (Python), InProcessChannel (JVM), port 0 (Node) |
 | Sharing one mock server across tests | Test order matters; flaky | Per-test setup; `t.Cleanup` / fixture teardown |
 | Mocking gRPC stub without server registration | Tests skip codec, marshalling, error mapping | In-process server preferred over interface mock for service-level tests |
-| Returning a Go error directly (not `status.Error`) | Client sees `Code: Unknown` (per grpc-status-code-mapping-reference) | Always wrap with `status.Errorf(codes.X, "...")` |
+| Returning a Go error directly (not `status.Error`) | Client sees `Code: Unknown` | Always wrap with `status.Errorf(codes.X, "...")` |
 | Mocking streaming methods with one response | Tests don't exercise multi-message logic | Use a real stream + `Send` multiple times |
 | Forgetting `server.Stop()` in teardown | Goroutine leaks; future tests pollute | `t.Cleanup` / pytest fixture yield |
 | No `-race` flag in Go tests | Concurrent races slip through | Always `go test -race` in CI |
@@ -352,8 +354,13 @@ server goroutines often surface races.
   [grpc.io/docs/languages/java/basics/](https://grpc.io/docs/languages/java/basics/).
 - @grpc/grpc-js:
   [github.com/grpc/grpc-node/tree/master/packages/grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js).
+- Interceptor test patterns (Go / Java / grpc-js playbooks):
+  [references/interceptors.md](references/interceptors.md)
+  (+ [references/go-interceptors.md](references/go-interceptors.md),
+  [references/java-interceptors.md](references/java-interceptors.md),
+  [references/grpc-js-interceptors.md](references/grpc-js-interceptors.md)).
 - Status-code assertions:
-  `grpc-status-code-mapping-reference`.
+  `grpc-streaming-test-author` (references/status-codes.md).
 - Sibling tools:
   `grpcurl-cli`,
   `ghz-load`,

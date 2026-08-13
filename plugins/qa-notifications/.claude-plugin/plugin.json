@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-notifications",
-  "version": "1.2.13",
-  "description": "Notifications + messaging testing: 7 skills (mailpit-testing, mailhog-testing, email-flow-test-author, sms-test-author, push-notification-test-author, in-app-notification-test-author, webhook-delivery-tester) and 1 agent (notification-delivery-critic).",
+  "version": "1.3.0",
+  "description": "Notifications + messaging testing: 4 skills (mailpit-testing - the email-testing home with email-flow + MailHog-legacy references; sms-test-author; push-notification-test-author with the in-app workflow in its references; webhook-delivery-tester - the marketplace-wide webhook home, sender + receiver) and 1 agent (notification-delivery-critic).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,19 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-notifications",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "notifications", "email", "smtp", "sms", "push", "webhook", "mailpit", "mailhog", "twilio", "fcm", "apns"]
+  "keywords": [
+    "qa",
+    "testing",
+    "notifications",
+    "email",
+    "smtp",
+    "sms",
+    "push",
+    "webhook",
+    "mailpit",
+    "mailhog",
+    "twilio",
+    "fcm",
+    "apns"
+  ]
 }

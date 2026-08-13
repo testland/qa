@@ -5,7 +5,7 @@ under `NODE_ENV=production` in CI.
 
 ## Introspection disabled
 
-Per `introspection-attack-surface-reference`:
+Per the introspection catalog in `graphql-complexity-limit-tester` (references/introspection.md):
 
 ```typescript
 import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection';
@@ -28,7 +28,7 @@ test('introspection disabled', async () => {
 
 ## Persisted-operations test
 
-Per `persisted-query-strategy-reference` Mode 2:
+Per the persisted-query catalog in `graphql-complexity-limit-tester` (references/persisted-queries.md), Mode 2:
 
 ```typescript
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations';

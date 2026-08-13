@@ -1,0 +1,9 @@
+{
+  "name": "testland/payment-flow-test-author",
+  "description": "Build-an-X workflow that authors the full payment-flow test suite in three phases: the refund matrix (full / partial / multiple-partials / over-refund / already-refunded, per-gateway APIs for Stripe, Adyen, PayPal, Braintree), the chargeback / dispute suite (Visa + Mastercard reason codes, evidence submission windows, won / lost / accepted dispositions), and webhook replay + recovery via gateway-native simulators (Stripe CLI trigger / resend, Adyen Customer Area resend, PayPal Webhook Simulator, Braintree sampleNotification). Driven by the state model in payment-flow-states-reference. Use when building refund, dispute, or payment-webhook-robustness coverage for a payment integration; for generic (non-payment) webhook receiver testing use webhook-delivery-tester in the qa-notifications plugin.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

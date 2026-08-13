@@ -1,6 +1,6 @@
 ---
 name: pci-dss-control-test-author
-description: "Build-an-X for PCI DSS v4.0 scope verification - cardholder data environment (CDE) boundary tests, segmentation tests (PCI Req 1), prohibited-data-storage assertions per Req 3 (no full track data, no CVV/CAV2/CVC2/CID, no PIN/PIN block post-authorization), key-management tests per Req 3.6, encryption-of-transmissions per Req 4. Use when authoring PCI DSS scope-reduction + control tests for any system handling payment-card data."
+description: "Build-an-X for PCI DSS v4.0 scope verification - cardholder data environment (CDE) boundary tests, segmentation tests (PCI Req 1), prohibited-data-storage assertions per Req 3 (no full track data, no CVV/CAV2/CVC2/CID, no PIN/PIN block post-authorization), key-management tests per Req 3.6, encryption-of-transmissions per Req 4; includes the scope catalog (SAQ A / A-EP / D levels, PAN-storage rules, hosted-fields / tokenization scope-reduction patterns) in references/pci-scope.md. Use when authoring PCI DSS scope-reduction + control tests for any system handling payment-card data, or when determining a payment integration's SAQ level."
 ---
 
 # pci-dss-control-test-author
@@ -227,7 +227,7 @@ def test_pan_access_creates_audit_record():
 
 ## Step 7 - Scope reduction strategies
 
-PCI DSS scope reduction is the highest-leverage cost saving. Default: **tokenization** - replace the PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only, which shrinks the CDE the most for the least integration churn. The alternatives (hosted iframe payment page, P2PE for card-present flows, network segmentation as layered defense only) and the Req 3.4 storage-format rationale are in [references/strategies.md](references/strategies.md).
+PCI DSS scope reduction is the highest-leverage cost saving. Default: **tokenization** - replace the PAN with a non-sensitive token at the earliest possible boundary so downstream systems handle tokens only, which shrinks the CDE the most for the least integration churn. The alternatives (hosted iframe payment page, P2PE for card-present flows, network segmentation as layered defense only) and the Req 3.4 storage-format rationale are in [references/strategies.md](references/strategies.md). The full scope catalog - SAQ level selection (A / A-EP / D), PAN-storage rules, per-gateway hosted-fields patterns, and the testable behaviours the scope boundary creates - is in [references/pci-scope.md](references/pci-scope.md).
 
 **PAN-storage format default (Req 3.4):** the four `is_*` checks in Step 3's `test_pan_stored_encrypted` are an OR because pre-existing systems may already use any of them; for new storage paths pick tokenization and treat encryption / truncation / hashing as escape hatches.
 
@@ -241,5 +241,6 @@ PCI DSS scope reduction is the highest-leverage cost saving. Default: **tokeniza
 ## References
 
 - PCI Security Standards Council: [home](https://www.pcisecuritystandards.org/), [document library](https://www.pcisecuritystandards.org/document_library/) (PCI DSS v4.0 docs), [glossary](https://www.pcisecuritystandards.org/glossary/)
+- Scope catalog (SAQ levels, PAN-storage rules, scope-reduction patterns): [references/pci-scope.md](references/pci-scope.md)
 - Sister catalogs: `gdpr-test-patterns` (CCPA/CPRA in its references/ccpa.md), `hipaa-test-patterns`, `soc2-evidence-collector`
 - `audit-trail-test-author` - Req 10 audit log requirements

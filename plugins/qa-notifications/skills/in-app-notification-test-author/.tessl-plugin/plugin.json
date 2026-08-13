@@ -1,9 +1,0 @@
-{
-  "name": "testland/in-app-notification-test-author",
-  "description": "Build-an-X workflow for testing real-time in-app notifications delivered over WebSocket (RFC 6455) or Server-Sent Events (WHATWG SSE spec), Firebase Realtime Database / Firestore listeners, and notification center read/unread state - covers fan-out to multiple sessions, offline-then-reconnect delivery, and ordering guarantees. Distinct from email, SMS, push, and webhook channels. Use when authoring tests for any notification that appears inside a connected web or mobile app UI without leaving the application.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.13"
-}

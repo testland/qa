@@ -1,6 +1,6 @@
 ---
 name: stripe-subscription-billing-test-author
-description: "Builds test suites for Stripe recurring-billing flows: trial-to-paid conversion, proration on plan upgrade and downgrade, dunning on failed renewal, cancel and reactivation, and the full subscription webhook event matrix (invoice.payment_failed, customer.subscription.updated, customer.subscription.deleted, invoice.paid). Uses Stripe Billing test clocks (POST /v1/test_helpers/test_clocks) to time-travel through billing cycles without calendar delay. Distinct from stripe-test-cards-and-webhooks (one-time PaymentIntents) and payment-webhook-replay (idempotency + replay robustness). Does not cover single-event CLI replay or handler idempotency testing (see payment-webhook-replay for those). Use when authoring tests for subscription or recurring-billing integrations."
+description: "Builds test suites for Stripe recurring-billing flows: trial-to-paid conversion, proration on plan upgrade and downgrade, dunning on failed renewal, cancel and reactivation, and the full subscription webhook event matrix (invoice.payment_failed, customer.subscription.updated, customer.subscription.deleted, invoice.paid). Uses Stripe Billing test clocks (POST /v1/test_helpers/test_clocks) to time-travel through billing cycles without calendar delay. Distinct from stripe-test-cards-and-webhooks (one-time PaymentIntents) and payment-flow-test-author (idempotency + replay robustness). Does not cover single-event CLI replay or handler idempotency testing (see payment-flow-test-author for those). Use when authoring tests for subscription or recurring-billing integrations."
 metadata:
   keywords: "stripe, billing, subscriptions, recurring, test-clocks, dunning, proration, trial"
 ---
@@ -350,4 +350,4 @@ tests do need `STRIPE_WEBHOOK_SECRET`.
   [docs.stripe.com/stripe-cli](https://docs.stripe.com/stripe-cli).
 - Sibling skills:
   `stripe-test-cards-and-webhooks`,
-  `payment-webhook-replay`.
+  `payment-flow-test-author`.

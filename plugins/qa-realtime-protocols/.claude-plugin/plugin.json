@@ -1,11 +1,24 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-realtime-protocols",
-  "version": "1.3.4",
-  "description": "Real-time protocol testing: 7 skills (websocket-tests, server-sent-events-tests, sse-load-tests, grpc-streaming-tests, mqtt-tests, stomp-amqp-tests, webhook-replay-tests) and 1 agent (realtime-protocol-reviewer). Anchored on RFC 6455, WHATWG SSE, gRPC streaming, MQTT v5, and the Standard Webhooks signature scheme.",
-  "author": { "name": "testland", "url": "https://testland.io/" },
+  "version": "1.4.0",
+  "description": "Real-time protocol testing: 3 skills (websocket-tests; server-sent-events-tests with k6 load testing in its references; mqtt-tests with STOMP/AMQP broker testing in its references) and 1 agent (realtime-protocol-reviewer). Anchored on RFC 6455, WHATWG SSE, and MQTT v5. gRPC streaming lives in qa-grpc; webhook testing lives in qa-notifications.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-realtime-protocols",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "realtime-protocols", "websocket", "sse", "grpc", "mqtt", "webhooks", "iot"]
+  "keywords": [
+    "qa",
+    "testing",
+    "realtime-protocols",
+    "websocket",
+    "sse",
+    "grpc",
+    "mqtt",
+    "webhooks",
+    "iot"
+  ]
 }

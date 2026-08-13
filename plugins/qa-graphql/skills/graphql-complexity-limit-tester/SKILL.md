@@ -1,19 +1,22 @@
 ---
 name: graphql-complexity-limit-tester
-description: "Crafts over-limit depth and complexity queries then asserts rejection before execution, verifying that graphql-depth-limit, graphql-cost-analysis, and graphql-armor (max-depth / cost-limit / max-tokens plugins) are actually enforced and not just configured. Use when auditing a GraphQL service for DoS exposure after depth or cost limits have been added as mitigations, or when adding tests that prove the limits in CI before a production deployment."
+description: "The GraphQL attack-surface / hardening skill: crafts over-limit depth and complexity queries then asserts rejection before execution, verifying that graphql-depth-limit, graphql-cost-analysis, and graphql-armor (max-depth / cost-limit / max-tokens plugins) are actually enforced and not just configured; carries the introspection attack-surface catalog (what __schema exposes, per-framework disable controls, hideSchemaDetailsFromClientErrors) in references/introspection.md and the persisted-query allowlisting strategies (Apollo APQ protocol, auto-register vs strict-allowlist vs hybrid modes) in references/persisted-queries.md. Use when auditing a GraphQL service for DoS or schema-disclosure exposure, hardening a production deployment, or adding tests that prove the limits in CI."
 metadata:
-  keywords: "graphql, depth-limit, complexity, cost-analysis, dos, security, graphql-armor"
+  keywords: "graphql, depth-limit, complexity, cost-analysis, dos, security, graphql-armor, introspection, persisted-queries"
 ---
 
 # graphql-complexity-limit-tester
 
 ## Overview
 
-`introspection-attack-surface-reference` names query-depth limiting and
-query-cost limiting as key DoS mitigations, but nothing in that catalog
-executes a test. This skill closes that gap: it authors tests that send
-an over-limit query and assert a validation error is returned _before_
-any resolver runs.
+The introspection attack-surface catalog
+([references/introspection.md](references/introspection.md)) names
+query-depth limiting and query-cost limiting as key DoS mitigations, but
+nothing in that catalog executes a test. This skill closes that gap: it
+authors tests that send an over-limit query and assert a validation error
+is returned _before_ any resolver runs. The strongest request-layer
+mitigation - persisted-query allowlisting - is cataloged in
+[references/persisted-queries.md](references/persisted-queries.md).
 
 Three library families are covered:
 
@@ -403,7 +406,11 @@ a configuration drift problem. See the CI note in `apollo-server-tests`.
   - max-tokens defaults: [escape.tech/graphql-armor/docs/plugins/max-tokens](https://escape.tech/graphql-armor/docs/plugins/max-tokens)
 - Apollo Server `executeOperation` and `validationRules`:
   [apollographql.com/docs/apollo-server/testing/testing](https://www.apollographql.com/docs/apollo-server/testing/testing)
-- Attack surface context:
-  `introspection-attack-surface-reference`
+- Introspection attack surface (what __schema exposes, disable controls,
+  testable behaviours):
+  [references/introspection.md](references/introspection.md)
+- Persisted-query strategies (APQ protocol, three modes, testable
+  behaviours):
+  [references/persisted-queries.md](references/persisted-queries.md)
 - Apollo testing patterns:
   `apollo-server-tests`

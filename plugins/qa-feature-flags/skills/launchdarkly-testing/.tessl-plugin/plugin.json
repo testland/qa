@@ -1,9 +1,9 @@
 {
   "name": "testland/launchdarkly-testing",
-  "description": "Wraps LaunchDarkly server-side SDK testing patterns: TestData data source for hermetic tests (no network), file-based data source for fixture-driven tests, flag override patterns (TestData.update for per-test flag values), and assignment-integrity tests. Use when writing tests for code that uses LaunchDarkly flags.",
+  "description": "Wraps LaunchDarkly server-side SDK testing patterns: TestData data source for hermetic tests (no network), file-based data source for fixture-driven tests, flag override patterns (TestData.update for per-test flag values), and assignment-integrity tests. Use when writing tests for code that uses LaunchDarkly flags; to decide which flag combinations those tests should cover in the first place, see feature-flag-test-matrix-reference.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.10"
+  "version": "1.3.11"
 }

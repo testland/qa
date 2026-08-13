@@ -1,6 +1,6 @@
 ---
 name: ab-test-validity-checklist
-description: "Workflow skill that builds an A/B-test validity checklist from an experiment proposal, walking the canonical design-correctness gates - pre-registered OEC/power/guardrails, randomization unit + SRM check, assignment integrity, telemetry, peeking discipline, novelty/primacy, post-experiment SRM re-check - into a per-experiment checklist + sign-off form. Use when launching, auditing, or governing an experiment. For pitfall mechanics use guardrail-metrics-reference or peeking-problem-reference; to read an already-valid result use experiment-results-interpreter; for per-SDK harness tests use optimizely-test or statsig-test - this gates DESIGN, not SDK code."
+description: "Workflow skill that builds an A/B-test validity checklist from an experiment proposal, walking the canonical design-correctness gates - pre-registered OEC/power/guardrails, randomization unit + SRM check, assignment integrity, telemetry, peeking discipline, novelty/primacy, post-experiment SRM re-check - into a per-experiment checklist + sign-off form. Use when launching, auditing, or governing an experiment. For pitfall mechanics (guardrails, peeking) see experiment-results-interpreter's references; to read an already-valid result use experiment-results-interpreter; for per-SDK harness tests use experiment-sdk-testing - this gates DESIGN, not SDK code."
 ---
 
 # ab-test-validity-checklist
@@ -33,15 +33,15 @@ Document **before launch**:
 |---|---|
 | OEC | The single metric (or weighted combination) to improve |
 | Power | Expected effect size, sample size, alpha, beta |
-| Guardrails | Per `guardrail-metrics-reference` - list each + threshold |
+| Guardrails | Per `experiment-results-interpreter` references/guardrails.md - list each + threshold |
 | Randomization unit | User / session / device / cookie / IP / tenant |
 | Allocation | Percentages per arm; rules for ramp-up |
-| Look schedule | Pre-declared days; per `peeking-problem-reference` |
+| Look schedule | Pre-declared days; per `experiment-results-interpreter` references/peeking.md |
 | Sequential method | Fixed / Pocock / O'Brien-Fleming / always-valid |
 | Stop-early rules | What signals stop (loss on OEC, blocking guardrail) |
 
 Candidate guardrail set to pick from, with typical block
-thresholds (per `guardrail-metrics-reference`;
+thresholds (per `experiment-results-interpreter` references/guardrails.md;
 Kohavi et al. *Trustworthy Online Controlled Experiments*, ISBN
 978-1108724265):
 
@@ -110,9 +110,8 @@ Tests for the assignment SDK / service:
 | Bot exclusion consistent | If bots filtered, filter applies before assignment |
 | Latency | Assignment SDK adds < 5ms to request path |
 
-These tests live in the SDK-specific test skills per
-`statsig-test`,
-`optimizely-test`, etc.
+These tests live in the per-vendor harnesses of
+`experiment-sdk-testing`.
 
 ## Step 4 - Telemetry correctness
 
@@ -128,7 +127,7 @@ Verify the **event firing** matches the proposal:
 
 ## Step 5 - Peeking discipline
 
-Per `peeking-problem-reference`:
+Per `experiment-results-interpreter` references/peeking.md:
 
 | Rule | Test |
 |---|---|
@@ -155,7 +154,7 @@ Before ship:
 | Pre-registration honoured | OEC / guardrails / unit / schedule unchanged since launch |
 | SRM clean | p > 0.0001 on the chi-square (Step 2) |
 | OEC significant under the declared method | Sequential / always-valid / fixed-horizon p-value |
-| All guardrails within thresholds | Each Step 1 guardrail below its block threshold; per `guardrail-metrics-reference` |
+| All guardrails within thresholds | Each Step 1 guardrail below its block threshold; per `experiment-results-interpreter` references/guardrails.md |
 | Multiple-comparison corrected | Bonferroni / BH if many metrics |
 | Novelty assessment | Effect persisting in week 2+ |
 | Segment-stability | Effect direction consistent across major segments (no Simpson's paradox) |
@@ -238,11 +237,7 @@ Sign-off: <name>, <date>
   (Microsoft Research).
 - Microsoft Experimentation Platform articles:
   [microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/).
-- Companion catalogs:
-  `guardrail-metrics-reference`,
-  `peeking-problem-reference`.
-- Operationalised:
-  `statsig-test`,
-  `optimizely-test`,
-  `vwo-test`,
-  `amplitude-experiment-test`.
+- Companion: `experiment-results-interpreter` (result reading; peeking +
+  guardrail methodology in its references/).
+- Operationalised: `experiment-sdk-testing` (Statsig / Optimizely /
+  Split.io / Amplitude / VWO harnesses).

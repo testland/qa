@@ -1,9 +1,0 @@
-{
-  "name": "testland/webhook-replay-tests",
-  "description": "Tests inbound webhook receivers for replay-attack resistance: capture incoming webhook payloads + headers, replay against the receiver under test, validate the Standard Webhooks signature scheme (svix-id + svix-timestamp + svix-signature, HMAC-SHA256 over `{id}.{timestamp}.{payload}`), svix-id idempotency dedup, and 5-minute timestamp-window enforcement by signing fixtures at runtime. Does NOT cover outbound delivery, retry-on-5xx, or failure-event exhaustion - those belong to an outbound webhook delivery harness. Use when testing the receiving side of a webhook integration.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.2"
-}

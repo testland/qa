@@ -167,7 +167,7 @@ grpcurl -cacert ca.crt \
     -d "${PAYLOAD}" \
     staging.example.com:443 my.custom.server.Service/Method
 
-# Compare status code per grpc-status-code-mapping-reference
+# Compare status code per grpc-streaming-test-author references/status-codes.md
 ```
 
 ## Parsing results
@@ -192,8 +192,7 @@ ERROR:
   Message: User 1234 does not exist
 ```
 
-Per
-`grpc-status-code-mapping-reference`,
+Per the status-code catalog in `grpc-streaming-test-author` (references/status-codes.md),
 `NotFound` (code 5) maps to HTTP 404 and indicates the resource
 isn't present. Exit code is non-zero.
 
@@ -281,8 +280,7 @@ done
 ```
 
 This finds methods registered in reflection but returning
-`Unimplemented` (per
-`grpc-status-code-mapping-reference`).
+`Unimplemented` (per the status-code catalog in `grpc-streaming-test-author` (references/status-codes.md)).
 
 ## Anti-patterns
 
@@ -319,13 +317,12 @@ This finds methods registered in reflection but returning
 - grpcurl README:
   [github.com/fullstorydev/grpcurl](https://github.com/fullstorydev/grpcurl/blob/master/README.md).
 - Companion catalogs:
-  `protobuf-versioning-strategy-reference`,
-  `grpc-status-code-mapping-reference`.
+  `buf-cli-lint-breaking-build` (references/versioning-strategy.md),
+  `grpc-streaming-test-author` (references/status-codes.md).
 - Sibling tools:
   `buf-cli-lint-breaking-build`,
   `ghz-load`,
   `grpc-mock`,
   `grpc-streaming-test-author`.
-- Sibling protocol-test plugin:
-  `grpc-streaming-tests` (in the qa-realtime-protocols plugin;
-  wire-level streaming semantics).
+- Wire-level streaming semantics:
+  `grpc-streaming-test-author` (references/wire-level-testing.md).

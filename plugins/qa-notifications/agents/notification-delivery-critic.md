@@ -5,7 +5,7 @@ tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - webhook-delivery-tester
-  - email-flow-test-author
+  - mailpit-testing
 ---
 
 # notification-delivery-critic
@@ -33,7 +33,8 @@ backoff with jitter (`webhook-delivery-tester` Step 3 retry schedule).
 Bare no-op catch, swallowed exception, or fire-and-forget coroutine with
 no error path = `high`.
 
-**Step 4 - Bounce and unsubscribe.** `email-flow-test-author` Step 7
+**Step 4 - Bounce and unsubscribe.** The email-flow workflow in preloaded
+`mailpit-testing` (references/email-flows.md, Step 7)
 requires ESP bounce/complaint webhooks to update delivery state. `Grep` for
 the actual handler - do not infer from framework name. Missing bounce or
 complaint suppression handler = `high`. Missing SMS STOP/UNSUBSCRIBE
@@ -86,4 +87,4 @@ Re-invoke on the updated diff after fixes.
 - RFC 7208: rfc-editor.org/rfc/rfc7208 - SPF (envelope MAIL FROM)
 - RFC 7489: rfc-editor.org/rfc/rfc7489 - DMARC identifier alignment
 - [`webhook-delivery-tester`](../skills/webhook-delivery-tester/SKILL.md)
-- [`email-flow-test-author`](../skills/email-flow-test-author/SKILL.md)
+- [`mailpit-testing`](../skills/mailpit-testing/SKILL.md) (email-flow workflow in references/email-flows.md)

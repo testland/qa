@@ -68,5 +68,5 @@ information."
 
 ## Companion catalogs
 
-`ab-test-validity-checklist`, `guardrail-metrics-reference`,
-`peeking-problem-reference`.
+`ab-test-validity-checklist`; sibling references
+[peeking.md](peeking.md) and [guardrails.md](guardrails.md).

@@ -1,0 +1,9 @@
+{
+  "name": "testland/experiment-sdk-testing",
+  "description": "Umbrella for experimentation-SDK test harnesses: the shared offline-datafile / hermetic-init pattern (commit a point-in-time flag/experiment config fixture, initialize the SDK with no network, pin arms per test, assert assignment integrity), with per-vendor references for Statsig (localMode + overrideGate), Optimizely (datafile + forced decisions), Split.io / Harness FME (localhost mode + features map or YAML fixture), Amplitude Experiment (local evaluation + bootstrap), and VWO (settings file + deterministic bucketing). Use when writing tests for application code instrumented with any of these five experimentation SDKs; for experiment DESIGN gates use ab-test-validity-checklist, and to read results use experiment-results-interpreter.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

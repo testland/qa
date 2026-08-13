@@ -1,25 +1,24 @@
 # qa-notifications
 
 Notifications + messaging testing across email, SMS, push, and
-webhooks. Two SMTP-capture wrappers (Mailpit current; MailHog
-legacy) plus four build-an-X workflow skills covering full
-notification flows: email (multipart + tracking + bounce), SMS
-(Twilio Magic Numbers + segment counting + STOP keywords), push
-(Web Push / APNs / FCM with expired-subscription cleanup), and
-webhook delivery (Standard Webhooks signing + replay defense).
+webhooks. Mailpit is the email-testing home (SMTP capture, the full
+email-flow workflow, and legacy MailHog migration in its references);
+sms-test-author covers Twilio Magic Numbers + segment counting + STOP
+keywords; push-notification-test-author covers Web Push / APNs / FCM
+plus the in-app notification workflow in its references; and
+webhook-delivery-tester is the single marketplace-wide webhook-testing
+home (sender + receiver, with inbound capture-and-replay hardening in
+its references).
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [mailpit-testing](skills/mailpit-testing/SKILL.md) | Modern dev mailbox; SMTP 1025 + Web UI 8025; REST API for assertions; Chaos mode; tagging via plus-addressing |
-| Skill | [mailhog-testing](skills/mailhog-testing/SKILL.md) | Legacy dev mailbox (predecessor to Mailpit); APIv2; Jim chaos monkey; migration-to-Mailpit guide |
-| Skill | [email-flow-test-author](skills/email-flow-test-author/SKILL.md) | Build-an-X for end-to-end email: capture → headers (incl. List-Unsubscribe) → multipart body → link-rewrite resolution → unsubscribe one-click → bounce/complaint webhooks |
+| Skill | [mailpit-testing](skills/mailpit-testing/SKILL.md) | Email-testing home: Mailpit SMTP capture + REST assertions + Chaos mode; email-flow workflow and MailHog legacy/migration in references/ |
 | Skill | [sms-test-author](skills/sms-test-author/SKILL.md) | Build-an-X for SMS via Twilio Test Credentials + Magic Numbers; segment counting (GSM-7 vs UCS-2); rate limit; STOP/HELP keyword handling; sender-type per geography |
-| Skill | [push-notification-test-author](skills/push-notification-test-author/SKILL.md) | Build-an-X across Web Push (RFC 8030+VAPID) + APNs + FCM; subscription handshake; payload + click-action; 410-cleanup; silent vs alert |
-| Skill | [webhook-delivery-tester](skills/webhook-delivery-tester/SKILL.md) | Build-an-X per Standard Webhooks: HMAC-SHA256 signing, retry+backoff, replay window, idempotent processing, vendor sample payloads (Stripe/Twilio/SendGrid/GitHub/GitLab) |
+| Skill | [push-notification-test-author](skills/push-notification-test-author/SKILL.md) | Build-an-X across Web Push (RFC 8030+VAPID) + APNs + FCM; subscription handshake; payload + click-action; 410-cleanup; silent vs alert; in-app workflow in references/ |
+| Skill | [webhook-delivery-tester](skills/webhook-delivery-tester/SKILL.md) | The webhook-testing home (sender + receiver) per Standard Webhooks: HMAC-SHA256 signing, retry+backoff, replay window, idempotent processing; inbound replay hardening in references/ |
 | Agent | [notification-delivery-critic](agents/notification-delivery-critic.md) | Adversarial critic scanning notification-send code (email/SMS/push/webhook) for delivery-reliability defects: missing idempotency, absent bounce/unsubscribe handlers, missing DKIM/SPF/DMARC alignment, missing retry/backoff, absent dead-letter handling; emits BLOCK or PASS |
-| Skill | [in-app-notification-test-author](skills/in-app-notification-test-author/SKILL.md) | Test real-time in-app notifications (WebSocket/SSE/Firebase): delivery, read state, fan-out, reconnect. |
 
 ## Install
 

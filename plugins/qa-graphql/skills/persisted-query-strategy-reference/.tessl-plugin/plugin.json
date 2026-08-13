@@ -1,9 +1,0 @@
-{
-  "name": "testland/persisted-query-strategy-reference",
-  "description": "Pure-reference catalog of GraphQL Persisted Query strategies: the Apollo APQ SHA-256 hash protocol, the PersistedQueryNotFoundError retry flow, the `extensions.persistedQuery` payload, GET-vs-POST and CDN-cache implications, and the three operation modes (auto-register, strict allowlist, hybrid). Use to design or audit a server's persisted-query request layer. This strategy reference emits no tests; to author the runtime tests use apollo-server-tests, graphql-yoga-tests, or mercurius-tests, and for introspection lockdown see introspection-attack-surface-reference.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.3"
-}

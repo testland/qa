@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 475 components**
+**89 plugins · 443 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -115,14 +115,14 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-payment](plugins/qa-payment/) | 1.4.8 | 11 skills + 1 agents | 12 |
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.3.15 | 9 skills + 2 agents | 11 |
-| [qa-experimentation](plugins/qa-experimentation/) | 1.1.16 | 9 skills + 1 agents | 10 |
-| [qa-graphql](plugins/qa-graphql/) | 1.5.0 | 9 skills + 1 agents | 10 |
-| [qa-grpc](plugins/qa-grpc/) | 1.2.14 | 8 skills + 1 agents | 9 |
-| [qa-notifications](plugins/qa-notifications/) | 1.2.13 | 7 skills + 1 agents | 8 |
-| [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.3.4 | 7 skills + 1 agents | 8 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.3.0 | 6 skills + 1 agents | 7 |
+| [qa-graphql](plugins/qa-graphql/) | 1.5.0 | 6 skills + 0 agents | 6 |
+| [qa-grpc](plugins/qa-grpc/) | 1.2.14 | 5 skills + 1 agents | 6 |
+| [qa-payment](plugins/qa-payment/) | 1.5.0 | 5 skills + 1 agents | 6 |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.4.0 | 3 skills + 2 agents | 5 |
+| [qa-notifications](plugins/qa-notifications/) | 1.3.0 | 4 skills + 1 agents | 5 |
+| [qa-experimentation](plugins/qa-experimentation/) | 1.2.0 | 3 skills + 1 agents | 4 |
+| [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.4.0 | 3 skills + 1 agents | 4 |
 
 ## AI & ML
 

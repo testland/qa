@@ -1,6 +1,6 @@
 ---
 name: graphql-subscription-test-author
-description: "Authors GraphQL subscription resolver test suites over graphql-ws (WebSocket) and graphql-sse (Server-Sent Events) transports: subscribe to event streams via the async-iterator API, assert emitted data shape and sequence, verify connection lifecycle and protocol close codes, and validate auth-on-connect (connectionParams / authenticate callback) plus resolver-level pubsub trigger logic. Use for real-time subscription operations; not for queries or mutations - for those use apollo-server-tests, graphql-yoga-tests, or mercurius-tests."
+description: "Authors GraphQL subscription resolver test suites over graphql-ws (WebSocket) and graphql-sse (Server-Sent Events) transports: subscribe to event streams via the async-iterator API, assert emitted data shape and sequence, verify connection lifecycle and protocol close codes, and validate auth-on-connect (connectionParams / authenticate callback) plus resolver-level pubsub trigger logic. Use for real-time subscription operations; not for queries or mutations - for those use apollo-server-tests or graphql-yoga-tests (Mercurius in its references)."
 ---
 
 # graphql-subscription-test-author
@@ -40,7 +40,7 @@ Distinct scope vs. sibling skills:
 - `graphql-yoga-tests` covers Yoga's `yoga.fetch()` path; subscription
   tests there go through Yoga's own plugin hooks, not graphql-ws/sse
   directly.
-- `mercurius-tests` and `hasura-tests` target those specific runtimes.
+- `graphql-yoga-tests` (references/mercurius.md) and `hasura-tests` target those specific runtimes.
 
 ## How to use
 

@@ -50,7 +50,7 @@ convenient but the raw CLI calls above work without them.
             ${{ steps.breaking.outputs.stdout }}
             ```
             Consult
-            protobuf-versioning-strategy-reference
+            references/versioning-strategy.md
             for whether this change is genuinely required and how
             to do it safely (reserve, add new, deprecate old).
 ```

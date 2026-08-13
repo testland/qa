@@ -147,8 +147,8 @@ Marketplace conventions (stricter than Anthropic's namespace-only rule):
   check for a collision with `ls plugins/*/skills/ plugins/*/agents/` before
   naming.
 - **Name the behavior or the tool, never the reader's state or the artifact
-  kind.** `web-e2e-overview` not `getting-started`; `payment-webhook-replay`
-  not `payment-webhook-replay-skill`. Anthropic's docs recommend gerund-form
+  kind.** `web-e2e-overview` not `getting-started`; `webhook-delivery-tester`
+  not `webhook-delivery-tester-skill`. Anthropic's docs recommend gerund-form
   names (`processing-pdfs`) and explicitly accept noun phrases
   (`pdf-processing`) - this marketplace's tool-wrapper (`jest-tests`),
   build-an-X (`*-author`, `*-builder`), reference (`*-reference`), and

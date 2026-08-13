@@ -1,6 +1,6 @@
 ---
 name: feature-flag-test-matrix-reference
-description: "Pure-reference catalog of feature-flag test matrix design. Defines the flag-state combinatorics problem (N flags × M variants × K user-segments = N×M×K test cases), the canonical coverage strategies (pairwise interaction coverage; default-only smoke; full matrix; risk-driven matrix), the kill-switch + percentage-rollout test patterns, and the relationship between flags + experiments (flags toggle behaviour; experiments measure outcome). Use when designing the flag-test surface for a new project or auditing existing flag-test coverage."
+description: "Feature-flag test matrix design: the flag-state combinatorics problem (N flags × M variants × K user-segments = N×M×K test cases), the canonical coverage strategies (pairwise interaction coverage; default-only smoke; full matrix; risk-driven matrix), the workflow for building the coverage suite from a flag inventory (grep-based inventory, per-flag classification, PICT pairwise generation, per-cell test skeletons), the dedicated kill-switch test categories (references/killswitch.md: graceful degradation, fail-static default, kill latency, mid-flight consistency), and the flags-vs-experiments distinction. Use when designing the flag-test surface for a new project, building or auditing flag-test coverage, or authoring kill-switch tests."
 ---
 
 # feature-flag-test-matrix-reference
@@ -14,8 +14,10 @@ combinations. At realistic numbers (50 flags, 2 variants each,
 segments, it's 1500. Testing every combination is infeasible, so the
 matrix has to be sampled deliberately rather than enumerated.
 
-This skill is a **pure reference** consumed by the SDK-test +
-coverage-builder skills.
+This skill is both the reference (the combinatorics + strategies below) and
+the coverage-suite-building workflow (see Building the coverage suite); the
+per-SDK test mechanics live in `launchdarkly-testing` and
+`openfeature-sdk-testing`.
 
 ## When to use
 
@@ -34,7 +36,7 @@ coverage-builder skills.
 4. Pick a coverage strategy from the five below - default-only smoke, per-flag isolation, pairwise, full matrix, or risk-driven - matching the flag set's risk.
 5. Add the special flag-state categories (kill-switch, percentage-rollout, sticky-assignment, default-on-error) as their own tests.
 6. Layer the resulting cases across unit, integration, E2E, and production-smoke.
-7. Hand the matrix to the platform SDK skill (`launchdarkly-testing`, `unleash-testing`, `flagsmith-testing`, `growthbook-testing`) to implement each case.
+7. Hand the matrix to the platform SDK skill (`launchdarkly-testing`, or `openfeature-sdk-testing` for OpenFeature / Unleash / Flagsmith / GrowthBook) to implement each case.
 
 ## The combinatorics
 
@@ -92,11 +94,67 @@ Custom matrix targeting (flag, segment) cells with known risk
 
 **Use when:** any non-trivial codebase. Best in practice.
 
+## Building the coverage suite
+
+The workflow that turns the strategies above into a committed matrix + test
+skeletons:
+
+1. **Inventory flags** - grep for SDK calls and emit a flag inventory:
+
+```bash
+grep -rn 'isOn\|isEnabled\|variation\|getFeatureValue' --include='*.{ts,js,py,go,java}' .
+```
+
+```yaml
+flags:
+  - name: show-new-ui
+    platform: launchdarkly
+    type: boolean
+    found_at: [src/components/Header.tsx:42, src/pages/Dashboard.tsx:88]
+  - name: checkout-experiment
+    type: multi-variant
+    variants: [control, treatment-a, treatment-b]
+```
+
+2. **Classify each flag** - kill-switch (naming: `*-kill`, `disable-*`,
+   `emergency-*`), experiment (multi-variant + analytics), permission-gated,
+   UI tweak, migration (`use-new-*`), plan/tier gating. The class picks the
+   strategy: default-only smoke for UI tweaks, per-flag isolation for
+   migrations, pairwise for permission/plan interactions, full matrix for
+   kill-switches + regulatory paths, risk-driven for the rest.
+3. **Generate the matrix** - for pairwise use
+   [PICT](https://github.com/microsoft/pict) (`pict pict.txt > matrix.tsv`
+   emits a pairwise-covering matrix, e.g. ≤12 tests instead of 24 for full);
+   for risk-driven, combine with the risk register (`risk-matrix` in the
+   qa-process plugin) - high-impact x high-likelihood cells become required
+   tests.
+4. **Emit a per-cell test skeleton** - one describe block per flag (or
+   flag-pair), one test per cell, with the SDK pinned via the platform's
+   test data source:
+
+```typescript
+describe('auth flag matrix', () => {
+  test('free user, new auth on → new flow', () => {
+    td.update(td.flag('use-new-auth').booleanFlag().on(true));
+    expect(authFlow({ plan: 'free' })).toBe('new');
+  });
+});
+```
+
+5. **Add the special-category tests** regardless of matrix coverage:
+   kill-switch deactivation latency (see
+   [references/killswitch.md](references/killswitch.md)), default-on-error
+   (SDK failure returns the call-site default), and sticky-assignment (same
+   user, same variant across evaluations).
+6. **Commit the matrix + document the gaps** - `flag-coverage.yaml` in the
+   repo, plus a coverage doc listing covered cells and deliberate gaps with
+   reasons, so drift is reviewable.
+
 ## Special flag-state test categories
 
 | Category | Test |
 |---|---|
-| **Kill-switch** | Setting flag → off must halt the feature within N seconds (cache TTL) |
+| **Kill-switch** | Setting flag → off must halt the feature within N seconds (cache TTL); full four-category treatment in [references/killswitch.md](references/killswitch.md) |
 | **Percentage rollout** | Flag at 10% → ~10% of users in 'on' bucket; SDK assignment stable per user |
 | **Targeted rollout** | Targeting `region=EU` → only EU users get treatment |
 | **Sticky assignment** | Same user → same variant across sessions and re-launches |
@@ -157,7 +215,7 @@ Result: a handful of targeted cases instead of the full cross-product, with the 
 | No kill-switch test | Production incident has no rehearsed response | Test deactivation latency |
 | Don't test percentage-rollout sticky-assignment | Rollout produces non-deterministic UX | Per `ab-test-validity-checklist` |
 | Tests assume flag-on default | Real default-off behaviour untested in CI | Test both paths |
-| No cleanup test for removed flags | Stale-flag accumulates per `flag-removal-runbook-author` | Periodic stale-flag audit |
+| No cleanup test for removed flags | Stale flags accumulate | Periodic audit via the `stale-flag-detector` agent |
 | Pairwise without flag-interaction discovery | Some pairs spuriously interact | Couple with risk-register input |
 
 ## Limitations
@@ -169,8 +227,8 @@ Result: a handful of targeted cases instead of the full cross-product, with the 
   separate coverage.
 - **Coverage tooling lags.** PICT / ACTS exist but integration
   with flag platforms is bespoke.
-- **Stale flags pollute the matrix.** Cleanup pairs with
-  `flag-removal-runbook-author`.
+- **Stale flags pollute the matrix.** Cleanup pairs with the
+  `stale-flag-detector` agent's removal runbook.
 
 ## References
 
@@ -180,14 +238,12 @@ Result: a handful of targeted cases instead of the full cross-product, with the 
   [csrc.nist.gov/publications/detail/sp/800-142/final](https://csrc.nist.gov/publications/detail/sp/800-142/final).
 - GrowthBook test docs:
   [docs.growthbook.io/lib/node](https://docs.growthbook.io/lib/node).
-- Sibling catalogs:
-  `flag-state-coverage-builder`,
-  `flag-removal-runbook-author`.
+- Kill-switch test categories:
+  [references/killswitch.md](references/killswitch.md).
 - Consumed by:
   `launchdarkly-testing`,
-  `unleash-testing`,
-  `flagsmith-testing`,
-  `growthbook-testing`.
+  `openfeature-sdk-testing`.
+- Removal side: `stale-flag-detector` agent.
 - Cross-plugin:
   `ab-test-validity-checklist`,
   `feature-flag-test-harness`.

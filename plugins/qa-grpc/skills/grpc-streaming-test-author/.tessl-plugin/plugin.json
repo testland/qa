@@ -1,9 +1,9 @@
 {
   "name": "testland/grpc-streaming-test-author",
-  "description": "Workflow-driven skill that builds gRPC streaming-RPC test suites from a proto definition. Classifies each RPC by pattern (unary, server-streaming, client-streaming, bidi), then emits the required categories per pattern - ordering preservation, completion semantics (server close after stream end, client half-close), cancellation, deadline handling, partial-stream failure. Produces skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end). Use when adding tests for a new streaming RPC or auditing a suite for uncovered categories. Different test surface from grpc-interceptor-test-author (interceptor layer) and grpc-mock (harness); for wire-level streaming semantics use grpc-streaming-tests, not this.",
+  "description": "The single gRPC-streaming test home: builds streaming-RPC test suites from a proto definition. Classifies each RPC by pattern (unary, server-streaming, client-streaming, bidi), then emits the required categories per pattern - ordering preservation, completion semantics (server close after stream end, client half-close), cancellation, deadline handling, partial-stream failure. Produces skeletons for Go (bufconn + Send/Recv), Python (iterators), JVM (StreamObserver), Node (call.write/end); carries the 17-code gRPC status catalog (retry semantics per AIP-194, grpc-gateway HTTP mapping) in references/status-codes.md and the wire-level / live-server streaming patterns (deadline propagation, server-side cancellation, metadata, ghz load) in references/wire-level-testing.md. Use when adding tests for a new or existing streaming RPC, auditing a suite for uncovered categories, or asserting status-code behavior. Different test surface from grpc-mock (the in-process harness itself).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.13"
+  "version": "1.2.14"
 }

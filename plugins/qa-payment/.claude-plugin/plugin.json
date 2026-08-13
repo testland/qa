@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-payment",
-  "version": "1.4.8",
-  "description": "Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-control-test-author (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.",
+  "version": "1.5.0",
+  "description": "Payment platform testing: Stripe test cards + webhooks, Stripe subscription-billing test clocks, the Adyen / PayPal / Braintree sandbox umbrella (payment-gateway-sandboxes), the payment lifecycle state-machine + 3DS flow reference, and the payment-flow-test-author workflow for refund / chargeback / webhook-replay suites. Distinct from qa-compliance/pci-dss-control-test-author (PCI DSS scope + control verification); this plugin is platform-specific sandbox testing + payment flow suites.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,9 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-payment",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "payment"]
+  "keywords": [
+    "qa",
+    "testing",
+    "payment"
+  ]
 }

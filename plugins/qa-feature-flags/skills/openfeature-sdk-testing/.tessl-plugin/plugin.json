@@ -1,9 +1,9 @@
 {
   "name": "testland/openfeature-sdk-testing",
-  "description": "Wraps OpenFeature (CNCF vendor-neutral SDK abstraction) testing patterns: the InMemoryProvider for hermetic tests without network calls, provider registration via OpenFeature.setProvider, the getBooleanValue/getBooleanDetails evaluation API with EvaluationDetails (value, variant, reason, errorCode), hooks for evaluation side-effects, and evaluation context for targeting-rule tests. Covers TypeScript, Java, and Python SDKs. Use when writing tests for code that resolves feature flags through the OpenFeature SDK regardless of the underlying flag management platform.",
+  "description": "Wraps OpenFeature (CNCF vendor-neutral SDK abstraction) testing patterns: the InMemoryProvider for hermetic tests without network calls, provider registration via OpenFeature.setProvider, the getBooleanValue/getBooleanDetails evaluation API with EvaluationDetails (value, variant, reason, errorCode), hooks for evaluation side-effects, and evaluation context for targeting-rule tests. Covers TypeScript, Java, and Python SDKs, plus per-vendor hermetic-bootstrap references for Unleash (bootstrap toggles), Flagsmith (offline LocalFileHandler), and GrowthBook (initSync payload). Use when writing tests for code that resolves feature flags through the OpenFeature SDK or the Unleash / Flagsmith / GrowthBook native SDKs; LaunchDarkly has its own skill (launchdarkly-testing).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.13"
+  "version": "1.3.14"
 }

@@ -1,11 +1,10 @@
 ---
 name: sample-ratio-mismatch-detector
-description: "Read-only specialist that detects Sample Ratio Mismatch (SRM) in an A/B test by running a chi-square test against the observed-vs-expected allocation. Returns a verdict (clean / SRM detected) and, if SRM detected, a taxonomy of likely root causes per the Microsoft Research KDD 2019 paper 'Diagnosing Sample Ratio Mismatch' (logging bugs, bot filtering, redirects, telemetry drops, randomization bugs). Use proactively at experiment-end before any ship decision, or when investigating surprising results. Preloads guardrail-metrics-reference + peeking-problem-reference."
+description: "Read-only specialist that detects Sample Ratio Mismatch (SRM) in an A/B test by running a chi-square test against the observed-vs-expected allocation. Returns a verdict (clean / SRM detected) and, if SRM detected, a taxonomy of likely root causes per the Microsoft Research KDD 2019 paper 'Diagnosing Sample Ratio Mismatch' (logging bugs, bot filtering, redirects, telemetry drops, randomization bugs). Use proactively at experiment-end before any ship decision, or when investigating surprising results. Preloads experiment-results-interpreter (guardrail + peeking methodology in its references/)."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(python3 *)"
 model: sonnet
 skills:
-  - guardrail-metrics-reference
-  - peeking-problem-reference
+  - experiment-results-interpreter
 ---
 
 A read-only specialist that detects SRM and proposes a root-cause investigation path.
@@ -212,6 +211,6 @@ Returns a markdown report. Does not modify files.
 - Microsoft Experimentation Platform:
   [microsoft.com/en-us/research/group/experimentation-platform-exp/](https://www.microsoft.com/en-us/research/group/experimentation-platform-exp/articles/).
 - Companion:
-  [`guardrail-metrics-reference`](../skills/guardrail-metrics-reference/SKILL.md),
-  [`peeking-problem-reference`](../skills/peeking-problem-reference/SKILL.md),
+  [`experiment-results-interpreter`](../skills/experiment-results-interpreter/SKILL.md)
+  (guardrails + peeking in its references/),
   [`ab-test-validity-checklist`](../skills/ab-test-validity-checklist/SKILL.md).

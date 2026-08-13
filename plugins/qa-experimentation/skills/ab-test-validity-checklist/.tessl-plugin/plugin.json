@@ -1,9 +1,9 @@
 {
   "name": "testland/ab-test-validity-checklist",
-  "description": "Workflow skill that builds an A/B-test validity checklist from an experiment proposal, walking the canonical design-correctness gates - pre-registered OEC/power/guardrails, randomization unit + SRM check, assignment integrity, telemetry, peeking discipline, novelty/primacy, post-experiment SRM re-check - into a per-experiment checklist + sign-off form. Use when launching, auditing, or governing an experiment. For pitfall mechanics use guardrail-metrics-reference or peeking-problem-reference; to read an already-valid result use experiment-results-interpreter; for per-SDK harness tests use optimizely-test or statsig-test - this gates DESIGN, not SDK code.",
+  "description": "Workflow skill that builds an A/B-test validity checklist from an experiment proposal, walking the canonical design-correctness gates - pre-registered OEC/power/guardrails, randomization unit + SRM check, assignment integrity, telemetry, peeking discipline, novelty/primacy, post-experiment SRM re-check - into a per-experiment checklist + sign-off form. Use when launching, auditing, or governing an experiment. For pitfall mechanics (guardrails, peeking) see experiment-results-interpreter's references; to read an already-valid result use experiment-results-interpreter; for per-SDK harness tests use experiment-sdk-testing - this gates DESIGN, not SDK code.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.13"
+  "version": "1.1.14"
 }

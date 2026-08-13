@@ -1,6 +1,6 @@
 ---
 name: webhook-delivery-tester
-description: "Build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) - HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks)."
+description: "The single webhook-testing home, sender AND receiver: build-an-X for webhook delivery + receiver tests per Standard Webhooks (standardwebhooks.com) - HMAC-SHA256 signature verification, retry semantics with exponential backoff + jitter, replay-window check via timestamp tolerance, ordering guarantees, dead-letter handling for permanent failures, content-type + body-encoding fidelity - plus inbound capture-and-replay hardening (runtime-signed fixtures, tampered-payload and future-timestamp rejection, key-rotation acceptance, sanitized production captures) in references/inbound-replay.md. Use when authoring tests for webhook senders OR receivers in any system (Stripe / Twilio / SendGrid / GitHub / GitLab outbound webhooks; SaaS app inbound webhooks), including payment and realtime integrations."
 ---
 
 # webhook-delivery-tester
@@ -174,7 +174,10 @@ def test_receiver_rejects_stale_timestamp(client):
 ```
 
 If receiver doesn't enforce this, mark **critical**: replay
-vulnerable.
+vulnerable. The harder receiver attack cases - tampered payloads,
+future-dated timestamps, key rotation, and a capture-and-replay framework
+with runtime-signed fixtures - are in
+[references/inbound-replay.md](references/inbound-replay.md).
 
 ## Step 6 - Receiver: idempotent processing
 
@@ -264,12 +267,15 @@ For receiver:
 
 ## References
 
+- Inbound capture-and-replay hardening (tamper / future-timestamp /
+  key-rotation cases, sanitized captures):
+  [references/inbound-replay.md](references/inbound-replay.md)
 - [stdwh][stdwh] - Standard Webhooks specification
 - IETF RFC 2104 - HMAC: Keyed-Hashing for Message Authentication
 - stripe.com/docs/webhooks - Stripe webhooks reference (de-facto standard for many patterns)
 - docs.github.com/en/webhooks - GitHub webhooks reference
 - `idempotency-test-author` - companion: receivers must be idempotent (cross-plugin)
-- `email-flow-test-author`,
+- `mailpit-testing` (email flows in its references),
   `sms-test-author` - sister channels
   (bounce/complaint webhooks + STOP-keyword webhooks reuse these
   patterns)

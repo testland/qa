@@ -1,9 +1,0 @@
-{
-  "name": "testland/3ds-test-flow-reference",
-  "description": "Cross-gateway, protocol-level reference for 3-D Secure (3DS 2.x) test coverage. Covers the EMVCo frictionless / challenge / not-applicable flow paths, SCA under EU PSD2, and the per-PAN test cards for Stripe, Adyen, and Braintree. The gateway-specific wrappers (adyen-test-mode / stripe-test-cards-and-webhooks / braintree-test-cards) compose this skill for single-gateway work, so use one of those for a single-gateway query. Use this skill when designing multi-gateway 3DS test coverage, auditing a 3DS redirect round-trip, or investigating a challenge-flow regression that is not gateway-specific.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.8"
-}

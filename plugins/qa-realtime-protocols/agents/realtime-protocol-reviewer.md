@@ -7,7 +7,7 @@ skills:
   - websocket-tests
   - server-sent-events-tests
   - mqtt-tests
-  - webhook-replay-tests
+  - webhook-delivery-tester
 ---
 
 Adversarial reviewer of real-time protocol handler diffs. Every finding maps
