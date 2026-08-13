@@ -1,9 +1,0 @@
-{
-  "name": "testland/interviewer-calibration-guide-author",
-  "description": "Build-an-X workflow that produces an interviewer calibration guide for a QA hiring loop - takes the question bank and rubric (from sibling skills `interview-question-author` and `hiring-rubric-author`) plus 2-5 sample candidate transcripts/responses, and emits gold-standard model answers, common pitfalls, score-anchor examples per question, and a calibration-session script for the panel. Distinct from the question and rubric skills (which produce the questions and the scoring scaffold); this skill produces the **demonstration material** that brings two interviewers' scores into agreement. Use after the rubric exists and before the first real candidate - the calibration guide is what closes the inter-rater-reliability gap that the rubric alone cannot.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.2"
-}

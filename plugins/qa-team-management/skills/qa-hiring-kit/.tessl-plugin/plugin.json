@@ -1,0 +1,9 @@
+{
+  "name": "testland/qa-hiring-kit",
+  "description": "End-to-end structured hiring for QA / SDET / automation / test-lead / quality-manager roles - one chain from job description through interview question bank, competency-anchored scoring rubric, interviewer calibration guide, and post-interview panel debrief, to the 30-60-90 day onboarding plan. Implements the canonical Levashina 2014 et al. structured-interview methodology with ISTQB-aligned competency vocabulary.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

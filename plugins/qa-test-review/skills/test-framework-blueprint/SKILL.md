@@ -237,10 +237,10 @@ steps and ending with the implementation order lives in
 
 ## Limitations
 
-- This skill **designs** the framework; it writes no code. A separate harness
-  scaffolder (qa-roles) scaffolds the skeleton from the blueprint, and the
-  per-framework skills in qa-web-e2e (`playwright-testing`, `cypress-testing`,
-  etc.) implement the actual tests.
+- This skill **designs** the framework; it writes no code. The
+  `automation-harness-bootstrapper` agent (qa-web-e2e) scaffolds the skeleton
+  from the blueprint, and the per-framework skills in qa-web-e2e
+  (`playwright-testing`, `cypress-testing`, etc.) implement the actual tests.
 - The worked stack is Playwright + TypeScript; the pytest mapping in Step 3
   is noted with citations but not carried through the worked example.
 - Layer-mix sizing (how many tests per tier) is out of scope: that is

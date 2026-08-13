@@ -19,6 +19,8 @@ Test process + methodology - the risk-based testing umbrella (risk matrix + regi
 | Skill | [test-pyramid-balancer](skills/test-pyramid-balancer/SKILL.md) | Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward Cohn's... |
 | Skill | [test-strategy-author](skills/test-strategy-author/SKILL.md) | Build-an-X workflow that produces a test strategy document for a project / release / feature, plus a risk-based test-planning workflow that turns a feature scope and the risk matrix into a budgeted per-risk test plan. |
 | Agent | [release-readiness-checker](agents/release-readiness-checker.md) | Builder/scaffolder agent that runs a configurable gate suite before a release - reads `release-readiness.yml` (which defines the gates: s... |
+| Agent | [quality-coach](agents/quality-coach.md) | Adversarial reviewer that pits a PR / story / Increment against the team's Definition of Done - walks each DoD line with repository evidence and tags it met / not met / unverifiable, refusing to rubber-stamp. |
+| Agent | [release-engineer](agents/release-engineer.md) | Runbook conductor for one specific release - walks the team's release runbook in order (smoke gate, canary deploy, metric thresholds, rollout / rollback), records pass/fail per step, and pauses at every human decision point. |
 
 ## Install
 

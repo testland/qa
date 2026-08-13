@@ -1,9 +1,0 @@
-{
-  "name": "testland/qa-jd-author",
-  "description": "Build-an-X workflow that authors a QA job description for a given role and seniority - responsibilities drawn from the ISTQB CTFL v4.0 split between the testing role (test analysis, design, implementation, execution) and the test management role (planning, monitoring and control, completion), a must-have versus nice-to-have skills split, and the screening signals a recruiter can apply to applications. The competency vocabulary matches `hiring-rubric-author`, so the JD a candidate reads and the rubric they are scored on describe the same role. This is the artifact that opens the role and attracts applicants - not the interview questions, not the scoring rubric, and not the post-hire ramp plan. Use when opening a QA / SDET / automation / test-lead / quality-manager requisition, before anything is posted - the JD is the upstream-most artifact of the hiring chain.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.2"
-}

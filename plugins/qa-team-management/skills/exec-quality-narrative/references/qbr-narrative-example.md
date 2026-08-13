@@ -29,7 +29,7 @@ instability - the checkout regression is a test-gap story, not a velocity story.
 
 ## 3. Commitments - 3 of 4 OKRs landed
 KR grades from the Q2 OKR set: regression cycle time 1.0, flake budget 0.8,
-escape-rate KR missed on checkout only (qa-okr-author grading sheet).
+escape-rate KR missed on checkout only (OKR grading sheet).
 
 ## 4. The decision
 One ask: 6 engineer-weeks for seeded checkout test data. Expected effect:

@@ -67,7 +67,8 @@ and device clouds, build-vs-buy framing - still has no component.
 decisions only.
 
 **Nearest existing components:** `qa-vendor-evaluator`,
-`test-effort-estimator` (qa-roles), `team-capability-gap-analyst`.
+`test-effort-estimation` (qa-process), `skill-matrix-author`
+(qa-team-management, gap analysis).
 
 **Differentiation axis:** effort estimation is per-epic;
 capability-gap analysis is per-skill; this is annual/quarterly
@@ -80,13 +81,13 @@ chapters), Capgemini World Quality Report (team-structure data).
 
 ### DORA metrics computation (extension: `qa-test-reporting`)
 
-**Why missing matters:** the `qa-manager` and `head-of-quality` agents
-(qa-roles) consume DORA metrics as context but nothing in the catalog
-*computes* deployment frequency, change failure rate, lead time, or
-MTTR from repo + CI history. Quality leadership reporting stops at
-whatever numbers the team already has.
+**Why missing matters:** the `qa-manager` agent and the
+`quality-status-digest` roll-up (qa-team-management) consume DORA metrics
+as context but nothing in the catalog *computes* deployment frequency,
+change failure rate, lead time, or MTTR from repo + CI history. Quality
+leadership reporting stops at whatever numbers the team already has.
 
-**Nearest existing components:** `qa-manager`, `head-of-quality`,
+**Nearest existing components:** `qa-manager`, `quality-status-digest`,
 `daily-test-suite-aggregator`.
 
 **Differentiation axis:** the existing agents aggregate and narrate
@@ -239,14 +240,10 @@ playwright.dev locators docs, testing-library query priority docs.
 
 ## Tier 3 - Niche and polish
 
-- **Org-chart seats (`qa-roles`):** a Tier-1 agent for *scripted*
-  manual execution (companion to `exploratory-charter-author`;
-  guides a human through a checklist run in `manual-test-script-author`'s
-  checklist format and records
-  results), plus the previously-suggested
-  `engineering-manager-quality-coach` and
-  `release-manager-cutover-checklist` (note:
-  `release-cutover-coordinator` partially covers the latter).
+- **Scripted-run companion (`qa-manual-testing`):** a Tier-1 agent for
+  *scripted* manual execution (companion to the `exploratory-charter-author`
+  skill; guides a human through a checklist run in
+  `manual-test-script-author`'s checklist format and records results).
 - **Load-generator wrappers (`qa-load-testing`):** `vegeta-load`,
   `wrk2-load`, `bombardier-load`, `artillery-load` - per-tool skills
   alongside the shipped k6/JMeter/Gatling/Locust set.

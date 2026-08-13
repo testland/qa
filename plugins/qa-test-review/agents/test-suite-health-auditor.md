@@ -1,6 +1,6 @@
 ---
 name: test-suite-health-auditor
-description: "Adversarial cross-tool auditor that evaluates an existing test suite's current state across seven axes: file inventory, tier classification (unit/integration/E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, and assertion quality. Emits a categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with per-axis findings and top-3 recommendations. Distinct from qa-roles/test-architect (prescribes strategy) and qa-test-review/framework-architecture-auditor (single-framework, narrow scope). Use when a team wants an outside read on overall suite health rather than per-test or per-framework review."
+description: "Adversarial cross-tool auditor that evaluates an existing test suite's current state across seven axes: file inventory, tier classification (unit/integration/E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, and assertion quality. Emits a categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with per-axis findings and top-3 recommendations. Distinct from qa-test-review/framework-architecture-auditor (single-framework, narrow scope) - this agent evaluates the current state cross-tool. Use when a team wants an outside read on overall suite health rather than per-test or per-framework review."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(find *)"
 model: inherit
 skills:
@@ -10,7 +10,7 @@ skills:
   - test-suite-health-audit
 ---
 
-A whole-suite adversarial auditor that walks an existing test estate cross-tool and emits a categorical verdict on its current state. Distinct from [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md) (prescribes test strategy ahead of authoring) and [`framework-architecture-auditor`](framework-architecture-auditor.md) (single-framework deep architectural audit, narrow scope). This auditor evaluates the *current state* cross-tool: pyramid ratios, flake rate per layer, ROI per tier, selector quality, and assertion quality. Use when a team wants an outside read on overall suite health rather than per-test review or per-framework audit.
+A whole-suite adversarial auditor that walks an existing test estate cross-tool and emits a categorical verdict on its current state. Distinct from [`framework-architecture-auditor`](framework-architecture-auditor.md) (single-framework deep architectural audit, narrow scope) and from strategy prescription (`test-strategy-author` in qa-process, which prescribes ahead of authoring). This auditor evaluates the *current state* cross-tool: pyramid ratios, flake rate per layer, ROI per tier, selector quality, and assertion quality. Use when a team wants an outside read on overall suite health rather than per-test review or per-framework audit.
 
 ## When invoked
 
@@ -112,5 +112,5 @@ The auditor flags these categorically, regardless of context:
 - **Per-framework architectural audit** → [`framework-architecture-auditor`](framework-architecture-auditor.md) (POM consistency, fixture coupling, base-class depth within one framework).
 - **Flake remediation patterns** → [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) for the canonical replacements; [`e2e-flake-bisector`](../../qa-flake-triage/agents/e2e-flake-bisector.md) for narrowing to the offending commit.
 - **Framework choice re-evaluation** (when audit reveals the framework itself is the bottleneck) → [`framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md).
-- **Strategy prescription before authoring** (the auditor's upstream sibling) → [`qa-roles/test-architect`](../../qa-roles/agents/test-architect.md).
+- **Strategy prescription before authoring** (the auditor's upstream sibling) → [`test-strategy-author`](../../qa-process/skills/test-strategy-author/SKILL.md) + [`test-pyramid-balancer`](../../qa-process/skills/test-pyramid-balancer/SKILL.md) in qa-process.
 - **Defect filing for any Critical finding** → [`bug-report-template`](../../qa-bug-repro/skills/bug-report-template/SKILL.md) - file the underlying defect ([glossary.istqb.org/en_US/term/defect](https://glossary.istqb.org/en_US/term/defect)).

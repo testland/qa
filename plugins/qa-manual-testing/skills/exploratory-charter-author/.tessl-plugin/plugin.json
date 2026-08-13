@@ -1,0 +1,9 @@
+{
+  "name": "testland/exploratory-charter-author",
+  "description": "Authoring workflow that turns a feature spec, risk area, or bug cluster into a session-based exploratory testing charter per Jonathan and James Bach's SBTM - frames the one-sentence mission, scopes 3-7 areas, picks a 60 / 90 / 120 min time-box, suggests tours, and wires the PROOF debrief deliverables. Use when a feature has too many unknowns to script and a session-based exploration is the right approach.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

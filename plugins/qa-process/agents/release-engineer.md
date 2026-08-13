@@ -1,6 +1,6 @@
 ---
 name: release-engineer
-description: "Builder/scaffolder agent that orchestrates the release runbook for one specific release - reads the team's `docs/release-runbook.md` (or planned `qa-process` Plugin 16's runbook template), executes its steps in order (smoke suite gate → canary deploy with metric thresholds → rollout / rollback decision), records pass/fail per step, and emits a release report. Implements the canary release pattern, rolling a change out to a small subset of users before the entire infrastructure. Use as the conductor for a release; never auto-merges or auto-rolls-out - always pauses at decision points for human approval."
+description: "Builder/scaffolder agent that orchestrates the release runbook for one specific release - reads the team's `docs/release-runbook.md` (or the release-runbook-author template from qa-shift-right), executes its steps in order (smoke suite gate → canary deploy with metric thresholds → rollout / rollback decision), records pass/fail per step, and emits a release report. Implements the canary release pattern, rolling a change out to a small subset of users before the entire infrastructure. Use as the conductor for a release; never auto-merges or auto-rolls-out - always pauses at decision points for human approval."
 tools: "Read, Edit, Bash(gh release *), Bash(gh pr view *), Bash(gh workflow run *), Bash(curl *), Bash(date *)"
 model: sonnet
 skills:
@@ -49,7 +49,7 @@ The agent **refuses** to:
 
 ## Hand-off targets
 
-- **Smoke test authoring** → `smoke-suite-gate`, planned in `qa-process` Plugin 16.
+- **Smoke test authoring** → the `smoke-suite-gate` skill in this plugin.
 - **Canary metric definitions** → `synthetic-monitor-author` in `qa-shift-right`.
-- **Runbook template** → planned `release-readiness-checker` in `qa-process` Plugin 16.
+- **Pre-release gate suite** → `release-readiness-checker` (`./release-readiness-checker.md`), the upstream agent that says "ready".
 - **Post-release incident response** → the team's on-call process; not in scope here.

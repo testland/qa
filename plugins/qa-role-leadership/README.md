@@ -1,8 +1,8 @@
 # QA leadership & test management
 
-QA leadership & test-management role bundle: one-command install of the QA role org-chart, test process, test management, impact analysis, reporting, hiring, team management, shift-left, defect management, and production-code quality governance.
+QA leadership & test-management role bundle: one-command install of test process, test management, impact analysis, reporting, team management (incl. the QA hiring kit and the weekly status-digest agent), shift-left, defect management, and production-code quality governance.
 
-Installing this one plugin installs all 10 member plugins below in a single command.
+Installing this one plugin installs all 8 member plugins below in a single command.
 
 ## Install
 
@@ -15,13 +15,11 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 ## What this installs
 
-- **qa-roles** - QA org chart of 15 sharply-scoped role agents across four tiers. Tier 1 IC
-- **qa-process** - Test process + methodology
+- **qa-process** - Test process + methodology (incl. the quality-coach DoD auditor and release-engineer runbook conductor)
 - **qa-test-management** - Test case management discipline (pre-execution authoring + lifecycle +
 - **qa-test-impact-analysis** - Test impact analysis (TIA) and regression-suite hygiene
 - **qa-test-reporting** - Test reporting + coverage analytics
-- **qa-hiring** - QA hiring toolkit
-- **qa-team-management** - QA people-and-org toolkit (skill matrix, career ladders, 1:1s, feedback, exec narrative)
+- **qa-team-management** - QA people-and-org toolkit (skill matrix, hiring kit, quality digest + qa-manager agent, exec narrative)
 - **qa-shift-left** - Shift-left QA
 - **qa-defect-management** - Defect management discipline (taxonomy, lifecycle, workflows)
 - **qa-code-quality** - Production code quality

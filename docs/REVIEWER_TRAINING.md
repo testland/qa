@@ -205,7 +205,7 @@ Just ask me anything QA-related.
 > they almost always come with persona-shaped scopes that fail D3/D4.
 > If you have a specific QA task in mind, reshape into a sharply scoped
 > component: pick ONE behavior (e.g., 'reviews a test plan against the
-> DoD' → that's `quality-coach` in qa-roles, already shipped) and name
+> DoD' → that's `quality-coach` in qa-process, already shipped) and name
 > it after the behavior, not the role.
 >
 > Before resubmitting:

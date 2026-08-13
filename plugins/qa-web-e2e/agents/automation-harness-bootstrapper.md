@@ -267,8 +267,8 @@ The agent emits a summary of every file written:
 
 ### Next step
 Run `npx playwright install --with-deps chromium` then `npx playwright test`.
-Hand off to **spec-to-e2e-test-scaffolder** (qa-web-e2e) to generate further
-spec files, or to **js-unit-tests** (qa-unit-tests-js) for unit layer coverage.
+Author further spec files per **playwright-testing** (this plugin), or add
+unit-layer coverage via **js-unit-tests** (qa-unit-tests-js).
 ```
 
 ## Anti-patterns
@@ -286,9 +286,9 @@ driver handle, mechanic-named methods) are catalogued in
 **Scope boundary - scaffolds new, doesn't audit existing:** this agent
 generates the harness when no E2E infrastructure exists. For repos with
 an existing framework, use `framework-architecture-auditor` (qa-test-review).
-For writing the actual tests once the harness is in place, use
-`spec-to-e2e-test-scaffolder` (qa-web-e2e) or the per-language unit-test
-umbrella skills (qa-unit-tests-*).
+For writing the actual tests once the harness is in place, use the
+per-framework skills in this plugin (`playwright-testing`, `cypress-testing`,
+etc.) or the per-language unit-test umbrella skills (qa-unit-tests-*).
 
 ## Limitations
 
@@ -309,7 +309,7 @@ umbrella skills (qa-unit-tests-*).
 After the harness is in place:
 
 - **Write E2E specs** (Playwright) →
-  [`spec-to-e2e-test-scaffolder`](../../qa-web-e2e/agents/spec-to-e2e-test-scaffolder.md)
+  [`playwright-testing`](../skills/playwright-testing/SKILL.md)
 - **Write JS/TS unit tests** →
   [`js-unit-tests`](../../qa-unit-tests-js/skills/js-unit-tests/SKILL.md)
 - **Write Python unit tests** →
@@ -319,7 +319,7 @@ After the harness is in place:
 - **Write JVM unit tests** →
   [`jvm-unit-tests`](../../qa-unit-tests-jvm/skills/jvm-unit-tests/SKILL.md)
 - **Review framework choice before scaffolding** →
-  [`web-e2e-overview`](../../qa-web-e2e/skills/web-e2e-overview/SKILL.md)
+  [`web-e2e-overview`](../skills/web-e2e-overview/SKILL.md)
   (repo-observation decision table)
 
 ## References

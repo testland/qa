@@ -124,7 +124,7 @@ activate on demand, so a focused set keeps things sharp.
 | Test automation engineer | [qa-web-e2e](plugins/qa-web-e2e/) · [qa-api-testing](plugins/qa-api-testing/) · [qa-unit-tests-js](plugins/qa-unit-tests-js/) |
 | Performance engineer | [qa-load-testing](plugins/qa-load-testing/) · [qa-chaos](plugins/qa-chaos/) |
 | Security tester | [qa-sast](plugins/qa-sast/) · [qa-secrets](plugins/qa-secrets/) · [qa-dast](plugins/qa-dast/) |
-| Lead / manager / head of quality | [qa-roles](plugins/qa-roles/) · [qa-test-management](plugins/qa-test-management/) · [qa-process](plugins/qa-process/) |
+| Lead / manager / head of quality | [qa-team-management](plugins/qa-team-management/) · [qa-test-management](plugins/qa-test-management/) · [qa-process](plugins/qa-process/) |
 
 ### Or adopt a whole role at once
 

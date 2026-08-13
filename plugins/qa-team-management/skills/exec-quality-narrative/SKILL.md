@@ -21,8 +21,8 @@ This skill applies that structure to quality data your existing test tooling alr
 
 Do **not** use this skill to:
 
-- Compute the underlying metrics - upstream roles in qa-roles compute single-team digests from CI and tracker data and roll teams into a portfolio review. This skill starts where they end.
-- Draft next quarter's commitments - that is `qa-okr-author` (in qa-process); the narrative may end by pointing at the OKR set, not by inventing one.
+- Compute the underlying metrics - the `qa-manager` agent (this plugin) computes single-team digests from CI and tracker data, and `quality-status-digest` Part 2 rolls teams into a portfolio review. This skill starts where they end.
+- Draft next quarter's commitments - OKR drafting is out of scope; the narrative may end by pointing at the team's OKR set, not by inventing one.
 - Report to engineering peers. The audience here holds budget, not backlogs; a sprint-level test report is a different artifact.
 
 ## Step 1 - Capture the inputs
@@ -32,7 +32,7 @@ Do **not** use this skill to:
 | **Quality digests** | Per-team quality digest output, or equivalent | Pass-rate trend, escape counts, flake debt with citations already attached |
 | **Portfolio roll-up** | Portfolio roll-up output, if multi-team | Cross-team table, risk heatmap, capacity view |
 | **DORA delivery metrics** | CI / deploy data per [dora.dev](https://dora.dev/guides/dora-metrics-four-keys/) | Delivery context executives often already know from engineering reporting |
-| **OKR grading** | `qa-okr-author` (qa-process) set + end-of-quarter grades | Commitment-vs-delivery evidence |
+| **OKR grading** | The team's OKR set + end-of-quarter grades | Commitment-vs-delivery evidence |
 | **Escape trend** | Defect-tracker trend (e.g., a defect-trend narrative) | The quality outcome line executives care about most |
 | **Audience + ask** | Who reads this, and what decision (if any) is being requested | Determines the Answer sentence and whether the narrative is informational or an investment case |
 
@@ -93,9 +93,9 @@ Everything below this layer in the real document is appendix - per-team tables, 
 
 ## Hand-off targets
 
-- **Single-team digest inputs** → per-team quality digest reporting (qa-roles).
-- **Multi-team portfolio inputs** → portfolio roll-up reporting (qa-roles).
-- **Next quarter's commitments the narrative points at** → `qa-okr-author` (in qa-process).
+- **Single-team digest inputs** → the `qa-manager` agent (this plugin).
+- **Multi-team portfolio inputs** → `quality-status-digest` Part 2 portfolio roll-up (this plugin).
+- **Next quarter's commitments the narrative points at** → the team's own OKR planning artifacts.
 - **Capability asks surfaced in the narrative** → capability gap analysis for the train-vs-hire grounding.
 
 ## References
@@ -103,4 +103,4 @@ Everything below this layer in the real document is appendix - per-team tables, 
 - Barbara Minto, *The Pyramid Principle: Logic in Writing and Thinking*, ISBN 978-0273710516 - pyramid structure, SCQA opening, answer-first discipline.
 - Barbara Minto (Wikipedia) - pyramid format "organized top-down, starting with a main idea"; MECE; the logical-grouping quote: https://en.wikipedia.org/wiki/Barbara_Minto (fetched 2026-06-10).
 - DORA software delivery metrics - five-metric model and verbatim definitions used in Step 2: https://dora.dev/guides/dora-metrics-four-keys/ (fetched 2026-06-10).
-- Per-team digest and portfolio roll-up reporting (qa-roles), and `qa-okr-author` (qa-process) - the upstream producers of this skill's inputs.
+- The `qa-manager` agent and `quality-status-digest` (this plugin) - the upstream producers of this skill's digest and roll-up inputs.

@@ -45,4 +45,4 @@ The agent **refuses** to:
 - **Acceptance criteria authoring** → `gherkin-from-stories` in `qa-bdd`.
 - **Telemetry wiring** → `synthetic-monitor-author` in `qa-shift-right`.
 - **Authoring a DoD when none exists** → the `definition-of-done` skill; authoring is out of scope here.
-- **Broader test-quality coaching** → `./test-quality-coach.md`.
+- **Test-code convention review** → `test-code-critic` in `qa-test-review`.

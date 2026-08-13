@@ -22,8 +22,8 @@ The output is two artifacts: the **matrix** (current state) and the **gap analys
 
 Do **not** use this skill to:
 
-- Score job candidates - that is `hiring-rubric-author` (in qa-hiring; point-in-time, per-candidate, anchored to interview questions).
-- Plan one new hire's first 90 days - that is `onboarding-plan-author` (in qa-hiring).
+- Score job candidates - that is `qa-hiring-kit`'s rubric stage (this plugin; point-in-time, per-candidate, anchored to interview questions).
+- Plan one new hire's first 90 days - that is `qa-hiring-kit`'s onboarding stage (this plugin).
 - Write individual performance feedback. The matrix describes capability, not performance; conflating them poisons the data (see Anti-patterns).
 
 ## Step 1 - Capture the inputs
@@ -176,11 +176,11 @@ Gap-analysis guardrails:
 
 ## Hand-off targets
 
-- **A capability gap becomes a hiring case** → `qa-jd-author` then the qa-hiring structured-interview chain; the matrix's competency vocabulary stays consistent with `hiring-rubric-author`.
+- **A capability gap becomes a hiring case** → `qa-hiring-kit` (this plugin), starting at its JD stage; the matrix's competency vocabulary stays consistent with the kit's rubric reference.
 - **A gap resolves to training** → the matrix owner's growth conversations per member; the member's matrix row seeds the growth agenda.
 
 ## References
 
 - ISTQB Certified Tester Advanced Level Test Management Syllabus v3.0 (2024-05-03), chapter 3 "Managing the Team", sections 3.1.1 - 3.1.6 - four areas of competence, required-skill analysis, skills-matrix assessment, development approaches: https://astqb.org/assets/documents/ISTQB_CTAL-TM_Syllabus_v3.0.pdf (fetched 2026-06-10).
 - ISTQB glossary - skills management terminology: https://glossary.istqb.org/
-- `hiring-rubric-author` (in qa-hiring) - the point-in-time candidate-scoring counterpart.
+- `qa-hiring-kit` (this plugin) - its rubric stage is the point-in-time candidate-scoring counterpart.

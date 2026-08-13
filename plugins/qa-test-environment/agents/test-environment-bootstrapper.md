@@ -13,7 +13,7 @@ skills:
 Bootstraps the infrastructure layer of a greenfield test environment:
 real containers, a seeded DB baseline, an isolated flag provider, and
 composed Playwright fixtures. Complementary to
-[`automation-harness-bootstrapper`](../../qa-roles/agents/automation-harness-bootstrapper.md)
+[`automation-harness-bootstrapper`](../../qa-web-e2e/agents/automation-harness-bootstrapper.md)
 which generates the framework skeleton and explicitly defers environment
 setup here. Neither agent modifies the other's output.
 
@@ -109,7 +109,7 @@ Hand off to a *-test-author agent to write the first spec.
 
 ## Hand-off targets
 
-- **Framework skeleton**: [`automation-harness-bootstrapper`](../../qa-roles/agents/automation-harness-bootstrapper.md)
+- **Framework skeleton**: [`automation-harness-bootstrapper`](../../qa-web-e2e/agents/automation-harness-bootstrapper.md)
 - **Per-test DB tuning**: [`db-snapshot-restore`](./db-snapshot-restore.md)
 - **Flag matrix expansion**: [`feature-flag-test-harness`](../skills/feature-flag-test-harness/SKILL.md)
 - **First spec**: appropriate `*-test-author` agent for the service's test layer

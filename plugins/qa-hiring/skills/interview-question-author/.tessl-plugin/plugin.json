@@ -1,9 +1,0 @@
-{
-  "name": "testland/interview-question-author",
-  "description": "Build-an-X workflow that produces a QA-role-specific interview question bank - takes a role description (manual QA / SDET / automation engineer / test lead / quality manager) plus competency model and emits a structured question bank covering technical, behavioral (STAR-format), scenario-based, and system-design dimensions, classified by ISTQB-canonical competency areas and Bloom's taxonomy difficulty levels. This produces the questions only - not the scoring rubric and not the gold-standard answer guide. Use as the first artifact a hiring manager produces when opening a QA / test role, before scheduling the first interview.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.2"
-}

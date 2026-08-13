@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 433 components**
+**87 plugins · 428 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -13,15 +13,13 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
+| [qa-process](plugins/qa-process/) | 1.11.0 | 12 skills + 3 agents | 15 |
 | [qa-test-data](plugins/qa-test-data/) | 1.3.10 | 12 skills + 2 agents | 14 |
-| [qa-process](plugins/qa-process/) | 1.11.0 | 12 skills + 1 agents | 13 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.5.0 | 10 skills + 2 agents | 12 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.15 | 7 skills + 4 agents | 11 |
-| [qa-hiring](plugins/qa-hiring/) | 1.4.2 | 5 skills + 1 agents | 6 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.3.0 | 4 skills + 2 agents | 6 |
-| [qa-roles](plugins/qa-roles/) | 1.4.0 | 0 skills + 5 agents | 5 |
+| [qa-team-management](plugins/qa-team-management/) | 1.3.0 | 4 skills + 1 agents | 5 |
 | [qa-test-management](plugins/qa-test-management/) | 1.3.0 | 3 skills + 2 agents | 5 |
-| [qa-team-management](plugins/qa-team-management/) | 1.2.0 | 3 skills + 0 agents | 3 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.2.0 | 2 skills + 1 agents | 3 |
 
 ## Functional testing
@@ -33,10 +31,10 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-mobile](plugins/qa-mobile/) | 1.5.0 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.8.0 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.0 | 7 skills + 1 agents | 8 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.0 | 6 skills + 2 agents | 8 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.6.0 | 6 skills + 1 agents | 7 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
 | [qa-embedded](plugins/qa-embedded/) | 1.4.0 | 6 skills + 1 agents | 7 |
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.0 | 6 skills + 1 agents | 7 |
 | [qa-desktop](plugins/qa-desktop/) | 1.3.0 | 5 skills + 1 agents | 6 |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.0 | 6 skills + 0 agents | 6 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.16 | 4 skills + 2 agents | 6 |
@@ -142,8 +140,8 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.9.0 | 6 skills + 1 agents | 7 |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.17 | 5 skills + 1 agents | 6 |
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.9.0 | 5 skills + 1 agents | 6 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.10 | 4 skills + 0 agents | 4 |
@@ -158,7 +156,7 @@ _One-command role installs - each bundles a curated capability set as dependenci
 | [qa-role-automation-engineer](plugins/qa-role-automation-engineer/) | 1.0.3 | 0 skills + 0 agents | 0 |
 | [qa-role-backend](plugins/qa-role-backend/) | 1.0.1 | 0 skills + 0 agents | 0 |
 | [qa-role-frontend](plugins/qa-role-frontend/) | 1.0.1 | 0 skills + 0 agents | 0 |
-| [qa-role-leadership](plugins/qa-role-leadership/) | 1.0.1 | 0 skills + 0 agents | 0 |
+| [qa-role-leadership](plugins/qa-role-leadership/) | 1.1.0 | 0 skills + 0 agents | 0 |
 | [qa-role-manual-tester](plugins/qa-role-manual-tester/) | 1.0.2 | 0 skills + 0 agents | 0 |
 | [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.1 | 0 skills + 0 agents | 0 |
 | [qa-role-performance](plugins/qa-role-performance/) | 1.0.1 | 0 skills + 0 agents | 0 |
@@ -201,7 +199,6 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-game](plugins/qa-game/)
 - [qa-graphql](plugins/qa-graphql/)
 - [qa-grpc](plugins/qa-grpc/)
-- [qa-hiring](plugins/qa-hiring/)
 - [qa-iac](plugins/qa-iac/)
 - [qa-llm-evaluation](plugins/qa-llm-evaluation/)
 - [qa-load-testing](plugins/qa-load-testing/)
@@ -230,7 +227,6 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-role-performance](plugins/qa-role-performance/)
 - [qa-role-sdet](plugins/qa-role-sdet/)
 - [qa-role-security](plugins/qa-role-security/)
-- [qa-roles](plugins/qa-roles/)
 - [qa-saga-cqrs](plugins/qa-saga-cqrs/)
 - [qa-sast](plugins/qa-sast/)
 - [qa-sbom](plugins/qa-sbom/)

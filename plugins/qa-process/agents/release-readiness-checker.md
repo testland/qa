@@ -157,7 +157,7 @@ The verdicts:
 
 ```markdown
 **Verdict:** ✅ READY
-**Next step:** Trigger [`release-engineer`](../../qa-roles/agents/release-engineer.md)
+**Next step:** Trigger [`release-engineer`](release-engineer.md)
 with `release_id=v1.4.5` to begin the runbook (pre-flight + smoke +
 canary + rollout).
 ```
@@ -207,5 +207,5 @@ The agent **refuses** to:
   gates.
 - [`smoke-suite-gate`](../skills/smoke-suite-gate/SKILL.md) - the
   smoke gate this agent invokes.
-- [`release-engineer`](../../qa-roles/agents/release-engineer.md) - downstream agent that takes over after this one says "ready."
+- [`release-engineer`](release-engineer.md) - downstream agent in this plugin that takes over after this one says "ready."
 - [`prod-canary-validator`](../../qa-shift-right/skills/prod-canary-validator/SKILL.md) - runtime counterpart at the canary stage.

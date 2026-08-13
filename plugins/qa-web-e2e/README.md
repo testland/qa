@@ -1,6 +1,6 @@
 # qa-web-e2e
 
-Web E2E framework wrappers (per-framework skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Cloud browser grids (BrowserStack / Sauce Labs / LambdaTest) live in one umbrella skill, and one agent reviews raw codegen recordings (Playwright codegen + Cypress Studio).
+Web E2E framework wrappers (per-framework skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Cloud browser grids (BrowserStack / Sauce Labs / LambdaTest) live in one umbrella skill, one agent scaffolds a from-zero harness skeleton, and one agent reviews raw codegen recordings (Playwright codegen + Cypress Studio).
 
 ## Components
 
@@ -13,6 +13,7 @@ Web E2E framework wrappers (per-framework skills). Full lifecycle per framework:
 | Skill | [webdriverio-testing](skills/webdriverio-testing/SKILL.md) | Authors WebdriverIO E2E tests - `npm init wdio@latest` scaffolding, services architecture (sauce, browserstack, appium, devtools), reporters, CI integration. |
 | Skill | [cloud-grid-e2e](skills/cloud-grid-e2e/SKILL.md) | Author and run E2E tests on a cloud browser grid - BrowserStack Automate, Sauce Labs, or LambdaTest. One vendor-generic pattern (auth env vars, hub URL, vendor options dict, local tunnel, CI wiring) with per-vendor deltas in references/. |
 | Agent | [playwright-codegen-reviewer](agents/playwright-codegen-reviewer.md) | Adversarial reviewer that takes raw recorded specs - Playwright codegen output or Cypress Studio recordings - and refactors them to team-ready idiomatic code (Page Objects / custom commands, accessibility-first selectors, retry-aware waits, AAA structure). |
+| Agent | [automation-harness-bootstrapper](agents/automation-harness-bootstrapper.md) | Scaffolds a complete test-automation harness skeleton (folder layout, base fixtures, page-object base class, one smoke test, CI job) for a repo with no existing E2E infrastructure - Playwright by default, Cypress variant included. |
 
 ## Install
 
