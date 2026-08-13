@@ -1,6 +1,6 @@
 ---
 name: service-worker-lifecycle-tests
-description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). Use when authoring the baseline lifecycle spec, or when a deploy leaves users stuck on the old service worker - scoped to the state machine and the `skipWaiting` / `clients.claim` upgrade path, not to general service-worker assertion or cache-strategy patterns."
+description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). The general Playwright SW harness, `service-worker-mock` unit tests, and cache-strategy assertions live in references/. Use when authoring the baseline lifecycle spec, when a deploy leaves users stuck on the old service worker, or when a site's caching / offline behavior is uncovered."
 metadata:
   keywords: "service-worker, lifecycle, skip-waiting, clients-claim, statechange"
 ---
@@ -18,13 +18,13 @@ leaves v1's caches alive; a `Clients.claim()` race against a hot-
 reload that flips the `navigator.serviceWorker.controller`
 mid-fetch.
 
-This skill produces the per-extension lifecycle spec - a Playwright
+This skill produces the per-SW lifecycle spec - a Playwright
 file with one test per transition cell plus a worked v1 → v2
-upgrade-path test. It is **distinct from**
-`service-worker-tests`,
-which covers general `context.serviceWorkers()` Playwright patterns
-and per-cache-strategy assertions. This builder is laser-focused on
-the state machine.
+upgrade-path test. The builder itself is laser-focused on the state
+machine; the general Playwright harness (`context.serviceWorkers()` +
+`waitForEvent('serviceworker')` patterns, `service-worker-mock` unit
+tests) and per-cache-strategy assertions are in
+[references/playwright-sw-harness.md](references/playwright-sw-harness.md).
 
 [sw-spec]: https://w3c.github.io/ServiceWorker/
 [mdn-sw]: https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
@@ -347,8 +347,8 @@ Steps 2 - 8 for the full lifecycle surface.
   Manual smoke covers this cell.
 - **The push and fetch events** that `waitUntil` gates aren't
   tested here directly; pair with
-  `web-push-tests` (push side) and
-  the `service-worker-tests` cache-strategy tests
+  `web-push-tests` (push side) and the cache-strategy tests in
+  [references/playwright-sw-harness.md](references/playwright-sw-harness.md)
   (fetch side).
 - **Browser variance.** Firefox and WebKit implement the state
   machine but report `statechange` with slightly different
@@ -364,10 +364,11 @@ Steps 2 - 8 for the full lifecycle surface.
   [mdn-sw].
 - MDN `ServiceWorkerGlobalScope.skipWaiting()` - [mdn-skipwaiting].
 - MDN `Clients.claim()` - [mdn-claim].
-- Differentiation: `service-worker-tests`
-  covers general `context.serviceWorkers()` + cache-strategy
-  patterns; this skill is the dedicated state-machine spec
-  generator.
+- General Playwright SW harness, `service-worker-mock` unit tests,
+  cache-strategy assertions -
+  [references/playwright-sw-harness.md](references/playwright-sw-harness.md)
+  and
+  [references/advanced-service-worker-tests.md](references/advanced-service-worker-tests.md).
 - Composes:
   `add-to-homescreen-flow-tests`,
   `workbox-tests`.

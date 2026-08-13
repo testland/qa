@@ -1,9 +1,0 @@
-{
-  "name": "testland/sw-cache-strategy-author",
-  "description": "Author service worker cache strategies (cache-first, network-first, stale-while-revalidate, cache-only, network-only) per Workbox conventions, plus generate the matching Playwright assertions to lock the strategy in. Avoids the common \"cached forever\" pitfall by enforcing TTL + version-bump invalidation. Use when a new route needs defined offline behavior, when a hand-rolled `sw.js` is being moved to Workbox strategies, or when users report seeing stale content after a deploy.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.1.9"
-}

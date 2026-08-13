@@ -1,9 +1,0 @@
-{
-  "name": "testland/chartjs-snapshot-tests",
-  "description": "Snapshot-test Chart.js charts - render via headless Chromium / jsdom + canvas mock, capture canvas pixels via `canvas.toDataURL()` + image-diff, disable animations (`options.animation = false`) for stable snapshots, test tooltip + legend interactions. Use when a project renders Chart.js charts and needs regression coverage of their rendered output.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.1.11"
-}

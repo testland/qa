@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-ai",
-  "version": "1.0.0",
-  "description": "AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing, AI-assisted test generation, search relevance, data notebooks, and data quality.",
+  "version": "1.0.1",
+  "description": "AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing (including the Jupyter notebook CI pipeline), AI-assisted test generation, search relevance, and data quality.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -25,7 +25,6 @@
     "qa-ml-models",
     "qa-ai-assisted",
     "qa-search-relevance",
-    "qa-data-notebooks",
     "qa-data-quality"
   ]
 }

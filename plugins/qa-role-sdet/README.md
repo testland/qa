@@ -4,7 +4,7 @@ SDET role bundle: one-command install of the full automation-engineer stack plus
 
 Unlike the tech-domain bundles (`qa-role-frontend`, `qa-role-backend`), this bundle is organized around the **job role**: an SDET builds and owns test infrastructure across layers - frameworks and harnesses, unit/integration depth in product languages, contract and mutation testing, performance scripting, and suite economics - on top of everything a test automation engineer does. If you only automate on top of an existing framework, `qa-role-automation-engineer` is the lighter install; work in a single language? Install just that language's unit-test plugin individually.
 
-Installing this one plugin installs all 20 member plugins below in a single command.
+Installing this one plugin installs all 19 member plugins below in a single command.
 
 ## Install
 
@@ -19,7 +19,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 The automation-engineer stack:
 
-- **qa-web-e2e** - Web E2E frameworks + cloud grids
+- **qa-web-e2e** - Web E2E frameworks + browser-matrix strategy, cloud grids, and self-hosted Selenium Grid 4
 - **qa-api-testing** - API test automation + fuzzing + chaos
 - **qa-mobile** - Mobile automation
 - **qa-bdd** - BDD frameworks + Gherkin authoring
@@ -28,7 +28,6 @@ The automation-engineer stack:
 - **qa-flake-triage** - Flake triage, bisection, quarantine
 - **qa-test-review** - Test-code quality reviewers + pattern catalogs
 - **qa-test-data** - Test data generators, mock servers, fixtures
-- **qa-compatibility** - Browser/OS/device matrix strategy
 
 Plus the SDET depth:
 

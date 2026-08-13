@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**81 plugins · 423 components**
+**77 plugins · 413 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -28,10 +28,10 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.0 | 8 skills + 2 agents | 10 |
 | [qa-mobile](plugins/qa-mobile/) | 1.5.0 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.8.0 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.0 | 7 skills + 1 agents | 8 |
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.0 | 6 skills + 2 agents | 8 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.6.0 | 6 skills + 1 agents | 7 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
 | [qa-embedded](plugins/qa-embedded/) | 1.4.0 | 6 skills + 1 agents | 7 |
@@ -50,14 +50,12 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
+| [qa-visual-regression](plugins/qa-visual-regression/) | 1.4.0 | 7 skills + 2 agents | 9 |
 | [qa-accessibility](plugins/qa-accessibility/) | 1.4.0 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.1.0 | 6 skills + 2 agents | 8 |
-| [qa-visual-regression](plugins/qa-visual-regression/) | 1.4.0 | 6 skills + 2 agents | 8 |
 | [qa-pwa](plugins/qa-pwa/) | 1.3.0 | 5 skills + 1 agents | 6 |
-| [qa-modern-web](plugins/qa-modern-web/) | 1.2.0 | 5 skills + 0 agents | 5 |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.3.0 | 3 skills + 1 agents | 4 |
 | [qa-localization](plugins/qa-localization/) | 1.2.0 | 4 skills + 0 agents | 4 |
-| [qa-charts](plugins/qa-charts/) | 1.2.0 | 3 skills + 0 agents | 3 |
 | [qa-pdf-print](plugins/qa-pdf-print/) | 1.2.0 | 3 skills + 0 agents | 3 |
 
 ## Security & compliance
@@ -79,7 +77,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 8 skills + 0 agents | 8 |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 9 skills + 0 agents | 9 |
 | [qa-resilience](plugins/qa-resilience/) | 1.0.0 | 7 skills + 0 agents | 7 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.7.0 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.3.0 | 4 skills + 2 agents | 6 |
@@ -123,10 +121,9 @@ _LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.4.0 | 7 skills + 2 agents | 9 |
-| [qa-ml-models](plugins/qa-ml-models/) | 1.4.0 | 6 skills + 0 agents | 6 |
+| [qa-ml-models](plugins/qa-ml-models/) | 1.4.0 | 7 skills + 0 agents | 7 |
 | [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.4.0 | 3 skills + 2 agents | 5 |
 | [qa-search-relevance](plugins/qa-search-relevance/) | 1.3.0 | 4 skills + 1 agents | 5 |
-| [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.3.0 | 1 skills + 0 agents | 1 |
 
 ## Tooling
 
@@ -135,7 +132,6 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-manual-testing](plugins/qa-manual-testing/) | 1.9.0 | 6 skills + 1 agents | 7 |
-| [qa-compatibility](plugins/qa-compatibility/) | 1.2.17 | 5 skills + 1 agents | 6 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.10 | 4 skills + 0 agents | 4 |
@@ -146,15 +142,15 @@ _One-command role installs - each bundles a curated capability set as dependenci
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-role-ai](plugins/qa-role-ai/) | 1.0.0 | 0 skills + 0 agents | 0 |
-| [qa-role-automation-engineer](plugins/qa-role-automation-engineer/) | 1.0.3 | 0 skills + 0 agents | 0 |
+| [qa-role-ai](plugins/qa-role-ai/) | 1.0.1 | 0 skills + 0 agents | 0 |
+| [qa-role-automation-engineer](plugins/qa-role-automation-engineer/) | 1.0.4 | 0 skills + 0 agents | 0 |
 | [qa-role-backend](plugins/qa-role-backend/) | 1.1.0 | 0 skills + 0 agents | 0 |
-| [qa-role-frontend](plugins/qa-role-frontend/) | 1.0.1 | 0 skills + 0 agents | 0 |
+| [qa-role-frontend](plugins/qa-role-frontend/) | 1.0.2 | 0 skills + 0 agents | 0 |
 | [qa-role-leadership](plugins/qa-role-leadership/) | 1.1.0 | 0 skills + 0 agents | 0 |
-| [qa-role-manual-tester](plugins/qa-role-manual-tester/) | 1.0.2 | 0 skills + 0 agents | 0 |
-| [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.1 | 0 skills + 0 agents | 0 |
+| [qa-role-manual-tester](plugins/qa-role-manual-tester/) | 1.0.3 | 0 skills + 0 agents | 0 |
+| [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.2 | 0 skills + 0 agents | 0 |
 | [qa-role-performance](plugins/qa-role-performance/) | 1.1.0 | 0 skills + 0 agents | 0 |
-| [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.3 | 0 skills + 0 agents | 0 |
+| [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.4 | 0 skills + 0 agents | 0 |
 | [qa-role-security](plugins/qa-role-security/) | 1.1.0 | 0 skills + 0 agents | 0 |
 | [qa-starter](plugins/qa-starter/) | 1.0.1 | 0 skills + 0 agents | 0 |
 
@@ -169,15 +165,12 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-browser-extension](plugins/qa-browser-extension/)
 - [qa-bug-repro](plugins/qa-bug-repro/)
 - [qa-cache-testing](plugins/qa-cache-testing/)
-- [qa-charts](plugins/qa-charts/)
 - [qa-ci-integration](plugins/qa-ci-integration/)
 - [qa-cli-tools](plugins/qa-cli-tools/)
 - [qa-code-quality](plugins/qa-code-quality/)
-- [qa-compatibility](plugins/qa-compatibility/)
 - [qa-compliance](plugins/qa-compliance/)
 - [qa-concurrency](plugins/qa-concurrency/)
 - [qa-contract-testing](plugins/qa-contract-testing/)
-- [qa-data-notebooks](plugins/qa-data-notebooks/)
 - [qa-data-quality](plugins/qa-data-quality/)
 - [qa-db-migrations](plugins/qa-db-migrations/)
 - [qa-defect-management](plugins/qa-defect-management/)
@@ -197,7 +190,6 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-manual-testing](plugins/qa-manual-testing/)
 - [qa-ml-models](plugins/qa-ml-models/)
 - [qa-mobile](plugins/qa-mobile/)
-- [qa-modern-web](plugins/qa-modern-web/)
 - [qa-multi-tenancy](plugins/qa-multi-tenancy/)
 - [qa-mutation-testing](plugins/qa-mutation-testing/)
 - [qa-notifications](plugins/qa-notifications/)

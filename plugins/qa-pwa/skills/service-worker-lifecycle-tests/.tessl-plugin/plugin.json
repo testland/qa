@@ -1,9 +1,9 @@
 {
   "name": "testland/service-worker-lifecycle-tests",
-  "description": "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed \u2192 installing \u2192 installed \u2192 activating \u2192 activated \u2192 redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active \u2192 v2 installed/waiting \u2192 v2 activated, with claim()). Use when authoring the baseline lifecycle spec, or when a deploy leaves users stuck on the old service worker - scoped to the state machine and the `skipWaiting` / `clients.claim` upgrade path, not to general service-worker assertion or cache-strategy patterns.",
+  "description": "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed \u2192 installing \u2192 installed \u2192 activating \u2192 activated \u2192 redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active \u2192 v2 installed/waiting \u2192 v2 activated, with claim()). The general Playwright SW harness, `service-worker-mock` unit tests, and cache-strategy assertions live in references/. Use when authoring the baseline lifecycle spec, when a deploy leaves users stuck on the old service worker, or when a site's caching / offline behavior is uncovered.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.5"
+  "version": "1.2.6"
 }

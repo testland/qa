@@ -20,10 +20,9 @@ network is fine; a route on `Network falling back to cache` must
 This skill emits the per-route test suite. The output is a
 Playwright spec file plus a coverage YAML that maps each URL
 pattern to its recipe and its assertion. The suite is distinct
-from the strategy *authoring* in `sw-cache-strategy-author` (in the
-qa-modern-web plugin);
-that skill authors the strategy, this builder generates the
-verification.
+from the strategy *authoring* covered by `workbox-tests`
+(references/cache-strategy-design.md); that side authors the
+strategy, this builder generates the verification.
 
 [off-cookbook]: https://web.dev/articles/offline-cookbook
 [off-data]: https://web.dev/learn/pwa/offline-data
@@ -340,8 +339,9 @@ regressions:
   `workbox-tests`,
   `service-worker-lifecycle-tests`,
   `add-to-homescreen-flow-tests`.
-- Differentiation: `sw-cache-strategy-author` authors the strategy;
-  this builder generates the verification
+- Differentiation: the cache-strategy design reference in
+  `workbox-tests` (references/cache-strategy-design.md) authors the
+  strategy; this builder generates the verification
   suite. Both consume the cookbook recipe vocabulary; the
   authoring side writes the SW code, this side writes the spec
   that locks it.

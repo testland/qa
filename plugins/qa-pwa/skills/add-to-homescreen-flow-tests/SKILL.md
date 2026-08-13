@@ -29,11 +29,11 @@ the workflow consumes it by emitting verification cells.
 [learn-pwa]: https://web.dev/learn/pwa/installation
 [customize-install]: https://web.dev/articles/customize-install
 
-Distinct from `pwa-install-flow-tests` (in the qa-modern-web plugin):
-that skill authors install-flow tests as a generic wrapper.
 This builder generates the *per-PWA* suite from the project's
 actual manifest + SW + page handler - the artifact you check into
-the repo, not the pattern reference.
+the repo. Standalone generic recipes (single-test manifest
+validation, prompt capture, iOS metadata, `display-mode` MQ) are in
+[references/install-flow-tests.md](references/install-flow-tests.md).
 
 Composes with:
 
@@ -400,10 +400,8 @@ the four classes of install regression most teams hit:
   [references/install-flow-reference.md](references/install-flow-reference.md).
 - Composes:
   `service-worker-lifecycle-tests`.
-- Differentiation: `pwa-install-flow-tests` is the generic pattern
-  wrapper. This builder emits the
-  *per-PWA* suite tied to the project's actual manifest /
-  handlers - the checked-in artifact, not the pattern reference.
+- Generic standalone install-flow test recipes -
+  [references/install-flow-tests.md](references/install-flow-tests.md).
 - Sibling builders:
   `offline-fallback-tests`,
   `service-worker-lifecycle-tests`.

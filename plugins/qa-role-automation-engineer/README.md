@@ -1,10 +1,10 @@
 # Test Automation Engineer (role bundle)
 
-Test automation engineer role bundle: one-command install of web E2E, API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, test data, and browser/OS compatibility.
+Test automation engineer role bundle: one-command install of web E2E (including cross-browser matrix strategy and grids), API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, and test data.
 
 Unlike the tech-domain bundles (`qa-role-frontend`, `qa-role-backend`), this bundle is organized around the **job role**: it covers an automation engineer's whole week - author and maintain automated suites across web, API, and mobile, wire them into CI, keep them stable (flake triage, quarantine, bisection), and keep the test code itself reviewable - regardless of which layer of the product you automate.
 
-Installing this one plugin installs all 10 member plugins below in a single command.
+Installing this one plugin installs all 9 member plugins below in a single command.
 
 ## Install
 
@@ -17,7 +17,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 ## What this installs
 
-- **qa-web-e2e** - Web E2E frameworks (Playwright, Cypress, Selenium, WebdriverIO, Puppeteer, TestCafe) + cloud grids
+- **qa-web-e2e** - Web E2E frameworks (Playwright, Cypress, Selenium, WebdriverIO) + browser-matrix strategy, cloud grids, and self-hosted Selenium Grid 4
 - **qa-api-testing** - API test automation (Postman/Newman, REST Assured, Karate, Tavern, fuzzing, chaos)
 - **qa-mobile** - Mobile automation (XCUITest, Espresso, Appium, Detox, Maestro, Flutter)
 - **qa-bdd** - BDD frameworks (Cucumber, Behave, Reqnroll) + Gherkin authoring
@@ -26,7 +26,6 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 - **qa-flake-triage** - Flake patterns, bisection, isolation checking, quarantine, trend reporting
 - **qa-test-review** - Test-code quality reviewers + object-model / isolation / step-design pattern catalogs
 - **qa-test-data** - Test data generators, mock servers (WireMock, MSW, Mountebank), fixtures
-- **qa-compatibility** - Browser/OS/device matrix strategy + Selenium Grid 4
 
 ## About role bundles
 

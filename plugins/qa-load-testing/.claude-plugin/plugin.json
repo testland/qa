@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-load-testing",
   "version": "1.9.0",
-  "description": "Load and performance testing: 8 skills (load-testing-overview - tool selection, load profiles, incident triage, Gatling/Locust references; k6-load-testing with latency-percentile interpretation; jmeter-load-testing; lighthouse-perf with budget authoring; perf-budget-gate; flame-graph-analyzer; db-query-plan-analyzer; slo-load-test-plan).",
+  "description": "Load and performance testing: 9 skills (load-testing-overview - tool selection, load profiles, incident triage, Gatling/Locust references; k6-load-testing with latency-percentile interpretation; jmeter-load-testing; lighthouse-perf with budget authoring; web-vitals-inp-deep for per-interaction INP budgets; perf-budget-gate; flame-graph-analyzer; db-query-plan-analyzer; slo-load-test-plan).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

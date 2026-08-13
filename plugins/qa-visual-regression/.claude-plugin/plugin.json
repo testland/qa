@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-visual-regression",
   "version": "1.4.0",
-  "description": "Visual regression testing: 6 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots with the responsive breakpoint matrix, storybook-visual-regression-testing, visual-baseline-conventions, visual-baseline-gate emitting binding gate artifacts) and 2 agents (visual-diff-classifier with a per-PR summary mode, visual-baseline-curator).",
+  "description": "Visual regression testing: 7 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots with the responsive breakpoint matrix, storybook-visual-regression-testing, chart-render-tests covering Chart.js / D3 / Vega chart regression, visual-baseline-conventions, visual-baseline-gate emitting binding gate artifacts) and 2 agents (visual-diff-classifier with a per-PR summary mode, visual-baseline-curator).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

@@ -1,9 +1,0 @@
-{
-  "name": "testland/browser-matrix-strategy-reference",
-  "description": "Pure-reference for designing and reviewing a browser / OS / device test matrix from traffic data - the T1/T2/T3 tier-membership heuristics (T1 >=5% traffic, T2 1-5% or statutory, T3 <1% with customer demand), the traffic-share sources (own analytics, StatCounter, MDN browser-compat-data), a worked matrix template with tier-change log, and how to justify dropping a legacy browser (IE11, old iOS Safari). Use when designing an initial matrix, running a quarterly re-tier review, or making the case to drop a browser. This is the WHAT-to-test strategy reference - to execute the matrix use the runners browser-matrix-runner (bundled engines) or selenium-grid-4-runner (self-hosted); to cap and publish committed support tiers use compatibility-budget.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.15"
-}

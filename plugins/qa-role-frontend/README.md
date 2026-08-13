@@ -1,8 +1,8 @@
 # Frontend & web-app QA
 
-Frontend & web-app QA role bundle: one-command install of web E2E, visual regression, accessibility, modern web, PWA, browser-extension, localization, charts, PDF/print, browser/OS compatibility, and JS/TS unit testing.
+Frontend & web-app QA role bundle: one-command install of web E2E (including cross-browser matrix strategy and grids), visual regression (including chart-render testing), accessibility, PWA and service-worker testing, browser-extension, localization, PDF/print, and JS/TS unit testing.
 
-Installing this one plugin installs all 11 member plugins below in a single command.
+Installing this one plugin installs all 8 member plugins below in a single command.
 
 ## Install
 
@@ -15,16 +15,13 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 ## What this installs
 
-- **qa-web-e2e** - Web E2E framework wrappers + cloud-grid integrations
-- **qa-visual-regression** - Visual regression testing
+- **qa-web-e2e** - Web E2E framework wrappers + browser-matrix strategy, cloud grids, and self-hosted Selenium Grid 4
+- **qa-visual-regression** - Visual regression testing + chart-render regression (Chart.js / D3 / Vega)
 - **qa-accessibility** - Atomic accessibility coverage
-- **qa-modern-web** - Modern web testing
-- **qa-pwa** - Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation,
+- **qa-pwa** - PWA + service-worker testing: Workbox recipes, cache-strategy design, offline fallback, install flow, web push
 - **qa-browser-extension** - Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission
 - **qa-localization** - Localization (l10n) + internationalization (i18n) testing
-- **qa-charts** - Chart + data viz testing
 - **qa-pdf-print** - PDF + print rendering tests
-- **qa-compatibility** - Browser + OS compatibility testing + self-hosted grid
 - **qa-unit-tests-js** - JS/TS unit testing per-framework wrappers + orchestrator agent
 
 ## About role bundles

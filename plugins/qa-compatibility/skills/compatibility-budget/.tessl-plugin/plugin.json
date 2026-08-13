@@ -1,9 +1,0 @@
-{
-  "name": "testland/compatibility-budget",
-  "description": "Pure-reference for deciding how large a compatibility matrix a team can afford and for publishing that commitment - defines tier-1 (must work; per-PR) vs tier-2 (must work; nightly) vs tier-3 (should work; pre-release) vs unsupported, with example budgets per product type (web / desktop / mobile / library), the matrix-size cost / coverage trade-off, and 'what we support' external templates. Use when a team must cap how many browser / OS / runtime combos it commits to, or must publish a support policy. This is the BUDGET and support-statement gate - for the traffic-share analysis that picks WHICH specific browsers belong in each tier use browser-matrix-strategy-reference; to execute the resulting matrix use the runners browser-matrix-runner (bundled engines) or selenium-grid-4-runner (self-hosted).",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.13"
-}

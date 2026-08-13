@@ -1,9 +1,0 @@
-{
-  "name": "testland/browser-matrix-runner",
-  "description": "Configures a CI matrix that runs the smoke / regression suite across multiple browsers per Playwright's three-engine support (Chromium, Firefox, WebKit / Safari) plus branded variants (chrome, msedge channels). Wires GitHub Actions / GitLab CI matrix syntax, captures per-browser screenshots, and aggregates per-browser pass/fail. Use when the product targets multiple browsers and the team wants automated cross-browser testing or browser-compatibility regression - e.g. a 'works in Chrome, broken in Safari' bug that needs Chrome / Firefox / Safari coverage.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.16"
-}

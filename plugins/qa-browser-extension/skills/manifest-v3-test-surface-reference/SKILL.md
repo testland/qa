@@ -27,10 +27,11 @@ field shapes, the full Firefox/Chrome key matrix, and the offscreen-document
 [references/web-ext-firefox.md](references/web-ext-firefox.md). All sources
 are consolidated in the References section.
 
-For Playwright-driven MV3 popup / content-script fixtures see
-`browser-extension-tests` - a Chromium-only popup + content-script +
-service-worker-fixture skill. This reference is browser-agnostic,
-manifest-field-keyed, and covers the Firefox column explicitly.
+For Playwright-driven MV3 popup / content-script fixtures and
+assertion recipes see `playwright-extension-fixtures` (Chromium-only;
+references/extension-surface-tests.md). This reference is
+browser-agnostic, manifest-field-keyed, and covers the Firefox column
+explicitly.
 
 ## When to use
 

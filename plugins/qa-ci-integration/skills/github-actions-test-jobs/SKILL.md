@@ -1,6 +1,6 @@
 ---
 name: github-actions-test-jobs
-description: "Configures GitHub Actions test workflows - `.github/workflows/test.yml` with matrix builds (OS × runtime), JUnit XML artifact upload, retry/sharding, services (PostgreSQL, Redis), per-trigger filtering (pull_request, push, schedule, workflow_dispatch). Use when the project hosts on GitHub and the team wants idiomatic GitHub Actions patterns for test workflows."
+description: "Configures GitHub Actions test workflows - `.github/workflows/test.yml` with matrix builds (OS × runtime, with per-OS quirks - path separators, line endings, shells - and per-language runtime matrices in references/os-matrix.md), JUnit XML artifact upload, retry/sharding, services (PostgreSQL, Redis), per-trigger filtering (pull_request, push, schedule, workflow_dispatch). Use when the project hosts on GitHub and the team wants idiomatic GitHub Actions patterns for test workflows, or needs continuous cross-platform OS / runtime coverage."
 ---
 
 # github-actions-test-jobs
@@ -88,6 +88,12 @@ jobs:
 
 `fail-fast: false` ensures one matrix failure doesn't cancel
 others. Matrix size is OS × Node = 3 × 2 = 6 jobs.
+
+Runner pinning, per-language runtime matrices (Node / Python / Java /
+.NET), OS-specific quirks (path separators, line endings, case
+sensitivity, shells), per-OS conditional steps and tests, and the
+tiered cost-management cadence are in
+[references/os-matrix.md](references/os-matrix.md).
 
 ## Step 3 - Sharding for parallel execution
 
@@ -247,6 +253,7 @@ their JUnit report.
 
 - [gha][gha] - GitHub Actions workflow basics: events + jobs +
   steps; YAML in `.github/workflows/`.
+- [references/os-matrix.md](references/os-matrix.md) - OS / runtime matrix depth + per-OS quirks.
 - [references/services-and-reporting.md](references/services-and-reporting.md) - service container + JUnit reporting recipes.
 - `gitlab-ci-test-jobs`,
   `jenkinsfile-test-stages` -

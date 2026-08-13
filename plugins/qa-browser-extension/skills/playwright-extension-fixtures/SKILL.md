@@ -1,6 +1,6 @@
 ---
 name: playwright-extension-fixtures
-description: "Author the Playwright fixture layer every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe - plus the extension load / reload matrix (which edit re-evaluates which surface) and the `chrome.storage` test suite (area selection, quota-exceeded, `storage.onChanged`, managed read-only) in references/. Use when authoring or debugging the fixture a Chromium extension test imports, when an edit appears to have no effect and you need the reload matrix, or when authoring storage-quota tests."
+description: "Author the Playwright fixture layer every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe - plus, in references/, the extension load / reload matrix (which edit re-evaluates which surface), the `chrome.storage` test suite (area selection, quota-exceeded, `storage.onChanged`, managed read-only), and the per-surface assertion recipes (popup, content script, background messaging, MV3 auto-suspend survival). Use when authoring or debugging the fixture a Chromium extension test imports, when an edit appears to have no effect and you need the reload matrix, or when authoring popup / content-script / storage tests."
 metadata:
   keywords: "playwright, chromium, launchpersistentcontext, test-fixtures, browser-extension"
 ---
@@ -16,20 +16,19 @@ race, and an extension-ID extraction. Per the
 contract the assertion-level skills depend on - it's the
 foundation, not the test logic.
 
-This skill is **distinct from
-`browser-extension-tests`**
-(MV3 popup + content-script assertions); this is the lower-level
-Playwright fixture pattern (`launchPersistentContext` +
-`--disable-extensions-except` + `--load-extension`) shared by all
-extension tests. The neighbour skill is the "what to assert"
-playbook; this skill is the "how to launch" reference that any
-test - extension popup, content script, service worker, options
-page, side panel - needs to import first.
+This SKILL.md is the "how to launch" layer - the Playwright fixture
+pattern (`launchPersistentContext` + `--disable-extensions-except` +
+`--load-extension`) shared by all extension tests. The "what to
+assert" playbook per surface - popup, content script, background
+messaging, storage, MV3 auto-suspend - lives in
+[references/extension-surface-tests.md](references/extension-surface-tests.md)
+and builds on this fixture.
 
 [pw-ext]: https://playwright.dev/docs/chrome-extensions
 
 Composes with:
 
+- [references/extension-surface-tests.md](references/extension-surface-tests.md) - per-surface assertion recipes (popup, content script, messaging, storage persistence, auto-suspend) run from this fixture.
 - [references/reload-matrix.md](references/reload-matrix.md) - which edits require which reload; the manual `chrome://extensions` gesture this fixture automates.
 - [references/storage-tests.md](references/storage-tests.md) - the `chrome.storage` area / quota / event test suite run from this fixture's SW context.
 - `manifest-v3-test-surface-reference` - the manifest fields the fixture is testing against.
@@ -287,12 +286,12 @@ Key choices:
   guidance, MV3 SW behaviour, headless support) - [pw-ext].
 - `chromium.launchPersistentContext` API - 
   [playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context](https://playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context).
+- [references/extension-surface-tests.md](references/extension-surface-tests.md) -
+  the popup / content-script / messaging assertion playbook this
+  fixture feeds.
 - [references/reload-matrix.md](references/reload-matrix.md) - the
   load / reload matrix and its automation equivalents.
 - [references/storage-tests.md](references/storage-tests.md) - the
   `chrome.storage` quota / area / event test suite.
 - Composes:
   `manifest-v3-test-surface-reference`.
-- Distinct neighbour:
-  `browser-extension-tests` - the popup / content-script / messaging assertion playbook this
-  fixture feeds.

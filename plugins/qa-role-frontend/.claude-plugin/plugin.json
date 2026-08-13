@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-frontend",
-  "version": "1.0.1",
-  "description": "Frontend & web-app QA role bundle: one-command install of web E2E, visual regression, accessibility, modern web, PWA, browser-extension, localization, charts, PDF/print, browser/OS compatibility, and JS/TS unit testing.",
+  "version": "1.0.2",
+  "description": "Frontend & web-app QA role bundle: one-command install of web E2E (including cross-browser matrix strategy and grids), visual regression (including chart-render testing), accessibility, PWA and service-worker testing, browser-extension, localization, PDF/print, and JS/TS unit testing.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -23,13 +23,10 @@
     "qa-web-e2e",
     "qa-visual-regression",
     "qa-accessibility",
-    "qa-modern-web",
     "qa-pwa",
     "qa-browser-extension",
     "qa-localization",
-    "qa-charts",
     "qa-pdf-print",
-    "qa-compatibility",
     "qa-unit-tests-js"
   ]
 }

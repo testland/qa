@@ -1,8 +1,8 @@
 # Mobile, desktop & cross-platform QA
 
-Mobile, desktop & cross-platform QA role bundle: one-command install of mobile-native, desktop, embedded, game, and browser/OS compatibility testing.
+Mobile, desktop & cross-platform QA role bundle: one-command install of mobile-native, desktop, embedded, and game testing.
 
-Installing this one plugin installs all 5 member plugins below in a single command.
+Installing this one plugin installs all 4 member plugins below in a single command.
 
 ## Install
 
@@ -19,7 +19,6 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 - **qa-desktop** - Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows),
 - **qa-embedded** - Embedded C/C++ testing
 - **qa-game** - Game engine testing (Unity, Unreal, Godot), platform certification overview (Sony
-- **qa-compatibility** - Browser + OS compatibility testing + self-hosted grid
 
 ## About role bundles
 

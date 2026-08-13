@@ -124,7 +124,7 @@ Nightly scheduled:
 
 Pre-release tag:
   - Cross-platform matrix (per `mobile-device-matrix-toolkit`).
-  - Cross-browser matrix (per `browser-matrix-runner`).
+  - Cross-browser matrix (per `playwright-testing` references/browser-matrix.md).
   - Manual UAT sign-off.
 
 Manual / on-demand:

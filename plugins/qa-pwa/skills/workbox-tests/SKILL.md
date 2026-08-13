@@ -1,6 +1,6 @@
 ---
 name: workbox-tests
-description: "Test Workbox-built service workers - pin behavior of the named recipes (`pageCache`, `staticResourceCache`, `imageCache`, `googleFontsCache`, `offlineFallback`, `warmStrategyCache`) per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes]; validate `workbox-precaching` manifest injection (`__WB_MANIFEST` revisioning); assert `workbox-routing` route handler matches; assert `workbox-expiration` and `workbox-cacheable-response` plugin gates; and verify the `workbox-window` registration helper events (`installed`, `waiting`, `controlling`, `activated`). Use when a project already ships a Workbox-built service worker and its recipe behavior needs pinning against refactors or a version upgrade."
+description: "Test Workbox-built service workers - pin behavior of the named recipes (`pageCache`, `staticResourceCache`, `imageCache`, `googleFontsCache`, `offlineFallback`, `warmStrategyCache`) per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes]; validate `workbox-precaching` manifest injection (`__WB_MANIFEST` revisioning); assert `workbox-routing` route handler matches; assert `workbox-expiration` and `workbox-cacheable-response` plugin gates; and verify the `workbox-window` registration helper events (`installed`, `waiting`, `controlling`, `activated`). Cache-strategy design (which strategy per route type, TTL + version-bump invalidation, migrating a hand-rolled sw.js to Workbox) lives in references/cache-strategy-design.md. Use when a project ships (or is adopting) a Workbox service worker and its strategy choices or recipe behavior need pinning against refactors or a version upgrade."
 metadata:
   keywords: "workbox, workbox-recipes, workbox-window, precaching, service-worker"
 ---
@@ -9,12 +9,14 @@ metadata:
 
 ## Overview
 
-This skill tests Workbox-built service workers - distinct from
-`sw-cache-strategy-author`, which *authors* the strategies. Here we assert that
-an already-shipped Workbox SW behaves the way its recipes claim, using the
+This skill tests Workbox-built service workers: assert that an
+already-shipped Workbox SW behaves the way its recipes claim, using the
 `workbox-precaching` / `workbox-routing` / `workbox-strategies` /
 `workbox-recipes` / `workbox-window` packages per
-[developer.chrome.com/docs/workbox/modules][wb-modules].
+[developer.chrome.com/docs/workbox/modules][wb-modules]. The
+design-side counterpart - choosing a strategy per route type and
+authoring the Workbox strategy code before pinning it - is in
+[references/cache-strategy-design.md](references/cache-strategy-design.md).
 
 [wb-overview]: https://developer.chrome.com/docs/workbox
 [wb-modules]: https://developer.chrome.com/docs/workbox/modules
@@ -36,6 +38,18 @@ Time-sensitive pin - re-check at [wb-gh] on upgrade: Workbox **v7.4.1**
   plugin's TTL with a test before patching.
 - A `workbox-precaching` injection drifted (build emits wrong
   `__WB_MANIFEST`) - assert the precache manifest shape in CI.
+
+## Choosing a cache strategy
+
+When the SW under test doesn't exist yet, or a hand-rolled `sw.js` is
+being migrated to Workbox, start with
+[references/cache-strategy-design.md](references/cache-strategy-design.md):
+the strategy-per-route-type table (CacheFirst / NetworkFirst /
+StaleWhileRevalidate / NetworkOnly), worked Workbox strategy code with
+`ExpirationPlugin` + `CacheableResponsePlugin`, the matching Playwright
+assertions, an audit table classifying existing hand-rolled fetch
+handlers, and invalidation locking (`SW_VERSION` bump + user-opt-in
+`skipWaiting`).
 
 ## Authoring
 
@@ -300,11 +314,11 @@ without test coverage.
   `googleFontsCache`, `offlineFallback`, `warmStrategyCache` with
   defaults) - [wb-recipes].
 - Workbox repo (v7.4.1 release, May 2026) - [wb-gh].
-- Differentiation: `service-worker-tests`
-  covers generic `context.serviceWorkers()` Playwright patterns;
-  `sw-cache-strategy-author`
-  authors strategies. This skill assumes Workbox was already used
-  and tests its specific recipe behavior.
+- Strategy design + authoring (per-route strategy table, audit of
+  hand-rolled SWs, invalidation locking) -
+  [references/cache-strategy-design.md](references/cache-strategy-design.md).
+- Generic `context.serviceWorkers()` Playwright patterns - the
+  `service-worker-lifecycle-tests` references.
 - Sibling skills:
   `offline-fallback-tests`,
   `service-worker-lifecycle-tests`.

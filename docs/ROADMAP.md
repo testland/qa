@@ -16,9 +16,10 @@ roadmap of what we want to land next.
 > `qa-test-data-privacy` shipped as plugins; risk-based testing was
 > absorbed into `qa-process` (the `risk-*` skill/agent family);
 > exploratory testing was absorbed into `qa-manual-testing` (SBTM,
-> charters, heuristics, tours); cross-browser grids were absorbed into
-> `qa-web-e2e` (BrowserStack / Sauce Labs / LambdaTest / Selenium Grid)
-> and `qa-compatibility` (matrix strategy). All nine former Tier-2 and
+> charters, heuristics, tours); cross-browser grids and matrix
+> strategy were absorbed into `qa-web-e2e` (BrowserStack / Sauce Labs /
+> LambdaTest / Selenium Grid + the browser-matrix strategy reference).
+> All nine former Tier-2 and
 > all five former Tier-3 plugin gaps also shipped. The tables below are
 > a fresh gap list derived from a June 2026 review of the catalog
 > against ISTQB role definitions (CTFL v4.0, CTAL-TM v3.0, CTAL-TAE
@@ -101,16 +102,17 @@ API + incident records in, four keys out), plus the long-suggested
 **Canonical sources to fetch:** dora.dev (metric definitions and the
 five-metric evolution), SPACE framework paper (ACM Queue).
 
-### Manual cross-browser / device spot-check workflow (extension: `qa-compatibility`)
+### Manual cross-browser / device spot-check workflow (extension: `qa-web-e2e`)
 
 **Why missing matters:** the grid skills (`cloud-grid-e2e`,
 `selenium-grid-4-runner`)
-and `browser-matrix-runner` are automation-oriented. A manual tester
+and the playwright-testing browser-matrix reference are
+automation-oriented. A manual tester
 doing a responsive pass or a per-release browser/device spot check has
 no checklist-shaped workflow.
 
-**Nearest existing components:** `browser-matrix-strategy-reference`,
-`compatibility-budget`, and the checklist format of
+**Nearest existing components:** `browser-matrix-strategy-reference`
+(including its compatibility-budget reference) and the checklist format of
 `manual-test-script-author` (qa-manual-testing).
 
 **Differentiation axis:** matrix strategy decides *what* to cover;

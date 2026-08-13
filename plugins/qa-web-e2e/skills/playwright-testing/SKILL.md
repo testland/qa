@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, mobile-web emulation via the `devices` catalog (viewport / DPR / touch per-device projects), and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, mobile-breakpoint regression, and CI setup; for reviewing codegen output specifically, use a dedicated codegen-review pass."
+description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, mobile-web emulation via the `devices` catalog (viewport / DPR / touch per-device projects), the cross-browser matrix with branded channels (chrome / msedge) in references/browser-matrix.md, and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, mobile-breakpoint regression, cross-browser matrix setup, and CI setup; for reviewing codegen output specifically, use a dedicated codegen-review pass."
 ---
 
 # playwright-testing
@@ -21,8 +21,9 @@ Per [pw-intro][pwi]:
 ## When to use
 
 - New web E2E project; pick Playwright as the modern default.
-- Cross-browser coverage matters (see `browser-matrix-runner` in the
-  qa-compatibility plugin) - Playwright's three-engine support is the differentiator.
+- Cross-browser coverage matters (see
+  [references/browser-matrix.md](references/browser-matrix.md)) -
+  Playwright's three-engine support is the differentiator.
 - Migration from Selenium / WebDriver-based stacks (see
   `selenium-testing`).
 
@@ -141,6 +142,10 @@ spreading `devices['iPhone 15']` / `devices['Pixel 7']` for
 mobile-breakpoint regression (viewport, DPR, user agent, `.tap()` touch
 synthesis, per-device snapshots, CI matrix) - see
 [references/mobile-emulation.md](references/mobile-emulation.md).
+For the full cross-browser matrix - branded chrome / msedge channel
+projects, the per-browser CI matrix with `fail-fast: false`, and the
+engine-vs-channel decision table - see
+[references/browser-matrix.md](references/browser-matrix.md).
 
 ## Step 5 - Run
 
@@ -251,7 +256,8 @@ feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
 
 ## Limitations
 
-- **No real Safari.** WebKit ≠ Safari (per `browser-matrix-runner`);
+- **No real Safari.** WebKit ≠ Safari (per
+  [references/browser-matrix.md](references/browser-matrix.md));
   iOS Safari needs real-device testing.
 - **Per-test runtime ~2-30s.** E2E expensive vs unit tests; use
   pyramid balance per `test-pyramid-balancer` (in the qa-process plugin).
@@ -265,5 +271,5 @@ feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
 - [pwi][pwi] - Playwright overview, install via `npm init
   playwright@latest`, three-engine support, CLI flags, HTML
   Reporter.
-- `browser-matrix-runner` - cross-browser matrix.
+- [references/browser-matrix.md](references/browser-matrix.md) - cross-browser matrix + branded channels.
 - `junit-xml-analysis` - downstream JUnit XML parsing.

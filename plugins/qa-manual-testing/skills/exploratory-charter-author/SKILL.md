@@ -70,7 +70,7 @@ deliverables (Step 3) into the card format from
 adding the source artifact ("Created from: story / diff / incident"), the
 target build / SHA, and an explicit out-of-scope list (performance / load →
 [`k6-load-testing`](../../../qa-load-testing/skills/k6-load-testing/SKILL.md);
-a11y → `qa-accessibility`; cross-browser → `qa-compatibility`).
+a11y → `qa-accessibility`; cross-browser → `qa-web-e2e`).
 
 ## Halt rules
 

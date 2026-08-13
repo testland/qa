@@ -32,8 +32,8 @@ retrieval, CI matrix examples):
 [references/sauce-labs.md](references/sauce-labs.md) ·
 [references/lambdatest.md](references/lambdatest.md).
 
-Composes with `browser-matrix-strategy-reference` (in the qa-compatibility
-plugin) for matrix planning.
+Composes with the sibling `browser-matrix-strategy-reference` for
+matrix planning.
 
 ## When to use
 
@@ -44,9 +44,9 @@ plugin) for matrix planning.
   vendor's tunnel binary.
 
 For **bundled-engine** matrix (Chromium / Firefox / WebKit on the runner
-machine), use `browser-matrix-runner`. For a self-hosted grid (data
-residency, cost control), use `selenium-grid-4-runner` - both in the
-qa-compatibility plugin.
+machine), use `playwright-testing` (references/browser-matrix.md). For a
+self-hosted grid (data residency, cost control), use the sibling
+`selenium-grid-4-runner`.
 
 Choosing between the vendors: BrowserStack has the broadest real-device
 matrix and enterprise procurement; Sauce Labs suits Selenium-grid-centric

@@ -20,7 +20,7 @@
     {
       "name": "qa-visual-regression",
       "source": "./plugins/qa-visual-regression",
-      "description": "Visual regression testing: 8 skills (chromatic-visual-regression-testing, percy-visual-regression-testing, playwright-snapshots, responsive-breakpoint-runner, storybook-visual-regression-testing, visual-baseline-conventions, visual-baseline-gate, visual-diff-summarizer) and 3 agents (visual-baseline-curator, visual-ci-gate-orchestrator, visual-diff-classifier).",
+      "description": "Visual regression testing: 7 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots with the responsive breakpoint matrix, storybook-visual-regression-testing, chart-render-tests covering Chart.js / D3 / Vega chart regression, visual-baseline-conventions, visual-baseline-gate emitting binding gate artifacts) and 2 agents (visual-diff-classifier with a per-PR summary mode, visual-baseline-curator).",
       "strict": true,
       "category": "quality-engineering"
     },
@@ -62,7 +62,7 @@
     {
       "name": "qa-load-testing",
       "source": "./plugins/qa-load-testing",
-      "description": "Load and performance testing: 12 skills (db-query-plan-analyzer, flame-graph-analyzer, gatling-load-testing, jmeter-load-testing, jvm-gc-tuning, k6-load-testing, latency-percentile-analyzer, lighthouse-budget-author, lighthouse-perf, load-testing-getting-started, locust-load-testing, perf-budget-gate) and 3 agents (load-test-tool-selector, perf-incident-responder, perf-regression-bisector).",
+      "description": "Load and performance testing: 9 skills (load-testing-overview - tool selection, load profiles, incident triage, Gatling/Locust references; k6-load-testing with latency-percentile interpretation; jmeter-load-testing; lighthouse-perf with budget authoring; web-vitals-inp-deep for per-interaction INP budgets; perf-budget-gate; flame-graph-analyzer; db-query-plan-analyzer; slo-load-test-plan).",
       "strict": true,
       "category": "operations-resilience"
     },
@@ -179,23 +179,16 @@
       "category": "ai-ml"
     },
     {
-      "name": "qa-compatibility",
-      "source": "./plugins/qa-compatibility",
-      "description": "Browser + OS compatibility testing: 5 skills (browser-matrix-runner, browser-matrix-strategy-reference, compatibility-budget, os-matrix-runner, selenium-grid-4-runner) and 1 agent (compatibility-matrix-auditor).",
-      "strict": true,
-      "category": "tooling"
-    },
-    {
       "name": "qa-web-e2e",
       "source": "./plugins/qa-web-e2e",
-      "description": "Web E2E framework wrappers: 10 skills (browserstack-automate, cypress-testing, lambdatest-automate, playwright-testing, puppeteer-testing, saucelabs-automate, selenium-testing, testcafe-testing, web-e2e-getting-started, webdriverio-testing) and 5 agents (cypress-codegen-reviewer, playwright-codegen-reviewer, selenium-grid-orchestrator, spec-to-e2e-test-scaffolder, web-e2e-framework-selector).",
+      "description": "Web E2E framework wrappers + cross-browser strategy and grids: 8 skills (playwright-testing carrying the cross-browser matrix reference, cypress-testing, selenium-testing, webdriverio-testing, cloud-grid-e2e covering BrowserStack / Sauce Labs / LambdaTest, selenium-grid-4-runner for the self-hosted grid, browser-matrix-strategy-reference with the T1/T2/T3 tiering + compatibility budget + matrix review checklist, and the web-e2e-overview decision guide) and 2 agents (playwright-codegen-reviewer, which also reviews Cypress Studio recordings, and automation-harness-bootstrapper, which scaffolds a full E2E harness skeleton for a repo with no suite).",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-ci-integration",
       "source": "./plugins/qa-ci-integration",
-      "description": "CI/CD test workflow patterns: 5 skills (ci-test-job-conventions, circleci-test-configs, github-actions-test-jobs, gitlab-ci-test-jobs, jenkinsfile-test-stages) and 1 agent (ci-pipeline-health-critic).",
+      "description": "CI/CD test workflow patterns: 4 skills (github-actions-test-jobs, gitlab-ci-test-jobs, jenkinsfile-test-stages, ci-test-job-conventions - the latter carries the CircleCI patterns in references/) and 1 agent (ci-pipeline-health-critic).",
       "strict": true,
       "category": "tooling"
     },
@@ -307,21 +300,7 @@
     {
       "name": "qa-ml-models",
       "source": "./plugins/qa-ml-models",
-      "description": "ML model testing: 6 skills (alibi-explainability, deepchecks-tests, evidently-monitoring, fairlearn-fairness, giskard-tests, model-performance-regression-gate) and 2 agents (data-drift-incident-responder, model-fairness-reviewer). Covers vulnerability scanning, drift monitoring, group fairness, and per-prediction explainability.",
-      "strict": true,
-      "category": "ai-ml"
-    },
-    {
-      "name": "qa-modern-web",
-      "source": "./plugins/qa-modern-web",
-      "description": "Modern web testing: 5 skills (browser-extension-tests, pwa-install-flow-tests, service-worker-tests, sw-cache-strategy-author, web-vitals-inp-deep) and 1 agent (modern-web-health-agent). Covers PWA + Chromium MV3 extensions + INP responsiveness.",
-      "strict": true,
-      "category": "quality-engineering"
-    },
-    {
-      "name": "qa-data-notebooks",
-      "source": "./plugins/qa-data-notebooks",
-      "description": "Jupyter notebook testing: 4 skills (nbval-tests, notebook-ci-pipeline-author, papermill-tests, testbook-tests) and 1 agent (notebook-quality-reviewer). Covers full-notebook regression (nbval), function-level unit tests (testbook), and parameterized execution (papermill).",
+      "description": "ML model testing: 7 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, model-performance-regression-gate, model-risk-evidence-matrix, notebook-ci-pipeline-author). Covers tabular + NLP + vision validation, drift monitoring with alert triage, group fairness with a risk-tiered promotion gate, per-prediction explainability, and the Jupyter notebook CI pipeline (papermill + nbval + testbook + nbstripout).",
       "strict": true,
       "category": "ai-ml"
     },
@@ -366,13 +345,6 @@
       "description": "Saga + CQRS + event sourcing test patterns: 5 skills (cqrs-projection-tests, event-sourcing-tests, eventual-consistency-tests, outbox-pattern-test-author, saga-transaction-tests) and 1 agent (saga-critic). Covers ACD-without-isolation saga tests, replay determinism, and projection consistency windows.",
       "strict": true,
       "category": "backend-distributed"
-    },
-    {
-      "name": "qa-charts",
-      "source": "./plugins/qa-charts",
-      "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator) and 1 agent (chart-test-author). Covers Canvas + SVG + declarative-spec visualizations, complementing qa-visual-regression which targets general UI screens.",
-      "strict": true,
-      "category": "quality-engineering"
     },
     {
       "name": "qa-team-management",
@@ -468,7 +440,7 @@
     {
       "name": "qa-browser-extension",
       "source": "./plugins/qa-browser-extension",
-      "description": "Firefox + Chrome extension lifecycle, MV2 to MV3 migration, host-permission prompts, and storage.sync vs storage.local test patterns",
+      "description": "Firefox + Chrome extension testing: 3 skills (playwright-extension-fixtures with the reload matrix + chrome.storage quota tests, chrome-extension-messaging-tests, manifest-v3-test-surface-reference with the web-ext Firefox CLI) and 1 agent (extension-test-author, which composes them to author one Playwright spec per behavior spec).",
       "strict": true,
       "category": "quality-engineering"
     },
@@ -489,7 +461,7 @@
     {
       "name": "qa-pwa",
       "source": "./plugins/qa-pwa",
-      "description": "Workbox recipes, offline fallback patterns, Lighthouse PWA audit interpretation, and web-push subscription lifecycle testing — distinct from qa-modern-web's generic SW/install/cache-strategy skills and qa-notifications' cross-channel push harness",
+      "description": "PWA testing: 5 skills (workbox-tests carrying the cache-strategy design reference, web-push-tests, service-worker-lifecycle-tests carrying the general Playwright SW harness, offline-fallback-tests, add-to-homescreen-flow-tests carrying the install-flow reference contract) and 1 agent (pwa-test-author, one Playwright spec per PWA surface) - the single home for service-worker, install-flow, and cache-strategy testing, distinct from qa-notifications' cross-channel push harness",
       "strict": true,
       "category": "quality-engineering"
     },
@@ -510,7 +482,7 @@
     {
       "name": "qa-role-frontend",
       "source": "./plugins/qa-role-frontend",
-      "description": "Frontend & web-app QA role bundle: one-command install of web E2E, visual regression, accessibility, modern web, PWA, browser-extension, localization, charts, PDF/print, browser/OS compatibility, and JS/TS unit testing.",
+      "description": "Frontend & web-app QA role bundle: one-command install of web E2E (including cross-browser matrix strategy and grids), visual regression (including chart-render testing), accessibility, PWA and service-worker testing, browser-extension, localization, PDF/print, and JS/TS unit testing.",
       "strict": true,
       "category": "role-bundles"
     },
@@ -538,14 +510,14 @@
     {
       "name": "qa-role-mobile-desktop",
       "source": "./plugins/qa-role-mobile-desktop",
-      "description": "Mobile, desktop & cross-platform QA role bundle: one-command install of mobile-native, desktop, embedded, game, and browser/OS compatibility testing.",
+      "description": "Mobile, desktop & cross-platform QA role bundle: one-command install of mobile-native, desktop, embedded, and game testing.",
       "strict": true,
       "category": "role-bundles"
     },
     {
       "name": "qa-role-ai",
       "source": "./plugins/qa-role-ai",
-      "description": "AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing, AI-assisted test generation, search relevance, data notebooks, and data quality.",
+      "description": "AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing (including the Jupyter notebook CI pipeline), AI-assisted test generation, search relevance, and data quality.",
       "strict": true,
       "category": "role-bundles"
     },
@@ -559,14 +531,14 @@
     {
       "name": "qa-role-manual-tester",
       "source": "./plugins/qa-role-manual-tester",
-      "description": "Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
+      "description": "Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, and test data. Organized around the job role, not a technology stack.",
       "strict": true,
       "category": "role-bundles"
     },
     {
       "name": "qa-role-automation-engineer",
       "source": "./plugins/qa-role-automation-engineer",
-      "description": "Test automation engineer role bundle: one-command install of web E2E, API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
+      "description": "Test automation engineer role bundle: one-command install of web E2E (including cross-browser matrix strategy and grids), API testing, mobile automation, BDD, visual regression, CI integration, flake triage, test-code review, and test data. Organized around the job role, not a technology stack.",
       "strict": true,
       "category": "role-bundles"
     },

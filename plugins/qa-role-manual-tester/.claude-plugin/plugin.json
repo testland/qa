@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-manual-tester",
-  "version": "1.0.2",
-  "description": "Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, test data, and browser/OS compatibility. Organized around the job role, not a technology stack.",
+  "version": "1.0.3",
+  "description": "Manual tester / QA analyst role bundle: one-command install of manual scripted + exploratory testing, test case management, defect management, bug reproduction, test reporting, test process, and test data. Organized around the job role, not a technology stack.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -27,7 +27,6 @@
     "qa-bug-repro",
     "qa-test-reporting",
     "qa-process",
-    "qa-test-data",
-    "qa-compatibility"
+    "qa-test-data"
   ]
 }

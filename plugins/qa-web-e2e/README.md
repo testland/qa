@@ -1,6 +1,6 @@
 # qa-web-e2e
 
-Web E2E framework wrappers (per-framework skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Cloud browser grids (BrowserStack / Sauce Labs / LambdaTest) live in one umbrella skill, one agent scaffolds a from-zero harness skeleton, and one agent reviews raw codegen recordings (Playwright codegen + Cypress Studio).
+Web E2E framework wrappers (per-framework skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Cloud browser grids (BrowserStack / Sauce Labs / LambdaTest) live in one umbrella skill, the self-hosted Selenium Grid 4 runner and the browser-matrix strategy reference (tiering + compatibility budget + review checklist) cover cross-browser planning and execution, one agent scaffolds a from-zero harness skeleton, and one agent reviews raw codegen recordings (Playwright codegen + Cypress Studio).
 
 ## Components
 
@@ -12,6 +12,8 @@ Web E2E framework wrappers (per-framework skills). Full lifecycle per framework:
 | Skill | [selenium-testing](skills/selenium-testing/SKILL.md) | Authors Selenium WebDriver tests in any of its 6+ supported languages (Java, Python, JavaScript, C#, Ruby, Kotlin, PHP) - picks the appropriate binding per project stack. |
 | Skill | [webdriverio-testing](skills/webdriverio-testing/SKILL.md) | Authors WebdriverIO E2E tests - `npm init wdio@latest` scaffolding, services architecture (sauce, browserstack, appium, devtools), reporters, CI integration. |
 | Skill | [cloud-grid-e2e](skills/cloud-grid-e2e/SKILL.md) | Author and run E2E tests on a cloud browser grid - BrowserStack Automate, Sauce Labs, or LambdaTest. One vendor-generic pattern (auth env vars, hub URL, vendor options dict, local tunnel, CI wiring) with per-vendor deltas in references/. |
+| Skill | [selenium-grid-4-runner](skills/selenium-grid-4-runner/SKILL.md) | Author and operate Selenium Grid 4 - the self-hosted distributed WebDriver grid: six-component architecture, standalone vs hub-and-node modes, Docker image stack, session-queue tuning, observability. For data-residency or cost-control cases where cloud grids don't fit. |
+| Skill | [browser-matrix-strategy-reference](skills/browser-matrix-strategy-reference/SKILL.md) | Pure reference for designing and reviewing a browser / OS / device matrix from traffic data - T1/T2/T3 tier heuristics, traffic-share sources, matrix template + tier-change log, the matrix review checklist, and the compatibility budget (tier caps, CI cost, support statement) in references/. |
 | Agent | [playwright-codegen-reviewer](agents/playwright-codegen-reviewer.md) | Adversarial reviewer that takes raw recorded specs - Playwright codegen output or Cypress Studio recordings - and refactors them to team-ready idiomatic code (Page Objects / custom commands, accessibility-first selectors, retry-aware waits, AAA structure). |
 | Agent | [automation-harness-bootstrapper](agents/automation-harness-bootstrapper.md) | Scaffolds a complete test-automation harness skeleton (folder layout, base fixtures, page-object base class, one smoke test, CI job) for a repo with no existing E2E infrastructure - Playwright by default, Cypress variant included. |
 

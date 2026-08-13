@@ -1,8 +1,8 @@
 # AI/ML & data-pipeline QA
 
-AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing, AI-assisted test generation, search relevance, data notebooks, and data quality.
+AI/ML & data-pipeline QA role bundle: one-command install of LLM evaluation, ML model testing (including the Jupyter notebook CI pipeline), AI-assisted test generation, search relevance, and data quality.
 
-Installing this one plugin installs all 6 member plugins below in a single command.
+Installing this one plugin installs all 5 member plugins below in a single command.
 
 ## Install
 
@@ -16,10 +16,9 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 ## What this installs
 
 - **qa-llm-evaluation** - LLM and prompt evaluation
-- **qa-ml-models** - ML model testing
+- **qa-ml-models** - ML model testing + the Jupyter notebook CI pipeline
 - **qa-ai-assisted** - AI-assisted test generation + curation
 - **qa-search-relevance** - Search relevance testing
-- **qa-data-notebooks** - Jupyter notebook testing
 - **qa-data-quality** - Data quality testing for analytical pipelines
 
 ## About role bundles

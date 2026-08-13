@@ -1,9 +1,0 @@
-{
-  "name": "testland/d3-snapshot-tests",
-  "description": "Snapshot-test D3.js charts - D3 generates SVG (not Canvas, per d3js.org getting-started); use `outerHTML` snapshot for static structure, `toHaveScreenshot` for rendered SVG; jsdom for headless render in unit tests; disable transitions for stable snapshots; per-element data-binding correctness tests. Use when a project renders charts with `d3.create('svg')` or D3 selections and the emitted SVG structure or update join needs regression coverage - including before a D3 major-version upgrade.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.1.10"
-}
