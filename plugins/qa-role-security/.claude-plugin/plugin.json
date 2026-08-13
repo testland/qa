@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-security",
-  "version": "1.0.0",
-  "description": "Application-security & compliance QA role bundle: one-command install of SAST, DAST, SCA, secrets scanning, SBOM, fuzzing, compliance, multi-tenancy isolation, test-data privacy, and IaC policy testing.",
+  "version": "1.1.0",
+  "description": "Application-security & compliance QA role bundle: one-command install of unified security scanning (SAST, DAST, SCA, secrets, SBOM), fuzzing, compliance, multi-tenancy isolation, test-data privacy, and IaC policy testing.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -20,11 +20,7 @@
     "compliance"
   ],
   "dependencies": [
-    "qa-sast",
-    "qa-dast",
-    "qa-sca",
-    "qa-secrets",
-    "qa-sbom",
+    "qa-security-scanning",
     "qa-fuzz-testing",
     "qa-compliance",
     "qa-multi-tenancy",

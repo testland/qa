@@ -202,7 +202,7 @@
     {
       "name": "qa-iac",
       "source": "./plugins/qa-iac",
-      "description": "Infrastructure-as-code testing + security policy: 6 skills (checkov-policy, helm-chart-tester, kics-policy, policy-as-code-runner, tfsec-policy, trivy-config) and 2 agents (iac-policy-checker, terraform-plan-reviewer).",
+      "description": "Infrastructure-as-code testing + security policy: 4 skills (helm-chart-tester, policy-as-code-runner, checkov-policy, trivy-config - the tfsec successor, with the legacy tfsec workflow in its references) and 1 agent (terraform-plan-reviewer). Cross-scanner IaC finding triage is handled by security-finding-triager in the qa-security-scanning plugin.",
       "strict": true,
       "category": "security-compliance"
     },
@@ -249,37 +249,9 @@
       "category": "integrations-protocols"
     },
     {
-      "name": "qa-sast",
-      "source": "./plugins/qa-sast",
-      "description": "SAST (static application security testing): 7 skills (bandit-python, codeql-queries, eslint-security-rules, gosec-go, pmd-apex-rules, semgrep-rules, sonarqube-rules) and 1 agent (sast-finding-triager). Every scanner skill includes a mandatory False-positive triage section.",
-      "strict": true,
-      "category": "security-compliance"
-    },
-    {
-      "name": "qa-dast",
-      "source": "./plugins/qa-dast",
-      "description": "DAST (dynamic application security testing): 6 skills (burp-headless, dast-scan-cadence-author, nightvision-dast, nuclei-dast, zap-authenticated-scans, zap-baseline) and 1 agent (dast-finding-triager). Sister to qa-sast for runtime vulnerabilities. Every scanner skill includes a mandatory False-positive triage section.",
-      "strict": true,
-      "category": "security-compliance"
-    },
-    {
-      "name": "qa-sca",
-      "source": "./plugins/qa-sca",
-      "description": "SCA (software composition analysis): 8 skills (bundle-audit-ruby, cargo-audit-rust, dependabot-config, npm-pip-maven-audit, osv-scanner, reachability-analyzer, renovate-config, snyk-test) and 1 agent (sca-prioritizer).",
-      "strict": true,
-      "category": "security-compliance"
-    },
-    {
-      "name": "qa-secrets",
-      "source": "./plugins/qa-secrets",
-      "description": "Secrets scanning + rotation: 5 skills (gitleaks-scanning, kingfisher-scanning, secrets-baseline-manager, secrets-rotation-runner, trufflehog-scanning) and 1 agent (secrets-finding-triager). Covers detection AND rotation workflow (git-history scrub doesn't fix the leak).",
-      "strict": true,
-      "category": "security-compliance"
-    },
-    {
-      "name": "qa-sbom",
-      "source": "./plugins/qa-sbom",
-      "description": "SBOM generation + container image scanning + vuln prioritization: 7 skills (cyclonedx-format, grype-scanning, sbom-diff, spdx-format, syft-generation, trivy-image, vex-author) and 1 agent (vuln-prioritizer). Required for US EO 14028 + EU CRA + FDA medical-device guidance.",
+      "name": "qa-security-scanning",
+      "source": "./plugins/qa-security-scanning",
+      "description": "Unified security scanning across five domains - SAST (semgrep-rules, sonarqube-rules, codeql-queries, language-native-sast, multi-tool-finding-triage), DAST (zap-baseline, nuclei-dast), SCA (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit, reachability-analyzer, cve-exploitability-triage), secrets (gitleaks-scanning, trufflehog-scanning, secrets-rotation-runner), and SBOM + container (syft-generation, sbom-formats, trivy-image, vex-author): 21 skills and 1 agent (security-finding-triager), the cross-domain adversarial unifier that gates multi-scanner output into one BLOCK / PASS verdict per domain. Every scanner skill includes a mandatory False-positive triage section.",
       "strict": true,
       "category": "security-compliance"
     },
@@ -566,7 +538,7 @@
     {
       "name": "qa-role-security",
       "source": "./plugins/qa-role-security",
-      "description": "Application-security & compliance QA role bundle: one-command install of SAST, DAST, SCA, secrets scanning, SBOM, fuzzing, compliance, multi-tenancy isolation, test-data privacy, and IaC policy testing.",
+      "description": "Application-security & compliance QA role bundle: one-command install of unified security scanning (SAST, DAST, SCA, secrets, SBOM), fuzzing, compliance, multi-tenancy isolation, test-data privacy, and IaC policy testing.",
       "strict": true,
       "category": "role-bundles"
     },

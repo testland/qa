@@ -75,17 +75,17 @@ review), but it has its own rules.
 2. **Bare-name dependencies.** Set `"dependencies"` to an array of **bare member
    plugin-name strings**:
    ```json
-   "dependencies": ["qa-sast", "qa-dast", "qa-sca"]
+   "dependencies": ["qa-security-scanning", "qa-fuzz-testing", "qa-compliance"]
    ```
    Do **not** use `{ "name": "...", "version": "..." }` objects or
-   `"qa-sast@testland-qa"`. A bare name resolves to whatever version the same
+   `"qa-security-scanning@testland-qa"`. A bare name resolves to whatever version the same
    marketplace provides, with no git tag. A version-pinned dependency resolves
    against a `{plugin}--v{version}` tag that this SHA-versioned repo does not
    publish, so it would fail `no-matching-tag` and disable the bundle.
 3. **Prose-only README.** `plugins/<bundle>/README.md` has a title, a one-line
    purpose, an Install fenced block (`/plugin install <bundle>@testland-qa`), and
-   a "What this installs" list written as **plain text** (e.g. `- **qa-sast** -
-   static analysis`). It must contain **no component-table row** - nothing whose
+   a "What this installs" list written as **plain text** (e.g. `- **qa-security-scanning** -
+   security scanning`). It must contain **no component-table row** - nothing whose
    first cell is `Skill`/`Agent`, and no `](skills/…)` / `](agents/…)` links - or
    `content-audit.py --strict` fails `readme_count_mismatch` (rows on disk = 0).
    Do not start from the scaffolder's component-table README.

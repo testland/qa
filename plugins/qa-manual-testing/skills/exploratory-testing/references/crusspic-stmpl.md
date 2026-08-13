@@ -77,9 +77,7 @@ Per Nielsen's usability heuristics.
 - Auditability
 
 Maps to ISO 25010 "Security." Composes with
-`qa-sast`,
-`qa-dast`,
-`qa-secrets`,
+`qa-security-scanning`,
 `qa-test-data-privacy`.
 
 #### S - Scalability

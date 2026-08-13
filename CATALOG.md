@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**87 plugins · 428 components**
+**83 plugins · 423 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -66,15 +66,11 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-sca](plugins/qa-sca/) | 1.3.0 | 7 skills + 1 agents | 8 |
+| [qa-security-scanning](plugins/qa-security-scanning/) | 1.0.0 | 21 skills + 1 agents | 22 |
 | [qa-compliance](plugins/qa-compliance/) | 1.4.0 | 6 skills + 0 agents | 6 |
-| [qa-iac](plugins/qa-iac/) | 1.2.0 | 4 skills + 2 agents | 6 |
-| [qa-sast](plugins/qa-sast/) | 1.3.0 | 5 skills + 1 agents | 6 |
-| [qa-sbom](plugins/qa-sbom/) | 1.2.0 | 4 skills + 1 agents | 5 |
+| [qa-iac](plugins/qa-iac/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.5 | 3 skills + 1 agents | 4 |
-| [qa-secrets](plugins/qa-secrets/) | 1.3.0 | 3 skills + 1 agents | 4 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.3.0 | 4 skills + 0 agents | 4 |
-| [qa-dast](plugins/qa-dast/) | 1.4.0 | 2 skills + 1 agents | 3 |
 | [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.4.0 | 2 skills + 1 agents | 3 |
 
 ## Operations & resilience
@@ -161,7 +157,7 @@ _One-command role installs - each bundles a curated capability set as dependenci
 | [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.1 | 0 skills + 0 agents | 0 |
 | [qa-role-performance](plugins/qa-role-performance/) | 1.0.1 | 0 skills + 0 agents | 0 |
 | [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.3 | 0 skills + 0 agents | 0 |
-| [qa-role-security](plugins/qa-role-security/) | 1.0.0 | 0 skills + 0 agents | 0 |
+| [qa-role-security](plugins/qa-role-security/) | 1.1.0 | 0 skills + 0 agents | 0 |
 | [qa-starter](plugins/qa-starter/) | 1.0.1 | 0 skills + 0 agents | 0 |
 
 ## Alphabetical index
@@ -184,7 +180,6 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-compliance](plugins/qa-compliance/)
 - [qa-concurrency](plugins/qa-concurrency/)
 - [qa-contract-testing](plugins/qa-contract-testing/)
-- [qa-dast](plugins/qa-dast/)
 - [qa-data-notebooks](plugins/qa-data-notebooks/)
 - [qa-data-quality](plugins/qa-data-quality/)
 - [qa-db-migrations](plugins/qa-db-migrations/)
@@ -228,11 +223,8 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-role-sdet](plugins/qa-role-sdet/)
 - [qa-role-security](plugins/qa-role-security/)
 - [qa-saga-cqrs](plugins/qa-saga-cqrs/)
-- [qa-sast](plugins/qa-sast/)
-- [qa-sbom](plugins/qa-sbom/)
-- [qa-sca](plugins/qa-sca/)
 - [qa-search-relevance](plugins/qa-search-relevance/)
-- [qa-secrets](plugins/qa-secrets/)
+- [qa-security-scanning](plugins/qa-security-scanning/)
 - [qa-serverless](plugins/qa-serverless/)
 - [qa-shift-left](plugins/qa-shift-left/)
 - [qa-shift-right](plugins/qa-shift-right/)

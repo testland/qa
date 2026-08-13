@@ -10,7 +10,7 @@ metadata:
 SonarQube classifies issues across three software qualities - **Reliability,
 Maintainability, Security** - and four Clean Code attributes
 (*Consistent, Intentional, Adaptable, Responsible*) per the SonarSource
-docs (see [Issues introduction]). qa-sast's `sonarqube-rules` skill
+docs (see [Issues introduction]). qa-security-scanning's `sonarqube-rules` skill
 covers the Security lens; this skill covers the **Reliability +
 Maintainability** lens for production code.
 

@@ -272,8 +272,8 @@ ecosystem clones.
   conversion target (e.g., "Converts manual Postman runs into k6
   scripts", not "automates tests").
 - **generic security tool wrappers** (zap, burp, snyk, trivy,
-  semgrep, gitleaks) - atomic skills under the relevant security
-  plugin (`qa-dast` / `qa-sca` / `qa-secrets`) are admissible if they
+  semgrep, gitleaks) - atomic skills under the security-scanning
+  plugin (`qa-security-scanning`) are admissible if they
   cover a specific workflow the existing skills don't.
 - **WCAG umbrella skills** - atomic accessibility skills (keyboard,
   focus-trap, colour-contrast, ARIA-roles, axe-rules) are admissible
@@ -357,12 +357,9 @@ listed in plugin order.
 
 - `icu-messageformat-validator` - ICU MessageFormat plural/select validation.
 
-### qa-dast
+### qa-security-scanning
 
 - `caido-proxy` - Caido as Burp Suite alternative.
-
-### qa-secrets
-
 - `detect-secrets-yelp` - Yelp detect-secrets.
 
 ### qa-flake-triage

@@ -141,4 +141,4 @@ PASS verdict is emitted only when no Critical or High findings remain.
 - [OWASP JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html) - browser token-storage options and short-expiry guidance
 - [`session-management-test-author`](../skills/session-management-test-author/SKILL.md) - ASVS V3 cookie + timeout tests (preloaded)
 - [`oauth-flow-test-author`](../skills/oauth-flow-test-author/SKILL.md) - RFC 9700 rotation + reuse-detection tests (preloaded)
-- [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md) - cross-plugin sibling: scanner-based SAST triage for deeper static analysis
+- [`security-finding-triager`](../../qa-security-scanning/agents/security-finding-triager.md) - cross-plugin sibling: scanner-based SAST triage for deeper static analysis

@@ -201,5 +201,5 @@ The agent **refuses** to:
 - [`checkov-policy`](../skills/checkov-policy/SKILL.md),
   [`trivy-config`](../skills/trivy-config/SKILL.md) - sister
   scanners (static, not plan-based).
-- [`iac-policy-checker`](iac-policy-checker.md) - agent that
-  unifies the scanner outputs.
+- [`security-finding-triager`](../../qa-security-scanning/agents/security-finding-triager.md) - 
+  cross-plugin agent that unifies the scanner outputs.

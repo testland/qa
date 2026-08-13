@@ -30,7 +30,7 @@ together, so a user adopts a whole role with one `/plugin install`. To author on
 
 - `plugins/<bundle>/.claude-plugin/plugin.json` **only** - no `skills/`, `agents/`,
   `commands/`, or `hooks/` dirs. Set `"dependencies"` to an array of **bare member
-  plugin-name strings** (e.g. `["qa-sast", "qa-dast"]`) - never `{name, version}`
+  plugin-name strings** (e.g. `["qa-security-scanning", "qa-iac"]`) - never `{name, version}`
   objects and never `name@testland-qa`. Bare same-marketplace names resolve with no
   git tag; a version-pinned dep looks for a `{plugin}--v{version}` tag this repo
   doesn't publish and would disable the bundle.
@@ -191,7 +191,7 @@ make all
 | Pattern | Canonical plugin |
 |---|---|
 | Tool wrappers + a mixed agent set | [`plugins/qa-data-quality/`](plugins/qa-data-quality/) (5 skills + 2 agents) |
-| Per-tool wrappers + an adversarial-critic unifier | [`plugins/qa-iac/`](plugins/qa-iac/), [`plugins/qa-sast/`](plugins/qa-sast/) |
+| Per-tool wrappers + an adversarial-critic unifier | [`plugins/qa-iac/`](plugins/qa-iac/), [`plugins/qa-security-scanning/`](plugins/qa-security-scanning/) |
 | Per-tool wrappers only (no agent) | [`plugins/qa-api-testing/`](plugins/qa-api-testing/), [`plugins/qa-property-based/`](plugins/qa-property-based/) |
 | Adversarial-critic agent family | [`plugins/qa-test-review/`](plugins/qa-test-review/) |
 | Build-an-X workflow skills | [`plugins/qa-resilience-drills/`](plugins/qa-resilience-drills/) |

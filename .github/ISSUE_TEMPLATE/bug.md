@@ -7,11 +7,11 @@ labels: ["bug"]
 
 ## Plugin
 
-<!-- e.g. qa-data-quality / qa-sast / qa-realtime-protocols -->
+<!-- e.g. qa-data-quality / qa-security-scanning / qa-realtime-protocols -->
 
 ## Component
 
-<!-- Skill or agent name, e.g. dbt-testing, sast-finding-triager. Skip if marketplace-level. -->
+<!-- Skill or agent name, e.g. dbt-testing, security-finding-triager. Skip if marketplace-level. -->
 
 ## Claude Code version
 

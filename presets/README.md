@@ -30,11 +30,7 @@ security role:
     "testland-qa": { "source": { "source": "github", "repo": "testland/qa" } }
   },
   "enabledPlugins": {
-    "qa-sast@testland-qa": true,
-    "qa-dast@testland-qa": true,
-    "qa-sca@testland-qa": true,
-    "qa-secrets@testland-qa": true,
-    "qa-sbom@testland-qa": true,
+    "qa-security-scanning@testland-qa": true,
     "qa-fuzz-testing@testland-qa": true,
     "qa-compliance@testland-qa": true,
     "qa-multi-tenancy@testland-qa": true,

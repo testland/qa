@@ -89,7 +89,6 @@ material that lives in skills.
 
 | Agent | Preloads |
 |---|---|
-| `iac-policy-checker` | `checkov-policy`, `trivy-config`, `multi-tool-finding-triage` |
 | `terraform-plan-reviewer` | (none) |
 
 ### qa-load-testing

@@ -1,0 +1,9 @@
+{
+  "name": "testland/snyk-test",
+  "description": "Configures and runs Snyk, a commercial multi-mode scanner: snyk test for SCA (dependency scanning), snyk code test for SAST (code security scanning), snyk container test for container images, snyk iac test for IaC (infrastructure-as-code), snyk monitor for continuous new-vuln alerts; policy file .snyk for ignore + patch. Use when the team has a Snyk license and needs SCA (dependency scanning) or continuous vuln monitoring; for open-source scanning without a Snyk license, prefer osv-scanner.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.2.8"
+}

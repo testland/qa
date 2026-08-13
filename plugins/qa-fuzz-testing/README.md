@@ -23,8 +23,9 @@ the binary / system level. Sibling neighbours:
 - [`qa-api-testing`](../qa-api-testing/) - has `schemathesis-fuzzing`
   (schema-driven API fuzzing) and `restler-fuzzing` (stateful API
   sequences). API-layer; this plugin is binary/system-level.
-- [`qa-sast`](../qa-sast/) / [`qa-dast`](../qa-dast/) - static /
-  dynamic security analysis without coverage-guided mutation.
+- [`qa-security-scanning`](../qa-security-scanning/) - static /
+  dynamic security analysis (SAST / DAST) without coverage-guided
+  mutation.
 
 ## Install
 

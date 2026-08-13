@@ -4,7 +4,7 @@
 
 ## Plugin(s) touched
 
-<!-- e.g. plugins/qa-data-quality, plugins/qa-sast -->
+<!-- e.g. plugins/qa-data-quality, plugins/qa-security-scanning -->
 
 ## D1–D6 review (manual)
 

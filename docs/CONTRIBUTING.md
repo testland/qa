@@ -192,7 +192,7 @@ What this changes vs. earlier policy:
   D3 / D4, not in a lint denylist.
 - Sharply-scoped role names that ship with a specific trigger are fine
   and always have been (see existing `quality-coach`, `release-engineer`,
-  `data-quality-engineer`, `iac-policy-checker`).
+  `data-quality-engineer`, `security-finding-triager`).
 
 ## Reviewer rubric
 

@@ -1,8 +1,8 @@
 # Application security & compliance QA
 
-Application-security & compliance QA role bundle: one-command install of SAST, DAST, SCA, secrets scanning, SBOM, fuzzing, compliance, multi-tenancy isolation, test-data privacy, and IaC policy testing.
+Application-security & compliance QA role bundle: one-command install of unified security scanning (SAST, DAST, SCA, secrets, SBOM), fuzzing, compliance, multi-tenancy isolation, test-data privacy, and IaC policy testing.
 
-Installing this one plugin installs all 10 member plugins below in a single command.
+Installing this one plugin installs all 6 member plugins below in a single command.
 
 ## Install
 
@@ -15,11 +15,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 
 ## What this installs
 
-- **qa-sast** - SAST (static application security testing)
-- **qa-dast** - DAST (dynamic application security testing)
-- **qa-sca** - SCA (software composition analysis) / dependency scanning
-- **qa-secrets** - Secrets scanning + rotation
-- **qa-sbom** - SBOM generation + container image scanning + vuln prioritization
+- **qa-security-scanning** - Unified security scanning: SAST, DAST, SCA / dependency scanning, secrets scanning + rotation, and SBOM + container image scanning, with one cross-domain finding-triage agent
 - **qa-fuzz-testing** - Structure-aware coverage-guided fuzzing
 - **qa-compliance** - Compliance test patterns + readiness review
 - **qa-multi-tenancy** - Tenant-isolation testing for B2B SaaS

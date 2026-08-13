@@ -26,8 +26,9 @@ existing data**. Sibling neighbours:
 - [`qa-compliance`](../qa-compliance/) - regulatory feature testing
   (does GDPR Art. 17 erasure work? does CCPA delete-on-request
   work?). This plugin engineers the data those tests run against.
-- [`qa-secrets`](../qa-secrets/) - credentials / API keys
-  (different scope from personal data).
+- [`qa-security-scanning`](../qa-security-scanning/) - credentials /
+  API keys via its secrets-scanning skills (different scope from
+  personal data).
 
 ## Install
 

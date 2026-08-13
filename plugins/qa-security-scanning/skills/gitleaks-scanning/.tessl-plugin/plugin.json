@@ -1,0 +1,9 @@
+{
+  "name": "testland/gitleaks-scanning",
+  "description": "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; plus baseline management for legacy debt - onboarding a repo with historical findings via `--baseline-path` snapshots, `.gitleaksignore`, cross-tool suppression consistency with TruffleHog, and rot-prevention cadence. Use when the team needs OSS secret scanning at commit time + CI gate, or is adopting scanning on a repo with pre-existing findings.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.2.13"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "testland/multi-tool-finding-triage",
+  "description": "Merges two or more security scanner reports into one gate. Use when you need a single BLOCK or PASS decision from multiple scanners instead of reading N separate reports. Normalizes each report into one common finding format (a canonical `Finding`), deduplicates on a per-domain key while recording which scanners agree (`caught_by` consensus), validates a waiver (finding-suppression) file, rejecting any missing `expires:` / `approved_by:` / `reason:` or expired, enriches CVE findings with EPSS (exploit-probability) and CISA KEV (known-exploited catalog), then applies a `fail_on` severity threshold to emit BLOCK or PASS plus a bucketed pull-request comment. Works across static (SAST), dynamic (DAST), secret, dependency (SCA), container, and IaC scanners. To run a single scanner instead use semgrep-rules, codeql-queries, or one of the language-native-sast linters; this runs after them to merge output - the cross-scanner gate, not a single-scanner wrapper.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.2.9"
+}

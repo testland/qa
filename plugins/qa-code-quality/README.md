@@ -1,7 +1,7 @@
 # qa-code-quality
 
 Production code quality wrappers + a synthesizing critic. Five
-skills covering SonarQube (Reliability+Maintainability lens - qa-sast
+skills covering SonarQube (Reliability+Maintainability lens - qa-security-scanning
 covers the Security lens), Qlty (formerly Code Climate), Lizard
 (cyclomatic complexity, language-agnostic), Madge (JS/TS module
 graph + circular deps), and Knip (dead code) - plus a critic
