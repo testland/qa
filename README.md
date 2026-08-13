@@ -173,9 +173,11 @@ Each plugin's `README.md` lists its skills and agents and what each one does.
 
 Plugins are grouped into ten categories. For the full, always-current list with
 per-plugin links, versions, and component counts, see [`CATALOG.md`](CATALOG.md).
+New here? Start with the curated core tier in [`CORE.md`](CORE.md) — the
+highest-demand skills and agents across the catalog.
 
 - **Role bundles**: one-command role installs, each bundling a curated capability set
-- **Foundations**: test process, environment, data, reporting, impact analysis, roles, test review, test management, hiring
+- **Foundations**: test process, environment, data, reporting, impact analysis, test review, test management, team management
 - **Functional testing**: API, BDD, E2E, mobile, desktop, embedded, game, contract, mutation, property-based, per-language unit tests
 - **Quality engineering**: data quality, visual regression, accessibility, localization, charts, PDF/print, modern web, browser extension, PWA
 - **Security and compliance**: SAST, DAST, SCA, secrets, SBOM, fuzzing, compliance, multi-tenancy isolation, test-data privacy

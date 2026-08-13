@@ -1,7 +1,7 @@
 # Claude Code instructions - testland-qa
 
 This is **testland-qa**, a Pattern B2 multi-plugin Claude Code marketplace.
-89 plugins / 706 components (run `python3 scripts/generate-catalog.py` for the
+77 plugins / 413 components (run `python3 scripts/generate-catalog.py` for the
 current count - `CATALOG.md` is authoritative). Every component is
 reviewed against the D1-D6 quality rubric before merge.
 
