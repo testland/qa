@@ -1,6 +1,6 @@
 ---
 name: crash-triage-reference
-description: "Pure-reference catalog for manually triaging individual fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; and minimizing reproducers with -minimize_crash. Use when you need to understand what a specific crash means, build exploitability intuition, or manually work a small set of findings. For automated bulk triage across a full artifact directory, run automated findings triage instead."
+description: "Reference catalog for triaging fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; minimizing reproducers with -minimize_crash; plus the bulk triage workflow for a full artifact directory (inventory, reproduce, classify, dedupe, BLOCK/PASS verdict with refuse-to-proceed rules and a report template). Use when you need to understand what a specific crash means, build exploitability intuition, work a set of findings by hand, or run a campaign-level triage that ends in a release verdict."
 ---
 
 # crash-triage-reference
@@ -11,10 +11,10 @@ Pure-reference catalog for working with fuzzer crash artifacts produced by
 libFuzzer, AFL++, or cargo-fuzz campaigns using clang sanitisers. Covers
 reading crash output from ASan, UBSan, and MSan; distinguishing
 LIKELY-EXPLOITABLE from BENIGN findings; collapsing duplicates by stack-hash;
-and minimizing reproducers. These steps can be automated across a full
-artifact directory for bulk triage. For sanitiser build
-flags and compatibility, see
-`sanitiser-integration-reference`.
+and minimizing reproducers. The "Bulk triage workflow" section applies these
+steps across a full artifact directory and ends in a BLOCK / PASS verdict.
+For sanitiser build flags and compatibility, see
+`coverage-guided-fuzzing` `references/sanitizer-integration.md`.
 
 ## When to use
 
@@ -23,6 +23,8 @@ flags and compatibility, see
   lower-priority issue (MEDIUM or BENIGN).
 - Collapsing 20 crash artifacts into N unique bugs before filing tickets.
 - Reducing a crash input to its minimal reproducer before attaching it to a bug.
+- Triaging a whole campaign's artifact directory into a release verdict
+  (see "Bulk triage workflow").
 
 ## Reading ASan crash output
 
@@ -93,8 +95,8 @@ UBSan's runtime is "not expected to produce false positives" (per
 [clang.llvm.org/docs/UndefinedBehaviorSanitizer.html](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)),
 but its production use needs care: recovery modes that continue execution
 instead of aborting can mask bugs from the fuzzer. Always build with
-`-fno-sanitize-recover=all` for fuzzing (see
-`sanitiser-integration-reference`).
+`-fno-sanitize-recover=all` for fuzzing (see `coverage-guided-fuzzing`
+`references/sanitizer-integration.md`).
 
 ## Reading MSan crash output
 
@@ -240,6 +242,74 @@ the form `id:N,sig:N,src:N,...`. They carry the same information but require
 symbolization separately via the AFL++ target binary - the class is not encoded
 in the filename.
 
+## Bulk triage workflow
+
+Applying the sections above across a full artifact directory turns a
+campaign's output into a release verdict. Read-only: this workflow reports
+findings, it never fixes, deletes, or minimises artifacts in place.
+
+1. **Inventory.** List artifacts by class prefix and count them:
+
+   ```bash
+   # libFuzzer: working dir or -artifact_prefix path
+   ls -1 "$ARTIFACT_DIR"/crash-* "$ARTIFACT_DIR"/leak-* \
+         "$ARTIFACT_DIR"/timeout-* 2>/dev/null | sort
+   # AFL++: output/default/crashes/ and output/default/hangs/
+   ls -1 "$AFL_OUT"/default/crashes/ "$AFL_OUT"/default/hangs/ 2>/dev/null
+   ```
+
+2. **Reproduce every artifact** against the current binary and capture the
+   sanitiser report - never classify from memory of what a crash
+   "probably means":
+
+   ```bash
+   ASAN_OPTIONS=abort_on_error=1:symbolize=1 \
+   UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 \
+     ./fuzz_target -runs=1 "$artifact" 2>&1 | tee /tmp/report_"$sha".txt
+   ```
+
+3. **Classify** each report using the ASan / UBSan / MSan sections above;
+   `timeout-` / `oom-` artifacts classify by prefix.
+4. **Deduplicate by stack-hash** (see "Deduplication by stack-hash");
+   unique hashes = unique bugs; keep the smallest artifact per hash.
+5. **Flag exploitability** per the classification table above.
+6. **Verdict**: **BLOCK** if any deduplicated finding is
+   LIKELY-EXPLOITABLE; **PASS** if all findings are MEDIUM or BENIGN
+   (surface them in the report - fix before next release, but they do not
+   gate the current build).
+
+Report template:
+
+```markdown
+## Fuzz triage report - <campaign-id>
+
+**Fuzzer:** libFuzzer 18.x / AFL++ 4.x / cargo-fuzz
+**Artifact dir:** fuzz/artifacts/
+**Total artifacts:** 14 | **Unique bugs (after dedup):** 5
+**Verdict:** BLOCK - 1 LIKELY-EXPLOITABLE finding
+
+### LIKELY-EXPLOITABLE (must fix before release)
+
+| Stack-hash | Class | Access | Resource | Artifact |
+|---|---|---|---|---|
+| `a3f2c1b0` | heap-overflow | WRITE 4 bytes | `src/parser.c:87` | `crash-a3f2...` |
+
+### MEDIUM (fix before next release)
+### BENIGN (log; no release gate)
+```
+
+**Refuse-to-proceed rules.** The triage refuses to:
+
+- Emit a PASS verdict while any unclassified artifact remains - classify
+  all before the verdict.
+- Mark any artifact BENIGN without completing classification (silent
+  unclassified failures are the dominant triage failure mode).
+- Modify, delete, or minimise artifacts during triage (minimise with
+  `afl-tmin` / `-minimize_crash=1` as a separate step).
+- Synthesise a verdict without re-running the artifact against the
+  binary (step 2).
+- Skip deduplication: a raw artifact count is not a bug count.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -282,8 +352,7 @@ in the filename.
 - LLVM libFuzzer (artifact naming, `-minimize_crash`, `-runs`, `-exact_artifact_path`,
   `-artifact_prefix`, `-rss_limit_mb`):
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html)
-- Sibling skills:
-  `sanitiser-integration-reference`
-  (build flags, sanitiser compatibility),
-  `corpus-management-reference`
-  (corpus discipline, seed selection)
+- Sibling skill: `coverage-guided-fuzzing` - the umbrella whose
+  `references/sanitizer-integration.md` (build flags, sanitiser
+  compatibility) and `references/corpus-management.md` (corpus
+  discipline, seed selection) feed this triage

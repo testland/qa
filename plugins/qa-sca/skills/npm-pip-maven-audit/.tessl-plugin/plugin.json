@@ -1,9 +1,9 @@
 {
   "name": "testland/npm-pip-maven-audit",
-  "description": "Configures and runs native package-manager audit commands across ecosystems - `npm audit --audit-level=high` (npm), `yarn npm audit` (Yarn 2+), `pnpm audit` (pnpm), `pip-audit` (Python via PyPA), `mvn dependency:check` (Maven via OWASP Dependency-Check plugin), `cargo audit` (Rust), `bundle audit` (Ruby Bundler); fastest no-install-required SCA option. Use when the team wants fast, no-extra-tooling SCA in CI as a first line of defense, or pairs with snyk/osv-scanner for layered coverage.",
+  "description": "Configures and runs native package-manager audit commands across ecosystems - `npm audit --audit-level=high` (npm), `yarn npm audit` (Yarn 2+), `pnpm audit` (pnpm), `pip-audit` (Python via PyPA), `mvn dependency:check` (Maven via OWASP Dependency-Check plugin), `cargo audit` (Rust, with `.cargo/audit.toml` suppression, `--deny` semantics, SARIF, binary auditing, and the rustsec/audit-check Action as a reference), and `bundle audit` (Ruby Bundler, with `.bundler-audit.yml` waivers, Rake integration, and CI gating as a reference); fastest no-install-required SCA option. Use when the team wants fast, no-extra-tooling SCA in CI as a first line of defense, when a Rust or Ruby repo needs its ecosystem-native scanner, or pairs with snyk/osv-scanner for layered coverage.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.8"
+  "version": "1.2.9"
 }

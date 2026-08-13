@@ -128,7 +128,7 @@ OSV-Scanner has experimental license-summary support:
 osv-scanner --experimental-licenses-summary scan -r .
 ```
 
-For full license-compliance + scanning, pair with `spdx-format`
+For full license-compliance + scanning, pair with `sbom-formats`
 (in the qa-sbom plugin) or use a dedicated tool like ScanCode / FOSSology.
 
 ## Anti-patterns
@@ -143,7 +143,7 @@ For full license-compliance + scanning, pair with `spdx-format`
 
 - OSV.dev coverage varies by ecosystem (Python / npm / Go strong; less common ones thinner).
 - No reachability analysis: every CVE on a declared dep counts even if the vulnerable function isn't called.
-- Container image scanning is limited; prefer `trivy-image` or `grype-scanning` (qa-sbom plugin).
+- Container image scanning is limited; prefer `trivy-image` or the Grype workflow in `syft-generation` (qa-sbom plugin).
 - Some CLI surface evolves; verify against current `osv-scanner` help output.
 
 ## References

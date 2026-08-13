@@ -1,9 +1,0 @@
-{
-  "name": "testland/bundle-audit-ruby",
-  "description": "Use when a Ruby project has a Gemfile.lock and needs CVE/GHSA scanning or a CI SCA gate. Installs and runs bundler-audit against a Ruby Gemfile.lock, updating the ruby-advisory-db corpus, scanning for vulnerable gem versions and insecure sources, suppressing false positives via .bundler-audit.yml, and gating CI on non-zero exit. Ruby-only SCA scanner: for other ecosystems use npm-pip-maven-audit (multi-ecosystem dispatcher), snyk-test, or osv-scanner; cargo-audit-rust is the Rust analog; once findings exist, reachability-analyzer downranks unreachable gems - not this.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.7"
-}

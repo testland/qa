@@ -1,0 +1,9 @@
+{
+  "name": "testland/coverage-guided-fuzzing",
+  "description": "Coverage-guided fuzzing across every mainstream engine - libFuzzer (C/C++ in-process), AFL++ (out-of-process, QEMU mode for closed-source binaries), cargo-fuzz (Rust), Go native fuzzing (go test -fuzz), Atheris (Python), and Jazzer (JVM, @FuzzTest). Body covers choosing the right fuzzer for the language and build type (the routing tree) plus the engine-generic workflow: writing a small deterministic fuzz target, seed-corpus + dictionary construction, sanitizer selection (ASan + UBSan default, compatibility matrix), corpus minimisation, crash-artifact handling, and CI smoke-fuzz wiring with a cached corpus. Per-engine depth (flags, harness syntax, CI jobs) lives in references, as do the corpus-management and sanitizer-integration catalogs. Use when a project needs fuzz coverage and no fuzzer is chosen yet, or when authoring / running / maintaining a fuzz campaign with any of these engines. For triaging the resulting crashes see crash-triage-reference.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

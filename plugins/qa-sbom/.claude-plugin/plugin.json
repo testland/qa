@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-sbom",
-  "version": "1.1.16",
-  "description": "SBOM generation + container image scanning + vuln prioritization: 7 skills (syft-generation, grype-scanning, cyclonedx-format, spdx-format, trivy-image, sbom-diff, vex-author) and 1 agent (vuln-prioritizer) with CVSS + EPSS + CISA KEV + VEX prioritization.",
+  "version": "1.2.0",
+  "description": "SBOM generation + container image scanning + vuln prioritization: 4 skills (syft-generation covering Syft generation plus Grype scanning and SBOM diffing, sbom-formats covering CycloneDX + SPDX, trivy-image, vex-author) and 1 agent (vuln-prioritizer) with CVSS + EPSS + CISA KEV + VEX prioritization.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

@@ -1,9 +1,10 @@
 # qa-dast
 
-DAST (dynamic application security testing). Three per-tool skill
-wrappers (OWASP ZAP, Burp Suite Pro/Enterprise, NightVision) plus
-a build-an-X cadence skill (`dast-scan-cadence-author`) and an
-adversarial unifier agent (`dast-finding-triager`).
+DAST (dynamic application security testing). Two per-tool skill
+wrappers - OWASP ZAP (`zap-baseline`, carrying authenticated-scan
+setup and layered scan-cadence planning as references) and nuclei
+(`nuclei-dast`) - plus an adversarial unifier agent
+(`dast-finding-triager`).
 
 Sister to [`qa-sast`](../qa-sast/) - covers runtime vulnerabilities
 (auth, session, input handling at runtime) that SAST can't see by
@@ -14,11 +15,9 @@ reading source code. Every scanner skill includes a
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [zap-baseline](skills/zap-baseline/SKILL.md) | OWASP ZAP baseline (passive, PR-blocking-safe) + zap-full-scan companion (active, staging-only); auth via context file; rule customization TSV |
-| Skill | [dast-scan-cadence-author](skills/dast-scan-cadence-author/SKILL.md) | Build-an-X for layered DAST cadence: ZAP baseline (PR) → ZAP full + NightVision (nightly) → Burp deep (per-release); baseline-finding ratchet; coverage measurement |
-| Agent | [dast-finding-triager](agents/dast-finding-triager.md) | Adversarial unifier across all 3 sister scanners; deduplicates by `(URL, method, parameter, finding-class)`; waiver enforcement; refuses pass with unwaived critical findings |
+| Skill | [zap-baseline](skills/zap-baseline/SKILL.md) | OWASP ZAP baseline (passive, PR-blocking-safe) + zap-full-scan companion (active, staging-only); rule customization TSV; authenticated-scan setup (context, auth methods, session management, OAuth/CSRF) and layered scan cadence (PR baseline → nightly active, baseline-finding ratchet) as references |
+| Agent | [dast-finding-triager](agents/dast-finding-triager.md) | Adversarial unifier of scanner output; deduplicates by `(URL, method, parameter, finding-class)`; waiver enforcement; refuses pass with unwaived critical findings |
 | Skill | [nuclei-dast](skills/nuclei-dast/SKILL.md) | Nuclei template-based HTTP scanning; JSONL output feeds dast-finding-triager. |
-| Skill | [zap-authenticated-scans](skills/zap-authenticated-scans/SKILL.md) | Authenticated DAST setup: ZAP auth scripts, session management, OAuth/CSRF handling. |
 
 ## Install
 

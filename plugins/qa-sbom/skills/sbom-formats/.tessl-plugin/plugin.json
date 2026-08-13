@@ -1,0 +1,9 @@
+{
+  "name": "testland/sbom-formats",
+  "description": "Reference for the two SBOM specification families and how to choose between them - CycloneDX v1.6 (OWASP-curated, security-focused: components, services, dependencies, first-class vulnerabilities[] with embedded VEX, formulation, ML/SaaS BOMs; XML / JSON / Protobuf) as the primary format, with SPDX 2.3 + 3.0 (Linux Foundation, license-focused: packages, relationships, license expressions, Tag-Value/JSON encodings, ISO/IEC 5962:2021) covered as a reference. Includes per-language generators, schema validation, sign + attest CI wiring, and the format-choice guidance (CycloneDX for security-focused consumers; SPDX for US Federal procurement, Linux Foundation, and license-compliance contexts). Use when the user asks to write or validate an SBOM in CycloneDX or SPDX form, or the team must pick its SBOM format.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

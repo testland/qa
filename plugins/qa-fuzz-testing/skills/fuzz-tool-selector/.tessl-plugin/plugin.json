@@ -1,9 +1,0 @@
-{
-  "name": "testland/fuzz-tool-selector",
-  "description": "Routes a fuzz-target authoring task to the right fuzzer for the detected language and build type. Decision tree: C/C++ → libfuzzer-cpp + afl-plus-plus; Rust → cargo-fuzz-rust (or libfuzzer-cpp via FFI); Go → go-native-fuzzing; Python → atheris-python-fuzzing; JVM → jazzer-jvm-fuzzing; closed-source binary → afl-plus-plus in QEMU mode; mature open-source project → ossfuzz-integration. Use when a project needs coverage-guided fuzzing and no fuzzer has been chosen for its language or toolchain yet.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.3"
-}

@@ -1,9 +1,0 @@
-{
-  "name": "testland/bandit-python",
-  "description": "Configures and runs Bandit - Python-only SAST covering 60+ rule IDs across 7 categories (B1xx-B7xx: misc, app, crypto, imports, injections, XSS); `bandit -r .` scan, `--severity-level` + `--confidence-level` filtering, `# nosec`/`# nosec B404` per-line and per-rule suppression, `pyproject.toml [tool.bandit]` config. Use for a focused, low-overhead Python SAST in pre-commit / CI. Python-only: for Go use gosec-go, for cross-language pattern SAST use semgrep-rules; to merge Bandit findings with other scanners into one gate use multi-tool-finding-triage - not this for non-Python code.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.4"
-}

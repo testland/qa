@@ -32,6 +32,6 @@ The `aquasecurity/trivy-action` GHA wraps the CLI plus SARIF upload.
 | Sister tool | Use |
 |---|---|
 | `syft-generation` | Generates standalone SBOM (Trivy embeds SBOM gen but exposes it less) |
-| `grype-scanning` | Alternative scanner; cross-DB consensus on findings |
-| `cyclonedx-format`, `spdx-format` | Reference for the SBOM formats Trivy outputs |
+| Grype (`syft-generation` Step 7) | Alternative scanner; cross-DB consensus on findings |
+| `sbom-formats` | Reference for the SBOM formats Trivy outputs |
 | `checkov-policy` | Cross-plugin: deeper IaC scanning vs Trivy's image-internal misconfig |

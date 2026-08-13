@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 587 components**
+**89 plugins · 567 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -68,16 +68,16 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.4.0 | 10 skills + 2 agents | 12 |
 | [qa-compliance](plugins/qa-compliance/) | 1.3.11 | 9 skills + 1 agents | 10 |
-| [qa-sca](plugins/qa-sca/) | 1.2.10 | 9 skills + 1 agents | 10 |
-| [qa-sast](plugins/qa-sast/) | 1.2.10 | 8 skills + 1 agents | 9 |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.5 | 6 skills + 2 agents | 8 |
-| [qa-sbom](plugins/qa-sbom/) | 1.1.16 | 7 skills + 1 agents | 8 |
+| [qa-sca](plugins/qa-sca/) | 1.3.0 | 7 skills + 1 agents | 8 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.3.0 | 7 skills + 1 agents | 8 |
 | [qa-iac](plugins/qa-iac/) | 1.2.0 | 5 skills + 2 agents | 7 |
-| [qa-dast](plugins/qa-dast/) | 1.4.0 | 4 skills + 1 agents | 5 |
-| [qa-secrets](plugins/qa-secrets/) | 1.3.0 | 4 skills + 1 agents | 5 |
+| [qa-sast](plugins/qa-sast/) | 1.3.0 | 5 skills + 1 agents | 6 |
+| [qa-sbom](plugins/qa-sbom/) | 1.2.0 | 4 skills + 1 agents | 5 |
+| [qa-secrets](plugins/qa-secrets/) | 1.3.0 | 3 skills + 1 agents | 4 |
+| [qa-dast](plugins/qa-dast/) | 1.4.0 | 2 skills + 1 agents | 3 |
+| [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.4.0 | 2 skills + 1 agents | 3 |
 
 ## Operations & resilience
 

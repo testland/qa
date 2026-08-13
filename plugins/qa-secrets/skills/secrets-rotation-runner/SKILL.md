@@ -21,8 +21,7 @@ Rotation is mandatory; history scrub is at most cosmetic.
 ## When to use
 
 - A scanner (`gitleaks-scanning`,
-  `trufflehog-scanning`,
-  `kingfisher-scanning`) found a
+  `trufflehog-scanning`) found a
   leaked credential.
 - Proactive periodic rotation (e.g., quarterly rotation of all
   cloud-provider service-account keys).
@@ -170,8 +169,6 @@ If the scanner missed the format that leaked, add a custom rule:
   (cross-ref `gitleaks-scanning` Step 4)
 - TruffleHog: custom detector definition
   (cross-ref `trufflehog-scanning`)
-- Kingfisher: built-in rule extension
-  (cross-ref `kingfisher-scanning`)
 
 This is the "test that catches the bug" pattern for security:
 make sure the same leak format gets caught at PR time going
@@ -248,8 +245,7 @@ After every rotation:
 ## References
 
 - `gitleaks-scanning`,
-  `trufflehog-scanning`,
-  `kingfisher-scanning` - sister
+  `trufflehog-scanning` - sister
   scanners (the detection step)
 - AWS IAM key rotation: docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
 - GitHub PAT management: docs.github.com/en/authentication/keeping-your-account-and-data-secure

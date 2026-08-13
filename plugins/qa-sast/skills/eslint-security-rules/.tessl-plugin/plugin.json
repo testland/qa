@@ -1,9 +1,0 @@
-{
-  "name": "testland/eslint-security-rules",
-  "description": "Configures and runs `eslint-plugin-security` (14 detect-* rules covering injection, path traversal, ReDoS, unsafe buffers, and bidi trojan-source) plus `eslint-plugin-no-unsanitized` (DOM XSS via `innerHTML`, `outerHTML`, `document.write`, `insertAdjacentHTML`) as the JS/TS first-party SAST layer; covers flat config setup, per-rule suppression with justification templates, SARIF output via `@microsoft/eslint-formatter-sarif` for GitHub Code Scanning upload, and CI gating on ESLint exit code 1. Use when the project is JS or TS and needs an in-process security lint pass without a separate SAST server.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.8"
-}

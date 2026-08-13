@@ -1,15 +1,14 @@
 ---
 name: fuzz-target-author
-description: "Builder agent that scaffolds a coverage-guided fuzz target from a target function signature. Routes via fuzz-tool-selector to the right per-language fuzzer (libFuzzer / AFL++ / cargo-fuzz / Go native / Atheris / Jazzer), generates a harness file with proper input handling (FuzzedDataProvider where applicable), creates seed corpus + dictionary scaffolds, and produces a build command + CI integration snippet. Use when adding fuzz coverage to a project that has none - produces a working harness + first run in under 5 minutes."
+description: "Builder agent that scaffolds a coverage-guided fuzz target from a target function signature. Routes via the coverage-guided-fuzzing routing tree to the right per-language fuzzer (libFuzzer / AFL++ / cargo-fuzz / Go native / Atheris / Jazzer), generates a harness file with proper input handling (FuzzedDataProvider where applicable), creates seed corpus + dictionary scaffolds, and produces a build command + CI integration snippet. Use when adding fuzz coverage to a project that has none - produces a working harness + first run in under 5 minutes."
 tools: "Read, Grep, Glob, Write, Edit, Bash(git *), Bash(clang *), Bash(go *), Bash(cargo *)"
 model: sonnet
 skills:
-  - fuzz-tool-selector
-  - corpus-management-reference
-  - sanitiser-integration-reference
+  - coverage-guided-fuzzing
+  - crash-triage-reference
 ---
 
-A builder agent that scaffolds a coverage-guided fuzz target from a function signature, routed via fuzz-tool-selector.
+A builder agent that scaffolds a coverage-guided fuzz target from a function signature, routed via the coverage-guided-fuzzing routing tree.
 
 ## When invoked
 
@@ -21,7 +20,7 @@ Inspect the project layout: `Cargo.toml` → Rust, `go.mod` → Go, `pyproject.t
 
 ## Step 2 - Route via dispatcher
 
-Apply [`fuzz-tool-selector`](../skills/fuzz-tool-selector/SKILL.md):
+Apply the routing tree in [`coverage-guided-fuzzing`](../skills/coverage-guided-fuzzing/SKILL.md):
 
 ```
 Rust   → cargo-fuzz harness
@@ -117,7 +116,7 @@ cargo +nightly fuzz run <f> -- -max_total_time=300
 
 ## Step 7 - Output summary
 
-Agent emits a markdown summary listing files generated (`fuzz/fuzz_<f>.cc`, `fuzz/seeds/.gitkeep`, `fuzz/fuzz.dict`, `.github/workflows/fuzz.yml`), the exact first-run command, and next steps: add 3-10 seeds, run locally ≥5 min, commit + PR, onboard mature projects to OSS-Fuzz via [`ossfuzz-integration`](../skills/ossfuzz-integration/SKILL.md).
+Agent emits a markdown summary listing files generated (`fuzz/fuzz_<f>.cc`, `fuzz/seeds/.gitkeep`, `fuzz/fuzz.dict`, `.github/workflows/fuzz.yml`), the exact first-run command, and next steps: add 3-10 seeds, run locally ≥5 min, commit + PR, onboard mature projects to OSS-Fuzz ([google.github.io/oss-fuzz](https://google.github.io/oss-fuzz/)).
 
 ## Refuse-to-proceed rules
 
@@ -142,5 +141,5 @@ Refuses to: scaffold for a non-pure function (global state / I/O / randomness) w
 
 ## References
 
-- Preloaded skills: [`fuzz-tool-selector`](../skills/fuzz-tool-selector/SKILL.md), [`corpus-management-reference`](../skills/corpus-management-reference/SKILL.md), [`sanitiser-integration-reference`](../skills/sanitiser-integration-reference/SKILL.md).
-- Per-language fuzzers (via dispatcher): [`libfuzzer-cpp`](../skills/libfuzzer-cpp/SKILL.md), [`afl-plus-plus`](../skills/afl-plus-plus/SKILL.md), [`go-native-fuzzing`](../skills/go-native-fuzzing/SKILL.md), [`cargo-fuzz-rust`](../skills/cargo-fuzz-rust/SKILL.md), [`atheris-python-fuzzing`](../skills/atheris-python-fuzzing/SKILL.md), [`jazzer-jvm-fuzzing`](../skills/jazzer-jvm-fuzzing/SKILL.md), [`ossfuzz-integration`](../skills/ossfuzz-integration/SKILL.md).
+- Preloaded skills: [`coverage-guided-fuzzing`](../skills/coverage-guided-fuzzing/SKILL.md) (routing tree, corpus + sanitizer catalogs in its references/), [`crash-triage-reference`](../skills/crash-triage-reference/SKILL.md).
+- Per-engine references (via the umbrella): [libfuzzer.md](../skills/coverage-guided-fuzzing/references/libfuzzer.md), [afl-plus-plus.md](../skills/coverage-guided-fuzzing/references/afl-plus-plus.md), [go-native-fuzzing.md](../skills/coverage-guided-fuzzing/references/go-native-fuzzing.md), [cargo-fuzz.md](../skills/coverage-guided-fuzzing/references/cargo-fuzz.md), [atheris.md](../skills/coverage-guided-fuzzing/references/atheris.md), [jazzer.md](../skills/coverage-guided-fuzzing/references/jazzer.md).

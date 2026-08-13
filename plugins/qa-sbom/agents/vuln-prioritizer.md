@@ -5,7 +5,6 @@ tools: "Read, Bash(jq *), WebFetch"
 model: sonnet
 skills:
   - syft-generation
-  - grype-scanning
   - trivy-image
   - multi-tool-finding-triage
   - cve-exploitability-triage
@@ -114,7 +113,6 @@ The agent **refuses** to:
 ## References
 
 - [`syft-generation`](../skills/syft-generation/SKILL.md),
-  [`grype-scanning`](../skills/grype-scanning/SKILL.md),
   [`trivy-image`](../skills/trivy-image/SKILL.md) - preloaded sister
   skills
 - [`multi-tool-finding-triage`](../../qa-sast/skills/multi-tool-finding-triage/SKILL.md) - 

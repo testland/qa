@@ -321,4 +321,4 @@ Scanning): [references/ci-integration.md](references/ci-integration.md).
 - [nuclei-faq][nuclei-faq] - validation and responsible use guidance
 - github.com/projectdiscovery/nuclei-templates - community template library
 - `zap-baseline` - companion passive DAST scanner
-- `dast-scan-cadence-author` - layered DAST workflow (baseline + full + optional Nuclei)
+- `zap-baseline` `references/cadence.md` - layered DAST cadence (baseline + nightly active + nuclei)

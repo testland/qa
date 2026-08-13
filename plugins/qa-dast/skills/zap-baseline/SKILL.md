@@ -1,6 +1,6 @@
 ---
 name: zap-baseline
-description: "Configures and runs OWASP ZAP baseline scanning: `zap-baseline.py` Docker-packaged spider + passive scan suitable for CI gating; supports `-t target_url` + `-r html_report` + `-c config_file` rule customization (INFO/IGNORE/FAIL warnings) and Ajax spider via `-j` for JS-heavy SPAs. Passive-only; for active injection probes use `zap-full-scan.py` via zap-authenticated-scans. Accepts `-n context_file` for pre-configured auth contexts (see zap-authenticated-scans for setting up auth from scratch). Use when the user runs OWASP ZAP for pre-prod web app DAST."
+description: "Configures and runs OWASP ZAP baseline scanning: `zap-baseline.py` Docker-packaged spider + passive scan suitable for CI gating; supports `-t target_url` + `-r html_report` + `-c config_file` rule customization (INFO/IGNORE/FAIL warnings) and Ajax spider via `-j` for JS-heavy SPAs; `zap-full-scan.py` active companion for staging. Covers authenticated scans end to end as a reference - ZAP Context, auth methods (form/JSON/script/browser), session management, verification strategy, OAuth/bearer injection, context XML export for `-n` - plus DAST cadence planning (PR-blocking passive baseline, nightly ZAP full + nuclei active layer, baseline-finding ratchet for legacy apps). Use when the user runs OWASP ZAP for pre-prod web app DAST, needs coverage of routes behind a login wall, or is designing a team's DAST rollout cadence."
 ---
 
 # zap-baseline
@@ -28,8 +28,10 @@ production; reserve for staging.
   a deployed staging environment.
 - The team uses OWASP ZAP (de facto OSS DAST) over commercial
   alternatives.
-- Pair with `burp-headless` for
-  deeper paid-tool coverage on critical flows.
+- The app's interesting routes sit behind a login wall
+  ([references/auth.md](references/auth.md)).
+- The team is designing its DAST rollout cadence from scratch
+  ([references/cadence.md](references/cadence.md)).
 
 ## Step 1 - Install
 
@@ -90,7 +92,10 @@ For apps requiring login, export a ZAP context file from the GUI
 - Session-management strategy
 - Logged-in / logged-out indicators
 
-Then:
+Building that context from scratch - choosing the auth method, wiring
+session management, calibrating verification indicators, CSRF and
+OAuth/bearer handling - is walked end to end in
+[references/auth.md](references/auth.md). Then:
 
 ```bash
 docker run -v $(pwd):/zap/wrk/:rw \
@@ -183,6 +188,11 @@ jobs:
 The official `zaproxy/action-baseline` action wraps the Docker
 invocation. Auto-creates a GitHub Issue on failure.
 
+Designing the full team cadence around this job - PR-blocking passive
+baseline, nightly ZAP full + nuclei active layer, the baseline-finding
+ratchet for legacy apps, dedup, and coverage measurement - is in
+[references/cadence.md](references/cadence.md).
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -202,14 +212,16 @@ invocation. Auto-creates a GitHub Issue on failure.
 - ZAP scans single-target only; for multi-app fleet, run per-app
   + aggregate via cross-tool triage.
 - Authentication setup via context file is fragile - 
-  apps with complex login flows often need custom ZAP scripts.
+  apps with complex login flows often need custom ZAP scripts
+  ([references/auth.md](references/auth.md)).
 
 ## References
 
 - [zap-base][zap-base] - official baseline scan documentation
 - zaproxy.org/docs/docker - full Docker docs
 - github.com/zaproxy/action-baseline - official GHA action
-- `burp-headless`,
-  `nightvision-dast` - sister DAST tools
-- `dast-scan-cadence-author` - 
-  build-an-X for layered DAST (baseline → full → optional Burp deep)
+- Authenticated-scan setup (context, auth methods, session management,
+  verification): [references/auth.md](references/auth.md)
+- Layered DAST cadence (PR baseline → nightly active, ratchet, dedup):
+  [references/cadence.md](references/cadence.md)
+- `nuclei-dast` - sister DAST tool (template-driven scanning)

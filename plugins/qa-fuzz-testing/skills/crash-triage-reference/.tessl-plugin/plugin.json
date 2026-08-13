@@ -1,9 +1,9 @@
 {
   "name": "testland/crash-triage-reference",
-  "description": "Pure-reference catalog for manually triaging individual fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; and minimizing reproducers with -minimize_crash. Use when you need to understand what a specific crash means, build exploitability intuition, or manually work a small set of findings. For automated bulk triage across a full artifact directory, run automated findings triage instead.",
+  "description": "Reference catalog for triaging fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; minimizing reproducers with -minimize_crash; plus the bulk triage workflow for a full artifact directory (inventory, reproduce, classify, dedupe, BLOCK/PASS verdict with refuse-to-proceed rules and a report template). Use when you need to understand what a specific crash means, build exploitability intuition, work a set of findings by hand, or run a campaign-level triage that ends in a release verdict.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.3"
+  "version": "1.3.4"
 }

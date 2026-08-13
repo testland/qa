@@ -1,9 +1,0 @@
-{
-  "name": "testland/corpus-management-reference",
-  "description": "Pure-reference catalog of fuzz-corpus management practices. Defines what a corpus is (seed corpus + evolved corpus saved by the fuzzer), corpus directory layout per libFuzzer / AFL++ / Go native / cargo-fuzz / OSS-Fuzz, the canonical crash-artefact naming (crash-{sha1} / leak-{sha1} / timeout-{sha1}), seed corpus construction strategies (sample-from-prod, sample-from-test-fixtures, from-spec-keywords), corpus minimisation, dictionary files, and the OSS-Fuzz integration corpus sync. Use as the corpus-discipline reference when building a fuzz target or maintaining a long-running fuzz campaign.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.3"
-}

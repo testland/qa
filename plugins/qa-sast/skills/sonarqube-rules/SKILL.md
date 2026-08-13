@@ -223,5 +223,4 @@ API token via `User → My Account → Security → Generate Tokens`.
 - docs.sonarsource.com/sonarqube-server/latest/user-guide/issues - Issue workflow + transitions
 - `semgrep-rules`,
   `codeql-queries`,
-  `bandit-python`,
-  `gosec-go` - sister scanners
+  `language-native-sast` - sister scanners

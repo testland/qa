@@ -180,5 +180,4 @@ table are in [references/cli-reference.md](references/cli-reference.md).
 - semgrep.dev/docs/semgrep-ci/overview - CI integration
 - `sonarqube-rules`,
   `codeql-queries`,
-  `bandit-python`,
-  `gosec-go` - sister scanners
+  `language-native-sast` - sister scanners

@@ -1,0 +1,9 @@
+{
+  "name": "testland/language-native-sast",
+  "description": "Language-native SAST linters - the first-party \"linter as SAST\" family that runs inside each ecosystem's standard toolchain with no separate scanner server: Bandit (Python, 60+ B-rules, severity x confidence filtering), gosec (Go, 40+ G-rules, AST + SSA taint tracking, golangci-lint integration), eslint-plugin-security + eslint-plugin-no-unsanitized (JS/TS, 14 detect-* rules + DOM-sink XSS), and PMD's Apex security ruleset (Salesforce, ApexSOQLInjection / ApexCRUDViolation / ApexSharingViolations). Covers the shared adoption pattern - install as a dev dependency, first scan, suppression-with-justification discipline, baseline-diff adoption for legacy code, SARIF output + CI gating - with per-tool depth in references. Use when a repo needs in-toolchain security linting for Python, Go, JavaScript/TypeScript, or Apex; for cross-language or cross-file taint analysis use semgrep-rules / codeql-queries instead.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

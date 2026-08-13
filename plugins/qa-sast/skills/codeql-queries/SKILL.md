@@ -158,5 +158,4 @@ GitHub).
 - learningqltest.github.io/learningql/ - CodeQL University training
 - `semgrep-rules`,
   `sonarqube-rules`,
-  `bandit-python`,
-  `gosec-go` - sister scanners
+  `language-native-sast` - sister scanners

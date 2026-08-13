@@ -1,6 +1,6 @@
 ---
 name: trivy-image
-description: "Configures and runs Trivy for container image scanning: Aqua Security's all-in-one scanner combining vuln + secret + misconfiguration + license detection in one pass; `trivy image {image}` with --severity HIGH,CRITICAL filter; --format sarif/json (incl. scan-embedded CycloneDX; for standalone SBOM generation see syft-generation + cyclonedx-format); .trivyignore CVE suppression file; --ignore-unfixed for actionable filter; --scanners vuln/misconfig/license/secret toggle. Use when the team wants a single tool covering container image security across multiple dimensions, not for producing a standalone CycloneDX SBOM."
+description: "Configures and runs Trivy for container image scanning: Aqua Security's all-in-one scanner combining vuln + secret + misconfiguration + license detection in one pass; `trivy image {image}` with --severity HIGH,CRITICAL filter; --format sarif/json (incl. scan-embedded CycloneDX; for standalone SBOM generation see syft-generation + sbom-formats); .trivyignore CVE suppression file; --ignore-unfixed for actionable filter; --scanners vuln/misconfig/license/secret toggle. Use when the team wants a single tool covering container image security across multiple dimensions, not for producing a standalone CycloneDX SBOM."
 ---
 
 # trivy-image
@@ -13,8 +13,8 @@ Per [trivy.dev/latest/docs/target/container_image/][tv-img]:
 
 Trivy is Aqua Security's open-source scanner. Distinguishing
 feature: **all-in-one** - one CLI invocation covers vuln + secret +
-misconfig + license scanning. By contrast, `syft-generation`
-+ `grype-scanning` is a two-step
+misconfig + license scanning. By contrast, `syft-generation`'s
+Grype workflow is a two-step
 SBOM-then-scan pattern.
 
 Per [tv-img][tv-img] the scanner toggles:
@@ -33,7 +33,7 @@ Per [tv-img][tv-img] the scanner toggles:
 - The team uses Aqua Security stack (Trivy is the OSS center of
   it).
 - Pre-prod or registry-side scanning (Trivy's image-by-tag mode).
-- Layered with `grype-scanning` for
+- Layered with the Grype workflow in `syft-generation` for
   cross-DB consensus on vuln findings.
 
 ## Step 1 - Install
@@ -213,7 +213,7 @@ in [references/ci-and-composition.md](references/ci-and-composition.md).
 ## Step 10 - Composition with sister tools
 
 Trivy is the all-in-one first line; compose it with `syft-generation` for a
-standalone SBOM, `grype-scanning` for cross-DB consensus on findings, and
+standalone SBOM plus the Grype scan for cross-DB consensus on findings, and
 `checkov-policy` for deeper IaC scanning. The full composition table is in
 [references/ci-and-composition.md](references/ci-and-composition.md).
 
@@ -235,7 +235,7 @@ standalone SBOM, `grype-scanning` for cross-DB consensus on findings, and
   dedicated tools (use Trivy as first-line; layer dedicated tools
   for depth).
 - Trivy's vuln DB has its own coverage profile; pair with
-  `grype-scanning` for cross-DB
+  Grype (`syft-generation` Step 7) for cross-DB
   consensus.
 - License detection is basic; for compliance-grade analysis, use
   ScanCode / FOSSology.
@@ -249,6 +249,4 @@ standalone SBOM, `grype-scanning` for cross-DB consensus on findings, and
 - openvex.dev - OpenVEX specification (used by `--vex` flag)
 - [references/ci-and-composition.md](references/ci-and-composition.md) - full CI workflow + sister-tool composition
 - `syft-generation`,
-  `grype-scanning`,
-  `cyclonedx-format`,
-  `spdx-format` - sister tools
+  `sbom-formats` - sister tools

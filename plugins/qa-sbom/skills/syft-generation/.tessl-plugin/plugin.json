@@ -1,9 +1,9 @@
 {
   "name": "testland/syft-generation",
-  "description": "Generates Software Bill of Materials (SBOMs) using Anchore Syft - supports container images / directories / archives across OCI / Docker / Singularity formats; output formats CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON; pairs with `grype-scanning` for SBOM-driven vuln scanning. Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance) or as input to vuln scanners.",
+  "description": "Generates, scans, and diffs Software Bills of Materials (SBOMs) with the Anchore stack - Syft generation from container images / directories / archives across OCI / Docker / Singularity formats (output CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON, cosign attestation); the paired generate + scan workflow with Grype (`grype sbom:./sbom.json`, `--fail-on high`, `--only-fixed`, `.grype.yaml` ignore rules with mandatory `expires:`, EPSS/KEV prioritization); and SBOM-to-SBOM diffing via `cyclonedx diff --component-versions` to gate CI on net-new components and detect supply-chain drift between builds. Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance), SBOM-driven vulnerability scanning, or dependency-drift detection between releases.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.15"
+  "version": "1.1.16"
 }

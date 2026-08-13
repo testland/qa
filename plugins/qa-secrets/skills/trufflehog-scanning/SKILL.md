@@ -256,8 +256,7 @@ formats not yet in gitleaks' rule library).
 
 - [th-gh][th-gh] - repository, install, commands, exit codes
 - trufflesecurity.com - company site
-- `gitleaks-scanning`,
-  `kingfisher-scanning` - 
-  sister scanners
+- `gitleaks-scanning` - 
+  sister scanner
 - `secrets-rotation-runner` - 
   rotation workflow after detection

@@ -7,8 +7,7 @@ skills:
   - semgrep-rules
   - sonarqube-rules
   - codeql-queries
-  - bandit-python
-  - gosec-go
+  - language-native-sast
   - multi-tool-finding-triage
 ---
 
@@ -123,8 +122,7 @@ The agent **refuses** to:
 - [`semgrep-rules`](../skills/semgrep-rules/SKILL.md),
   [`sonarqube-rules`](../skills/sonarqube-rules/SKILL.md),
   [`codeql-queries`](../skills/codeql-queries/SKILL.md),
-  [`bandit-python`](../skills/bandit-python/SKILL.md),
-  [`gosec-go`](../skills/gosec-go/SKILL.md) - preloaded sister skills
+  [`language-native-sast`](../skills/language-native-sast/SKILL.md) - preloaded sister skills
 - [`multi-tool-finding-triage`](../skills/multi-tool-finding-triage/SKILL.md) - 
   preloaded; owns the Finding schema, dedupe key, and waiver validation
 - [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md) - 

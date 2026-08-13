@@ -19,7 +19,7 @@ links here for the complete tables.
 | `table` | Human-readable terminal table (default) |
 | `github-json` | GitHub dependency-graph submission format |
 
-For `grype-scanning` input, use `syft-json` (richest metadata) or
+For Grype scan input (SKILL.md Step 7), use `syft-json` (richest metadata) or
 `cyclonedx-json` (broader compat). For compliance delivery, the consumer's
 requirement dictates: SPDX-JSON for US federal, CycloneDX-JSON for most EU
 contexts.

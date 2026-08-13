@@ -124,14 +124,12 @@ The agent **refuses** to:
 
 ## References
 
-- [`zap-baseline`](../skills/zap-baseline/SKILL.md),
-  [`burp-headless`](../skills/burp-headless/SKILL.md),
-  [`nightvision-dast`](../skills/nightvision-dast/SKILL.md) - 
-  preloaded sister skills
+- [`zap-baseline`](../skills/zap-baseline/SKILL.md) - 
+  preloaded sister skill
 - [`multi-tool-finding-triage`](../../qa-sast/skills/multi-tool-finding-triage/SKILL.md) - 
   preloaded; owns the Finding schema, dedupe key, and waiver validation
-- [`dast-scan-cadence-author`](../skills/dast-scan-cadence-author/SKILL.md) - 
-  build-an-X for cadence
+- [`zap-baseline` cadence reference](../skills/zap-baseline/references/cadence.md) - 
+  layered DAST cadence
 - [`sast-finding-triager`](../../qa-sast/agents/sast-finding-triager.md) - 
   cross-plugin sibling: same pattern for SAST
 - [`iac-policy-checker`](../../qa-iac/agents/iac-policy-checker.md) - 

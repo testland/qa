@@ -1,6 +1,6 @@
 ---
 name: gitleaks-scanning
-description: "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; baseline file for legacy debt. Use when the team needs OSS secret scanning at commit time + CI gate."
+description: "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; plus baseline management for legacy debt - onboarding a repo with historical findings via `--baseline-path` snapshots, `.gitleaksignore`, cross-tool suppression consistency with TruffleHog, and rot-prevention cadence. Use when the team needs OSS secret scanning at commit time + CI gate, or is adopting scanning on a repo with pre-existing findings."
 ---
 
 # gitleaks-scanning
@@ -125,9 +125,12 @@ Suppress genuine false-positives with `[[rules.allowlists]]` (paths /
 commits), the top-level `[[allowlists]]`, `--baseline-path` for legacy
 debt, or an inline `# gitleaks:allow` comment. Every allowlist entry
 needs a `Re-review-date`; audit them quarterly. The suppression
-priority table, the baseline workflow, and the justification template
-are in
+priority table and the justification template are in
 [references/custom-rules-and-triage.md](references/custom-rules-and-triage.md).
+Onboarding a repo that already has historical findings - baseline
+snapshots, cross-tool suppression consistency with TruffleHog, waiver
+pointers, and rot prevention - is in
+[references/baseline.md](references/baseline.md).
 
 ## Step 6 - Pre-commit hook integration
 
@@ -232,8 +235,8 @@ A team enables gitleaks on a 4-year-old private repo.
 
 - [gl-gh][gl-gh] - repository, install, commands, config
 - gitleaks.io - landing page
-- `trufflehog-scanning`,
-  `kingfisher-scanning` - 
-  sister scanners
+- Baseline management for legacy findings:
+  [references/baseline.md](references/baseline.md)
+- `trufflehog-scanning` - sister scanner (live verification)
 - `secrets-rotation-runner` - 
   build-an-X for rotation workflow after detection
