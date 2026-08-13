@@ -216,19 +216,25 @@ the test's job is often to assert against specific values. But
 **meaningful magic** matters:
 
 ```typescript
-// Bad
+// Bad - unexplained value
 expect(cart.totalPrice).toBe(43.21);   // why 43.21?
 
-// Better
-const PRICE_PER_BOOK = 10.99;
-const QTY = 4;
-const EXPECTED_TAX_RATE = 0.0825;
+// Also bad - expectation recomputes the formula under test, so it agrees
+// with the implementation even when the implementation is wrong
 const EXPECTED_TOTAL = PRICE_PER_BOOK * QTY * (1 + EXPECTED_TAX_RATE);
 expect(cart.totalPrice).toBeCloseTo(EXPECTED_TOTAL, 2);
+
+// Better - inputs named, expected value stated independently
+const PRICE_PER_BOOK = 10.99;
+const QTY = 4;
+const TAX_RATE = 0.0825;
+expect(cart.totalPrice).toBeCloseTo(47.59, 2);   // 4 x 10.99, +8.25% tax
 ```
 
-The named constants double as documentation. The reviewer sees the
-math; the assertion failure message becomes interpretable.
+Name the **inputs**; never derive the **expected value** from the
+expression under test. The named inputs document where the number came
+from, and the literal expectation is what makes the assertion
+independent of the code it is checking.
 
 ## §8 - E2E selectors
 
