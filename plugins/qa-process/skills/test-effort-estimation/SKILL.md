@@ -1,6 +1,6 @@
 ---
 name: test-effort-estimation
-description: "Turns a list of testable areas plus a change-shape distribution into a PERT three-point test effort estimate, reporting every row as a range around the expected value rather than a single number, requiring a named assumptions ledger across six mandatory categories, and recommending a per-layer ownership split across developer, automation, and exploratory roles. Owns the hours and the ownership recommendation only: it consumes a change-shape distribution rather than producing one, and it does not choose which tests to run or how deep coverage should go. Use when an epic or release has been broken into testable areas and someone is about to commit test capacity for a sprint."
+description: "Turns a list of testable areas plus a change-shape distribution into a PERT three-point test effort estimate, reporting every row as a range around the expected value rather than a single number, requiring a named assumptions ledger across six mandatory categories, and recommending a per-layer ownership split across developer, automation, and exploratory roles. Bundles the change-shape classifier (pure-logic / service-layer / ui-heavy / data-heavy from git-history path and content signals, with the relative per-layer cost model) as a reference, so the shape distribution the estimate consumes can be produced here too. Does not choose which tests to run or how deep coverage should go. Use when an epic or release has been broken into testable areas and someone is about to commit test capacity for a sprint, or when a change set needs its shape classified before planning."
 ---
 
 # test-effort-estimation
@@ -19,14 +19,15 @@ This skill produces three things per epic:
 
 ## Differentiation axis
 
-This skill owns **hours and ownership**. It does not own the taxonomy of change
-shapes, the path and content signals used to detect them, or the relative
-per-layer cost model. Those belong to `code-change-shape-classifier`, and this
-skill **consumes** its output: a distribution over `pure-logic`,
-`service-layer`, `ui-heavy`, and `data-heavy`, each already mapped to the test
-layer where its verification lands. Do not re-derive that mapping here. If the
-shape definitions get copied into the estimator, the two answers drift and stop
-agreeing.
+This skill owns **hours and ownership**. The taxonomy of change shapes, the
+path and content signals used to detect them, and the relative per-layer cost
+model live in
+[references/change-shape-classifier.md](references/change-shape-classifier.md),
+and the estimating steps **consume** that classifier's output: a distribution
+over `pure-logic`, `service-layer`, `ui-heavy`, and `data-heavy`, each already
+mapped to the test layer where its verification lands. Do not re-derive that
+mapping inside the estimate. If the shape definitions get copied into the
+estimator's own tables, the two answers drift and stop agreeing.
 
 It also stops short of two downstream decisions. It does not select which
 existing tests to run for a given change, and it does not set coverage depth
@@ -256,7 +257,7 @@ The full filled template is in
 | Reweighting the PERT formula to "be more pessimistic" | The 1/6:4/6:1/6 weighting "is essentially fixed and cannot be altered" ([Brunel University](https://people.brunel.ac.uk/~mastjjb/jeb/or/netpert.html)) | Raise `b` instead |
 | Rating every area risk-2 | Erases the signal that drives effort allocation and the exploratory rows | Force at least one risk-1 and one risk-3 per epic |
 | Estimating without a layer for each row | Hours cannot be mapped to an owner, so the ownership split is unassignable | Attach a layer to every row before computing anything |
-| Re-deriving change shapes inside the estimate | Two components then own the same taxonomy and drift apart | Consume the distribution from `code-change-shape-classifier` unchanged |
+| Re-deriving change shapes inside the estimate | Two components then own the same taxonomy and drift apart | Consume the distribution from [references/change-shape-classifier.md](references/change-shape-classifier.md) unchanged |
 | Leaving exploratory work unestimated | Unestimated work is unbudgeted work and does not happen | Give every risk-2 and risk-3 area its own exploratory row with three points |
 | Collecting three points in an open group meeting | The loudest or most senior estimate anchors everyone else | Use anonymous rounds ([Wikipedia, Wideband delphi](https://en.wikipedia.org/wiki/Wideband_delphi)) |
 

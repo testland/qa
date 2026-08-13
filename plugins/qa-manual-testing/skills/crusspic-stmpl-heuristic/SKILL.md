@@ -22,17 +22,18 @@ quality model) but offers a more practitioner-friendly mnemonic
 form that fits in an exploratory tester's working memory.
 
 This skill is a **pure reference** used when shaping a session's
-evaluation lens, and by `product-risk-register-builder` when
-categorising risks (see its "Quality characteristic" step).
+evaluation lens, and by the product-risk-register workflow (in
+qa-process's `risk-matrix` references/) when categorising risks by
+quality characteristic.
 
 ## When to use
 
 - Authoring a charter - pick which quality criteria the session
   will evaluate.
-- Categorising risks in the product register
-  (`product-risk-register-builder`).
-- Evaluating a vendor / framework
-  (`qa-vendor-evaluator`).
+- Categorising risks in the product register (the
+  product-risk-register reference of qa-process's `risk-matrix`).
+- Evaluating a vendor / framework (`framework-choice-advisor` in
+  qa-process, including its vendor-evaluation reference).
 - Reviewing a release candidate - walk CRUSSPIC STMPL to confirm
   each criterion is addressed.
 
@@ -288,4 +289,4 @@ Verdict: cleared for release.
   `sfdpot-exploratory-heuristic`,
   `fcc-cuts-vids-heuristic`,
   `session-based-test-management-reference`.
-- Consumed by: `product-risk-register-builder`.
+- Consumed by: the product-risk-register workflow in qa-process's `risk-matrix` references/.

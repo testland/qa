@@ -1,9 +1,9 @@
 {
   "name": "testland/framework-choice-advisor",
-  "description": "Pure reference catalog for picking a test automation framework - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso / XCUITest / RestAssured / Karate / k6 / Locust with side-by-side tradeoffs on speed, cross-browser, mobile, parallelisation, language support, ecosystem maturity, CI integration; a decision tree for matching project NFRs to framework choice; and reference directory / fixture / CI layouts for the chosen stack. This is the **upstream selection step**: it decides which tool to adopt, not how to configure a tool already chosen, and not how to rebalance the unit / integration / E2E mix of an existing suite. Use when starting a new test-automation suite from scratch, before installing any tool.",
+  "description": "Reference catalog for picking a test automation framework or QA tool - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso / XCUITest / RestAssured / Karate / k6 / Locust with side-by-side tradeoffs on speed, cross-browser, mobile, parallelisation, language support, ecosystem maturity, CI integration; a decision tree for matching project NFRs to framework choice; and reference directory / fixture / CI layouts for the chosen stack. references/ extends the same decision to commercial procurement (a seven-axis vendor evaluation matrix for TCM platforms, no-code tools, and visual-regression services) and to recording the outcome (an ADR-based tool-selection decision record with signal, one recommendation, and flip conditions). This is the **upstream selection step**: it decides which tool to adopt, not how to configure a tool already chosen, and not how to rebalance the unit / integration / E2E mix of an existing suite. Use when starting a new test-automation suite from scratch, evaluating commercial QA vendors, or writing down a tool decision.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.14"
+  "version": "1.10.15"
 }

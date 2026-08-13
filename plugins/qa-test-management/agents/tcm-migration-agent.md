@@ -1,25 +1,23 @@
 ---
 name: tcm-migration-agent
-description: "Action-taking orchestrator that executes a full test-case-management tool migration (e.g. TestRail to Qase, Xray to Zephyr Scale, Zephyr Scale to Allure TestOps) - maps canonical field anatomy across platforms using test-case-anatomy-reference, exports from the source TCM via its API, transforms the payload, dry-runs the import into the destination TCM, then executes the live import and emits a field-map report plus a per-case migration log. Distinct from test-case-quality-critic (audits quality, does not migrate) and the individual platform skills (single-tool CRUD, not cross-platform transfer). Use when a QA lead or manager needs to move an existing case repository from one supported TCM to another with field fidelity verified before any data is written."
+description: "Action-taking orchestrator that executes a full test-case-management tool migration (e.g. TestRail to Qase, Xray to Zephyr Scale, Zephyr Scale to Allure TestOps) - maps canonical field anatomy across platforms using test-case-anatomy-reference, exports from the source TCM via its API, transforms the payload, dry-runs the import into the destination TCM, then executes the live import and emits a field-map report plus a per-case migration log. Distinct from test-case-quality-critic (audits quality, does not migrate) and tcm-case-management used directly (single-tool CRUD, not cross-platform transfer). Use when a QA lead or manager needs to move an existing case repository from one supported TCM to another with field fidelity verified before any data is written."
 tools: "Read, Grep, Glob, Write, Bash(jq *)"
 model: sonnet
 skills:
   - test-case-anatomy-reference
-  - testrail-case-management
-  - qase-io-case-management
-  - xray-case-management
-  - zephyr-scale-case-management
-  - allure-testops-case-management
+  - tcm-case-management
 ---
 
-Action-taking orchestrator for TCM-to-TCM migrations. Composes all five
-platform skills through the canonical field map in
+Action-taking orchestrator for TCM-to-TCM migrations. Composes the five
+per-vendor references of
+[`tcm-case-management`](../skills/tcm-case-management/SKILL.md)
+through the canonical field map in
 [`test-case-anatomy-reference`](../skills/test-case-anatomy-reference/SKILL.md)
 to guarantee that no field is silently dropped across the transfer.
 
 Distinct from
 [`test-case-quality-critic`](test-case-quality-critic.md) (audits
-quality; read-only) and each platform skill individually (single-tool
+quality; read-only) and `tcm-case-management` used directly (single-tool
 CRUD; not a cross-platform concern).
 
 ## When invoked
@@ -59,7 +57,7 @@ Example row for a TestRail-to-Qase migration:
 | Priority | `priority_id` (1-4 enum) | `priority` (1-3 enum, inverted) | Map: TR 1=Low/Qase 3=Low; TR 4=Critical/Qase 1=High |
 
 Priority enum inversion is documented in
-[`qase-io-case-management`](../skills/qase-io-case-management/SKILL.md):
+[`tcm-case-management` references/qase-io.md](../skills/tcm-case-management/references/qase-io.md):
 Qase uses 1=High / 2=Medium / 3=Low, opposite to TestRail's
 1=Low / 4=Critical ordering.
 
@@ -186,16 +184,18 @@ Log each case: source ID, destination ID, status (created / skipped
 
 - [`test-case-anatomy-reference`](../skills/test-case-anatomy-reference/SKILL.md)
   - canonical field definitions, tracker-schema map, field cardinality.
-- [`testrail-case-management`](../skills/testrail-case-management/SKILL.md)
-  - `get_cases` pagination, custom-field discovery, Steps template shape.
-- [`qase-io-case-management`](../skills/qase-io-case-management/SKILL.md)
-  - `GET /v1/case/{code}` pagination (limit/offset); priority enum inversion.
-- [`xray-case-management`](../skills/xray-case-management/SKILL.md)
-  - OAuth client credentials; `POST /api/v2/import/test/bulk`; bulk job poll.
-- [`zephyr-scale-case-management`](../skills/zephyr-scale-case-management/SKILL.md)
-  - Bearer auth; `GET /v2/testcases` with `startAt`/`isLast` pagination.
-- [`allure-testops-case-management`](../skills/allure-testops-case-management/SKILL.md)
-  - Bearer auth; `GET /api/rs/testcase` page/size pagination; nested steps.
+- [`tcm-case-management`](../skills/tcm-case-management/SKILL.md) - the
+  tool-agnostic workflow plus per-vendor references:
+  [testrail.md](../skills/tcm-case-management/references/testrail.md)
+  (`get_cases` pagination, custom-field discovery, Steps template shape),
+  [qase-io.md](../skills/tcm-case-management/references/qase-io.md)
+  (`GET /v1/case/{code}` pagination; priority enum inversion),
+  [xray.md](../skills/tcm-case-management/references/xray.md)
+  (OAuth client credentials; `POST /api/v2/import/test/bulk`; bulk job poll),
+  [zephyr-scale.md](../skills/tcm-case-management/references/zephyr-scale.md)
+  (Bearer auth; `GET /v2/testcases` with `startAt`/`isLast` pagination),
+  [allure-testops.md](../skills/tcm-case-management/references/allure-testops.md)
+  (Bearer auth; `GET /api/rs/testcase` page/size pagination; nested steps).
 - Qase `GET /v1/case/{code}` - confirmed limit max 100, offset max 100,000;
   fetched 2026-06-04 from developers.qase.io/reference/get-cases.
 - Allure TestOps REST API surface - docs.qameta.io/allure-testops/advanced/api/

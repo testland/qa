@@ -1,9 +1,9 @@
 {
   "name": "testland/test-case-anatomy-reference",
-  "description": "Pure-reference catalog of test-case anatomy - what fields a well-formed test case must have and what each field means. Enumerates the ISO/IEC/IEEE 29119-3:2021 test-case template fields (identifier, objective, preconditions, inputs, steps, expected results, postconditions, environment, traceability) and the ISTQB CTAL-TM specification-technique-driven additions (equivalence partition, boundary value, decision table, state transition). Maps the canonical anatomy to five tracker-specific schemas (TestRail, Xray, Zephyr Scale, Allure TestOps, Qase). Use as the authoritative source when authoring a case template, reviewing case quality, or migrating between tools.",
+  "description": "Pure-reference catalog of test-case anatomy and review quality - what fields a well-formed test case must have, what each field means, and how to score the content once the fields are filled. Enumerates the ISO/IEC/IEEE 29119-3:2021 test-case template fields (identifier, objective, preconditions, inputs, steps, expected results, postconditions, environment, traceability) and the ISTQB CTAL-TM specification-technique-driven additions (equivalence partition, boundary value, decision table, state transition), maps the canonical anatomy to five tracker-specific schemas (TestRail, Xray, Zephyr Scale, Allure TestOps, Qase), and carries the review rubric: six per-case quality axes plus six set-level axes with PASS / WEAK / FAIL verdicts derived without averaging, each threshold marked standard-backed or practitioner convention. Use as the authoritative source when authoring a case template, reviewing a batch of test cases for quality, or migrating between tools.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.4"
+  "version": "1.2.5"
 }

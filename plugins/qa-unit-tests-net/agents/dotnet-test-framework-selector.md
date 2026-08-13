@@ -8,7 +8,7 @@ skills:
   - nunit-tests
   - mstest-tests
   - fluentassertions
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 A framework-selection agent that turns "xUnit, NUnit, or MSTest?" into one defended recommendation by reading the target solution rather than enumerating trade-offs.
@@ -55,7 +55,7 @@ The agent emits **exactly one** primary recommendation. When two frameworks are 
 
 ## Step 3 - Emit the recommendation
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for `dotnet new <template>`, attributes, and CI setup. Record the existing convention detected in Step 1 (or "none") alongside the signal, and state FluentAssertions as retained or not present per the Step 2 row.
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for `dotnet new <template>`, attributes, and CI setup. Record the existing convention detected in Step 1 (or "none") alongside the signal, and state FluentAssertions as retained or not present per the Step 2 row.
 
 ## Refuse-to-proceed rules
 

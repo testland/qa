@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 675 components**
+**89 plugins · 656 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -13,16 +13,16 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-process](plugins/qa-process/) | 1.11.0 | 22 skills + 4 agents | 26 |
 | [qa-test-data](plugins/qa-test-data/) | 1.3.10 | 16 skills + 3 agents | 19 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.5.0 | 14 skills + 2 agents | 16 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.15 | 8 skills + 6 agents | 14 |
-| [qa-test-management](plugins/qa-test-management/) | 1.2.5 | 8 skills + 2 agents | 10 |
+| [qa-process](plugins/qa-process/) | 1.11.0 | 12 skills + 1 agents | 13 |
 | [qa-hiring](plugins/qa-hiring/) | 1.4.2 | 5 skills + 1 agents | 6 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.2.5 | 4 skills + 2 agents | 6 |
 | [qa-roles](plugins/qa-roles/) | 1.4.0 | 0 skills + 5 agents | 5 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.1.7 | 3 skills + 2 agents | 5 |
-| [qa-team-management](plugins/qa-team-management/) | 1.2.0 | 3 skills + 1 agents | 4 |
+| [qa-test-management](plugins/qa-test-management/) | 1.3.0 | 3 skills + 2 agents | 5 |
+| [qa-team-management](plugins/qa-team-management/) | 1.2.0 | 3 skills + 0 agents | 3 |
 
 ## Functional testing
 
@@ -35,14 +35,14 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-mobile](plugins/qa-mobile/) | 1.5.0 | 9 skills + 3 agents | 12 |
 | [qa-game](plugins/qa-game/) | 1.4.15 | 8 skills + 3 agents | 11 |
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.0 | 8 skills + 3 agents | 11 |
-| [qa-embedded](plugins/qa-embedded/) | 1.3.10 | 7 skills + 3 agents | 10 |
+| [qa-embedded](plugins/qa-embedded/) | 1.4.0 | 7 skills + 3 agents | 10 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.6.0 | 7 skills + 2 agents | 9 |
-| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.2.12 | 6 skills + 2 agents | 8 |
-| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.2.13 | 6 skills + 2 agents | 8 |
+| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.0 | 6 skills + 2 agents | 8 |
+| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.0 | 6 skills + 2 agents | 8 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.16 | 4 skills + 3 agents | 7 |
-| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.2.12 | 5 skills + 2 agents | 7 |
-| [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.1.15 | 4 skills + 2 agents | 6 |
+| [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.0 | 5 skills + 2 agents | 7 |
+| [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.0 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.3.0 | 4 skills + 1 agents | 5 |
 
@@ -142,7 +142,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.8.0 | 14 skills + 3 agents | 17 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.9.0 | 14 skills + 3 agents | 17 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.1.11 | 5 skills + 1 agents | 6 |
 | [qa-compatibility](plugins/qa-compatibility/) | 1.2.16 | 5 skills + 1 agents | 6 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.2.0 | 4 skills + 1 agents | 5 |

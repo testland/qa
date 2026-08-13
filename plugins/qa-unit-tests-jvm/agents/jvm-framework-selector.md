@@ -9,7 +9,7 @@ skills:
   - scalatest
   - spock-tests
   - testng-tests
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 Turns "which JVM test framework?" into one defended recommendation by reading build descriptors and source language markers, not by enumerating trade-offs in the abstract.
@@ -74,7 +74,7 @@ The agent emits exactly one primary recommendation. When a language falls betwee
 
 ## Step 4 - Emit the recommendation
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for install snippets, annotation reference, and CI setup. Record the detected source language and the existing convention (or "none") alongside the signal.
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for install snippets, annotation reference, and CI setup. Record the detected source language and the existing convention (or "none") alongside the signal.
 
 ## Refuse-to-proceed rules
 

@@ -1,9 +1,0 @@
-{
-  "name": "testland/risk-storming-facilitator",
-  "description": "Reference guide for planning and facilitating a risk-storming session yourself - meeting structure, participant roster, per-category brainstorm prompts (categories from risk-matrix), affinity grouping, impact by likelihood scoring, and mitigation assignment. Static reference only, not an active runner that writes the matrix file. Use to learn or teach the facilitation pattern, or to run a feature-kickoff session without agent assistance. For the matrix artifact itself use risk-matrix, to calibrate its ratings against real defect data use risk-matrix-calibration, and to map the resulting risks onto test coverage use risk-coverage-mapper.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.10.12"
-}

@@ -9,7 +9,7 @@ skills:
   - unity-test-framework-c
   - qemu-system-test-runner
   - embedded-coverage-strategy-reference
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 A framework-selection agent that turns "which test framework should we use for this embedded project?" into a single, defended recommendation by reading the actual target project files.
@@ -69,7 +69,7 @@ If the user mentions a safety standard (DO-178C, ISO 26262, IEC 62304, MISRA-C),
 
 ## Output format
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section. Two additions specific to this agent: state the selected execution path (host / host + QEMU / host + QEMU + on-target) alongside the framework, and let "Read next" carry [`qemu-system-test-runner`](../skills/qemu-system-test-runner/SKILL.md) when the QEMU path applies and [`embedded-coverage-strategy-reference`](../skills/embedded-coverage-strategy-reference/SKILL.md) when a safety standard applies.
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section. Two additions specific to this agent: state the selected execution path (host / host + QEMU / host + QEMU + on-target) alongside the framework, and let "Read next" carry [`qemu-system-test-runner`](../skills/qemu-system-test-runner/SKILL.md) when the QEMU path applies and [`embedded-coverage-strategy-reference`](../skills/embedded-coverage-strategy-reference/SKILL.md) when a safety standard applies.
 
 ## Worked examples
 

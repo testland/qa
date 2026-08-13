@@ -9,7 +9,7 @@ skills:
   - pitest-mutation
   - mutmut-mutation
   - mull-mutation
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 A tool-selection agent that picks the right mutation testing tool by language, never by team preference.
@@ -52,7 +52,7 @@ The agent emits **exactly one** primary recommendation per detected language. Pe
 
 ## Step 3 - Emit the recommendation
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md for configuration + CI gating. Add one rationale line giving the typical mutation score baseline to expect on the first run (~60-70% for well-tested code is common).
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md for configuration + CI gating. Add one rationale line giving the typical mutation score baseline to expect on the first run (~60-70% for well-tested code is common).
 
 ## Refuse-to-proceed rules
 

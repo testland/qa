@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(gh pr view *)"
 model: sonnet
 skills:
   - definition-of-done
-  - dod-adherence-review
 ---
 
 An adversarial reviewer that pits a PR / story / Increment against the team's own quality bar - and refuses to rubber-stamp.
@@ -23,7 +22,7 @@ The agent operates in one of two modes:
 
 1. **Locate the checklist.** `Glob` / `Read` for `docs/definition-of-done.md`, `docs/quality/definition-of-done.md`, `.github/DEFINITION_OF_DONE.md`, or a `## Definition of Done` heading in `CONTRIBUTING.md` or `README.md`; record its path and revision.
 2. **Fix the evidence window.** `git diff --name-only <base>..<head>`, `gh pr view --json reviews,statusCheckRollup` for the head SHA, and `git log` for the commit range on a release audit. Evidence outside it does not count.
-3. **Audit each line.** Apply `dod-adherence-review`: it owns the two-stage split, the line-to-artifact mapping, the `met` / `not met` / `unverifiable` states, the evidence standards, the verdict roll-up, and the audit table.
+3. **Audit each line.** Apply the Auditing adherence section of `definition-of-done`: it owns the two-stage split, the line-to-artifact mapping, the `met` / `not met` / `unverifiable` states, the evidence standards, the verdict roll-up, and the audit table.
 4. **Emit the review** with the checklist revision, the evidence window, the verdict, and a named next action per unmet and unverifiable line.
 
 ## Refuse-to-proceed rules

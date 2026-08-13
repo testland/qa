@@ -1,9 +1,0 @@
-{
-  "name": "testland/risk-matrix-calibration",
-  "description": "Checks an already-written risk matrix against what actually happened. Maps each row's likelihood rating to observed defect density, test failure rate and code churn, maps its impact rating to the severity mix and escape rate, then classifies each row as over-stated, under-stated, in-agreement, or not calibrated, using stated reporting thresholds so small differences are not treated as findings. Every proposed rating change carries the observation that produced it, and every proposal is handed to the matrix owner rather than applied. Also emits candidate new entries for areas that show up in defect data but have no row. Owns calibration only: choosing a scoring methodology, designing the matrix structure, picking risk categories, mapping risks to test types, FMEA scoring, review cadence and file storage are all out of scope. Use when a matrix has been driving test decisions for at least three releases and nobody has yet checked whether its ratings match the defects, escapes and incidents that followed.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.10.14"
-}

@@ -1,6 +1,6 @@
 ---
 name: framework-choice-advisor
-description: "Pure reference catalog for picking a test automation framework - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso / XCUITest / RestAssured / Karate / k6 / Locust with side-by-side tradeoffs on speed, cross-browser, mobile, parallelisation, language support, ecosystem maturity, CI integration; a decision tree for matching project NFRs to framework choice; and reference directory / fixture / CI layouts for the chosen stack. This is the **upstream selection step**: it decides which tool to adopt, not how to configure a tool already chosen, and not how to rebalance the unit / integration / E2E mix of an existing suite. Use when starting a new test-automation suite from scratch, before installing any tool."
+description: "Reference catalog for picking a test automation framework or QA tool - covers Playwright / Cypress / Selenium / WebdriverIO / Appium / Espresso / XCUITest / RestAssured / Karate / k6 / Locust with side-by-side tradeoffs on speed, cross-browser, mobile, parallelisation, language support, ecosystem maturity, CI integration; a decision tree matching project NFRs to framework choice; and reference layouts for the chosen stack. references/ extends the same decision to commercial procurement (seven-axis vendor evaluation for TCM platforms, no-code tools, visual-regression services) and to recording the outcome (ADR-based tool-selection decision record with signal, one recommendation, flip conditions). This is the upstream selection step: it decides which tool to adopt, not how to configure one already chosen. Use when starting a new test-automation suite, evaluating commercial QA vendors, or writing down a tool decision."
 ---
 
 # framework-choice-advisor
@@ -111,6 +111,29 @@ The skill recommends **deferring framework choice** when:
 
 In these cases, the right output is an **explicit deferral note**: "no decision today; revisit when (a)/(b)/(c) resolves."
 
+## Step 7 - Commercial vendors (procurement axis)
+
+When the decision is a **commercial** tool - a test-management platform
+(TestRail / Qase / Xray / Zephyr), a no-code automation vendor (mabl / Testim /
+Functionize), a visual-regression service (Applitools / Percy / Chromatic), or
+an AI copilot tier - the axes change: contract, lock-in, and exit cost matter
+as much as capability. Run the seven-axis vendor evaluation (capability fit,
+cost model, integration depth, lock-in risk, exit cost, contractual posture,
+customer-reference data) in
+[references/vendor-evaluation.md](references/vendor-evaluation.md). It emits
+an evidence pack with a weighted score per the team's NFR order and
+deliberately refuses to pick the winner - the team owns the procurement
+choice.
+
+## Step 8 - Record the decision
+
+Whichever path produced the choice, write it down as a decision record so a
+later reader can see the signal, the rejected alternative, and what would
+reverse it. The ADR-based format - observed project signal, exactly one
+primary recommendation, a why-not clause, one read-next link, and mandatory
+flip conditions - is in
+[references/decision-record-format.md](references/decision-record-format.md).
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -130,11 +153,13 @@ In these cases, the right output is an **explicit deferral note**: "no decision 
 - **Tradeoffs are illustrative.** A specific product can have constraints that flip the recommendation - e.g., a Salesforce internal app where the legacy stack is JVM-only would override the "Playwright by default" guidance.
 - **Hire-ability is geography-dependent.** "Hire-ability" assumes US / EU markets in the matrix; for other markets, the team's local pool is the authority.
 - **No automated framework scaffolding.** Per the introduction, this is intentional - auto-scaffolded boilerplate is the dominant failure mode the [research](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/) flags. Use the per-framework skill after the decision.
-- **No closed-platform comparison.** Mabl / Testim / Functionize / TestSigma are no-code platforms; they compete with this entire category, not with one framework. If the team is choosing "code vs no-code", that's a strategic decision beyond this skill's scope.
+- **Closed-platform comparison is a different axis.** Mabl / Testim / Functionize / TestSigma are no-code platforms; they compete with this entire category, not with one framework. The "code vs no-code" strategic call stays with the team; once the team is comparing commercial vendors, use the procurement workflow in [references/vendor-evaluation.md](references/vendor-evaluation.md).
 
 ## Hand-off targets
 
 - **After the framework is chosen, configure it** → per-framework skill (`playwright-testing`, `cypress-testing`, `selenium-testing`, `webdriverio-testing`).
+- **Record the choice** → [references/decision-record-format.md](references/decision-record-format.md).
+- **Commercial-vendor procurement** → [references/vendor-evaluation.md](references/vendor-evaluation.md).
 - **Tune the layer balance after the framework is in place** → `test-pyramid-balancer`.
 - **Convert Selenium suite → Playwright (the most common 2026 migration)** → migration is a project, not an agent; this skill provides the decision input, the per-framework skills provide the target configuration.
 

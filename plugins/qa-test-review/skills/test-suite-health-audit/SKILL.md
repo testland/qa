@@ -17,7 +17,7 @@ It deliberately does **not** own:
 | Not owned | Where it belongs |
 |---|---|
 | The recommended target ratio, and the plan for getting back to it | A pyramid-balancing capability such as `test-pyramid-balancer`. That capability decides what the mix *should* be for a given codebase and produces the rebalancing recommendation. This audit consumes a target and reports distance from it. |
-| Classifying the *change set* (which layers recent commits touch) | A change-shape classifier such as `code-change-shape-classifier`. That answers "what kind of work is this team doing?"; this answers "what does the suite that already exists look like?" Do not re-derive either one inside the other. |
+| Classifying the *change set* (which layers recent commits touch) | The change-shape classifier bundled with `test-effort-estimation` (qa-process). That answers "what kind of work is this team doing?"; this answers "what does the suite that already exists look like?" Do not re-derive either one inside the other. |
 | Per-file review of selector fragility, assertion specificity, mocking technique, or naming | Reviews scoped to a single file. This audit counts and bands whole layers; it does not open a test and argue about a locator. |
 
 Read the boundary this way: if the question is **what the ratio should be**, that

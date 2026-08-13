@@ -1,9 +1,9 @@
 {
   "name": "testland/test-effort-estimation",
-  "description": "Turns a list of testable areas plus a change-shape distribution into a PERT three-point test effort estimate, reporting every row as a range around the expected value rather than a single number, requiring a named assumptions ledger across six mandatory categories, and recommending a per-layer ownership split across developer, automation, and exploratory roles. Owns the hours and the ownership recommendation only: it consumes a change-shape distribution rather than producing one, and it does not choose which tests to run or how deep coverage should go. Use when an epic or release has been broken into testable areas and someone is about to commit test capacity for a sprint.",
+  "description": "Turns a list of testable areas plus a change-shape distribution into a PERT three-point test effort estimate, reporting every row as a range around the expected value rather than a single number, requiring a named assumptions ledger across six mandatory categories, and recommending a per-layer ownership split across developer, automation, and exploratory roles. Bundles the change-shape classifier (pure-logic / service-layer / ui-heavy / data-heavy from git-history path and content signals, with the relative per-layer cost model) as a reference, so the shape distribution the estimate consumes can be produced here too. Does not choose which tests to run or how deep coverage should go. Use when an epic or release has been broken into testable areas and someone is about to commit test capacity for a sprint, or when a change set needs its shape classified before planning.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.14"
+  "version": "1.10.15"
 }

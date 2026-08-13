@@ -14,7 +14,6 @@ Desktop application testing across Windows (FlaUI, WinAppDriver, Appium-Windows)
 | skill | appium-windows-driver | Authors Appium 2.x tests against the Windows driver - the Node.js proxy in front of WinAppDriver with `windows:` gestures and PowerShell hooks |
 | skill | qt-test-framework | Authors and runs Qt Test - the first-party C++ in-process unit + GUI test framework for Qt 6 with QTEST_MAIN, QSignalSpy, and QBENCHMARK |
 | skill | xctest-mac-desktop | Authors XCTest UI + unit tests for macOS apps with XCUIApplication / XCUIElement queries and `xcodebuild test` CI integration |
-| skill | at-spi-linux | Authors Linux desktop tests via AT-SPI accessibility - dogtail for GTK + Qt apps, Accerciser for tree inspection, Xvfb + dbus-launch CI |
 | agent | desktop-driver-selector | Reads a target desktop project (`csproj` / `package.json` / `.pro` / `CMakeLists.txt`) and emits one driver recommendation (FlaUI / WinAppDriver / electron-playwright / QtTest / XCUITest / AT-SPI) plus rationale |
 | agent | desktop-test-scaffolder | Scaffolds a fresh desktop test project - test project file, driver-init module, one screen-object skeleton, and a CI workflow tagged for the matching Windows / macOS / Linux runner |
 | agent | desktop-test-author | Authors one desktop UI test for one user flow given a spec + target app + chosen driver; composes FlaUI / WinAppDriver / Appium-Windows / electron-playwright / QtTest skills with xUnit / NUnit / MSTest harnesses |

@@ -10,7 +10,7 @@ skills:
   - schemathesis-fuzzing
   - restler-fuzzing
   - api-chaos-runner
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 A tool-selection agent that turns "which API test tool should we use?" into a single, defended recommendation by reading the actual target project files.
@@ -60,7 +60,7 @@ The agent emits **exactly one** primary recommendation. A secondary fallback may
 
 ## Step 3 - Emit the recommendation
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md.
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section; "Read next" names the chosen tool's preloaded SKILL.md.
 
 ## Refuse-to-proceed rules
 

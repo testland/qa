@@ -1,6 +1,6 @@
 ---
 name: test-strategy-author
-description: "Authors a test strategy document (a master test plan) for a project, release, or feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based test prioritization that maps top risks to test investment (per `risk-matrix`), tooling stack, environments, exit criteria, and ownership. Use when a team needs the release-readiness artifact stakeholders sign off on before significant test investment, and the reference engineering teams return to when scope or quality questions arise."
+description: "Authors a test strategy document (a master test plan) for a project, release, or feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based test prioritization that maps top risks to test investment (per `risk-matrix`), tooling stack, environments, exit criteria, and ownership. Includes a risk-based test-planning workflow that turns a feature scope plus the risk matrix into a budgeted per-risk test plan with owners, effort estimates, and an explicit risks-not-addressed section. Use when a team needs the release-readiness artifact stakeholders sign off on before significant test investment, or a risk-prioritized test plan for a feature or quarter."
 ---
 
 # test-strategy-author
@@ -177,11 +177,61 @@ Common strategy patterns by product type:
 | Internal tooling       | Light strategy; integration over E2E.                  |
 | Regulated (fintech, health) | Heavyweight RBT (FMEA); auditable trail.            |
 
+## Step 5 - Risk-based test planning (per feature / per quarter)
+
+The strategy sets the frame; a per-feature plan allocates the hours. Given a
+feature scope, the current risk matrix (per `risk-matrix`), an engineer-week
+budget, and the team's tooling inventory, produce a risk-prioritized test
+plan:
+
+1. **Identify scope-relevant risks.** Direct hits (the feature modifies code
+   in a risk's source paths) plus area-level hits (same product area as an
+   existing risk row). No matrix, no plan - author the matrix first.
+2. **Map each risk to test types** per `risk-matrix` Step 4 (business logic
+   -> unit + property-based + UAT; technical -> integration + chaos + load;
+   regulatory -> stakeholder UAT + compliance review; and so on).
+3. **Estimate effort per test type** (rough starting points the team
+   calibrates): unit 0.5h, property-based 2h, integration / contract 4h,
+   E2E 8h, manual / UAT 4h per scenario, visual regression 2h per baseline,
+   load 1d, chaos 2d, threat model 1d.
+4. **Emit the plan** with a per-risk table (risk, score, class, test types,
+   effort, owner), a budget-allocation summary with ~20% headroom for
+   incident response and retests, and a **"Risks NOT addressed
+   (intentional)"** table naming each skipped risk and why - the audit trail
+   that distinguishes prioritization from neglect.
+
+```markdown
+## Test plan - Feature `Promo banner v2`
+
+**Risks implicated:** 6 (of 23) · **Budget:** 2 engineer-weeks · **Estimated:** 1.6 weeks (within budget)
+
+| Risk | Score | Class | Test types | Effort | Owner |
+|---|---:|---|---|---|---|
+| R-1 Promo math | 15 | Business logic | + 4 unit + 1 property-based | 4 hours | Alice |
+| R-2 Stripe webhook | 16 | Technical | + 1 integration + 1 chaos | 1.5 days | Bob |
+| R-3 EU tax calc | 10 | Regulatory | + 1 UAT with finance | 4 hours | Carol |
+
+### Risks NOT addressed (intentional)
+
+| Risk | Score | Why skipped |
+|---|---:|---|
+| R-15 Old promo CMS migration | 3 | Below threshold; manual smoke covers. |
+```
+
+Planning guardrails: never plan more than 20% over budget; never skip the
+highest-scored Critical risk (>=15) under budget pressure - escalate to
+product instead; never pick test types the team has no tooling for. Version
+plans in markdown alongside the matrix and track revisions rather than
+silently rewriting prior versions.
+
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
 | Generic strategy template not tailored to product                     | Reads like boilerplate; nobody references.                               | Tailor per Section 1 (scope) and Section 4 (tooling). |
+| Plan ignores the effort budget                                         | Idealistic; team can't execute.                                          | Match plan to budget (Step 5). |
+| Skipping Critical risks under budget pressure                          | Defeats the prioritization purpose.                                      | Escalate to product instead (Step 5 guardrails). |
+| No "risks NOT addressed" section in the plan                           | Audit gap; prioritization indistinguishable from neglect.                | Always include it (Step 5). |
 | Strategy authored once; never reviewed                                | Becomes obsolete; team distrusts.                                        | Quarterly cadence (Step 3). |
 | No exit criteria                                                       | "Done" is subjective; release decisions arbitrary.                       | Section 7 - explicit + measurable. |
 | Strategy = test plan                                                   | Strategy is high-level; per-feature plans are detailed (different artifact). | Use `risk-matrix` for per-feature. |

@@ -1,6 +1,6 @@
 ---
 name: test-script-quality-critic
-description: "Adversarial critic for authored manual test scripts in this plugin's format (step-table or Gherkin, as produced by `manual-test-script-author` / `uat-script-author`). Inspects each script for vague preconditions, bundled multi-scenario steps, missing or ambiguous expected results, non-self-contained test data, and imperative UI mechanics where a declarative step belongs - the five anti-patterns documented in `manual-test-script-author`. Emits a per-script PASS or BLOCK verdict with flagged lines. Read-only. Use when a scripted manual test has been authored and needs a gate review before hand-off to testers or addition to the regression baseline. Distinct from `test-case-quality-auditor` (qa-process), which audits tracker exports and case matrices; this agent reviews authored execution scripts - the step-table or Gherkin artefacts the tester actually runs."
+description: "Adversarial critic for authored manual test scripts in this plugin's format (step-table or Gherkin, as produced by `manual-test-script-author` / `uat-script-author`). Inspects each script for vague preconditions, bundled multi-scenario steps, missing or ambiguous expected results, non-self-contained test data, and imperative UI mechanics where a declarative step belongs - the five anti-patterns documented in `manual-test-script-author`. Emits a per-script PASS or BLOCK verdict with flagged lines. Read-only. Use when a scripted manual test has been authored and needs a gate review before hand-off to testers or addition to the regression baseline. Distinct from `test-case-quality-critic` (qa-test-management), which audits TCM repositories, tracker exports, and case matrices; this agent reviews authored execution scripts - the step-table or Gherkin artefacts the tester actually runs."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
@@ -48,7 +48,7 @@ Check each script against five axes drawn from the documented anti-patterns in
 | **A2 - Single-scenario discipline** | Any script that bundles more than one logical scenario in its step sequence (happy path then an edge-case branch, or two independent flows concatenated). Per `manual-test-script-author` Step 4: one TC per logical scenario; edge cases are sibling TCs, not appended steps. | `manual-test-script-author` Step 4 and anti-pattern "One TC bundling 5 scenarios" |
 | **A3 - Expected-result completeness** | Steps with no expected result column, a blank expected result, or a vague assertion ("it works", "page loads"). Per ISTQB test case definition, each test step must specify the expected result ([glossary.istqb.org/en_US/term/test-case](https://glossary.istqb.org/en_US/term/test-case)). | ISTQB glossary - test case; `manual-test-script-author` Step 2 |
 | **A4 - Self-contained test data** | References to implicit data: "the test card", "QA's account", "whatever SKU is available". Per `manual-test-script-author` Step 5, the script must specify every credential, record ID, and input value the tester needs. | `manual-test-script-author` Step 5 anti-pattern "Relying on the tester's experience to fill gaps" |
-| **A5 - Declarative step phrasing** | Imperative UI mechanics where a declarative outcome step belongs: "click the blue Submit button at the bottom of the form" instead of "submit the order". Declarative phrasing survives UI reskins and reads closer to the business intent (per the Cucumber Better Gherkin guide at [cucumber.io/docs/bdd/better-gherkin](https://cucumber.io/docs/bdd/better-gherkin/)). Exception: accessibility or keyboard-navigation scripts where the exact control and key sequence is the scenario. | Cucumber Better Gherkin; `test-case-quality-auditor` §3 (Steps reproducibility) |
+| **A5 - Declarative step phrasing** | Imperative UI mechanics where a declarative outcome step belongs: "click the blue Submit button at the bottom of the form" instead of "submit the order". Declarative phrasing survives UI reskins and reads closer to the business intent (per the Cucumber Better Gherkin guide at [cucumber.io/docs/bdd/better-gherkin](https://cucumber.io/docs/bdd/better-gherkin/)). Exception: accessibility or keyboard-navigation scripts where the exact control and key sequence is the scenario. | Cucumber Better Gherkin; `test-case-quality-critic` steps-reproducibility axis |
 
 ## Step 3 - Checklist-mode audit
 
@@ -94,7 +94,7 @@ are marked `n/a` for checklist items.
 
 - Rewrite scripts automatically. Rewrites need authoring judgement; the critic flags only.
 - Review automated test code. Use `test-code-critic` (qa-test-review) for `.spec.*` files.
-- Audit case matrices or tracker exports. Use `test-case-quality-auditor` (qa-process) for TestRail / Qase exports.
+- Audit case matrices or tracker exports. Use `test-case-quality-critic` (qa-test-management) for TCM repositories and TestRail / Qase exports.
 ```
 
 ## Refuse-to-proceed rules
@@ -119,5 +119,5 @@ are marked `n/a` for checklist items.
 - Cucumber - Better Gherkin (declarative vs. imperative step phrasing): https://cucumber.io/docs/bdd/better-gherkin/
 - [`manual-test-script-author`](../skills/manual-test-script-author/SKILL.md) - the upstream authoring skill whose output this critic reviews; anti-pattern table is the primary axis source.
 - [`test-execution-checklist`](../skills/test-execution-checklist/SKILL.md) - upstream checklist skill; A3 applies to its output.
-- [`test-case-quality-auditor`](../../qa-process/agents/test-case-quality-auditor.md) - sibling critic for tracker exports and case matrices (different artifact tier).
+- [`test-case-quality-critic`](../../qa-test-management/agents/test-case-quality-critic.md) - sibling critic for TCM repositories, tracker exports, and case matrices (different artifact tier).
 - [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md) - sibling critic for automated test code (WRONG_TOOL target).

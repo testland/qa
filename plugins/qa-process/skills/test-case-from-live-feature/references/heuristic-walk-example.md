@@ -1,6 +1,6 @@
 # Heuristic walk - worked example
 
-Deep reference for the `test-case-from-live-feature` SKILL.md, Step 2. The four heuristic models from `heuristic-test-design-reference` applied to the checkout observation log from Step 1, turning observations into candidate test-case rows. The spine keeps the four-substep method; this file shows the walk in full.
+Deep reference for the `test-case-from-live-feature` SKILL.md, Step 2. The four heuristic models from [heuristics.md](heuristics.md) applied to the checkout observation log from Step 1, turning observations into candidate test-case rows. The spine keeps the four-substep method; this file shows the walk in full.
 
 ## 2a - SFDPOT coverage walk
 
@@ -19,7 +19,7 @@ Each non-empty cell becomes one or more test-case rows.
 
 ## 2b - Whittaker attack overlay
 
-For each function, enumerate the attacks from the [Whittaker catalog](https://en.wikipedia.org/wiki/Exploratory_testing) (in `heuristic-test-design-reference`):
+For each function, enumerate the attacks from the [Whittaker catalog](https://en.wikipedia.org/wiki/Exploratory_testing) (in [heuristics.md](heuristics.md)):
 
 - **Input attack on coupon**: empty, 33+ chars (one over the observed UI limit), special characters, SQL-keyword string, leading whitespace, expired (already covered by 422), case mismatch.
 - **UI attack on place-order**: double-click (button disable already observed - verify it actually prevents the second POST), browser-back after charge, refresh during payment redirect.

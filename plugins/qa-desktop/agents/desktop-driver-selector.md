@@ -11,7 +11,7 @@ skills:
   - qt-test-framework
   - xctest-mac-desktop
   - desktop-test-strategy-reference
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 A driver-selection agent that turns "which desktop UI driver should we use?" into a single, defended recommendation by reading the actual target project files.
@@ -79,7 +79,7 @@ Signals: `<requestedExecutionLevel level="requireAdministrator" />` in `app.mani
 
 ## Step 3 - Emit the recommendation
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen driver's preloaded SKILL.md. Any elevation flag from Step 2b goes in the flip conditions.
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section; "Read next" names the chosen driver's preloaded SKILL.md. Any elevation flag from Step 2b goes in the flip conditions.
 
 ## Worked example
 

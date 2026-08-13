@@ -63,7 +63,7 @@ references stored in the `refs` / link / tags field:
 # Per platform
 def get_cases_testrail(project_id):
     cases = []
-    # Per testrail-case-management list_cases pattern
+    # Per tcm-case-management list_cases pattern (references/testrail.md)
     for case in list_testrail_cases(project_id):
         refs = case.get("refs", "").split(",") if case.get("refs") else []
         cases.append({"id": f"C{case['id']}", "title": case["title"],

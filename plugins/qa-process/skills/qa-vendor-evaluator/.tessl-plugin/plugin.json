@@ -1,9 +1,0 @@
-{
-  "name": "testland/qa-vendor-evaluator",
-  "description": "Build-an-X workflow that produces a side-by-side **commercial-vendor** evaluation matrix for QA tools - test-management platforms (TestRail / Qase / Xray / Zephyr / TestCollab), no-code platforms (mabl / Testim / Functionize / TestSigma / Reflect), visual regression services (Applitools / Percy / Chromatic), and commercial AI copilots - scoring each on capability fit, cost model, integration depth, vendor lock-in risk, exit cost, contractual posture, and customer-reference data. Scoped to commercial procurement - contract, lock-in, and exit-cost axes - not to choosing an open-source code-first framework on architectural fit. Use for commercial procurement decisions only - refuses to recommend a winner; the team owns the procurement choice.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.10.14"
-}

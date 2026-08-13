@@ -63,7 +63,7 @@ Per [test-pyramid][tp]: the right ratio depends on the codebase. Defaults:
 | UI-heavy                   | 60 / 25 / 15                   | SPAs, mobile apps; UI is the product.   |
 | Data-heavy                 | 60 / 30 / 10                   | + dedicated data quality suite.          |
 
-The change-shape input comes from `code-change-shape-classifier`, which walks a window of `git log` and classifies each commit by path and content signal. This step consumes that distribution: it does not recompute it.
+The change-shape input comes from the change-shape classifier bundled with `test-effort-estimation` (its references/change-shape-classifier.md), which walks a window of `git log` and classifies each commit by path and content signal. This step consumes that distribution: it does not recompute it.
 
 [tp]: https://martinfowler.com/bliki/TestPyramid.html
 

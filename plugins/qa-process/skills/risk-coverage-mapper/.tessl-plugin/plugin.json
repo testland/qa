@@ -1,9 +1,0 @@
-{
-  "name": "testland/risk-coverage-mapper",
-  "description": "Build-an-X workflow that produces a risk-to-test-coverage matrix - maps each risk in the product/release register to the tests / cases / monitoring that mitigate it. Walks the author through ingesting risks (from risk-matrix / product-risk-register-builder), inventorying test coverage (test cases via traceability-matrix-builder, automated tests via repo scan, production monitoring via observability dashboards), and computing per-risk coverage depth + identifying orphan risks (no coverage) + orphan tests (not linked to risks). Output is a Markdown matrix + executive summary. Use before a release sign-off or compliance audit, when the team must show which tests, cases, or monitors back each registered risk and which risks have nothing behind them.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.10.8"
-}

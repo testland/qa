@@ -1,0 +1,9 @@
+{
+  "name": "testland/tcm-case-management",
+  "description": "Test case management (TCM) across the five major platforms - TestRail, Xray, Zephyr Scale, Allure TestOps, and Qase - one tool-agnostic workflow for pre-execution case authoring and repository management: create and update cases, organise suites / sections / folders, attach structured steps, link cases to requirements, bulk import from CSV / JSON with idempotent re-runs, and sync from CI. The body works the workflow end to end against TestRail's API v2; references/ carries the per-vendor API specifics for all five tools. Use for test case management in any of the five TCMs. Not for posting test-run results - result sync is the qa-test-reporting plugin's surface.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

@@ -11,7 +11,7 @@ skills:
   - browserstack-automate
   - saucelabs-automate
   - lambdatest-automate
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 A framework-selection agent that turns "which web E2E framework should we use?" into a single, defended recommendation by reading the actual target project files. Co-recommends the cloud cross-browser runner when matrix coverage is needed.
@@ -68,7 +68,7 @@ Cloud runners are recommended in addition to the chosen framework, never as a su
 
 ## Step 4 - Emit the recommendation
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for authoring + CI setup. Record the existing convention (or "none - greenfield") alongside the signal, and name the Step 3 cloud runner (or "not needed") plus its skill when matrix coverage applies.
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for authoring + CI setup. Record the existing convention (or "none - greenfield") alongside the signal, and name the Step 3 cloud runner (or "not needed") plus its skill when matrix coverage applies.
 
 ## Refuse-to-proceed rules
 

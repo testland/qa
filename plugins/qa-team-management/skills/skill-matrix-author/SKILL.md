@@ -1,6 +1,6 @@
 ---
 name: skill-matrix-author
-description: "Build-an-X workflow that produces a QA team skill matrix - team members crossed with competency dimensions at explicit proficiency levels, each cell backed by observable evidence - then derives a gap analysis comparing the matrix against the team's required testing skills. Competency dimensions follow ISTQB CTAL-TM v3.0 chapter 3 (Managing the Team): professional, methodological, social, and personal competence. Maps the existing team on an ongoing basis - not a point-in-time score of external candidates, not the downstream prioritization of those gaps against a roadmap, and not one new hire's ramp plan. Use when a QA manager needs to know what the team can do today versus what its projects demand - before planning training, hiring, or work allocation."
+description: "Build-an-X workflow that produces a QA team skill matrix - team members crossed with competency dimensions at explicit proficiency levels, each cell backed by observable evidence - then derives the full gap analysis: classify each gap (coverage / capability / bus-factor / surplus), rank the gaps against the team's roadmap, and recommend a closing move per gap (train / peer-learn vs hire vs external expert). Competency dimensions follow ISTQB CTAL-TM v3.0 chapter 3 (Managing the Team): professional, methodological, social, and personal competence. Maps the existing team on an ongoing basis - not a point-in-time score of external candidates and not one new hire's ramp plan. Use when a QA manager needs to know what the team can do today versus what its projects demand - before quarterly planning, a training-budget decision, or opening a requisition."
 metadata:
   keywords: "skill-matrix, competency, qa-team, gap-analysis, ctal-tm, test-management, capability"
 ---
@@ -18,13 +18,13 @@ The output is two artifacts: the **matrix** (current state) and the **gap analys
 - A QA manager inherits or builds a team and needs a current-state capability map.
 - The team's work is changing (new tech stack, new test level, new domain) and the manager must know whether the team can cover it.
 - Before quarterly planning: the matrix plus gap analysis feeds the training budget and the hiring case.
-- As the required input for downstream gap prioritization against a concrete roadmap.
+- Before a training-budget decision or opening a requisition: Step 7's ranked gap report is the evidence the manager takes into those conversations.
 
 Do **not** use this skill to:
 
 - Score job candidates - that is `hiring-rubric-author` (in qa-hiring; point-in-time, per-candidate, anchored to interview questions).
 - Plan one new hire's first 90 days - that is `onboarding-plan-author` (in qa-hiring).
-- Write individual performance feedback - that is `performance-feedback-author`. The matrix describes capability, not performance; conflating them poisons the data (see Anti-patterns).
+- Write individual performance feedback. The matrix describes capability, not performance; conflating them poisons the data (see Anti-patterns).
 
 ## Step 1 - Capture the inputs
 
@@ -100,14 +100,68 @@ In the worked example: performance testing is a **bus-factor gap** (Dana alone a
 
 For each gap, list candidate development approaches. CTAL-TM 3.1.4 enumerates five: training and education, self-study, peer learning, mentoring or coaching, and training on the job - and notes they are not equally effective per competence area: "self-study and training, for example, are well suited for developing professional and methodological competence", while for social and personal competence "it is recommended to use approaches such as training and coaching, which are often more promising than self-study" (§3.1.4).
 
-Do not pick the response in this skill. Prioritizing gaps against the roadmap and recommending train-vs-hire is a separate downstream step; this skill ends by handing it a complete, evidence-backed matrix.
+## Step 7 - Prioritize gaps against the roadmap and recommend closing moves
+
+The matrix plus classification is still an inventory until it meets demand.
+This step joins supply (the matrix) against demand (the roadmap) and emits
+the report the manager takes into planning, budget, or requisition
+conversations.
+
+**7a - Extract demand from the roadmap.** Read the supplied roadmap, test
+strategy, or quarter plan. For each roadmap item, list the competencies it
+demands and the depth (how many people, at what level, by when). Per CTAL-TM
+3.1.2, required skills follow from the project context - system domain,
+architecture and technologies, and SDLC - not from a generic checklist.
+Roadmap items whose competency demand cannot be inferred go into an
+`UNMAPPED ROADMAP ITEMS` list rather than being guessed. **No roadmap or
+test-needs input, no gap report** - a matrix alone yields an inventory, not
+gaps; halt with `MISSING_DEMAND_INPUT`.
+
+**7b - Rank the gaps.** Order by: (1) roadmap proximity (a gap blocking next
+quarter outranks one blocking H2); (2) gap class (capability > bus-factor >
+coverage, because lead time to close differs); (3) blast radius of the
+roadmap items affected. Emit the ranking with the reasoning visible, not
+just the order.
+
+**7c - Recommend a closing move per gap**, stating the heuristic with each
+recommendation:
+
+- **Train / peer-learn** when an adjacent skill exists in-team at level 2+
+  and the deadline allows a ramp (coverage and bus-factor gaps, typically).
+- **Hire** when it is a capability gap on a sustained need with no in-team
+  seed skill, or when training demand exceeds the team's absorptive capacity
+  for the window.
+- **External expert / contract** for a one-off need; CTAL-TM 3.1 notes
+  bringing in external experts for tasks beyond the team's capabilities.
+
+**7d - Emit the gap report** (`docs/capability-gap-report-<YYYY-MM-DD>.md`):
+(1) inputs block naming the matrix file, its date, and the roadmap source;
+(2) ranked gap table (gap, class, roadmap items blocked, deadline, evidence
+row / column reference); (3) per-gap recommendation (move, rationale, first
+concrete step, owner suggestion); (4) `UNMAPPED ROADMAP ITEMS`; (5) a "not
+considered" section (individual performance, compensation, vendor selection).
+
+Gap-analysis guardrails:
+
+- **Never analyze a self-assessment-only matrix.** Cells above level 1 with
+  no artifact citations or observation notes mean the Step 3 evidence rule
+  was skipped; fix the matrix first and name the offending cells.
+- **Mark stale matrices** (older than ~2 quarters, or predating a team
+  change named in the roadmap) and recommend re-assessment; do not silently
+  analyze on top.
+- **Never rank individuals.** The unit of analysis is the capability column,
+  not the person; "who is the weakest tester" is a performance question and
+  out of scope.
+- **Never invent budget, salary, or market-availability figures** for the
+  train-vs-hire comparison; mark them `[DATA NOT SUPPLIED]`.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Self-assessment-only matrix | Unanchored ratings drift toward the middle; the gap analysis inherits fiction | Step 3 evidence rule: nothing above level 1 without an artifact |
-| Using the matrix in performance reviews | Members learn to inflate cells; the instrument dies as a planning tool | Keep capability (this skill) and performance (`performance-feedback-author`) as separate artifacts |
+| Using the matrix in performance reviews | Members learn to inflate cells; the instrument dies as a planning tool | Keep capability (this skill) and performance feedback as separate artifacts |
+| Gap analysis without a roadmap input | Supply without demand is an inventory, not a gap report | Step 7a halts on `MISSING_DEMAND_INPUT` |
 | 20+ columns | Nobody maintains it; cells go stale within a quarter | 8 - 12 columns; fold detail into evidence footnotes |
 | Matrix without required levels | Pure inventory; cannot say whether the team is in trouble | Step 5 requires a `req.` row per column |
 | Copying another team's columns | Required skills come from this team's context analysis (CTAL-TM 3.1.2), not a template | Derive columns from the team's own strategy and stack in Step 2 |
@@ -122,10 +176,8 @@ Do not pick the response in this skill. Prioritizing gaps against the roadmap an
 
 ## Hand-off targets
 
-- **Prioritize the gaps against the roadmap, recommend train vs hire** → a downstream gap-prioritization step that consumes this matrix.
-- **A capability gap becomes a hiring case** → `qa-jd-author` then the qa-hiring structured-interview chain.
-- **A growth conversation per member** → `tester-one-on-one-planner`; the member's matrix row seeds the growth half of the agenda.
-- **Level expectations over time** → `career-ladder-author`; the ladder defines progression, the matrix measures today.
+- **A capability gap becomes a hiring case** → `qa-jd-author` then the qa-hiring structured-interview chain; the matrix's competency vocabulary stays consistent with `hiring-rubric-author`.
+- **A gap resolves to training** → the matrix owner's growth conversations per member; the member's matrix row seeds the growth agenda.
 
 ## References
 

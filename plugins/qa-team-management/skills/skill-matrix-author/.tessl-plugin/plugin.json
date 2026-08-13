@@ -1,9 +1,9 @@
 {
   "name": "testland/skill-matrix-author",
-  "description": "Build-an-X workflow that produces a QA team skill matrix - team members crossed with competency dimensions at explicit proficiency levels, each cell backed by observable evidence - then derives a gap analysis comparing the matrix against the team's required testing skills. Competency dimensions follow ISTQB CTAL-TM v3.0 chapter 3 (Managing the Team): professional, methodological, social, and personal competence. Maps the existing team on an ongoing basis - not a point-in-time score of external candidates, not the downstream prioritization of those gaps against a roadmap, and not one new hire's ramp plan. Use when a QA manager needs to know what the team can do today versus what its projects demand - before planning training, hiring, or work allocation.",
+  "description": "Build-an-X workflow that produces a QA team skill matrix - team members crossed with competency dimensions at explicit proficiency levels, each cell backed by observable evidence - then derives the full gap analysis: classify each gap (coverage / capability / bus-factor / surplus), rank the gaps against the team's roadmap, and recommend a closing move per gap (train / peer-learn vs hire vs external expert). Competency dimensions follow ISTQB CTAL-TM v3.0 chapter 3 (Managing the Team): professional, methodological, social, and personal competence. Maps the existing team on an ongoing basis - not a point-in-time score of external candidates and not one new hire's ramp plan. Use when a QA manager needs to know what the team can do today versus what its projects demand - before quarterly planning, a training-budget decision, or opening a requisition.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.5"
+  "version": "1.1.6"
 }

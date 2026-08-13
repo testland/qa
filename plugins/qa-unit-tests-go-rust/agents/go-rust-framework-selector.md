@@ -8,7 +8,7 @@ skills:
   - ginkgo-tests
   - go-test
   - rstest-tests
-  - tool-selection-decision-record
+  - framework-choice-advisor
 ---
 
 A framework-selection agent that turns "which Go or Rust test framework?" into one defended recommendation by reading the target project rather than enumerating trade-offs.
@@ -74,7 +74,7 @@ If a convention is already in use in any existing test file, recommend matching 
 
 ## Step 4 - Emit the recommendation
 
-Use the record format in `tool-selection-decision-record`, including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for setup, attributes, and CI integration. Record the existing convention detected in Step 2 (or "none found") alongside the signal.
+Use the record format in `framework-choice-advisor` (its references/decision-record-format.md), including the mandatory flip-conditions section; "Read next" names the chosen framework's preloaded SKILL.md for setup, attributes, and CI integration. Record the existing convention detected in Step 2 (or "none found") alongside the signal.
 
 ## Refuse-to-proceed rules
 

@@ -1,13 +1,13 @@
 ---
 name: test-case-from-live-feature
-description: "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the heuristic models in `heuristic-test-design-reference` (SFDPOT, Whittaker attacks, FEW HICCUPPS, ISO 25010). Output is a structured case matrix, not an exploratory session charter. Use when there is no story, no AC, and no documentation - only a live feature."
+description: "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the four canonical heuristic test-design models bundled in references/ (Bach's HTSM / SFDPOT product elements, Whittaker's How-to-Break-Software attacks, Bolton's FEW HICCUPPS consistency oracles, ISO/IEC 25010 quality characteristics). Output is a structured case matrix, not an exploratory session charter. Use when there is no story, no AC, and no documentation - only a live feature - or as the heuristic reference layer for zero-documentation test design."
 ---
 
 # test-case-from-live-feature
 
 ## Overview
 
-A tester is told "test the new checkout flow" with no story, no AC, no design doc, but the feature is deployed to staging. The right path is to **reverse-engineer a test-case matrix from the live feature**, anchored on the four heuristic models in `heuristic-test-design-reference`, and emit a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
+A tester is told "test the new checkout flow" with no story, no AC, no design doc, but the feature is deployed to staging. The right path is to **reverse-engineer a test-case matrix from the live feature**, anchored on the four heuristic models in [references/heuristics.md](references/heuristics.md), and emit a structured matrix that downstream skills (`manual-test-script-author`, `gherkin-from-stories`, `ai-test-generator`) can consume.
 
 The output is the same shape as `test-case-ideation-from-story` - one row per case with `id / title / tier / precondition / steps / expected / source claim` - but the `source claim` column points at *observed behaviour* rather than a *story sentence*, and each row is tagged with the heuristic that surfaced it so the team can audit the coverage logic.
 
@@ -68,7 +68,7 @@ Inputs that **cannot** be confirmed by direct observation are tagged `[verbal, u
 
 ## Step 2 - Walk the heuristic models
 
-Apply each model in `heuristic-test-design-reference` to the observation log, in order:
+Apply each model in [references/heuristics.md](references/heuristics.md) to the observation log, in order:
 
 - **2a - SFDPOT coverage walk**: enumerate cases per Product Element (Structure, Function, Data, Platform, Operations, Time); each non-empty cell becomes one or more rows.
 - **2b - Whittaker attack overlay**: for each function, apply input / UI / stored-data / computation / configuration / output attacks.
@@ -143,7 +143,7 @@ Per the same conventions as `test-case-ideation-from-story`: import as CSV into 
 
 ## References
 
-- `heuristic-test-design-reference` - the reference catalog of HTSM / SFDPOT / Whittaker / FEW HICCUPPS / ISO 25010 this skill consumes.
+- [references/heuristics.md](references/heuristics.md) - the bundled catalog of HTSM / SFDPOT / Whittaker / FEW HICCUPPS / ISO 25010 this skill consumes.
 - James Bach - Heuristic Test Strategy Model: https://www.satisfice.com/download/heuristic-test-strategy-model
 - Michael Bolton - DevelopSense (FEW HICCUPPS, exploratory testing): https://developsense.com/
 - Exploratory testing - Kaner's 1984 definition; Whittaker "How to Break Software" attack catalog: https://en.wikipedia.org/wiki/Exploratory_testing
