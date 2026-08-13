@@ -83,5 +83,5 @@ exist in Jira / Linear / etc.; pair with traceability-matrix reconciliation.
   support.testrail.com/hc/en-us/articles/7077871398036-Cases.
 - TestRail API v2 Suites + Sections + Custom Fields docs -
   support.testrail.com/hc/en-us/categories/7076541806228.
-- Sibling-plugin neighbour: `testrail-integration` (qa-test-reporting) -
+- Sibling-plugin neighbour: `test-management-sync` (qa-test-reporting) -
   result sync via `add_results_for_cases`, not case authoring.

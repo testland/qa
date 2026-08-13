@@ -1,6 +1,6 @@
 ---
 name: test-coverage-targeter
-description: "Builds a \"what to test next\" recommendation by combining a coverage report (LCOV / Cobertura / coverage.py JSON / Jest JSON / JaCoCo XML) with the PR's `git diff`, ranking uncovered branches by risk × cost - risk weighted by McCabe cyclomatic complexity and code-churn frequency, cost weighted by the unit-test pyramid layer (unit tests cheaper than integration than E2E). Emits a prioritized list with concrete file:line targets and the test layer recommended for each. Use when a team has the budget to write 5 - 10 new tests and needs help picking which uncovered code to target first instead of blindly chasing 100% coverage."
+description: "Builds a \"what to test next\" recommendation by combining a coverage report (LCOV / Cobertura / coverage.py JSON / Jest JSON / JaCoCo XML) with the PR's `git diff`, ranking uncovered branches by risk × cost - risk weighted by McCabe cyclomatic complexity and code-churn frequency, cost weighted by the unit-test pyramid layer (unit tests cheaper than integration than E2E). Also carries the coverage debt ledger: a weekly per-file drift report over N historical main runs flagging `falling` (line% slid >M pp from peak), `stale` (flat coverage + high churn), and `orphan` (lost last covering test) files, whose rows feed the same targeting. Emits a prioritized list with concrete file:line targets and the test layer recommended for each. Use when a team has the budget to write 5 - 10 new tests and needs help picking which uncovered code to target first instead of blindly chasing 100% coverage, or when specific modules are eroding silently while whole-repo coverage looks fine."
 ---
 
 # test-coverage-targeter
@@ -71,7 +71,7 @@ Per language tool:
 - LCOV: parse `BRDA:<line>,<block>,<branch>,<taken>` records;
   `taken == '-'` is uncovered. Use `lcov-analysis`.
 - Cobertura: parse `<line branch="true" condition-coverage="50% (1/2)"/>`;
-  use `cobertura-analysis`.
+  use the Cobertura reference in `lcov-analysis`.
 - Jest JSON `b` field: arrays of arm hit counts; uncovered = 0.
   Use `jest-coverage-analysis`.
 - JaCoCo XML: parse `<counter type="BRANCH" missed="N" covered="M"/>`
@@ -247,6 +247,57 @@ Step 7) but don't fail the build on it:
     path: targets.md
 ```
 
+## Coverage debt ledger (drift over time)
+
+Aggregate coverage hides per-file decay: a repo can sit at 82%
+overall while the payment module slides from 95% to 60% across 30
+PRs, none of which crossed a gate threshold. The debt ledger is the
+**weekly, informational** (never gating) companion to the per-PR
+targeting above - it walks a rolling window of persisted coverage
+history and flags files on three axes:
+
+| Axis           | Signal                                                  |
+|----------------|---------------------------------------------------------|
+| **Falling**    | line% (or branch%) dropped >M pp (default 5) from its window peak. |
+| **Stale**      | Coverage flat (<1pp variance) while churn is high (≥10 commits / 90 days). |
+| **Orphan**     | Lost its last covering test (every covering test was deleted). |
+
+Mechanics:
+
+1. **Persist history**: each main-branch run uploads its parsed
+   coverage as `coverage-history/<sha>-<timestamp>.json`
+   (`{sha, timestamp, files: [{path, line_pct, branch_pct}]}`);
+   ~90 days retention is enough to catch quarterly drift.
+2. **Detect falling via peak-vs-now**, not last-vs-now - a sequence
+   of small drops (-1pp, -1pp, -1pp...) never crosses a per-run gate
+   but adds up:
+
+```python
+peak = max(pct for _, _, pct in series)      # over the last ~30 runs
+drop = peak - series[-1][2]
+if drop >= 5.0:  # FALL_THRESHOLD_PP
+    flag('falling', path, peak, drop)
+```
+
+3. **Detect stale** by pairing coverage variance <1pp with
+   `git log --since='90 days ago' -- <path>` churn ≥10 (checkout with
+   `fetch-depth: 0` or every file looks low-churn).
+4. **Detect orphans** from the per-test → source map (see
+   `regression-suite-selector` in qa-test-impact-analysis): a file
+   whose covering tests were all deleted is at 0% now, however fine
+   the aggregate looks.
+5. **Render one stack-ranked backlog**, highest-risk first -
+   **orphan → falling (>10pp) → falling (5-10pp) → stale** - showing
+   absolute % alongside the drop (100%→95% is less urgent than
+   60%→55%). Run it weekly on a schedule and refresh one GitHub
+   issue so debt history stays visible; never per-PR (that conflates
+   the gate's job with the ledger's job) and never gating (refactors
+   that remove dead code legitimately "drop" coverage).
+
+Each ledger row then feeds the targeting workflow above: the
+falling / orphan file becomes the Step 1 input, and Steps 2-7 turn
+it into specific file:line test targets.
+
 ## Anti-patterns
 
 | Anti-pattern                                                            | Why it fails                                                                  | Fix |
@@ -257,7 +308,7 @@ Step 7) but don't fail the build on it:
 | Treating cyclomatic complexity as a goal                                 | Per [cyclomatic][cc]: reducing complexity isn't proven to reduce defects.   | Use complexity as a risk indicator only (Step 3). |
 | Ignoring PR-changed files                                                | A new function added in the PR with 0 coverage isn't surfaced.               | PR-touch boost (Step 4). |
 | Recommending tests for code marked `# pragma: no cover` / `istanbul ignore` | The team explicitly excluded that code.                                       | Skip files / lines with explicit ignores. |
-| Blocking the build on the recommendation                                  | Recommendation is opinion; gating turns it into bureaucracy.                  | Advisory comment only (Step 8); the actual gate is `lcov-analysis` / `cobertura-analysis`. |
+| Blocking the build on the recommendation                                  | Recommendation is opinion; gating turns it into bureaucracy.                  | Advisory comment only (Step 8); the actual gate is `lcov-analysis` (LCOV or Cobertura). |
 
 ## Limitations
 
@@ -288,8 +339,7 @@ Step 7) but don't fail the build on it:
   `M = E - N + 2`, threshold convention (1 - 10 / 11 - 20 / 21 - 50 /
   >50), the warning that "reducing the cyclomatic complexity of
   code is not proven to reduce the number of errors or bugs".
-- `lcov-analysis`,
-  `cobertura-analysis`,
+- `lcov-analysis` (LCOV + Cobertura),
   `jest-coverage-analysis`,
   `jacoco-analysis`,
   `coverage-py-analysis` - 

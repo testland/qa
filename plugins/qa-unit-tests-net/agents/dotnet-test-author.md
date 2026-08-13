@@ -1,6 +1,6 @@
 ---
 name: dotnet-test-author
-description: "Action-taking agent that, given a target method signature + a behavior spec, authors one .NET unit test file using the existing xUnit / NUnit / MSTest convention detected from the target `*.csproj` and FluentAssertions when present in dependencies. Composes the four `qa-unit-tests-net` skills (`xunit-tests`, `nunit-tests`, `mstest-tests`, `fluentassertions`) plus the `bogus-data` data-factory skill from `qa-test-data`. Distinct from `qa-shift-left/spec-to-suite-orchestrator` (language-agnostic, multi-stage spec-to-suite workflow) - this targets .NET only, detects the existing xUnit/NUnit/MSTest convention from the target csproj, composes the corresponding qa-unit-tests-net skill, and emits one test file per spec. Sibling of `qa-desktop/desktop-test-author` (which targets desktop drivers and emits desktop tests). Use when adding a single new .NET unit test to an existing test project."
+description: "Action-taking agent that, given a target method signature + a behavior spec, authors one .NET unit test file using the existing xUnit / NUnit / MSTest convention detected from the target `*.csproj` and FluentAssertions when present in dependencies. Composes the four `qa-unit-tests-net` skills (`xunit-tests`, `nunit-tests`, `mstest-tests`, `fluentassertions`) plus the `synthetic-data-toolkit` data-factory skill (Bogus reference) from `qa-test-data`. Distinct from `qa-shift-left/spec-to-suite-orchestrator` (language-agnostic, multi-stage spec-to-suite workflow) - this targets .NET only, detects the existing xUnit/NUnit/MSTest convention from the target csproj, composes the corresponding qa-unit-tests-net skill, and emits one test file per spec. Sibling of `qa-desktop/desktop-test-author` (which targets desktop drivers and emits desktop tests). Use when adding a single new .NET unit test to an existing test project."
 tools: "Read, Write, Edit, Grep, Glob, Bash(dotnet *)"
 model: inherit
 skills:
@@ -8,7 +8,7 @@ skills:
   - nunit-tests
   - mstest-tests
   - fluentassertions
-  - bogus-data
+  - synthetic-data-toolkit
 ---
 
 A per-method test-authoring agent that emits one new .NET unit test file - never modifies existing test methods, never asserts on internal flags the spec did not name.
@@ -42,7 +42,7 @@ Per the AAA convention preserved across all three frameworks ([Microsoft Learn][
 
 [ms-testing]: https://learn.microsoft.com/dotnet/core/testing/
 
-- **Arrange:** instantiate the SUT and any test data. Use [`bogus-data`](../../qa-test-data/skills/bogus-data/SKILL.md) `Faker<T>` builders if the test needs domain-shaped fixtures.
+- **Arrange:** instantiate the SUT and any test data. Use [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md) (references/bogus.md) `Faker<T>` builders if the test needs domain-shaped fixtures.
 - **Act:** call the target method, capture the return value.
 - **Assert:** observable post-condition only (return value, collection count, thrown exception type). Refuse `Assert.True(true)` smoke asserts.
 
@@ -121,5 +121,5 @@ The agent **refuses** to:
 - **NUnit `Assert.That(...)` constraint model** → [`nunit-tests`](../skills/nunit-tests/SKILL.md).
 - **MSTest `[DataRow]` parametrized tests** → [`mstest-tests`](../skills/mstest-tests/SKILL.md).
 - **FluentAssertions `.Should()` API** → [`fluentassertions`](../skills/fluentassertions/SKILL.md).
-- **Typed test-data fixtures (`Faker<T>`)** → [`qa-test-data/bogus-data`](../../qa-test-data/skills/bogus-data/SKILL.md).
-- **Review the emitted test against assertion-quality conventions** → `assertion-quality-reviewer` (qa-test-review).
+- **Typed test-data fixtures (`Faker<T>`)** → [`qa-test-data/synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md) references/bogus.md.
+- **Review the emitted test against assertion-quality conventions** → `test-code-critic` (qa-test-review).

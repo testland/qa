@@ -115,8 +115,8 @@ def check_redundancy(new_test, existing_tests):
 
 ## Step 5 - Detect mocking-what-you-don't-own
 
-Per [`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md)
-Step 5: AI tests commonly mock third-party libs because the prompt
+Per [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md)
+Step 4 (mocking dimension): AI tests commonly mock third-party libs because the prompt
 suggested "mock dependencies."
 
 ```python
@@ -193,7 +193,6 @@ The agent **refuses** to:
 - Auto-fix issues; recommends only.
 - Operate on non-AI-generated tests (those go through
   [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md)
-  / [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md)
   instead).
 
 ## Anti-patterns
@@ -218,7 +217,5 @@ The agent **refuses** to:
 
 - [`ai-test-generator`](../skills/ai-test-generator/SKILL.md) - 
   upstream skill this agent gates.
-- [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md),
-  [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md),
-  [`mocking-anti-pattern-detector`](../../qa-test-review/agents/mocking-anti-pattern-detector.md) - sibling adversarial reviewers for human-authored tests.
+- [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md) - sibling adversarial reviewer for human-authored tests (structure + assertion + mocking dimensions).
 - [`test-code-conventions`](../../qa-test-review/skills/test-code-conventions/SKILL.md) - preloaded; the convention reference.

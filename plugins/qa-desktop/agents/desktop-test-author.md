@@ -160,4 +160,4 @@ The agent emits the `LoginTests.cs` block above plus three new `LoginScreen` pro
 - **Pick the driver before authoring** → [`desktop-driver-selector`](desktop-driver-selector.md).
 - **Scaffold the whole test project from zero** → [`desktop-test-scaffolder`](desktop-test-scaffolder.md).
 - **Pick the .NET test framework if not yet decided** → upstream `dotnet-test-framework-selector` (qa-unit-tests-net).
-- **Review the emitted test against assertion-quality conventions** → `assertion-quality-reviewer` (qa-test-review).
+- **Review the emitted test against assertion-quality conventions** → `test-code-critic` (qa-test-review).

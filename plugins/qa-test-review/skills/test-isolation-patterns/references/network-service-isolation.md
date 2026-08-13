@@ -4,7 +4,7 @@ Deep reference for `test-isolation-patterns` SKILL.md. Consult when a test touch
 
 ## Stub (canned response)
 
-Use when the test doesn't care about the network itself. Reach for a stub library - [nock](https://github.com/nock/nock), [WireMock](https://wiremock.org/), [Mountebank](http://www.mbtest.org/) - or the `msw-handlers` / `wiremock-stubs` / `mountebank-imposters` skills in qa-test-data.
+Use when the test doesn't care about the network itself. Reach for a stub library - [nock](https://github.com/nock/nock), [WireMock](https://wiremock.org/), [Mountebank](https://github.com/bbyars/mountebank) - or the `msw-handlers` / `wiremock-stubs` skills in qa-test-data (Mountebank lives in wiremock-stubs references/).
 
 ## Contract test
 
@@ -23,4 +23,4 @@ Use for a smoke / canary test in a staging tier with a dedicated test partition,
 | One global stub for the whole suite | Tests cross-couple through the stub configuration |
 | Contract test with no contract refresh | Stub goes stale; tests pass while production breaks |
 
-See also the `msw-handlers`, `wiremock-stubs`, and `mountebank-imposters` skills in qa-test-data for stub implementation, and the SKILL's pattern-selection guide for when each pattern applies.
+See also the `msw-handlers` and `wiremock-stubs` skills in qa-test-data for stub implementation (multi-protocol Mountebank in wiremock-stubs references/), and the SKILL's pattern-selection guide for when each pattern applies.

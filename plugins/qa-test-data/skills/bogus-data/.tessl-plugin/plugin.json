@@ -1,9 +1,0 @@
-{
-  "name": "testland/bogus-data",
-  "description": "Authors .NET test fixtures using the Bogus library - fluent typed `Faker` builders with `.RuleFor` per property, generation via `Generate()` / `GenerateBetween(min, max)` / `GenerateLazy()`, and `UseSeed()` for reproducibility. Provides the Bogus equivalent of Python's Faker / Ruby's FactoryBot. Use when the project is C# / F# / VB.NET and the team needs typed fixture creation.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.5"
-}

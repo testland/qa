@@ -1,9 +1,0 @@
-{
-  "name": "testland/synthetic-data-tool-selector",
-  "description": "Chooses between the four mainstream synthetic test-data generators - Faker (JavaScript), FactoryBot (Ruby), mimesis (Python), Bogus (.NET) - picks the right tool by language and use case (raw value generation vs. typed factory orchestration), shows side-by-side equivalents for the same fixture across all four, and emits the language-appropriate code. Use when starting test-data work on a project and the team wants the \"which tool should I use\" decision documented.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.8"
-}

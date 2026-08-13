@@ -242,4 +242,4 @@ Secrets configured in **Project Settings → CI/CD → Variables**
 - `ci-test-job-conventions` - cross-CI conventions; CircleCI patterns
   live in its references/circleci.md.
 - `junit-xml-analysis` - JUnit XML parser.
-- `cobertura-analysis` - Cobertura parser (GitLab's native coverage format).
+- `lcov-analysis` - Cobertura parser (GitLab's native coverage format).

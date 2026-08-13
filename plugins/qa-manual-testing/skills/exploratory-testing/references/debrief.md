@@ -148,7 +148,7 @@ not that the tester is slow.
 - Staging was down for ~10 min mid-session; lost momentum.
 
 **Recommendations for next session:**
-- Pre-seed promo codes via a fixture per `synthetic-data-tool-selector`.
+- Pre-seed promo codes via a fixture per `synthetic-data-toolkit`.
 - Verify staging is up before session start.
 
 ## Feelings

@@ -1,9 +1,9 @@
 {
   "name": "testland/currents-integration",
-  "description": "Wires Currents.dev cross-run test analytics into a Playwright suite: installs `@currents/playwright`, authors `currents.config.ts` (env-sourced `recordKey` + `projectId`), registers `currentsReporter()`, enables trace/video/screenshot artifacts, and runs via `npx pwc` so per-test traces stream to the Currents dashboard with over-time flakiness, slowest-test, and pass-rate trends. Use when a Playwright suite needs hosted cross-run suite-health analytics; for a static per-run report use extentreports or allure-reports, and to sync results into Jira test management use zephyr-integration or xray-integration.",
+  "description": "Wires Currents.dev cross-run test analytics into a Playwright suite: installs `@currents/playwright`, authors `currents.config.ts` (env-sourced `recordKey` + `projectId`), registers `currentsReporter()`, enables trace/video/screenshot artifacts, and runs via `npx pwc` so per-test traces stream to the Currents dashboard with over-time flakiness, slowest-test, and pass-rate trends. Use when a Playwright suite needs hosted cross-run suite-health analytics; for a static per-run report use extentreports or allure-reports, and to sync results into TestRail / Xray / Zephyr test management use test-management-sync.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.11"
+  "version": "1.4.12"
 }

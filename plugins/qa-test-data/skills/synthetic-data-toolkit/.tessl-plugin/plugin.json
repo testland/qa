@@ -1,0 +1,9 @@
+{
+  "name": "testland/synthetic-data-toolkit",
+  "description": "Umbrella for the synthetic test data generators beyond plain Faker - FactoryBot (Ruby factories with traits, associations, and build / create / build_stubbed strategies), Mimesis (fast type-hinted Python generator with the Schema/Field bulk pattern and 46 locales), and Bogus (.NET typed `Faker<T>` builders with `.RuleFor` / `StrictMode` / `UseSeed`). Picks the right generator by language and job, shows side-by-side equivalents of the same fixture across all four ecosystems, and carries each tool's full workflow in references/ (factory-bot.md, mimesis.md, bogus.md). faker-data stays the default for plain field values in Python / JS / Ruby; use this skill when the project needs typed factory orchestration, .NET fixtures, or a documented \"which tool should I use\" decision.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

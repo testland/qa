@@ -1,19 +1,15 @@
 # qa-test-data
 
-Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock / MSW / Mountebank mock servers; synthetic-data-tool-selector dispatcher; golden-file conventions + manager; seed-data curator; parameterized / boundary / negative test case generators; synthetic PII; malicious payload bank.
+Test data engineering: Faker as the default generator plus the synthetic-data-toolkit umbrella (FactoryBot / mimesis / Bogus); WireMock (with Mountebank multi-protocol reference) and MSW mock servers; golden-file conventions + manager; seed-data curator; parameterized / boundary / negative test case generators; synthetic PII; malicious payload bank.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [faker-data](skills/faker-data/SKILL.md) | Faker (Python `faker` / JS `@faker-js/faker` / Ruby `faker-ruby`) - fields, locales, deterministic seeding. |
-| Skill | [factory-bot-data](skills/factory-bot-data/SKILL.md) | Ruby FactoryBot factories with traits, associations, sequences; build / create / build_stubbed strategies; pairs with Faker. |
-| Skill | [mimesis-data](skills/mimesis-data/SKILL.md) | Python mimesis (fastest pure-Python generator); 46 locales; Schema/Field typed-dict pattern. |
-| Skill | [bogus-data](skills/bogus-data/SKILL.md) | .NET Bogus typed `Faker<T>` builders with `.RuleFor` / `.StrictMode` / `.UseSeed`; `Generate*` for single / lazy / batch. |
-| Skill | [wiremock-stubs](skills/wiremock-stubs/SKILL.md) | JVM HTTP mock server: `stubFor` matchers + `willReturn` + `verify()` + dynamic ports + scenarios. |
+| Skill | [faker-data](skills/faker-data/SKILL.md) | Faker (Python `faker` / JS `@faker-js/faker` / Ruby `faker-ruby`) - fields, locales, deterministic seeding. The family default. |
+| Skill | [synthetic-data-toolkit](skills/synthetic-data-toolkit/SKILL.md) | Umbrella for the generators beyond Faker: dispatch by language + job; side-by-side patterns; full FactoryBot (Ruby), mimesis (Python), and Bogus (.NET) workflows in references/. |
+| Skill | [wiremock-stubs](skills/wiremock-stubs/SKILL.md) | JVM HTTP mock server: `stubFor` matchers + `willReturn` + `verify()` + dynamic ports + scenarios; Mountebank multi-protocol workflow in references/. |
 | Skill | [msw-handlers](skills/msw-handlers/SKILL.md) | JS / TS HTTP mocking via Mock Service Worker: `http.get` / `HttpResponse.json` handlers; browser + Node setup. |
-| Skill | [mountebank-imposters](skills/mountebank-imposters/SKILL.md) | Multi-protocol mocking (HTTP, TCP, SMTP, gRPC, more) via `POST /imposters`; predicates + responses; record-playback. |
-| Skill | [synthetic-data-tool-selector](skills/synthetic-data-tool-selector/SKILL.md) | Dispatcher across Faker / FactoryBot / mimesis / Bogus by language and use case; side-by-side patterns. |
 | Skill | [golden-file-conventions](skills/golden-file-conventions/SKILL.md) | Reference: snapshot/golden file naming, layout, sanitization, severity tiering, update-vs-fix decision tree. |
 | Skill | [seed-data-curator](skills/seed-data-curator/SKILL.md) | Build a reproducible E2E seed dataset; coverage matrix; persistence formats; intentional refresh cadence. |
 | Skill | [pairwise-test-case-generator](skills/pairwise-test-case-generator/SKILL.md) | All-pairs / pairwise combinatorial generation from a multi-input spec; constraints; coverage report. |
@@ -24,7 +20,16 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 | Skill | [negative-test-generator](skills/negative-test-generator/SKILL.md) | Generate rejection-path tests mirroring happy-path: schema / auth / authz / rate / conflict / adversarial / server-error categories. |
 | Agent | [golden-file-manager](agents/golden-file-manager.md) | Active maintenance: add / update / prune snapshot baselines; refuse updates whose diff doesn't match PR intent. |
 | Agent | [test-data-setup-agent](agents/test-data-setup-agent.md) | Stands up a full test-data setup for a feature: fixtures + seed data, composing the plugin's generators. |
-| Agent | [mock-server-composer](agents/mock-server-composer.md) | Detects the stack and generates the matching mock-server config (WireMock / MSW / Mountebank). |
+
+## Choosing WireMock vs MSW vs Mountebank
+
+| Project shape | Mock server |
+| --- | --- |
+| JVM (Java / Kotlin / Scala), HTTP dependencies | `wiremock-stubs` - in-process `@WireMockTest`, typed DSL |
+| JS / TS (browser or Node), HTTP dependencies | `msw-handlers` - one handler set shared across Vitest / Jest / Cypress / Playwright |
+| Any stack with non-HTTP dependencies (TCP, SMTP, LDAP, gRPC, WebSockets) | Mountebank - see `wiremock-stubs` references/mountebank.md |
+
+Pick one per project; add Mountebank only when a dependency genuinely isn't HTTP.
 
 ## Install
 

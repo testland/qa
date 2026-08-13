@@ -8,7 +8,7 @@ skills:
   - allure-reports
   - coverage-diff-reporter
   - currents-integration
-  - testrail-integration
+  - test-management-sync
 ---
 
 A morning roll-up that takes the previous day's CI artifacts across every test suite and every environment and emits one structured summary the team reads in stand-up.
@@ -154,4 +154,4 @@ The agent **refuses** to:
 - [Grafana k6 end-of-test summary](https://grafana.com/docs/k6/latest/results-output/end-of-test/) - `metrics` shape, threshold-breach signal.
 - [axe-core API](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#results-object) - violation list, impact taxonomy (`minor`/`moderate`/`serious`/`critical`).
 - [PractiTest 2026 State of Testing](https://www.practitest.com/state-of-testing/) - 19.9% of teams use AI for risk identification.
-- Preloaded skills: [`junit-xml-analysis`](../skills/junit-xml-analysis/SKILL.md), [`allure-reports`](../skills/allure-reports/SKILL.md), [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md), [`currents-integration`](../skills/currents-integration/SKILL.md), [`testrail-integration`](../skills/testrail-integration/SKILL.md).
+- Preloaded skills: [`junit-xml-analysis`](../skills/junit-xml-analysis/SKILL.md), [`allure-reports`](../skills/allure-reports/SKILL.md), [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md), [`currents-integration`](../skills/currents-integration/SKILL.md), [`test-management-sync`](../skills/test-management-sync/SKILL.md).

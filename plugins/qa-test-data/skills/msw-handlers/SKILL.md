@@ -29,8 +29,8 @@ Cypress browser test.
   layered on top of project-wide defaults.
 
 If the project is JVM, use `wiremock-stubs`.
-For multi-protocol mocking, see
-`mountebank-imposters`.
+For multi-protocol mocking (TCP / SMTP / LDAP / gRPC), see the
+Mountebank reference in `wiremock-stubs`.
 
 ## Install
 
@@ -212,6 +212,5 @@ service worker script is in `public/`.
 - [msw-getting-started][gs] - install, handler authoring, browser
   vs node setup, lifecycle hooks, `server.use()` per-test overrides.
 - MSW Docs - https://mswjs.io/docs/
-- `wiremock-stubs` - JVM counterpart.
-- `mountebank-imposters` - 
-  multi-protocol alternative.
+- `wiremock-stubs` - JVM counterpart; its references/mountebank.md
+  covers the multi-protocol alternative.

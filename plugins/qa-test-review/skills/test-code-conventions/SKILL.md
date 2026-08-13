@@ -1,6 +1,6 @@
 ---
 name: test-code-conventions
-description: "Pure-reference catalog of test-code conventions: AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming (`{sut}_{scenario}_{expected}`), assertion specificity, mocking rationale (state vs behavior, fake vs mock), fixture-coupling rules, and the magic-number / hard-coded-string anti-patterns; the E2E selector-priority and web-first-assertion conventions live in references/. Use as the shared rule book a test-code review cites back to, or as onboarding for what makes a test code-reviewable; to score a test's quality on weighted axes use test-design-scorecard, and for setup/teardown isolation specifically use test-isolation-patterns."
+description: "Pure-reference catalog of test-code conventions: AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming (`{sut}_{scenario}_{expected}`), assertion specificity, mocking rationale (state vs behavior, fake vs mock), fixture-coupling rules, the magic-number / hard-coded-string anti-patterns, and step design (§11: FIRST principles, step granularity, the mechanical → page → business abstraction layers, the rule-of-three extraction heuristic, declarative phrasing); the E2E selector-priority, web-first-assertion, and step-grouping conventions live in references/. Use as the shared rule book a test-code review cites back to, or as onboarding for what makes a test code-reviewable; to score a test's quality on weighted axes use test-design-scorecard, and for setup/teardown isolation specifically use test-isolation-patterns."
 ---
 
 # test-code-conventions
@@ -268,6 +268,71 @@ warming caches) has a coupling problem. The remedies:
 The whole-suite cost of slow setup compounds: 10 tests × 2s =
 +20s per CI run × 50 PRs/day = 1000s/day burned.
 
+## §11 - Step design (architecture tier)
+
+Within an "Act" phase, *what is one step?* The architecture-tier
+rules for step granularity, layering, and phrasing:
+
+### FIRST principles
+
+Per [Robert C. Martin - *Clean Code* (2008), ch. 9 "Unit Tests"](https://www.oreilly.com/library/view/clean-code-a/9780136083238/):
+**F**ast (slow tests don't get run), **I**ndependent (each test sets
+up its own world - per [Fowler on non-determinism](https://martinfowler.com/articles/nonDeterminism.html),
+the prerequisite to parallel execution), **R**epeatable (any
+environment), **S**elf-validating (no human reads logs to determine
+the outcome), **T**imely (written close to the production code).
+A step that violates FIRST is the smell; the rules below are the fix.
+
+### Step granularity
+
+A "step" is the minimal unit a reader can name in business terms -
+one *meaningful operation*, not one click. Each step does exactly
+one of Arrange / Act / Assert / Annotate; steps that mix two are
+split (`await page.click('#submit'); expect(toast).toBeVisible();`
+is an Act and an Assert). Aim for **3-8 steps per test body**; >15
+signals the test does too much or sits at the wrong abstraction.
+
+### Abstraction layers
+
+Three layers, named consistently: **business** (`customer.signsIn()`,
+`checkout.placesOrder()`) → **page / component** (Page Objects,
+Tasks: `LoginPage.submit({...})`) → **mechanical** (`page.click()`,
+`page.fill()`). **The test body lives at the business layer** - a
+body full of mechanical clicks reads as a script, not a
+specification. Exceptions that legitimately stay mechanical: a11y
+keyboard-order tests, visual regression, selector-resilience tests -
+tag them (`@a11y`, `@visual`) so reviewers don't refactor them.
+
+### Extraction: the rule of three
+
+Per [Fowler - *Refactoring* (2nd ed. 2018)](https://martinfowler.com/books/refactoring.html):
+inline at first occurrence, note at the second, extract at the
+third. Always extract a step that is 5+ mechanical lines, appears in
+3+ tests, or needs an explanatory comment (the comment is the smell
+that the abstraction is missing). Don't pre-extract on the first
+test (YAGNI), and never hide Act + Arrange in one helper
+(`setupAndDoThing()`).
+
+### Phrasing and naming
+
+Prefer declarative ("the customer signs in") over imperative
+("enters email, clicks submit") - the test: *would the wording
+change if the implementation changed?* If yes, rewrite (per
+[Cucumber - Better Gherkin](https://cucumber.io/docs/bdd/better-gherkin/),
+which applies beyond Gherkin). Step naming follows the same
+discipline as §3 test naming (per
+[Osherove - *The Art of Unit Testing*](https://www.artofunittesting.com/)):
+read the body aloud - it should sound like a specification, not
+"click, type, click, expect-truthy".
+
+The AAA / Given-When-Then vocabulary mapping, the phase-separation
+rule, and the full declarative-vs-imperative tables with
+when-imperative-is-correct cases are in
+[references/step-grouping-and-phrasing.md](references/step-grouping-and-phrasing.md).
+Where extracted steps live (Page Object / Screenplay / App Actions)
+is `object-model-patterns`; fixture lifecycle is
+`test-isolation-patterns`.
+
 ## Worked example - reviewing one test file
 
 **The file under review (`checkout.spec.ts`):**
@@ -342,6 +407,15 @@ file, see [references/e2e-selector-and-assertion-conventions.md](references/e2e-
 - E2E selector priority + web-first assertions (§8 / §9), with these
   citations, in
   [references/e2e-selector-and-assertion-conventions.md](references/e2e-selector-and-assertion-conventions.md).
+- Step grouping (AAA / Given-When-Then mapping) + declarative
+  phrasing (§11) in
+  [references/step-grouping-and-phrasing.md](references/step-grouping-and-phrasing.md).
+- §11 canonical sources: Martin - *Clean Code* ch. 9 (FIRST,
+  ISBN 978-0132350884); Fowler - *Refactoring* 2nd ed. (rule of
+  three); Osherove - *The Art of Unit Testing* (naming); Meszaros -
+  *xUnit Test Patterns* (ISBN 978-0131495050); Cucumber - *Better
+  Gherkin* (declarative phrasing); ISTQB glossary - [test step](https://glossary.istqb.org/en_US/term/test-step) /
+  [test procedure](https://glossary.istqb.org/en_US/term/test-procedure).
 
 [tl]: https://testing-library.com/docs/queries/about/
 [pwb]: https://playwright.dev/docs/best-practices

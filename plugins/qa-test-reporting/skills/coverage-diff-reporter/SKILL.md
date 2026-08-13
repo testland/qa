@@ -34,7 +34,7 @@ This skill **builds a coverage diff report** that solves the
 
 This skill **does not** decide pass/fail - that's the gate's job
 (see `lcov-analysis` or
-`cobertura-analysis` Step 5). This
+`lcov-analysis` references/cobertura.md). This
 skill just makes the diff legible.
 
 ## Step 1 - Pick the parser
@@ -44,7 +44,7 @@ Match the existing CI's reporter:
 | Existing reporter           | Use                                                      |
 |-----------------------------|----------------------------------------------------------|
 | LCOV `.info`                | `lcov-analysis` parser      |
-| Cobertura XML               | `cobertura-analysis` parser |
+| Cobertura XML               | `lcov-analysis` (references/cobertura.md) parser |
 | Jest JSON / V8 coverage     | Convert to LCOV first (`jest --coverageReporters=lcov`)  |
 | JaCoCo XML                  | Use `jacoco-analysis`, or convert to Cobertura |
 | coverage.py                 | `coverage xml` → Cobertura, OR `py2lcov` → LCOV          |
@@ -248,7 +248,7 @@ report as the PR evolves.
 
 - `lcov-analysis` - LCOV parser this
   skill consumes.
-- `cobertura-analysis` - Cobertura
+- `lcov-analysis` - LCOV + Cobertura
   parser this skill consumes.
 - `jest-coverage-analysis`,
   `jacoco-analysis`,

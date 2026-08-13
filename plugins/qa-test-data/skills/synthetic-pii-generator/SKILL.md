@@ -11,8 +11,7 @@ description: "Generates realistic-but-fake personally identifiable information (
 the same format validators) but **never matches** a real person. This
 skill wraps the synthetic-data libraries
 (`faker-data`,
-`mimesis-data`,
-`bogus-data`) with PII-specific
+the `synthetic-data-toolkit` generators) with PII-specific
 constraints to produce format-valid but identity-safe values.
 
 **Default: Faker (Python)** - broadest locale coverage and the most
@@ -201,7 +200,6 @@ jq -r '.users[].ssn' fixtures/users-test.yaml | grep -v '^9[0-9]{2}-' && echo 'W
 - Adyen testing - https://docs.adyen.com/development-resources/testing - alternative test card set.
 - NIST SP 800-122 - Guide to Protecting the Confidentiality of PII.
 - `faker-data`,
-  `mimesis-data`,
-  `bogus-data` - value-engine skills.
+  `synthetic-data-toolkit` - value-engine skills.
 - `seed-data-curator` - downstream
   skill that uses this for E2E seed PII fields.

@@ -27,8 +27,8 @@ to references/.
 **Differentiation vs result sync:** this skill operates on the *case
 repository* - create, update, organise, traceability - a strictly
 pre-execution concern. Posting test-run results (pass/fail, status updates)
-is the qa-test-reporting plugin's `testrail-integration` / `xray-integration`
-/ `zephyr-integration` surface.
+is the qa-test-reporting plugin's `test-management-sync` / `test-management-sync`
+/ `test-management-sync` surface.
 
 ## When to use
 
@@ -292,5 +292,5 @@ Per-vendor response shapes and permalink formats are in each reference.
 - Sibling references:
   `test-case-anatomy-reference` - the canonical case anatomy + tracker schema map.
 - Sibling-plugin neighbours:
-  `testrail-integration`, `xray-integration`, `zephyr-integration`
+  `test-management-sync`, `test-management-sync`, `test-management-sync`
   (qa-test-reporting plugin) - post-execution result sync, not case authoring.

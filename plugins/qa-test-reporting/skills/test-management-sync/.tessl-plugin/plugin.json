@@ -1,0 +1,9 @@
+{
+  "name": "testland/test-management-sync",
+  "description": "Syncs automated test results into test management tools - TestRail (standalone, `add_run` + batched `add_results_for_cases`), Xray for Jira (JWT auth + `/api/v2/import/execution/*`), and Zephyr Scale (Bearer token + `/testexecutions`) - from CI. The body carries the vendor-independent push-results workflow (map tests to case IDs, open a run / execution / cycle per build, batch results back, close on main only, run as an `if: always()` step) with TestRail as the worked example; full vendor specifics live in references/ (testrail.md, xray.md, zephyr.md). Use when automated suites must keep the team's test management view in sync without a human copy-paste step; for hosted cross-run flakiness analytics rather than TCM sync use currents-integration, and for authoring / migrating test CASES rather than pushing results see qa-test-management's tcm-case-management.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

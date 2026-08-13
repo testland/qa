@@ -1,6 +1,6 @@
 ---
 name: wiremock-stubs
-description: "Authors WireMock stub mappings for HTTP service mocking - `stubFor` with verb/path/header matchers + `willReturn` response shaping, lifecycle via `WireMockServer` (start / stop) or JUnit `WireMockExtension`, request verification via `verify()`, and dynamic-port allocation for parallel tests. Use when the project is JVM-based and tests need to mock HTTP dependencies (third-party APIs, internal microservices) at the network layer."
+description: "Authors WireMock stub mappings for HTTP service mocking - `stubFor` with verb/path/header matchers + `willReturn` response shaping, lifecycle via `WireMockServer` (start / stop) or JUnit `WireMockExtension`, request verification via `verify()`, and dynamic-port allocation for parallel tests. Also carries the Mountebank multi-protocol workflow (TCP / SMTP / LDAP / gRPC imposters, record-playback proxying) in references/mountebank.md. Use when the project is JVM-based and tests need to mock HTTP dependencies (third-party APIs, internal microservices) at the network layer, or when mocking must go beyond HTTP."
 ---
 
 # wiremock-stubs
@@ -163,8 +163,8 @@ locally, failed on CI" puzzles).
 - **In-memory state only.** Scenario state resets when the WireMock
   server restarts; persistent state requires the standalone mode +
   on-disk file storage.
-- **HTTP-only.** No WebSocket / gRPC - for those, use a different
-  mock server.
+- **HTTP-only.** No WebSocket / gRPC - for those, use Mountebank per
+  [references/mountebank.md](references/mountebank.md).
 
 ## References
 
@@ -173,5 +173,5 @@ locally, failed on CI" puzzles).
 - WireMock Docs - https://wiremock.org/docs/
 - `msw-handlers` - JS / TS counterpart
   (for browser + Node).
-- `mountebank-imposters` - 
-  multi-protocol alternative (HTTP + TCP + SMTP).
+- [references/mountebank.md](references/mountebank.md) - Mountebank
+  multi-protocol workflow (HTTP + TCP + SMTP + gRPC, record-playback).

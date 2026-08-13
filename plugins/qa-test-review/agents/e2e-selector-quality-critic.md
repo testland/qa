@@ -1,6 +1,6 @@
 ---
 name: e2e-selector-quality-critic
-description: "Adversarial reviewer specialized for E2E test selector fragility only - flags brittle CSS class selectors / nth-child / XPath / position-based selectors and recommends `getByRole` / `getByLabelText` / accessibility-first equivalents per Testing Library's priority order. Per Playwright best practices: \"automated tests should verify that the application code works for the end users, and avoid relying on implementation details.\" For non-web-first assertion style (`.isVisible()` checked synchronously vs the `await expect(...).toBeVisible()` form) and matcher specificity, see `assertion-quality-reviewer`. Use against any E2E test files (Playwright / Cypress / Selenium / WebdriverIO) when the concern is selector fragility."
+description: "Adversarial reviewer specialized for E2E test selector fragility only - flags brittle CSS class selectors / nth-child / XPath / position-based selectors and recommends `getByRole` / `getByLabelText` / accessibility-first equivalents per Testing Library's priority order. Per Playwright best practices: \"automated tests should verify that the application code works for the end users, and avoid relying on implementation details.\" For non-web-first assertion style (`.isVisible()` checked synchronously vs the `await expect(...).toBeVisible()` form) and matcher specificity, see `test-code-critic` (its §4 assertion dimension). Use against any E2E test files (Playwright / Cypress / Selenium / WebdriverIO) when the concern is selector fragility."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
@@ -253,8 +253,7 @@ The agent **refuses** to:
 - **WCAG compliance reporting** → see
   [`wcag-compliance-reporter`](../../qa-accessibility/skills/wcag-compliance-reporter/SKILL.md).
 - **Test-code structure / naming** → [`test-code-critic`](test-code-critic.md).
-- **Assertion specificity** → [`assertion-quality-reviewer`](assertion-quality-reviewer.md).
-- **Mocking patterns** → [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md).
+- **Assertion specificity + mocking patterns** → [`test-code-critic`](test-code-critic.md) (§4 / §5 dimensions).
 
 ## References
 

@@ -1,6 +1,6 @@
 ---
 name: lcov-analysis
-description: "Parses LCOV `.info` text files (the de-facto coverage interchange format produced by gcov, llvm-cov, Coverage.py via `py2lcov`, JaCoCo via `xml2lcov`, Devel::Cover, Jest via `lcov` reporter, NYC, and most others). Extracts per-file line / function / branch metrics from the canonical record keywords (TN/SF/FN/FNDA/FNF/FNH/BRDA/BRF/BRH/DA/LH/LF), computes the diff vs a baseline, and emits per-file gating verdicts. Use for PR coverage gates that don't depend on a specific language runtime."
+description: "Parses both mainstream coverage interchange formats: LCOV `.info` text files (produced by gcov, llvm-cov, Coverage.py via `py2lcov`, JaCoCo via `xml2lcov`, Devel::Cover, Jest via `lcov` reporter, NYC, and most others) and Cobertura XML (coverage-04.dtd - emitted by JaCoCo, coverage.py `--xml`, Jest's `cobertura` reporter, coverlet, gocover-cobertura; full parser in references/cobertura.md). Extracts per-file line / function / branch metrics from the canonical record keywords (TN/SF/FN/FNDA/FNF/FNH/BRDA/BRF/BRH/DA/LH/LF), computes the diff vs a baseline, and emits per-file gating verdicts. Use for PR coverage gates that don't depend on a specific language runtime, whichever of the two formats the CI emits."
 ---
 
 # lcov-analysis
@@ -21,12 +21,15 @@ LCOV `.info` is the **lingua franca** every coverage UI (Coveralls,
 Codecov, Codacy, SonarQube, in-house dashboards) ingests.
 
 This skill covers parsing the `.info` text format directly so the
-team can gate PRs without running the full HTML generation step.
+team can gate PRs without running the full HTML generation step. The
+sibling Cobertura XML format (same PR-gating shape, different parser)
+is covered in [references/cobertura.md](references/cobertura.md) -
+pick whichever format the existing reporter produces.
 
 ## When to use
 
-- The CI already emits LCOV (or can via a converter) and the team
-  wants PR-time per-file coverage gating.
+- The CI already emits LCOV or Cobertura XML (or can via a
+  converter) and the team wants PR-time per-file coverage gating.
 - A coverage SaaS isn't an option (compliance, cost, air-gapped CI).
 - A multi-language project needs one analyzer (Python via `py2lcov`,
   Java via `xml2lcov`, Node via `nyc`/`jest`'s `lcov` reporter, C++
@@ -190,9 +193,8 @@ coverage-gate CI job are in
 - [references/format-diff-and-ci.md](references/format-diff-and-ci.md) -
   full `.info` record-keyword table, the baseline-diff + gate
   reference implementation, and the PR coverage-gate CI job.
-- `cobertura-analysis` - sibling
-  for the Cobertura XML format (same PR-gating shape, different
-  parser).
+- [references/cobertura.md](references/cobertura.md) - the sibling
+  Cobertura XML format (same PR-gating shape, different parser).
 - `coverage-diff-reporter` - 
   build-an-X workflow that consumes parsed coverage and emits a PR
   comment with file-level deltas.

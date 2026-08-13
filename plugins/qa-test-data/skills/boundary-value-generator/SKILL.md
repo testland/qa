@@ -122,7 +122,7 @@ Same six boundary points applied to count. For `items` with
 ```
 
 Item shape comes from the matching factory (Faker / mimesis /
-FactoryBot - see `synthetic-data-tool-selector`).
+FactoryBot - see `synthetic-data-toolkit`).
 
 ### Enum
 
@@ -263,5 +263,5 @@ one representative per class.
   technique.
 - `pairwise-test-case-generator` - broader skill including pairwise combinatorial cases.
 - `negative-test-generator` - sibling skill for rejection-path coverage.
-- `synthetic-data-tool-selector` - for value generation when the boundary string requires a
+- `synthetic-data-toolkit` - for value generation when the boundary string requires a
   realistic-looking string.

@@ -1,13 +1,12 @@
 ---
 name: framework-architecture-auditor
-description: "Adversarial reviewer that audits the test framework codebase at the **architecture tier** - POM consistency across pages, base-class hierarchy depth, fixture coupling and scope, helper sprawl, naming-convention drift between modules, retry / wait convention consistency, documented-vs-actual convention drift, CI integration health, and dead helpers. Operates on the whole test directory, not individual test files. Distinct from `test-code-critic`, `assertion-quality-reviewer`, `e2e-selector-quality-critic`, and `mocking-anti-pattern-detector` (sibling critics in this plugin, each reviewing individual test files); this agent reviews **patterns across files** that per-file critics structurally cannot see. Use as a quarterly / per-release framework-health audit, or before a major refactor."
+description: "Adversarial reviewer that audits the test framework codebase at the **architecture tier** - POM consistency across pages, base-class hierarchy depth, fixture coupling and scope, helper sprawl, naming-convention drift between modules, retry / wait convention consistency, documented-vs-actual convention drift, CI integration health, and dead helpers. Operates on the whole test directory, not individual test files. Distinct from `test-code-critic` and `e2e-selector-quality-critic` (sibling critics in this plugin, each reviewing individual test files); this agent reviews **patterns across files** that per-file critics structurally cannot see. Use as a quarterly / per-release framework-health audit, or before a major refactor."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(jq *)"
 model: sonnet
 skills:
   - test-code-conventions
   - object-model-patterns
   - test-isolation-patterns
-  - test-step-design-patterns
   - test-data-patterns
   - test-framework-architecture-audit
 ---
@@ -80,7 +79,7 @@ by `test-framework-architecture-audit`.
 
 ## Hand-off targets
 
-- **Per-file convention violations** → run [`test-code-critic`](test-code-critic.md), [`assertion-quality-reviewer`](assertion-quality-reviewer.md), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md), [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md) in parallel.
+- **Per-file convention violations** → run [`test-code-critic`](test-code-critic.md) and [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md) in parallel.
 - **Hardcoded sleep / async-wait pattern remediation** → [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md).
 - **Convention rewrite (§A7 drift)** → update `docs/test-conventions.md`; or rebase on [`test-code-conventions`](../skills/test-code-conventions/SKILL.md) defaults.
 - **Framework choice re-evaluation (when audit reveals the framework itself is the bottleneck)** → [`framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md).

@@ -311,7 +311,7 @@ selling point.
 
 - **No PR-coverage role.** Allure tells you which tests passed /
   failed / flaked; it doesn't measure code coverage. Pair with
-  `lcov-analysis` / `cobertura-analysis` / `jacoco-analysis`.
+  `lcov-analysis` / `jacoco-analysis`.
 - **History is per-CI-runner-local** unless explicitly persisted.
   GitHub Actions artifacts have a retention cap (default 90 days);
   for long-running history, consider GitHub Pages or S3 hosting.
@@ -336,5 +336,5 @@ selling point.
   alternative when only pass/fail + flake detection is needed.
 - `coverage-diff-reporter`,
   `lcov-analysis`,
-  `cobertura-analysis` - coverage
+  `lcov-analysis` - coverage
   side of the same PR review.

@@ -309,7 +309,7 @@ that are typically untested boilerplate.
   (text, HTML, XML, LCOV, JSON), supported Python versions.
 - `lcov-analysis` - coverage.py
   `coverage lcov` produces the LCOV file this parser consumes.
-- `cobertura-analysis` - coverage.py
+- `lcov-analysis` (references/cobertura.md) - coverage.py
   `coverage xml` produces the Cobertura file this parser consumes.
 - `coverage-diff-reporter` - 
   PR-comment formatter built on top of the parsed coverage.py

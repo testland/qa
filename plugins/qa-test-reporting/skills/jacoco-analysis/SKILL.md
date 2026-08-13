@@ -268,7 +268,7 @@ that. The full GitHub Actions workflow (verify, artifact upload,
   the Gradle plugin config, the `jacoco.xml` parser, the counter-aware
   gating table, JaCoCo-to-Cobertura / LCOV conversion, and the Maven
   `verify` CI job.
-- `cobertura-analysis` - sister
+- `lcov-analysis` (references/cobertura.md) - sister
   parser; JaCoCo XML can convert to Cobertura XML for sibling tooling.
 - `lcov-analysis` - sister parser; JaCoCo
   can convert to LCOV for cross-language aggregation.

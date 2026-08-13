@@ -152,7 +152,7 @@ Sign-off: ___________________ Date: __________
 For teams using TestRail / Xray / Zephyr - encode the flow as a
 manual test case with one step per row, expected result per row.
 The skill emits the matching format; per
-`testrail-integration`
+`test-management-sync`
 (when shipped) the test case can be uploaded automatically.
 
 ## Anti-patterns

@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 644 components**
+**89 plugins · 631 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -13,16 +13,16 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-test-data](plugins/qa-test-data/) | 1.3.10 | 16 skills + 3 agents | 19 |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.5.0 | 14 skills + 2 agents | 16 |
-| [qa-test-review](plugins/qa-test-review/) | 1.6.15 | 8 skills + 6 agents | 14 |
+| [qa-test-data](plugins/qa-test-data/) | 1.3.10 | 12 skills + 2 agents | 14 |
 | [qa-process](plugins/qa-process/) | 1.11.0 | 12 skills + 1 agents | 13 |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.5.0 | 11 skills + 2 agents | 13 |
+| [qa-test-review](plugins/qa-test-review/) | 1.6.15 | 7 skills + 4 agents | 11 |
 | [qa-hiring](plugins/qa-hiring/) | 1.4.2 | 5 skills + 1 agents | 6 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.2.5 | 4 skills + 2 agents | 6 |
 | [qa-roles](plugins/qa-roles/) | 1.4.0 | 0 skills + 5 agents | 5 |
-| [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.1.7 | 3 skills + 2 agents | 5 |
 | [qa-test-management](plugins/qa-test-management/) | 1.3.0 | 3 skills + 2 agents | 5 |
 | [qa-team-management](plugins/qa-team-management/) | 1.2.0 | 3 skills + 0 agents | 3 |
+| [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.2.0 | 2 skills + 1 agents | 3 |
 
 ## Functional testing
 
@@ -52,7 +52,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-accessibility](plugins/qa-accessibility/) | 1.3.10 | 14 skills + 2 agents | 16 |
+| [qa-accessibility](plugins/qa-accessibility/) | 1.4.0 | 14 skills + 2 agents | 16 |
 | [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.13 | 8 skills + 3 agents | 11 |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.3.0 | 6 skills + 1 agents | 7 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.8 | 5 skills + 2 agents | 7 |
@@ -86,7 +86,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 12 skills + 2 agents | 14 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.4.8 | 9 skills + 4 agents | 13 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.5.0 | 9 skills + 4 agents | 13 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.7.0 | 3 skills + 7 agents | 10 |
 | [qa-chaos](plugins/qa-chaos/) | 1.4.0 | 8 skills + 1 agents | 9 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.3.0 | 5 skills + 4 agents | 9 |
@@ -132,7 +132,7 @@ _LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, 
 |---|---|---|---:|
 | [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.4.0 | 7 skills + 2 agents | 9 |
 | [qa-ml-models](plugins/qa-ml-models/) | 1.3.6 | 7 skills + 2 agents | 9 |
-| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.3.8 | 4 skills + 3 agents | 7 |
+| [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.4.0 | 4 skills + 3 agents | 7 |
 | [qa-search-relevance](plugins/qa-search-relevance/) | 1.2.5 | 6 skills + 1 agents | 7 |
 | [qa-data-notebooks](plugins/qa-data-notebooks/) | 1.3.0 | 3 skills + 1 agents | 4 |
 

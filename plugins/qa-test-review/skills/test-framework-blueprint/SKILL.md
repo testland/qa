@@ -21,7 +21,6 @@ act on:
 It is the connective tissue between the pattern catalogs and the scaffolder.
 The catalogs (`object-model-patterns`,
 `test-isolation-patterns`,
-`test-step-design-patterns`,
 `test-data-patterns` in qa-test-data)
 say what each pattern IS; the scaffolder emits a skeleton once decisions
 are made. Neither walks the decisions in order. This skill does.
@@ -230,7 +229,7 @@ steps and ending with the implementation order lives in
 | Anti-pattern | Why it fails |
 |---|---|
 | Copying the framework from a previous job regardless of change shape | The old framework encoded the old SUT's inventory (Step 1); a UI-heavy framework on an API-heavy product tests the wrong layer slowly |
-| Building abstraction layers before ~10 tests exist | Abstractions extracted from zero usage guess wrong; extract from observed duplication (the rule-of-three framing in `test-step-design-patterns`) |
+| Building abstraction layers before ~10 tests exist | Abstractions extracted from zero usage guess wrong; extract from observed duplication (the rule-of-three framing in `test-code-conventions` §11) |
 | One mega base-class every test inherits | Depth-3+ hierarchies break unpredictably on root changes (§A2); compose fixtures instead |
 | Choosing the runner before the team-skills inventory | Framework-language mismatch is the #1 maintenance cost per `framework-choice-advisor` |
 | Designing the CI matrix for scale on day one (8 shards, 3 retries) | Retries hide flake in a young suite; shards add cost below the `ci-test-job-conventions` §1 runtime thresholds |
@@ -261,7 +260,6 @@ steps and ending with the implementation order lives in
   https://docs.pytest.org/en/stable/how-to/fixtures.html
 - `object-model-patterns`,
   `test-isolation-patterns`,
-  `test-step-design-patterns`,
   `test-data-patterns` (qa-test-data) -
   the sister pattern catalogs Steps 3-5 defer to.
 - `framework-choice-advisor` (qa-process) - the Step 2 deep tool.

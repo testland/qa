@@ -277,4 +277,4 @@ visible instead of being swallowed.
 - Consumed by:
   `bug-report-from-failure`.
 - Sibling-plugin neighbour:
-  `testrail-integration` (in the qa-test-reporting plugin) - different scope (test-result posting; not bug workflow).
+  `test-management-sync` (in the qa-test-reporting plugin) - different scope (test-result posting; not bug workflow).

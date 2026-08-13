@@ -87,7 +87,7 @@ Per the test pyramid (`test-pyramid-balancer`):
 
 ## 6. Test data
 
-- **Synthetic accounts** - per synthetic-data-tool-selector.
+- **Synthetic accounts** - per synthetic-data-toolkit.
 - **PII handling** - per synthetic-pii-generator.
 - **Database state** - per database snapshot / restore.
 

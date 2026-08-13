@@ -153,7 +153,7 @@ The patterns are not equally good for every project. The matrix:
 - **Pick the framework itself before applying these patterns** → `framework-choice-advisor` (in the qa-process plugin).
 - **Test-data construction patterns (Builder / Factory / Fixture)** → `test-data-patterns` (in the qa-test-data plugin, sister catalog).
 - **Test isolation / fixture lifecycle / parallel safety** → `test-isolation-patterns` (sister catalog).
-- **Test step granularity and abstraction** → `test-step-design-patterns` (sister catalog).
+- **Test step granularity and abstraction** → `test-code-conventions` §11 (step design).
 - **Cross-file convention reference** → `test-code-conventions` (file-level companion).
 
 ## References

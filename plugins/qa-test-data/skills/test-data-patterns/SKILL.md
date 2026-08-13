@@ -1,13 +1,13 @@
 ---
 name: test-data-patterns
-description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from per-language data wrappers (`factory-bot-data` Ruby, `faker-data` JS, `mimesis-data` Python, `bogus-data` .NET) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Use when choosing a test-data construction pattern for a new suite, or auditing an existing suite whose fixtures have drifted into shared mutable state."
+description: "Pure reference catalog of the cross-language object-construction patterns for test data - Test Data Builder (Pryce/Freeman), Factory (with traits and associations), Object Mother, Fixture composition (per-test / per-describe / shared), Snapshot (defers to `golden-file-conventions` for the operational details), and Production-Data Anonymisation. Distinct from the per-language tool skills (`faker-data` and the `synthetic-data-toolkit` umbrella covering FactoryBot / mimesis / Bogus) which document tool-specific configuration; this catalog is the architecture-tier reference for choosing **which pattern** before reaching for the tool. Use when choosing a test-data construction pattern for a new suite, or auditing an existing suite whose fixtures have drifted into shared mutable state."
 ---
 
 # test-data-patterns
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing a test framework's data-construction approach. It complements `factory-bot-data` (Ruby), `faker-data` (JS), `mimesis-data` (Python), `bogus-data` (.NET), `synthetic-pii-generator` (cross-language), and `golden-file-conventions` (snapshot pattern). Those skills document the tools; this skill documents the patterns.
+This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing a test framework's data-construction approach. It complements `faker-data`, `synthetic-data-toolkit` (FactoryBot / mimesis / Bogus), `synthetic-pii-generator` (cross-language), and `golden-file-conventions` (snapshot pattern). Those skills document the tools; this skill documents the patterns.
 
 ## When to use
 
@@ -105,7 +105,7 @@ admin_user = create(:user, :admin, :with_org)
 |---|---|
 | Factory definitions that hard-code IDs (`id: 1`) | Tests collide in parallel; factories must let the DB / Faker assign |
 | Traits that overlap silently (`:admin` and `:premium` both set `role`) | Order-dependent behaviour; trait composition becomes unpredictable |
-| Factories that persist by default (`create` is the only mode) | Slow tests, unnecessary DB writes. Builders should expose `build` / `attributes` / `create` strategies (see `factory-bot-data`) |
+| Factories that persist by default (`create` is the only mode) | Slow tests, unnecessary DB writes. Builders should expose `build` / `attributes` / `create` strategies (see `synthetic-data-toolkit` references/factory-bot.md) |
 | One mega-factory for the entire domain | Becomes a god-object; every test pulls a fully-populated graph |
 
 ## Pattern 3 - Object Mother
@@ -236,7 +236,7 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Hand-off targets
 
-- **Configure a specific per-language tool** → `factory-bot-data` (Ruby), `faker-data` (JS), `mimesis-data` (Python), `bogus-data` (.NET).
+- **Configure a specific per-language tool** → `faker-data` (Python / JS / Ruby) or `synthetic-data-toolkit` (FactoryBot / mimesis / Bogus).
 - **Build an E2E seed dataset** → `seed-data-curator`.
 - **Generate PII (anonymised) test data** → `synthetic-pii-generator`.
 - **Snapshot / golden-file operational details** → `golden-file-conventions`.
@@ -263,5 +263,5 @@ admin_user = create(:user, :admin, :with_org)
 - ISTQB glossary - fixture: https://glossary.istqb.org/en_US/term/test-fixture
 - ISO/IEC 25024 - data quality model (cited for anonymisation requirements).
 - Anonymisation / synthetic-data tooling: Tonic.ai (https://www.tonic.ai/), Gretel.ai (https://gretel.ai/), K2view (https://www.k2view.com/).
-- `factory-bot-data`, `faker-data`, `mimesis-data`, `bogus-data`, `synthetic-pii-generator`, `golden-file-conventions`, `seed-data-curator` - the per-tool and operational siblings.
-- `object-model-patterns`, `test-isolation-patterns`, `test-step-design-patterns` - sister architecture-tier pattern catalogs.
+- `faker-data`, `synthetic-data-toolkit`, `synthetic-pii-generator`, `golden-file-conventions`, `seed-data-curator` - the per-tool and operational siblings.
+- `object-model-patterns`, `test-isolation-patterns` - sister architecture-tier pattern catalogs (step design is `test-code-conventions` §11).

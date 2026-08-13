@@ -1,6 +1,6 @@
 ---
 name: currents-integration
-description: "Wires Currents.dev cross-run test analytics into a Playwright suite: installs `@currents/playwright`, authors `currents.config.ts` (env-sourced `recordKey` + `projectId`), registers `currentsReporter()`, enables trace/video/screenshot artifacts, and runs via `npx pwc` so per-test traces stream to the Currents dashboard with over-time flakiness, slowest-test, and pass-rate trends. Use when a Playwright suite needs hosted cross-run suite-health analytics; for a static per-run report use extentreports or allure-reports, and to sync results into Jira test management use zephyr-integration or xray-integration."
+description: "Wires Currents.dev cross-run test analytics into a Playwright suite: installs `@currents/playwright`, authors `currents.config.ts` (env-sourced `recordKey` + `projectId`), registers `currentsReporter()`, enables trace/video/screenshot artifacts, and runs via `npx pwc` so per-test traces stream to the Currents dashboard with over-time flakiness, slowest-test, and pass-rate trends. Use when a Playwright suite needs hosted cross-run suite-health analytics; for a static per-run report use extentreports or allure-reports, and to sync results into TestRail / Xray / Zephyr test management use test-management-sync."
 ---
 
 # currents-integration
@@ -222,8 +222,6 @@ integration are in
 - `junit-xml-analysis` - pair
   with Currents to keep CI gating self-hosted (JUnit) while
   Currents handles longitudinal analytics.
-- `testrail-integration`,
-  `xray-integration`,
-  `zephyr-integration` - sibling
+- `test-management-sync` - sibling
   test-management integrations (different role: test management
   vs analytics).

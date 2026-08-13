@@ -225,10 +225,10 @@ Once fixture scope is chosen, the two external-dependency concerns have their ow
 - **Per-file fixture coupling rule** → `test-code-conventions §6`.
 - **Flake symptoms / pattern catalog** → `flake-pattern-reference` (qa-flake-triage) - symptoms; this skill is the prevention reference.
 - **Quarantine a chronically flaky test** → `flaky-test-quarantine` (qa-flake-triage).
-- **Stub / mock external services** → `msw-handlers`, `wiremock-stubs`, `mountebank-imposters` (qa-test-data).
+- **Stub / mock external services** → `msw-handlers`, `wiremock-stubs` (qa-test-data; multi-protocol Mountebank in wiremock-stubs references/).
 - **Test data construction patterns** → `test-data-patterns` (qa-test-data, sister catalog).
 - **Object-model architecture patterns** → `object-model-patterns` (sister catalog).
-- **Test step granularity** → `test-step-design-patterns` (sister catalog).
+- **Test step granularity** → `test-code-conventions` §11 (step design).
 
 ## References
 
@@ -242,4 +242,4 @@ Once fixture scope is chosen, the two external-dependency concerns have their ow
 - Gerard Meszaros - *Principles of Test Automation* ("Principle: Keep Tests Independent", also known as Independent Test - the canonical statement of the test-isolation principle this catalog implements): http://xunitpatterns.com/Principles%20of%20Test%20Automation.html
 - ISTQB glossary - test fixture: https://glossary.istqb.org/en_US/term/test-fixture
 - `test-code-conventions §6`, `flake-pattern-reference` (qa-flake-triage) - companion file-level and symptom-level references.
-- `object-model-patterns`, `test-data-patterns` (qa-test-data), `test-step-design-patterns` - sister architecture-tier pattern catalogs.
+- `object-model-patterns`, `test-data-patterns` (qa-test-data) - sister architecture-tier pattern catalogs; step design is `test-code-conventions` §11.

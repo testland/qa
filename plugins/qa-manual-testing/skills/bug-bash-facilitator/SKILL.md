@@ -72,7 +72,7 @@ Per cohort, 1-2 testers + 1 facilitator-roving:
 ## Test data prep (do BEFORE the bash)
 
 - [ ] Create 5 test accounts with varying states (per
-      `synthetic-data-tool-selector`):
+      `synthetic-data-toolkit`):
       `qa-bash-A`, `qa-bash-B`, ..., `qa-bash-E`.
 - [ ] Seed promo codes: `WELCOME10`, `EXPIRED50`, `MIN100`,
       `STACKABLE5`.
@@ -251,4 +251,4 @@ triage) but it broadens coverage.
 - `exploratory-testing` - the tours menu the cohorts pick from
   (references/tours.md) and the PROOF debrief format the bug-bash
   debrief inherits from (references/debrief.md).
-- `synthetic-data-tool-selector` - used in the test-data-prep step.
+- `synthetic-data-toolkit` - used in the test-data-prep step.

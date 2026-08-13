@@ -80,7 +80,7 @@ Per the [Capgemini WQR 2025-26](https://www.capgemini.com/insights/research-libr
 | SSO / IAM | SAML / OIDC / SCIM provisioning |
 | Reverse data flow | Can the team export raw test results? In what format? |
 
-For each integration, score: native (1.0) / API-buildable (0.7) / community-plugin (0.5) / not available (0.0). The per-vendor result-sync baselines (`testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration` in the qa-test-reporting plugin) feed this axis.
+For each integration, score: native (1.0) / API-buildable (0.7) / community-plugin (0.5) / not available (0.0). The per-vendor result-sync baselines (`test-management-sync`, `test-management-sync`, `test-management-sync`, `currents-integration` in the qa-test-reporting plugin) feed this axis.
 
 ### Axis A4 - Vendor lock-in risk
 
@@ -288,4 +288,4 @@ The matrix is the **input** to the decision, not the decision itself. Downstream
 - G2 / Capterra - methodology disclosure for review-density and recency scoring (general SaaS evaluation context; not QA-specific): https://www.g2.com/about
 - ISTQB glossary - test automation framework (the open-source / commercial boundary): https://glossary.istqb.org/en_US/term/test-automation-framework
 - ISO/IEC 25010 - quality model for non-functional requirements (used in A1 capability scoring): https://en.wikipedia.org/wiki/ISO/IEC_25010
-- `testrail-integration`, `xray-integration`, `zephyr-integration`, `currents-integration` (qa-test-reporting plugin) - per-vendor integration baselines that feed A3.
+- `test-management-sync`, `test-management-sync`, `test-management-sync`, `currents-integration` (qa-test-reporting plugin) - per-vendor integration baselines that feed A3.

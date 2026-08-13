@@ -240,5 +240,5 @@ failed titles.
 - Zephyr Scale Cloud REST API v2 - smartbear.com/test-management/zephyr-scale
   (Cloudflare-protected; cite by stable URL).
 - Atlassian Marketplace - Zephyr Scale (formerly TM4J) listing.
-- Sibling-plugin neighbour: `zephyr-integration` (qa-test-reporting) - result
+- Sibling-plugin neighbour: `test-management-sync` (qa-test-reporting) - result
   sync via test cycles, not case authoring.

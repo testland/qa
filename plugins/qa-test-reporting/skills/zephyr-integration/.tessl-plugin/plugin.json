@@ -1,9 +1,0 @@
-{
-  "name": "testland/zephyr-integration",
-  "description": "Syncs automated test results to Zephyr Scale for Jira (formerly TM4J / SmartBear / Adaptavist): picks the product variant (Scale Cloud / Squad / Enterprise), authenticates with a long-lived API token as a Bearer header, opens a Test Cycle per build, posts executions via `POST /testexecutions` (or bulk JUnit via `/automations/executions/junit`), and maps test methods to Zephyr Test Cases via `@TestCaseKey`-style annotations. Use when the team's Jira test management is Zephyr Scale; for the Xray Jira app use xray-integration, for standalone TestRail use testrail-integration, and for over-time flakiness analytics rather than TCM sync use currents-integration.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.11"
-}

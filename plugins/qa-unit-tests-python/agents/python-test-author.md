@@ -7,7 +7,7 @@ skills:
   - pytest-tests
   - unittest-tests
   - doctest-tests
-  - mimesis-data
+  - synthetic-data-toolkit
   - pairwise-test-case-generator
 ---
 
@@ -31,7 +31,7 @@ If **two or more** framework signals coexist with no clear winner (e.g., `pyproj
 
 pytest auto-discovers "all files of the form `test_*.py` or `*_test.py` in the current directory and its subdirectories" ([docs.pytest.org][pytest-start]). Resolve the conventional layout: existing `tests/` directory → emit there; co-located `test_<module>.py` next to source → match the existing pattern. unittest discovery uses the same `test_*.py` filename convention via `python -m unittest discover` ([docs.python.org][unittest]). nose2 "looks for tests in Python files whose names start with `test`" ([docs.nose2.io][nose2]).
 
-Data peers: `mimesis` in dev-deps → use `Person(Locale.EN).full_name()` / `Address` / `Internet` / `Datetime` providers for locale-aware fixtures ([github.com/lk-geimfari/mimesis][mimesis]); see [`mimesis-data`](../../qa-test-data/skills/mimesis-data/SKILL.md). Do NOT add the dep if absent - the agent never installs packages. If the spec lists 3+ inputs whose interactions matter, hand off to [`pairwise-test-case-generator`](../../qa-test-data/skills/pairwise-test-case-generator/SKILL.md) for the case set, then map it through `@pytest.mark.parametrize`.
+Data peers: `mimesis` in dev-deps → use `Person(Locale.EN).full_name()` / `Address` / `Internet` / `Datetime` providers for locale-aware fixtures ([github.com/lk-geimfari/mimesis][mimesis]); see [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md) (references/mimesis.md). Do NOT add the dep if absent - the agent never installs packages. If the spec lists 3+ inputs whose interactions matter, hand off to [`pairwise-test-case-generator`](../../qa-test-data/skills/pairwise-test-case-generator/SKILL.md) for the case set, then map it through `@pytest.mark.parametrize`.
 
 [pytest-start]: https://docs.pytest.org/en/stable/getting-started.html
 [unittest]: https://docs.python.org/3/library/unittest.html
@@ -97,7 +97,7 @@ One markdown block: spec one-liner, detected framework, mimesis yes/no, the new 
 ## Hand-off targets
 
 - **Framework skills** → [`pytest-tests`](../skills/pytest-tests/SKILL.md), [`unittest-tests`](../skills/unittest-tests/SKILL.md), [`doctest-tests`](../skills/doctest-tests/SKILL.md), [`nose2-tests`](../skills/nose2-tests/SKILL.md).
-- **Locale-aware fake data** → [`mimesis-data`](../../qa-test-data/skills/mimesis-data/SKILL.md).
+- **Locale-aware fake data** → [`synthetic-data-toolkit`](../../qa-test-data/skills/synthetic-data-toolkit/SKILL.md) references/mimesis.md.
 - **Multi-input parameterized cases** → [`pairwise-test-case-generator`](../../qa-test-data/skills/pairwise-test-case-generator/SKILL.md).
 - **Property-based scope** (refused above) → deferred to the `qa-property-based` plugin.
 - **Assertion-quality review** → `test-code-conventions` (qa-test-review).

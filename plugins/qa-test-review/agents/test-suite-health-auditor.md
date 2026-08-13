@@ -76,7 +76,7 @@ Grep every test layer for tautological-assertion patterns. Each instance is a `M
 | `expect(result).not.toBeNull()` as the *only* assertion | Same as above |
 | Empty `try { ... } catch (e) {}` after the act phase | Swallows the failure signal entirely |
 
-Refer remediation to [`assertion-quality-reviewer`](assertion-quality-reviewer.md) for the per-file rewrite catalogue and [`test-code-conventions`](../skills/test-code-conventions/SKILL.md) §4.
+Refer remediation to [`test-code-critic`](test-code-critic.md) (its §4 assertion dimension) and [`test-code-conventions`](../skills/test-code-conventions/SKILL.md) §4.
 
 ## Output format
 
@@ -108,7 +108,7 @@ The auditor flags these categorically, regardless of context:
 
 ## Hand-off targets
 
-- **Per-test review** → [`test-code-critic`](test-code-critic.md) (structure, naming, AAA), [`assertion-quality-reviewer`](assertion-quality-reviewer.md) (assertion specificity), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md) (E2E selectors), [`mocking-anti-pattern-detector`](mocking-anti-pattern-detector.md) (mock anti-patterns).
+- **Per-test review** → [`test-code-critic`](test-code-critic.md) (structure, naming, AAA, assertion specificity, mocking), [`e2e-selector-quality-critic`](e2e-selector-quality-critic.md) (E2E selectors).
 - **Per-framework architectural audit** → [`framework-architecture-auditor`](framework-architecture-auditor.md) (POM consistency, fixture coupling, base-class depth within one framework).
 - **Flake remediation patterns** → [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md) for the canonical replacements; [`e2e-flake-bisector`](../../qa-flake-triage/agents/e2e-flake-bisector.md) for narrowing to the offending commit.
 - **Framework choice re-evaluation** (when audit reveals the framework itself is the bottleneck) → [`framework-choice-advisor`](../../qa-process/skills/framework-choice-advisor/SKILL.md).

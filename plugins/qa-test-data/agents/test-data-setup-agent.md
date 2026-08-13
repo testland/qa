@@ -1,10 +1,10 @@
 ---
 name: test-data-setup-agent
-description: "Action-taking agent that sets up a complete test-data layer for a single feature - detects the project language and stack, generates per-test fixture factories (via faker-data or synthetic-data-tool-selector), and builds a reproducible E2E seed dataset (via seed-data-curator), wiring both into the test bootstrap. Distinct from golden-file-manager (snapshot baseline maintenance) and synthetic-data-tool-selector used standalone (tool-selection only, no files written). Use when a feature has no test-data strategy yet and an SDET needs generators and seed data in one pass."
+description: "Action-taking agent that sets up a complete test-data layer for a single feature - detects the project language and stack, generates per-test fixture factories (via faker-data or synthetic-data-toolkit), and builds a reproducible E2E seed dataset (via seed-data-curator), wiring both into the test bootstrap. Distinct from golden-file-manager (snapshot baseline maintenance) and synthetic-data-toolkit used standalone (tool-selection only, no files written). Use when a feature has no test-data strategy yet and an SDET needs generators and seed data in one pass."
 tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:
-  - synthetic-data-tool-selector
+  - synthetic-data-toolkit
   - seed-data-curator
   - faker-data
 ---
@@ -13,7 +13,7 @@ Action-taking agent that stands up the full test-data layer for one feature: per
 fixture generators and a persistent E2E seed dataset, composed from the plugin's three
 data-primitive skills. Targets mid/senior SDETs. Distinct from
 [`golden-file-manager`](./golden-file-manager.md) (snapshot baseline health) and
-[`synthetic-data-tool-selector`](../skills/synthetic-data-tool-selector/SKILL.md) standalone
+[`synthetic-data-toolkit`](../skills/synthetic-data-toolkit/SKILL.md) standalone
 (tool selection only, no files written).
 
 ## When invoked
@@ -28,14 +28,14 @@ tiers, statuses, locales). Missing either: halt and ask before writing anything.
 Glob for `package.json`, `Gemfile`, `pyproject.toml`, `*.csproj`. Read the first
 match. Also grep for existing factory paths (`factories/`, `__factories__`,
 `*.factory.ts`). Map to a generator per
-[`synthetic-data-tool-selector`](../skills/synthetic-data-tool-selector/SKILL.md):
+[`synthetic-data-toolkit`](../skills/synthetic-data-toolkit/SKILL.md):
 
 | Language | Generator |
 |----------|-----------|
 | JS / TS  | `@faker-js/faker` - per [fakerjs.dev][js] |
 | Python   | `faker` - per [faker.readthedocs.io][py] |
 | Ruby     | `faker-ruby` gem + FactoryBot if present |
-| .NET     | Bogus - defer to `bogus-data` skill |
+| .NET     | Bogus - defer to `synthetic-data-toolkit` references/bogus.md |
 
 If no language detected: halt and ask.
 

@@ -203,7 +203,7 @@ The team should be able to opt out for a specific build, matching Azure's
   all in sequence" comparison pattern.
 - [bazel-deps][bz] - Bazel target dependency model, `rdeps` reverse
   dependency query, declared-vs-actual dependency principle.
-- `coverage-debt-tracker` - 
-  sibling skill: tracks files that lost coverage / went stale.
+- `test-coverage-targeter` (qa-test-reporting) - its coverage debt
+  ledger tracks files that lost coverage / went stale.
 
 [bz]: https://bazel.build/concepts/dependencies

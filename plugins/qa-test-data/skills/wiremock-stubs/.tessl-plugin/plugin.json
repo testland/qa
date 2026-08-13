@@ -1,9 +1,9 @@
 {
   "name": "testland/wiremock-stubs",
-  "description": "Authors WireMock stub mappings for HTTP service mocking - `stubFor` with verb/path/header matchers + `willReturn` response shaping, lifecycle via `WireMockServer` (start / stop) or JUnit `WireMockExtension`, request verification via `verify()`, and dynamic-port allocation for parallel tests. Use when the project is JVM-based and tests need to mock HTTP dependencies (third-party APIs, internal microservices) at the network layer.",
+  "description": "Authors WireMock stub mappings for HTTP service mocking - `stubFor` with verb/path/header matchers + `willReturn` response shaping, lifecycle via `WireMockServer` (start / stop) or JUnit `WireMockExtension`, request verification via `verify()`, and dynamic-port allocation for parallel tests. Also carries the Mountebank multi-protocol workflow (TCP / SMTP / LDAP / gRPC imposters, record-playback proxying) in references/mountebank.md. Use when the project is JVM-based and tests need to mock HTTP dependencies (third-party APIs, internal microservices) at the network layer, or when mocking must go beyond HTTP.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.8"
+  "version": "1.3.9"
 }

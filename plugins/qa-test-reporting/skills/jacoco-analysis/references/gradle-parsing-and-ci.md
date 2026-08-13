@@ -126,7 +126,7 @@ coverage UI, convert JaCoCo XML to a sibling format.
 python cover2cover.py target/site/jacoco/jacoco.xml src/main/java > target/cobertura.xml
 ```
 
-Then feed `cobertura-analysis`.
+Then feed `lcov-analysis` (references/cobertura.md).
 
 ### To LCOV
 

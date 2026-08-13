@@ -162,4 +162,4 @@ uncovered ACs are the highest-priority gaps to close before sign-off.
 - `ai-test-generator` - sister
   skill: generates tests for the gaps this skill identifies.
 - `acceptance-test-from-criteria` (in the qa-bdd plugin) - for tag-based AC traceability without LLM.
-- `coverage-debt-tracker` (in the qa-test-impact-analysis plugin) - line-coverage debt; complementary to spec coverage.
+- `test-coverage-targeter` (in the qa-test-reporting plugin) - its coverage debt ledger tracks line-coverage debt; complementary to spec coverage.

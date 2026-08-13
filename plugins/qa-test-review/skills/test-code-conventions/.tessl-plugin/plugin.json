@@ -1,9 +1,9 @@
 {
   "name": "testland/test-code-conventions",
-  "description": "Pure-reference catalog of test-code conventions: AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming (`{sut}_{scenario}_{expected}`), assertion specificity, mocking rationale (state vs behavior, fake vs mock), fixture-coupling rules, and the magic-number / hard-coded-string anti-patterns; the E2E selector-priority and web-first-assertion conventions live in references/. Use as the shared rule book a test-code review cites back to, or as onboarding for what makes a test code-reviewable; to score a test's quality on weighted axes use test-design-scorecard, and for setup/teardown isolation specifically use test-isolation-patterns.",
+  "description": "Pure-reference catalog of test-code conventions: AAA structure (Arrange / Act / Assert), per-test single-responsibility, descriptive naming (`{sut}_{scenario}_{expected}`), assertion specificity, mocking rationale (state vs behavior, fake vs mock), fixture-coupling rules, the magic-number / hard-coded-string anti-patterns, and step design (§11: FIRST principles, step granularity, the mechanical → page → business abstraction layers, the rule-of-three extraction heuristic, declarative phrasing); the E2E selector-priority, web-first-assertion, and step-grouping conventions live in references/. Use as the shared rule book a test-code review cites back to, or as onboarding for what makes a test code-reviewable; to score a test's quality on weighted axes use test-design-scorecard, and for setup/teardown isolation specifically use test-isolation-patterns.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.6.10"
+  "version": "1.6.11"
 }

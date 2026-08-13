@@ -238,6 +238,6 @@ Sync Cucumber `.feature` files on every PR merge:
   (Cloudflare-protected; cite by stable URL).
 - Xray Cloud GraphQL - docs.getxray.app/display/XRAYCLOUD/GraphQL+API.
 - Xray Cloud Authentication - docs.getxray.app/display/XRAYCLOUD/Authentication+-+REST.
-- Sibling-plugin neighbour: `xray-integration` (qa-test-reporting) - result
+- Sibling-plugin neighbour: `test-management-sync` (qa-test-reporting) - result
   sync, not case authoring.
 - Composes with the qa-bdd plugin when importing Cucumber features.

@@ -1,6 +1,6 @@
 ---
 name: faker-data
-description: "Authors test-data factories using Faker: the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem. Owns the library mechanics end to end: install per language, the provider catalogue (person / internet / location / date / finance / lorem), locale selection and multi-locale mode, and seed-based determinism for reproducible runs. Scope is generating fresh values for tests that start from nothing, not replacing values inside an existing dataset that already holds real records - a production dump in staging goes to faker-synthetic-data, which owns the referential-integrity and re-identification concerns this skill does not address. Prefer this skill when the codebase already uses the Faker family or when cross-language consistency across Python, JS, and Ruby matters; use mimesis-data only when deeper Python locale coverage is the primary requirement. Use when authoring fixtures or factories that need realistic-looking field values."
+description: "Authors test-data factories using Faker: the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem. Owns the library mechanics end to end: install per language, the provider catalogue (person / internet / location / date / finance / lorem), locale selection and multi-locale mode, and seed-based determinism for reproducible runs. Scope is generating fresh values for tests that start from nothing, not replacing values inside an existing dataset that already holds real records - a production dump in staging goes to faker-synthetic-data, which owns the referential-integrity and re-identification concerns this skill does not address. Prefer this skill when the codebase already uses the Faker family or when cross-language consistency across Python, JS, and Ruby matters; use the mimesis reference in synthetic-data-toolkit only when deeper Python locale coverage is the primary requirement. Use when authoring fixtures or factories that need realistic-looking field values."
 ---
 
 # faker-data
@@ -22,9 +22,8 @@ ports in this skill's scope:
 [js]: https://github.com/faker-js/faker
 [rb]: https://github.com/faker-ruby/faker
 
-For .NET, see `bogus-data`. For
-Python-specifically with stronger locale coverage, also see
-`mimesis-data`.
+For .NET (Bogus) and Python-specifically with stronger locale
+coverage (mimesis), see `synthetic-data-toolkit`.
 
 ## When to use
 
@@ -210,10 +209,10 @@ library that wraps Faker:
 
 | Language | Factory library | Skill                                              |
 |----------|-----------------|----------------------------------------------------|
-| Python   | `factory_boy`   | (consider `mimesis-data` for locale-rich pure mimesis pattern) |
+| Python   | `factory_boy`   | (consider mimesis - `synthetic-data-toolkit` - for locale-rich generation) |
 | JS / TS  | `fishery` / `factory.ts` | hand-rolled with Faker as engine               |
-| Ruby     | FactoryBot      | `factory-bot-data` |
-| .NET     | Bogus           | `bogus-data`             |
+| Ruby     | FactoryBot      | `synthetic-data-toolkit` references/factory-bot.md |
+| .NET     | Bogus           | `synthetic-data-toolkit` references/bogus.md |
 
 Faker alone won't enforce that `order.user_id == user.id`; the
 factory library handles that.
@@ -247,10 +246,6 @@ factory library handles that.
   providers).
 - [faker-js][js] - `@faker-js/faker` (modules, seed, 70+ locales).
 - [faker-rb][rb] - `faker-ruby/faker` (modules, seed, locale).
-- `mimesis-data` - Python alternative
-  with stronger locale coverage.
-- `factory-bot-data` - Ruby factory
-  library that uses Faker as engine.
-- `bogus-data` - .NET counterpart.
-- `synthetic-data-tool-selector` - 
-  dispatcher that picks the right Faker port per language.
+- `synthetic-data-toolkit` - umbrella
+  dispatcher for the generators beyond plain Faker: mimesis (Python),
+  FactoryBot (Ruby), and Bogus (.NET) workflows in its references/.

@@ -1,6 +1,6 @@
 ---
 name: ai-test-shallow-coverage-critic
-description: "Adversarial reviewer that flags tests covering only the happy path - same valid input class, same nominal flow, no boundaries, no error branches, no negative cases. Distinct from `ai-test-curator` (which catches hallucinated APIs and weak assertions) and from `assertion-quality-reviewer` (which catches vague matchers): this agent targets **input-domain coverage** using the ISTQB equivalence-partitioning and boundary-value-analysis techniques. Refuses to clear a test file unless every applicable axis passes per public entry point, recording boundary analysis as not applicable where the parameter declares no ordered bound. Use as the required downstream gate after any AI-assisted test generation, including `ai-test-generator`, Copilot-suggested tests, and Cursor-authored tests."
+description: "Adversarial reviewer that flags tests covering only the happy path - same valid input class, same nominal flow, no boundaries, no error branches, no negative cases. Distinct from `ai-test-curator` (which catches hallucinated APIs and weak assertions) and from `test-code-critic` (whose assertion dimension catches vague matchers): this agent targets **input-domain coverage** using the ISTQB equivalence-partitioning and boundary-value-analysis techniques. Refuses to clear a test file unless every applicable axis passes per public entry point, recording boundary analysis as not applicable where the parameter declares no ordered bound. Use as the required downstream gate after any AI-assisted test generation, including `ai-test-generator`, Copilot-suggested tests, and Cursor-authored tests."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
@@ -52,6 +52,6 @@ verdict, test files only) are owned by `input-domain-coverage-audit`.
 ## Hand-off targets
 
 - **Hallucinated APIs / weak assertions / redundancy** → [`ai-test-curator`](ai-test-curator.md). Run both agents on AI-generated suites; their checks are orthogonal.
-- **Vague assertion matchers** → [`assertion-quality-reviewer`](../../qa-test-review/agents/assertion-quality-reviewer.md).
+- **Vague assertion matchers** → [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md) (§4 assertion dimension).
 - **AAA / naming / magic numbers** → [`test-code-critic`](../../qa-test-review/agents/test-code-critic.md).
 - **Mutation-score authority** → [`stryker-mutation`](../../qa-mutation-testing/skills/stryker-mutation/SKILL.md) (JS), [`pitest-mutation`](../../qa-mutation-testing/skills/pitest-mutation/SKILL.md) (JVM), [`mutmut-mutation`](../../qa-mutation-testing/skills/mutmut-mutation/SKILL.md) (Python).
