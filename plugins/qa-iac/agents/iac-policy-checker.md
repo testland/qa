@@ -5,7 +5,7 @@ tools: "Read, Bash(jq *)"
 model: sonnet
 skills:
   - checkov-policy
-  - tfsec-policy
+  - trivy-config
   - multi-tool-finding-triage
 ---
 
@@ -92,9 +92,8 @@ The agent **refuses** to:
 ## References
 
 - [`checkov-policy`](../skills/checkov-policy/SKILL.md),
-  [`tfsec-policy`](../skills/tfsec-policy/SKILL.md),
-  [`kics-policy`](../skills/kics-policy/SKILL.md) - preloaded;
-  source scanners.
+  [`trivy-config`](../skills/trivy-config/SKILL.md) (tfsec legacy in its
+  references/tfsec-legacy.md) - preloaded; source scanners.
 - [`terraform-plan-reviewer`](terraform-plan-reviewer.md) - 
   sibling: plan-time review (vs static-config review of this
   agent).

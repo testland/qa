@@ -241,5 +241,5 @@ PCI DSS scope reduction is the highest-leverage cost saving. Default: **tokeniza
 ## References
 
 - PCI Security Standards Council: [home](https://www.pcisecuritystandards.org/), [document library](https://www.pcisecuritystandards.org/document_library/) (PCI DSS v4.0 docs), [glossary](https://www.pcisecuritystandards.org/glossary/)
-- Sister catalogs: `gdpr-test-patterns`, `hipaa-test-patterns`, `ccpa-test-patterns`, `soc2-evidence-collector`
+- Sister catalogs: `gdpr-test-patterns` (CCPA/CPRA in its references/ccpa.md), `hipaa-test-patterns`, `soc2-evidence-collector`
 - `audit-trail-test-author` - Req 10 audit log requirements

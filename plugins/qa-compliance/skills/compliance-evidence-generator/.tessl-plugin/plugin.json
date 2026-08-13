@@ -1,9 +1,0 @@
-{
-  "name": "testland/compliance-evidence-generator",
-  "description": "Build-an-X workflow that produces auditor-facing evidence packages from automated test results: maps control IDs to test outcomes across any compliance framework (SOC 2, ISO 27001, HIPAA, PCI DSS, GDPR, FedRAMP); generates the control-evidence matrix, timestamped evidence bundles (screenshots, log excerpts, CI exports), and chain-of-custody notes per NIST SP 800-72. Distinct from soc2-evidence-collector (SOC2-only raw log harvest) and from read-only coverage gap analysis that produces no artifacts. Use when an audit engagement requires auditor-ready evidence packages built from existing automated test output.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.6"
-}

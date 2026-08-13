@@ -1,6 +1,6 @@
 ---
 name: trivy-config
-description: "Runs Trivy's misconfiguration scanner (`trivy config`) against IaC directories to detect security issues across Terraform, CloudFormation, Kubernetes manifests, Helm charts, Dockerfiles, and Azure ARM templates - installs Trivy, scans with severity gating via `--exit-code`, suppresses findings via `.trivyignore` / `.trivyignore.yaml` or inline annotations, extends built-in checks with custom Rego policies, and emits SARIF for GitHub Code Scanning. Trivy is the forward path from tfsec (per Aqua Security's own migration guidance). Use when adopting a consolidated IaC scanner for new projects, migrating away from tfsec, or scanning mixed IaC stacks with a single tool."
+description: "Runs Trivy's misconfiguration scanner (`trivy config`) against IaC directories to detect security issues across Terraform, CloudFormation, Kubernetes manifests, Helm charts, Dockerfiles, and Azure ARM templates - installs Trivy, scans with severity gating via `--exit-code`, suppresses findings via `.trivyignore` / `.trivyignore.yaml` or inline annotations, extends built-in checks with custom Rego policies, and emits SARIF for GitHub Code Scanning. Trivy is the tfsec successor - the forward path from tfsec per Aqua Security's own migration guidance - and the legacy tfsec workflow (install, custom YAML rules, ignore annotations, migration steps) is kept in references/tfsec-legacy.md. Use when adopting a consolidated IaC scanner for new projects, migrating away from tfsec (or still operating a Terraform-only tfsec stack), or scanning mixed IaC stacks with a single tool."
 metadata:
   keywords: "trivy, iac, misconfiguration, terraform, kubernetes, dockerfile, helm, cloudformation, rego, sarif, security"
 ---
@@ -16,13 +16,13 @@ metadata:
 [filter]: https://trivy.dev/latest/docs/configuration/filtering/
 [report]: https://trivy.dev/latest/docs/configuration/reporting/
 [checks]: https://github.com/aquasecurity/trivy-checks
-[tfsec]: ../tfsec-policy/SKILL.md
+[tfsec]: references/tfsec-legacy.md
 
 Trivy is Aqua Security's consolidated misconfiguration scanner (`trivy
-config`) and the forward path from tfsec. Per the [tfsec skill][tfsec],
-[trivy.dev misconfiguration docs][mc], and Aqua's own documentation, new
-projects should evaluate Trivy first; tfsec's checks ship inside Trivy
-under `trivy config`.
+config`) and the forward path from tfsec. Per the
+[tfsec legacy reference][tfsec], [trivy.dev misconfiguration docs][mc], and
+Aqua's own documentation, new projects should evaluate Trivy first; tfsec's
+checks ship inside Trivy under `trivy config`.
 
 ## Pinned versions
 
@@ -286,7 +286,9 @@ comma-separated list from: `azure-arm`, `cloudformation`, `dockerfile`,
   `template`; `--output` flag; SARIF 2.1.0 compliance.
 - [checks][checks] - `aquasecurity/trivy-checks` - the upstream
   OPA bundle for all built-in checks.
-- [`tfsec-policy`][tfsec] - Migration context: tfsec is transitioning
-  to Trivy; this skill is the forward path.
+- [tfsec legacy reference][tfsec] - Migration context: tfsec is
+  transitioning to Trivy; this skill is the forward path. tfsec custom
+  rules + CI live in
+  [references/tfsec-custom-rules-and-ci.md](references/tfsec-custom-rules-and-ci.md).
 - `checkov-policy` - Sister scanner;
   broader Python-check framework, different rule coverage.

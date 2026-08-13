@@ -1,6 +1,6 @@
 ---
 name: tenant-onboarding-test-author
-description: "Workflow-driven skill that authors a test suite for tenant provisioning and offboarding: account creation, isolation at creation (no cross-tenant bleed from a new tenant's first API call), default resource quotas, billing record linkage, seed and default data correctness, idempotent re-provisioning, and teardown with full data deletion. Walks through mapping provisioning surfaces, generating test cases per surface, emitting the test suite skeleton (pytest / Jest / JUnit / Go test), and producing a coverage matrix. Use when a new tenant onboarding flow is introduced or changed, when the offboarding pipeline is modified, or when auditing provisioning coverage before a compliance review. Distinct from tenant-leak-test-author (runtime cross-tenant access) and cross-tenant-data-leak-tests (CI gate): this skill covers the provisioning lifecycle, not steady-state access control."
+description: "Workflow-driven skill that authors a test suite for tenant provisioning and offboarding: account creation, isolation at creation (no cross-tenant bleed from a new tenant's first API call), default resource quotas, billing record linkage, seed and default data correctness, idempotent re-provisioning, and teardown with full data deletion. Walks through mapping provisioning surfaces, generating test cases per surface, emitting the test suite skeleton (pytest / Jest / JUnit / Go test), and producing a coverage matrix. Use when a new tenant onboarding flow is introduced or changed, when the offboarding pipeline is modified, or when auditing provisioning coverage before a compliance review. Distinct from cross-tenant-data-leak-tests (leak-test planning + runtime CI gate): this skill covers the provisioning lifecycle, not steady-state access control."
 metadata:
   keywords: "tenant-provisioning, onboarding, offboarding, saas, multi-tenancy, idempotent, quota, billing, teardown"
 ---
@@ -16,7 +16,7 @@ delete-cascade paths - surfaces the runtime isolation test battery never
 exercises.
 
 This skill produces a test suite for that lifecycle. The output is committed to
-the project repo alongside the runtime suite from `tenant-leak-test-author`.
+the project repo alongside the runtime suite from `cross-tenant-data-leak-tests`.
 
 The workflow is:
 
@@ -31,7 +31,7 @@ The workflow is:
 | Skill | What it tests |
 |---|---|
 | `tenant-onboarding-test-author` (this skill) | Provisioning lifecycle: creation, quota, billing, seed data, idempotency, teardown |
-| `tenant-leak-test-author` | Steady-state runtime: cross-tenant access attempts, IDOR, horizontal escalation |
+| `cross-tenant-data-leak-tests` | Steady-state runtime: cross-tenant access attempts, IDOR, horizontal escalation |
 | `cross-tenant-data-leak-tests` | CI gate: confirms isolation invariants pass before merge |
 
 ## How to use
@@ -72,7 +72,7 @@ its Microsoft citations:
 
 ## Step 3 - Generate test cases
 
-Naming convention matches `tenant-leak-test-author`:
+Naming convention matches the `cross-tenant-data-leak-tests` planning section:
 
 ```
 test_<surface>_<scenario>_<expected>()
@@ -103,7 +103,7 @@ test_offboarding_application_data_deleted_after_retention_period()
 
 ## Step 4 - Pick the test framework and emit skeleton
 
-Same framework selection table as `tenant-leak-test-author`:
+Same framework selection table as the `cross-tenant-data-leak-tests` planning section:
 
 | Stack | Framework |
 |---|---|
@@ -196,4 +196,4 @@ The runtime isolation gate is `cross-tenant-data-leak-tests`.
 - [references/test-skeleton-examples.md](references/test-skeleton-examples.md) -
   pytest skeleton and SQL idempotency assertion.
 - Tenant isolation (runtime gate): `cross-tenant-data-leak-tests`.
-- Isolation models reference: `tenant-isolation-models-reference`.
+- Isolation models reference: isolation-models.md in `cross-tenant-data-leak-tests` references/.

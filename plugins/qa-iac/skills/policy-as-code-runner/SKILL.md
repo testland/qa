@@ -241,6 +241,5 @@ that violate the policy at admission time.
 - Conftest at `conftest.dev`.
 - OPA Gatekeeper at `open-policy-agent.github.io/gatekeeper/`.
 - `checkov-policy`,
-  `tfsec-policy`,
-  `kics-policy` - sister scanners with
+  `trivy-config` - sister scanners with
   built-in checks (use these first; OPA for custom).

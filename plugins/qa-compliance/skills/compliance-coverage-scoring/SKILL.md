@@ -1,6 +1,6 @@
 ---
 name: compliance-coverage-scoring
-description: "Scores existing tests and evidence against a named compliance framework's criteria list (GDPR, CCPA/CPRA, SOC 2 Trust Services Criteria, HIPAA Security Rule, PCI DSS, ISO/IEC 27001), marking every criterion met, partial, not met, or not applicable with a stated evidence requirement per state, and recording each scope exclusion with its criterion reference, reason, named approver, and re-review date. Produces a readiness self-assessment only: not certification, not an audit opinion, not legal advice. Use when a framework version has been named and an evidence set already exists, and someone needs a per-criterion readiness score before an observation period opens, before a qualified assessor arrives, or in response to a regulator inquiry."
+description: "Scores existing tests and evidence against a named compliance framework's criteria list (GDPR, CCPA/CPRA, SOC 2 Trust Services Criteria, HIPAA Security Rule, PCI DSS, ISO/IEC 27001), marking every criterion met, partial, not met, or not applicable with a stated evidence requirement per state, and recording each scope exclusion with its criterion reference, reason, named approver, and re-review date. Includes an adversarial readiness-review mode with hard refusal rules (never \"ready\" with an unjustified gap), and the ISO/IEC 27001:2022 Annex A per-control test-pattern catalog in references/iso27001.md. Produces a readiness self-assessment only: not certification, not an audit opinion, not legal advice. Use when a framework version has been named and an evidence set already exists, and someone needs a per-criterion readiness score before an observation period opens, before a qualified assessor arrives, or in response to a regulator inquiry."
 ---
 
 # Compliance coverage scoring
@@ -54,6 +54,12 @@ the HIPAA Security/Privacy/Breach subparts unmixed, the PCI DSS v4.0.1 version p
 and the ISO/IEC 27001:2022 full-reference rule - are in
 [references/frameworks.md](references/frameworks.md). Read the note for whichever
 framework is in play before building its list.
+
+For ISO/IEC 27001:2022 engagements, the Annex A per-control test-pattern
+catalog - the 93-control index, testable technical controls (A.8.x), Stage 1 /
+Stage 2 evidence shapes, and Statement of Applicability scoping - is in
+[references/iso27001.md](references/iso27001.md); it defines what a `met`
+artifact looks like per Annex A control before you score it.
 
 ### Required versus addressable (HIPAA specifically)
 
@@ -222,6 +228,43 @@ two cannot be created in month six.
 5. **On any framework version change.** A version change invalidates the mapping,
    not just the content. Rebuild the list from the new source of record and
    re-score from zero.
+
+## Adversarial readiness review
+
+Before a compliance audit (Type II observation period start, QSA dry-run, DPA
+assessment), run the scoring pass in adversarial mode: assume the evidence set
+is incomplete and make it prove otherwise. Discover what actually exists rather
+than trusting the team's claimed coverage:
+
+```bash
+# Search test directories for compliance-relevant tests
+grep -rE "(test_gdpr|test_ccpa|test_soc2|test_hipaa|test_pci)" tests/
+
+# Search for compliance-tag annotations
+grep -rE "@compliance\(" tests/ src/
+
+# Discover audit-evidence collection scripts
+find evidence/ -name "*.json" -o -name "*.py" -newer evidence/.last-collected
+```
+
+Map each in-scope criterion to the discovered tests and evidence, score per
+Step 2, then apply the refusal rules. The reviewer **refuses** to:
+
+- Mark "ready" if any required criterion is `not met`.
+- Accept `not applicable` without all four required fields (criterion,
+  reason, approver, re-review date).
+- Accept a scope exclusion older than its re-review date.
+- Approve a coverage map where audit-evidence is older than the
+  observation period start.
+- Map a single test to multiple criteria as "covers all" - each
+  criterion needs its own dedicated assertion or composite test
+  with explicit per-criterion verification.
+- Skip the audit-trail criterion in any framework requiring it (HIPAA,
+  PCI, SOC 2, GDPR Art. 5(1)(f)).
+
+A review that trips any rule emits NOT READY with the tripped rule as the
+first action item - there is no override short of fixing the gap or recording
+a valid exclusion.
 
 ## Anti-patterns
 

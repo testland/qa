@@ -1,6 +1,6 @@
 ---
 name: synthea-healthcare-data
-description: "Author and run Synthea (MITRE's open-source synthetic patient population simulator) to produce HIPAA-safe synthetic medical records for testing health IT systems. Covers Gradle build, population-size and state-specific generation, FHIR R4 / STU3 / DSTU2 / C-CDA / CSV / CPCDS output formats, disease-module customisation, and the lifecycle-simulation approach (birth-through-death patient journeys with realistic demographics). Use when testing FHIR servers, EHR integrations, claims processing, or any health IT system that needs realistic patient records without HIPAA exposure (distinct from faker-synthetic-data which is generic; this is health-domain-specific)."
+description: "Author and run Synthea (MITRE's open-source synthetic patient population simulator) to produce HIPAA-safe synthetic medical records for testing health IT systems. Covers Gradle build, population-size and state-specific generation, FHIR R4 / STU3 / DSTU2 / C-CDA / CSV / CPCDS output formats, disease-module customisation, and the lifecycle-simulation approach (birth-through-death patient journeys with realistic demographics). Use when testing FHIR servers, EHR integrations, claims processing, or any health IT system that needs realistic patient records without HIPAA exposure (distinct from the generic Faker family - qa-test-data faker-data for fixtures, the pii-masking-pipeline-builder faker-masking-operators reference for masking substitution; this is health-domain-specific)."
 ---
 
 # synthea-healthcare-data
@@ -24,10 +24,11 @@ Use this when:
 - Demoing a health-tech product without HIPAA exposure on a real
   dataset.
 
-For non-health-domain synthetic data use
-`faker-synthetic-data`. For
-the **categories** of PHI that Synthea avoids exposing see
-`pii-categories-reference`
+For non-health-domain fixture data use the `qa-test-data` plugin's
+`faker-data`; for Faker-driven masking substitution see the
+faker-masking-operators catalog in `pii-masking-pipeline-builder`
+references/. For the **categories** of PHI that Synthea avoids exposing
+see the pii-categories catalog there
 (HIPAA Safe Harbor 18 identifiers).
 
 ## When to use
@@ -216,7 +217,7 @@ rows linked by `patient` to `output/csv/patients.csv`, and every patient's
 |---|---|---|
 | Using a real-patient seed file then claiming "synthetic" | Real PHI inadvertently embedded; HIPAA exposure | Always start from Synthea defaults or audited synthetic seed |
 | Running without a pinned seed in CI | Output drifts across runs; test fixtures unstable | `-s <seed>` per CI run; pin Synthea version |
-| Faking demographics with `faker-synthetic-data` for a health context | Faker generates uncorrelated values; ICD codes, medications, encounters don't link | Use Synthea for any health-domain dataset |
+| Faking demographics with generic Faker substitution for a health context | Faker generates uncorrelated values; ICD codes, medications, encounters don't link | Use Synthea for any health-domain dataset |
 | Loading Synthea output into a "real" FHIR server without isolation | If a misconfigured environment crosses into production, fake patients land in real EHR | Strict env separation; namespace Synthea patient IDs (prefix with `synth-`) |
 | Treating Synthea SSNs as truly safe in all jurisdictions | Synthea uses reserved SSN ranges but format is still HIPAA-flagged | Pair with `presidio-pii-detection` on logs to confirm no SSN leakage |
 | Custom module without validation | Malformed module silently runs (or doesn't); fixtures look right but cover nothing | Validate JSON modules against Synthea's schema before running large populations |
@@ -248,10 +249,10 @@ rows linked by `patient` to `output/csv/patients.csv`, and every patient's
 - MITRE Synthea project site - synthea.mitre.org (the canonical
   project home; documentation, downloads, community).
 - HIPAA Safe Harbor (45 CFR § 164.514(b)(2)) - the de-identification
-  standard Synthea output is engineered against. See
-  `pii-categories-reference`.
-- Sibling generator (generic):
-  `faker-synthetic-data`.
+  standard Synthea output is engineered against. See the
+  pii-categories catalog in `pii-masking-pipeline-builder` references/.
+- Sibling generator (generic fixtures):
+  `faker-data` in the qa-test-data plugin.
 - Composes with:
   `pii-masking-pipeline-builder`.
 - Reference file:

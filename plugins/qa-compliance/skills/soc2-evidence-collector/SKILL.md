@@ -1,6 +1,6 @@
 ---
 name: soc2-evidence-collector
-description: "Build-an-X for SOC 2 Type II evidence collection - per-Trust-Services-Criterion test artifacts (Common Criteria CC1.1 - CC9.2; plus Availability A1, Confidentiality C1, Processing Integrity PI1, Privacy P1 - P9 if in scope); auto-collection from CI logs + audit trails + access logs + change-management records; alignment with Vanta / Drata / Secureframe evidence shapes; observation-period sampling. Use when the team is preparing for SOC 2 Type II audit and needs continuous evidence collection automation."
+description: "Build-an-X for SOC 2 Type II evidence collection and auditor-facing packaging - per-Trust-Services-Criterion test artifacts (Common Criteria CC1.1 - CC9.2; plus Availability A1, Confidentiality C1, Processing Integrity PI1, Privacy P1 - P9 if in scope); auto-collection from CI logs + audit trails + access logs + change-management records; alignment with Vanta / Drata / Secureframe evidence shapes; observation-period sampling. Cross-framework evidence packaging (control-evidence matrix, timestamped bundles, chain-of-custody notes per NIST SP 800-72 - also for ISO 27001 / HIPAA / PCI DSS / GDPR / FedRAMP) lives in references/evidence-packaging.md. Use when the team is preparing for SOC 2 Type II audit and needs continuous evidence collection, or when any audit engagement requires auditor-ready evidence packages built from automated test output."
 ---
 
 # soc2-evidence-collector
@@ -148,7 +148,19 @@ Pattern: daily collector cron job that:
 Continuity gaps in collector runs are themselves audit findings - 
 make collector failures alert-worthy.
 
-## Step 7 - End-to-end recipe
+## Step 7 - Package evidence for the auditor
+
+Raw collected evidence (Steps 2 - 6) still needs assembling into the
+deliverable an auditor or GRC platform receives: the control-evidence
+matrix, bounded log excerpts, chain-of-custody notes (SHA-256 hashed,
+per NIST SP 800-72), and a deterministic archive. The full cross-framework
+packaging workflow - it also handles ISO 27001, HIPAA, PCI DSS, GDPR, and
+FedRAMP control IDs - is in
+[references/evidence-packaging.md](references/evidence-packaging.md);
+GRC-platform delivery and CI automation of the whole run is in
+[references/grc-delivery-and-ci-automation.md](references/grc-delivery-and-ci-automation.md).
+
+## Step 8 - End-to-end recipe
 
 For each in-scope criterion:
 
@@ -157,7 +169,8 @@ For each in-scope criterion:
 3. ✅ Write per-control test (Step 3)
 4. ✅ Wire evidence into GRC platform (Step 4)
 5. ✅ Verify continuous-collection has no gaps (Step 6)
-6. ✅ Run a mock auditor query (request a sample; verify response is complete + timely)
+6. ✅ Package the evidence for delivery (Step 7)
+7. ✅ Run a mock auditor query (request a sample; verify response is complete + timely)
 
 ## Worked example
 
@@ -171,7 +184,7 @@ The observation period opens and CC6.3 (access deprovisioning) is in scope. The 
 | Trust the auditor will only sample what we expect | Audit fails on unexpected sample request | Continuous full-population collection (Step 6) |
 | Evidence stored in mutable storage | Tampering risk; audit invalidated | Append-only / immutable storage (Step 6) |
 | Test pass-history not preserved | Loses control-effectiveness evidence | Persist test results for the period |
-| Skip mock-audit dry runs | First real audit reveals gaps | Mock-audit before observation period (Step 7) |
+| Skip mock-audit dry runs | First real audit reveals gaps | Mock-audit before observation period (Step 8) |
 
 ## Limitations
 
@@ -189,6 +202,10 @@ The observation period opens and CC6.3 (access deprovisioning) is in scope. The 
 ## References
 
 - aicpa.org/topic/audit-assurance/audit-and-assurance-greaterthan-suitable-trust-services-criteria - AICPA Trust Services Criteria (paywalled; free abstract)
+- Cross-framework evidence packaging (carries the NIST SP 800-72 chain-of-custody + ISACA citations):
+  [references/evidence-packaging.md](references/evidence-packaging.md)
+- GRC-platform delivery + CI automation (carries the PCI DSS retention citation):
+  [references/grc-delivery-and-ci-automation.md](references/grc-delivery-and-ci-automation.md)
 - vanta.com/solutions/soc-2 - Vanta SOC 2 product
 - drata.com/grc-central/soc-2 - Drata SOC 2 reference
 - secureframe.com/hub/soc-2 - Secureframe SOC 2 hub

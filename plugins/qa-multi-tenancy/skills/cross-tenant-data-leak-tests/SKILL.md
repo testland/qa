@@ -1,17 +1,16 @@
 ---
 name: cross-tenant-data-leak-tests
-description: "Workflow-driven skill that emits the runtime CI gate of cross-tenant leak tests - the actual battery a multi-tenant codebase must pass on every PR. Defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the expected response codes per pattern (404 vs 403 disclosure trade-off), the Postgres-RLS-direct test patterns, and the CI integration (run with non-superuser non-BYPASSRLS role, fail the build on any leak). Use when implementing the actual leak-test suite (after tenant-leak-test-author produces the plan), when adding the CI gate to an existing project, or when investigating a leak finding."
+description: "Workflow-driven skill that plans and implements the cross-tenant leak-test suite - from surface inventory to the runtime CI gate a multi-tenant codebase must pass on every PR. The planning section inventories tenant-bearing surfaces (tables, APIs, object storage, search, queues, caches), classifies each by isolation model (silo / pool / bridge, per references/isolation-models.md), and derives the OWASP WSTG-ATHZ-02 coverage matrix. The battery defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the 404-vs-403 disclosure trade-off, the Postgres-RLS-direct patterns, and the CI integration (non-superuser non-BYPASSRLS role, fail the build on any leak). Use when designing or implementing a tenant-isolation test suite, adding the CI gate to an existing project, or investigating a leak finding."
 ---
 
 # cross-tenant-data-leak-tests
 
 ## Overview
 
-The runtime CI gate. While
-`tenant-leak-test-author`
-produces the *plan* (which surfaces, which patterns), this skill
-produces the *executing tests* - the actual code that fails the
-build when isolation breaks.
+Plan first, then implement. The planning section below produces the
+surface × pattern coverage matrix; the numbered steps produce the
+*executing tests* - the actual code that fails the build when
+isolation breaks.
 
 The contract:
 
@@ -23,11 +22,81 @@ The contract:
 
 ## When to use
 
-- Implementing the leak-test suite after planning with
-  `tenant-leak-test-author`.
+- Designing a multi-tenant test suite for a new feature or auditing
+  coverage for an existing tenant boundary (planning section).
+- Implementing the leak-test suite from the coverage matrix.
 - Adding the CI gate to an existing multi-tenant project.
 - Investigating a leak finding - reproduce with a minimal test.
 - Adding coverage for a newly-introduced tenant-bearing surface.
+
+## Planning the leak-test suite
+
+Every product has a different surface area, so the suite is built from an
+inventory, not a pre-canned set of tests.
+
+### Inventory tenant-bearing surfaces
+
+Walk the codebase and enumerate every surface that should be tenant-scoped:
+
+| Surface category | Examples | How to find |
+|---|---|---|
+| Database tables | tables with `tenant_id` column | `grep -r "tenant_id" --include="*.sql"` ; ORM model field annotations |
+| API endpoints | routes returning tenant data | route registrations grep |
+| Object storage | buckets / prefixes per tenant | IaC for buckets, lifecycle config |
+| Search indices | tenant-routed Elasticsearch / Algolia | index-naming scheme |
+| Async messages | tenant_id in message attributes / payload | message-class definitions |
+| Caches | Redis keys with tenant_id prefix | cache-client wrappers |
+| Logs / metrics | log lines containing tenant_id | log-emit grep |
+| Background jobs | Sidekiq / Celery tasks taking tenant_id | task definitions |
+| Reports / exports | tenant-scoped reports | export endpoints |
+| Webhooks / outbound | tenant-routed external calls | webhook configuration |
+
+Classify each surface by isolation model - silo / pool / bridge /
+vertically-partitioned, per
+[references/isolation-models.md](references/isolation-models.md). The test
+surface depends on the **lowest** isolation level in the stack: pool surfaces
+get the canonical battery below, bridge surfaces get cross-database-routing
+tests, silo surfaces get tenant-to-deployment routing tests (and the shared
+management surface still gets the pool battery).
+
+### Enumerate attack patterns per surface
+
+Per OWASP WSTG-ATHZ-02
+([owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema)),
+three primary scenarios: **horizontal escalation** (tenant A accesses tenant
+B's data at identical privilege), **vertical escalation** (non-admin reaches
+admin-only resources), and **IDOR / BOLA** (direct-reference attack on any
+ID-bearing endpoint). Layer the tenant-specific patterns (spoofed-body
+tenant_id, cross-tenant FK / unique-constraint, JWT replay, storage path
+traversal, unfiltered search, async-job context, cache-key collision) on
+top - the full test-per-pattern catalog is in
+[references/attack-patterns.md](references/attack-patterns.md).
+
+### Generate test cases and fixtures
+
+One or more test cases per (surface, pattern) cell, named
+`test_<surface>_<pattern>_<expected>()`. Each test fixtures two disjoint
+tenants with users of identical privilege (`tenant_a`, `tenant_b`,
+`tenant_a_user`, `tenant_b_user`, `tenant_a_admin`, `tenant_a_resource`,
+`tenant_b_resource`), performs the cross-access attempt, and asserts denial.
+Pick the runner by stack (pytest / Jest+Supertest / JUnit 5+Testcontainers /
+Go httptest / RSpec); ready-made skeletons are in
+[references/framework-skeletons.md](references/framework-skeletons.md).
+
+### Track coverage
+
+```
+                | horiz | vert | IDOR | jwt | fk | cache | log
+documents       |   X   |   X  |   X  |  X  | -  |   X   |  -
+attachments     |   X   |   -  |   X  |  X  | -  |   -   |  -
+search_index    |   X   |   -  |   X  |  X  | -  |   -   |  -
+audit_log       |   X   |   -  |   -  |  -  | -  |   -   |  X
+```
+
+Generate the matrix from the surface inventory × the pattern list. Empty
+cells are coverage gaps the PR must justify. The planning output - surface
+inventory, coverage matrix, suite skeleton, and a test-directory README - is
+committed to the project repo; the steps below implement the battery.
 
 ## Step 1 - Choose the test runner and DB connection role
 
@@ -40,7 +109,7 @@ For Postgres-backed apps, this is the most-common-bug step:
 | Role that **owns** the tenant table (and table not `FORCE`d) | Bypasses RLS. **Do not use** unless `FORCE ROW LEVEL SECURITY` is set. |
 | Plain application role (no BYPASSRLS, not owner) | **Correct** - same role prod uses. |
 
-Per `row-level-security-postgres-reference`,
+Per `rls-reference`,
 verify with:
 
 ```sql
@@ -143,7 +212,7 @@ def test_cannot_create_fk_referencing_other_tenant(
 
 This tests FK-based leak via reference: the FK constraint
 **bypasses RLS** per
-`row-level-security-postgres-reference`,
+`rls-reference`,
 so the FK must be validated at application layer too.
 
 ### Test 6 - Unique-collision side channel
@@ -166,7 +235,7 @@ def test_unique_violation_does_not_disclose_other_tenant_existence(
 ```
 
 Per
-`row-level-security-postgres-reference`:
+`rls-reference`:
 "Foreign key constraint checks, Unique constraint checks,
 TRUNCATE, and REFERENCES privilege checks bypass RLS." Solution:
 make `slug` unique per tenant: `UNIQUE (tenant_id, slug)`.
@@ -264,7 +333,7 @@ ROLLBACK;
 ```
 
 Per
-`row-level-security-postgres-reference`:
+`rls-reference`:
 test fails if either assertion fails (count != 0, or INSERT
 succeeds).
 
@@ -366,10 +435,12 @@ When a leak test fails:
 
 ## References
 
-- OWASP WSTG-ATHZ-02 (consumed via
-  `tenant-leak-test-author`):
+- OWASP WSTG-ATHZ-02 (consumed in the planning section):
   [owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema).
 - Postgres RLS bypass rules:
-  `row-level-security-postgres-reference`.
-- Plan / inventory:
-  `tenant-leak-test-author`.
+  `rls-reference` (non-Postgres engines in its references/other-engines.md).
+- Attack-pattern catalog:
+  [references/attack-patterns.md](references/attack-patterns.md); test
+  skeletons: [references/framework-skeletons.md](references/framework-skeletons.md).
+- Isolation models (silo / pool / bridge):
+  [references/isolation-models.md](references/isolation-models.md).

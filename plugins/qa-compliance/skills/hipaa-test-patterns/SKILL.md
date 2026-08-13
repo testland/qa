@@ -100,9 +100,8 @@ A billing clerk's role is added to the scheduling service. The team runs the §1
   HIPAA regulations text (45 CFR §164)
 - nist.gov/publications/sp-800-66-revision-1-introductory-resource-guide-implementing-hipaa-security - NIST SP 800-66 implementation guidance
 - nist.gov/publications/sp-800-88-revision-1-guidelines-media-sanitization - NIST SP 800-88 device sanitization
-- `gdpr-test-patterns`,
-  `ccpa-test-patterns` - sister
-  privacy-pattern catalogs
+- `gdpr-test-patterns` - sister
+  privacy-pattern catalog (CCPA/CPRA in its references/ccpa.md)
 - `audit-trail-test-author` - 
   §164.312(b) audit log requirements
 - `synthetic-pii-generator` - cross-plugin: safe PHI fixture generation

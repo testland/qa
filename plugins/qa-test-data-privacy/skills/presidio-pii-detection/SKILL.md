@@ -16,10 +16,10 @@ anonymisation. Two engines compose:
   spans (replace, redact, mask, hash, encrypt, custom).
 
 This skill wraps both. For the **categories** of PII that Presidio
-detects across regulatory regimes see
-`pii-categories-reference`;
-for the **operator** chosen per field see
-`data-masking-techniques-reference`.
+detects across regulatory regimes see the pii-categories catalog in
+`pii-masking-pipeline-builder` references/;
+for the **operator** chosen per field see the masking-techniques
+catalog there.
 
 ## When to use
 
@@ -160,8 +160,8 @@ Per [presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack
 default operator is `replace` with `<entity_type>` placeholder when
 no operator is configured.
 
-See
-`data-masking-techniques-reference`
+See the masking-techniques catalog in
+`pii-masking-pipeline-builder` references/
 for which operator suits which field.
 
 ### Batch processing
@@ -211,8 +211,8 @@ print(json.dumps(findings, indent=2))
 ```
 
 To classify findings by regulatory regime, map `entity_type` →
-regime via
-`pii-categories-reference`
+regime via the pii-categories catalog in
+`pii-masking-pipeline-builder` references/
 (e.g., `US_SSN` → GDPR Art. 4(1) identifier + CPRA SPI + NIST
 direct identifier + HIPAA Safe Harbor #7).
 
@@ -308,7 +308,7 @@ these reserved values.
 | No custom recogniser for in-house IDs | Internal employee IDs slip through | Define `PatternRecognizer` per Authoring section |
 | `replace` operator with default placeholder for analytics | Loses distribution / cardinality | Use deterministic hash or substitution for analytics-bound output |
 | Running analyzer + anonymizer on every request in prod | High latency (NER model is heavy) | Run as batch / offline; or use a lighter recogniser set |
-| Trusting Presidio to be regime-complete | Built-in recognisers cover GDPR/CCPA broadly but miss specialised IDs (e.g., medical record numbers); HIPAA #8 not detected by default | Add custom `PatternRecognizer` per regime - see `pii-categories-reference` |
+| Trusting Presidio to be regime-complete | Built-in recognisers cover GDPR/CCPA broadly but miss specialised IDs (e.g., medical record numbers); HIPAA #8 not detected by default | Add custom `PatternRecognizer` per regime - see the pii-categories catalog in `pii-masking-pipeline-builder` references/ |
 
 ## Limitations
 
@@ -319,9 +319,9 @@ these reserved values.
   Presidio's training data.
 - **No formal de-identification guarantee.** Presidio is a
   detect-and-mask toolkit, not a k-anonymity / differential
-  privacy engine. For statistical privacy models see
-  `data-masking-techniques-reference`
-  on NIST SP 800-188 models.
+  privacy engine. For statistical privacy models see the
+  masking-techniques catalog in `pii-masking-pipeline-builder`
+  references/ on NIST SP 800-188 models.
 - **English-default NLP.** Non-English text needs a different
   spaCy model and may have weaker built-in PERSON detection.
 - **Free-text only.** Structured-column detection (PII in a column
@@ -336,9 +336,8 @@ these reserved values.
   [presidio.dataprivacystack.org/anonymizer](https://presidio.dataprivacystack.org/anonymizer/).
 - Supported entities - 
   [presidio.dataprivacystack.org/supported_entities](https://presidio.dataprivacystack.org/supported_entities/).
-- Sibling references:
-  `pii-categories-reference`,
-  `data-masking-techniques-reference`.
+- Companion catalogs: pii-categories.md and masking-techniques.md in
+  `pii-masking-pipeline-builder` references/.
 - Downstream consumers:
   `pii-masking-pipeline-builder`.
 - Orthogonal sibling:

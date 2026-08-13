@@ -1,6 +1,6 @@
 ---
 name: gdpr-test-patterns
-description: "Reference catalog of GDPR-aligned test patterns - data-subject-rights workflows (Art. 15 access, Art. 16 rectification, Art. 17 erasure / \"right to be forgotten\", Art. 18 restriction, Art. 20 portability, Art. 21 objection); consent recording + revocation per Art. 7; data-residency assertions per Art. 44 - 50 international transfers; breach-notification timing tests per Art. 33 (72 hours); data-minimization assertions in fixtures per Art. 5(1)(c). Use when authoring GDPR-readiness tests for any product processing EU personal data."
+description: "Reference catalog of GDPR-aligned test patterns - data-subject-rights workflows (Art. 15 access, Art. 16 rectification, Art. 17 erasure / \"right to be forgotten\", Art. 18 restriction, Art. 20 portability, Art. 21 objection); consent recording + revocation per Art. 7; data-residency assertions per Art. 44 - 50 international transfers; breach-notification timing tests per Art. 33 (72 hours); data-minimization assertions in fixtures per Art. 5(1)(c). The California analogue - CCPA/CPRA patterns by Cal. Civ. Code section, including Global Privacy Control (GPC) opt-out, right-to-know, deletion, right-to-correct, and sensitive-PI limits - lives in references/ccpa.md. Use when authoring GDPR- or CCPA/CPRA-readiness tests for any product processing EU or California personal data."
 ---
 
 # gdpr-test-patterns
@@ -20,6 +20,11 @@ fines up to €20M or 4% of global annual turnover (whichever higher).
 This is a **reference skill** - defines the test-pattern
 catalog by Article. Tests use the team's existing test framework;
 this skill is the per-Article test recipe.
+
+For products also processing California consumer data, the CCPA/CPRA
+catalog by Cal. Civ. Code section - GPC opt-out (§1798.135),
+right-to-know, deletion, right-to-correct, sensitive-PI limits - is in
+[references/ccpa.md](references/ccpa.md).
 
 ## When to use
 
@@ -194,6 +199,7 @@ A support agent triggers an Art. 17 erasure for `alice@example.com`. The team al
 - eur-lex.europa.eu/eli/reg/2016/679/oj - canonical GDPR text
 - edpb.europa.eu - European Data Protection Board guidelines
 - ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/ - UK ICO guide
+- CCPA/CPRA California analogue (carries the oag.ca.gov + globalprivacycontrol.org citations):
+  [references/ccpa.md](references/ccpa.md)
 - `synthetic-pii-generator` - cross-plugin: safe test fixture generation
-- `ccpa-test-patterns` - sister: California analogue
 - `audit-trail-test-author` - companion: GDPR audit logs

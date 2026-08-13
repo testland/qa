@@ -1,9 +1,9 @@
 {
   "name": "testland/gdpr-test-patterns",
-  "description": "Reference catalog of GDPR-aligned test patterns - data-subject-rights workflows (Art. 15 access, Art. 16 rectification, Art. 17 erasure / \"right to be forgotten\", Art. 18 restriction, Art. 20 portability, Art. 21 objection); consent recording + revocation per Art. 7; data-residency assertions per Art. 44 - 50 international transfers; breach-notification timing tests per Art. 33 (72 hours); data-minimization assertions in fixtures per Art. 5(1)(c). Use when authoring GDPR-readiness tests for any product processing EU personal data.",
+  "description": "Reference catalog of GDPR-aligned test patterns - data-subject-rights workflows (Art. 15 access, Art. 16 rectification, Art. 17 erasure / \"right to be forgotten\", Art. 18 restriction, Art. 20 portability, Art. 21 objection); consent recording + revocation per Art. 7; data-residency assertions per Art. 44 - 50 international transfers; breach-notification timing tests per Art. 33 (72 hours); data-minimization assertions in fixtures per Art. 5(1)(c). The California analogue - CCPA/CPRA patterns by Cal. Civ. Code section, including Global Privacy Control (GPC) opt-out, right-to-know, deletion, right-to-correct, and sensitive-PI limits - lives in references/ccpa.md. Use when authoring GDPR- or CCPA/CPRA-readiness tests for any product processing EU or California personal data.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.8"
+  "version": "1.3.9"
 }

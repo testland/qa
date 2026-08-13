@@ -199,8 +199,7 @@ The agent **refuses** to:
 - HashiCorp Terraform JSON plan format at
   `developer.hashicorp.com/terraform/internals/json-format`.
 - [`checkov-policy`](../skills/checkov-policy/SKILL.md),
-  [`tfsec-policy`](../skills/tfsec-policy/SKILL.md),
-  [`kics-policy`](../skills/kics-policy/SKILL.md) - sister
+  [`trivy-config`](../skills/trivy-config/SKILL.md) - sister
   scanners (static, not plan-based).
 - [`iac-policy-checker`](iac-policy-checker.md) - agent that
   unifies the scanner outputs.

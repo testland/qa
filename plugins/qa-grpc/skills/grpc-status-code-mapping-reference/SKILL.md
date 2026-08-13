@@ -216,7 +216,7 @@ def test_unauthenticated_call_returns_unauthenticated(stub_no_auth):
 | Returning `INTERNAL` for caller-side errors | Surfaces server bugs that don't exist; alarms fire | Use `INVALID_ARGUMENT` for bad inputs |
 | Returning `UNKNOWN` everywhere | No retry semantics, no HTTP mapping clarity | Pick the specific code |
 | Returning `FAILED_PRECONDITION` for transient unavailability | Clients don't retry → user-visible failures | Use `UNAVAILABLE` |
-| Using `NOT_FOUND` for "you don't have permission" | Information leak (tenant probes) - OR - opacity (debugging hard); document the choice | Per `tenant-leak-test-author` (in the qa-multi-tenancy plugin) the 404-vs-403 trade-off is project policy |
+| Using `NOT_FOUND` for "you don't have permission" | Information leak (tenant probes) - OR - opacity (debugging hard); document the choice | Per `cross-tenant-data-leak-tests` (in the qa-multi-tenancy plugin) the 404-vs-403 trade-off is project policy |
 | `OK` with error message in payload | Breaks every gRPC client's error handling | Always use a non-OK status for errors |
 | Adding all codes to retryableStatusCodes | Retries non-idempotent operations; data corruption | Only `UNAVAILABLE` per AIP-194 (case-by-case for others) |
 | Treating HTTP 412 as `FAILED_PRECONDITION` in gateway | grpc-gateway maps FP→400 (not 412) | Verify the mapping in `runtime/errors.go` |

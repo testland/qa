@@ -2,10 +2,10 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-iac",
   "version": "1.2.0",
-  "description": "Infrastructure-as-code testing + security policy: 5 skills (helm-chart-tester, policy-as-code-runner, checkov-policy, tfsec-policy, kics-policy, trivy-config) and 2 agents (terraform-plan-reviewer, iac-policy-checker).",
+  "description": "Infrastructure-as-code testing + security policy: 4 skills (helm-chart-tester, policy-as-code-runner, checkov-policy, trivy-config - the tfsec successor, with the legacy tfsec workflow in its references) and 2 agents (terraform-plan-reviewer, iac-policy-checker).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-iac",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "iac", "terraform", "helm", "opa", "checkov", "tfsec", "kics", "policy-as-code"]
+  "keywords": ["qa", "testing", "iac", "terraform", "helm", "opa", "checkov", "tfsec", "trivy", "policy-as-code"]
 }

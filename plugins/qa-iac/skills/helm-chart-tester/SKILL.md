@@ -1,6 +1,6 @@
 ---
 name: helm-chart-tester
-description: "Configures helm-unittest for Helm chart unit testing - installs the `helm-unittest` plugin, authors `tests/*.yaml` per template, asserts on rendered manifests (`isKind`, `equal`, `matchRegex`, snapshots), plus `helm lint` and `helm template` render testing. Use to verify a chart's template logic and rendered shape; this is unit-level correctness testing, not security scanning - to enforce policy on rendered manifests use policy-as-code-runner, and to scan charts for misconfigurations use checkov-policy or kics-policy."
+description: "Configures helm-unittest for Helm chart unit testing - installs the `helm-unittest` plugin, authors `tests/*.yaml` per template, asserts on rendered manifests (`isKind`, `equal`, `matchRegex`, snapshots), plus `helm lint` and `helm template` render testing. Use to verify a chart's template logic and rendered shape; this is unit-level correctness testing, not security scanning - to enforce policy on rendered manifests use policy-as-code-runner, and to scan charts for misconfigurations use checkov-policy or trivy-config."
 ---
 
 # helm-chart-tester

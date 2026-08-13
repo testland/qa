@@ -229,7 +229,7 @@ jobs:
   `introspection-attack-surface-reference`.
 - Cross-plugin (tenant isolation):
   `cross-tenant-data-leak-tests`,
-  `row-level-security-postgres-reference`.
+  `rls-reference`.
 - Sibling frameworks:
   `apollo-server-tests`,
   `graphql-yoga-tests`,

@@ -1,9 +1,9 @@
 {
   "name": "testland/soc2-evidence-collector",
-  "description": "Build-an-X for SOC 2 Type II evidence collection - per-Trust-Services-Criterion test artifacts (Common Criteria CC1.1 - CC9.2; plus Availability A1, Confidentiality C1, Processing Integrity PI1, Privacy P1 - P9 if in scope); auto-collection from CI logs + audit trails + access logs + change-management records; alignment with Vanta / Drata / Secureframe evidence shapes; observation-period sampling. Use when the team is preparing for SOC 2 Type II audit and needs continuous evidence collection automation.",
+  "description": "Build-an-X for SOC 2 Type II evidence collection and auditor-facing packaging - per-Trust-Services-Criterion test artifacts (Common Criteria CC1.1 - CC9.2; plus Availability A1, Confidentiality C1, Processing Integrity PI1, Privacy P1 - P9 if in scope); auto-collection from CI logs + audit trails + access logs + change-management records; alignment with Vanta / Drata / Secureframe evidence shapes; observation-period sampling. Cross-framework evidence packaging (control-evidence matrix, timestamped bundles, chain-of-custody notes per NIST SP 800-72 - also for ISO 27001 / HIPAA / PCI DSS / GDPR / FedRAMP) lives in references/evidence-packaging.md. Use when the team is preparing for SOC 2 Type II audit and needs continuous evidence collection, or when any audit engagement requires auditor-ready evidence packages built from automated test output.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.9"
+  "version": "1.3.10"
 }

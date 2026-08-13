@@ -1,9 +1,0 @@
-{
-  "name": "testland/faker-synthetic-data",
-  "description": "Substitutes realistic replacement values for PII that a masking or de-identification step removed, nulled, or redacted, so a non-production dataset stays usable. Covers building an injective substitution map that keeps a shared identifier consistent everywhere it appears so joins survive; choosing deterministic (seeded) over random substitution, and the re-identification risk a shared or committed seed reintroduces, since a generator seed is a reproducibility control and not a cryptographic key; preserving field shape where a downstream system validates it, including check-digit values such as payment-card and national-ID numbers plus phone and postal formats; and why a value that merely looks realistic is not yet safe, leaving a residual re-identification measurement over the remaining quasi-identifiers. Use when a masking pipeline has nulled or dropped PII columns and the dataset now needs replacement values that keep cross-table joins intact.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.5"
-}

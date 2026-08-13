@@ -1,9 +1,9 @@
 {
   "name": "testland/compliance-coverage-scoring",
-  "description": "Scores existing tests and evidence against a named compliance framework's criteria list (GDPR, CCPA/CPRA, SOC 2 Trust Services Criteria, HIPAA Security Rule, PCI DSS, ISO/IEC 27001), marking every criterion met, partial, not met, or not applicable with a stated evidence requirement per state, and recording each scope exclusion with its criterion reference, reason, named approver, and re-review date. Produces a readiness self-assessment only: not certification, not an audit opinion, not legal advice. Use when a framework version has been named and an evidence set already exists, and someone needs a per-criterion readiness score before an observation period opens, before a qualified assessor arrives, or in response to a regulator inquiry.",
+  "description": "Scores existing tests and evidence against a named compliance framework's criteria list (GDPR, CCPA/CPRA, SOC 2 Trust Services Criteria, HIPAA Security Rule, PCI DSS, ISO/IEC 27001), marking every criterion met, partial, not met, or not applicable with a stated evidence requirement per state, and recording each scope exclusion with its criterion reference, reason, named approver, and re-review date. Includes an adversarial readiness-review mode with hard refusal rules (never \"ready\" with an unjustified gap), and the ISO/IEC 27001:2022 Annex A per-control test-pattern catalog in references/iso27001.md. Produces a readiness self-assessment only: not certification, not an audit opinion, not legal advice. Use when a framework version has been named and an evidence set already exists, and someone needs a per-criterion readiness score before an observation period opens, before a qualified assessor arrives, or in response to a regulator inquiry.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.10"
+  "version": "1.3.11"
 }

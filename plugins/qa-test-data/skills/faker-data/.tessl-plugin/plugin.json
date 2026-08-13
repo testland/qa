@@ -1,9 +1,9 @@
 {
   "name": "testland/faker-data",
-  "description": "Authors test-data factories using Faker: the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem. Owns the library mechanics end to end: install per language, the provider catalogue (person / internet / location / date / finance / lorem), locale selection and multi-locale mode, and seed-based determinism for reproducible runs. Scope is generating fresh values for tests that start from nothing, not replacing values inside an existing dataset that already holds real records - a production dump in staging goes to faker-synthetic-data, which owns the referential-integrity and re-identification concerns this skill does not address. Prefer this skill when the codebase already uses the Faker family or when cross-language consistency across Python, JS, and Ruby matters; use the mimesis reference in synthetic-data-toolkit only when deeper Python locale coverage is the primary requirement. Use when authoring fixtures or factories that need realistic-looking field values.",
+  "description": "Authors test-data factories using Faker: the Python `faker` library, the `@faker-js/faker` JS port, and the `faker-ruby` gem. Owns the library mechanics end to end: install per language, the provider catalogue (person / internet / location / date / finance / lorem), locale selection and multi-locale mode, and seed-based determinism for reproducible runs. Scope is generating fresh values for tests that start from nothing, not replacing values inside an existing dataset that already holds real records - a production dump in staging goes to pii-masking-pipeline-builder in qa-test-data-privacy (its faker-masking-operators reference), which owns referential integrity and re-identification. Prefer this skill when the codebase already uses the Faker family or when cross-language consistency across Python, JS, and Ruby matters; use synthetic-data-toolkit's mimesis reference only when deeper Python locale coverage is the priority. Use when authoring fixtures or factories that need realistic-looking field values.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.6"
+  "version": "1.3.7"
 }

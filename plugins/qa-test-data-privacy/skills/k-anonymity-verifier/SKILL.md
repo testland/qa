@@ -1,6 +1,6 @@
 ---
 name: k-anonymity-verifier
-description: "Verifies that a masked dataset satisfies k-anonymity, l-diversity, and t-closeness by computing equivalence classes over chosen quasi-identifiers and reporting re-identification risk. Covers quasi-identifier selection heuristics, threshold guidance, pycanon API (k_anonymity / l_diversity / t_closeness / report), ARX Java API and GUI workflow, SmartNoise for differential-privacy comparison, and CI-gate integration. Distinct from data-masking-techniques-reference (which catalogs masking operators but defers k-anonymity measurement to dedicated tooling) and from presidio-pii-detection (which detects PII spans but offers no equivalence-class analysis). Use when you need to confirm whether a masked dataset meets a stated k, l, or t threshold before promoting it to a non-production environment."
+description: "Verifies that a masked dataset satisfies k-anonymity, l-diversity, and t-closeness by computing equivalence classes over chosen quasi-identifiers and reporting re-identification risk. Covers quasi-identifier selection heuristics, threshold guidance, pycanon API (k_anonymity / l_diversity / t_closeness / report), ARX Java API and GUI workflow, SmartNoise for differential-privacy comparison, and CI-gate integration. Distinct from pii-masking-pipeline-builder's masking-techniques catalog (which lists masking operators but defers k-anonymity measurement to dedicated tooling) and from presidio-pii-detection (which detects PII spans but offers no equivalence-class analysis). Use when you need to confirm whether a masked dataset meets a stated k, l, or t threshold before promoting it to a non-production environment."
 metadata:
   keywords: "k-anonymity, l-diversity, t-closeness, re-identification risk, quasi-identifier, equivalence class, pycanon, ARX, anonymization verification"
 ---
@@ -27,8 +27,8 @@ Two stronger models layer on top:
   guarding against the skewness and similarity attacks.
 
 This skill verifies all three after masking. For choosing which
-masking operator to apply per field, see
-`data-masking-techniques-reference`.
+masking operator to apply per field, see the masking-techniques
+catalog in `pii-masking-pipeline-builder` references/.
 For detecting PII spans before masking, see
 `presidio-pii-detection`.
 
@@ -294,6 +294,6 @@ global one.
   [references/ci-gate.md](references/ci-gate.md) (gate script + workflow),
   [references/arx-api.md](references/arx-api.md) (ARX Java API + GUI workflow).
 - Related skills:
-  `data-masking-techniques-reference`,
   `presidio-pii-detection`,
-  `pii-masking-pipeline-builder`.
+  `pii-masking-pipeline-builder` (masking-techniques + privacy-models
+  catalogs in its references/).

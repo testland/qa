@@ -1,9 +1,0 @@
-{
-  "name": "testland/iso27001-test-patterns",
-  "description": "Reference catalog of ISO/IEC 27001:2022 Annex A test patterns: testable technical controls with code-level assertions for access control (A.8.2-A.8.5), logging and monitoring (A.8.15-A.8.16), cryptography (A.8.24), and secure development (A.8.25-A.8.31), plus evidence patterns for Stage 1 and Stage 2 certification audits and Statement of Applicability scoping. The full 93-control Annex A index (four themes: organizational A.5, people A.6, physical A.7, technological A.8) and the exhaustive per-control test code live in references/. Use when authoring ISMS test coverage for an ISO 27001:2022 certification engagement or gap assessment.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.7"
-}

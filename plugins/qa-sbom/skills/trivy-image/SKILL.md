@@ -154,7 +154,7 @@ HEALTHCHECK, exposed sensitive ports).
 
 For comprehensive IaC scanning (not just image-internal config),
 use `checkov-policy`
-+ `tfsec-policy`
++ `trivy-config`
 from the qa-iac plugin.
 
 ## Step 8 - False-positive triage (MANDATORY)

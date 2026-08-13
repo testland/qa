@@ -1,9 +1,9 @@
 {
   "name": "testland/grpc-status-code-mapping-reference",
-  "description": "Pure-reference catalog of gRPC standard status codes - the 17 canonical codes (OK..UNAUTHENTICATED), their numeric values, semantics, retry behaviour per AIP-194 (only UNAVAILABLE is auto-retry-safe), and the gRPC-to-HTTP status mapping used by grpc-gateway (NOT_FOUND→404, INVALID_ARGUMENT→400, PERMISSION_DENIED→403, UNAUTHENTICATED→401, RESOURCE_EXHAUSTED→429, FAILED_PRECONDITION→400 not 412, ABORTED→409, UNAVAILABLE→503, DEADLINE_EXCEEDED→504, etc.). Use when designing a gRPC service's error vocabulary, writing assertions in gRPC client tests, configuring retry policies, or mapping gRPC errors to HTTP via a gateway. Consumed by buf-cli-lint-breaking-build, ghz-load, grpcurl-cli, grpc-mock, grpc-streaming-test-author.",
+  "description": "Pure-reference catalog of gRPC standard status codes - the 17 canonical codes (OK..UNAUTHENTICATED), their numeric values, semantics, retry behaviour per AIP-194 (only UNAVAILABLE is auto-retry-safe), and the gRPC-to-HTTP status mapping used by grpc-gateway (NOT_FOUND\u2192404, INVALID_ARGUMENT\u2192400, PERMISSION_DENIED\u2192403, UNAUTHENTICATED\u2192401, RESOURCE_EXHAUSTED\u2192429, FAILED_PRECONDITION\u2192400 not 412, ABORTED\u2192409, UNAVAILABLE\u2192503, DEADLINE_EXCEEDED\u2192504, etc.). Use when designing a gRPC service's error vocabulary, writing assertions in gRPC client tests, configuring retry policies, or mapping gRPC errors to HTTP via a gateway. Consumed by buf-cli-lint-breaking-build, ghz-load, grpcurl-cli, grpc-mock, grpc-streaming-test-author.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.10"
+  "version": "1.2.11"
 }

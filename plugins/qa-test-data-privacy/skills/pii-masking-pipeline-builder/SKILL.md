@@ -1,6 +1,6 @@
 ---
 name: pii-masking-pipeline-builder
-description: "Build-an-X workflow that produces a PII masking pipeline spec from a source-data inventory. Walks the author through (1) classifying each field against pii-categories-reference, (2) picking a masking operator from data-masking-techniques-reference, (3) deciding pseudonymisation (reversible, in GDPR scope) vs anonymisation (irreversible, out of scope), (4) ordering the pipeline (detect → operator → audit), and (5) emitting a deployable config for Presidio + Faker + Synthea wrappers. Output is a YAML pipeline spec plus a per-field rationale table. Use after classifying a dataset's PII risk; this is the workflow that translates classification into runnable masking config."
+description: "Build-an-X workflow that owns the full detect → mask → verify pipeline for PII in test data. Walks the author through (1) classifying each field against the cross-regime PII catalog (GDPR / CCPA-CPRA / NIST SP 800-122 / HIPAA, in references/pii-categories.md), (2) picking a masking operator from the techniques catalog (seven canonical operators + Presidio operators + privacy models, in references/masking-techniques.md), (3) deciding pseudonymisation (reversible, in GDPR scope) vs anonymisation (irreversible, out of scope), (4) ordering the pipeline (detect → operator → audit) and emitting a deployable YAML config for Presidio + Faker + Synthea wrappers (Faker-as-masking-operator detail in references/faker-masking-operators.md), and (5) running the adversarial verification pass that re-detects PII in the masked output and blocks promotion on a leak. Use when non-production environments need masked production data - from field classification through runnable masking config to the leak audit."
 ---
 
 # pii-masking-pipeline-builder
@@ -14,10 +14,11 @@ a **deployable YAML spec** that downstream tools execute:
 
 - `presidio-pii-detection`
   runs the detector.
-- `faker-synthetic-data` /
+- Faker substitution operators
+  ([references/faker-masking-operators.md](references/faker-masking-operators.md)) /
   `synthea-healthcare-data`
   supply substitute values.
-- A leak-detection audit checks the output.
+- The verification pass (below) audits the output for leaks.
 
 ## When to use
 
@@ -43,8 +44,8 @@ and join graph need a quick analytical pass.
 
 ## Step 2 - Classify each field
 
-Look up each column in
-`pii-categories-reference`
+Look up each column in the cross-regime catalog
+([references/pii-categories.md](references/pii-categories.md))
 and record which regulatory regime(s) apply. Include linkable
 fields explicitly (NIST 800-122 §2.2).
 
@@ -59,12 +60,12 @@ fields explicitly (NIST 800-122 §2.2).
 Any field marked direct OR linkable enters the masking scope. A
 field marked only "linkable" still gets masked because it
 identifies in combination with others (Sweeney 87% rule, see
-`pii-categories-reference`).
+[references/pii-categories.md](references/pii-categories.md)).
 
 ## Step 3 - Pick an operator per field
 
-Match each field to a technique in
-`data-masking-techniques-reference`.
+Match each field to a technique in the techniques catalog
+([references/masking-techniques.md](references/masking-techniques.md)).
 Decision tree:
 
 1. **Must round-trip for authorised consumer?** (e.g., payments)
@@ -131,8 +132,8 @@ A standard order:
    `presidio-pii-detection`
    to catch embedded PII (e.g., a user-typed comment that contains
    an email).
-3. **Audit hook** - sample N rows of output and run a
-   leak-detection audit before
+3. **Audit hook** - sample N rows of output and run the
+   verification pass (below) before
    declaring the run complete.
 4. **Manifest** - emit a per-run manifest recording: pipeline
    version, source snapshot ID, row count in / out, operator
@@ -235,6 +236,57 @@ Pipeline classification: pseudonymised (email is deterministic,
 IP is FPE-encrypted with key retained). The user explicitly
 accepts that this output remains in GDPR scope.
 
+## Verification pass - auditing the masked output
+
+Every pipeline run ends with an adversarial leak audit that re-detects PII in
+the masked output and challenges the pipeline's "clean" claim. Audit checklist:
+
+1. **Sample the output.** N rows (default 1000) uniformly; 10 000+ for
+   high-risk datasets: `shuf -n 1000 masked-users.csv > sample.csv`.
+2. **Detect.** Re-run `presidio-pii-detection` against the sample with the
+   strictest entity set and a **lower** `score_threshold` than the pipeline
+   used during masking (e.g. 0.4 vs 0.5+) - the audit should catch hits the
+   pipeline filtered out as low-confidence. Scan **every** column, including
+   declared-non-PII passthrough columns.
+3. **Cross-reference.** For each hit: was the column in the spec, and what
+   operator ran? A hit in an unclassified or passthrough column is a leak
+   unless the column is genuinely non-PII per
+   [references/pii-categories.md](references/pii-categories.md). Was the
+   operator appropriate per
+   [references/masking-techniques.md](references/masking-techniques.md)?
+   Did it silently fail (literal "NULL" string still detected)?
+4. **Classify by regime.** Map each leak to its regulator(s) via the
+   cross-jurisdiction table; a leak counts against every regime listing it.
+5. **Verdict.**
+
+```
+BLOCK if any hit is:
+  - A CPRA SPI / GDPR Art. 9 / HIPAA Safe Harbor identifier
+  - A direct identifier in a column where the pipeline declared
+    "anonymised" output
+  - A hit in a column the pipeline didn't classify
+
+PASS-WITH-CAVEATS if:
+  - Only linkable (not direct) leaks remain
+  - The pipeline output is declared "pseudonymised" (GDPR scope
+    retained, so linkable hits are tolerable when access-controlled)
+
+PASS if:
+  - Zero hits, OR
+  - Only false-positive hits that the analyst flags as
+    Presidio-noise (e.g., a fake-shaped string that's actually a
+    UUID)
+```
+
+The audit **refuses** to mark a run "pass" if any CPRA SPI / GDPR Art. 9 /
+HIPAA Safe Harbor identifier appears unmasked, if the spec lacks a manifest
+(no provenance = no audit trail), or on a "we'll fix it next time" promise -
+leaks block the promotion. Findings are suppressed only via an explicit
+per-row waiver. Re-audit on every pipeline-spec change; detection is
+heuristic (Presidio's recogniser ceiling), so custom `PatternRecognizer`s
+cover in-house ID formats and full-dataset scans replace sampling for
+comprehensive audits.
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -242,7 +294,7 @@ accepts that this output remains in GDPR scope.
 | Per-column operator without referential check | Joins break after masking | Group columns that share keys; apply deterministic operators consistently |
 | Free-text columns skipped | Embedded PII (user-typed emails) leaks | Always run Presidio on any string column > ~50 chars |
 | Claiming "anonymised" when any reversible op is in the pipeline | False GDPR compliance claim | Audit the pipeline; pseudonymised if any operator is reversible |
-| No audit step | Operator failure or recogniser drift goes unnoticed | Always sample output and run a leak-detection audit |
+| No audit step | Operator failure or recogniser drift goes unnoticed | Always sample output and run the verification pass |
 | Salt vault key shared across pipelines | Salt-rotation breaks every downstream pipeline at once | Per-pipeline salt; rotate independently |
 | No manifest | Cannot reproduce a past run; auditors can't trace lineage | Always emit manifest with version IDs |
 | Pipeline runs on prod-write connection | Risk of writing masked data back over prod | Strict source = read-only DSN; output = staging-write DSN |
@@ -264,11 +316,20 @@ accepts that this output remains in GDPR scope.
 
 ## References
 
+- Cross-regime PII catalog (GDPR / CCPA-CPRA / NIST / HIPAA citations):
+  [references/pii-categories.md](references/pii-categories.md), with full
+  per-regime enumerations in
+  [references/regime-catalogs.md](references/regime-catalogs.md).
+- Masking-operator catalog (ISO/IEC 20889 + Presidio citations):
+  [references/masking-techniques.md](references/masking-techniques.md), with
+  privacy models in
+  [references/privacy-models.md](references/privacy-models.md).
+- Faker as a masking substitution operator (seed-exposure matrix):
+  [references/faker-masking-operators.md](references/faker-masking-operators.md).
+  Fixture-style fake data built from nothing lives in the `qa-test-data`
+  plugin's `faker-data` skill.
 - Composes:
-  `pii-categories-reference`,
-  `data-masking-techniques-reference`,
   `presidio-pii-detection`,
-  `faker-synthetic-data`,
   `synthea-healthcare-data`.
 - GDPR Art. 4(5) pseudonymisation - 
   [gdpr-info.eu/art-4-gdpr/](https://gdpr-info.eu/art-4-gdpr/).

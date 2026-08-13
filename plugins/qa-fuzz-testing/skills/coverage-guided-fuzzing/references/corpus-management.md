@@ -164,7 +164,7 @@ The corpus syncs to `gs://<project>-corpus.clusterfuzz-external.appspot.com/`.
 |---|---|---|
 | **From spec keywords** | New target, no inputs exist | Extract JSON keywords from a JSON parser spec, write each as a tiny file |
 | **From test fixtures** | Existing unit-test inputs cover paths | Copy fixtures from `tests/fixtures/*.json` to `seeds/` |
-| **From production data** | Mature target, prod logs available | Sample 1000 prod requests, strip PII per `pii-categories-reference`, seed |
+| **From production data** | Mature target, prod logs available | Sample 1000 prod requests, strip PII per qa-test-data-privacy's pii-categories catalog (pii-masking-pipeline-builder references/), seed |
 | **From corpus minimisation** | Reduce a large corpus to its coverage-equivalent core | Run `afl-cmin` or `libFuzzer -merge=1` |
 | **From OSS-Fuzz cousin** | Same format, different target | Reuse `<format>_seed_corpus.zip` from a related OSS-Fuzz project |
 
