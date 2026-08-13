@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob, Bash(jq *), Bash(git *)"
 model: sonnet
 skills:
   - sonarqube-maintainability-gate
-  - codeclimate-config
   - lizard-complexity
   - madge-deps
   - knip-dead-code

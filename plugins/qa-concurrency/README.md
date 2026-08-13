@@ -10,7 +10,6 @@ database isolation levels.
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [jepsen-patterns](skills/jepsen-patterns/SKILL.md) | Reference: consistency-model hierarchy (linearizability ↔ sequential ↔ causal ↔ monotonic-reads ↔ eventual); nemesis primitives (partition, crash, pause, clock skew); Knossos + Elle checkers; reading vendor reports |
 | Skill | [race-condition-test-author](skills/race-condition-test-author/SKILL.md) | Build deterministic interleavings via barriers; ThreadSanitizer (`-fsanitize=thread`, Go `-race`); jcstress `@JCStressTest` + `@Actor` + `@Outcome`; Loom virtual-thread stress |
 | Skill | [deadlock-detection-harness](skills/deadlock-detection-harness/SKILL.md) | Lock-order convention; lock-acquire-graph cycle detection (DFS); timed acquires + escalation; TSan `detect_deadlocks=1`; jstack / `gdb thread apply all bt` postmortem |
 | Skill | [async-ordering-tests](skills/async-ordering-tests/SKILL.md) | Microtask vs macrotask; deterministic timers (Sinon / Vitest fake); Promise.all vs sequential await; asyncio gather/cancel propagation; Go channel happens-before |

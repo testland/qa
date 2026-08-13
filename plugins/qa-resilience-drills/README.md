@@ -14,9 +14,7 @@ plugin covers measured, scheduled drills + the metrics they feed.
 | Skill | [restore-time-tests](skills/restore-time-tests/SKILL.md) | TTF segments; baseline timed restore; parallel-restore optimization; PITR latency; partial object-store restore; trend tracking; cold-start latency |
 | Skill | [error-budget-tests](skills/error-budget-tests/SKILL.md) | SLI calculation; budget consumption; multi-window multi-burn-rate alerting; freeze-trigger when budget exhausted; rolling-window reset; weekly stakeholder reporting |
 | Skill | [mttr-mtbf-tracker](skills/mttr-mtbf-tracker/SKILL.md) | Per-incident schema (detected/acknowledged/mitigated/resolved); MTTD / MTTA / MTTR / MTBF formulae; ITIL alignment; postmortem integration; mitigation vs resolution distinction |
-| Skill | [slo-negotiation-prep](skills/slo-negotiation-prep/SKILL.md) | Build-an-X prep pack for the QA - SRE - Product SLO conversation: current error-budget consumption + MTTR/MTBF trend + framed decision question + 3-5 option matrix (impact / reversibility / stakeholder cost) + recommended posture with cited alternatives. |
 | Agent | [dr-drill-orchestrator](agents/dr-drill-orchestrator.md) | Executes a planned DR drill end to end: pre-drill checklist, failover, RTO/RPO monitor, fail-back, post-drill report. |
-| Agent | [reliability-review-agent](agents/reliability-review-agent.md) | Composes error-budget burn + MTTR/MTBF into a weekly manager-facing reliability review narrative. |
 
 ## Install
 

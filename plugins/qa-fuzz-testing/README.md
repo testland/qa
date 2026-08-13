@@ -14,7 +14,6 @@ Structure-aware coverage-guided fuzzing: 2 reference skills (corpus-management-r
 | skill | [cargo-fuzz-rust](skills/cargo-fuzz-rust/SKILL.md) | Rust cargo-fuzz (libFuzzer + Arbitrary trait) |
 | skill | [atheris-python-fuzzing](skills/atheris-python-fuzzing/SKILL.md) | Google Atheris (libFuzzer for Python + CPython extensions) |
 | skill | [jazzer-jvm-fuzzing](skills/jazzer-jvm-fuzzing/SKILL.md) | Code Intelligence Jazzer (JVM + JUnit 5 + JVM sanitisers) |
-| skill | [ossfuzz-integration](skills/ossfuzz-integration/SKILL.md) | Onboard to Google OSS-Fuzz continuous fuzzing service |
 | skill | [fuzz-tool-selector](skills/fuzz-tool-selector/SKILL.md) | Decision tree routing fuzz-target authoring per language |
 | agent | [fuzz-target-author](agents/fuzz-target-author.md) | Scaffold a fuzz target from a function signature (routed via dispatcher) |
 | agent | [fuzz-findings-critic](agents/fuzz-findings-critic.md) | Classify, deduplicate, and verdict crash artifacts from a fuzz campaign (ASan / UBSan / timeout / OOM) |

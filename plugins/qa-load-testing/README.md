@@ -16,10 +16,8 @@ Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI
 | Skill | [flame-graph-analyzer](skills/flame-graph-analyzer/SKILL.md) | Read py-spy / async-profiler / pprof / clinic.js folded stacks; classify CPU-bound / GC / lock-contention; propose remediation. |
 | Skill | [db-query-plan-analyzer](skills/db-query-plan-analyzer/SKILL.md) | Read `EXPLAIN ANALYZE`; identify dominant cost (seq-scan / sort spill / nested loop); propose specific index or rewrite. |
 | Agent | [perf-regression-bisector](agents/perf-regression-bisector.md) | `git bisect run` against a per-commit perf measurement (k6 / Lighthouse); hand off culprit to flame-graph or db-slow-query analysis. |
-| Agent | [load-test-tool-selector](agents/load-test-tool-selector.md) | Reads project stack + load-testing goal (RPS profile, soak duration, browser-side metrics, CI gating) and recommends one tool from k6 / JMeter / Gatling / Locust / Lighthouse. Refuses when goal lacks a concrete load profile. Sibling of qa-mutation-testing/mutation-tool-selector. |
 | Agent | [perf-incident-responder](agents/perf-incident-responder.md) | On-call perf-incident orchestrator: confirm with k6, flame-graph the hot path, check slow queries, localize the cause. |
 | Skill | [latency-percentile-analyzer](skills/latency-percentile-analyzer/SKILL.md) | Interpret latency distributions beyond p95/p99: tail ratio, bimodal detection, coordinated omission. |
-| Skill | [jvm-gc-tuning](skills/jvm-gc-tuning/SKILL.md) | Diagnose JVM GC under load: GC logs, collector selection, the GC-pause to latency-tail link. |
 | Skill | [load-testing-overview](skills/load-testing-overview/SKILL.md) | Junior on-ramp: load-testing metrics, which tool to pick, and a first k6 run + threshold. |
 | Skill | [slo-load-test-plan](skills/slo-load-test-plan/SKILL.md) | Turns SLOs and an endpoint traffic mix into a named scenario matrix: a load profile and injection model per scenario, SLO-derived threshold expressions, and an error-budget-sized soak allowance. |
 

@@ -7,7 +7,6 @@ skills:
   - chrome-extension-test-loader
   - playwright-extension-fixtures
   - web-ext-cli-mozilla
-  - mv2-to-mv3-migration-test-checklist
   - extension-storage-test-author
   - manifest-v3-test-surface-reference
   - chrome-extension-messaging-tests

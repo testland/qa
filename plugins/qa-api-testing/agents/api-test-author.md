@@ -7,7 +7,6 @@ skills:
   - postman-collections
   - restassured-testing
   - karate-testing
-  - tavern-testing
   - schemathesis-fuzzing
   - restler-fuzzing
   - api-chaos-runner

@@ -14,7 +14,6 @@ GraphQL server testing: introspection attack-surface reference, persisted-query 
 | Skill | [introspection-attack-surface-reference](skills/introspection-attack-surface-reference/SKILL.md) | Pure-reference catalog of GraphQL introspection as an attack surface and the production-deployment controls for it. |
 | Skill | [mercurius-tests](skills/mercurius-tests/SKILL.md) | Wraps Mercurius (Fastify GraphQL plugin) testing patterns: `app.inject()` for HTTP-layer simulation without spinning up a network listene... |
 | Skill | [persisted-query-strategy-reference](skills/persisted-query-strategy-reference/SKILL.md) | Pure-reference catalog of GraphQL Persisted Query strategies. |
-| Skill | [pothos-builder-tests](skills/pothos-builder-tests/SKILL.md) | Wraps Pothos GraphQL schema-builder testing patterns: testing the SchemaBuilder output (lexicographicSortSchema + printSchema for snapsho... |
 | Skill | [graphql-n-plus-one-remediation](skills/graphql-n-plus-one-remediation/SKILL.md) | Traces a resolver tree to locate N+1, classifies each child resolver as safe or at risk, and applies per-request DataLoader batching, parent projection, or selection-set-aware prefetch. |
 | Agent | [n-plus-one-query-detector](agents/n-plus-one-query-detector.md) | Read-only specialist that scans GraphQL resolver code for the canonical N+1 query pattern - a resolver on a list field whose inner field-... |
 

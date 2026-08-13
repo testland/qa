@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-shift-left",
-  "version": "1.4.6",
-  "description": "Shift-left QA: 6 skills (acceptance-criteria-extractor, non-functional-requirement-extractor, data-contract-extractor, gherkin-scenario-coverage-map, spec-testability-heuristics, stride-threat-modeling) and 4 agents (testability-reviewer, definition-of-done-checker, threat-model-from-spec, spec-to-suite-orchestrator).",
+  "version": "1.5.0",
+  "description": "Shift-left QA: 6 skills (acceptance-criteria-extractor, non-functional-requirement-extractor, data-contract-extractor, gherkin-scenario-coverage-map, spec-testability-heuristics, stride-threat-modeling) and 3 agents (testability-reviewer, definition-of-done-checker, threat-model-from-spec, spec-to-suite-orchestrator).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

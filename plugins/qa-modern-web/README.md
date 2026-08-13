@@ -14,7 +14,6 @@ surfaces that the bulk of e2e/UI test plugins under-cover.
 | Skill | [web-vitals-inp-deep](skills/web-vitals-inp-deep/SKILL.md) | INP decomposition (input delay / processing duration / presentation delay); long-task detection; CrUX field correlation |
 | Skill | [browser-extension-tests](skills/browser-extension-tests/SKILL.md) | Playwright fixtures for Chromium MV3 extensions; popup + content-script + background-SW + chrome.storage tests |
 | Skill | [sw-cache-strategy-author](skills/sw-cache-strategy-author/SKILL.md) | Authors Workbox-style strategies (CacheFirst / NetworkFirst / StaleWhileRevalidate / NetworkOnly) AND the matching Playwright assertions |
-| Agent | [modern-web-health-agent](agents/modern-web-health-agent.md) | Pre-deploy readiness check composing SW lifecycle gate, manifest install-gate, and INP budget assertion into one READY/NOT READY verdict |
 
 ## Install
 

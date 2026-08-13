@@ -251,6 +251,8 @@ feeds `junit-xml-analysis` (in the qa-test-reporting plugin).
   pyramid balance per `test-pyramid-balancer` (in the qa-process plugin).
 - **Browser version drift.** Playwright N+1 ahead of stable; some
   tests pass in Playwright but fail in shipped Chrome.
+- **Migrating from Puppeteer:** Playwright supersedes it for testing;
+  the APIs are close enough that scripts port near-mechanically.
 
 ## References
 

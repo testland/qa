@@ -18,7 +18,6 @@ Test data engineering: Faker / FactoryBot / mimesis / Bogus generators; WireMock
 | Skill | [seed-data-curator](skills/seed-data-curator/SKILL.md) | Build a reproducible E2E seed dataset; coverage matrix; persistence formats; intentional refresh cadence. |
 | Skill | [pairwise-test-case-generator](skills/pairwise-test-case-generator/SKILL.md) | All-pairs / pairwise combinatorial generation from a multi-input spec; constraints; coverage report. |
 | Skill | [boundary-value-generator](skills/boundary-value-generator/SKILL.md) | Six-point boundary cases per typed input field (numeric / string-length / collection-count / enum / nullable). |
-| Skill | [e2e-test-narrative-builder](skills/e2e-test-narrative-builder/SKILL.md) | Assemble multi-step E2E tests from intent lists; per-framework code emission. |
 | Skill | [synthetic-pii-generator](skills/synthetic-pii-generator/SKILL.md) | Realistic-but-fake PII using safe-by-construction values (RFC 2606 domains, IRS test SSN range, Stripe test cards). |
 | Skill | [malicious-payload-bank](skills/malicious-payload-bank/SKILL.md) | Reference catalog of adversarial payloads (SQLi / XSS / SSRF / path traversal / XXE / prototype pollution / ReDoS / Unicode / CRLF). |
 | Skill | [test-data-patterns](skills/test-data-patterns/SKILL.md) | Architecture-tier reference: Test Data Builder (Pryce), Factory (with traits), Object Mother (Fowler), Fixture composition (Meszaros four-phase + Fresh-vs-Shared), Snapshot (defers to `golden-file-conventions`), Production-Data Anonymisation. |

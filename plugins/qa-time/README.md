@@ -14,7 +14,6 @@ Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest
 | Skill | [libfaketime-c](skills/libfaketime-c/SKILL.md) | libfaketime `LD_PRELOAD` time interception for any binary. |
 | Skill | [dst-transition-reference](skills/dst-transition-reference/SKILL.md) | Pure reference: DST transition bug classes. |
 | Skill | [leap-second-reference](skills/leap-second-reference/SKILL.md) | Pure reference: leap-second mechanics and bug surface. |
-| Skill | [iso-8601-vs-rfc-3339-reference](skills/iso-8601-vs-rfc-3339-reference/SKILL.md) | Pure reference: ISO 8601 vs RFC 3339 distinction. |
 | Skill | [timezone-test-matrix-builder](skills/timezone-test-matrix-builder/SKILL.md) | Build-an-X timezone + DST + leap test matrix from a code-base inventory. |
 | Agent | [time-handling-critic](agents/time-handling-critic.md) | Adversarial critic: scans diffs for naive time anti-patterns (naive now(), DST-unsafe construction, offset-free storage) and emits BLOCK/PASS. |
 | Skill | [dotnet-faketime](skills/dotnet-faketime/SKILL.md) | .NET TimeProvider / FakeTimeProvider fake-clock for time-dependent tests. |

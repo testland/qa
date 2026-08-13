@@ -10,7 +10,6 @@ Cache testing across layers: Redis cache patterns, CDN cache-purge testing (Clou
 | Skill | [cache-coherence-patterns-reference](skills/cache-coherence-patterns-reference/SKILL.md) | Pure-reference catalog of cache-coherence patterns across the request path. |
 | Skill | [cache-stampede-reference](skills/cache-stampede-reference/SKILL.md) | Pure-reference catalog of cache-stampede (thundering-herd) phenomena and mitigations. |
 | Skill | [cdn-cache-purge-tests](skills/cdn-cache-purge-tests/SKILL.md) | Wraps CDN cache-purge testing patterns for Cloudflare (POST /zones/{zone_id}/purge_cache, single-file / everything / cache-tags / hostnam... |
-| Skill | [memcached-tests](skills/memcached-tests/SKILL.md) | Wraps Memcached cache testing patterns: text and binary protocol command verification (set/get/add/cas/incr/decr), TTL semantics (0=never... |
 | Skill | [redis-cache-tests](skills/redis-cache-tests/SKILL.md) | Wraps Redis cache testing patterns: EXPIRE / PEXPIRE / TTL command verification (with the Redis 7+ NX/XX/GT/LT flags), the cache-aside wr... |
 | Skill | [stale-while-revalidate-reference](skills/stale-while-revalidate-reference/SKILL.md) | Pure-reference catalog of RFC 5861's stale-while-revalidate + stale-if-error Cache-Control extensions. |
 | Skill | [varnish-test-vtc-syntax](skills/varnish-test-vtc-syntax/SKILL.md) | Wraps the varnishtest CLI + VTC (Varnish Test Case) syntax for testing VCL configurations. |

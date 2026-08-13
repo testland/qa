@@ -1,9 +1,0 @@
-{
-  "name": "testland/career-ladder-author",
-  "description": "Build-an-X workflow that designs a QA career ladder - parallel individual-contributor and management tracks, per-level criteria across consistent axes, and observable promotion evidence per level - modeled on public engineering career frameworks (the Dropbox Engineering Career Framework, which includes Quality Engineer and SDET roles) and the career-development guidance in Camille Fournier's The Manager's Path (ISBN 978-1491973899). The ladder defines what each level looks like over a career - not a snapshot of the team's capability today, not a scorecard for grading external candidates against one open role, and not feedback on one person's recent work. Use when a QA org needs leveling criteria - before promotion season, during compensation banding, or when senior testers ask what comes next besides management.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.1.5"
-}

@@ -6,7 +6,6 @@ model: sonnet
 skills:
   - gitleaks-scanning
   - trufflehog-scanning
-  - kingfisher-scanning
   - multi-tool-finding-triage
 ---
 

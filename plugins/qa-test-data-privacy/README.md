@@ -14,7 +14,6 @@ PII detection, masking, and synthetic data generation for test environments: 5 s
 | skill | [pii-masking-pipeline-builder](skills/pii-masking-pipeline-builder/SKILL.md) | Build a deployable masking pipeline spec from a source-data inventory |
 | agent | [pii-leak-critic](agents/pii-leak-critic.md) | Audits masked output for leaks; classifies findings by regime; emits block/pass verdict |
 | Skill | [k-anonymity-verifier](skills/k-anonymity-verifier/SKILL.md) | Verify k-anonymity / l-diversity / t-closeness on masked datasets (ARX, pycanon). |
-| Skill | [test-data-governance-reference](skills/test-data-governance-reference/SKILL.md) | Pure reference: test-data lifecycle governance (retention, cross-env promotion, deletion). |
 
 ## Differentiation
 

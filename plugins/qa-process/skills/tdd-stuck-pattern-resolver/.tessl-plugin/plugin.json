@@ -1,9 +1,0 @@
-{
-  "name": "testland/tdd-stuck-pattern-resolver",
-  "description": "Pattern catalog for \"I can't write the test first\" moments - recognizes common testability blockers (singletons / static dependencies, network in constructors, time / random as hidden inputs, deeply nested construction, untestable boundaries) and proposes the refactor that unblocks TDD (extract interface, dependency injection, seam, ports-and-adapters). Use as TDD coaching when an engineer is stuck on a class of code. For a catalog of what-to-test heuristics with no story use heuristic-test-design-reference, to label a change's shape before planning test effort use code-change-shape-classifier, and for conventions on writing the test well once the code is testable use test-code-conventions.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.10.12"
-}

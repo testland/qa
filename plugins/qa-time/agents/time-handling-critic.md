@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
   - dst-transition-reference
-  - iso-8601-vs-rfc-3339-reference
 ---
 
 Adversarial read-only critic for time-handling correctness. Scans diffs

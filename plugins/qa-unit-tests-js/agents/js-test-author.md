@@ -8,7 +8,6 @@ skills:
   - vitest-tests
   - mocha-tests
   - jasmine-tests
-  - ava-tests
   - faker-data
   - msw-handlers
 ---

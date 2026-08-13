@@ -5,8 +5,6 @@ tools: "Read, Bash(jq *)"
 model: sonnet
 skills:
   - zap-baseline
-  - burp-headless
-  - nightvision-dast
   - multi-tool-finding-triage
 ---
 

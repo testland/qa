@@ -1,9 +1,0 @@
-{
-  "name": "testland/performance-feedback-author",
-  "description": "Build-an-X workflow that drafts evidence-based performance feedback and review input for testers using the Center for Creative Leadership's SBI model (Situation - Behavior - Impact, extended to SBII with Intent) - pulling every Behavior statement from verifiable work artifacts (bug reports authored, test cases and automation merged, review comments, charter session logs) rather than impressions or adjectives. Produces the written feedback artifact itself - not the agenda for the recurring conversation where it is delivered, not a team capability map (kept deliberately separate from performance data), and not a scorecard for external candidates. Use when a QA manager owes someone specific feedback this week, or when writing review input or a promotion case for review season.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.1.4"
-}

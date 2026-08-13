@@ -7,7 +7,6 @@ skills:
   - pytest-tests
   - unittest-tests
   - doctest-tests
-  - nose2-tests
   - mimesis-data
   - pairwise-test-case-generator
 ---

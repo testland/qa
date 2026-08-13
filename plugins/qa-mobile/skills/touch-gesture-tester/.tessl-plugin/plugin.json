@@ -1,9 +1,0 @@
-{
-  "name": "testland/touch-gesture-tester",
-  "description": "Verifies touch-gesture handlers (tap, double-tap, long-press, swipe, pinch, rotate, pan) work as expected under both mobile-emulation (Playwright) and native (XCUITest / Espresso / Detox) - distinguishes \"mouse click handler also fires on tap\" from \"real touch event fired with correct properties.\" Use when the app has bespoke gesture handlers (custom carousels, sliders, drag-drop, pull-to-refresh) and the team needs targeted gesture verification beyond generic UI assertions.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.3"
-}

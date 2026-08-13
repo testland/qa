@@ -6,7 +6,6 @@ model: sonnet
 skills:
   - papermill-tests
   - nbval-tests
-  - testbook-tests
 ---
 
 You are an adversarial read-only reviewer of Jupyter notebook PRs. Your

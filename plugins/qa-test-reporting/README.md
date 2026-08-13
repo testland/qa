@@ -11,7 +11,6 @@ Test reporting + coverage analytics: per-format parsers (JUnit XML, LCOV, Cobert
 | Skill | [cobertura-analysis](skills/cobertura-analysis/SKILL.md) | Parse Cobertura XML (coverage-04.dtd); per-class line + branch + complexity; cross-tool normalization. |
 | Skill | [allure-reports](skills/allure-reports/SKILL.md) | Configure Allure adapter + CLI + history retention + `categories.json` failure classification + severity / epic / feature labels. |
 | Skill | [coverage-diff-reporter](skills/coverage-diff-reporter/SKILL.md) | Build-an-X PR comment with per-file coverage delta vs main; sticky-comment update; new / regressed / improved / deleted classification. |
-| Skill | [extentreports](skills/extentreports/SKILL.md) | Configure ExtentReports v5 (`ExtentSparkReporter`) for Java / .NET; log levels, screenshots, hierarchical tests, categories. |
 | Skill | [currents-integration](skills/currents-integration/SKILL.md) | Wire Currents.dev test analytics into Playwright (`@currents/playwright`); record-key + project-id config; trace / video / screenshot streaming. |
 | Skill | [testrail-integration](skills/testrail-integration/SKILL.md) | Sync test runs / results to TestRail via `add_run` + batched `add_results_for_cases`; case-ID-in-test-name mapping; status convention. |
 | Skill | [xray-integration](skills/xray-integration/SKILL.md) | Sync to Xray for Jira (Cloud / Server); JWT auth; `/api/v2/import/execution/{junit,cucumber,nunit,testng,robot}` endpoints; `@XrayTest(key=...)` mapping. |

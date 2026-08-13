@@ -11,7 +11,6 @@ skills:
   - electron-spectron
   - qt-test-framework
   - xctest-mac-desktop
-  - at-spi-linux
   - desktop-test-strategy-reference
   - xunit-tests
   - nunit-tests

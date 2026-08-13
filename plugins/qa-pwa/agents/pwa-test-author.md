@@ -5,7 +5,6 @@ tools: "Read, Write, Edit, Grep, Glob, Bash(npx playwright test *), Bash(npx wor
 model: inherit
 skills:
   - workbox-tests
-  - lighthouse-pwa-audit
   - web-push-tests
   - service-worker-lifecycle-tests
   - offline-fallback-tests

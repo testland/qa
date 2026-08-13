@@ -7,8 +7,6 @@ skills:
   - playwright-testing
   - cypress-testing
   - selenium-testing
-  - puppeteer-testing
-  - testcafe-testing
   - webdriverio-testing
   - browserstack-automate
   - saucelabs-automate

@@ -15,7 +15,6 @@ that plugin instead.
 | Skill | [jest-tests](skills/jest-tests/SKILL.md) | Meta-built batteries-included; built-in `expect` + snapshot + mocking + coverage; `--ci` flag for safe CI runs |
 | Skill | [vitest-tests](skills/vitest-tests/SKILL.md) | Vite-native; Jest-compatible API; in-source testing; browser-mode; `--typecheck` flag for type validation |
 | Skill | [mocha-tests](skills/mocha-tests/SKILL.md) | Pluggable runner pairable with Chai/Sinon/nyc/c8; BDD + TDD interfaces; `--parallel` since Mocha 8 |
-| Skill | [ava-tests](skills/ava-tests/SKILL.md) | Concurrent-by-default per-file process isolation; explicit imports; powerful diff-rich failure output; `test.failing` for known-bug markers |
 | Skill | [jasmine-tests](skills/jasmine-tests/SKILL.md) | Original BDD-style; legacy AngularJS heritage; built-in matchers + spies; pairs with Karma (legacy); migration-to-Jest path documented |
 | Agent | [js-test-author](agents/js-test-author.md) | Authors one JS/TS unit test given a target module + behavior spec; detects framework + Faker + MSW from package.json; emits idiomatic Jest/Vitest/Mocha/Jasmine/AVA test file |
 

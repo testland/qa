@@ -6,7 +6,6 @@ model: sonnet
 skills:
   - checkov-policy
   - tfsec-policy
-  - kics-policy
   - multi-tool-finding-triage
 ---
 

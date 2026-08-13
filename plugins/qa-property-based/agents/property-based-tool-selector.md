@@ -8,7 +8,6 @@ skills:
   - hypothesis-testing
   - jqwik-testing
   - proptest-testing
-  - quickcheck-testing
   - tool-selection-decision-record
 ---
 

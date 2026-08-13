@@ -7,7 +7,6 @@ skills:
   - flyway-migrations
   - liquibase-migrations
   - atlas-migrations
-  - sqlmesh-migrations
   - migration-operation-taxonomy
 ---
 

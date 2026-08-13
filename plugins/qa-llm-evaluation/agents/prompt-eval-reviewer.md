@@ -5,7 +5,6 @@ tools: "Read, Grep, Glob, Bash(jq *)"
 model: sonnet
 skills:
   - promptfoo-evaluation
-  - openai-evals
   - deepeval-evaluation
   - ragas-evaluation
   - giskard-llm

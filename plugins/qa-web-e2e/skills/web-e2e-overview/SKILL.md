@@ -196,8 +196,8 @@ installed alongside this one; nothing here depends on them.
 | Cypress | `cypress-testing` |
 | Selenium WebDriver | `selenium-testing` |
 | WebdriverIO | `webdriverio-testing` |
-| Puppeteer | `puppeteer-testing` |
-| TestCafe | `testcafe-testing` |
+| Puppeteer | `playwright-testing` (Puppeteer is a browser-automation library, not a test framework; migrate to Playwright) |
+| TestCafe | `playwright-testing` (marginal adoption; not recommended for new projects) |
 | BrowserStack | `browserstack-automate` |
 | Sauce Labs | `saucelabs-automate` |
 | LambdaTest | `lambdatest-automate` |

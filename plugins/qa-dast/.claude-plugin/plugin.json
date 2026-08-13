@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-dast",
-  "version": "1.3.8",
-  "description": "DAST (dynamic application security testing): 6 skills (zap-baseline, zap-authenticated-scans, burp-headless, nightvision-dast, nuclei-dast, dast-scan-cadence-author) and 1 agent (dast-finding-triager). Sister to qa-sast for runtime vulnerabilities. Every scanner skill includes a mandatory False-positive triage section.",
+  "version": "1.4.0",
+  "description": "DAST (dynamic application security testing): 4 skills (zap-baseline, zap-authenticated-scans, burp-headless, nightvision-dast, nuclei-dast, dast-scan-cadence-author) and 1 agent (dast-finding-triager). Sister to qa-sast for runtime vulnerabilities. Every scanner skill includes a mandatory False-positive triage section.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

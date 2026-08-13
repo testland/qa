@@ -13,10 +13,8 @@ Bug reproduction workflow: extracts bug reports from Playwright traces / HARs, b
 | Agent | [bug-repro-builder](agents/bug-repro-builder.md) | Action-taking: turn a bug report into a minimal failing test (unit / integration / component / e2e) or a minimal-repro repository. |
 | Agent | [failure-classifier](agents/failure-classifier.md) | Read-only triager: take one failed test result + 7-day history + environment metadata; classify as `defect` / `flaky-pre-incident` / `flaky-known` / `environment-drift` / `timeout` / `flake-of-unknown-cause`; recommend the next agent. |
 | Agent | [defect-trend-narrator](agents/defect-trend-narrator.md) | Read-only narrator: take a time-windowed defect set, compute Pareto distribution + week-over-week deltas + escape-rate, emit a manager-facing trend narrative with citation appendix. |
-| Agent | [crash-stack-trace-analyzer](agents/crash-stack-trace-analyzer.md) | Parse V8 / Python / JVM / Go / native / minified traces; locate top app frame; `git blame` to attribute; emit hypothesis. |
 | Agent | [defect-clusterer](agents/defect-clusterer.md) | Group a backlog of bug reports by fingerprint (top-frame, error+route, error alone) into root-cause clusters; flag weak-signal clusters for human review. |
 | Agent | [escape-defect-analyzer](agents/escape-defect-analyzer.md) | Builder: classify a production-found bug as test-gap / process-gap / tooling-gap; generate a prevention-asset report with concrete test or monitoring change. |
-| Agent | [test-failure-debugger](agents/test-failure-debugger.md) | Read-only diagnoser for a consistently-failing test: reads stderr + diff against last-known-good baseline, classifies failure mode (assertion mismatch / setup error / environmental / selector breakage / timing-logic), proposes one minimal fix. |
 | Agent | [defect-pipeline-runner](agents/defect-pipeline-runner.md) | Weekly defect-review orchestrator: chains defect-clusterer, defect-trend-narrator, and escape-defect-analyzer into one report. |
 
 ## Install

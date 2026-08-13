@@ -1,9 +1,0 @@
-{
-  "name": "testland/memcached-tests",
-  "description": "Wraps Memcached cache testing against a real container: an inline set/get/expire/no-persistence worked example, with the exhaustive protocol-command tests (set/get/add/cas/incr/decr, TTL 0=never-expire / 30-day Unix-timestamp boundary) and the LRU-eviction, consistent-hashing distribution, ElastiCache Auto Discovery, and CI-wiring deep-dives in references/. Use when writing tests for an application that uses Memcached as its primary cache, when verifying ElastiCache Memcached cluster behaviour, or when contrasting Memcached eviction and distribution semantics against Redis.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.5"
-}

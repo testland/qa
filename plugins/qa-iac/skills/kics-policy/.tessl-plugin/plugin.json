@@ -1,9 +1,0 @@
-{
-  "name": "testland/kics-policy",
-  "description": "Configures KICS (Keeping Infrastructure as Code Secure), Checkmarx's scanner covering Terraform, Kubernetes, Helm, Dockerfile, OpenAPI, Ansible, ARM, CloudFormation, Pulumi, Crossplane - CLI / Docker / GitHub Action / pre-commit, JSON / SARIF / HTML / JUnit output, custom Rego queries. Use for the widest platform breadth, especially OpenAPI / Pulumi / Crossplane; for the broadest built-in checks with Python custom rules use checkov-policy, for Terraform-only scanning use tfsec-policy, and for a consolidated scanner use trivy-config.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.1.16"
-}

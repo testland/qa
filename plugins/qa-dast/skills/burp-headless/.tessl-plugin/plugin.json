@@ -1,9 +1,0 @@
-{
-  "name": "testland/burp-headless",
-  "description": "Configures and runs headless Burp Suite Professional / Enterprise vulnerability scans (a \"Burp scan\"): Pro drives scans via its local REST API, Enterprise runs CI-driven scans at scale via its server API; supports BApp Store extensions (BCheck, custom scanners) and authenticated targets via session-handling rules; exports issues as HTML / XML / CSV / JSON or SARIF. Use when the team has a Burp Suite license and wants to run a vulnerability scan with Burp - paid-tier dynamic application security testing (DAST) layered on top of OWASP ZAP.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.6"
-}

@@ -7,7 +7,6 @@ skills:
   - risk-matrix
   - product-risk-register-builder
   - risk-coverage-mapper
-  - risk-acceptance-decision-author
 ---
 
 An adversarial risk-register auditor that blocks substandard risk assessments from driving release planning.
