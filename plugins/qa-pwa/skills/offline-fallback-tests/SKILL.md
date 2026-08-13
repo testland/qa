@@ -37,7 +37,7 @@ Composes with:
   decision and the page-side assertion.
 - `service-worker-lifecycle-tests` - every recipe assumes an active SW; the lifecycle spec is the
   prerequisite for this one.
-- `pwa-install-flow-reference` - Stage 1's service-worker prerequisite cell is the same SW
+- `add-to-homescreen-flow-tests` (references/install-flow-reference.md) - install-gate Stage 1's service-worker prerequisite cell is the same SW
   this builder tests offline behavior of.
 
 ## When to use
@@ -339,7 +339,7 @@ regressions:
 - Composes:
   `workbox-tests`,
   `service-worker-lifecycle-tests`,
-  `pwa-install-flow-reference`.
+  `add-to-homescreen-flow-tests`.
 - Differentiation: `sw-cache-strategy-author` authors the strategy;
   this builder generates the verification
   suite. Both consume the cookbook recipe vocabulary; the

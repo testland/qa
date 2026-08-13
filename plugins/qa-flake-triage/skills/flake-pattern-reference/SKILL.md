@@ -142,9 +142,9 @@ UI tests pass when the page looks one way, fail when it shifts.
   then `data-testid`, only `text=` / CSS as a last resort.
 - For Playwright: enable `strict: true` so any ambiguous selector
   fails immediately rather than silently picking the first match.
-- For viewport-specific UIs: snapshot at every breakpoint via
-  `responsive-breakpoint-runner`; visual signal exposes layout-shift
-  flakes faster than text checks.
+- For viewport-specific UIs: snapshot at every breakpoint via the
+  breakpoint matrix in `playwright-snapshots`; visual signal exposes
+  layout-shift flakes faster than text checks.
 
 ## Pattern 7: environment variance
 

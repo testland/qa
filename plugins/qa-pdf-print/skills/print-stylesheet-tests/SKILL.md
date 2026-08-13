@@ -187,7 +187,7 @@ across two pages, though it looks fine on screen.
 | Test print stylesheet only by visually inspecting `page.pdf()` output | Regressions slip; not automated | Pair with `pdf-snapshot-tester` (see [references/page-geometry.md](references/page-geometry.md)) |
 | Skip `preferCSSPageSize` when CSS owns layout | API options override; CSS `@page` ignored | `preferCSSPageSize: true` (Step 3) |
 | Forget `printBackground: true` | Branded headers/colors missing in prod PDFs | Step 6 |
-| Test only Chromium-rendered PDF | WeasyPrint / wkhtmltopdf differ; cross-engine bugs slip | `html-to-pdf-regression` skill covers cross-engine |
+| Test only Chromium-rendered PDF | WeasyPrint / wkhtmltopdf differ; cross-engine bugs slip | `pdf-snapshot-tester` references/cross-engine-regression.md covers cross-engine |
 | Hard-code page-break tests against pixel positions | Slight font tweaks invalidate | Test text content per page (Step 5) |
 
 ## Limitations
@@ -209,9 +209,9 @@ across two pages, though it looks fine on screen.
 - [references/page-geometry.md](references/page-geometry.md) - `@page`
   pseudo-classes and margin verification
 - `pdf-snapshot-tester` - sister
-  skill for pixel-diff assertions on rendered PDF pages
-- `html-to-pdf-regression` - 
-  cross-engine HTML→PDF comparison
+  skill for pixel-diff assertions on rendered PDF pages; its
+  references/cross-engine-regression.md covers cross-engine HTML→PDF
+  comparison
 
 [MDN Paged Media]: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Paged_media
 [Playwright page.pdf docs]: https://playwright.dev/docs/api/class-page#page-pdf

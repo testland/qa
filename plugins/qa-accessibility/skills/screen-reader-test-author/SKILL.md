@@ -1,6 +1,6 @@
 ---
 name: screen-reader-test-author
-description: "Builds a screen-reader test narrative - a step-by-step manual test script for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) - that exercises a specific user flow through a component or page and captures the expected announcement at each step. Use when authoring an accessibility-acceptance test the team will run before sign-off, OR when scripting a manual a11y audit."
+description: "Builds the full manual-accessibility artifact surface: step-by-step screen-reader test scripts for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) with per-step keystroke + expected announcement; per-archetype WCAG 2.2 checklists (references/wcag-checklist.md); per-widget keystroke matrices pairing expected NVDA and VoiceOver announcements with the WCAG SC each row verifies (references/widget-matrix.md); and a guided NVDA / VoiceOver session protocol that merges script + checklist into a signed pass/fail session report. Use when authoring an accessibility-acceptance test, checklist, or widget matrix the team will run before sign-off, when scripting a manual a11y audit, OR when walking a tester through a guided screen-reader session."
 ---
 
 # screen-reader-test-author
@@ -14,7 +14,14 @@ NVDA / JAWS / VoiceOver / TalkBack. The team needs a repeatable
 script that any tester (not just the original author) can follow.
 
 This skill takes a user flow and produces that script: per-step
-keystroke + expected announcement.
+keystroke + expected announcement. Two sibling artifact shapes live in
+references/: a per-archetype WCAG 2.2 checklist generator for
+spec-review-time acceptance criteria
+([references/wcag-checklist.md](references/wcag-checklist.md)) and
+per-widget keystroke matrices for hand-run NVDA / VoiceOver passes
+([references/widget-matrix.md](references/widget-matrix.md)). The
+"Running the session" section below turns script + checklist into a
+guided, signed session.
 
 ## When to use
 
@@ -155,6 +162,89 @@ The skill emits the matching format; per
 `test-management-sync`
 (when shipped) the test case can be uploaded automatically.
 
+## Running the session
+
+When a component has passed automated scans and static review and a human
+tester needs a guided manual session to sign off acceptance, compose the
+script (Steps 1-5) with the component's per-archetype checklist
+([references/wcag-checklist.md](references/wcag-checklist.md)) into one
+session package. Required inputs: the component's rendered URL, its
+archetype, and either an existing script or the intent-level flow (Step 2
+format). Without a rendered URL the pre-conditions cannot be defined - stop
+and ask.
+
+### Build the session package
+
+Merge script + checklist into a single session document:
+
+- Header: component name, archetype, URL, date, tester name (blank field),
+  SR + browser pair.
+- NVDA section (Windows): single-letter quick-navigation keys. Per
+  [WebAIM NVDA guide][webaim-nvda]: H navigates headings, F form controls,
+  B buttons, K links; Shift+letter moves backwards; NVDA+Space toggles
+  Browse and Focus modes. Per the [NVDA user guide][nvda-ug], the default
+  NVDA modifier key is Insert (or numpadZero with numLock off).
+- VoiceOver section (macOS): per [WebAIM VoiceOver guide][webaim-vo], the
+  VO keys are Control+Option; VO+Right/Left reads next/previous item;
+  VO+Cmd+H navigates headings; VO+Cmd+J form controls; VO+Space activates;
+  VO+U opens the Web Rotor.
+- Checklist rows mapped to each script step, so the tester sees the WCAG SC
+  being verified alongside the keystroke.
+
+[webaim-nvda]: https://webaim.org/articles/nvda/
+[webaim-vo]: https://webaim.org/articles/voiceover/
+[nvda-ug]: https://download.nvaccess.org/documentation/userGuide.html
+
+### Walk the tester through it
+
+1. Pre-conditions block: SR running, browser open to the URL, virtual
+   cursor at page top (NVDA browse mode; VoiceOver with Web Rotor closed).
+2. For each intent step: the keystroke, the expected announcement, the WCAG
+   SC being verified, and a `[ ] PASS` / `[ ] FAIL` / `[ ] BLOCKED`
+   checkbox.
+3. After each overlay or composite step: a focus-return checkpoint per the
+   [W3C APG dialog-modal pattern][apg-dialog] (focus must return to the
+   trigger on close).
+4. After each live-region step: a timing checkpoint (announce within
+   1-2 s of state change; matches the `aria-live="polite"` contract per
+   [WCAG SC 4.1.3 Status Messages][wcag-413]).
+
+[apg-dialog]: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+[wcag-413]: https://www.w3.org/TR/WCAG22/#status-messages
+
+### Capture the session report
+
+Write the results to `a11y-sessions/<component>-<YYYY-MM-DD>-<sr>.md`:
+
+```markdown
+## Screen-Reader Session Report
+
+**Component:** <name>  **Archetype:** <archetype>  **URL:** <url>
+**Date:** <YYYY-MM-DD>  **Tester:** _______________
+**SR + Browser:** NVDA + Firefox | VoiceOver + Safari
+
+| Step | Intent | Keystroke | Expected announcement | WCAG SC | Result |
+|------|--------|-----------|-----------------------|---------|--------|
+| 1 | Navigate to component heading | H | "<Component>, heading level 2" | 1.3.1 / 2.4.6 | [ ] PASS [ ] FAIL [ ] BLOCKED |
+
+### Summary
+
+| Verdict | Count |
+|---------|-------|
+| PASS / FAIL / BLOCKED | N |
+
+**Overall:** PASS / FAIL / INCOMPLETE
+
+**Failures to remediate:**
+1. <Step N>: <what was announced> vs. <expected> - likely cause + WCAG SC.
+
+**Sign-off:** _______________ Date: __________
+```
+
+The session never modifies component source. iOS VoiceOver and TalkBack
+(Android) have different gesture models - author a separate mobile script
+(Step 1) rather than reusing the desktop session.
+
 ## Anti-patterns
 
 | Anti-pattern                                                  | Why it fails                                                       | Fix |
@@ -181,5 +271,11 @@ The skill emits the matching format; per
 - WebAIM Screen Reader Survey - https://webaim.org/projects/screenreadersurvey/
 - NVDA documentation - https://www.nvaccess.org/files/nvda/documentation/userGuide.html
 - VoiceOver Getting Started - https://www.apple.com/accessibility/mac/vision/ + Apple developer docs
+- [references/wcag-checklist.md](references/wcag-checklist.md) -
+  per-archetype WCAG 2.2 checklist builder (spec-review acceptance
+  criteria).
+- [references/widget-matrix.md](references/widget-matrix.md) -
+  per-widget keystroke matrices with expected NVDA / VoiceOver
+  announcements per WCAG SC.
 - `wcag-keyboard-navigation`,
   `aria-authoring-patterns` - patterns this skill references for the "Why" column.

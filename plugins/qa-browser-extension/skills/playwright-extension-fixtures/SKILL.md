@@ -1,6 +1,6 @@
 ---
 name: playwright-extension-fixtures
-description: "Author the lower-level Playwright fixture pattern that every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe. This is the launch-and-load layer shared by every extension test, not the assertions run on top of it. Use when authoring or debugging the fixture a Chromium extension test imports - popup, content script, service worker, options page, or side panel."
+description: "Author the Playwright fixture layer every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe - plus the extension load / reload matrix (which edit re-evaluates which surface) and the `chrome.storage` test suite (area selection, quota-exceeded, `storage.onChanged`, managed read-only) in references/. Use when authoring or debugging the fixture a Chromium extension test imports, when an edit appears to have no effect and you need the reload matrix, or when authoring storage-quota tests."
 metadata:
   keywords: "playwright, chromium, launchpersistentcontext, test-fixtures, browser-extension"
 ---
@@ -30,7 +30,8 @@ page, side panel - needs to import first.
 
 Composes with:
 
-- `chrome-extension-test-loader` - the manual `chrome://extensions` flow this fixture automates.
+- [references/reload-matrix.md](references/reload-matrix.md) - which edits require which reload; the manual `chrome://extensions` gesture this fixture automates.
+- [references/storage-tests.md](references/storage-tests.md) - the `chrome.storage` area / quota / event test suite run from this fixture's SW context.
 - `manifest-v3-test-surface-reference` - the manifest fields the fixture is testing against.
 
 ## When to use
@@ -211,7 +212,7 @@ typical causes:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `waitForEvent('serviceworker')` times out | Manifest invalid or `background.service_worker` field missing | Check `chrome://extensions` manually first via `chrome-extension-test-loader` |
+| `waitForEvent('serviceworker')` times out | Manifest invalid or `background.service_worker` field missing | Load unpacked via `chrome://extensions` manually first and read the red Errors card |
 | Extension loads in headed but not headless | Channel set to `chrome` / `msedge` instead of `chromium` | Use `channel: 'chromium'` per [pw-ext] |
 | `extensionId` extracts an empty string | URL not `chrome-extension://...` shape (e.g., `about:blank` listener fired) | Filter on `serviceWorker.url().startsWith('chrome-extension://')` before split |
 
@@ -264,9 +265,9 @@ Key choices:
 
 - **Chromium-only.** Per [pw-ext], the fixture covers
   Chromium-family extensions only. Firefox WebExtensions test
-  differently - see
-  `web-ext-cli-mozilla` for the
-  Mozilla-side runner.
+  differently - see the `web-ext` reference in
+  `manifest-v3-test-surface-reference`
+  (references/web-ext-firefox.md) for the Mozilla-side runner.
 - **MV3 SW lifecycle is asynchronous.** The 30s auto-suspend is
   non-deterministic; tests timing-sensitive to it should use
   `chrome.alarms` (see
@@ -286,8 +287,11 @@ Key choices:
   guidance, MV3 SW behaviour, headless support) - [pw-ext].
 - `chromium.launchPersistentContext` API - 
   [playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context](https://playwright.dev/docs/api/class-browsertype#browser-type-launch-persistent-context).
+- [references/reload-matrix.md](references/reload-matrix.md) - the
+  load / reload matrix and its automation equivalents.
+- [references/storage-tests.md](references/storage-tests.md) - the
+  `chrome.storage` quota / area / event test suite.
 - Composes:
-  `chrome-extension-test-loader`,
   `manifest-v3-test-surface-reference`.
 - Distinct neighbour:
   `browser-extension-tests` - the popup / content-script / messaging assertion playbook this

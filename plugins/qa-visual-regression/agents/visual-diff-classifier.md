@@ -1,6 +1,6 @@
 ---
 name: visual-diff-classifier
-description: "Adversarial reviewer of visual regression diffs. Classifies each diff in a build (Percy / Chromatic / Playwright snapshot report) into one of three categories - intentional, incidental, or regression - with rationale and recommended action. Use when reviewing a visual-test build that the team is about to accept; surfaces \"looks intentional but isn't\" cases that human reviewers rubber-stamp."
+description: "Adversarial reviewer of visual regression diffs. Classifies each diff in a build (Percy / Chromatic / Playwright snapshot report) into one of three categories - intentional, incidental, or regression - with rationale and recommended action; on large builds (20+ diffs) it also emits a per-PR summary-comment report mode that clusters diffs by component / route, separates intent-aligned changes from cascade / regression suspects, and points the reviewer at the screenshots that need actual eyes. Use when reviewing a visual-test build that the team is about to accept; surfaces \"looks intentional but isn't\" cases that human reviewers rubber-stamp."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:
@@ -73,6 +73,66 @@ Verdict rule:
 - **BLOCK** - any `regression` row.
 - **REVIEW** - at least one `incidental` row.
 - **OK** - all rows `intentional`.
+
+## Report output mode (per-PR summary comment)
+
+A 50-diff build causes **diff blindness** - reviewers rubber-stamp or skip.
+When a build has ~20+ diffs, emit the classification as one sticky PR
+comment instead of (or in addition to) the raw table:
+
+1. **Cluster diffs by component / route** (not by file): derive the cluster
+   key from the story/page name (`Button/with-icon` → `Button`;
+   `/checkout` → `checkout`). Deduplicate cross-tool double-instrumentation
+   by `(componentOrRoute, variant)`.
+2. **Read the PR intent** via `gh pr view --json title,body,labels,files`:
+   scope keywords come from title casing, `area:*` labels, and the leaf
+   directories of changed files under `src/components/` / `src/routes/`.
+3. **Classify each cluster against intent**: `aligned` (cluster is in the
+   PR's scope keywords or changed components), `adjacent` (parent / child
+   of a changed component in the component graph), `unrelated` (suspected
+   cascade or regression - maps to this agent's `regression` posture).
+4. **Order the comment for the reviewer's scan**: unrelated first
+   (investigate), then adjacent (confirm), then aligned (bulk-approve);
+   within each group, sort by max diff ratio descending. Report only
+   changed snapshots; put the unchanged count in the header.
+
+```markdown
+## Visual diff summary - `<sha>`
+
+**Total snapshots:** 87 (12 changed, 75 unchanged)
+**Verdict:** REVIEW (1 unrelated cluster suspects regression)
+
+### ❌ Unrelated (1 cluster, 2 diffs) - DO NOT update without investigation
+| Cluster | Diffs | Max diff% | Recommendation |
+|---------|------:|----------:|----------------|
+| Footer  |   2   |   12.0%   | Not mentioned in the PR. Suspected cascade; open the diffs, bisect if no obvious cause. |
+
+### ⚠ Adjacent (1 cluster, 3 diffs) - confirm intent
+| Cluster | Diffs | Max diff% | Recommendation |
+|---------|------:|----------:|----------------|
+| Modal   |   3   |   2.8%    | Modal contains Button; eyeball one diff to confirm the cascade is intended. |
+
+### ✅ Aligned with PR intent (3 clusters, 7 diffs)
+| Cluster | Diffs | Max diff% | Recommendation |
+|---------|------:|----------:|----------------|
+| Button  |   4   |   8.2%    | Update baselines after eyeballing 1 sample. |
+```
+
+End the comment with a **Quick actions** block that auto-accepts only the
+aligned clusters (e.g. `chromatic --auto-accept-changes --only-changed
+--components Button,ButtonGroup` or `percy approve <build-id> --snapshots
+...`); adjacent and unrelated clusters never get an auto-update suggestion.
+Checkpoint before suggesting the command: open one sample diff per aligned
+cluster and confirm it matches the PR's stated intent. Post via a sticky
+comment action (e.g. `marocchino/sticky-pull-request-comment`) - one comment
+per build, never one per snapshot.
+
+Report-mode caveats: a diff ratio has no semantic understanding ("color
+changed" vs "layout broke" look the same - eyeball the unrelated cluster);
+the adjacent classification needs a component graph (typically the Storybook
+tree), without which everything outside the changed-files set looks
+unrelated; and sub-threshold jitter (diff% < ~0.5) is anti-aliasing noise,
+not a visual change.
 
 ## Examples
 

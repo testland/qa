@@ -1,9 +1,0 @@
-{
-  "name": "testland/chrome-extension-test-loader",
-  "description": "Loads an unpacked Chrome / Chromium extension for testing through the `chrome://extensions` Developer-mode flow: the minimum loadable `manifest.json`, the Load-unpacked directory-not-file selection, toolbar pinning, and the reload matrix deciding what a code edit actually re-evaluates (`manifest.json`, the background service worker, and content scripts need an explicit card refresh, content scripts additionally need a host-page refresh, while popup / options / other extension HTML pages re-evaluate on next open). Also covers reading the red Errors card, where service-worker and content-script logs surface, and the `--load-extension` and `web-ext --target chromium` equivalents that move the same load into CI. Scope is getting a build directory loaded and reloaded, not the runtime behaviour asserted afterwards. Use when a freshly built extension directory has to go into Chrome for the first time, or when an edit appears to have no effect and you need to know which surface requires an explicit reload.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.4"
-}

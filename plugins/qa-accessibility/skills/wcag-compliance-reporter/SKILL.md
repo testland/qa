@@ -233,10 +233,9 @@ live in
 - `junit-xml-analysis` (in the qa-test-reporting plugin) - reporter
   for test execution (different domain, same PR-time
   reporting shape).
-- The `qa-accessibility` plugin's per-tool wrappers
-  (`axe-a11y`, `pa11y-a11y`, `lighthouse-a11y`, `wave-a11y`,
-  `ibm-equal-access-a11y`) - produce the upstream input this skill
-  consumes.
+- The `axe-a11y` scanner umbrella (axe-core primary; pa11y, Lighthouse
+  a11y, WAVE, and IBM Equal Access in its references/) - produces the
+  upstream input this skill consumes.
 - Per-tool normalizers + the `sc-mapping.json` shape (Step 1 deep dive):
   [references/tool-normalizers.md](references/tool-normalizers.md).
 - The full multi-table sample report format (Step 5 deep dive):

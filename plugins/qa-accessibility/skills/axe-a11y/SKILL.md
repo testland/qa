@@ -1,6 +1,6 @@
 ---
 name: axe-a11y
-description: "Authors and runs axe-core accessibility scans - the most-deployed open-source a11y engine - via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses the `violations[]` results into per-rule severity (critical / serious / moderate / minor), configures rule disable / disable-by-tag patterns, and emits JUnit-shaped output for CI gating. Use when the project ships UI tests in JavaScript / TypeScript and wants automated a11y coverage on every PR."
+description: "Automated accessibility scanning across the five engines - axe-core (primary), pa11y, Lighthouse a11y, WAVE, and IBM Equal Access. Authors and runs axe-core scans via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses `violations[]` into per-rule severity, configures rule disable / disable-by-tag patterns, and emits CI-gateable output; references/ carry the pa11y CLI (htmlcs + axe runners), Lighthouse CI `categories:accessibility` assertions, the WAVE API / overlay, and IBM Equal Access (Section 508) with their verified CLI / API / config. Use for any automated a11y scanner setup - axe-core for JS/TS UI test suites on every PR, and the references for CLI-only, Lighthouse-pipeline, WebAIM-branded, or Section 508 scanning."
 ---
 
 # axe-a11y
@@ -29,12 +29,22 @@ fixture, browser extension, or framework adapter), call
 - Pair with `a11y-violation-gate`
   for the ratchet pattern over baseline.
 
-If the team is on a non-JS stack, evaluate
-`pa11y-a11y` (CLI; uses axe-core
-under the hood),
-`lighthouse-a11y` (CI-friendly,
-broader perf + a11y), or
-`ibm-equal-access-a11y`.
+If axe-core's direct integration doesn't fit, route to the other
+scanners below.
+
+## Other scanners
+
+axe-core is the primary engine; four alternatives live in references/,
+each with verified install / CLI / API / CI patterns:
+
+| Scanner | Reach for it when | Reference |
+|---|---|---|
+| pa11y (htmlcs + axe engines) | Scriptable CLI scans without a test framework; multi-URL batching via pa11y-ci. | [references/pa11y.md](references/pa11y.md) |
+| Lighthouse a11y | The project already runs Lighthouse CI and wants a11y in the same pipeline. | [references/lighthouse-a11y.md](references/lighthouse-a11y.md) |
+| WAVE | WebAIM-branded reports, visual overlay for designers, or third-party-site audits. | [references/wave.md](references/wave.md) |
+| IBM Equal Access | US Section 508 procurement or IBM-branded enterprise compliance. | [references/ibm-equal-access.md](references/ibm-equal-access.md) |
+
+All five emit JSON that `a11y-violation-gate` normalizes and ratchets.
 
 ## Install
 
@@ -225,8 +235,8 @@ JSON as a build artifact and pipe to
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - `a11y-violation-gate` - 
   CI gate using axe results.
-- `pa11y-a11y`,
-  `lighthouse-a11y`,
-  `wave-a11y`,
-  `ibm-equal-access-a11y` - 
-  alternative scanners.
+- Alternative scanners:
+  [references/pa11y.md](references/pa11y.md),
+  [references/lighthouse-a11y.md](references/lighthouse-a11y.md),
+  [references/wave.md](references/wave.md),
+  [references/ibm-equal-access.md](references/ibm-equal-access.md).

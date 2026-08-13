@@ -1,9 +1,0 @@
-{
-  "name": "testland/widget-a11y-test-matrix",
-  "description": "Per-widget manual accessibility test matrices where every row pairs one keystroke with the expected focus behavior, the expected NVDA announcement, the expected VoiceOver announcement, and the WCAG 2.2 success criterion that row verifies. Covers button, toggle button, checkbox, text input, modal dialog, menu button, and combobox archetypes, plus universal Tab traversal. Use when a rendered widget has cleared automated scanning and a tester needs a fill-in pass/fail sheet to run by hand against NVDA and VoiceOver.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.10"
-}

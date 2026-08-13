@@ -14,8 +14,8 @@ baseline. Existing violations are grandfathered; fixes shrink the
 baseline.
 
 This skill builds that gate, aggregating outputs from any
-combination of `axe-a11y`, `pa11y-a11y`, `lighthouse-a11y`,
-`wave-a11y`, and `ibm-equal-access-a11y`.
+combination of the five scanners covered by `axe-a11y`
+(axe-core, pa11y, Lighthouse a11y, WAVE, IBM Equal Access).
 
 Sibling gates with the same architecture: `data-quality-gate`,
 `visual-baseline-gate`, `contract-compatibility-gate`,
@@ -176,12 +176,8 @@ rot:
 
 ## References
 
-- All five scanner skills:
-  `axe-a11y`,
-  `pa11y-a11y`,
-  `lighthouse-a11y`,
-  `wave-a11y`,
-  `ibm-equal-access-a11y`.
+- `axe-a11y` - the scanner umbrella; its references/ carry pa11y,
+  Lighthouse a11y, WAVE, and IBM Equal Access.
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - Sibling gate skills (same architecture):
   `data-quality-gate`, `visual-baseline-gate`,

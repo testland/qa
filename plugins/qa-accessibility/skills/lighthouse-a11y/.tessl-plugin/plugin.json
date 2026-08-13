@@ -1,9 +1,0 @@
-{
-  "name": "testland/lighthouse-a11y",
-  "description": "Configures Lighthouse CI's Accessibility category for automated accessibility testing (a11y / WCAG coverage) - `categories:accessibility` audits backed by axe-core (axe) - with per-URL minimum-score assertions (fail a build when a page's score drops below a threshold) and per-audit overrides, distinct from the Performance category that `lighthouse-perf` covers. Use when the project already runs Lighthouse CI for Web Vitals and the team wants to add accessibility coverage in the same pipeline rather than spinning up a separate scanner.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.9"
-}

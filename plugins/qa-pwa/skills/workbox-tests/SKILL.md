@@ -307,5 +307,4 @@ without test coverage.
   and tests its specific recipe behavior.
 - Sibling skills:
   `offline-fallback-tests`,
-  `service-worker-lifecycle-tests`,
-  `lighthouse-pwa-audit`.
+  `service-worker-lifecycle-tests`.

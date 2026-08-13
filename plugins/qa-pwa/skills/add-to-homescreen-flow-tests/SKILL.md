@@ -1,6 +1,6 @@
 ---
 name: add-to-homescreen-flow-tests
-description: "Build-an-X workflow that emits the Add-to-Home-Screen / install-flow test suite. Walks the four-stage install timeline (gate → `beforeinstallprompt` handshake → per-platform path → `display-mode` MQ), emits one test per gate cell per [web.dev/articles/install-criteria][install-criteria], the deferred-prompt → `prompt()` → `userChoice` chain per [web.dev/articles/customize-install][customize-install], the iOS Safari manual-metadata branch (`apple-touch-icon`, `apple-mobile-web-app-capable`) per [web.dev/learn/pwa/installation][learn-pwa], and the post-install `(display-mode: standalone)` MQ assertion. Output: a Playwright spec file with per-stage cells plus the iOS metadata spec, plus a coverage matrix mapping each install criterion to its assertion. Use when a PWA's manifest, icons, or install handler change, or when install conversion drops and it is unclear which install stage users fall out at."
+description: "The single install-flow skill: the reference contract for the PWA install flow (installability gate fields, `beforeinstallprompt` handshake, per-platform paths - Android WebAPK / iOS Share menu / Firefox no-op - and the `display-mode` post-install signal, in references/install-flow-reference.md) plus the build-an-X workflow that emits the Add-to-Home-Screen suite. Walks the four-stage timeline, emitting one test per gate cell per [web.dev/articles/install-criteria][install-criteria], the deferred-prompt → `prompt()` → `userChoice` chain per [web.dev/articles/customize-install][customize-install], the iOS Safari manual-metadata branch (`apple-touch-icon`) per [web.dev/learn/pwa/installation][learn-pwa], and the post-install `(display-mode: standalone)` MQ assertion. Output: a Playwright spec with per-stage cells plus a coverage matrix. Use when a PWA's manifest, icons, or install handler change, when install conversion drops at an unknown stage, or when triaging a flaky install assertion."
 metadata:
   keywords: "add-to-homescreen, beforeinstallprompt, appinstalled, display-mode, apple-touch-icon"
 ---
@@ -10,7 +10,7 @@ metadata:
 ## Overview
 
 The PWA install flow is a four-stage test surface per
-`pwa-install-flow-reference`:
+[references/install-flow-reference.md](references/install-flow-reference.md):
 installability gate → `beforeinstallprompt` handshake → per-platform
 install path → post-install `display-mode` signal. Every team's
 install regression looks slightly different - a missing `start_url`,
@@ -20,8 +20,10 @@ gesture - but the test surface is the same.
 This builder produces the per-PWA install suite. Output is a
 Playwright spec file plus a coverage YAML matrix mapping each
 install criterion from [install-criteria] to its assertion.
-Composes with the reference skill for the contract; consumes the
-contract by emitting verification cells.
+The contract itself - gate cells, event lifecycle, per-platform
+paths, and the full event timeline - lives in
+[references/install-flow-reference.md](references/install-flow-reference.md);
+the workflow consumes it by emitting verification cells.
 
 [install-criteria]: https://web.dev/articles/install-criteria
 [learn-pwa]: https://web.dev/learn/pwa/installation
@@ -35,10 +37,7 @@ the repo, not the pattern reference.
 
 Composes with:
 
-- `pwa-install-flow-reference` - the four-stage timeline this builder follows step-by-step.
-- `lighthouse-pwa-audit` - the
-  `installable-manifest` and `apple-touch-icon` audits are the
-  Lighthouse counterpart of the Step 2 + Step 5 cells here.
+- [references/install-flow-reference.md](references/install-flow-reference.md) - the four-stage timeline this builder follows step-by-step.
 - `service-worker-lifecycle-tests` - Stage 1 of the install gate requires an active SW; pair this
   builder's output with the lifecycle spec for full coverage.
 
@@ -294,7 +293,7 @@ test('display-mode: standalone in launched-as-app context', async () => {
 
 test('display-mode: hides Install button when standalone', async () => {
   const { ctx, page } = await launchInstalled();
-  // Per pwa-install-flow-reference Stage 4: apps hide the Install button when already installed
+  // Per references/install-flow-reference.md Stage 4: apps hide the Install button when already installed
   await expect(page.locator('[data-testid="install-pwa"]')).not.toBeVisible();
   await ctx.close();
 });
@@ -369,7 +368,7 @@ the four classes of install regression most teams hit:
 - **Headless WebAPK minting can't be asserted.** Step 4's
   `appinstalled` test verifies the event fires; the actual Android
   WebAPK creation is opaque per
-  `pwa-install-flow-reference`
+  [references/install-flow-reference.md](references/install-flow-reference.md)
   Stage 3.
 - **iOS install is fully manual.** Step 5's tests cover the
   metadata; the actual Share → Add to Home Screen flow needs a
@@ -396,9 +395,10 @@ the four classes of install regression most teams hit:
 - web.dev - Customize the install experience (`beforeinstallprompt`
   handshake, `prompt()` once-only, `appinstalled` firing
   conditions) - [customize-install].
+- The install-flow contract (gate cells, handshake, per-platform paths,
+  event timeline) -
+  [references/install-flow-reference.md](references/install-flow-reference.md).
 - Composes:
-  `pwa-install-flow-reference`,
-  `lighthouse-pwa-audit`,
   `service-worker-lifecycle-tests`.
 - Differentiation: `pwa-install-flow-tests` is the generic pattern
   wrapper. This builder emits the

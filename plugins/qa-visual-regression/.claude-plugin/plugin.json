@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-visual-regression",
-  "version": "1.3.13",
-  "description": "Visual regression testing: 8 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots, storybook-visual-regression-testing, responsive-breakpoint-runner, visual-baseline-conventions, visual-baseline-gate, visual-diff-summarizer) and 3 agents (visual-diff-classifier, visual-baseline-curator, visual-ci-gate-orchestrator).",
+  "version": "1.4.0",
+  "description": "Visual regression testing: 6 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots with the responsive breakpoint matrix, storybook-visual-regression-testing, visual-baseline-conventions, visual-baseline-gate emitting binding gate artifacts) and 2 agents (visual-diff-classifier with a per-PR summary mode, visual-baseline-curator).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,9 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-visual-regression",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "visual-regression"]
+  "keywords": [
+    "qa",
+    "testing",
+    "visual-regression"
+  ]
 }

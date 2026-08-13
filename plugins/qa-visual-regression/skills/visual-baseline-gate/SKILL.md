@@ -1,6 +1,6 @@
 ---
 name: visual-baseline-gate
-description: "Consumes pre-classified visual-diff JSON and a reviewer-signed acceptance log to produce a single go/no-go CI verdict for visual regression. Blocks when intentional baseline changes lack a non-author reviewer sign-off or when regressions are present, and emits a markdown + JSON artifact for the CI step. Use this skill when the gate's input is pre-classified diff data and the enforcement concern is reviewer approval, not when the goal is fanning out to multiple engines (use a multi-engine CI orchestrator for that)."
+description: "Consumes pre-classified visual-diff JSON and a reviewer-signed acceptance log to produce a single go/no-go CI verdict for visual regression. Blocks when intentional baseline changes lack a non-author reviewer sign-off or when regressions are present, and emits the binding gate artifacts - visual-gate.json + visual-gate.md - with fail-closed handling of a missing classifier run and author-cannot-self-approve enforcement, so the pipeline can exit non-zero on BLOCK. Use when the gate's input is pre-classified diff data and the enforcement concern is reviewer approval and a binding CI verdict."
 ---
 
 # visual-baseline-gate
@@ -145,6 +145,41 @@ fi
 
 This is the visual-regression analog of GitHub's "require approval
 from someone other than the last committer" branch protection.
+
+## Emitting gate artifacts (the binding CI verdict)
+
+Applying the decision rule in CI means turning the per-diff judgements into
+binding output files the pipeline acts on:
+
+1. **Fail closed on a missing classifier run.** Read
+   `visual-classifications.json` (written by the classification step, e.g.
+   `visual-diff-classifier`). If the file is absent or empty, emit `BLOCK`
+   with reason `classifier-output-missing` and stop - a missing classifier
+   run is itself a gate failure. Do not attempt to reconstruct
+   classifications.
+2. **Read the acceptance log.** Look for `.visual-acceptance.yml` in the
+   branch root; if absent, treat all `intentional` diffs as unaccepted.
+3. **Apply the decision rule** (previous section). Verdict precedence is
+   `BLOCK` > `REVIEW` > `OK` - one `BLOCK` overrides any number of `OK`
+   rows. `incidental` rows surface as `REVIEW`, never silently downgraded
+   to `OK`; an `incidental` row whose pattern isn't in the conventions'
+   valid list (anti-aliasing, font-bump, sub-pixel drift per
+   `visual-baseline-conventions`) is suspect and stays `REVIEW`.
+4. **Enforce author-cannot-self-approve.** Compare the acceptance log's
+   `accepted_by` (and the committing author, next section) against the PR
+   author; on a match, escalate the verdict to `BLOCK` regardless of other
+   rows. The gate is read-only on `.visual-acceptance.yml` - only a human
+   reviewer writes that file.
+5. **Don't double-count engine-level signaling.** If the build used
+   Chromatic without `--exit-zero-on-changes`, the CLI already exited
+   non-zero on detected changes (exit code `1` = `BUILD_HAS_CHANGES`, per
+   chromatic.com/docs/ci) - that is engine-level signaling, not a
+   classifier verdict.
+6. **Write `visual-gate.md` + `visual-gate.json` and exit.** `BLOCK` exits
+   non-zero to halt CI; `REVIEW` and `OK` exit zero, with `REVIEW` posting
+   the incidentals table as a PR comment for human attention. The full
+   artifact templates and the GitHub Actions wiring are in
+   [references/artifact-and-ci-wiring.md](references/artifact-and-ci-wiring.md).
 
 ## Worked example
 

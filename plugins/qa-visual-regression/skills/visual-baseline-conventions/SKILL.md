@@ -16,8 +16,8 @@ engine-specific skills
 ## Engine selection
 
 Pick before authoring any baseline. Mixing engines is fine in a large
-project - see
-`responsive-breakpoint-runner`
+project - see the breakpoint-matrix reference in
+`playwright-snapshots` (references/responsive-breakpoints.md)
 and `visual-baseline-gate` for the
 mechanics of running and gating multiple engines together.
 

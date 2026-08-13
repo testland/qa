@@ -1,6 +1,6 @@
 ---
 name: pdf-snapshot-tester
-description: "Test PDF outputs by converting per-page to images (`pdftocairo` / pdf2image / Poppler) and running pixel-diff (pixelmatch / Resemble.js / Pillow `ImageChops`) against approved baselines. Per-page-range targeting, threshold tuning, font-substitution warnings, byte-stable PDF metadata stripping (CreationDate, /ID). Use when a product generates invoices, contracts, or regulatory filings whose layout must not shift, and a PDF template, font pack, or generation library is about to change."
+description: "Test PDF outputs by converting per-page to images (`pdftocairo` / pdf2image / Poppler) and running pixel-diff (pixelmatch / Resemble.js / Pillow `ImageChops`) against approved baselines. Per-page-range targeting, threshold tuning, font-substitution warnings, byte-stable PDF metadata stripping (CreationDate, /ID); references/ carry cross-engine HTML→PDF regression (Chromium `page.pdf()` / WeasyPrint / wkhtmltopdf per-engine baselines, engine-agreement tests, font-embedding checks, engine-version pinning). Use when a product generates invoices, contracts, or regulatory filings whose layout must not shift, when a PDF template, font pack, or generation library is about to change, or when swapping / upgrading the PDF engine."
 metadata:
   keywords: "pdf-snapshot, visual-regression, pdftocairo, poppler, pixel-diff"
 ---
@@ -19,7 +19,9 @@ approved baselines.
 - Pre-deploy gate before changing PDF generation library, font
   pack, or template.
 - Cross-engine verification (WeasyPrint output vs Chromium
-  `page.pdf()` output).
+  `page.pdf()` output) - the per-engine generation setup, agreement
+  tests, and version pinning live in
+  [references/cross-engine-regression.md](references/cross-engine-regression.md).
 
 ## How to use
 
@@ -212,7 +214,8 @@ is about to swap the body font and needs proof no invoice layout shifts.
 - pixelmatch (Node reference impl) - github.com/mapbox/pixelmatch
 - [references/deterministic-rendering.md](references/deterministic-rendering.md) -
   metadata stripping + font-substitution detection
-- `html-to-pdf-regression` - 
-  sister skill for the HTML→PDF generation step
+- [references/cross-engine-regression.md](references/cross-engine-regression.md) -
+  cross-engine HTML→PDF generation, per-engine baselines,
+  engine-agreement tests
 - `print-stylesheet-tests` - 
   sister skill for pre-PDF CSS verification

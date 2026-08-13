@@ -1,9 +1,0 @@
-{
-  "name": "testland/pwa-install-flow-reference",
-  "description": "Pure reference for the PWA install flow as a test surface - the installability gate (manifest required fields per [install-criteria], registered service worker, HTTPS, ~30s user engagement), the `beforeinstallprompt` handshake (preventDefault → stash → prompt() on gesture → userChoice → appinstalled), and the `display-mode` post-install signal, with a how-to-use walkthrough and a worked Chromium install-flow assertion; per-platform paths (Android WebAPK, iOS Share menu, Firefox no-op) live in references/. Use when authoring or triaging install-flow assertions and you need the gate fields, the event contract, and the per-platform expectations in one place instead of re-reading three vendor docs.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.2.3"
-}

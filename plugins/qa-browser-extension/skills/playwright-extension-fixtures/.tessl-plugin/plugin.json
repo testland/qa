@@ -1,9 +1,9 @@
 {
   "name": "testland/playwright-extension-fixtures",
-  "description": "Author the lower-level Playwright fixture pattern that every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe. This is the launch-and-load layer shared by every extension test, not the assertions run on top of it. Use when authoring or debugging the fixture a Chromium extension test imports - popup, content script, service worker, options page, or side panel.",
+  "description": "Author the Playwright fixture layer every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe - plus the extension load / reload matrix (which edit re-evaluates which surface) and the `chrome.storage` test suite (area selection, quota-exceeded, `storage.onChanged`, managed read-only) in references/. Use when authoring or debugging the fixture a Chromium extension test imports, when an edit appears to have no effect and you need the reload matrix, or when authoring storage-quota tests.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.4"
+  "version": "1.2.5"
 }

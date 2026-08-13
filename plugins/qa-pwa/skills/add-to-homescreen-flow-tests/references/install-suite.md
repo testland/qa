@@ -56,10 +56,10 @@ matrix:
   stage_4_runtime:
     - cell: display_mode_standalone
       spec: install-display-mode.spec.ts > "display-mode: standalone in launched-as-app context"
-      source: pwa-install-flow-reference Stage 4
+      source: references/install-flow-reference.md Stage 4
     - cell: install_button_hidden_when_standalone
       spec: install-display-mode.spec.ts > "display-mode: hides Install button when standalone"
-      source: pwa-install-flow-reference Stage 4
+      source: references/install-flow-reference.md Stage 4
 ```
 
 Source references:

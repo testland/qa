@@ -1,6 +1,6 @@
 ---
 name: manifest-v3-test-surface-reference
-description: "Pure-reference catalog of the Manifest V3 test surface for Firefox + Chromium browser extensions. Maps each manifest field that changed from MV2 (manifest_version, background.service_worker vs background.scripts, action vs browser_action / page_action, host_permissions split, web_accessible_resources object-form, content_security_policy object-form), the runtime restrictions service workers impose (no DOM, no XMLHttpRequest, no localStorage, ephemeral lifecycle, synchronous listener registration, alarms instead of setTimeout), and the Firefox-vs-Chrome key matrix (browser_specific_settings.gecko, externally_connectable / offline_enabled gaps, MV2-only user_scripts manifest key). Use as the manifest-surface reference when authoring extension tests across both browsers."
+description: "Pure-reference catalog of the Manifest V3 test surface for Firefox + Chromium browser extensions. Maps each manifest field that changed from MV2 (manifest_version, background.service_worker vs background.scripts, action vs browser_action / page_action, host_permissions split, web_accessible_resources object-form, content_security_policy object-form), the runtime restrictions service workers impose (no DOM, no XMLHttpRequest, no localStorage, ephemeral lifecycle, synchronous listener registration, alarms instead of setTimeout), and the Firefox-vs-Chrome key matrix (browser_specific_settings.gecko, externally_connectable / offline_enabled gaps, MV2-only user_scripts manifest key); references/ carry Mozilla's web-ext CLI (lint via addons-linter, run on firefox-desktop / firefox-android / chromium targets, deterministic build, AMO sign). Use as the manifest-surface reference when authoring extension tests across both browsers, or when driving Firefox runs / AMO signing with web-ext."
 metadata:
   keywords: "browser-extension, manifest-v3, mv3, firefox-webextensions, chrome-extensions"
 ---
@@ -17,14 +17,15 @@ web-accessible-resource fetch) hangs off a manifest field. Knowing which field
 maps to which runtime behaviour is what lets a test author decide whether a
 behaviour is testable in unit, integration, or full-browser scope.
 
-This skill is the **pure reference** consumed by the per-tool wrappers
-(`web-ext-cli-mozilla`, `chrome-extension-test-loader`,
-`playwright-extension-fixtures`) and the two builders
-(`mv2-to-mv3-migration-test-checklist`, `extension-storage-test-author`). The
-summary tables below are the quick lookup; exact MV2/MV3 field shapes, the full
-Firefox/Chrome key matrix, and the offscreen-document + keep-alive detail live in
-[references/manifest-matrix.md](references/manifest-matrix.md). All sources are
-consolidated in the References section.
+This skill is the **pure reference** consumed by
+`playwright-extension-fixtures` (and its reload-matrix / storage-tests
+references). The summary tables below are the quick lookup; exact MV2/MV3
+field shapes, the full Firefox/Chrome key matrix, and the offscreen-document
++ keep-alive detail live in
+[references/manifest-matrix.md](references/manifest-matrix.md); Mozilla's
+`web-ext` CLI (Firefox lint / run / build / sign) lives in
+[references/web-ext-firefox.md](references/web-ext-firefox.md). All sources
+are consolidated in the References section.
 
 For Playwright-driven MV3 popup / content-script fixtures see
 `browser-extension-tests` - a Chromium-only popup + content-script +
@@ -68,7 +69,7 @@ in [references/manifest-matrix.md](references/manifest-matrix.md).
 |---|---|---|---|
 | DOM / `window` | available | unavailable | Anything touching DOM moves to an offscreen document (`chrome.offscreen.createDocument`) |
 | `XMLHttpRequest` | available | unavailable - use `fetch()` | XHR-using test fixtures must be rewritten |
-| `localStorage` | available | unavailable - use `chrome.storage.local` | Tests asserting persisted state must use `chrome.storage.*` (see `extension-storage-test-author`) |
+| `localStorage` | available | unavailable - use `chrome.storage.local` | Tests asserting persisted state must use `chrome.storage.*` (see `playwright-extension-fixtures` references/storage-tests.md) |
 | `setTimeout` / `setInterval` | reliable | cancelled when worker terminates - use `chrome.alarms` | Tests timing background work must use alarms, not timers |
 | Listener registration | top-level or async | **must be synchronous at top level** | Async-registered listeners are "not guaranteed to work in Manifest V3" |
 | Lifecycle | persistent | ephemeral (start -> run -> terminate, repeated) | Globals reset; storage is source of truth |
@@ -112,10 +113,10 @@ and read live, as dates have shifted multiple times.
 |---|---|---|
 | Assuming MV3 `permissions` still accepts host match patterns | Lint passes; runtime drops them silently | Move all host patterns to `host_permissions` |
 | Testing `background.scripts` array under MV3 | Field doesn't exist in MV3; manifest fails to load | Use `background.service_worker` single string |
-| Using `localStorage` in service-worker tests | Throws in MV3 | Use `chrome.storage.local` (see `extension-storage-test-author`) |
+| Using `localStorage` in service-worker tests | Throws in MV3 | Use `chrome.storage.local` (see `playwright-extension-fixtures` references/storage-tests.md) |
 | Registering `chrome.runtime.onMessage` inside a promise | Listener may not fire after worker restart in MV3 | Register synchronously at top level |
 | Testing flat-string `web_accessible_resources` under MV3 | Resources unreachable from page context | Use object form `{ resources, matches }` |
-| Treating Firefox MV3 as Chrome MV3 | `externally_connectable`, `offline_enabled` not supported; `browser_specific_settings` required | Run Firefox tests with `web-ext` (see `web-ext-cli-mozilla`) and gate Chrome-only assertions |
+| Treating Firefox MV3 as Chrome MV3 | `externally_connectable`, `offline_enabled` not supported; `browser_specific_settings` required | Run Firefox tests with `web-ext` (see [references/web-ext-firefox.md](references/web-ext-firefox.md)) and gate Chrome-only assertions |
 | Using `setTimeout` to delay background work | Cancelled on worker termination | Use `chrome.alarms.create` |
 | Polling via 1s heartbeat to keep SW alive | Chrome explicitly limits keepalive abuse | Restructure to event-driven; offscreen document for long DOM work |
 
@@ -146,9 +147,9 @@ and read live, as dates have shifted multiple times.
   `browser_specific_settings`) - [mdn-manifest].
 - Field shapes + full key matrix + offscreen / keepalive detail -
   [references/manifest-matrix.md](references/manifest-matrix.md).
-- Consumed by: `web-ext-cli-mozilla`, `chrome-extension-test-loader`,
-  `playwright-extension-fixtures`, `mv2-to-mv3-migration-test-checklist`,
-  `extension-storage-test-author`.
+- Mozilla `web-ext` CLI (Firefox lint / run / build / sign) -
+  [references/web-ext-firefox.md](references/web-ext-firefox.md).
+- Consumed by: `playwright-extension-fixtures`.
 
 [cr-mig-overview]: https://developer.chrome.com/docs/extensions/develop/migrate
 [cr-mig-manifest]: https://developer.chrome.com/docs/extensions/develop/migrate/manifest

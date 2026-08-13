@@ -28,10 +28,9 @@ WCAG 2.2 specifies four color-contrast Success Criteria
 - Reviewing a component's CSS for contrast violations.
 - Setting up bulk-checking of design tokens via tooling.
 - Authoring per-component a11y checklists (paired with
-  `wcag-checklist-builder`).
+  `screen-reader-test-author` references/wcag-checklist.md).
 - Configuring per-rule severity in
-  `axe-a11y` /
-  `pa11y-a11y`.
+  `axe-a11y`.
 
 ## Contrast ratios
 

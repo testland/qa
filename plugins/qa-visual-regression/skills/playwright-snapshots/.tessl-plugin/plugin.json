@@ -1,9 +1,9 @@
 {
   "name": "testland/playwright-snapshots",
-  "description": "Authors Playwright `expect(page).toHaveScreenshot()` assertions, configures masks / clips / threshold / maxDiffPixels per test, manages the per-OS / per-browser snapshot directory, and runs the update flow with `--update-snapshots`. Use when the project ships self-hosted visual regression coverage in Playwright (no external snapshot service).",
+  "description": "Authors Playwright `expect(page).toHaveScreenshot()` assertions, configures masks / clips / threshold / maxDiffPixels per test, manages the per-OS / per-browser snapshot directory, and runs the update flow with `--update-snapshots`; references/ carry the responsive-breakpoint viewport matrix (one project per breakpoint, cross-breakpoint matrix report, plus Chromatic / Percy / Storybook test-runner viewport syntax). Use when the project ships self-hosted visual regression coverage in Playwright (no external snapshot service), or needs a unified multi-viewport breakpoint matrix.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.11"
+  "version": "1.3.12"
 }

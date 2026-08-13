@@ -1,9 +1,9 @@
 {
   "name": "testland/screen-reader-test-author",
-  "description": "Builds a screen-reader test narrative - a step-by-step manual test script for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) - that exercises a specific user flow through a component or page and captures the expected announcement at each step. Use when authoring an accessibility-acceptance test the team will run before sign-off, OR when scripting a manual a11y audit.",
+  "description": "Builds the full manual-accessibility artifact surface: step-by-step screen-reader test scripts for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) with per-step keystroke + expected announcement; per-archetype WCAG 2.2 checklists (references/wcag-checklist.md); per-widget keystroke matrices pairing expected NVDA and VoiceOver announcements with the WCAG SC each row verifies (references/widget-matrix.md); and a guided NVDA / VoiceOver session protocol that merges script + checklist into a signed pass/fail session report. Use when authoring an accessibility-acceptance test, checklist, or widget matrix the team will run before sign-off, when scripting a manual a11y audit, OR when walking a tester through a guided screen-reader session.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.11"
+  "version": "1.3.12"
 }

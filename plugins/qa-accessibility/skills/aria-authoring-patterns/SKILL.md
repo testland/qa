@@ -31,8 +31,8 @@ The APG documents 31 patterns; each one specifies:
   correctness.
 - Adding ARIA to an existing widget that was hand-rolled without
   it.
-- Configuring assertions in `axe-a11y` /
-  `pa11y-a11y` to enforce per-pattern
+- Configuring assertions in `axe-a11y`
+  (or its pa11y reference) to enforce per-pattern
   conventions.
 
 ## The first rule of ARIA
@@ -84,7 +84,7 @@ The 31 patterns documented per [apg-patterns][apg]:
 | Accordion         | Vertically-stacked list of headers; each expands.    |
 | Breadcrumb        | Hierarchical-location indicator.                      |
 | Carousel          | Cycle through groups of equivalent content.          |
-| Dialog (Modal)    | Overlay requiring user interaction. (See `wcag-focus-trap`.) |
+| Dialog (Modal)    | Overlay requiring user interaction. (See `wcag-keyboard-navigation` references/focus-trap.md.) |
 | Alert Dialog      | Modal that interrupts to convey urgency.             |
 | Tabs              | Switch between sibling content sections.             |
 | Toolbar           | Group of controls (buttons, dropdowns).             |
@@ -205,7 +205,7 @@ The most-used `aria-*` states across patterns:
 | `aria-invalid`          | Form field validation state.                            |
 | `aria-required`         | Form field required (with native `required` for forms). |
 | `aria-disabled`         | Functionally disabled but in tab order (vs. `disabled` attribute which removes from tab order). |
-| `aria-modal`            | Dialog modal flag; see `wcag-focus-trap`. |
+| `aria-modal`            | Dialog modal flag; see `wcag-keyboard-navigation` references/focus-trap.md. |
 
 ## Common ARIA failures
 
@@ -232,9 +232,8 @@ The most-used `aria-*` states across patterns:
 - [apg-patterns][apg] - W3C ARIA Authoring Practices Guide
   (canonical patterns).
 - WAI-ARIA 1.2 Spec - https://www.w3.org/TR/wai-aria-1.2/
-- `wcag-focus-trap` - Dialog
-  pattern's focus-management deep dive.
-- `wcag-keyboard-navigation` - Keyboard-interaction conformance underlying every APG pattern.
-- `axe-a11y`,
-  `pa11y-a11y` - runners that detect
+- `wcag-keyboard-navigation` - Keyboard-interaction conformance underlying
+  every APG pattern; its references/focus-trap.md is the Dialog pattern's
+  focus-management deep dive.
+- `axe-a11y` - scanners that detect
   ARIA misuse programmatically.

@@ -1,9 +1,9 @@
 {
   "name": "testland/axe-a11y",
-  "description": "Authors and runs axe-core accessibility scans - the most-deployed open-source a11y engine - via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses the `violations[]` results into per-rule severity (critical / serious / moderate / minor), configures rule disable / disable-by-tag patterns, and emits JUnit-shaped output for CI gating. Use when the project ships UI tests in JavaScript / TypeScript and wants automated a11y coverage on every PR.",
+  "description": "Automated accessibility scanning across the five engines - axe-core (primary), pa11y, Lighthouse a11y, WAVE, and IBM Equal Access. Authors and runs axe-core scans via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses `violations[]` into per-rule severity, configures rule disable / disable-by-tag patterns, and emits CI-gateable output; references/ carry the pa11y CLI (htmlcs + axe runners), Lighthouse CI `categories:accessibility` assertions, the WAVE API / overlay, and IBM Equal Access (Section 508) with their verified CLI / API / config. Use for any automated a11y scanner setup - axe-core for JS/TS UI test suites on every PR, and the references for CLI-only, Lighthouse-pipeline, WebAIM-branded, or Section 508 scanning.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.8"
+  "version": "1.3.9"
 }

@@ -9,7 +9,6 @@ skills:
   - service-worker-lifecycle-tests
   - offline-fallback-tests
   - add-to-homescreen-flow-tests
-  - pwa-install-flow-reference
 ---
 
 A per-surface PWA test authoring agent - emits ONE new Playwright spec file targeting one
@@ -70,7 +69,7 @@ Grep the SW source for `from 'workbox-precaching'` / `from 'workbox-routing'` / 
 - **Offline fallback** - `await context.setOffline(true); await page.goto('/missing'); await expect(page.locator('h1')).toHaveText(/offline/i);` (uses `browserContext.setOffline` per [pw-bc][pw-bc]).
 - **Web push** - `await context.grantPermissions(['notifications']); await page.goto('/'); await page.evaluate(() => navigator.serviceWorker.controller.postMessage({type: 'simulate-push'}));` then assert on notification or controller state.
 - **Add-to-homescreen** - capture the deferred event: `await page.evaluate(() => { window.deferredPrompt = null; addEventListener('beforeinstallprompt', e => { e.preventDefault(); window.deferredPrompt = e; }); });` then assert `await page.evaluate(() => !!window.deferredPrompt)`. Per [web.dev install prompt][wdip]: *"Listen for the `beforeinstallprompt` event. Save it (you'll need it later). Trigger it from your UI"* and *"You can only call `prompt()` on the deferred event once"*.
-- **Lighthouse PWA audit** - invoke `npx lighthouse --only-categories=pwa <url>` as a CI-side gate via the [`lighthouse-pwa-audit`](../skills/lighthouse-pwa-audit/SKILL.md) skill - not a per-test `expect()` assertion.
+- **Lighthouse PWA scoring** - out of scope: Lighthouse removed the PWA category (v12, 2024); assert install-gate cells directly per [`add-to-homescreen-flow-tests`](../skills/add-to-homescreen-flow-tests/SKILL.md) instead of a category score.
 
 [wdip]: https://web.dev/learn/pwa/installation-prompt/
 
@@ -81,7 +80,7 @@ Write one new file at `tests/pwa-<surface>.spec.ts` (Playwright convention). Emi
 ## Refuse-to-proceed rules
 
 - No `manifest.json` (or `.webmanifest`) AND no service-worker registration in the project → refuse (no PWA surface to test).
-- Spec asks for a Lighthouse PWA *score* gate → recommend the [`lighthouse-pwa-audit`](../skills/lighthouse-pwa-audit/SKILL.md) skill directly; Lighthouse PWA scoring is a CI-side audit, not a per-test assertion.
+- Spec asks for a Lighthouse PWA *score* gate → refuse; Lighthouse removed the PWA category (v12, 2024). Recommend per-cell install-gate assertions via [`add-to-homescreen-flow-tests`](../skills/add-to-homescreen-flow-tests/SKILL.md).
 - Spec asks to test install-flow on iOS Safari → refuse. Per [web.dev install prompt][wdip], the `beforeinstallprompt` event does not fire on iOS / iPadOS (*"Chrome and Edge on iOS and iPadOS do not support PWA installation, so the `beforeinstallprompt` event can't fire"*); iOS PWA install is via the Safari share menu and is a manual flow. Recommend manual testing or a separate WebKit-Inspector capture.
 - Spec missing OR target PWA surface not identified → halt and ask.
 - Never modify existing tests, the service worker, or the manifest.
@@ -97,6 +96,5 @@ Write one new file at `tests/pwa-<surface>.spec.ts` (Playwright convention). Emi
 ## Hand-off targets
 
 - **Per-surface skill** → [`workbox-tests`](../skills/workbox-tests/SKILL.md), [`service-worker-lifecycle-tests`](../skills/service-worker-lifecycle-tests/SKILL.md), [`offline-fallback-tests`](../skills/offline-fallback-tests/SKILL.md), [`web-push-tests`](../skills/web-push-tests/SKILL.md), [`add-to-homescreen-flow-tests`](../skills/add-to-homescreen-flow-tests/SKILL.md).
-- **Reference** → [`pwa-install-flow-reference`](../skills/pwa-install-flow-reference/SKILL.md).
-- **CI-side PWA score gate** → [`lighthouse-pwa-audit`](../skills/lighthouse-pwa-audit/SKILL.md).
+- **Reference** → [`add-to-homescreen-flow-tests` references/install-flow-reference.md](../skills/add-to-homescreen-flow-tests/references/install-flow-reference.md).
 - **Test-code review** → `test-code-conventions` (qa-test-review).

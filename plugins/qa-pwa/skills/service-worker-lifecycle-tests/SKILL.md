@@ -33,7 +33,7 @@ the state machine.
 
 Composes with:
 
-- `pwa-install-flow-reference` - the Stage 1 service-worker-registered prerequisite, which
+- `add-to-homescreen-flow-tests` (references/install-flow-reference.md) - the install-gate Stage 1 service-worker-registered prerequisite, which
   *this* builder takes as input (assumes registration already
   works).
 - `workbox-tests` - the
@@ -369,7 +369,7 @@ Steps 2 - 8 for the full lifecycle surface.
   patterns; this skill is the dedicated state-machine spec
   generator.
 - Composes:
-  `pwa-install-flow-reference`,
+  `add-to-homescreen-flow-tests`,
   `workbox-tests`.
 - Sibling builders:
   `offline-fallback-tests`,

@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 603 components**
+**89 plugins · 587 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -52,15 +52,15 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-accessibility](plugins/qa-accessibility/) | 1.4.0 | 14 skills + 2 agents | 16 |
-| [qa-visual-regression](plugins/qa-visual-regression/) | 1.3.13 | 8 skills + 3 agents | 11 |
-| [qa-browser-extension](plugins/qa-browser-extension/) | 1.3.0 | 6 skills + 1 agents | 7 |
+| [qa-accessibility](plugins/qa-accessibility/) | 1.4.0 | 7 skills + 1 agents | 8 |
+| [qa-visual-regression](plugins/qa-visual-regression/) | 1.4.0 | 6 skills + 2 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.0.8 | 5 skills + 2 agents | 7 |
-| [qa-pwa](plugins/qa-pwa/) | 1.3.0 | 6 skills + 1 agents | 7 |
+| [qa-pwa](plugins/qa-pwa/) | 1.3.0 | 5 skills + 1 agents | 6 |
 | [qa-modern-web](plugins/qa-modern-web/) | 1.2.0 | 5 skills + 0 agents | 5 |
+| [qa-browser-extension](plugins/qa-browser-extension/) | 1.3.0 | 3 skills + 1 agents | 4 |
 | [qa-localization](plugins/qa-localization/) | 1.2.0 | 4 skills + 0 agents | 4 |
-| [qa-pdf-print](plugins/qa-pdf-print/) | 1.2.0 | 4 skills + 0 agents | 4 |
 | [qa-charts](plugins/qa-charts/) | 1.2.0 | 3 skills + 0 agents | 3 |
+| [qa-pdf-print](plugins/qa-pdf-print/) | 1.2.0 | 3 skills + 0 agents | 3 |
 
 ## Security & compliance
 

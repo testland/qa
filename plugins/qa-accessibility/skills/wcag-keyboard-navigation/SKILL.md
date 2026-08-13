@@ -1,14 +1,13 @@
 ---
 name: wcag-keyboard-navigation
-description: "Reference catalog for WCAG 2.2 keyboard-navigation conformance - covers SC 2.1.1 (Keyboard), 2.1.2 (No Keyboard Trap), 2.1.4 (Character Key Shortcuts), 2.4.3 (Focus Order), 2.4.7 (Focus Visible), 2.4.11/2.4.12 (Focus Not Obscured) - with conformance levels (A/AA), test scripts, and per-criterion failure patterns. Use when authoring or reviewing keyboard-only interaction support."
+description: "Reference catalog for WCAG 2.2 keyboard-navigation conformance - covers SC 2.1.1 (Keyboard), 2.1.2 (No Keyboard Trap), 2.1.4 (Character Key Shortcuts), 2.4.3 (Focus Order), 2.4.7 (Focus Visible), 2.4.11/2.4.12 (Focus Not Obscured) - with conformance levels (A/AA), test scripts, and per-criterion failure patterns, plus the modal focus-trap / focus-management pattern (focus-on-open, Tab-cycle, inert, Escape-closes, restore-to-trigger, native `<dialog>`) in references/. Use when authoring or reviewing keyboard-only interaction support, or a modal / drawer / popover's focus management."
 ---
 
 # wcag-keyboard-navigation
 
 > Reference catalog for **how** to verify keyboard-navigation
-> conformance. Pairs with the runner skills
-> (`axe-a11y`, `pa11y-a11y`,
-> `lighthouse-a11y`).
+> conformance. Pairs with the scanner umbrella
+> `axe-a11y` (axe-core, pa11y, Lighthouse a11y).
 
 ## Overview
 
@@ -30,8 +29,7 @@ focus management, and focus visibility.
 - Triaging an accessibility audit finding tagged with one of the
   SCs below.
 - Configuring per-rule severities for
-  `axe-a11y` /
-  `pa11y-a11y`.
+  `axe-a11y`.
 
 ## Success Criteria
 
@@ -76,7 +74,7 @@ standard keys are required."
 | Embedded `<iframe>` (e.g. third-party widget) traps Tab   | Set `tabindex="-1"` on the iframe OR document the exit (Esc + Tab) in surrounding label. |
 | Custom date picker locks focus inside on first focus      | Provide Tab to exit the calendar and continue to the next field. |
 
-See `wcag-focus-trap` for the
+See [references/focus-trap.md](references/focus-trap.md) for the
 **intentional**-trap convention (modal focus management) which is
 distinct from a violation.
 
@@ -157,7 +155,7 @@ obscured. Stricter; relevant for high-stakes forms.
 3. Shift+Tab from first → last interactive element (cycle).
 4. Escape closes the dialog and returns focus to the trigger.
 
-(See `wcag-focus-trap` for the full
+(See [references/focus-trap.md](references/focus-trap.md) for the full
 modal pattern.)
 
 ### Menu / dropdown
@@ -184,8 +182,7 @@ This matches the [ARIA Menu pattern][aria-menu] (referenced from
 ## CI integration
 
 The patterns above translate to per-test assertions in
-`axe-a11y` /
-`pa11y-a11y` configurations. The
+`axe-a11y` configurations. The
 `a11y-violation-gate` skill
 gates the build on new violations of these SCs.
 
@@ -202,12 +199,11 @@ gates the build on new violations of these SCs.
 ## References
 
 - [wcag22][wcag22] - WCAG 2.2 specification.
-- `wcag-focus-trap` - focus
-  management for modals (the intentional-trap pattern).
+- [references/focus-trap.md](references/focus-trap.md) - focus
+  management for modals (the intentional-trap pattern, 6 steps, native
+  `<dialog>`, test scripts).
 - `wcag-color-contrast` - 
   for SC 1.4.11 focus-indicator contrast.
 - `aria-authoring-patterns` - for canonical interactive-widget patterns.
-- `axe-a11y`,
-  `pa11y-a11y`,
-  `lighthouse-a11y` - runners that
+- `axe-a11y` - scanners that
   detect SC violations programmatically.

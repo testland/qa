@@ -8,7 +8,6 @@ skills:
   - chromatic-visual-regression-testing
   - playwright-snapshots
   - storybook-visual-regression-testing
-  - responsive-breakpoint-runner
   - visual-baseline-conventions
 ---
 
@@ -16,9 +15,9 @@ A baseline-coverage architect that turns "we should add visual tests" into a wor
 
 ## When invoked
 
-1. **Detect the engine.** Same logic as
-   [`responsive-breakpoint-runner`](../skills/responsive-breakpoint-runner/SKILL.md)
-   "Dispatcher: pick by engine":
+1. **Detect the engine.** Same logic as the "Dispatcher: pick by engine"
+   tree in
+   [`playwright-snapshots` references/responsive-breakpoints.md](../skills/playwright-snapshots/references/responsive-breakpoints.md):
    - Chromatic if `chromatic` or `@chromatic-com/storybook` is in
      `devDependencies`.
    - Percy if `@percy/cli` is in `devDependencies`.

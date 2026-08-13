@@ -1,6 +1,6 @@
 ---
 name: playwright-snapshots
-description: "Authors Playwright `expect(page).toHaveScreenshot()` assertions, configures masks / clips / threshold / maxDiffPixels per test, manages the per-OS / per-browser snapshot directory, and runs the update flow with `--update-snapshots`. Use when the project ships self-hosted visual regression coverage in Playwright (no external snapshot service)."
+description: "Authors Playwright `expect(page).toHaveScreenshot()` assertions, configures masks / clips / threshold / maxDiffPixels per test, manages the per-OS / per-browser snapshot directory, and runs the update flow with `--update-snapshots`; references/ carry the responsive-breakpoint viewport matrix (one project per breakpoint, cross-breakpoint matrix report, plus Chromatic / Percy / Storybook test-runner viewport syntax). Use when the project ships self-hosted visual regression coverage in Playwright (no external snapshot service), or needs a unified multi-viewport breakpoint matrix."
 ---
 
 # playwright-snapshots
@@ -154,6 +154,12 @@ export default defineConfig({
 `projects` controls which browsers run; each project's snapshots live
 in the same directory differentiated by the platform suffix.
 
+For multi-viewport coverage, define one `project` per breakpoint
+(`mobile-375`, `tablet-768`, `desktop-1280`, `wide-1920`) and aggregate
+into a single cross-breakpoint matrix report - the full pattern, the other
+engines' viewport syntax, and the unified matrix row shape are in
+[references/responsive-breakpoints.md](references/responsive-breakpoints.md).
+
 ## Running
 
 ### First run / update flow
@@ -238,3 +244,6 @@ images.
   layout, update flow.
 - [PageAssertions API][assertion] - full `toHaveScreenshot` option
   reference.
+- [references/responsive-breakpoints.md](references/responsive-breakpoints.md) -
+  viewport-matrix pattern across breakpoints, per-engine syntax, unified
+  matrix report.

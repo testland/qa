@@ -1,9 +1,0 @@
-{
-  "name": "testland/wcag-checklist-builder",
-  "description": "Builds a per-component WCAG 2.2 accessibility checklist from a component spec - covers focus management, color contrast, ARIA roles & states, keyboard interaction, error handling, and live-region announcements - emitting a markdown checklist or YAML test plan that pairs with screen-reader-test-author for manual verification and the violation gate for automated scans. Use during component-spec review or pre-implementation acceptance.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.5"
-}
