@@ -1,6 +1,6 @@
 ---
 name: non-functional-requirement-extractor
-description: "Reads a PRD, design doc, or product brief and pulls out the non-functional requirements (performance, accessibility, security, internationalization, reliability, observability) as concrete, threshold-bound, testable assertions. Maps every NFR to its measurement source (Lighthouse, axe, OWASP ASVS, WCAG criterion, etc.) so the test suite knows what to assert against. Use after acceptance-criteria-extractor handles functional requirements."
+description: "Reads a PRD, design doc, or product brief and pulls out the non-functional requirements (performance, accessibility, security, internationalization, reliability, observability) as concrete, threshold-bound, testable assertions. Maps every NFR to its measurement source (Lighthouse, axe, OWASP ASVS, WCAG criterion, etc.) so the test suite knows what to assert against. Use after gherkin-from-stories (qa-bdd) handles functional requirements."
 ---
 
 # non-functional-requirement-extractor
@@ -17,7 +17,7 @@ characteristics define the canonical NFR categories
 
 | ISO/IEC 25010 characteristic       | Common shorthand   | This skill covers |
 |------------------------------------|--------------------|-------------------|
-| Functional Suitability             | functional         | (out - handled by acceptance-criteria-extractor) |
+| Functional Suitability             | functional         | (out - handled by gherkin-from-stories in qa-bdd) |
 | Performance Efficiency             | performance / perf | yes               |
 | Compatibility                      | compatibility       | yes               |
 | Usability                          | a11y / UX           | yes (a11y subset) |
@@ -49,7 +49,7 @@ threshold-and-measurement requirements that don't fit Gherkin's shape.
 ## How to use
 
 1. Confirm functional requirements are already covered by
-   `acceptance-criteria-extractor`; this skill takes everything else.
+   `gherkin-from-stories` (qa-bdd); this skill takes everything else.
 2. Scan the doc family-by-family for the Step 1 signal phrases.
 3. For each signal, run the Step 2 testability test: does it have a
    threshold, a measurement source, and a scope?
@@ -228,4 +228,4 @@ emits tables with zero gaps:
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - OWASP ASVS - https://owasp.org/www-project-application-security-verification-standard/
 - Web Vitals - https://web.dev/articles/vitals (LCP / INP / CLS).
-- `acceptance-criteria-extractor` - sibling skill for **functional** requirements.
+- `gherkin-from-stories` (qa-bdd plugin) - for **functional** requirements.

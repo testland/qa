@@ -1,11 +1,12 @@
 # qa-data-quality
 
-Data quality testing for analytical pipelines: dbt-tests, Great Expectations, Soda, schema drift detection, anomaly triage, and schema-diff review.
+Data quality testing for analytical pipelines: data-contract extraction, dbt-tests, Great Expectations, Soda, schema drift detection, anomaly triage, and schema-diff review.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
+| Skill | [data-contract-extractor](skills/data-contract-extractor/SKILL.md) | Extract data contracts (schema + freshness + volume + distribution + ownership) from data PRDs; flag gaps; emit YAML consumed by the dbt / GX / Soda skills as their assertion baseline. |
 | Skill | [dbt-testing](skills/dbt-testing/SKILL.md) | Author and run dbt data tests (generic, singular, custom-macro), parse run_results.json, gate `dbt build` on test results. |
 | Skill | [great-expectations](skills/great-expectations/SKILL.md) | Author GX Core ExpectationSuites + Checkpoints; run validations on Pandas/SQL/Spark batches; parse JSON results for CI gating. |
 | Skill | [soda-checks](skills/soda-checks/SKILL.md) | Author SodaCL checks against SQL warehouses; configure scan profiles; gate CI on `soda scan` exit code. |

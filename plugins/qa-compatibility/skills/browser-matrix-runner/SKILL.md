@@ -194,4 +194,4 @@ manual / spot-check.
   OS / runtime matrices.
 - `compatibility-budget` - 
   conventions for choosing the matrix.
-- `mobile-web-emulation-runner` (in the qa-mobile plugin) - sibling: mobile viewport variants of the same browsers.
+- `playwright-testing` (in the qa-web-e2e plugin) - mobile viewport variants of the same browsers via the `devices` catalog (references/mobile-emulation.md).

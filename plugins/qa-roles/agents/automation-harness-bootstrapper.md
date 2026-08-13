@@ -319,7 +319,8 @@ After the harness is in place:
 - **Write JVM unit tests** →
   [`jvm-unit-tests`](../../qa-unit-tests-jvm/skills/jvm-unit-tests/SKILL.md)
 - **Review framework choice before scaffolding** →
-  [`web-e2e-framework-selector`](../../qa-web-e2e/agents/web-e2e-framework-selector.md)
+  [`web-e2e-overview`](../../qa-web-e2e/skills/web-e2e-overview/SKILL.md)
+  (repo-observation decision table)
 
 ## References
 

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-data-quality",
-  "version": "1.0.8",
-  "description": "Data quality testing for analytical pipelines: 5 skills (dbt-testing, great-expectations, soda-checks, data-quality-gate, data-quality-conventions) and 2 agents (schema-diff-reviewer, data-anomaly-triager).",
+  "version": "1.1.0",
+  "description": "Data quality testing for analytical pipelines: 6 skills (data-contract-extractor, dbt-testing, great-expectations, soda-checks, data-quality-gate, data-quality-conventions) and 2 agents (schema-diff-reviewer, data-anomaly-triager).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

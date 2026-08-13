@@ -1,6 +1,6 @@
 ---
 name: bdd-step-library-curator
-description: "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, and publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones. Use when a BDD project's step count grows past ~50, on a quarterly step-library review, or when a new engineer cannot find an existing step and is about to write a duplicate."
+description: "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones, and builds a scenario coverage map that fingerprints new Gherkin scenarios against the live suite to classify each as duplicate, partial overlap, or genuine gap before any test is authored. Use when a BDD project's step count grows past ~50, on a quarterly step-library review, when a new engineer is about to write a duplicate step, or when fresh .feature files need a covered-already check."
 ---
 
 # bdd-step-library-curator
@@ -159,6 +159,29 @@ author to acknowledge the new step and grep the README first. The
 `check-new-steps.sh` script is in
 [references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md).
 
+## Scenario coverage map (pre-authoring duplicate check)
+
+The same duplicate-prevention discipline applies one level up, at the
+scenario layer. When new `.feature` files land (typically from
+`gherkin-from-stories`), fingerprint each new scenario by its ordered,
+keyword-stripped step texts and diff against the existing suite's
+step-usage index before any test is authored:
+
+- `DUPLICATE` - every step already covered under one existing scenario:
+  do not author.
+- `PARTIAL` - some steps overlap: author only the new step definitions,
+  reuse the rest.
+- `GAP` - nothing matches: author in full.
+
+Fingerprint on the step **text**, not the keyword - per the Gherkin
+reference, "keywords are not taken into account when looking for a step
+definition." Prefer the Cucumber JSON report over re-parsing source
+`.feature` files when one exists, exclude Background steps from the
+fingerprint, and halt on an empty or tiny index (a map against an empty
+suite is vacuous). The full method, output templates, tag-match handling,
+and hard-reject conditions:
+[references/coverage-map.md](references/coverage-map.md).
+
 ## Step 6 - Quarterly cadence
 
 | Cadence            | Trigger                                           |
@@ -227,6 +250,9 @@ discoverable index the whole team searches before writing a step.
 - Step extraction commands, the overlap-detection script, and the
   pre-merge gate:
   [references/step-extraction-and-overlap.md](references/step-extraction-and-overlap.md).
+- Scenario-level coverage map (fingerprinting, output templates,
+  hard-reject conditions):
+  [references/coverage-map.md](references/coverage-map.md).
 - `cucumber-testing`,
   `behave-testing`,
   `reqnroll-testing` - per-language

@@ -193,4 +193,4 @@ go-live authorization, vendor approval).
   it (end user / SME / solution owner), purpose (sign-off as
   contractual artifact), format (user journeys, not technical
   click-steps), three-most-common-or-difficult-tasks rule.
-- `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream: emits the ACs this format turns into UAT scripts.
+- `gherkin-from-stories` (in the qa-bdd plugin) - upstream: emits the ACs this format turns into UAT scripts.

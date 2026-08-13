@@ -184,4 +184,4 @@ LLM calls have cost and rate limits. Pattern:
 ## References
 
 - `ai-spec-coverage-mapper` - sister skill: maps existing tests to spec sections.
-- `acceptance-test-from-criteria` (in the qa-bdd plugin) - non-AI alternative for AC-to-test conversion.
+- `gherkin-from-stories` (in the qa-bdd plugin, ATDD mode) - non-AI alternative for AC-to-test conversion.

@@ -37,9 +37,9 @@ without asking anyone. Take the **first** row that matches, top to bottom.
 
 ```bash
 # Run at the repo root before choosing anything.
-ls playwright.config.* cypress.config.* wdio.conf.* .testcaferc.* 2>/dev/null
+ls playwright.config.* cypress.config.* wdio.conf.* .testcaferc.* nightwatch.conf.* 2>/dev/null
 ls -d cypress e2e tests/e2e 2>/dev/null
-grep -iE '"(@playwright/test|cypress|webdriverio|puppeteer|testcafe|selenium-webdriver)"' package.json
+grep -iE '"(@playwright/test|cypress|webdriverio|@wdio/cli|puppeteer|testcafe|nightwatch|selenium-webdriver)"' package.json
 grep -riE 'selenium-(java|webdriver)|Selenium\.WebDriver' pom.xml build.gradle* requirements.txt *.csproj Gemfile 2>/dev/null
 ```
 
@@ -49,6 +49,7 @@ grep -riE 'selenium-(java|webdriver)|Selenium\.WebDriver' pom.xml build.gradle* 
 | `cypress.config.ts` / `.js`, or a `cypress/` directory | **Cypress** | Already chosen. Extend it; a migration is a separate project with its own budget. |
 | `wdio.conf.ts` / `.js` | **WebdriverIO** | Already chosen. |
 | `.testcaferc.json` / `.testcaferc.js` | **TestCafe** | Already chosen. |
+| `nightwatch.conf.*`, or `nightwatch` in `package.json` | **Nightwatch (legacy)** | Keep it running, but plan a migration to Playwright or WebdriverIO rather than growing the suite. |
 | `selenium-java`, `selenium-webdriver`, or `Selenium.WebDriver` in a build file | **Selenium WebDriver** | Already chosen, usually with years of page objects behind it. |
 | No E2E config anywhere, and the repo has a `package.json` | **Playwright** | Default for greenfield. One install covers Chromium, Firefox and WebKit [[pwi]]. |
 | No E2E config, and the team will not add Node (pure Java / C# / Ruby / Python shop) | **Selenium WebDriver** | The only option with first-class bindings in Java, Python, C#, Ruby, JavaScript and Kotlin [[sellib]]. |
@@ -60,7 +61,11 @@ grep -riE 'selenium-(java|webdriver)|Selenium\.WebDriver' pom.xml build.gradle* 
 
 Tie-break when two rows both look true: whatever is already in the repo wins. A second
 E2E framework doubles the CI cost, the selector conventions and the flake surface, and
-buys coverage you could get by adding one grid config to the framework you have.
+buys coverage you could get by adding one grid config to the framework you have. If the
+repo shows **two competing frameworks** (`@playwright/test` AND `cypress` both in
+devDependencies), stop and ask which is canonical - do not silently pick one. And never
+recommend a framework swap on an existing project without a stated reason: "modernity"
+alone burns years of page-object investment for marginal gain.
 
 ## First runnable path: Playwright
 
@@ -117,11 +122,17 @@ A local runner covers the engines installed on the machine. When the requirement
 real hardware, legacy browser versions, or dozens of OS/browser pairs, point the same
 suite at a hosted grid instead of rewriting it.
 
-| Provider | Credentials | Note |
+| Provider | Credentials | Best fit |
 |---|---|---|
-| BrowserStack Automate | username + access key from the account profile, set in `browserstack.yml` [[bs]] | advertises "3000+ real devices and desktop browsers" [[bs]] |
-| Sauce Labs | username + access key from User Settings [[sl]] | region-specific hubs, e.g. `https://ondemand.us-west-1.saucelabs.com/wd/hub`, `https://ondemand.eu-central-1.saucelabs.com/wd/hub` [[sl]] |
-| LambdaTest | `LT_USERNAME` and `LT_ACCESS_KEY` environment variables [[lt]] | grid endpoint and capabilities are generated from the dashboard [[lt]] |
+| BrowserStack Automate | username + access key from the account profile, set in `browserstack.yml` [[bs]] | broadest device matrix - advertises "3000+ real devices and desktop browsers" [[bs]] - and enterprise procurement |
+| Sauce Labs | username + access key from User Settings [[sl]] | Selenium-grid-centric parallel CI farms; region-specific hubs, e.g. `https://ondemand.us-west-1.saucelabs.com/wd/hub`, `https://ondemand.eu-central-1.saucelabs.com/wd/hub` [[sl]] |
+| LambdaTest | `LT_USERNAME` and `LT_ACCESS_KEY` environment variables [[lt]] | cost-sensitive, smaller scale; grid endpoint and capabilities are generated from the dashboard [[lt]] |
+
+A grid is recommended **in addition to** the chosen framework, never as a substitute.
+Two pairing cautions: Cypress runs its own runner, not WebDriver, so it cannot target a
+WebDriver hub URL - use Cypress Cloud or the vendor's Cypress-specific runner instead.
+And Puppeteer stays Chromium-only no matter what grid sits behind it - for cross-browser
+coverage pick Playwright. Setup for all three vendors is in `cloud-grid-e2e`.
 
 Decide the matrix from analytics, not from anxiety. Grid minutes are billed, and a
 matrix of twenty combinations turns a two-minute suite into a twenty-minute one.
@@ -198,9 +209,7 @@ installed alongside this one; nothing here depends on them.
 | WebdriverIO | `webdriverio-testing` |
 | Puppeteer | `playwright-testing` (Puppeteer is a browser-automation library, not a test framework; migrate to Playwright) |
 | TestCafe | `playwright-testing` (marginal adoption; not recommended for new projects) |
-| BrowserStack | `browserstack-automate` |
-| Sauce Labs | `saucelabs-automate` |
-| LambdaTest | `lambdatest-automate` |
+| BrowserStack / Sauce Labs / LambdaTest | `cloud-grid-e2e` (one pattern, per-vendor references) |
 
 [pwi]: https://playwright.dev/docs/intro
 [pwbp]: https://playwright.dev/docs/best-practices

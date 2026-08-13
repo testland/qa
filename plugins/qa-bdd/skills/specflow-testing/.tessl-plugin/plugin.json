@@ -1,9 +1,0 @@
-{
-  "name": "testland/specflow-testing",
-  "description": "Maintains SpecFlow tests on existing .NET projects - authors Gherkin `.feature` files, writes C# `[Binding]` step definitions, runs them via xUnit/NUnit/MsTest, and migrates a project to Reqnroll. SpecFlow is the legacy .NET BDD framework and Reqnroll is its maintained fork. Use only for existing SpecFlow projects, especially mid-migration; new .NET BDD projects use `reqnroll-testing` instead.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.7.7"
-}

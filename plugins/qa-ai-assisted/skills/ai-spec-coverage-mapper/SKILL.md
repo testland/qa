@@ -161,5 +161,5 @@ uncovered ACs are the highest-priority gaps to close before sign-off.
   weekly CI scheduling and how to verify the LLM's coverage claims.
 - `ai-test-generator` - sister
   skill: generates tests for the gaps this skill identifies.
-- `acceptance-test-from-criteria` (in the qa-bdd plugin) - for tag-based AC traceability without LLM.
+- `gherkin-from-stories` (in the qa-bdd plugin, ATDD mode) - for tag-based AC traceability without LLM.
 - `test-coverage-targeter` (in the qa-test-reporting plugin) - its coverage debt ledger tracks line-coverage debt; complementary to spec coverage.

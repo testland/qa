@@ -39,8 +39,8 @@ sibling skill - instead.
   the runner can't reach.
 
 If the feature is fully automatable and the team has the budget,
-write an automated test - see `acceptance-criteria-extractor` for
-the upstream Gherkin generation.
+write an automated test - see `gherkin-from-stories` (in the qa-bdd
+plugin) for the upstream Gherkin generation.
 
 ## Step 1 - Read the input
 
@@ -52,7 +52,7 @@ The skill takes one of:
 - An acceptance criterion line item (for UAT scripts).
 
 Extract the **actor**, **trigger**, and **observable outcomes** - 
-the same Gherkin structure as `acceptance-criteria-extractor`.
+the same Gherkin structure as `gherkin-from-stories` (qa-bdd plugin).
 A manual script is the same logical shape as a Gherkin scenario;
 the difference is the level of detail + the inclusion of setup
 data.
@@ -270,7 +270,7 @@ Turn each failure into a structured bug-reproduction package.
 - [exp][exp] - Exploratory vs scripted testing distinction;
   "most real-world testing combines both approaches with emphasis
   depending on project context."
-- `acceptance-criteria-extractor` - upstream: emits Gherkin from a story; this skill turns Gherkin
+- `gherkin-from-stories` (qa-bdd plugin) - upstream: emits Gherkin from a story; this skill turns Gherkin
   into a tester-runnable script.
 - UAT script format (business language, AC mapping, sign-off):
   [references/uat-format.md](references/uat-format.md).

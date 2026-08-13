@@ -25,7 +25,7 @@ catalog.
   testing.
 - A team is migrating from "test only what works" to "test every
   documented response code."
-- Pairs with `acceptance-criteria-extractor` (in the qa-shift-left plugin)
+- Pairs with `gherkin-from-stories` (in the qa-bdd plugin)
   output: every Then-clause's positive assertion gets a negative
   sibling.
 
@@ -159,7 +159,7 @@ def test_create_order_handles_adversarial_sku(payload):
 
 - **Doesn't auto-detect input domain.** The team must declare
   required fields, types, ranges, and enum values for the skill
-  to generate the matching cases. Use `acceptance-criteria-extractor`
+  to generate the matching cases. Use `gherkin-from-stories`
   + `non-functional-requirement-extractor`
   upstream.
 - **Server-error simulation requires mocking.** Categories 5 and 7
@@ -173,7 +173,7 @@ def test_create_order_handles_adversarial_sku(payload):
 
 ## References
 
-- `acceptance-criteria-extractor` - upstream skill producing the happy-path AC.
+- `gherkin-from-stories` (qa-bdd plugin) - upstream skill producing the happy-path AC.
 - `malicious-payload-bank` - adversarial payload catalog (category 6).
 - `boundary-value-generator` - sibling skill for boundary cases.
 - `synthetic-pii-generator` - for any test data that includes PII.

@@ -42,7 +42,7 @@ The agent **refuses** to:
 ## Hand-off targets
 
 - **Coverage gaps** → `test-coverage-targeter` in `qa-test-reporting`.
-- **Acceptance criteria authoring** → `acceptance-criteria-extractor` in `qa-shift-left`.
+- **Acceptance criteria authoring** → `gherkin-from-stories` in `qa-bdd`.
 - **Telemetry wiring** → `synthetic-monitor-author` in `qa-shift-right`.
 - **Authoring a DoD when none exists** → the `definition-of-done` skill; authoring is out of scope here.
 - **Broader test-quality coaching** → `./test-quality-coach.md`.

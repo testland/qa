@@ -102,8 +102,8 @@ five-metric evolution), SPACE framework paper (ACM Queue).
 
 ### Manual cross-browser / device spot-check workflow (extension: `qa-compatibility`)
 
-**Why missing matters:** the grid skills (`browserstack-automate`,
-`saucelabs-automate`, `lambdatest-automate`, `selenium-grid-4-runner`)
+**Why missing matters:** the grid skills (`cloud-grid-e2e`,
+`selenium-grid-4-runner`)
 and `browser-matrix-runner` are automation-oriented. A manual tester
 doing a responsive pass or a per-release browser/device spot check has
 no checklist-shaped workflow.
@@ -148,11 +148,11 @@ documentation).
 **Why missing matters:** raising ambiguities in requirements before
 build is a daily manual-tester activity (ISTQB CTFL v4.0 static
 testing), but the catalog only touches it indirectly:
-`acceptance-criteria-extractor` converts a story into AC, and
+`gherkin-from-stories` (qa-bdd) converts a story into AC, and
 `test-case-ideation-from-story` designs cases from one - neither
 *reviews* requirements for testability-blocking ambiguity.
 
-**Nearest existing components:** `acceptance-criteria-extractor`,
+**Nearest existing components:** `gherkin-from-stories` (qa-bdd),
 `spec-testability-heuristics`, `test-case-ideation-from-story`.
 
 **Differentiation axis:** extraction converts; testability review

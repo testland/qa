@@ -108,7 +108,7 @@ Confidence-tagged rows give the team an explicit gradient: `observed` cases can 
 The matrix is the input to the same downstream chain as `test-case-ideation-from-story`:
 
 1. Cases the team wants to **execute manually** → `manual-test-script-author`.
-2. Cases the team wants to **convert to Gherkin** → `manual-step-to-gherkin`.
+2. Cases the team wants to **convert to Gherkin** → `gherkin-from-stories` (qa-bdd plugin, manual-step mode).
 3. Cases the team wants to **automate as E2E** → author E2E test scaffolds.
 4. Cases the team wants to **audit before committing to the suite** → run a quality audit of the matrix.
 
@@ -137,7 +137,7 @@ Per the same conventions as `test-case-ideation-from-story`: import as CSV into 
 ## Hand-off targets
 
 - **Manual execution script** → `manual-test-script-author`.
-- **Gherkin scenarios** → `manual-step-to-gherkin` or `gherkin-from-stories`.
+- **Gherkin scenarios** → `gherkin-from-stories` (qa-bdd plugin; covers manual-step input too).
 - **Negative / boundary expansion of the cases** → `negative-test-generator`, `boundary-value-generator`.
 - **When a written spec arrives mid-flow** → switch upstream to `test-case-ideation-from-story` and merge the two matrices.
 

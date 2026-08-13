@@ -140,14 +140,14 @@ and [subagents](https://code.claude.com/docs/en/sub-agents) docs):
 Marketplace conventions (stricter than Anthropic's namespace-only rule):
 
 - **Unique bare names across the whole marketplace**, not just within your
-  plugin. Plugin skills are namespaced (`qa-bdd:bdd-overview`), so
+  plugin. Plugin skills are namespaced (`qa-web-e2e:web-e2e-overview`), so
   Claude Code tolerates duplicates - but agent `skills:` preloads and
   cross-plugin body links resolve by **bare name**, and duplicates make them
   ambiguous. `CATALOG.md` lists per-plugin counts, not component names, so
   check for a collision with `ls plugins/*/skills/ plugins/*/agents/` before
   naming.
 - **Name the behavior or the tool, never the reader's state or the artifact
-  kind.** `bdd-overview` not `getting-started`; `payment-webhook-replay`
+  kind.** `web-e2e-overview` not `getting-started`; `payment-webhook-replay`
   not `payment-webhook-replay-skill`. Anthropic's docs recommend gerund-form
   names (`processing-pdfs`) and explicitly accept noun phrases
   (`pdf-processing`) - this marketplace's tool-wrapper (`jest-tests`),

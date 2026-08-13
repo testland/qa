@@ -27,7 +27,7 @@ components but maintained outside the main org).
 
 - The codebase is Python and the team uses BDD.
 - Acceptance criteria are authored in Gherkin (per
-  `acceptance-criteria-extractor` in the qa-shift-left plugin).
+  `gherkin-from-stories`).
 - pytest with parametrize isn't sufficient - non-engineers read
   the tests.
 

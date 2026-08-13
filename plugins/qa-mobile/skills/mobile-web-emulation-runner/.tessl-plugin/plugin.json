@@ -1,9 +1,0 @@
-{
-  "name": "testland/mobile-web-emulation-runner",
-  "description": "Builds a workflow to run web E2E tests under mobile viewports + DPRs (device pixel ratios): Playwright's `devices` catalog (iPhone 15, Pixel 7), suite run per-device as matrix shards, per-device screenshots, mobile assertions (`.tap()`, viewport-conditional layout). Use when a responsive web app needs mobile-breakpoint regression without a real-device farm. Mobile WEB only - for native apps use appium-testing, detox-testing, or flutter-testing; for cross-shard aggregation use mobile-device-matrix-toolkit; for gesture sequences use touch-gesture-tester.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.7"
-}

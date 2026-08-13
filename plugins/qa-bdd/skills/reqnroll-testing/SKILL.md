@@ -1,6 +1,6 @@
 ---
 name: reqnroll-testing
-description: "Configures Reqnroll (the canonical .NET BDD framework) - install via `dotnet add package Reqnroll`, author `.feature` files in Gherkin, write step bindings as `[Given/When/Then]`-decorated methods in any C# class, runs via `dotnet test`. Reqnroll is the SpecFlow successor (originated as a community port off the SpecFlow codebase); new .NET BDD work targets Reqnroll. Use for .NET projects starting BDD or migrating from SpecFlow."
+description: "Configures Reqnroll (the canonical .NET BDD framework) - install via `dotnet add package Reqnroll`, author `.feature` files in Gherkin, write step bindings as `[Given/When/Then]`-decorated methods in any C# class, runs via `dotnet test`. Reqnroll is the SpecFlow successor (SpecFlow reached end-of-life 2024-12-31); covers the SpecFlow-to-Reqnroll migration path, and references/specflow-legacy.md maintains not-yet-migrated SpecFlow projects. Use for .NET projects starting BDD, migrating from SpecFlow, or maintaining legacy SpecFlow suites."
 ---
 
 # reqnroll-testing
@@ -28,8 +28,9 @@ active development.
   (per [reqnroll-home][rh]: "Full Gherkin support with tagged
   Rule blocks").
 
-For SpecFlow-locked legacy projects mid-migration, see
-`specflow-testing`.
+For SpecFlow-locked legacy projects mid-migration (packages, bindings,
+EOL background), see
+[references/specflow-legacy.md](references/specflow-legacy.md).
 
 ## Worked example
 
@@ -212,8 +213,8 @@ Most SpecFlow projects migrate in <1 day for typical scope.
   (VS / VS Code / Rider).
 - [references/bindings-and-hooks.md](references/bindings-and-hooks.md) - full
   step-binding class, cucumber-expression variant, and hook class.
-- `specflow-testing` - legacy
-  SpecFlow support skill.
+- [references/specflow-legacy.md](references/specflow-legacy.md) - legacy
+  SpecFlow support + EOL background + full migration path.
 - `cucumber-testing`,
   `behave-testing` - sibling language
   wrappers.

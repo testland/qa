@@ -1,6 +1,6 @@
 ---
 name: api-test-author
-description: "Action-taking agent that authors ONE API test file per behavior spec - detects tool via api-test-tool-selector (or accepts an override), then emits a Postman collection request, REST Assured test, Karate feature, Tavern YAML stage, Schemathesis spec-driven test, or RESTler grammar using the chosen tool's idiomatic patterns. Distinct from qa-contract-testing/contract-test-scaffolder (consumer/provider Pact tests). Sibling of qa-mobile/mobile-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one API test (functional, not contract or load) to an existing test project."
+description: "Action-taking agent that authors ONE API test file per behavior spec - picks the tool from the plugin README's decision table using observable project facts (or accepts an override), then emits a Postman collection request, REST Assured test, Karate feature, Schemathesis spec-driven test, or RESTler grammar using the chosen tool's idiomatic patterns. Distinct from qa-contract-testing/contract-test-scaffolder (consumer/provider Pact tests). Sibling of qa-mobile/mobile-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one API test (functional, not contract or load) to an existing test project."
 tools: "Read, Write, Edit, Grep, Glob, Bash(newman *), Bash(mvn test *), Bash(./mvnw test *), Bash(karate *), Bash(pytest *), Bash(schemathesis *)"
 model: inherit
 skills:
@@ -19,7 +19,7 @@ Distinct from [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract
 
 ## When invoked
 
-Required: target endpoint (path + method) + behavior spec (request inputs + expected response). Optional: tool override (one of Postman / REST Assured / Karate / Tavern / Schemathesis / RESTler / API Chaos Runner - if not given, invoke [`api-test-tool-selector`](api-test-tool-selector.md) first); project root path; OpenAPI spec path if available.
+Required: target endpoint (path + method) + behavior spec (request inputs + expected response). Optional: tool override (one of Postman / REST Assured / Karate / Tavern / Schemathesis / RESTler / API Chaos Runner - if not given, pick via the plugin README's decision table first); project root path; OpenAPI spec path if available.
 
 Missing endpoint OR missing behavior spec → refuses.
 
@@ -27,7 +27,12 @@ Missing endpoint OR missing behavior spec → refuses.
 
 ### Step 1 - Pick tool if not provided
 
-If the tool is not supplied, invoke [`api-test-tool-selector`](api-test-tool-selector.md) against the project root + spec markers first. Halt and pass control back if the selector refuses.
+If the tool is not supplied, apply the decision table in the plugin
+[README](../README.md) against observable project facts (build files, schema
+markers like `*.openapi.yaml` / `*.graphql`, existing Postman collection JSON,
+language stack). Take the first matching row; if no row matches and no
+`package.json` / build file / schema exists, halt and ask - the signal is too
+weak to pick for the user.
 
 ### Step 2 - Map spec to tool idiom
 
@@ -71,7 +76,7 @@ Write one new file (or one new collection request for Postman) at the convention
 
 ## Hand-off targets
 
-- **Tool pick if not yet decided** → [`api-test-tool-selector`](api-test-tool-selector.md).
+- **Tool pick if not yet decided** → the decision table in the plugin [README](../README.md).
 - **Contract testing (consumer/provider)** → [`qa-contract-testing/contract-test-scaffolder`](../../qa-contract-testing/agents/contract-test-scaffolder.md).
 - **Load testing** → qa-load-testing plugin (Wave 6).
 - **Per-tool authoring + CI setup** → the chosen tool's SKILL.md.

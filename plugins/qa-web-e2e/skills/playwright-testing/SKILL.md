@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, and CI setup; for reviewing codegen output specifically, use a dedicated codegen-review pass."
+description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, mobile-web emulation via the `devices` catalog (viewport / DPR / touch per-device projects), and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, mobile-breakpoint regression, and CI setup; for reviewing codegen output specifically, use a dedicated codegen-review pass."
 ---
 
 # playwright-testing
@@ -135,6 +135,12 @@ export default defineConfig({
 `trace: 'on-first-retry'` captures rich debug info (DOM snapshots,
 network, console) only when needed - avoids storage cost on
 passing runs.
+
+The same `devices` catalog covers mobile-web emulation: add projects
+spreading `devices['iPhone 15']` / `devices['Pixel 7']` for
+mobile-breakpoint regression (viewport, DPR, user agent, `.tap()` touch
+synthesis, per-device snapshots, CI matrix) - see
+[references/mobile-emulation.md](references/mobile-emulation.md).
 
 ## Step 5 - Run
 

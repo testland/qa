@@ -51,8 +51,8 @@ The agent flags by pattern:
 \bSELECT\s+\*\s+FROM\b
 ```
 
-Per [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-Step 1: every Then "must be observable" - this same principle
+Per [`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md)
+(spec-extraction section): every Then "must be observable" - this same principle
 applies to When (declarative) and Then (observable).
 
 ## Step 3 - Detect technical leakage
@@ -137,8 +137,8 @@ Scenario: Apply expired promo
   ...
 ```
 
-Per [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md)
-Step 3: only one Background per Feature; extract truly shared
+Per [`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md)
+(spec-extraction section): only one Background per Feature; extract truly shared
 state.
 
 ## Step 6 - Detect vague Then
@@ -221,7 +221,5 @@ The agent refuses to:
 
 ## References
 
-- [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md) - upstream: emits style-conforming Gherkin from ACs.
-- [`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md),
-  [`acceptance-test-from-criteria`](../skills/acceptance-test-from-criteria/SKILL.md) - generators that should produce style-conforming output.
+- [`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md) - upstream generator (story / AC-list / manual-step / raw-spec inputs) that should produce style-conforming output.
 - [`bdd-step-library-curator`](../skills/bdd-step-library-curator/SKILL.md) - sibling: addresses step library quality, not Gherkin quality.

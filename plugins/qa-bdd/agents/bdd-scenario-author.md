@@ -1,11 +1,10 @@
 ---
 name: bdd-scenario-author
-description: "Action-taking agent that authors Gherkin scenarios and scaffolds step definitions end-to-end - accepts a user story or acceptance criteria list, invokes gherkin-from-stories or acceptance-test-from-criteria to produce a Feature file, detects the project's BDD runner (Cucumber-JVM, Cucumber-JS, Cucumber-Ruby, Behave, Reqnroll, or SpecFlow), and emits idiomatic step definition stubs wired to that runner. De-duplicates against the existing step library via bdd-step-library-curator before adding new steps. Fills the build counterpart to gherkin-style-reviewer: that agent critiques; this one authors. Use when a story or AC list needs to be turned into runnable BDD tests."
+description: "Action-taking agent that authors Gherkin scenarios and scaffolds step definitions end-to-end - accepts a user story or acceptance criteria list, invokes gherkin-from-stories (the authoring umbrella covering story, AC-list, manual-step, and raw-spec inputs) to produce a Feature file, detects the project's BDD runner (Cucumber-JVM, Cucumber-JS, Cucumber-Ruby, Behave, Reqnroll, or SpecFlow), and emits idiomatic step definition stubs wired to that runner. De-duplicates against the existing step library via bdd-step-library-curator before adding new steps. Fills the build counterpart to gherkin-style-reviewer: that agent critiques; this one authors. Use when a story or AC list needs to be turned into runnable BDD tests."
 tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:
   - gherkin-from-stories
-  - acceptance-test-from-criteria
   - bdd-step-library-curator
 ---
 
@@ -28,14 +27,16 @@ Missing story AND missing AC list → refuse and ask for at least one.
 
 ## Step 1 - Choose the Gherkin generation path
 
-Story input (free-form prose with As-a / I-want / So-that) → invoke
-[`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md) to extract the
-actor/capability/value triple, map each AC to a Scenario block, and detect
-Scenario Outline opportunities where the underlying logic is identical and only
-data varies.
+Both paths live in [`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md);
+pick the section matching the input shape.
 
-AC list input (numbered criteria, no story body) → invoke
-[`acceptance-test-from-criteria`](../skills/acceptance-test-from-criteria/SKILL.md)
+Story input (free-form prose with As-a / I-want / So-that) → the "From a user
+story" section: extract the actor/capability/value triple, map each AC to a
+Scenario block, and detect Scenario Outline opportunities where the underlying
+logic is identical and only data varies.
+
+AC list input (numbered criteria, no story body) → the "From an
+acceptance-criteria list (ATDD)" section (plus its references/atdd-traceability.md)
 to produce one `@AC-X.Y`-tagged Scenario per criterion. Per ISTQB Glossary V4.7.1,
 ATDD is "a collaboration-based test-first approach that defines acceptance tests in
 the stakeholders' domain language" ([istqb.org][istqb-atdd]); the `@AC-X.Y` tag is
@@ -129,7 +130,9 @@ public void PromoCodeIsActive(string code) =>
 predecessor; step definition syntax is identical).
 
 `NotImplementedError` / `PendingException` bodies make the first run explicitly red -
-a requirement of the ATDD test-first approach per [`acceptance-test-from-criteria`](../skills/acceptance-test-from-criteria/SKILL.md) Step 3.
+a requirement of the ATDD test-first approach per
+[`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md)
+references/atdd-traceability.md.
 
 [cuke-stepdefs]: https://cucumber.io/docs/cucumber/step-definitions/
 [cuke-js]: https://cucumber.io/docs/cucumber/step-definitions/?lang=javascript
@@ -185,5 +188,5 @@ file path, new-step count, reused-step count, and the verify command.
 
 - **Style review of emitted Feature file** → [`gherkin-style-reviewer`](gherkin-style-reviewer.md).
 - **Step library de-duplication** → [`bdd-step-library-curator`](../skills/bdd-step-library-curator/SKILL.md).
-- **AC extraction from Jira / tickets** → [`acceptance-criteria-extractor`](../../qa-shift-left/skills/acceptance-criteria-extractor/SKILL.md).
+- **AC extraction from raw specs / tickets** → the "Extracting acceptance criteria from a raw spec" section of [`gherkin-from-stories`](../skills/gherkin-from-stories/SKILL.md).
 - **Test-code review** → `test-code-conventions` (qa-test-review).

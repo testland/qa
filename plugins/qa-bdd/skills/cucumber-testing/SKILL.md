@@ -33,10 +33,14 @@ This skill covers the three most-used official implementations:
 - Cross-stakeholder collaboration is the value (Gherkin scenarios
   read by non-engineers).
 - Acceptance criteria authored as Gherkin scenarios per
-  `acceptance-criteria-extractor` (in the qa-shift-left plugin).
+  `gherkin-from-stories`.
 
 If only engineers will read the tests, BDD's collaboration value
-is wasted - plain xUnit-style tests are simpler.
+is wasted - plain xUnit-style tests are simpler. Not sure which
+runner fits the repo, or whether BDD is worth adopting at all? See
+[references/runner-selection.md](references/runner-selection.md) -
+the runner decision table, per-runner first-run commands, the
+SpecFlow end-of-life note, and the "when BDD is not worth it" test.
 
 ## Step 1 - Install (Cucumber-JVM)
 
@@ -202,4 +206,5 @@ npx cucumber-js features/ --tags 'not @wip'
 - `behave-testing` - Python sibling.
 - `reqnroll-testing` - .NET sibling.
 - `bdd-step-library-curator` - addresses step proliferation.
-- `acceptance-criteria-extractor` (in the qa-shift-left plugin) - upstream skill that generates Gherkin from stories.
+- `gherkin-from-stories` - upstream skill that generates Gherkin from stories, AC lists, manual steps, and raw specs.
+- [references/runner-selection.md](references/runner-selection.md) - runner decision table + first-run commands.

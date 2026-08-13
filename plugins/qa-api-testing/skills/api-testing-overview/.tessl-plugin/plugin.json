@@ -1,9 +1,0 @@
-{
-  "name": "testland/api-testing-overview",
-  "description": "Teaches API testing from zero: what functional API testing covers, how it differs from contract testing and load testing, and a decision table that picks one tool from observable project facts (language and build file, whether an OpenAPI or GraphQL schema exists, functional vs spec-conformance fuzzing vs stateful security fuzzing, whether non-engineers read the tests). Names the real options (Postman with newman, REST Assured, Karate, Tavern, Schemathesis, RESTler), gives install and first-run commands with what a passing run looks like, and the traps that bite first: asserting only on HTTP status, order-dependent tests sharing server state, and hardcoded environment URLs and secrets. Use when an HTTP API needs automated tests and no tool has been chosen, or when an inherited suite only checks status codes.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.5.6"
-}

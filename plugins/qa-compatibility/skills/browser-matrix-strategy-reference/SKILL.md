@@ -10,10 +10,9 @@ description: "Pure-reference for designing and reviewing a browser / OS / device
 A real browser matrix tiers browsers by traffic share, regulatory requirement, and team budget, then runs each tier at its own cadence - not "test on everything".
 
 This skill is a **pure reference** consumed by the cloud-grid
-skills
-(`browserstack-automate`,
-`saucelabs-automate`,
-`lambdatest-automate`)
+skill
+(`cloud-grid-e2e` in the qa-web-e2e plugin, covering
+BrowserStack / Sauce Labs / LambdaTest)
 + the self-hosted `selenium-grid-4-runner`
 + existing
 `browser-matrix-runner`
@@ -197,6 +196,4 @@ matters (some bugs are real-Chrome-only).
   `browser-matrix-runner`
   (existing - bundled engines),
   `selenium-grid-4-runner`,
-  `browserstack-automate`,
-  `saucelabs-automate`,
-  `lambdatest-automate`.
+  `cloud-grid-e2e` (qa-web-e2e plugin - BrowserStack / Sauce Labs / LambdaTest).

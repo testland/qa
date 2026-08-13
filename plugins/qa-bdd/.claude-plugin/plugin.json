@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-bdd",
-  "version": "1.7.7",
-  "description": "BDD pipelines: 10 skills (cucumber-testing, behave-testing, reqnroll-testing, specflow-testing, bdd-step-library-curator, gherkin-from-stories, acceptance-test-from-criteria, manual-step-to-gherkin, living-documentation-publisher, bdd-overview) and 2 agents (bdd-scenario-author, gherkin-style-reviewer).",
+  "version": "1.8.0",
+  "description": "BDD pipelines: 6 skills (cucumber-testing, behave-testing, reqnroll-testing with SpecFlow migration, the gherkin-from-stories authoring umbrella covering story / AC-list / manual-step / raw-spec inputs, bdd-step-library-curator with scenario coverage mapping, living-documentation-publisher) and 2 agents (bdd-scenario-author, gherkin-style-reviewer).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-bdd",
   "repository": "https://github.com/testland/qa",

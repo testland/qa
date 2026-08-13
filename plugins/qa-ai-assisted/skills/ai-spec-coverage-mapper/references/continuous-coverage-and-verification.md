@@ -37,7 +37,7 @@ LLMs may claim a test "covers" an AC when it doesn't. Before trusting a
 
 - **Spot-check the highest-priority ACs manually** - read the named test
   and confirm it asserts what the AC requires.
-- **Cross-reference with `acceptance-test-from-criteria`** (in the qa-bdd
+- **Cross-reference with `gherkin-from-stories`'s ATDD mode** (in the qa-bdd
   plugin) if the team uses `@AC-X.Y` tags - those tags are the ground
   truth the LLM's semantic guess can be checked against.
 - **Compare the LLM's claim against the test code in human review** -

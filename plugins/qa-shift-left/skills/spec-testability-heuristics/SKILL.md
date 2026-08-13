@@ -186,11 +186,11 @@ cheapest defect to fix is the one prevented before it's coded.
 
 Hand-off targets by verdict:
 
-- **OK** - convert to Gherkin via `acceptance-criteria-extractor`.
+- **OK** - convert to Gherkin via `gherkin-from-stories` (qa-bdd plugin).
 - **BLOCK on a non-functional claim** (perf, a11y, security) - formalize via
   `non-functional-requirement-extractor`.
 - **BLOCK on a data-pipeline claim** - formalize the schema via
-  `data-contract-extractor`.
+  `data-contract-extractor` (qa-data-quality plugin).
 - **Whole-story readiness before dev** - the Definition-of-Done audit
   workflow in the `definition-of-done` skill (qa-process plugin).
 
