@@ -1,8 +1,8 @@
 # Backend, API & distributed-systems QA
 
-Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, feature flags, and experimentation.
+Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, and feature flags + experimentation.
 
-Installing this one plugin installs all 18 member plugins below in a single command.
+Installing this one plugin installs all 17 member plugins below in a single command.
 
 ## Install
 
@@ -31,8 +31,7 @@ Claude Code resolves and installs the member plugins automatically and lists wha
 - **qa-distributed-tracing** - Distributed tracing assertion testing
 - **qa-serverless** - Serverless platform testing
 - **qa-time** - Time-related testing
-- **qa-feature-flags** - Feature-flag platform testing
-- **qa-experimentation** - Experimentation harness testing
+- **qa-feature-flags** - Feature-flag platform testing + experimentation harness testing
 
 ## About role bundles
 

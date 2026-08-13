@@ -1,7 +1,7 @@
 # qa-concurrency
 
 Code-level concurrency + race-condition testing - distinct from
-`qa-chaos` (infra fault) and `qa-distributed-tracing`
+`qa-resilience` (infra fault) and `qa-distributed-tracing`
 (observability). Four skills covering in-process data races (with the
 full Go race-detector + goleak workflow in references), deadlock
 detection, async ordering, and database isolation levels.

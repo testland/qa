@@ -151,9 +151,9 @@
       "category": "foundations"
     },
     {
-      "name": "qa-chaos",
-      "source": "./plugins/qa-chaos",
-      "description": "Chaos engineering + fault injection: 8 skills (chaos-experiment-author, chaos-mesh, chaos-results-reporter, failure-injection-test-author, gremlin-chaos, litmus-chaos, steady-state-hypothesis-validator, toxiproxy-chaos) and 1 agent (chaos-drill-orchestrator).",
+      "name": "qa-resilience",
+      "source": "./plugins/qa-resilience",
+      "description": "Chaos engineering, fault injection, and resilience drills: 7 skills (chaos-experiment-author, chaos-mesh, toxiproxy-chaos, failure-injection-test-author, chaos-drill-protocol, dr-drill-runner, error-budget-tests). Chaos-experiment design with steady-state pre-flight validation and LitmusChaos/Gremlin routing, the chaos-drill run protocol with abort gates, Chaos Mesh, Toxiproxy, and combined HTTP+TCP fault injection, plus the DR-drill discipline (backup verification + restore-time / RTO measurement in references) and error-budget gating with burn-rate alerting and incident metrics.",
       "strict": true,
       "category": "operations-resilience"
     },
@@ -356,7 +356,7 @@
     {
       "name": "qa-concurrency",
       "source": "./plugins/qa-concurrency",
-      "description": "Concurrency + race-condition testing: 6 skills (async-ordering-tests, deadlock-detection-harness, go-race-detector-workflow, jepsen-patterns, mvcc-isolation-tests, race-condition-test-author) and 1 agent (concurrency-critic). Code-level data races, distinct from qa-chaos (infrastructure fault injection).",
+      "description": "Concurrency + race-condition testing: 6 skills (async-ordering-tests, deadlock-detection-harness, go-race-detector-workflow, jepsen-patterns, mvcc-isolation-tests, race-condition-test-author) and 1 agent (concurrency-critic). Code-level data races, distinct from qa-resilience (infrastructure fault injection).",
       "strict": true,
       "category": "backend-distributed"
     },
@@ -373,13 +373,6 @@
       "description": "Chart + data viz testing: 3 skills (chartjs-snapshot-tests, d3-snapshot-tests, vega-spec-validator) and 1 agent (chart-test-author). Covers Canvas + SVG + declarative-spec visualizations, complementing qa-visual-regression which targets general UI screens.",
       "strict": true,
       "category": "quality-engineering"
-    },
-    {
-      "name": "qa-resilience-drills",
-      "source": "./plugins/qa-resilience-drills",
-      "description": "Resilience drills: 6 skills (backup-verification-author, dr-drill-runner, error-budget-tests, mttr-mtbf-tracker, restore-time-tests, slo-negotiation-prep) and 2 agents (dr-drill-orchestrator, reliability-review-agent). Production-grade DR drills + backup verification + RTO + error-budget gating + incident metrics.",
-      "strict": true,
-      "category": "operations-resilience"
     },
     {
       "name": "qa-team-management",
@@ -445,16 +438,9 @@
       "category": "backend-distributed"
     },
     {
-      "name": "qa-experimentation",
-      "source": "./plugins/qa-experimentation",
-      "description": "Experimentation harness testing: SDK-specific testing for Statsig, Optimizely, VWO, Amplitude Experiment; sample-ratio-mismatch (SRM) detection; AB-test validity checklist; guardrail-metrics + peeking-problem references. Distinct from qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin tests the experimentation harness itself (SDK behaviour, assignment integrity, statistical-validity gates).",
-      "strict": true,
-      "category": "integrations-protocols"
-    },
-    {
       "name": "qa-feature-flags",
       "source": "./plugins/qa-feature-flags",
-      "description": "Feature-flag platform testing: SDK-specific tests for LaunchDarkly, Unleash, Flagsmith, GrowthBook; feature-flag test matrix reference; flag-state coverage builder; flag-removal runbook author; stale-flag detector. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin scopes to platform-SDK testing + flag-lifecycle hygiene.",
+      "description": "Feature-flag platform testing + experimentation harness testing: SDK-specific tests for LaunchDarkly plus the OpenFeature umbrella (Unleash, Flagsmith, GrowthBook); the feature-flag test matrix reference; the experiment-sdk-testing umbrella (Statsig, Optimizely, Split.io, Amplitude Experiment, VWO); AB-test validity checklist; experiment-results interpreter (peeking + guardrail references); stale-flag detector with the removal runbook; flag-coverage-gap detector; sample-ratio-mismatch (SRM) detector. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates production experiment results); this plugin scopes to platform-SDK testing, flag-lifecycle hygiene, and experimentation-harness integrity.",
       "strict": true,
       "category": "integrations-protocols"
     },

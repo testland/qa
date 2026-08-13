@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-feature-flags",
-  "version": "1.4.0",
-  "description": "Feature-flag platform testing: LaunchDarkly SDK tests, the OpenFeature SDK umbrella (with Unleash / Flagsmith / GrowthBook vendor references), the feature-flag test matrix reference (coverage-suite building + kill-switch categories), flag-coverage-gap detection, and stale-flag detection with the removal runbook. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates experiment results); this plugin scopes to platform-SDK testing + flag-lifecycle hygiene.",
+  "version": "1.5.0",
+  "description": "Feature-flag platform testing + experimentation harness testing: LaunchDarkly SDK tests, the OpenFeature SDK umbrella (with Unleash / Flagsmith / GrowthBook vendor references), the feature-flag test matrix reference (coverage-suite building + kill-switch categories), the experiment-sdk-testing umbrella (Statsig, Optimizely, Split.io, Amplitude Experiment, VWO hermetic harnesses), the AB-test validity checklist, the experiment-results interpreter (peeking + guardrail methodology in its references), flag-coverage-gap detection, stale-flag detection with the removal runbook, and sample-ratio-mismatch (SRM) detection. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates production experiment results); this plugin scopes to platform-SDK testing, flag-lifecycle hygiene, and testing the experimentation harness itself (SDK behaviour, assignment integrity, statistical-validity gates).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -13,6 +13,13 @@
   "keywords": [
     "qa",
     "testing",
-    "feature-flags"
+    "feature-flags",
+    "experimentation",
+    "ab-testing",
+    "srm",
+    "launchdarkly",
+    "openfeature",
+    "statsig",
+    "optimizely"
   ]
 }

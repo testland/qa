@@ -8,7 +8,7 @@ and a reviewer agent that audits coverage + cardinality + spec
 drift.
 
 Pairs naturally with `qa-shift-right` (synthetic monitoring),
-`qa-saga-cqrs` (saga trace shape), and `qa-resilience-drills`
+`qa-saga-cqrs` (saga trace shape), and `qa-resilience`
 (DR / runbook tracing).
 
 ## Components

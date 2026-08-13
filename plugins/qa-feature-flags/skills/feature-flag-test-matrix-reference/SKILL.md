@@ -179,7 +179,7 @@ Tests should run at multiple layers:
 
 ## Flag-experiment distinction
 
-Per `ab-test-validity-checklist` (in the qa-experimentation plugin):
+Per `ab-test-validity-checklist` (in this plugin):
 
 | Flag | Experiment |
 |---|---|

@@ -194,7 +194,7 @@ make all
 | Per-tool wrappers + an adversarial-critic unifier | [`plugins/qa-iac/`](plugins/qa-iac/), [`plugins/qa-security-scanning/`](plugins/qa-security-scanning/) |
 | Per-tool wrappers only (no agent) | [`plugins/qa-api-testing/`](plugins/qa-api-testing/), [`plugins/qa-property-based/`](plugins/qa-property-based/) |
 | Adversarial-critic agent family | [`plugins/qa-test-review/`](plugins/qa-test-review/) |
-| Build-an-X workflow skills | [`plugins/qa-resilience-drills/`](plugins/qa-resilience-drills/) |
+| Build-an-X workflow skills | [`plugins/qa-resilience/`](plugins/qa-resilience/) |
 
 ## Common pitfalls
 

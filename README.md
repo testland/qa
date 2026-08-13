@@ -122,7 +122,7 @@ activate on demand, so a focused set keeps things sharp.
 |---|---|
 | Manual / exploratory tester | [qa-manual-testing](plugins/qa-manual-testing/) · [qa-bdd](plugins/qa-bdd/) · [qa-bug-repro](plugins/qa-bug-repro/) |
 | Test automation engineer | [qa-web-e2e](plugins/qa-web-e2e/) · [qa-api-testing](plugins/qa-api-testing/) · [qa-unit-tests-js](plugins/qa-unit-tests-js/) |
-| Performance engineer | [qa-load-testing](plugins/qa-load-testing/) · [qa-chaos](plugins/qa-chaos/) |
+| Performance engineer | [qa-load-testing](plugins/qa-load-testing/) · [qa-resilience](plugins/qa-resilience/) |
 | Security tester | [qa-security-scanning](plugins/qa-security-scanning/) · [qa-iac](plugins/qa-iac/) · [qa-compliance](plugins/qa-compliance/) |
 | Lead / manager / head of quality | [qa-team-management](plugins/qa-team-management/) · [qa-test-management](plugins/qa-test-management/) · [qa-process](plugins/qa-process/) |
 

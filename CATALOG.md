@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**83 plugins · 423 components**
+**81 plugins · 423 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -80,13 +80,12 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 8 skills + 0 agents | 8 |
+| [qa-resilience](plugins/qa-resilience/) | 1.0.0 | 7 skills + 0 agents | 7 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.7.0 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.3.0 | 4 skills + 2 agents | 6 |
-| [qa-chaos](plugins/qa-chaos/) | 1.4.0 | 5 skills + 0 agents | 5 |
 | [qa-defect-management](plugins/qa-defect-management/) | 1.5.0 | 3 skills + 2 agents | 5 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.4.0 | 4 skills + 1 agents | 5 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.5.0 | 3 skills + 0 agents | 3 |
-| [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.3.0 | 2 skills + 0 agents | 2 |
 
 ## Backend & distributed systems
 
@@ -97,9 +96,9 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.6 | 8 skills + 1 agents | 9 |
 | [qa-cache-testing](plugins/qa-cache-testing/) | 1.3.0 | 5 skills + 1 agents | 6 |
 | [qa-serverless](plugins/qa-serverless/) | 1.4.0 | 5 skills + 1 agents | 6 |
-| [qa-concurrency](plugins/qa-concurrency/) | 1.2.13 | 4 skills + 1 agents | 5 |
+| [qa-concurrency](plugins/qa-concurrency/) | 1.2.14 | 4 skills + 1 agents | 5 |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.3.0 | 4 skills + 1 agents | 5 |
-| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.2.0 | 4 skills + 1 agents | 5 |
+| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.2.1 | 4 skills + 1 agents | 5 |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.3.0 | 3 skills + 1 agents | 4 |
 | [qa-time](plugins/qa-time/) | 1.2.21 | 3 skills + 1 agents | 4 |
 
@@ -109,13 +108,12 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.5.0 | 6 skills + 3 agents | 9 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.3.0 | 6 skills + 1 agents | 7 |
 | [qa-graphql](plugins/qa-graphql/) | 1.5.0 | 6 skills + 0 agents | 6 |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.14 | 5 skills + 1 agents | 6 |
 | [qa-payment](plugins/qa-payment/) | 1.5.0 | 5 skills + 1 agents | 6 |
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.4.0 | 3 skills + 2 agents | 5 |
 | [qa-notifications](plugins/qa-notifications/) | 1.3.0 | 4 skills + 1 agents | 5 |
-| [qa-experimentation](plugins/qa-experimentation/) | 1.2.0 | 3 skills + 1 agents | 4 |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.4.0 | 3 skills + 1 agents | 4 |
 
 ## AI & ML
@@ -150,12 +148,12 @@ _One-command role installs - each bundles a curated capability set as dependenci
 |---|---|---|---:|
 | [qa-role-ai](plugins/qa-role-ai/) | 1.0.0 | 0 skills + 0 agents | 0 |
 | [qa-role-automation-engineer](plugins/qa-role-automation-engineer/) | 1.0.3 | 0 skills + 0 agents | 0 |
-| [qa-role-backend](plugins/qa-role-backend/) | 1.0.1 | 0 skills + 0 agents | 0 |
+| [qa-role-backend](plugins/qa-role-backend/) | 1.1.0 | 0 skills + 0 agents | 0 |
 | [qa-role-frontend](plugins/qa-role-frontend/) | 1.0.1 | 0 skills + 0 agents | 0 |
 | [qa-role-leadership](plugins/qa-role-leadership/) | 1.1.0 | 0 skills + 0 agents | 0 |
 | [qa-role-manual-tester](plugins/qa-role-manual-tester/) | 1.0.2 | 0 skills + 0 agents | 0 |
 | [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.1 | 0 skills + 0 agents | 0 |
-| [qa-role-performance](plugins/qa-role-performance/) | 1.0.1 | 0 skills + 0 agents | 0 |
+| [qa-role-performance](plugins/qa-role-performance/) | 1.1.0 | 0 skills + 0 agents | 0 |
 | [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.3 | 0 skills + 0 agents | 0 |
 | [qa-role-security](plugins/qa-role-security/) | 1.1.0 | 0 skills + 0 agents | 0 |
 | [qa-starter](plugins/qa-starter/) | 1.0.1 | 0 skills + 0 agents | 0 |
@@ -171,7 +169,6 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-browser-extension](plugins/qa-browser-extension/)
 - [qa-bug-repro](plugins/qa-bug-repro/)
 - [qa-cache-testing](plugins/qa-cache-testing/)
-- [qa-chaos](plugins/qa-chaos/)
 - [qa-charts](plugins/qa-charts/)
 - [qa-ci-integration](plugins/qa-ci-integration/)
 - [qa-cli-tools](plugins/qa-cli-tools/)
@@ -187,7 +184,6 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-desktop](plugins/qa-desktop/)
 - [qa-distributed-tracing](plugins/qa-distributed-tracing/)
 - [qa-embedded](plugins/qa-embedded/)
-- [qa-experimentation](plugins/qa-experimentation/)
 - [qa-feature-flags](plugins/qa-feature-flags/)
 - [qa-flake-triage](plugins/qa-flake-triage/)
 - [qa-fuzz-testing](plugins/qa-fuzz-testing/)
@@ -211,7 +207,7 @@ _One-command role installs - each bundles a curated capability set as dependenci
 - [qa-property-based](plugins/qa-property-based/)
 - [qa-pwa](plugins/qa-pwa/)
 - [qa-realtime-protocols](plugins/qa-realtime-protocols/)
-- [qa-resilience-drills](plugins/qa-resilience-drills/)
+- [qa-resilience](plugins/qa-resilience/)
 - [qa-role-ai](plugins/qa-role-ai/)
 - [qa-role-automation-engineer](plugins/qa-role-automation-engineer/)
 - [qa-role-backend](plugins/qa-role-backend/)

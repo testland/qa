@@ -177,7 +177,7 @@ noting any issues." Without cadence, runbooks rot.
 
 Nobody delegates failover execution; a human drill commander runs the five
 stages below against this protocol. This is the **rehearsed** DR path - for
-injecting unrehearsed failures see the chaos-drill protocol in `qa-chaos`.
+injecting unrehearsed failures see the `chaos-drill-protocol` skill in this plugin.
 
 **Refuse to start when:**
 
@@ -238,7 +238,7 @@ date before the drill closes.
 
 ## Limitations
 
-- DR drills don't replace chaos engineering (`qa-chaos`) - they test rehearsed paths; chaos tests unrehearsed ones.
+- DR drills don't replace chaos engineering (this plugin's chaos skills) - they test rehearsed paths; chaos tests unrehearsed ones.
 - Cloud-managed services may have built-in regional failover that
   bypasses your runbook; document boundaries.
 - Some compliance regimes (FFIEC for banks) prescribe specific
