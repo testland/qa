@@ -1,9 +1,0 @@
-{
-  "name": "testland/gremlin-chaos",
-  "description": "Configures Gremlin (commercial) for cross-platform chaos engineering (fault injection, resilience testing) - installs the Gremlin agent on Linux / Windows / Kubernetes, picks attack types (resource, network, state, request), chains attacks into Scenarios (chaos experiments), integrates with the Reliability Score for forward-looking metrics. Use when the platform spans multiple environments (bare metal + cloud + serverless) and the team needs a commercial-supported solution per Gremlin's multi-platform support.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.6"
-}

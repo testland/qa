@@ -1,9 +1,9 @@
 {
   "name": "testland/spec-testability-heuristics",
-  "description": "Judges whether a written requirement can be tested at all, by scoring each claim against three heuristics: Observable (a state or output visible from outside the system), Decidable (a deterministic pass/fail against a named oracle), and Bounded (stated inputs, states, and users). Supplies untestable-to-testable rewrite pairs per heuristic, severity assignment, a BLOCK / REVIEW / OK verdict rule, and a findings table that pairs every flagged sentence with a concrete replacement. Scope is testability only: it does not write the tests, rank risk, or judge whether the requirement is correct or complete. Use when a user story, acceptance criterion, PRD section, API contract, or PR description is about to be handed to implementation and someone needs to know which sentences cannot be verified as written.",
+  "description": "Judges whether a written requirement can be tested at all, by scoring each claim against three heuristics: Observable (a state or output visible from outside the system), Decidable (a deterministic pass/fail against a named oracle), and Bounded (stated inputs, states, and users). Supplies untestable-to-testable rewrite pairs per heuristic, severity assignment, a BLOCK / REVIEW / OK verdict rule, a findings table that pairs every flagged sentence with a concrete replacement, and the review workflow for running the rubric against a story, PRD section, PR description, or spec at sprint planning or PR review, with per-verdict hand-off targets. Scope is testability only: it does not write the tests, rank risk, or judge whether the requirement is correct or complete. Use when a user story, acceptance criterion, PRD section, API contract, or PR description is about to be handed to implementation and someone needs to know which sentences cannot be verified as written.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.6"
+  "version": "1.4.7"
 }

@@ -1,6 +1,6 @@
 ---
 name: spec-testability-heuristics
-description: "Judges whether a written requirement can be tested at all, by scoring each claim against three heuristics: Observable (a state or output visible from outside the system), Decidable (a deterministic pass/fail against a named oracle), and Bounded (stated inputs, states, and users). Supplies untestable-to-testable rewrite pairs per heuristic, severity assignment, a BLOCK / REVIEW / OK verdict rule, and a findings table that pairs every flagged sentence with a concrete replacement. Scope is testability only: it does not write the tests, rank risk, or judge whether the requirement is correct or complete. Use when a user story, acceptance criterion, PRD section, API contract, or PR description is about to be handed to implementation and someone needs to know which sentences cannot be verified as written."
+description: "Judges whether a written requirement can be tested at all, by scoring each claim against three heuristics: Observable (a state or output visible from outside the system), Decidable (a deterministic pass/fail against a named oracle), and Bounded (stated inputs, states, and users). Supplies untestable-to-testable rewrite pairs per heuristic, severity assignment, a BLOCK / REVIEW / OK verdict rule, a findings table that pairs every flagged sentence with a concrete replacement, and the review workflow for running the rubric against a story, PRD section, PR description, or spec at sprint planning or PR review, with per-verdict hand-off targets. Scope is testability only: it does not write the tests, rank risk, or judge whether the requirement is correct or complete. Use when a user story, acceptance criterion, PRD section, API contract, or PR description is about to be handed to implementation and someone needs to know which sentences cannot be verified as written."
 ---
 
 # spec-testability-heuristics
@@ -166,6 +166,33 @@ requires the split.
 - **BLOCK**: at least one claim has severity Block.
 - **REVIEW**: no Block, and at least one claim has severity Review.
 - **OK**: every claim passes all three heuristics.
+
+## Review workflow
+
+Run the rubric as a read-only review at the cheapest possible moment -
+during sprint planning or PR review, before the engineer starts coding. The
+cheapest defect to fix is the one prevented before it's coded.
+
+1. **Read the input artifact.** Any of: a user story / Linear / Jira ticket
+   body, a PRD or design-doc section, a PR description (the proposed change,
+   not the diff), or a feature-spec markdown checked into the repo.
+2. **Tokenize the artifact into claims** - sentences asserting what the
+   system "will" / "must" / "should" do - per step 1 of "How to apply the
+   rubric" above.
+3. **Score every claim** against all three heuristics, assign severity,
+   compute the verdict.
+4. **Emit the findings table and verdict** in the output format below -
+   every row carries a concrete suggested rewrite.
+
+Hand-off targets by verdict:
+
+- **OK** - convert to Gherkin via `acceptance-criteria-extractor`.
+- **BLOCK on a non-functional claim** (perf, a11y, security) - formalize via
+  `non-functional-requirement-extractor`.
+- **BLOCK on a data-pipeline claim** - formalize the schema via
+  `data-contract-extractor`.
+- **Whole-story readiness before dev** - the Definition-of-Done audit
+  workflow in the `definition-of-done` skill (qa-process plugin).
 
 ## Output format
 

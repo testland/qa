@@ -1,6 +1,6 @@
 ---
 name: chaos-drill-protocol
-description: "Run protocol for a chaos experiment that has already been designed: the four pre-flight gates (non-production target, measured healthy baseline, live observability, a rollback that has actually been exercised), how to pick a conservative blast-radius bound, the sampling cadence and abort criteria fixed in writing before injection, and the recovery-validation step with its tolerance and timeout. Owns execution safety only, not experiment design: the steady-state hypothesis, the fault to inject, and the experiment file come from elsewhere. Use when an experiment definition exists and a fault is about to be injected into a running system, and the go/no-go gates, abort thresholds, and recovery check still need to be agreed and written down before the fault starts."
+description: "Run protocol and run workflow for a chaos experiment that has already been designed: the four pre-flight gates (non-production target, measured healthy baseline, live observability, a rollback that has actually been exercised), how to pick a conservative blast-radius bound, the sampling cadence and abort criteria fixed in writing before injection, the per-runner inject and abort commands (Chaos Mesh / Litmus / Gremlin / Toxiproxy), the refuse-to-start rules (no blast-radius bound, production context, degraded baseline, offline observability, unexercised rollback), and the recovery-validation step with its tolerance and timeout. Owns execution safety only, not experiment design: the steady-state hypothesis, the fault to inject, and the experiment file come from chaos-experiment-author. Use when an experiment definition exists and a fault is about to be injected into a running system, and the go/no-go gates, abort thresholds, and recovery check still need to be agreed and written down before the fault starts."
 ---
 
 # chaos-drill-protocol
@@ -317,6 +317,47 @@ is a finding worth more than a clean pass.
 before recovery validates starts from an unknown baseline, which fails Gate 2
 by definition, and its blast-radius reasoning is void because the
 surviving-capacity arithmetic assumed a full complement of healthy replicas.
+
+## Running the drill
+
+The four stages execute as one workflow per drill: pre-flight gates, then
+injection, then the live monitor, then recovery validation. No team should
+delegate live fault injection; a human runs each step against this protocol.
+
+**Required before anything starts:** the target (environment, namespace,
+service, replica count), one specific experiment intent (latency-injection /
+pod-kill / network-partition / disk-pressure / cpu-stress / dns-failure), and
+the blast-radius bound (max fraction of replicas, max duration, max
+error-rate budget). Read the environment identity from the tooling itself
+(`kubectl config current-context` for K8s; `gremlin env` for Gremlin), never
+from the ticket. The experiment file comes from `chaos-experiment-author`;
+for network-layer faults at the application boundary use
+`failure-injection-test-author` (host-side harness) instead.
+
+**Per-runner inject and abort commands.** Record the injection timestamp and
+the experiment's unique ID at inject time - the abort path needs both.
+
+| Runner | Inject | Abort |
+|---|---|---|
+| Chaos Mesh | `kubectl apply -f <experiment>.yaml` | `kubectl delete -f <experiment>.yaml` |
+| Litmus | `litmusctl chaos run -f <experiment>.yaml` | `litmusctl chaos abort <experiment-id>` |
+| Gremlin | `gremlin attack new --command <type> --args <args>` | `gremlin halt <attack-id>` |
+| Toxiproxy | `toxiproxy-cli toxic add --type <type> --attribute <name=value> <proxy>` | `toxiproxy-cli toxic delete --toxicName <name> <proxy>` |
+
+The abort command doubles as the Gate 4 rollback action to exercise before
+injection. While the fault is live, sample every abort-criterion signal on
+the contract's interval (Stage 3) and abort on any breach; recovery
+validation (Stage 4) runs regardless of how the run ended.
+
+**Refuse-to-start rules.** Each maps to a gate or contract row; a drill that
+trips one does not start:
+
+- No blast-radius bound supplied - unbounded chaos is an incident, not a drill.
+- The resolved context names production (Gate 1).
+- The baseline is degraded at pre-flight (Gate 2) - the result would be uninterpretable.
+- Observability is offline or stale (Gate 3) - no live signals, no stopping rule.
+- The rollback was not exercised against this target (Gate 4) - a configured TTL is a backstop, not a verified rollback.
+- The request says "test the system end-to-end" with no specific experiment type - ask for one.
 
 ## Worked example
 

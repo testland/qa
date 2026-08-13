@@ -7,7 +7,7 @@ patterns from RFC 6749 / RFC 7636 PKCE / RFC 9700 Security BCP /
 OWASP ASVS V3.
 
 Universal in B2B/B2C; high-defect surface. Pairs with
-`qa-shift-left/threat-model-from-spec` (planning) - this plugin
+`qa-shift-left/stride-threat-modeling` (planning) - this plugin
 covers the runtime validation.
 
 ## Components

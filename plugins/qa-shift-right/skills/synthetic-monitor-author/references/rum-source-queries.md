@@ -1,8 +1,9 @@
 # RUM source queries
 
-Per-source instructions for pulling the top-N journey inventory (Step 1 of
-`rum-to-synthetic-gap-analyzer`). Aim for the top 50 view paths (or transaction
-names) by session volume to avoid chasing long-tail pages with negligible traffic.
+Per-source instructions for pulling the top-N journey inventory for the
+RUM-coverage gap method in `synthetic-monitor-author`. Aim for the top 50 view
+paths (or transaction names) by session volume to avoid chasing long-tail
+pages with negligible traffic.
 
 ## Datadog RUM
 

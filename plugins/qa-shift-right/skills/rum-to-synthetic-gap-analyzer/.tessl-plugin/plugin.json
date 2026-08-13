@@ -1,9 +1,0 @@
-{
-  "name": "testland/rum-to-synthetic-gap-analyzer",
-  "description": "Reads Real User Monitoring data (Datadog RUM, Sentry Performance, GA4 Core Web Vitals / CrUX) to identify high-traffic user journeys that have no synthetic monitor coverage: ranks journeys by session volume times business value, diffs the ranked list against existing synthetic monitors, and emits a prioritized gap list ready to feed into synthetic-monitor-author. Use when an observability stack has RUM instrumented but the team suspects synthetic coverage is sparse, biased toward low-traffic paths, or was never systematically derived from real usage data.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.7"
-}

@@ -1,11 +1,10 @@
----
-name: restore-time-tests
-description: "Build restore-time SLA tests - per-database + per-object-store baseline measurement, RTO objective verification, parallel-restore optimization tests, point-in-time-recovery (PITR) latency. Bound `time-to-functional` (TTF) ≤ documented RTO; flag silent regressions when restore time grows over months. Use when a service documents an RTO nobody has actually timed, when the backup has grown by an order of magnitude, or right after a backup-tool change."
-metadata:
-  keywords: "restore-time, rto, point-in-time-recovery, parallel-restore, dr-readiness"
----
+# Restore-time SLA tests
 
-# restore-time-tests
+Deep dive for `dr-drill-runner` - the RTO-measurement half of DR readiness.
+Bound time-to-functional (TTF) at or under the documented RTO; flag silent
+regressions when restore time grows over months. Consult when a service
+documents an RTO nobody has actually timed, when the backup has grown by an
+order of magnitude, or right after a backup-tool change.
 
 Per the [Google Cloud DR planning guide], RTO is "the maximum
 acceptable length of time that your application can be offline."
@@ -244,9 +243,9 @@ queries before declaring "functional").
 - [PostgreSQL PITR docs] - continuous archiving + point-in-time
   recovery (base backup + WAL archive, `restore_command`,
   `recovery_target_time`, `recovery.signal`)
-- `dr-drill-runner` - drill-level
+- The host `dr-drill-runner` SKILL.md - drill-level
   end-to-end timing
-- `backup-verification-author` - 
+- [backup-verification.md](backup-verification.md) - 
   verifies backup integrity before restore
 - `error-budget-tests` - restore
   failures consume error budget

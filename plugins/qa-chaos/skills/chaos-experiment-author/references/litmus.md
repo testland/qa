@@ -1,9 +1,10 @@
----
-name: litmus-chaos
-description: "Configures LitmusChaos for Kubernetes-native chaos engineering - installs via Helm, picks ChaosExperiments from the ChaosHub (`pod-delete`, `network-latency`, `node-cpu-hog`, etc.), authors a ChaosEngine CR scoping the experiment + steady-state probes, runs as part of the cluster, exports Prometheus metrics for the verdict. Use when the platform is Kubernetes (CNCF-hosted; cloud-native). Prefer over chaos-mesh when the team wants a ChaosCenter web UI for workflow scheduling and ChaosHub catalog browsing; use chaos-mesh for fine-grained network-fault policies via its own CRD family."
----
+# LitmusChaos runner
 
-# litmus-chaos
+Deep dive for `chaos-experiment-author` Step 4. Configures LitmusChaos for
+Kubernetes-native chaos engineering. Prefer over `chaos-mesh` when the team
+wants a ChaosCenter web UI for workflow scheduling and ChaosHub catalog
+browsing; use `chaos-mesh` for fine-grained network-fault policies via its
+own CRD family.
 
 ## Overview
 
@@ -196,6 +197,6 @@ Wire to Grafana for dashboards.
   + ChaosEngine + ChaosHub + probes, Prometheus metrics export.
 - `chaos-mesh` - sibling K8s-native
   alternative.
-- `gremlin-chaos` - commercial
+- [gremlin.md](gremlin.md) - commercial
   multi-platform alternative.
-- `chaos-experiment-author` - methodology this tool implements.
+- The host `chaos-experiment-author` SKILL.md - methodology this tool implements.

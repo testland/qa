@@ -1,9 +1,0 @@
-{
-  "name": "testland/cutover-sequence-author",
-  "description": "Sequences a multi-team release cutover into dependency-ordered gates: builds the cross-service dependency graph, converts it into a numbered gate list where every gate carries exactly one named owner, a hard timebox, and a written rollback trigger, then derives the reverse-order rollback path and the window hard-stop rule. Emits one cutover plan document with an authority table and a runtime log. Use when two or more teams must cut over interdependent services inside one shared release window and nobody has yet written down the order, who calls each gate, or what reverses it.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.3.8"
-}

@@ -1,9 +1,10 @@
----
-name: gremlin-chaos
-description: "Configures Gremlin (commercial) for cross-platform chaos engineering (fault injection, resilience testing) - installs the Gremlin agent on Linux / Windows / Kubernetes, picks attack types (resource, network, state, request), chains attacks into Scenarios (chaos experiments), integrates with the Reliability Score for forward-looking metrics. Use when the platform spans multiple environments (bare metal + cloud + serverless) and the team needs a commercial-supported solution per Gremlin's multi-platform support."
----
+# Gremlin runner
 
-# gremlin-chaos
+Deep dive for `chaos-experiment-author` Step 4. Configures Gremlin
+(commercial) for cross-platform chaos engineering - agent install on Linux /
+Windows / Kubernetes, the four attack classes, Scenarios, and the Reliability
+Score. Use when the platform spans multiple environments (bare metal + cloud
++ serverless) and the team needs a commercial-supported solution.
 
 ## Overview
 
@@ -25,17 +26,17 @@ likely failure points before an incident (per [gremlin-home][gh]).
   the compliance posture.
 
 If the team is K8s-only and OSS-preferred, see
-`litmus-chaos` or
+[litmus.md](litmus.md) or
 `chaos-mesh`.
 
 ## How to use
 
 1. Install the Gremlin agent on the target host or cluster (see Install) and register it with the Gremlin Control Plane.
-2. Pick an attack type from the four classes (resource, network, state, request) - the exhaustive per-attack table is in [references/advanced-operations.md](references/advanced-operations.md).
+2. Pick an attack type from the four classes (resource, network, state, request) - the exhaustive per-attack table is in [gremlin-advanced-operations.md](gremlin-advanced-operations.md).
 3. Verify before injecting: assert the target is in steady state (error rate and p95 latency healthy on the dashboard) and the blast radius is scoped to a single container in staging; if either check fails, do not inject - fix the scope or wait for steady state to return.
 4. Run one scoped experiment end to end against staging - inject a single fault and attach an abort condition that halts the attack the moment the steady-state metric breaches its threshold (see Worked example).
 5. Verify the abort path fires: confirm the attack actually stops when the abort condition trips; if it does not halt on breach, fix the abort wiring (monitor query, threshold, or notification hook) before widening the blast radius.
-6. Promote passing experiments into a Scenario (chained attacks + abort conditions), wire it into CI via the API, and track each service's Reliability Score - all covered in [references/advanced-operations.md](references/advanced-operations.md).
+6. Promote passing experiments into a Scenario (chained attacks + abort conditions), wire it into CI via the API, and track each service's Reliability Score - all covered in [gremlin-advanced-operations.md](gremlin-advanced-operations.md).
 
 ## Install
 
@@ -74,7 +75,7 @@ Gremlin groups fault injections into four classes (per
 | Request  | Request injection                  | Modify HTTP requests in flight  |
 
 The full per-attack table (all twelve attacks with their exact effect)
-lives in [references/advanced-operations.md](references/advanced-operations.md).
+lives in [gremlin-advanced-operations.md](gremlin-advanced-operations.md).
 
 ## Worked example
 
@@ -115,14 +116,14 @@ curl -X POST "https://api.gremlin.com/v1/attacks/new" \
 Scenarios (chaining this latency attack with a downstream packet-loss
 attack), the Reliability Score model, the full CI workflow, and the
 compliance / audit posture are in
-[references/advanced-operations.md](references/advanced-operations.md).
+[gremlin-advanced-operations.md](gremlin-advanced-operations.md).
 
 ## Anti-patterns
 
 | Anti-pattern                                                          | Why it fails                                                              | Fix |
 |-----------------------------------------------------------------------|---------------------------------------------------------------------------|-----|
-| Manual UI-only attacks                                                 | Doesn't scale; per chaos principle 4 must automate.                      | API-driven Scenarios (references/advanced-operations.md). |
-| Skipping abort conditions                                              | Attack runs past safety threshold.                                       | Define abort signals on every Scenario (references/advanced-operations.md). |
+| Manual UI-only attacks                                                 | Doesn't scale; per chaos principle 4 must automate.                      | API-driven Scenarios (gremlin-advanced-operations.md). |
+| Skipping abort conditions                                              | Attack runs past safety threshold.                                       | Define abort signals on every Scenario (gremlin-advanced-operations.md). |
 | Treating Reliability Score as the only signal                          | Score is service-level; per-attack verdicts matter too.                  | Both Score (trend) + per-attack verdicts (detail). |
 | One-shot installation; team forgets                                    | License paid; not used.                                                  | Schedule attacks; build into release process. |
 | Production attacks without playbook                                    | Real incident if attack escalates.                                       | Per `chaos-experiment-author`: blast radius + abort. |
@@ -144,11 +145,11 @@ compliance / audit posture are in
   forward-looking reliability scores, multi-platform (bare metal /
   on-prem / multi-cloud / serverless), fault injection +
   reliability scoring + dependency discovery.
-- [references/advanced-operations.md](references/advanced-operations.md) -
+- [gremlin-advanced-operations.md](gremlin-advanced-operations.md) -
   exhaustive attack table, UI attack workflow, Scenario authoring,
   Reliability Score model, the API + CI automation workflow, and the
   compliance / audit posture.
-- `litmus-chaos`,
+- [litmus.md](litmus.md),
   `chaos-mesh` - open-source K8s-only
   alternatives.
-- `chaos-experiment-author` - methodology Gremlin Scenarios implement.
+- The host `chaos-experiment-author` SKILL.md - methodology Gremlin Scenarios implement.

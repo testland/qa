@@ -1,9 +1,12 @@
----
-name: cutover-sequence-author
-description: "Sequences a multi-team release cutover into dependency-ordered gates: builds the cross-service dependency graph, converts it into a numbered gate list where every gate carries exactly one named owner, a hard timebox, and a written rollback trigger, then derives the reverse-order rollback path and the window hard-stop rule. Emits one cutover plan document with an authority table and a runtime log. Use when two or more teams must cut over interdependent services inside one shared release window and nobody has yet written down the order, who calls each gate, or what reverses it."
----
+# Cutover sequencing - multi-team release windows
 
-# cutover-sequence-author
+Deep dive for `release-runbook-author`. Sequences a multi-team release
+cutover into dependency-ordered gates: the cross-service dependency graph, a
+numbered gate list where every gate carries exactly one named owner, a hard
+timebox, and a written rollback trigger, then the reverse-order rollback
+path and the window hard-stop rule. Consult when two or more teams must cut
+over interdependent services inside one shared release window and nobody has
+yet written down the order, who calls each gate, or what reverses it.
 
 ## What this owns, and what it does not
 
@@ -15,10 +18,11 @@ confirmed" and "nobody knew who was allowed to say stop".
 It deliberately does **not** cover the single-service release runbook: the
 pre-flight checklist, the smoke gate, canary observation thresholds and their
 statistical comparison, the human promote gate, the progressive rollout, and
-post-release verification for one service. That is a separate procedure, run
-per service, inside the timebox this plan gives that service. Write it
-separately and reference it from the gate row. If your window contains one
-service, you do not need this skill at all.
+post-release verification for one service. That is the host
+`release-runbook-author` SKILL.md, run per service, inside the timebox this
+plan gives that service. Write it separately and reference it from the gate
+row. If your window contains one service, you do not need this reference at
+all.
 
 Needing a cross-team cutover sequence is itself a coupling signal worth
 recording. DORA sets the opposite target - teams releasing "independently of
@@ -312,19 +316,19 @@ judgment call:
 
 A four-service, three-team window (one dependency chain plus one parallel
 track) worked end to end - dependency graph, gate list, rollback triggers, and
-the reverse path: [references/worked-example.md](references/worked-example.md).
+the reverse path: [cutover-worked-example.md](cutover-worked-example.md).
 
 ## Output template
 
 One document that is the plan before the window and the record after it - plan
 header, rollback rule, dependency graph, gate sequence, authority table,
 rollback triggers, reverse path, and runtime log:
-[references/output-template.md](references/output-template.md).
+[cutover-output-template.md](cutover-output-template.md).
 
 ## Anti-patterns
 
 Nine cutover anti-patterns with why each fails and its fix:
-[references/anti-patterns.md](references/anti-patterns.md).
+[cutover-anti-patterns.md](cutover-anti-patterns.md).
 
 ## Limitations
 

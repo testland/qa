@@ -1,15 +1,9 @@
----
-name: mttr-mtbf-tracker
-description: "Reference for tracking MTTR (Mean Time To Recovery) / MTBF (Mean Time Between Failures) / MTTD (Mean Time To Detection) / MTTA (Mean Time To Acknowledge) - incident-record schema, calculation formulae, dashboards-as-code, target-vs-actual alerting. Aligns with ITIL incident management + ISO 20000 + Google SRE incident response chapter. Use when incident reporting is being stood up from scratch, or when an existing MTTR / MTBF dashboard reports numbers nobody can reproduce or agree on the definition of."
-metadata:
-  keywords: "mttr, mtbf, mttd, mtta, incident-metrics, sre"
----
+# MTTR / MTBF / MTTD / MTTA tracking
 
-# mttr-mtbf-tracker
-
-Reference document for the four canonical incident-response metrics.
-This is a *reference skill* - incidents are tracked in your IR tool
-(PagerDuty, Opsgenie, FireHydrant, custom), and this skill defines
+Reference for `error-budget-tests` - the four canonical incident-response
+metrics: incident-record schema, calculation formulae, dashboards-as-code,
+and target-vs-actual alerting. Incidents are tracked in your IR tool
+(PagerDuty, Opsgenie, FireHydrant, custom); this reference defines
 the schema + formulae so dashboards reflect reality.
 
 ## When to use
@@ -17,7 +11,7 @@ the schema + formulae so dashboards reflect reality.
 - Standing up incident reporting from scratch.
 - Auditing existing incident metrics - are MTTR / MTBF actually
   being computed correctly?
-- Setting reliability targets (cross-ref `error-budget-tests`).
+- Setting reliability targets against the error budget (host SKILL.md).
 
 ## How to use
 
@@ -207,7 +201,7 @@ on-call responsiveness.
 - [Google SRE - Embracing Risk] - incident-metrics framing
 - ITIL 4 incident management - ITSM standard
 - ISO/IEC 20000 service management - high-level governance
-- `error-budget-tests` - per-incident
+- The host `error-budget-tests` SKILL.md - per-incident
   budget consumption
 - `dr-drill-runner` - drills produce
   incidents with `is_planned_maintenance: true`

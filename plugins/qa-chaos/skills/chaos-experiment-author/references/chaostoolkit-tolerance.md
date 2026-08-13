@@ -1,8 +1,9 @@
 # Chaos Toolkit steady-state-hypothesis block and tolerance forms
 
-Reference for `steady-state-hypothesis-validator`. The five pre-flight checks in
-SKILL.md validate a hypothesis expressed in this schema; this file is the schema
-and tolerance detail they assume.
+Reference for the steady-state hypothesis validation section of
+`chaos-experiment-author`. The five pre-flight checks there validate a
+hypothesis expressed in this schema; this file is the schema and tolerance
+detail they assume.
 
 ## The steady-state-hypothesis object
 

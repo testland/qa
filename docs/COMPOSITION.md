@@ -128,15 +128,6 @@ material that lives in skills.
 | `test-architect` | `regression-suite-selector` *(qa-test-impact-analysis)* |
 | `test-quality-coach` | `test-code-conventions` *(qa-test-review)* |
 
-### qa-shift-left
-
-| Agent | Preloads |
-|---|---|
-| `definition-of-done-checker` | (none) |
-| `spec-to-suite-orchestrator` | `acceptance-criteria-extractor`, `non-functional-requirement-extractor`, `data-contract-extractor` |
-| `testability-reviewer` | (none) |
-| `threat-model-from-spec` | (none) |
-
 ### qa-shift-right
 
 | Agent | Preloads |

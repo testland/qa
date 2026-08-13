@@ -1,6 +1,6 @@
 ---
 name: dr-drill-runner
-description: "Author and execute a single DR drill for one service: author the runbook (per-tier RTO + RPO), pre-drill checklist (data sync state, alert silencing, customer comms), drill workflow (announce, fail-over, verify, fail-back) with timestamps, standby verification, failback, and an auditor-ready post-drill report. Per Google Cloud DR planning guide; covers cold / warm / hot standby tier-specific patterns. For coordinating drills across multiple services or teams, use a multi-service drill orchestrator. Use when a scheduled or post-incident failover drill for one service is being planned, executed, or written up, or when a new tier-1 service ships without a drill defined."
+description: "The full DR-drill discipline for one service: author the runbook (per-tier RTO + RPO), pre-drill checklist (data sync state, alert silencing, customer comms), drill workflow (announce, fail-over, verify, fail-back) with timestamps, the supervised run protocol (refuse without declared RTO/RPO or against production, RTO/RPO monitoring cadence, abort-on-breach), and an auditor-ready post-drill report. Backup-integrity verification (SHA-256 + signature, restore spot checks, cross-region replication, retention, key recovery) and restore-time / RTO measurement (TTF segments, PITR latency, parallel-restore tuning, trend tracking) are worked in references. Per Google Cloud DR planning guide; covers cold / warm / hot standby tier-specific patterns. Use when a scheduled or post-incident failover drill for one service is being planned, executed, or written up, or when a new tier-1 service ships without a drill defined."
 metadata:
   keywords: "disaster-recovery, dr-drill, rto, rpo, failover, runbook"
 ---
@@ -51,8 +51,8 @@ Per the [Google Cloud DR planning guide]:
   interruption.
 
 Drill expectations differ:
-- Cold: Test bring-up from backup (Restore-time test - see
-  `restore-time-tests` skill).
+- Cold: Test bring-up from backup (restore-time tests -
+  [references/restore-time.md](references/restore-time.md)).
 - Warm: Test failover automation + warm-up time.
 - Hot: Test traffic redirection + sticky-session impact.
 
@@ -144,8 +144,8 @@ Skipping the pre-drill = drills become incidents.
 
 Cold drills = bring up from backup. Verifies:
 
-- Backup is current within RPO (cross-ref `backup-verification-author`).
-- Restore time is within RTO (cross-ref `restore-time-tests`).
+- Backup is current within RPO ([references/backup-verification.md](references/backup-verification.md)).
+- Restore time is within RTO ([references/restore-time.md](references/restore-time.md)).
 - Infrastructure-as-code provisioning works (Terraform / CloudFormation /
   Bicep in DR account).
 - Permissions + secrets are in place (per the [Google Cloud DR
@@ -173,6 +173,59 @@ Hot drills = redirect traffic between active replicas. Verifies:
 Per the [Google Cloud DR planning guide]: "test it regularly,
 noting any issues." Without cadence, runbooks rot.
 
+## Run protocol (executing the drill end to end)
+
+Nobody delegates failover execution; a human drill commander runs the five
+stages below against this protocol. This is the **rehearsed** DR path - for
+injecting unrehearsed failures see the chaos-drill protocol in `qa-chaos`.
+
+**Refuse to start when:**
+
+- No declared RTO + RPO. Per the [Google Cloud DR planning guide], RTO is
+  "the maximum acceptable length of time that your application can be
+  offline" and RPO bounds acceptable data loss - without them there is no
+  pass/fail criterion.
+- The DR environment identifier matches `prod` / `production`.
+- Any CRITICAL pre-drill item fails (backup integrity, key recovery, alert
+  silencing) - halt and emit the blocking checklist instead of proceeding.
+
+**Stage 1 - pre-drill.** Run the Step 3 checklist. Verify backup SHA-256
+integrity, replication lag within RPO at T-30 min, and encryption-key
+recoverability in the DR region per
+[references/backup-verification.md](references/backup-verification.md).
+Verify DR-environment configuration drift is within bounds - per the
+[AWS DR testing whitepaper], "Manage configuration drift at the DR Region.
+Ensure that your infrastructure, data, and configuration are as needed at
+the DR Region."
+
+**Stage 2 - failover.** Record T-0; execute the Step 4 runbook step by step,
+capturing a timestamp per step. Per the [AWS DR testing whitepaper], "Our
+experience has shown that the only error recovery that works is the path you
+test frequently" - a runbook step that requires improvisation is logged as a
+MAJOR finding immediately, never silently adapted.
+
+**Stage 3 - RTO/RPO monitor.** While failover is active, sample on a fixed
+interval (60 s is a workable default): replication lag at the DR side,
+smoke-suite pass rate, and data-row spot checks. Measure time-to-functional
+for the Restore + Verification segments per
+[references/restore-time.md](references/restore-time.md) and compare against
+the per-segment RTO budget. If observed TTF exceeds the RTO - abort the
+failover, record the breach metrics, and skip directly to the report. Record
+the peak RPO gap (replication lag at fail-over time); flag if it exceeds the
+declared RPO.
+
+**Stage 4 - fail-back.** Per Step 4: redirect traffic back (warm/hot) or
+tear down + restore primary (cold), re-enable silenced alerts, send the all
+clear, verify primary health before recording fail-back complete, reconcile
+drill-introduced data divergence.
+
+**Stage 5 - report.** Emit the Step 5 post-drill report, including the
+observed TTF, total RTO, and peak RPO gap versus their declared targets.
+Schedule the postmortem within 48 hours; every finding gets an owner + due
+date before the drill closes.
+
+[AWS DR testing whitepaper]: https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/testing-disaster-recovery.html
+
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
@@ -195,11 +248,12 @@ noting any issues." Without cadence, runbooks rot.
 
 - [Google Cloud DR planning guide] - RTO / RPO / cold-warm-hot
   tiers / testing requirements
-- `backup-verification-author`,
-  `restore-time-tests` - sister
-  skills for drill prerequisites
-- `error-budget-tests`,
-  `mttr-mtbf-tracker` - incident
-  metrics fed by drills
+- [AWS DR testing whitepaper] - configuration-drift management,
+  "test the path you execute" principle
+- [references/backup-verification.md](references/backup-verification.md),
+  [references/restore-time.md](references/restore-time.md) - drill
+  prerequisites: backup integrity + RTO measurement
+- `error-budget-tests` - incident
+  metrics fed by drills (MTTR/MTBF schema in its references)
 
 [Google Cloud DR planning guide]: https://docs.cloud.google.com/architecture/dr-scenarios-planning-guide

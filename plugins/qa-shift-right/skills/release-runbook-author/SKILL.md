@@ -1,6 +1,6 @@
 ---
 name: release-runbook-author
-description: "Turns one service's release into a written six-phase runbook: pre-flight checks, a smoke gate, a canary observation window, a named human promote gate, progressive rollout, and post-release verification. Fixes each phase's pass criteria as a delta against a recorded baseline rather than a bare absolute number, gives canary and rollout separate windows and separate thresholds, and emits a per-phase evidence table that becomes the release record. Use when a single service is about to ship and its release steps exist only as tribal knowledge or a chat thread, so nobody can say in advance what evidence promotes it, what evidence halts it, or who decides."
+description: "Turns one service's release into a written six-phase runbook: pre-flight checks, a smoke gate, a canary observation window, a named human promote gate, progressive rollout, and post-release verification. Fixes each phase's pass criteria as a delta against a recorded baseline rather than a bare absolute number, gives canary and rollout separate windows and separate thresholds, and emits a per-phase evidence table that becomes the release record. The multi-team cutover-sequence procedure - dependency-ordered gates with one named owner each, hard timeboxes, written rollback triggers, and the reverse-order rollback path - is worked in references for windows where several teams cut over interdependent services. Use when a single service is about to ship and its release steps exist only as tribal knowledge or a chat thread, or when a shared release window needs its cutover order, gate owners, and rollback path written down."
 ---
 
 # release-runbook-author
@@ -13,13 +13,14 @@ each phase, and the way each phase compares what it observes against a
 baseline. The failure mode it addresses is a release where the steps live in
 someone's head, so "is it healthy?" gets answered by whoever is awake.
 
-It deliberately does **not** own the cross-team sequencing problem: several
-interdependent services, owned by several teams, that must change over in a
-dependency order inside one shared window. That is `cutover-sequence-author`.
+The cross-team sequencing problem - several interdependent services, owned by
+several teams, that must change over in a dependency order inside one shared
+window - is a separate procedure, worked in
+[references/cutover-sequence.md](references/cutover-sequence.md).
 The division is clean: that procedure decides *which service goes when and who
-may say stop for the window*; this one is what a single service runs *inside*
-the slot it was given. If your release touches one service, you need only this
-one.
+may say stop for the window*; this runbook is what a single service runs
+*inside* the slot it was given. If your release touches one service, you need
+only the runbook.
 
 It also does not own the statistics of canary analysis. Choosing a significance
 test, computing effect size, and correcting for the sample-size penalty of a
@@ -347,8 +348,12 @@ Eleven runbook anti-patterns with why each fails and its fix:
   sample-size penalty of a small traffic share need a dedicated comparison
   procedure. This document defines what is compared, not how confident the
   comparison is.
-- **Cross-team sequencing is out of scope.** Ordering interdependent services
-  across teams inside one window is `cutover-sequence-author`. This runbook runs
+- **Cross-team sequencing is a separate procedure.** Ordering interdependent
+  services across teams inside one window is
+  [references/cutover-sequence.md](references/cutover-sequence.md) (with its
+  own [worked example](references/cutover-worked-example.md),
+  [output template](references/cutover-output-template.md), and
+  [anti-patterns](references/cutover-anti-patterns.md)). This runbook runs
   inside whatever slot that plan assigns.
 - **Low-traffic services get a weak canary.** A small share of small traffic
   produces no usable signal, and no threshold wording fixes that. Consider

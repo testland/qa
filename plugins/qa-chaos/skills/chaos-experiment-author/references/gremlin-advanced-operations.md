@@ -1,6 +1,6 @@
 # Gremlin advanced operations - attacks, Scenarios, Reliability Score, CI, compliance
 
-Deep reference for the `gremlin-chaos` SKILL.md. Consult when picking a
+Deep reference for [gremlin.md](gremlin.md). Consult when picking a
 specific attack, chaining attacks into a Scenario, wiring Gremlin into CI,
 reading the Reliability Score, or satisfying an audit / compliance
 requirement.

@@ -182,7 +182,7 @@ control API.
 - **TCP only.** UDP, QUIC, raw IP - out of scope.
 - **Not for K8s pod chaos.** For pod-level / node-level chaos, use
   `chaos-mesh` or
-  `litmus-chaos`.
+  LitmusChaos (references/litmus.md in `chaos-experiment-author`).
 - **Single-node deployment.** No clustering; for distributed chaos,
   use a chaos-platform tool.
 - **Application must point at Toxiproxy.** Requires config change

@@ -1,6 +1,6 @@
 ---
 name: extension-test-author
-description: "Action-taking agent that authors ONE browser-extension test file per behavior spec - detects Manifest version (V2 vs V3) and target browser (Chromium vs Firefox) from manifest.json, then emits a Playwright spec under tests/extension-<surface>.spec.ts composing qa-browser-extension skills for background SW, content scripts, popup / options pages, message passing, and storage events. Distinct from qa-shift-left/spec-to-suite-orchestrator (language-agnostic project skeleton) - narrower scope, single-file output, extension surfaces only. Sibling of the other per-surface authors qa-pwa/pwa-test-author and qa-mobile/mobile-test-author - same one-file-per-surface shape, different runtime surface. Use when adding one browser-extension test to an existing project."
+description: "Action-taking agent that authors ONE browser-extension test file per behavior spec - detects Manifest version (V2 vs V3) and target browser (Chromium vs Firefox) from manifest.json, then emits a Playwright spec under tests/extension-<surface>.spec.ts composing qa-browser-extension skills for background SW, content scripts, popup / options pages, message passing, and storage events. Sibling of the other per-surface authors qa-pwa/pwa-test-author and qa-mobile/mobile-test-author - same one-file-per-surface shape, different runtime surface. Use when adding one browser-extension test to an existing project."
 tools: "Read, Write, Edit, Grep, Glob, Bash(npx playwright test *), Bash(web-ext *)"
 model: inherit
 skills:
@@ -14,9 +14,8 @@ targeting one extension surface (background SW, content script, popup, options p
 message passing, or storage event). Never modifies the extension manifest, background script, or existing
 tests.
 
-Distinct from [`qa-shift-left/spec-to-suite-orchestrator`](../../qa-shift-left/agents/spec-to-suite-orchestrator.md)
-(language-agnostic multi-stage project-skeleton workflow) - narrower scope, single-file
-output, extension surfaces only. Sibling of [`qa-pwa/pwa-test-author`](../../qa-pwa/agents/pwa-test-author.md)
+Scope: single-file output for extension surfaces only. Sibling of
+[`qa-pwa/pwa-test-author`](../../qa-pwa/agents/pwa-test-author.md)
 and the per-language unit-test authors in `qa-unit-tests-{net,js,jvm,python,go-rust}`.
 
 ## When invoked

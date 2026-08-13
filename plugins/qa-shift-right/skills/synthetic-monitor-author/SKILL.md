@@ -1,6 +1,6 @@
 ---
 name: synthetic-monitor-author
-description: "Drafts a synthetic monitor configuration for one critical user journey - picks the platform (Datadog Synthetics, Pingdom, Checkly, New Relic, etc.), authors the scripted-transaction body (Playwright-style for browser checks; HTTP-step for API checks), wires the cadence (typical 1-15 min), defines per-step assertions (DOM presence, API status, response shape) and aggregate alert thresholds (consecutive-failure count + on-call routing). Use when a critical journey needs continuous-in-production verification per ISTQB-canonical shift-right (\"a test approach to test a system continuously in production\")."
+description: "Drafts a synthetic monitor configuration for one critical user journey - picks the platform (Datadog Synthetics, Pingdom, Checkly, New Relic, etc.), authors the scripted-transaction body (Playwright-style for browser checks; HTTP-step for API checks), wires the cadence (typical 1-15 min), defines per-step assertions (DOM presence, API status, response shape) and aggregate alert thresholds (consecutive-failure count + on-call routing). Includes the RUM-coverage gap method for deciding which journeys to monitor: score real-user journeys from RUM / CrUX data by session volume times business value, diff against the existing monitor inventory, and emit a ranked gap list. Use when a critical journey needs continuous-in-production verification per ISTQB-canonical shift-right (\"a test approach to test a system continuously in production\"), or when synthetic coverage was never systematically derived from real usage data."
 ---
 
 # synthetic-monitor-author
@@ -47,6 +47,52 @@ journey** the team would page on at 3am if it broke. Examples:
 Target commonly used paths and critical business processes. Don't
 monitor every flow - pick the 3-5 hero flows that map to the team's
 SLOs.
+
+### Which journeys to monitor - the RUM-coverage gap method
+
+Synthetic monitors verify journeys the team *chose* to script; Real User
+Monitoring records journeys users *actually* take. The gap between the two
+sets is where production breakage goes undetected: a journey with 40 k
+sessions per day but no monitor can fail silently for hours. When RUM is
+instrumented, derive the journey list from it instead of gut feel:
+
+1. **Collect the RUM journey inventory.** Pull the top ~50 view paths (or
+   transaction names) by session volume from Datadog RUM, Sentry
+   Performance, or GA4 + CrUX. Per-source queries are in
+   [references/rum-source-queries.md](references/rum-source-queries.md).
+2. **Score each journey:** `coverage_priority = session_volume_score x
+   business_value_score`, each on a 1-5 scale (range 1-25):
+
+   | Score | Daily sessions | Journey type (business value) |
+   |---|---|---|
+   | 5 | > 10 k | Revenue-generating (checkout, upgrade); authentication (login, SSO, MFA) |
+   | 4 | 1 k - 10 k | Primary feature (core read/write); onboarding |
+   | 3 | 100 - 1 k | Support / self-service (docs, status) |
+   | 2 | 10 - 100 | Informational (marketing pages, help) |
+   | 1 | < 10 | Admin / internal tooling |
+
+   The business-value column is editorial - align it with product
+   stakeholders before the first run and record the agreed values.
+3. **Build the existing-monitor inventory.** Datadog: `GET
+   /api/v1/synthetics/tests`; Checkly: `monitors/*.spec.ts` + `*.yml` in the
+   repo; New Relic: `GET /v2/monitors.json`. Normalize each monitor to a
+   canonical URL path pattern (strip query strings, replace ID segments with
+   `{id}`, lowercase).
+4. **Diff and rank.** Journeys whose normalized path matches no monitor
+   pattern form the gap list, sorted by `coverage_priority` descending. Emit
+   one row per gap: path, sessions/day, business value, score, recommended
+   monitor type (score >= 20 with interactions: browser check; pure API
+   endpoint: API check; score < 10: defer - monitor sprawl costs more than
+   the coverage is worth).
+5. Feed the ranked gap list back into this step as the journey input.
+
+**Hard-reject rule: no RUM source, no gap analysis.** If neither Datadog
+RUM, Sentry Performance, nor CrUX data exists for the target, halt and say
+so. Do not estimate journey volume from a sitemap - it contains every URL,
+not the ones users visit, and produces a monitor list biased by developer
+assumptions. Two data caveats: CrUX only captures publicly discoverable
+pages (use Datadog RUM or Sentry for post-login journeys), and Datadog RUM
+session retention is 30 days, so pick a representative date range.
 
 ## Step 2 - Pick the platform
 
@@ -237,6 +283,11 @@ for why a monitor was added / removed.
   active vs proactive vs real-user monitoring distinction, common
   metrics (Time to First Byte, Speed Index, Time to Interactive,
   Page Complete), named providers (Datadog, F5).
+- [references/rum-source-queries.md](references/rum-source-queries.md) -
+  per-source queries for the RUM-coverage gap method (Datadog RUM
+  Explorer, Sentry Performance throughput, GA4 + CrUX field data),
+  with the Datadog retention and CrUX public-discoverability caveats
+  cited at the point of use.
 - ISTQB Glossary V4.7.1 - `https://glossary.istqb.org/en_US/term/shift-right`
   defines shift right as "A test approach to test a system
   continuously in production." (Per workspace memory: ISTQB glossary

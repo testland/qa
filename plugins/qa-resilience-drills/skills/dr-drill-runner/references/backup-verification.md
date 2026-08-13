@@ -1,11 +1,9 @@
----
-name: backup-verification-author
-description: "Author backup-verification harness - per-backup-type integrity (SHA-256 / encrypted-payload signature), restore-to-test-env spot-check cadence, partial-restore (single-table / single-object) verification, cross-region replication validation, retention-policy assertions. \"An untested backup is not a backup.\" Use when a service's backups have never been restore-tested, when the backup tool is being swapped, or when an audit needs proof that backups are integrity-checked and restorable."
-metadata:
-  keywords: "backup-verification, integrity-check, restore-spot-check, retention, cross-region-replication"
----
+# Backup verification harness
 
-# backup-verification-author
+Deep dive for `dr-drill-runner` - the backup-integrity half of DR readiness.
+"An untested backup is not a backup." Consult when a service's backups have
+never been restore-tested, when the backup tool is being swapped, or when an
+audit needs proof that backups are integrity-checked and restorable.
 
 Backups silently fail in many ways - wrong encryption key, missing
 volume, corrupted file, expired credential. Per the [Google Cloud
@@ -213,8 +211,8 @@ restore on demand. Author the workflow:
 ## Limitations
 
 - Backup verification doesn't test the restore-time SLA - see
-  `restore-time-tests` for that.
-- Some legal regimes prescribe per-restore audit records; this skill
+  [restore-time.md](restore-time.md) for that.
+- Some legal regimes prescribe per-restore audit records; this reference
   covers the test pattern, not the legal compliance.
 - Cloud-managed backup services (AWS Backup, Veeam Cloud) handle
   some steps; verify the boundary clearly.
@@ -222,9 +220,9 @@ restore on demand. Author the workflow:
 ## References
 
 - [Google Cloud DR planning guide] - DR planning context
-- `dr-drill-runner` - drill-level
+- The host `dr-drill-runner` SKILL.md - drill-level
   workflow that consumes verified backups
-- `restore-time-tests` - RTO
+- [restore-time.md](restore-time.md) - RTO
   verification of the restore process
 - `secrets-rotation-runner` (in the qa-secrets plugin) - 
   related rotation workflow

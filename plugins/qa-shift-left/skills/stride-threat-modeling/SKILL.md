@@ -1,6 +1,6 @@
 ---
 name: stride-threat-modeling
-description: "Enumerates security threats against a feature specification or design using Microsoft's six STRIDE categories (spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege), each paired with the security property it violates. Covers the asset-and-trust-boundary walk that produces threat rows, the threat-row output schema, a likelihood x impact triage rule labelled plainly as practitioner convention rather than standard, a worked example, and an anti-pattern catalog. Enumerates threats against a design; it does not scan code, run a penetration test, or audit control compliance. Use when a PRD section, user story, design doc, or architecture sketch touching authentication, user data, payments, file uploads, or an external integration is about to enter implementation and no threat model exists for it yet."
+description: "Enumerates security threats against a feature specification or design using Microsoft's six STRIDE categories (spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege), each paired with the security property it violates. Covers the asset-and-trust-boundary walk that produces threat rows, the threat-row output schema, a likelihood x impact triage rule labelled plainly as practitioner convention rather than standard, a worked example, an anti-pattern catalog, and the from-spec workflow: read the spec, run the walk end to end, and write the threat-model document into the repo, with a no-fabrication rule for asset-free specs. Enumerates threats against a design; it does not scan code, run a penetration test, or audit control compliance. Use when a PRD section, user story, design doc, or architecture sketch touching authentication, user data, payments, file uploads, or an external integration is about to enter implementation and no threat model exists for it yet."
 ---
 
 # stride-threat-modeling
@@ -174,6 +174,30 @@ Common threat shapes and their ASVS 4.0.3 anchors (session tokens, broken
 access control, IDOR, verbose errors, upload storage exhaustion, decompression
 bombs, polyglot files, executable upload paths) are tabulated in
 [references/mitigations.md](references/mitigations.md).
+
+## From-spec workflow
+
+Turning "we're adding feature X" into a committed threat model runs the
+steps above against a concrete spec artifact:
+
+1. **Read the spec** at the supplied path or URL (PRD section, user story,
+   design doc, or architecture sketch).
+2. **Build the threat table end to end:** the Step 1 asset and
+   trust-boundary inventory, the Step 2 per-element STRIDE walk, the Step 3
+   relevance filter, the Step 4 triage score, the Step 5 mitigation anchors.
+3. **Write the artifact** to `docs/threat-models/<YYYY-MM-DD>-<feature-slug>.md`
+   in the output format below, so rows stay referenceable from tickets and
+   test names.
+
+**Never fabricate threats.** For a spec with no security-relevant assets (a
+static text edit on a public marketing page), the correct output is "No
+STRIDE-relevant assets identified" and a recommendation to skip - per the
+Step 3 filter and the anti-pattern catalog below.
+
+Spec ambiguity discovered during the walk is a requirements defect, not a
+security finding: record it under "Open questions for the spec author" and
+route the sentence itself to the testability review workflow in
+`spec-testability-heuristics`.
 
 ## Output format
 

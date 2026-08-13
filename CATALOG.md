@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 533 components**
+**89 plugins · 520 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -85,14 +85,14 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-chaos](plugins/qa-chaos/) | 1.4.0 | 8 skills + 1 agents | 9 |
-| [qa-shift-left](plugins/qa-shift-left/) | 1.5.0 | 6 skills + 3 agents | 9 |
 | [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 8 skills + 0 agents | 8 |
-| [qa-shift-right](plugins/qa-shift-right/) | 1.4.0 | 6 skills + 1 agents | 7 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.7.0 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.3.0 | 4 skills + 2 agents | 6 |
-| [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.3.0 | 5 skills + 1 agents | 6 |
+| [qa-shift-left](plugins/qa-shift-left/) | 1.5.0 | 6 skills + 0 agents | 6 |
+| [qa-chaos](plugins/qa-chaos/) | 1.4.0 | 5 skills + 0 agents | 5 |
 | [qa-defect-management](plugins/qa-defect-management/) | 1.5.0 | 3 skills + 2 agents | 5 |
+| [qa-shift-right](plugins/qa-shift-right/) | 1.4.0 | 4 skills + 1 agents | 5 |
+| [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.3.0 | 2 skills + 0 agents | 2 |
 
 ## Backend & distributed systems
 
@@ -122,7 +122,7 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature
 | [qa-grpc](plugins/qa-grpc/) | 1.2.14 | 8 skills + 1 agents | 9 |
 | [qa-notifications](plugins/qa-notifications/) | 1.2.13 | 7 skills + 1 agents | 8 |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.3.4 | 7 skills + 1 agents | 8 |
-| [qa-auth-flows](plugins/qa-auth-flows/) | 1.2.15 | 6 skills + 1 agents | 7 |
+| [qa-auth-flows](plugins/qa-auth-flows/) | 1.3.0 | 6 skills + 1 agents | 7 |
 
 ## AI & ML
 

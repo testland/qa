@@ -1,20 +1,16 @@
 # qa-resilience-drills
 
-Production-grade resilience discipline - DR drills, backup
-verification, restore-time SLAs, error budgets, MTTR/MTBF tracking.
-Distinct from `qa-chaos` (experiment-authoring) - this
-plugin covers measured, scheduled drills + the metrics they feed.
+Production-grade resilience discipline - DR drills with backup
+verification and restore-time SLAs worked in references, error budgets,
+and MTTR/MTBF tracking. Distinct from `qa-chaos` (experiment-authoring) -
+this plugin covers measured, scheduled drills + the metrics they feed.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [dr-drill-runner](skills/dr-drill-runner/SKILL.md) | Per-tier RTO + RPO; pre-drill checklist; drill workflow (announce → fail-over → verify → fail-back → cleanup); post-drill report; cold/warm/hot tier-specific patterns; cadence (monthly/quarterly/annual) |
-| Skill | [backup-verification-author](skills/backup-verification-author/SKILL.md) | Per-backup-type integrity (SHA-256 + signature); restore-to-test-env spot check; partial-restore; cross-region replication SLA; retention-policy verification; encryption + key recovery |
-| Skill | [restore-time-tests](skills/restore-time-tests/SKILL.md) | TTF segments; baseline timed restore; parallel-restore optimization; PITR latency; partial object-store restore; trend tracking; cold-start latency |
-| Skill | [error-budget-tests](skills/error-budget-tests/SKILL.md) | SLI calculation; budget consumption; multi-window multi-burn-rate alerting; freeze-trigger when budget exhausted; rolling-window reset; weekly stakeholder reporting |
-| Skill | [mttr-mtbf-tracker](skills/mttr-mtbf-tracker/SKILL.md) | Per-incident schema (detected/acknowledged/mitigated/resolved); MTTD / MTTA / MTTR / MTBF formulae; ITIL alignment; postmortem integration; mitigation vs resolution distinction |
-| Agent | [dr-drill-orchestrator](agents/dr-drill-orchestrator.md) | Executes a planned DR drill end to end: pre-drill checklist, failover, RTO/RPO monitor, fail-back, post-drill report. |
+| Skill | [dr-drill-runner](skills/dr-drill-runner/SKILL.md) | The full DR-drill discipline: per-tier RTO + RPO; pre-drill checklist; drill workflow (announce → fail-over → verify → fail-back → cleanup); the supervised run protocol (refuse rules, RTO/RPO monitor, abort-on-breach); post-drill report; cold/warm/hot patterns; cadence. Backup-integrity verification and restore-time / RTO measurement live in references/. |
+| Skill | [error-budget-tests](skills/error-budget-tests/SKILL.md) | SLI calculation; budget consumption; multi-window multi-burn-rate alerting; freeze-trigger when budget exhausted; rolling-window reset; weekly stakeholder reporting. The MTTR / MTTA / MTTD / MTBF incident-metrics schema + formulae live in references/. |
 
 ## Install
 

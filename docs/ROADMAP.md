@@ -153,7 +153,7 @@ testing), but the catalog only touches it indirectly:
 *reviews* requirements for testability-blocking ambiguity.
 
 **Nearest existing components:** `acceptance-criteria-extractor`,
-`testability-reviewer`, `test-case-ideation-from-story`.
+`spec-testability-heuristics`, `test-case-ideation-from-story`.
 
 **Differentiation axis:** extraction converts; testability review
 targets the *design*; this critiques the *requirement text* (vague
@@ -168,13 +168,13 @@ review types), INVEST criteria (original Wake article), ISO/IEC/IEEE
 
 ### Design-for-testability remediation patterns (extension: `qa-shift-left`)
 
-**Why missing matters:** `testability-reviewer` flags
+**Why missing matters:** `spec-testability-heuristics` flags
 Observable/Decidable/Bounded failures and `tdd-stuck-pattern-resolver`
 names blockers (singletons, statics), but nothing teaches the
 remediation patterns - dependency injection, seams, ports-and-adapters
 boundaries, observability hooks for tests.
 
-**Nearest existing components:** `testability-reviewer`,
+**Nearest existing components:** `spec-testability-heuristics`,
 `tdd-stuck-pattern-resolver`, `observability-to-test`.
 
 **Differentiation axis:** the reviewer finds the problem; this is the
