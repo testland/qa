@@ -1,6 +1,6 @@
 ---
 name: k6-load-testing
-description: "Authors k6 JavaScript load-test scripts (VU loops + checks + sleeps), configures the `options` block with `stages` (ramp-up patterns) and `thresholds` (p(95) latency, error rate), runs via `k6 run script.js` or `--vus / --duration` ad-hoc flags, and uses thresholds as the CI pass/fail signal. Use when the project ships HTTP / WebSocket / gRPC load tests and the team wants developer-friendly JavaScript authoring."
+description: "Authors k6 JavaScript load-test scripts (VU loops + checks + sleeps), configures the `options` block with `stages` (ramp-up patterns) and `thresholds` (p(95) latency, error rate), runs via `k6 run script.js` or `--vus / --duration` ad-hoc flags, and uses thresholds as the CI pass/fail signal. Includes a latency-percentile interpretation reference: tail ratio (p99/p50), bimodal-distribution detection, coordinated omission and why naive p99 is optimistic, and constant-vus vs constant-arrival-rate executors. Use when the project ships HTTP / WebSocket / gRPC load tests and the team wants developer-friendly JavaScript authoring, or when a k6 threshold passes but the system still feels slow."
 ---
 
 # k6-load-testing
@@ -28,9 +28,8 @@ out of scope here.
 
 If the team is already deep in JMeter, the migration cost is non-
 trivial - evaluate `jmeter-load-testing`
-in place. For Python / Locust shops, see
-`locust-load-testing`. For JVM /
-Gatling, see `gatling-load-testing`.
+in place. For Python / Locust shops and JVM / Gatling teams, see the
+Gatling and Locust references in `load-testing-overview`.
 
 ## Install
 
@@ -202,6 +201,16 @@ summary upload via `if: always()` - in
 [references/ci-integration.md](references/ci-integration.md). A
 failing threshold causes `k6 run` to exit non-zero, failing the job.
 
+## Interpreting latency distributions
+
+Passing a p95 threshold is necessary but not sufficient. The full
+interpretation workflow - expanding `summaryTrendStats` to p99/p99.9, the
+tail ratio (p99/p50) as a spread signal, bimodal-distribution heuristics,
+sub-metric cross-checks (`http_req_waiting` / `http_req_blocked`),
+coordinated omission and HdrHistogram correction, and `constant-vus` vs
+`constant-arrival-rate` executor semantics - is in
+[references/latency-percentiles.md](references/latency-percentiles.md).
+
 ## Anti-patterns
 
 | Anti-pattern                                                    | Why it fails                                                     | Fix |
@@ -233,9 +242,9 @@ failing threshold causes `k6 run` to exit non-zero, failing the job.
   flags.
 - [k6-thresholds][thresholds] - threshold syntax, aggregation methods,
   abortOnFail / delayAbortEval.
-- `jmeter-load-testing`,
-  `gatling-load-testing`,
-  `locust-load-testing` - 
-  alternatives by language stack.
+- `jmeter-load-testing` and the Gatling / Locust references in
+  `load-testing-overview` - alternatives by language stack.
+- [references/latency-percentiles.md](references/latency-percentiles.md) -
+  interpreting the latency distributions this skill's runs produce.
 - `perf-budget-gate` - downstream
   gate that aggregates k6 / lighthouse / load-runner verdicts.

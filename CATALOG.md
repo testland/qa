@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `python3 scripts/generate-catalog.py`).
 
-**89 plugins · 554 components**
+**89 plugins · 533 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -18,7 +18,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.5.0 | 10 skills + 2 agents | 12 |
 | [qa-test-review](plugins/qa-test-review/) | 1.6.15 | 7 skills + 4 agents | 11 |
 | [qa-hiring](plugins/qa-hiring/) | 1.4.2 | 5 skills + 1 agents | 6 |
-| [qa-test-environment](plugins/qa-test-environment/) | 1.2.5 | 4 skills + 2 agents | 6 |
+| [qa-test-environment](plugins/qa-test-environment/) | 1.3.0 | 4 skills + 2 agents | 6 |
 | [qa-roles](plugins/qa-roles/) | 1.4.0 | 0 skills + 5 agents | 5 |
 | [qa-test-management](plugins/qa-test-management/) | 1.3.0 | 3 skills + 2 agents | 5 |
 | [qa-team-management](plugins/qa-team-management/) | 1.2.0 | 3 skills + 0 agents | 3 |
@@ -85,14 +85,14 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 12 skills + 2 agents | 14 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.5.0 | 9 skills + 4 agents | 13 |
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.7.0 | 3 skills + 7 agents | 10 |
 | [qa-chaos](plugins/qa-chaos/) | 1.4.0 | 8 skills + 1 agents | 9 |
-| [qa-flake-triage](plugins/qa-flake-triage/) | 1.3.0 | 5 skills + 4 agents | 9 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.5.0 | 6 skills + 3 agents | 9 |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 8 skills + 0 agents | 8 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.4.0 | 6 skills + 1 agents | 7 |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.7.0 | 3 skills + 3 agents | 6 |
+| [qa-flake-triage](plugins/qa-flake-triage/) | 1.3.0 | 4 skills + 2 agents | 6 |
 | [qa-resilience-drills](plugins/qa-resilience-drills/) | 1.3.0 | 5 skills + 1 agents | 6 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.5.0 | 3 skills + 2 agents | 5 |
 
 ## Backend & distributed systems
 

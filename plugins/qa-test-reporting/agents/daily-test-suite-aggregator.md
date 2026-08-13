@@ -1,6 +1,6 @@
 ---
 name: daily-test-suite-aggregator
-description: "Action-taking agent that ingests test-run artifacts from multiple suites (unit, integration, E2E, contract, performance, accessibility) and multiple environments (dev, staging, prod-canary) for a single day and emits a unified cross-suite cross-environment summary suitable for the team stand-up. Distinct from `test-run-summary-author` (sister skill that narrativises a single run) and from `e2e-test-trend-reporter` (qa-flake-triage; longitudinal weekly health for one E2E suite). Use as the morning routine that answers \"how did everything we run yesterday actually go?\" in one report."
+description: "Action-taking agent that ingests test-run artifacts from multiple suites (unit, integration, E2E, contract, performance, accessibility) and multiple environments (dev, staging, prod-canary) for a single day and emits a unified cross-suite cross-environment summary suitable for the team stand-up. Distinct from `test-run-summary-author` (sister skill that narrativises a single run) and from the trend-report workflow in `flake-dashboard-author` (qa-flake-triage; longitudinal weekly health for one E2E suite). Use as the morning routine that answers \"how did everything we run yesterday actually go?\" in one report."
 tools: "Read, Glob, Grep, Bash(jq *), Bash(xmllint *), Bash(find *)"
 model: sonnet
 skills:
@@ -85,8 +85,8 @@ Cells marked `not-run` did not produce an artifact in the window. Investigate wh
 
 ## Cells of concern
 
-- **`e2e-playwright × prod-canary` - FAIL** - 11/412 failed (97.3%; SLO 98.0%); 4 new since yesterday. Top-3: `cart.checkout.spec → submits coupon` (assertion); `auth.sso.spec → samlv2 round-trip` (30s timeout); `payments.refund.spec → partial refund` (precision). Hand off to [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md).
-- **`e2e-playwright × staging` - WARN** - 1 new flake. Hand off to [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md).
+- **`e2e-playwright × prod-canary` - FAIL** - 11/412 failed (97.3%; SLO 98.0%); 4 new since yesterday. Top-3: `cart.checkout.spec → submits coupon` (assertion); `auth.sso.spec → samlv2 round-trip` (30s timeout); `payments.refund.spec → partial refund` (precision). Hand off to [`ci-failure-triage`](../../qa-bug-repro/skills/ci-failure-triage/SKILL.md).
+- **`e2e-playwright × staging` - WARN** - 1 new flake. Hand off to [`e2e-flake-bisector`](../../qa-flake-triage/agents/e2e-flake-bisector.md).
 - **`contract × prod-canary` - WARN** - 2 schema-drift fails. Hand off to [`contract-drift-investigator`](../../qa-contract-testing/agents/contract-drift-investigator.md).
 - **`perf-k6 × dev` - WARN** - p95 312ms > 300ms SLO; staging clean. Investigate dev-environment perf delta.
 
@@ -102,7 +102,7 @@ Cells marked `not-run` did not produce an artifact in the window. Investigate wh
 
 ## What this agent did NOT do
 
-- Classify any individual failure (defer to `failure-classifier`).
+- Classify any individual failure (defer to the `ci-failure-triage` rule set).
 - Open issues (out of scope; A2 produces the report, the team triages).
 - Drop / dismiss any `not-run` cell - they appear in the output to be investigated.
 ```
@@ -114,7 +114,7 @@ The agent **refuses** to:
 - Emit a roll-up without an inventory file. The (suite × environment) matrix is the load-bearing structure; without the inventory, the report is shaped by whatever artifacts happened to exist.
 - Drop `not-run` cells silently. Missing artifacts are the most common signal of a broken nightly schedule and must surface in the report.
 - Compute `Δ vs. yesterday` without a yesterday baseline. If yesterday's run is missing for a cell, the delta column emits `n/a (no prior data)`.
-- Classify a failure. Classification is [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md)'s job; this agent stops at the cell-level summary.
+- Classify a failure. Classification is the job of the [`ci-failure-triage`](../../qa-bug-repro/skills/ci-failure-triage/SKILL.md) rule set; this agent stops at the cell-level summary.
 - Touch source files. The agent reads artifacts only.
 
 ## Anti-patterns
@@ -138,12 +138,12 @@ The agent **refuses** to:
 
 ## Hand-off targets
 
-- **Per-failure classification** → [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md).
-- **Flake pattern attribution for the WARN cells** → [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md).
+- **Per-failure classification** → [`ci-failure-triage`](../../qa-bug-repro/skills/ci-failure-triage/SKILL.md) (qa-bug-repro).
+- **Flake pattern attribution for the WARN cells** → [`flake-pattern-reference`](../../qa-flake-triage/skills/flake-pattern-reference/SKILL.md).
 - **Contract drift in the contract-test cells** → [`contract-drift-investigator`](../../qa-contract-testing/agents/contract-drift-investigator.md).
 - **Per-cell narrative for an exec summary** → [`test-run-summary-author`](../skills/test-run-summary-author/SKILL.md) (sister skill).
-- **Defect trend narrative over a longer window** → [`defect-trend-narrator`](../../qa-bug-repro/agents/defect-trend-narrator.md).
-- **Longitudinal E2E suite health** → [`e2e-test-trend-reporter`](../../qa-flake-triage/agents/e2e-test-trend-reporter.md).
+- **Defect trend narrative over a longer window** → [`defect-pipeline-runner`](../../qa-bug-repro/agents/defect-pipeline-runner.md) (trend-narration stage).
+- **Longitudinal E2E suite health** → the trend report in [`flake-dashboard-author`](../../qa-flake-triage/skills/flake-dashboard-author/SKILL.md).
 
 ## References
 

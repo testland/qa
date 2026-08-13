@@ -1,6 +1,6 @@
 ---
 name: flake-pattern-reference
-description: "Reference catalog of flake patterns - async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness - with detection heuristics and remediation per pattern. Use when triaging an unknown flake to identify the category before bisecting."
+description: "Reference catalog of the eight flake patterns - async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness - with detection heuristics, remediation per pattern, and the concrete code-level fixes: replacing fixed sleeps with framework auto-waits, isolating state in beforeEach fixtures, per-worker DB schemas via workerIndex, try/finally teardown, mocking network + clock at the boundary, stable role-based locators, TZ pinning, and RNG seeding. Use when triaging an unknown flake to identify the category before bisecting, or when a classified flake needs the specific code change to apply."
 ---
 
 # flake-pattern-reference
@@ -203,6 +203,72 @@ Test fails ~50% of runs?
 
 For systematic bisection, run a structured bisect that varies one axis
 at a time per the patterns above.
+
+## Code-level fixes
+
+Once the pattern is named - by inspection above or by experiment via
+`flake-axis-bisection` - apply the smallest change the pattern calls for
+(a targeted edit, not a rewrite), then re-measure at a real depth: re-run
+at an N chosen from the failure rate you are willing to ship, not the
+screening N; a clean 0/20 does not prove the flake is gone
+(`flake-axis-bisection`). Quarantine via `flaky-test-quarantine` if the
+flake blocks the trunk while the fix is in review.
+
+The per-pattern code fixes, grounded in Playwright, Cypress, MSW, and
+Faker official docs:
+
+- **Patterns 1-4** (async/timing, test ordering, shared parallel state,
+  resource leaks):
+  [references/timing-and-isolation-fixes.md](references/timing-and-isolation-fixes.md).
+- **Patterns 5-6** (network mock-at-the-boundary with `page.route()` /
+  MSW; role-based locators with `data-testid` fallback):
+  [references/network-and-locator-fixes.md](references/network-and-locator-fixes.md).
+- **Patterns 7-8** (pin `TZ=UTC`, freeze the clock, normalize paths;
+  seed every RNG and persist the seed):
+  [references/environment-and-randomness-fixes.md](references/environment-and-randomness-fixes.md).
+
+### Worked example
+
+A checkout test, `tests/checkout.spec.ts:42`, fails about 15% of runs in
+CI and always passes locally.
+
+1. **Classify.** `flake-axis-bisection` implicates the network-latency
+   axis, and reading the source shows the assertion is gated on a fixed
+   `page.waitForTimeout(2000)`, not on the response. That is Pattern 1
+   (async / timing): the sleep is shorter than the slowest CI response.
+2. **Apply the fix.** Replace the fixed sleep with a web-first assertion
+   that retries until the condition holds:
+
+```typescript
+// Before - the 2s sleep races a variable-latency XHR
+await page.getByRole('button', { name: 'Place order' }).click();
+await page.waitForTimeout(2000);
+expect(await page.getByText('Order confirmed').isVisible()).toBe(true);
+
+// After - retries until the confirmation renders or the timeout expires
+await page.getByRole('button', { name: 'Place order' }).click();
+await expect(page.getByText('Order confirmed')).toBeVisible();
+```
+
+3. **Re-measure and ship.** The team's tolerance is 1%, so re-run at
+   N=300 (`flake-axis-bisection` Step 2). A clean 0/300 bounds the rate at
+   roughly 1%; a clean 0/20 would have proved nothing. No quarantine was
+   needed - the fix landed inside the PR the flake was blocking.
+
+### Quick-reference: pattern to fix
+
+| Pattern | Key fix | Primary API |
+|---------|---------|-------------|
+| async / timing | Replace sleep with auto-wait assertion | `await expect(loc).toBeVisible()` |
+| test ordering | Move setup to `beforeEach`; roll back DB per test | `test.beforeEach` / `test.afterEach` |
+| shared parallel state | Per-worker schema / dir / port via `workerIndex` | `testInfo.workerIndex` |
+| resource leaks | `browser.close()` in `afterAll` with `try/finally` | `test.afterAll` + `try/finally` |
+| network | Mock at boundary; never reach real endpoints | `page.route()` / MSW |
+| locator drift | Role-based locators; `data-testid` fallback | `getByRole()` |
+| environment variance | Pin `TZ=UTC`; freeze clock; normalize paths | `page.clock.install()` |
+| randomness | Seed every RNG; persist seed in CI log | `faker.seed(N)` |
+
+Per-fix citations live in the three reference files above.
 
 ## References
 

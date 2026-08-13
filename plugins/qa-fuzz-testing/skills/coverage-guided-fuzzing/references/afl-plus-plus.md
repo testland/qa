@@ -160,8 +160,8 @@ Reproduce a crash:
 ```
 
 For automated bug filing, parse the sanitiser output (if compiled
-with `AFL_USE_ASAN=1`) via `bug-report-from-failure`
-(in the qa-defect-management plugin).
+with `AFL_USE_ASAN=1`) via the from-CI-failure workflow in `bug-report-template`
+(qa-bug-repro plugin).
 
 ### Triaging crashes
 

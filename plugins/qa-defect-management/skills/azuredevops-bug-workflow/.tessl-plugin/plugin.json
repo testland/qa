@@ -1,9 +1,0 @@
-{
-  "name": "testland/azuredevops-bug-workflow",
-  "description": "Authors and triages Bug work items in Azure DevOps Boards via the Work Item Tracking REST API (api-version 7.1) - Bug creation with JSON Patch, state transitions across New/Active/Resolved/Closed, and WIQL queries for triage queues and duplicate detection. Deep operational blocks (field-value fetch, PR / build artifact links, bulk close, az boards CLI, CI wiring) live in references/. Use when programmatically managing Azure DevOps Bug lifecycle states: creating from CI failures, triaging open defect queues, transitioning states in bulk, or attaching traceability links to builds and pull requests.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.4"
-}

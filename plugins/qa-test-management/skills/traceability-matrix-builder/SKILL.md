@@ -49,10 +49,9 @@ def get_requirements_jira(project_key):
     ]
 ```
 
-For Linear / GitHub Issues use the corresponding bug-workflow skill
-(`linear-bug-workflow-runner`, `github-issues-bug-workflow` in the
-qa-defect-management plugin) adapted for requirement-type issues rather
-than bugs.
+For Linear / GitHub Issues use the corresponding platform reference in
+`bug-tracker-workflow` (qa-defect-management plugin) adapted for
+requirement-type issues rather than bugs.
 
 ## Step 2 - Extract cases + refs
 

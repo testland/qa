@@ -112,8 +112,8 @@ Key fields:
 - **Allocation site:** Where the corrupted memory was allocated
 - **Freed site (UAF):** Where the memory was freed
 
-Parse this for `bug-report-from-failure`
-to extract the failure assertion.
+Parse this for the from-CI-failure workflow in `bug-report-template`
+(qa-bug-repro plugin) to extract the failure assertion.
 
 ## Per-language sanitiser support
 
@@ -149,7 +149,7 @@ within minutes. The report opens with `heap-buffer-overflow ... READ of size 4`,
 top frame `process_input src/parser.c:42`, allocated at `src/parser.c:39` (a
 16-byte region). The bug class plus the allocation site pin it to an off-by-one in
 the chunk-length handling. The parser has no MSan dependency requirement, so they
-skip the separate MSan binary and hand the report to `bug-report-from-failure`.
+skip the separate MSan binary and hand the report to the from-CI-failure workflow in `bug-report-template`.
 
 ## Anti-patterns
 

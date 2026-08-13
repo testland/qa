@@ -54,8 +54,8 @@ curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
   "https://api.browserstack.com/automate/sessions/<session-id>.json"
 ```
 
-Feed failure videos + HAR to `bug-report-from-failure` (in the
-qa-defect-management plugin) for triage.
+Feed failure videos + HAR to the from-CI-failure workflow in
+`bug-report-template` (qa-bug-repro plugin) for triage.
 
 ## CI integration
 

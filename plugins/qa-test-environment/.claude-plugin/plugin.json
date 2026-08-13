@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-environment",
-  "version": "1.2.5",
-  "description": "Test environment management: 4 skills (testcontainers, docker-compose-tests, feature-flag-test-harness, playwright-fixture-builder) and 2 agents (db-snapshot-restore, test-environment-bootstrapper). Composes with parallel-isolation-checker in qa-flake-triage for shared-state diagnosis.",
+  "version": "1.3.0",
+  "description": "Test environment management: 4 skills (testcontainers, docker-compose-tests, feature-flag-test-harness, playwright-fixture-builder) and 2 agents (db-snapshot-restore, test-environment-bootstrapper). Composes with e2e-flake-bisector in qa-flake-triage (its shared-state isolation stage) for shared-state diagnosis.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,9 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-test-environment",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "test-environment"]
+  "keywords": [
+    "qa",
+    "testing",
+    "test-environment"
+  ]
 }

@@ -1,6 +1,6 @@
 ---
 name: lighthouse-perf
-description: "Configures Lighthouse CI (`@lhci/cli`) to audit Web Vitals (LCP, INP, CLS) on every PR, asserts against canonical thresholds (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1 at the 75th percentile), uploads Lighthouse reports as build artifacts, and posts deltas as PR comments. Use when the project ships a web frontend and the team needs continuous Web Vitals monitoring tied to PR gating."
+description: "Configures Lighthouse CI (`@lhci/cli`) to audit Web Vitals (LCP, INP, CLS) on every PR, asserts against canonical thresholds (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1 at the 75th percentile), uploads Lighthouse reports as build artifacts, and posts deltas as PR comments. Includes a budget-authoring reference: per-route LCP/INP/CLS thresholds by traffic class (cached / dynamic / api-heavy / form-heavy / media-heavy) via `assertMatrix`, plus `budget.json` resource-size caps (JS / CSS / images / total bytes). Use when the project ships a web frontend and the team needs continuous Web Vitals monitoring tied to PR gating, or needs its first Lighthouse budgets drafted."
 ---
 
 # lighthouse-perf
@@ -181,6 +181,15 @@ The optional `LHCI_GITHUB_APP_TOKEN` (set up via the Lighthouse CI
 GitHub App) enables PR comments showing the per-metric delta vs. the
 main branch's last green run.
 
+## Authoring budgets
+
+Budget authoring is part of Lighthouse CI configuration: picking per-route
+LCP / INP / CLS thresholds by traffic class, resource-size caps in
+`budget.json`, the `assertMatrix` config shape, and how to validate a new
+budget against production before committing it, are all in
+[references/budgets.md](references/budgets.md). Start there when the project
+has no budgets yet or the existing ones need a redesign.
+
 ## Mobile vs desktop budgets
 
 LCP / INP thresholds are the same across mobile and desktop, but
@@ -232,9 +241,8 @@ one for the other.
   measurement; INP-replaces-FID in 2024).
 - [lhci][lhci] - Lighthouse CI canonical install, `lhci autorun`,
   configuration shape, assertion levels.
-- `lighthouse-budget-author` - 
-  sibling skill for **drafting** budgets at design time (this skill
-  is the **runner**).
+- [references/budgets.md](references/budgets.md) - drafting per-route
+  budgets and `budget.json` resource-size caps at design time.
 - `perf-budget-gate` - downstream
   unified gate aggregating Lighthouse + load-runner verdicts.
 - `non-functional-requirement-extractor` - upstream skill that surfaces Web Vitals NFRs from PRDs.

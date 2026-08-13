@@ -103,7 +103,7 @@ The report is a single markdown document. The verdict (`GO` / `NO-GO` / `CONDITI
 
 ## Hand-off targets
 
-- **Per-failure classification for NO-GO failures** - [`failure-classifier`](../../qa-bug-repro/agents/failure-classifier.md).
+- **Per-failure classification for NO-GO failures** - [`ci-failure-triage`](../../qa-bug-repro/skills/ci-failure-triage/SKILL.md) (qa-bug-repro).
 - **Cross-suite daily health for context** - [`daily-test-suite-aggregator`](./daily-test-suite-aggregator.md).
 - **Coverage per-file drill-down** - [`coverage-diff-reporter`](../skills/coverage-diff-reporter/SKILL.md) full report.
 - **Coverage improvement plan post-release** - [`test-coverage-targeter`](../skills/test-coverage-targeter/SKILL.md) advisory list.

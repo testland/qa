@@ -1,9 +1,9 @@
 {
   "name": "testland/bug-report-template",
-  "description": "Builds a well-formed bug (defect) report from raw observation notes - fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale. Validates that each field has the load-bearing content reviewers and engineers need to triage. Use when a stakeholder reports a problem informally (chat, email, voice) and the team needs a triageable issue without round-tripping for missing fields.",
+  "description": "Builds a well-formed bug (defect) report from raw observation notes - fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale - and validates that each field has the load-bearing content reviewers and engineers need to triage. Also converts a single test-failure record (JUnit XML, Allure JSON, pytest log, Playwright report) into a classified, ready-to-file bug spec, and provides the adversarial review checklist that gates a report before it enters the tracker (required fields, single-description title test, severity-priority independence, reproduction quality). Use when a stakeholder reports a problem informally, when a CI failure artefact needs to become a triageable report, or when a drafted report needs a pre-filing quality audit.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.6.5"
+  "version": "1.6.6"
 }

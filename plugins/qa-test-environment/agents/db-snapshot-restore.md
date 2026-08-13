@@ -149,7 +149,7 @@ Slower than template clone but portable.
 
 - **Container-managed DBs** → [`testcontainers`](../skills/testcontainers/SKILL.md) (containers ~5 - 30s vs template restore ~50 - 500ms).
 - **Compose stacks** → [`docker-compose-tests`](../skills/docker-compose-tests/SKILL.md) (its `migrate` service produces the template state).
-- **Parallel-isolation symptoms** under `-j N` → `parallel-isolation-checker` in `qa-flake-triage`.
+- **Parallel-isolation symptoms** under `-j N` → `e2e-flake-bisector` in `qa-flake-triage` (shared-state isolation stage).
 
 ## References
 

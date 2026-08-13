@@ -168,8 +168,8 @@ Traceback (most recent call last):
   ...
 ```
 
-Map the traceback to a bug spec via `bug-report-from-failure`
-(in the qa-defect-management plugin).
+Map the traceback to a bug spec via the from-CI-failure workflow in `bug-report-template`
+(qa-bug-repro plugin).
 
 ## CI integration
 

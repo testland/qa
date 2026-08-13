@@ -179,8 +179,8 @@ crash. Pair with the sanitiser report (stderr) for stack +
 allocation site.
 
 For automated parsing (e.g., file as a bug), feed the
-sanitiser-report output to `bug-report-from-failure`
-(in the qa-defect-management plugin):
+sanitiser-report output to the from-CI-failure workflow in `bug-report-template`
+(qa-bug-repro plugin):
 
 ```bash
 ./fuzz_target crash-<sha1> 2> sanitiser-report.txt

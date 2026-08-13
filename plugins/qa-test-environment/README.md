@@ -1,6 +1,6 @@
 # qa-test-environment
 
-Test environment management: containerized backing services (Testcontainers + docker-compose), per-test database snapshot/restore via Postgres template DBs, an OpenFeature-driven feature-flag matrix harness, and a Playwright fixture builder. Composes with `parallel-isolation-checker` in [`qa-flake-triage`](../qa-flake-triage/) for shared-state diagnosis.
+Test environment management: containerized backing services (Testcontainers + docker-compose), per-test database snapshot/restore via Postgres template DBs, an OpenFeature-driven feature-flag matrix harness, and a Playwright fixture builder. Composes with `e2e-flake-bisector` in [`qa-flake-triage`](../qa-flake-triage/) (its shared-state isolation stage) for shared-state diagnosis.
 
 ## Components
 
@@ -17,7 +17,7 @@ Test environment management: containerized backing services (Testcontainers + do
 
 | Type | Name | Lives in | Description |
 |---|---|---|---|
-| Agent | [parallel-isolation-checker](../qa-flake-triage/agents/parallel-isolation-checker.md) | `qa-flake-triage` | Read-only investigator that finds the shared state two parallel workers are stepping on (DB rows, env vars, files, ports, lockfiles, module state). Install `qa-flake-triage` to use it; it composes naturally with this plugin's `db-snapshot-restore` and Playwright fixtures. |
+| Agent | [e2e-flake-bisector](../qa-flake-triage/agents/e2e-flake-bisector.md) | `qa-flake-triage` | Flake bisector whose stage 2 finds the shared state two parallel workers are stepping on (DB rows, env vars, files, ports, lockfiles, module state). Install `qa-flake-triage` to use it; it composes naturally with this plugin's `db-snapshot-restore` and Playwright fixtures. |
 
 ## Install
 

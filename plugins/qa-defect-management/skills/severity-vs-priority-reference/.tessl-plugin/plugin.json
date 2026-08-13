@@ -1,9 +1,9 @@
 {
   "name": "testland/severity-vs-priority-reference",
-  "description": "Pure-reference catalog distinguishing defect severity (impact on the system / user) from defect priority (urgency of fix), each on its own axis. Enumerates the canonical 5-point severity scale (Critical / High / Medium / Low / Trivial) and the 5-point priority scale (Immediate / High / Medium / Low / Deferred), explains why they must be tracked separately (a Critical/Deferred legacy bug exists; a Trivial/Immediate spelling bug on the homepage exists), maps to IEEE 1044-2009 severity classes, and ties to bug-lifecycle-reference state transitions. Use when triaging a defect, configuring a tracker's severity/priority fields, or reviewing whether a bug report assigned them consistently.",
+  "description": "Pure-reference catalog for defect classification: severity (impact on the system / user) vs priority (urgency of fix) on independent axes - the canonical 5-point severity scale (Critical / High / Medium / Low / Trivial), the 5-point priority scale (Immediate / High / Medium / Low / Deferred), the 5x5 matrix with worked S1/P5 and S5/P1 examples, and IEEE 1044-2009 severity classes; plus the full defect lifecycle (ISTQB-canonical states new / open / assigned / fixed / verified / closed / reopened / deferred / rejected / duplicate, allowed and forbidden transitions, tracker vocabulary maps) and the defect-categorisation taxonomies (IEEE 1044 anomaly classification, ISTQB CTAL-TA root-cause categories, Orthogonal Defect Classification) in references. Use when triaging or classifying a defect, configuring a tracker's severity/priority/state fields, reviewing a bug report's classification, or running root-cause analysis.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.6"
+  "version": "1.4.7"
 }

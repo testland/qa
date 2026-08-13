@@ -1,25 +1,21 @@
 # qa-load-testing
 
-Load and performance testing: k6, JMeter, Gatling, Locust runners; Lighthouse CI for Web Vitals; perf budget gate; flame-graph analyzer; DB slow-query detector; perf regression bisector.
+Load and performance testing: k6 and JMeter runners (Gatling and Locust deep dives inside the overview umbrella); Lighthouse CI for Web Vitals with budget authoring; perf budget gate; flame-graph analyzer; DB slow-query detector; SLO-derived load-test planning.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [k6-load-testing](skills/k6-load-testing/SKILL.md) | Author k6 JavaScript load tests with stages + thresholds; CI gate via `k6 run` exit code. |
+| Skill | [load-testing-overview](skills/load-testing-overview/SKILL.md) | Entry point: tool-selection table, the six load profiles, open vs closed workload models, a first k6 run + threshold, the performance-incident triage workflow, and Gatling / Locust deep dives in references. |
+| Skill | [k6-load-testing](skills/k6-load-testing/SKILL.md) | Author k6 JavaScript load tests with stages + thresholds; CI gate via `k6 run` exit code; latency-percentile interpretation (tail ratio, coordinated omission) in references. |
 | Skill | [jmeter-load-testing](skills/jmeter-load-testing/SKILL.md) | Run `.jmx` test plans via `jmeter -n -t` CLI; HTML dashboard via `-e -o`; JTL parsing for CI gates. |
-| Skill | [gatling-load-testing](skills/gatling-load-testing/SKILL.md) | Author Gatling Simulation classes (Java/Kotlin/Scala/JS); `injectOpen` vs `injectClosed`; setUp().assertions() as the CI gate. |
-| Skill | [locust-load-testing](skills/locust-load-testing/SKILL.md) | Author Python locustfile.py with HttpUser + @task; run headless with `--users` / `--spawn-rate`; CSV / HTML reports for CI gates. |
-| Skill | [lighthouse-perf](skills/lighthouse-perf/SKILL.md) | Lighthouse CI for Web Vitals (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1) at 75th percentile; per-PR assertions + reports. |
+| Skill | [lighthouse-perf](skills/lighthouse-perf/SKILL.md) | Lighthouse CI for Web Vitals (LCP ≤2.5s, INP ≤200ms, CLS ≤0.1) at 75th percentile; per-PR assertions + reports; per-route budget authoring in references. |
 | Skill | [perf-budget-gate](skills/perf-budget-gate/SKILL.md) | Aggregate k6 / JMeter / Gatling / Locust / Lighthouse verdicts into a unified go/no-go gate with delta vs baseline. |
-| Skill | [lighthouse-budget-author](skills/lighthouse-budget-author/SKILL.md) | Draft `.lighthouserc.js` per-route LCP/INP/CLS thresholds + `budget.json` resource-size caps at design time. |
 | Skill | [flame-graph-analyzer](skills/flame-graph-analyzer/SKILL.md) | Read py-spy / async-profiler / pprof / clinic.js folded stacks; classify CPU-bound / GC / lock-contention; propose remediation. |
 | Skill | [db-query-plan-analyzer](skills/db-query-plan-analyzer/SKILL.md) | Read `EXPLAIN ANALYZE`; identify dominant cost (seq-scan / sort spill / nested loop); propose specific index or rewrite. |
-| Agent | [perf-regression-bisector](agents/perf-regression-bisector.md) | `git bisect run` against a per-commit perf measurement (k6 / Lighthouse); hand off culprit to flame-graph or db-slow-query analysis. |
-| Agent | [perf-incident-responder](agents/perf-incident-responder.md) | On-call perf-incident orchestrator: confirm with k6, flame-graph the hot path, check slow queries, localize the cause. |
-| Skill | [latency-percentile-analyzer](skills/latency-percentile-analyzer/SKILL.md) | Interpret latency distributions beyond p95/p99: tail ratio, bimodal detection, coordinated omission. |
-| Skill | [load-testing-overview](skills/load-testing-overview/SKILL.md) | Junior on-ramp: load-testing metrics, which tool to pick, and a first k6 run + threshold. |
 | Skill | [slo-load-test-plan](skills/slo-load-test-plan/SKILL.md) | Turns SLOs and an endpoint traffic mix into a named scenario matrix: a load profile and injection model per scenario, SLO-derived threshold expressions, and an error-budget-sized soak allowance. |
+
+Perf regressions are bisected by the `regression-bisector` agent (qa-flake-triage) in its perf-measurement mode.
 
 ## Install
 

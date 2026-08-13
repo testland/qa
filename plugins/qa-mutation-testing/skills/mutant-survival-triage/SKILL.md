@@ -39,7 +39,8 @@ Ground rules for the investigation - it is read-only:
 
 Downstream hand-offs: weak-assertion survivors → `test-code-critic`
 (qa-test-review, assertion dimension); flaky-killer survivors →
-`parallel-isolation-checker` (qa-flake-triage); "where to add tests" rather
+`e2e-flake-bisector` (qa-flake-triage, shared-state isolation stage);
+"where to add tests" rather
 than "what to test" → `test-coverage-targeter` (qa-test-reporting).
 
 ## Step 1 - Normalize the survivor into one record

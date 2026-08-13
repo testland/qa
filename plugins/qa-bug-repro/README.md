@@ -1,21 +1,17 @@
 # qa-bug-repro
 
-Bug reproduction workflow: extracts bug reports from Playwright traces / HARs, builds minimal failing tests from issue reports, classifies crash stacks, clusters defects, and analyzes escape defects.
+Bug reproduction workflow: extracts bug reports from Playwright traces / HARs, builds minimal failing tests from issue reports, authors and reviews bug reports (including CI-failure-to-spec conversion), triages CI failures, and runs the weekly defect-review pipeline.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| Skill | [bug-report-template](skills/bug-report-template/SKILL.md) | Build a triageable bug report from raw notes; flag gaps in environment / steps / expected / actual / severity / priority / reproducibility. |
+| Skill | [bug-report-template](skills/bug-report-template/SKILL.md) | Build a triageable bug report from raw notes; convert a CI failure record into a classified, ready-to-file spec; audit any report against the pre-filing review checklist. |
 | Skill | [ci-failure-triage](skills/ci-failure-triage/SKILL.md) | Decides what kind of failure a red test is before anyone fixes it: seven signals, an ordered first-match-wins rule set, and a verdict that records which alternatives were rejected and why. |
 | Skill | [defect-escape-taxonomy](skills/defect-escape-taxonomy/SKILL.md) | Classifies a production escape into test, process, or tooling gap by the earliest layer that should have caught it, stated as a property of the system and never of a person. |
 | Agent | [bug-report-from-recording](agents/bug-report-from-recording.md) | Action-taking: read a Playwright `trace.zip` (or HAR + console + screenshot) and emit a filled `bug-report-template` with verbatim error messages, reconstructed repro steps, and trace-derived environment block. |
 | Agent | [bug-repro-builder](agents/bug-repro-builder.md) | Action-taking: turn a bug report into a minimal failing test (unit / integration / component / e2e) or a minimal-repro repository. |
-| Agent | [failure-classifier](agents/failure-classifier.md) | Read-only triager: take one failed test result + 7-day history + environment metadata; classify as `defect` / `flaky-pre-incident` / `flaky-known` / `environment-drift` / `timeout` / `flake-of-unknown-cause`; recommend the next agent. |
-| Agent | [defect-trend-narrator](agents/defect-trend-narrator.md) | Read-only narrator: take a time-windowed defect set, compute Pareto distribution + week-over-week deltas + escape-rate, emit a manager-facing trend narrative with citation appendix. |
-| Agent | [defect-clusterer](agents/defect-clusterer.md) | Group a backlog of bug reports by fingerprint (top-frame, error+route, error alone) into root-cause clusters; flag weak-signal clusters for human review. |
-| Agent | [escape-defect-analyzer](agents/escape-defect-analyzer.md) | Builder: classify a production-found bug as test-gap / process-gap / tooling-gap; generate a prevention-asset report with concrete test or monitoring change. |
-| Agent | [defect-pipeline-runner](agents/defect-pipeline-runner.md) | Weekly defect-review orchestrator: chains defect-clusterer, defect-trend-narrator, and escape-defect-analyzer into one report. |
+| Agent | [defect-pipeline-runner](agents/defect-pipeline-runner.md) | Weekly defect-review pipeline in one agent: cluster the backlog by fingerprint, narrate the trend (Pareto + WoW deltas + escape rate), classify production escapes as test / process / tooling gaps. |
 
 ## Install
 

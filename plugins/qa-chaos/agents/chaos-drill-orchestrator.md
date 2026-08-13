@@ -89,4 +89,4 @@ validates) are owned by `chaos-drill-protocol`.
 - **Single experiment file authoring** → [`chaos-experiment-author`](../skills/chaos-experiment-author/SKILL.md).
 - **Application-layer fault injection (Toxiproxy host-side)** → [`failure-injection-test-author`](../skills/failure-injection-test-author/SKILL.md).
 - **Per-runner setup + CI** → [`chaos-mesh`](../skills/chaos-mesh/SKILL.md), [`litmus-chaos`](../skills/litmus-chaos/SKILL.md), [`gremlin-chaos`](../skills/gremlin-chaos/SKILL.md), [`toxiproxy-chaos`](../skills/toxiproxy-chaos/SKILL.md).
-- **Post-drill performance regression analysis** → qa-load-testing/perf-regression-bisector.
+- **Post-drill performance regression analysis** → qa-flake-triage/regression-bisector (perf-measurement mode).

@@ -100,7 +100,7 @@ The agent fills the eight fields the [`bug-report-template`](../skills/bug-repor
 
 1. Open an issue in the team's tracker (Linear / Jira / GitHub Issues) with the report above. The issue title is the summary.
 2. Pass the issue (or the report markdown) to [`bug-repro-builder`](bug-repro-builder.md) to convert the recording into a committed failing test.
-3. If the failure is a flake candidate (intermittent, timing-related, retried in CI), pass the same trace to [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md) instead of treating it as a defect.
+3. If the failure is a flake candidate (intermittent, timing-related, retried in CI), hand the test to [`e2e-flake-bisector`](../../qa-flake-triage/agents/e2e-flake-bisector.md) instead of treating it as a defect.
 
 ## Refuse-to-proceed rules
 
@@ -119,7 +119,7 @@ The agent **refuses** to:
 | Paraphrasing the verbatim error message in `Actual` | Loses the load-bearing literal that engineers grep for. | Quote verbatim with quotation marks. |
 | Translating selectors directly into the human-readable steps | Couples the report to the test framework; hostile to manual-tester reproduction. | Emit declarative phrasing **and** the selector as a sub-bullet (Step 3). |
 | Setting `Priority` based on severity heuristics | Priority is business-context-dependent; the agent has no such context. | Always `[set by triage]`. |
-| Treating every retried-and-failed trace as a flake | Retries-and-failures may indicate a real defect; flake detection is a separate analysis. | Hand off to `ai-flake-detector` for that classification. |
+| Treating every retried-and-failed trace as a flake | Retries-and-failures may indicate a real defect; flake detection is a separate analysis. | Hand off to `e2e-flake-bisector` for that classification. |
 | Emitting a report when only a HAR is supplied with no console / screenshot | The report misses the visual and console evidence; reviewers can't tell whether the page was even loaded. | Halt and request the missing inputs unless the failure is clearly network-only. |
 | Generating the failing test inline | Test generation is the job of `bug-repro-builder`; doing both blurs responsibility. | Stop at the report; hand off. |
 
@@ -134,9 +134,8 @@ The agent **refuses** to:
 ## Hand-off targets
 
 - **Bug report → committed failing test** → [`bug-repro-builder`](bug-repro-builder.md).
-- **Stack-trace deep-dive when the trace's `0-trace.stacks` has a meaningful frame** → [`crash-stack-trace-analyzer`](crash-stack-trace-analyzer.md).
-- **Similarity to known existing bugs** → [`defect-clusterer`](defect-clusterer.md).
-- **Suspected flake rather than defect** → [`ai-flake-detector`](../../qa-flake-triage/agents/ai-flake-detector.md).
+- **Similarity to known existing bugs** → the clustering stage of [`defect-pipeline-runner`](defect-pipeline-runner.md).
+- **Suspected flake rather than defect** → [`e2e-flake-bisector`](../../qa-flake-triage/agents/e2e-flake-bisector.md).
 
 ## References
 

@@ -1,9 +1,9 @@
 {
   "name": "testland/flake-pattern-reference",
-  "description": "Reference catalog of flake patterns - async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness - with detection heuristics and remediation per pattern. Use when triaging an unknown flake to identify the category before bisecting.",
+  "description": "Reference catalog of the eight flake patterns - async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness - with detection heuristics, remediation per pattern, and the concrete code-level fixes: replacing fixed sleeps with framework auto-waits, isolating state in beforeEach fixtures, per-worker DB schemas via workerIndex, try/finally teardown, mocking network + clock at the boundary, stable role-based locators, TZ pinning, and RNG seeding. Use when triaging an unknown flake to identify the category before bisecting, or when a classified flake needs the specific code change to apply.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.5"
+  "version": "1.2.6"
 }

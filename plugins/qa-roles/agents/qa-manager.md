@@ -52,6 +52,6 @@ threshold file.
 
 ## Hand-off targets
 
-- **Escape-defect root cause** → `../../qa-bug-repro/agents/escape-defect-analyzer.md`.
-- **Flake investigation** → `../../qa-flake-triage/agents/e2e-test-trend-reporter.md` or `../../qa-flake-triage/agents/ai-flake-detector.md`.
+- **Escape-defect root cause** → `../../qa-bug-repro/agents/defect-pipeline-runner.md` (escape-analysis stage).
+- **Flake investigation** → `../../qa-flake-triage/agents/e2e-flake-bisector.md`, or the trend report in `../../qa-flake-triage/skills/flake-dashboard-author/SKILL.md`.
 - **Portfolio roll-up across teams** → `./head-of-quality.md`.

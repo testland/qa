@@ -1,6 +1,6 @@
 ---
 name: flake-dashboard-author
-description: "Builds a persistent flakiness infrastructure dashboard from JUnit XML or JSON CI run history: defines the flake-rate metric (failures per test over a configurable window), authors the data model, generates a Grafana time-series panel JSON or configures a Datadog CI Visibility view, derives the quarantine-candidate query, and wires trend alerts. Use when a team needs a long-lived observability surface for test reliability that outlasts any single weekly report."
+description: "Builds a persistent flakiness infrastructure dashboard from JUnit XML or JSON CI run history: defines the flake-rate metric (failures per test over a configurable window), authors the data model, generates a Grafana time-series panel JSON or configures a Datadog CI Visibility view, derives the quarantine-candidate query, and wires trend alerts. Also generates the periodic (weekly / monthly) test-suite trend report - total runs, suite duration, flakiness rate, top failing tests, time-to-green per PR, week-over-week deltas - as a markdown summary for a team Slack channel or wiki page. Use when a team needs a long-lived observability surface for test reliability, or a scheduled comparable health report on top of it."
 metadata:
   keywords: "flakiness, dashboard, grafana, datadog, ci-visibility, junit, test-observability"
 ---
@@ -283,6 +283,85 @@ curl -s -X POST http://grafana:3000/api/dashboards/import \
 After the first ingestion, the Grafana panel populates immediately for the
 last 14 days of history that was just loaded. The trend alert begins
 evaluating on the next 1-minute evaluation cycle.
+
+## Periodic trend report
+
+The dashboard is the live surface; a scheduled markdown report gives the
+team a stable, comparable point-in-time view on top of the same data.
+
+1. **Define the window.** Default: last 7 days vs. the prior 7 days
+   (week-over-week). For monthly cadence, last 30 days vs. prior 30.
+2. **Ingest CI history** for both windows - JUnit XML, vendor JSON, or the
+   `test_runs` table from Step 2.
+3. **Compute the metrics** (table below).
+4. **Compute deltas** vs. the prior window.
+5. **Emit the report.**
+
+| Metric                          | Definition                                                                |
+|---------------------------------|---------------------------------------------------------------------------|
+| **Total runs**                  | Count of test executions in the window.                                   |
+| **Total suite duration (CI)**   | Sum of `time` attributes across all `<testcase>` elements.                |
+| **Suite duration mean per run** | Total duration / number of CI runs.                                       |
+| **Pass rate**                   | (passed + flaky-passed) / total runs.                                     |
+| **Flakiness rate**              | (`flaky` runs per [pw-retries][pw-retries]) / total.                      |
+| **Top failing tests**           | Top 5 by failure count.                                                   |
+| **Top slowest tests**           | Top 5 by mean duration.                                                   |
+| **Time-to-green per PR**        | Mean wall-clock from first PR push to first all-green CI.                 |
+| **Quarantine count**            | Tests under `test.fixme()` / `it.skip()` annotations.                     |
+
+Report shape:
+
+```markdown
+# Test Suite Trend Report - week of <YYYY-MM-DD>
+
+**Reporting window:** YYYY-MM-DD to YYYY-MM-DD · **Comparison window:** prior 7 days
+
+## Health summary
+
+| Metric                       | This week  | Last week | Δ        |
+|------------------------------|-----------:|----------:|---------:|
+| Total CI runs                |       820  |      795  |    +3.1% |
+| Suite mean duration          |    11m 42s |   10m 58s |    +6.7% |
+| Pass rate                    |      96.3% |     97.1% |    -0.8% |
+| Flakiness rate               |       2.4% |      1.7% |    +0.7% |
+| Time-to-green per PR (mean)  |    23 min  |   18 min  |   +5 min |
+| Quarantined tests            |        14  |       12  |       +2 |
+
+## Top failing tests
+
+| Test                              | Failures |  Runs | Failure rate | Trend |
+|-----------------------------------|---------:|------:|-------------:|-------|
+| tests/checkout.spec.ts:42         |       18 |   820 |        2.2%  |  ↑↑   |
+| tests/auth.spec.ts:88             |       12 |   820 |        1.5%  |   ↑   |
+
+## Notes
+
+- **Flakiness up 0.7 pp** - `checkout.spec.ts:42` started flaking on tablet-768 viewport.
+- **Suite duration up 6.7%** - accounted for by 3 new `dashboard.spec.ts` tests.
+
+## Suggested follow-ups
+
+1. Hand `tests/checkout.spec.ts:42` to the `e2e-flake-bisector` agent - flakiness trend (↑↑) is the strongest signal of the week.
+2. Review the 14 quarantined tests against the two-renewal cap from `flaky-test-quarantine`.
+```
+
+Trend arrows: `↑↑` >50% WoW increase, `↑` 10-50%, `→` ±10%, `↓` 10-50%
+decrease, `↓↓` >50% decrease.
+
+When pass rate drops 5 pp and flakiness doubles in one week with two
+specific tests accounting for most of the drop, flag them as "regression,
+not flake" (a jump from <0.5% to >2% in one week is unlikely to be
+variance) and recommend the `regression-bisector` agent. For improving
+weeks, Notes surfaces the cleanup pattern (e.g. "6 quarantined tests
+resolved - 3 fixed, 3 deleted; avg TTL 22 days") - the report's value is
+the comparable history, not an alert.
+
+Cadence and caveats: weekly for daily-CI teams; monthly for slow-cadence
+projects (sparse 7-day data); on-demand for incident triage (window=2
+days). The report surfaces what changed, not why - hand off to a bisector
+for root cause. It is sensitive to CI volume changes (adding 10 tests
+trivially raises suite duration; note it in Notes), and quarantine count
+alone isn't a quality metric - read it alongside the pass rate.
 
 ## Limitations
 

@@ -1,6 +1,6 @@
 ---
 name: load-testing-overview
-description: "Teaches load and performance testing from zero: how to choose between k6, JMeter, Gatling, Locust, and Artillery based on observable project facts (team language, tests-as-code vs GUI authoring, protocols beyond HTTP, CI gating needs); the six load profiles (smoke, average-load, stress, spike, soak, breakpoint) and the question each one answers; the difference between open workload models that hold arrival rate constant and closed models that hold concurrent users constant; why percentiles rather than averages are the unit of measurement; and how to turn a run into a pass/fail CI gate, with a first runnable k6 script. Use when a service needs performance coverage and the tool, the load profile, or the pass/fail threshold has not been decided yet."
+description: "Teaches load and performance testing from zero: a tool-selection table choosing between k6, JMeter, Gatling, Locust, and Artillery from observable project facts; the six load profiles (smoke, average-load, stress, spike, soak, breakpoint); open vs closed workload models; why percentiles beat averages; turning a run into a pass/fail CI gate with a first runnable k6 script; a performance-incident triage workflow (confirm with a k6 smoke run, flame-graph the hot path, check slow queries, localize the cause); and full Gatling (Simulation DSL, injectOpen/injectClosed, setUp().assertions()) and Locust (HttpUser + @task locustfile, headless / distributed runs, CSV gating) deep dives in references. Use when a service needs performance coverage and the tool, load profile, or pass/fail threshold has not been decided yet, or when a live performance incident needs cause localization."
 ---
 
 # load-testing-overview
@@ -42,6 +42,14 @@ Two follow-on constraints that change the answer:
 
 **If you truly have no constraint, choose k6.** It has the shortest path from
 zero to a failing build, which is the only path that matters at the start.
+
+When the table lands on Gatling or Locust, the full authoring deep dive lives
+in this skill: [references/gatling.md](references/gatling.md) (Simulation
+class DSL, `injectOpen` vs `injectClosed`, `setUp().assertions()` as the CI
+gate, Maven/Gradle/sbt runs) and [references/locust.md](references/locust.md)
+(`HttpUser` + `@task` locustfile structure, headless and distributed runs,
+CSV-based CI gating). For k6 and JMeter, use the dedicated
+`k6-load-testing` and `jmeter-load-testing` skills.
 
 ## The six load profiles
 
@@ -206,6 +214,96 @@ guarantee the reliability of releases"
 Gate the short smoke and average-load runs in CI; run stress, spike, soak, and
 breakpoint on a schedule against a dedicated environment.
 
+## Performance incident workflow
+
+When an alert, APM spike, or customer report signals a live performance
+incident, the goal is to localize the dominant cause under time pressure.
+Required inputs: the affected endpoint (or service name) plus the observed
+symptom (p95 latency, error rate, CPU saturation, or DB load). Do not proceed
+without an endpoint.
+
+### Step 1 - Confirm and reproduce
+
+Run a smoke k6 script against the affected endpoint to confirm the symptom is
+reproducible and measure its current magnitude. Per
+[k6 running docs](https://grafana.com/docs/k6/latest/get-started/running-k6/),
+a minimal confirmation run with a `thresholds` block:
+
+```javascript
+export const options = {
+  stages: [{ duration: '60s', target: 20 }],
+  thresholds: {
+    http_req_duration: ['p(95)<500'],
+    http_req_failed:   ['rate<0.01'],
+  },
+};
+```
+
+Run it with `--summary-export=summary.json --quiet` and parse the result:
+
+```bash
+jq -r '.metrics | to_entries[] | select(.value.thresholds) | .key + ": " + (.value.thresholds | to_entries | map("\(.key) -> \(if .value.ok then "PASS" else "FAIL" end)") | join(", "))' summary.json
+```
+
+Per [k6 thresholds docs](https://grafana.com/docs/k6/latest/using-k6/thresholds/),
+a non-zero exit and `"ok": false` on a threshold confirms the regression is
+deterministic before investing in deeper diagnosis. If the run passes all
+thresholds, the incident may be intermittent or already resolved - state that
+explicitly and stop.
+
+### Step 2 - Flame-graph the hot path
+
+With the service running under the k6 load from Step 1, capture a CPU profile
+using `flame-graph-analyzer`: run the runtime-appropriate profiler (py-spy /
+async-profiler / Go pprof / `clinic.js flame`) for 30 seconds under live
+load, sort folded stacks by sample count, surface the top 5 leaf frames, and
+classify each (CPU-bound hot algo, allocator pressure, lock contention,
+reflection overhead). The widest leaf in the flame graph is the hot path per
+[Brendan Gregg's canonical flame-graph reference](https://www.brendangregg.com/flamegraphs.html).
+If the flame graph shows DB-bound frames (e.g. `pg_send_query_blocking`,
+`mysql_send_query`) as the dominant cost, the bottleneck is database-side -
+proceed directly to Step 3 and skip app-side remediation. If a flame graph
+cannot be captured (no profiler available, no access to the process), state
+the blocker; do not guess the hot path from code review alone.
+
+### Step 3 - Detect slow queries
+
+If Step 2 points to DB-bound cost (or is inconclusive), use
+`db-query-plan-analyzer`: capture
+`EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON, SETTINGS)` for the suspect query
+(PostgreSQL) or `EXPLAIN ANALYZE` (MySQL 8.0+) per
+[pg-explain docs](https://www.postgresql.org/docs/current/using-explain.html),
+identify the dominant plan node (Seq Scan, Sort spill, Nested Loop with high
+inner-side row count), and emit the candidate `CREATE INDEX` or query
+rewrite. Find the hottest node with `jq`:
+
+```bash
+jq '[.. | objects | select(.["Node Type"] and .["Actual Total Time"]) | {node: .["Node Type"], time: .["Actual Total Time"]}] | sort_by(-.time) | .[0]' plan.json
+```
+
+### Step 4 - Localize and recommend
+
+Combine the k6 confirmation delta, the flame-graph top frame, and the
+slow-query plan node into a single cause statement, one of:
+
+- **App-side CPU:** dominant hot path is in user code (e.g.
+  `JSON.stringify`, a hash function, a regex) - recommend algorithm or
+  serialization change.
+- **App-side allocator:** GC frames dominate - recommend object pooling or
+  streaming serialization.
+- **DB-side:** Seq Scan or sort spill dominates - emit the `CREATE INDEX`
+  candidate.
+- **Mixed:** both app-side and DB-side cost are significant - order
+  recommendations by sample share descending.
+
+Emit a triage report: symptom confirmed (observed vs budget), flame-graph
+findings table (rank, sample share, leaf stack, category), slow-query
+findings if DB-bound, the localized cause paragraph, and recommended actions
+ordered by impact - ending with a re-run of the k6 confirmation test after
+the fix. If the cause is still inconclusive after Steps 2 and 3, the
+introducing commit is unknown: hand off to the `regression-bisector` agent
+(qa-flake-triage) in its perf-measurement mode to bisect for it.
+
 ## Traps that catch newcomers first
 
 The seven mistakes that most often invalidate a first effort - load testing the
@@ -217,8 +315,8 @@ detailed with citations in [references/traps.md](references/traps.md).
 ## Related skills
 
 Optional deeper dives, if you have them installed:
-`k6-load-testing`,
-`gatling-load-testing`,
-`jmeter-load-testing`,
-`locust-load-testing`,
-`latency-percentile-analyzer`.
+`k6-load-testing` (including latency-percentile interpretation in its
+references), `jmeter-load-testing`, `flame-graph-analyzer`,
+`db-query-plan-analyzer`. Gatling and Locust deep dives live in this skill's
+[references/gatling.md](references/gatling.md) and
+[references/locust.md](references/locust.md).

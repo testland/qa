@@ -1,0 +1,9 @@
+{
+  "name": "testland/bug-tracker-workflow",
+  "description": "Files, transitions, and searches bugs in the team's tracker - Jira, Linear, GitHub Issues, or Azure DevOps - through one tracker-agnostic workflow: authenticate, dedupe-search before creating, create with severity/priority classification, transition lifecycle states, and wire idempotent CI-driven filing from test failures. Jira Cloud REST API v3 is worked in full in the body (ADF descriptions, runtime transition lookup, JQL triage and duplicate queries, dry-run bulk transitions); Linear's GraphQL API (issueCreate/issueUpdate, workflowStates resolved by type, the 0-4 priority enum), GitHub Issues REST (open/closed + state_reason, label-based severity/priority), and Azure DevOps Work Item Tracking (JSON Patch, WIQL, process-template states) each have a deep reference. Use when programmatically managing the bug lifecycle on any of the four trackers: creating from CI failures, triaging queues, transitioning states, or dedupe-searching.",
+  "private": false,
+  "skills": [
+    "."
+  ],
+  "version": "1.0.0"
+}

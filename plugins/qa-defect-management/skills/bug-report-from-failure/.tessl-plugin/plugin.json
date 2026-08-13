@@ -1,9 +1,0 @@
-{
-  "name": "testland/bug-report-from-failure",
-  "description": "On-demand builder that converts a SINGLE test failure record (JUnit XML, Allure JSON, pytest --tb=short, Playwright HTML, Cypress mocha-junit) into a structured, tracker-agnostic bug SPEC: extracts test name, assertion, stack trace, environment, and artefacts, and proposes severity, defect type (IEEE 1044), and a root-cause hypothesis (ISTQB CTAL-TA), then hands the JSON spec to a jira/linear/github-issues-bug-workflow runner to file. Use when you already hold a failure artefact and want one classified, ready-to-file report. Distinct from the event-driven CI orchestrator that triggers automatically on a pipeline failure and files in bulk, and from screen-recording-driven bug reporting; this is the on-demand, single-record spec builder.",
-  "private": false,
-  "skills": [
-    "."
-  ],
-  "version": "1.4.8"
-}

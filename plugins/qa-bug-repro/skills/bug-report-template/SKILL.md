@@ -1,6 +1,6 @@
 ---
 name: bug-report-template
-description: "Builds a well-formed bug (defect) report from raw observation notes - fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale. Validates that each field has the load-bearing content reviewers and engineers need to triage. Use when a stakeholder reports a problem informally (chat, email, voice) and the team needs a triageable issue without round-tripping for missing fields."
+description: "Builds a well-formed bug (defect) report from raw observation notes - fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale - and validates that each field has the load-bearing content reviewers and engineers need to triage. Also converts a single test-failure record (JUnit XML, Allure JSON, pytest log, Playwright report) into a classified, ready-to-file bug spec, and provides the adversarial review checklist that gates a report before it enters the tracker (required fields, single-description title test, severity-priority independence, reproduction quality). Use when a stakeholder reports a problem informally, when a CI failure artefact needs to become a triageable report, or when a drafted report needs a pre-filing quality audit."
 ---
 
 # bug-report-template
@@ -257,6 +257,147 @@ production stack trace, the skill drafts the report with **Steps to Reproduce**
 marked `Unable - production crash (no manual repro yet)` and the **Actual**
 field populated with the verbatim trace, flagged for hypothesis extraction.
 
+## From a CI failure record
+
+A test failure produces structured data (XML, JSON, HTML) with everything a
+triager needs - assertion, stack, test name, environment. This workflow
+ingests that record and emits a ready-to-file bug spec instead of starting
+from prose.
+
+### F1 - Ingest the failure record
+
+Inputs are auto-detected by extension:
+
+| Format | Source | Schema reference |
+|---|---|---|
+| JUnit XML | pytest, JUnit, surefire, Playwright | `<testsuites>/<testsuite>/<testcase>/<failure>` per the de-facto schema (Apache Ant) at [llg.cubic.org/docs/junit/](https://llg.cubic.org/docs/junit/) |
+| Allure JSON | Allure framework (any language) | per-test JSON in `allure-results/`; schema at [docs.qameta.io/allure-report](https://docs.qameta.io/allure-report/) |
+| pytest `--tb=short` log | pytest stdout/stderr | line-oriented; regex-driven |
+| Playwright HTML report | Playwright trace | `report.json` inside the HTML bundle |
+| TestNG XML | TestNG | similar to JUnit; per [testng.org](https://testng.org/) |
+
+Parser bodies and per-format field shapes live in
+[references/parsers.md](references/parsers.md). `parse_junit(path)` returns
+one dict per failing testcase; Allure's first-class `severity` / `feature` /
+`suite` labels are harvested when present.
+
+### F2 - Extract classification fields
+
+For each failure, propose values for the bug report:
+
+| Field | Source | Default if unknown |
+|---|---|---|
+| Title | First line of `failure.message` truncated to 100 chars | "Test failure: {test_name}" |
+| Body | Markdown with test name, stack, env, links | (always present) |
+| Severity | Allure `severity` label OR inferred from assertion class (`AssertionError` → Medium; `TimeoutError` → High; `ConnectionError` → High) | Medium |
+| Priority | Match severity by default; production-runner = bump | Medium |
+| Defect type (IEEE 1044) | Inferred from stack location: tests/* → Test specification; app/* → Code (implementation) | Code |
+| Component | Allure `feature` / `suite` label OR top-of-stack module | (none) |
+
+Severity inference rules (heuristic, reviewer confirms):
+
+```python
+SEVERITY_FROM_ERROR = {
+    "AssertionError":   "medium",
+    "TimeoutError":     "high",
+    "ConnectionError":  "high",
+    "OutOfMemoryError": "critical",
+    "SecurityException": "critical",
+}
+
+def infer_severity(failure_type, message):
+    if failure_type in SEVERITY_FROM_ERROR:
+        return SEVERITY_FROM_ERROR[failure_type]
+    if "production" in message.lower() or "p0" in message.lower():
+        return "high"
+    return "medium"
+```
+
+Inference is heuristic - severity / type from exception class is
+approximate, and root cause (ISTQB CTAL-TA) requires human investigation:
+leave that field blank for the triager, and always label classification
+fields "proposed - triager confirms".
+
+### F3 - Render, dedupe, file
+
+`render_body(failure, env)` emits a standard Markdown block consumed
+verbatim by every tracker - test name, assertion, stack, environment,
+artefact links, a proposed-classification table, reproduction (commit +
+command), and dupe history. Full template:
+[references/spec-template.md](references/spec-template.md).
+
+Before filing, **search the tracker for open bugs with a matching title /
+test name** - if duplicates exist, attach a comment instead of creating a
+new bug. Then emit the tracker-agnostic spec and hand it to the
+`bug-tracker-workflow` skill (qa-defect-management) to file on Jira,
+Linear, GitHub Issues, or Azure DevOps:
+
+```yaml
+bug_spec:
+  title: "Test failure: checkout fails with promo X"
+  body: |
+    ## Test failure
+    ...
+  severity: high
+  priority: p2
+  labels: [bug, type:regression, component:checkout]
+  defect_type: Code
+  component: checkout
+  reproduction:
+    commit: "abc123"
+    command: "pytest tests/checkout/test_promo.py::test_stacked"
+    environment:
+      branch: main
+      ci_run: "https://github.com/.../runs/123"
+```
+
+After filing: capture the new bug's URL, append a comment to the CI run
+linking the bug, and update a per-test "known failure" register so
+subsequent runs can correlate.
+
+Caveats: JUnit XML is an informal Ant convention and some runners emit
+non-standard variants - parse gracefully; tests that crash before the
+runner catches them (segfault) produce no JUnit output - pair with CI
+step-failure detection; each tracker has its own search semantics, so
+dedup false negatives are possible.
+
+## Review checklist
+
+Before any report - hand-written or auto-filed - enters the tracker, audit
+it. Auto-filed bugs need the audit *especially*. Output: per-finding
+pass/fail plus a single verdict (`pass`, `block`, `pass-with-caveats`).
+
+1. **Required fields.** Title, severity, priority, initial lifecycle state
+   (`New`), reproduction steps (commit + command + observation),
+   environment. Proposed fields: defect type (IEEE 1044), root-cause
+   hypothesis, component. Any missing required field = BLOCK. `TBD` in a
+   required field = blank = BLOCK.
+2. **Title quality (single-description test).** Distinguishable (not
+   "checkout broken"), behavioural (states what fails, not "fix this"),
+   concrete verbs, single-clause (no "and" joining two failures). Failures
+   = BLOCK + coach with a suggested rewrite.
+3. **Severity-priority consistency.** Both populated independently.
+   Critical severity + Low priority (or Trivial + Immediate) demands
+   justification - rare but legitimate. Severity always equal to priority =
+   flag as suspicious (likely auto-equated). Scales in
+   [references/severity-and-priority-scales.md](references/severity-and-priority-scales.md);
+   deeper classification rules in `severity-vs-priority-reference`
+   (qa-defect-management).
+4. **Reproduction quality.** Must include a commit SHA (not "Production" -
+   that isn't a commit), a runnable command, a one-line observation, and
+   expected vs actual. Missing any = BLOCK.
+5. **Classification sanity.** If the from-CI-failure workflow proposed
+   classification fields: defect type matches stack location; severity
+   proposal consistent with assertion class (AssertionError → Critical
+   without justification is suspect); component matches the code path.
+   Treat Allure severity tags as advisory, not authoritative.
+   Inconsistencies = caveat, shown but flagged.
+
+Never auto-fill missing fields during review - only flag and recommend;
+never mark "pass" with a missing required field or a repro without a
+pinned commit. Severity / priority calibration stays judgmental - the
+triager arbitrates disagreements.
+
 ## Anti-patterns
 
 | Anti-pattern                                                | Why it fails                                                | Fix |
@@ -265,6 +406,8 @@ field populated with the verbatim trace, flagged for hypothesis extraction.
 | Combining multiple unrelated symptoms in one bug            | Triage rate-limits - one of the symptoms gets fixed, the bug closes, and the others get lost. | Split into separate bugs; cross-link if related. |
 | Severity = Priority shorthand ("Critical = P0")              | Confuses intrinsic impact with business prioritization.    | Score them independently; let the PM/engineering decide priority. |
 | `Always` reproducibility on first observation               | The reporter may have triggered a one-off race condition.   | Verify "Always" with at least 5 deterministic repros before claiming it. |
+| Hand-copying an assertion into the bug instead of parsing the artefact | Stack truncation, escaping errors.                        | Always parse the structured failure record (section F1). |
+| One bug per test failure with no deduplication              | Tracker fills with the same flake filed N times.            | Always search for an open match before filing (section F3). |
 
 ## References
 

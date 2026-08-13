@@ -224,8 +224,9 @@ When the fuzzer finds a crash:
    ```
 2. **Minimise the crash input** (see above) so the bug report is
    small.
-3. **File the bug** via `bug-report-from-failure`
-   with the minimised crash as an attachment.
+3. **File the bug** via the from-CI-failure workflow in
+   `bug-report-template` (qa-bug-repro plugin) with the minimised crash
+   as an attachment.
 4. **Add the original (non-minimised) crash to the seed corpus**
    as a regression test - re-runs will catch reintroduction.
 

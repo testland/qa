@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-bug-repro",
   "version": "1.7.0",
-  "description": "Bug reproduction workflow: 3 skills (bug-report-template, ci-failure-triage, defect-escape-taxonomy) and 7 agents (bug-report-from-recording, bug-repro-builder, crash-stack-trace-analyzer, defect-clusterer, defect-trend-narrator, escape-defect-analyzer, failure-classifier, test-failure-debugger, defect-pipeline-runner).",
+  "description": "Bug reproduction workflow: 3 skills (bug-report-template - authoring, from-CI-failure specs, and the review checklist; ci-failure-triage; defect-escape-taxonomy) and 3 agents (bug-report-from-recording, bug-repro-builder, defect-pipeline-runner - the cluster/trend/escape weekly review).",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
@@ -10,5 +10,9 @@
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-bug-repro",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
-  "keywords": ["qa", "testing", "bug-repro"]
+  "keywords": [
+    "qa",
+    "testing",
+    "bug-repro"
+  ]
 }
