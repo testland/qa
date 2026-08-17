@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-concurrency",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "description": "Concurrency + race-condition testing: 4 skills (race-condition-test-author with the Go -race + goleak workflow in references, deadlock-detection-harness, async-ordering-tests, mvcc-isolation-tests) and 1 agent (concurrency-critic). Code-level data races, distinct from qa-resilience (infrastructure fault injection).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-concurrency",

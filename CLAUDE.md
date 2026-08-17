@@ -1,7 +1,7 @@
 # Claude Code instructions - testland-qa
 
 This is **testland-qa**, a Pattern B2 multi-plugin Claude Code marketplace.
-77 plugins / 413 components (run `python3 scripts/generate-catalog.py` for the
+77 plugins / 413 components (run `npm run catalog` for the
 current count - `CATALOG.md` is authoritative). Every component is
 reviewed against the D1-D6 quality rubric before merge.
 
@@ -11,7 +11,7 @@ what conventions to follow.
 ## Adding a new plugin
 
 ```bash
-bash scripts/new-plugin.sh <plugin-name> "<one-line-description>" <primary-keyword>
+npm run new-plugin -- <plugin-name> "<one-line-description>" <primary-keyword>
 ```
 
 The scaffolder creates `plugins/<plugin-name>/` with the standard layout
@@ -148,8 +148,8 @@ update** - the "silent no-update" trap.
   restructure. Role bundles bump when their `dependencies` change.
 - **Also** bump `.claude-plugin/marketplace.json` `metadata.version` for a
   marketplace-wide release and regenerate `CATALOG.md` - it prints a per-plugin
-  Version column (`python3 scripts/generate-catalog.py`).
-- **Enforced** by `scripts/version-bump-check.py` (local mirror) and
+  Version column (`npm run catalog`).
+- **Enforced** by `scripts/ts/version-bump-check.ts` (local mirror) and
   `.github/workflows/version-bump.yml`, which runs on **pull requests AND direct
   pushes to `main`** - a component change without a matching bump fails CI either
   way. There is no bypass; a direct push to `main` is checked just like a PR.
@@ -175,9 +175,9 @@ Run these before opening a PR (or before any direct push to `main`); CI runs the
 same:
 
 ```bash
-bash scripts/validate.sh .             # lint: kebab-case, required fields, no placeholders
-python3 scripts/composition-graph.py   # agent → skill preload references valid
-python3 scripts/version-bump-check.py  # every touched plugin bumped its plugin.json version
+npm run validate             # lint: kebab-case, required fields, no placeholders
+npm run compose   # agent → skill preload references valid
+npm run version-check  # every touched plugin bumped its plugin.json version
 ```
 
 Or run all checks plus catalog regeneration in one go:

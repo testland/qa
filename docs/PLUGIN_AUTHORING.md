@@ -103,7 +103,7 @@ disable chain.
 ## Step 1 - Scaffold the plugin
 
 ```bash
-bash scripts/new-plugin.sh <plugin-name> "<one-line-description>" <primary-keyword>
+npm run new-plugin -- <plugin-name> "<one-line-description>" <primary-keyword>
 ```
 
 The scaffolder:
@@ -113,7 +113,7 @@ The scaffolder:
 - Appends a `{ name, source, description, strict: true }` entry to
   `.claude-plugin/marketplace.json` plugins[].
 
-Verify: `bash scripts/validate.sh` must pass after scaffolding.
+Verify: `npm run validate` must pass after scaffolding.
 
 ## Step 2 - Plan components
 
@@ -325,9 +325,9 @@ Add a row to the plugin's component table:
 ## Step 8 - Run CI locally
 
 ```bash
-bash scripts/test-validate.sh
-bash scripts/validate.sh
-python3 scripts/content-audit.py --strict
+npm test
+npm run validate
+npm run audit
 ```
 
 All three must pass.

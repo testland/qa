@@ -1,11 +1,11 @@
 # Composition graph - agent → skill preloads
 
 This document maps every agent's `skills:` preload list. It is
-regenerated from the source files via `scripts/composition-graph.py`.
+regenerated from the source files via `scripts/ts/composition-graph.ts`.
 
 ## Scope
 
-**Last refreshed: 2026-06-04 (marketplace gap-remediation).** The header counts below are kept current; the per-plugin subsections and the cross-plugin table later in this document are an earlier-tier snapshot that has NOT been backfilled for the 2026-06 remediation additions (54 new agents, 66 new skills). For the live, authoritative graph run `python3 scripts/composition-graph.py`.
+**Last refreshed: 2026-06-04 (marketplace gap-remediation).** The header counts below are kept current; the per-plugin subsections and the cross-plugin table later in this document are an earlier-tier snapshot that has NOT been backfilled for the 2026-06 remediation additions (54 new agents, 66 new skills). For the live, authoritative graph run `npm run compose`.
 
 - **530 skills** across 77 plugins.
 - **165 agents** across 77 plugins.
@@ -204,10 +204,10 @@ supports it; until then, cross-plugin preloads are documented here.
 
 ## Validation
 
-The composition graph is validated by `scripts/composition-graph.py`:
+The composition graph is validated by `scripts/ts/composition-graph.ts`:
 
 ```bash
-python scripts/composition-graph.py
+npm run compose
 ```
 
 Exit code 0 means every preloaded skill name resolves to a real
@@ -218,7 +218,7 @@ references.
 
 After any agent's `skills:` field changes:
 
-1. Run `python scripts/composition-graph.py` to confirm no missing
+1. Run `npm run compose` to confirm no missing
    references.
 2. Update the affected plugin's section in this file.
 3. Update the cross-plugin table if the change crosses a plugin

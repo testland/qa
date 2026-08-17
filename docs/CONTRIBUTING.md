@@ -31,15 +31,15 @@ review (see "The six review dimensions" below), not stored in frontmatter.
 
 CI runs these checks on every PR:
 
-1. **`scripts/test-validate.sh`** - self-test of validate.sh against fixtures.
-2. **`scripts/validate.sh`** - frontmatter/file lint: kebab-case naming, no
+1. **`scripts/ts/validate.test.ts`** - self-test of validate.sh against fixtures.
+2. **`scripts/ts/validate.ts`** - frontmatter/file lint: kebab-case naming, no
    reserved words (`claude`/`anthropic`), no "You are.../I help..." openers,
    no placeholder strings, no empty command bodies, JSON syntax.
-3. **`scripts/content-audit.py`** - description ≤1024 chars, body within the
+3. **`scripts/ts/content-audit.ts`** - description ≤1024 chars, body within the
    type cap (skill 600 / agent 350 lines), Windows-path hygiene.
-4. **`scripts/composition-graph.py`** - every agent `skills:` preload resolves
+4. **`scripts/ts/composition-graph.ts`** - every agent `skills:` preload resolves
    to a real skill.
-5. **`scripts/generate-catalog.py`** - `CATALOG.md` is regenerated and current.
+5. **`scripts/ts/generate-catalog.ts`** - `CATALOG.md` is regenerated and current.
 
 There is no automated rating gate. The six D1-D6 dimensions are a manual review
 lens a reviewer applies to the PR diff via the
@@ -95,7 +95,7 @@ If any check fails, reshape the scope before authoring.
 1. **Scaffold** a new plugin (if needed):
 
    ```bash
-   bash scripts/new-plugin.sh <name> "<description>" <primary-keyword>
+   npm run new-plugin -- <name> "<description>" <primary-keyword>
    ```
 
 2. **Add components** under `plugins/<name>/skills/<name>/SKILL.md` or
@@ -116,9 +116,9 @@ If any check fails, reshape the scope before authoring.
 5. **Run CI locally:**
 
    ```bash
-   bash scripts/test-validate.sh
-   bash scripts/validate.sh
-   python3 scripts/content-audit.py --strict
+   npm test
+   npm run validate
+   npm run audit
    ```
 
 6. **Commit** with a message that includes the source-fetch date, e.g.:

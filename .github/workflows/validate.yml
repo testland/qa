@@ -11,25 +11,39 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Run validate.sh harness test
-        run: bash scripts/test-validate.sh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
 
-      - name: Run validate.sh on plugins
-        run: bash scripts/validate.sh .
+      - name: Install tooling
+        run: npm ci
+
+      - name: Type-check tooling
+        run: npm run typecheck
+
+      - name: Tooling unit tests (includes the validate fixture harness)
+        run: npm test
+
+      - name: Run validate on plugins
+        run: npm run validate
 
       - name: Validate marketplace.json syntax
-        run: python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"
+        run: node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8'))"
 
       - name: Validate composition graph (agent -> skill preloads)
-        run: python3 scripts/composition-graph.py
+        run: npm run compose
 
       - name: Regenerate CATALOG.md and check for drift
         run: |
-          python3 scripts/generate-catalog.py
+          npm run catalog
           git diff --exit-code CATALOG.md
 
+      - name: Check eval manifests are in sync with their scenarios
+        run: npm run evals:check
+
       - name: Content audit (description / body length + Windows-path hygiene)
-        run: python3 scripts/content-audit.py --strict
+        run: npm run audit
 
       - name: Check plugin.json description count drift
-        run: python3 scripts/check-description-drift.py
+        run: npm run drift

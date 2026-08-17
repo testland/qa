@@ -246,7 +246,7 @@ Read [`CLAUDE.md`](CLAUDE.md) and [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md)
 before opening a PR. Use the scaffolder:
 
 ```bash
-bash scripts/new-plugin.sh <plugin-name> "<one-line-description>" <primary-keyword>
+npm run new-plugin -- <plugin-name> "<one-line-description>" <primary-keyword>
 ```
 
 Run validation locally before pushing:
@@ -258,8 +258,8 @@ make all   # validate + compose + catalog
 Or, without `make`:
 
 ```bash
-bash scripts/validate.sh .
-python3 scripts/composition-graph.py
+npm run validate
+npm run compose
 ```
 
 ## License

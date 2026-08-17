@@ -1,34 +1,50 @@
-.PHONY: help validate compose catalog inventory drift version-check all clean
+.PHONY: help install validate compose catalog inventory drift version-check evals test typecheck all clean
 
 help:
 	@echo "Targets:"
+	@echo "  install     Install the Node tooling (npm ci)"
 	@echo "  validate    Lint plugin structure and frontmatter"
 	@echo "  compose     Validate agent -> skill preload references"
 	@echo "  catalog     Regenerate CATALOG.md from marketplace.json"
 	@echo "  inventory   Print marketplace inventory snapshot"
 	@echo "  drift       Flag plugin.json descriptions whose component counts disagree with disk"
 	@echo "  version-check  Flag plugins changed without a plugin.json version bump (run before pushing)"
-	@echo "  all         Run validate + compose + drift + catalog"
+	@echo "  evals       Recompile the Anthropic eval manifests from the scenarios"
+	@echo "  test        Run the tooling unit tests"
+	@echo "  typecheck   Type-check the tooling"
+	@echo "  all         Run validate + compose + drift + evals + catalog"
+
+install:
+	npm ci
 
 validate:
-	bash scripts/validate.sh .
+	npm run validate
 
 compose:
-	python3 scripts/composition-graph.py
+	npm run compose
 
 catalog:
-	python3 scripts/generate-catalog.py
+	npm run catalog
 
 inventory:
-	python3 scripts/inventory.py
+	npm run inventory
 
 drift:
-	python3 scripts/check-description-drift.py
+	npm run drift
 
 version-check:
-	python3 scripts/version-bump-check.py
+	npm run version-check
 
-all: validate compose drift catalog
+evals:
+	npm run evals:build
+
+test:
+	npm test
+
+typecheck:
+	npm run typecheck
+
+all: validate compose drift evals catalog
 	@echo "All checks passed; CATALOG.md regenerated."
 
 clean:
