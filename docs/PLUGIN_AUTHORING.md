@@ -87,7 +87,7 @@ review), but it has its own rules.
    a "What this installs" list written as **plain text** (e.g. `- **qa-security-scanning** -
    security scanning`). It must contain **no component-table row** - nothing whose
    first cell is `Skill`/`Agent`, and no `](skills/…)` / `](agents/…)` links - or
-   `content-audit.py --strict` fails `readme_count_mismatch` (rows on disk = 0).
+   `npm run audit` fails `readme_count_mismatch` (rows on disk = 0).
    Do not start from the scaffolder's component-table README.
 4. **Register + categorize.** Add a `marketplace.json` entry with
    `"category": "role-bundles"`, then regenerate and commit `CATALOG.md`
@@ -234,7 +234,7 @@ If any check fails, redraft.
 ## Prose style
 
 These conventions keep component content (skills, agents, READMEs) readable
-both in the terminal and on the published marketplace site. `validate.sh`
+both in the terminal and on the published marketplace site. `npm run validate`
 emits **advisory `WARN` lines** for the two rules below - they never block a
 merge, but reviewers should resolve them.
 
@@ -312,7 +312,7 @@ checklist; there is no stored score and no rating field. The dimensions:
 
 **Merge bar (reviewer judgment):** each dimension clears its anchor, with
 citations (D6) as the hard floor. Mechanical hygiene (description / body length,
-Windows paths) is checked separately by `content-audit.py`.
+Windows paths) is checked separately by `npm run audit`.
 
 ## Step 7 - Update plugin README
 

@@ -175,7 +175,7 @@ Just ask me anything QA-related.
 
 | Dim | Score | Rationale |
 |---|:---:|---|
-| D1 Spec compliance | 1 | Description starts with "You are…" + "I help…" - both rejected by `validate.sh`. Name `qa-expert` is kebab-case and 64-char-compliant (the lint no longer bans the literal name; the issue is in D3/D4). **Lint failures on description alone make this unmergeable.** |
+| D1 Spec compliance | 1 | Description starts with "You are…" + "I help…" - both rejected by `npm run validate`. Name `qa-expert` is kebab-case and 64-char-compliant (the lint no longer bans the literal name; the issue is in D3/D4). **Lint failures on description alone make this unmergeable.** |
 | D2 Scope quality | 0 | No coherent scope - body has no when-invoked steps, no output format, no concrete task. It's a persona, not a task. |
 | D3 Description quality | 0 | "You are…" + "I help with all aspects of…" + 6 unrelated clauses joined with "and". Predicts nothing - the body could be literally anything. PR doesn't name nearest neighbors or articulate a differentiation axis. |
 | D4 Use-case fit | 0 | Persona-as-scope; no trigger condition; would compete with every other QA component for invocation. The differentiation requirement in [`CONTRIBUTING.md`](CONTRIBUTING.md) is not met - contributor cannot say "use this when X but not when Y." |
@@ -228,7 +228,7 @@ If you and another reviewer disagree on a new component by more than
 | D3 | "description is 1024 chars, is that too long?" | 1024 is the spec ceiling. Quality is about predictiveness, not length. A 900-char description that uniquely identifies the component is better than a 200-char description that doesn't. |
 | D3 | "PR doesn't name nearest neighbors" | The differentiation requirement is a hard expectation, not a nice-to-have. If the PR body and component description don't identify the 2-3 closest existing components and state the axis on which the new one differs, deduct in D3 and request an update. |
 | D4 | "trigger condition is implicit in the title" | Implicit triggers cause auto-invocation collisions. The trigger should be explicit in the description ("Use when…" / "Use proactively after…"). Deduct if implicit. |
-| D4 | "persona-shaped scope, but lint passes" | Persona scopes (`qa-expert`, `quality-engineer`) are no longer banned by `validate.sh`. The check now lives here: if the trigger condition doesn't pick this component over its nearest neighbors, D4 fails regardless of name. |
+| D4 | "persona-shaped scope, but lint passes" | Persona scopes (`qa-expert`, `quality-engineer`) are no longer banned by `npm run validate`. The check now lives here: if the trigger condition doesn't pick this component over its nearest neighbors, D4 fails regardless of name. |
 | D5 | "body is 350 lines, push for `references/` split?" | <300 OK for a full-lifecycle skill. 300-400 OK if the extra is examples / case studies. Beyond that (toward Anthropic's ~500-line ceiling) push for split unless the contributor argues progressive disclosure would harm comprehension. |
 | D6 | "claim is correct but uncited; do I deduct?" | Yes. The framework rates *citation discipline*, not just *claim accuracy*. An uncited correct claim is still uncited. The user can't verify it without re-doing the research. |
 

@@ -37,7 +37,7 @@ together, so a user adopts a whole role with one `/plugin install`. To author on
 - `plugins/<bundle>/README.md` is **prose-only**: an Install block plus a plain
   "What this installs" list. It must contain **no** component-table rows (no
   first-cell `Skill`/`Agent`, no `](skills/…)`/`](agents/…)` links) or
-  `content-audit.py --strict` fails `readme_count_mismatch`.
+  `npm run audit` fails `readme_count_mismatch`.
 - Register it in `marketplace.json` with `"category": "role-bundles"`, then
   regenerate + commit `CATALOG.md`.
 - Bundles own no components, so the D1-D6 review does not apply. Bump the
@@ -208,7 +208,7 @@ make all
   against a fetched canonical source - inline or listed in a checked
   "References" section. Facts with no source anywhere are the hard reject.
 - **Description starts with "You are…" or "I help…"**: linted out by
-  `validate.sh`. Use third-person action verbs.
+  `npm run validate`. Use third-person action verbs.
 - **Persona-as-scope agents**: agents must have a specific task scope, not
   a job title. "Reviews test plans against the DoD" is an agent;
   "is a QA expert" is not.

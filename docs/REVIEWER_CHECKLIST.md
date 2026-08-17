@@ -8,7 +8,7 @@ the calibration anchors at the bottom of this file.
 > **The D6 rubric** - six dimensions (D1-D6), each scored 0-5; the sum is the
 > total (0-30). Merge bar: total ≥ 21 with D6 ≥ 1 (D6 = 0 is a hard reject).
 > Mechanical hygiene (description / body length, Windows-path checks) runs
-> separately in `content-audit.py`; this checklist is the human rubric.
+> separately in `npm run audit`; this checklist is the human rubric.
 >
 > **How the rubric is applied:** a reviewer reads the PR diff and scores it
 > against the six dimensions using the D1-D6 checklist in
@@ -21,7 +21,7 @@ the calibration anchors at the bottom of this file.
 
 Before scoring dimensions, confirm:
 
-- [ ] CI is green (`validate.sh`, `test-validate.sh` all pass)
+- [ ] CI is green (`npm run validate`, `npm test` all pass)
 - [ ] Commit message includes source-fetch date(s)
 - [ ] Component file is in the correct path
   (`plugins/<plugin>/skills/<name>/SKILL.md` or `plugins/<plugin>/agents/<name>.md`)

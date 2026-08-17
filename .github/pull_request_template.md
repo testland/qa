@@ -12,7 +12,7 @@ New and changed components are validated by **reading this PR** against the
 six-dimension rubric — there is no automated rating gate and no `rating` / `d6`
 frontmatter. Full anchors: [`docs/REVIEWER_CHECKLIST.md`](../docs/REVIEWER_CHECKLIST.md).
 
-- [ ] **D1 Spec compliance** — frontmatter valid (kebab-case `name`, third-person `description`); `bash scripts/validate.sh .` passes.
+- [ ] **D1 Spec compliance** — frontmatter valid (kebab-case `name`, third-person `description`); `npm run validate` passes.
 - [ ] **D2 Scope quality** — one coherent scope, single responsibility, progressive disclosure.
 - [ ] **D3 Description quality** — distinguishes vs the 2–3 nearest neighbors; predicts the body.
 - [ ] **D4 Use-case fit** — explicit "Use when…" trigger, not a persona.
@@ -29,9 +29,11 @@ frontmatter. Full anchors: [`docs/REVIEWER_CHECKLIST.md`](../docs/REVIEWER_CHECK
 ## Local validation passed
 
 ```bash
-bash scripts/validate.sh .
-python3 scripts/composition-graph.py
-python3 scripts/version-bump-check.py
+npm ci
+npm run typecheck && npm test
+npm run validate && npm run compose
+npm run catalog && npm run evals:check && npm run audit && npm run drift
+npm run version-check
 ```
 
 - [ ] all exit 0

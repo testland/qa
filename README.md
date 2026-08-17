@@ -207,7 +207,7 @@ The merge bar is reviewer judgment: each dimension should clear its anchor, with
 failure mode and a hard reject. There is no automated rating gate and no
 `rating`/`d6` frontmatter; the rubric lives in the reviewer's checklist.
 Mechanical lint (naming, JSON, description/body length, Windows-path hygiene)
-still runs in CI via `validate.py` and `content-audit.py`.
+still runs in CI via `npm run validate` and `npm run audit`.
 
 See [`docs/REVIEWER_CHECKLIST.md`](docs/REVIEWER_CHECKLIST.md) for the rubric and
 [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for the framework details.

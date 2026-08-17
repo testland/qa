@@ -31,7 +31,7 @@ review (see "The six review dimensions" below), not stored in frontmatter.
 
 CI runs these checks on every PR:
 
-1. **`scripts/ts/validate.test.ts`** - self-test of validate.sh against fixtures.
+1. **`scripts/ts/validate.test.ts`** - self-test of validate.ts against fixtures.
 2. **`scripts/ts/validate.ts`** - frontmatter/file lint: kebab-case naming, no
    reserved words (`claude`/`anthropic`), no "You are.../I help..." openers,
    no placeholder strings, no empty command bodies, JSON syntax.
@@ -187,7 +187,7 @@ What this changes vs. earlier policy:
   WCAG umbrella skills) are **no longer blocked by category**. A
   differentiated contribution in any of these areas is admissible.
 - Names like `qa-expert` / `quality-engineer` / `qa-engineer` are also
-  no longer banned by `validate.sh`. They remain *bad names* because they
+  no longer banned by `npm run validate`. They remain *bad names* because they
   rarely come with a trigger condition - but the reviewer judgment is in
   D3 / D4, not in a lint denylist.
 - Sharply-scoped role names that ship with a specific trigger are fine
