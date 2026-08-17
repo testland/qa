@@ -1,0 +1,46 @@
+{
+  "context": "Failure coverage for work that is accepted first and fails later. Predicted baseline failure: the agent aims its cases at the call it can see. It writes assert.throws around submitExport, or expects a 4xx from it, for a missing dataset and a revoked grant - conditions this submit step never inspects - so those cases either fail outright or encode a contract the service does not have. Where it does drive the worker, it stops at 'the job is not succeeded', which is satisfied by a job stuck in running or requeued forever, and it never looks at the artifact list, so a failed job that still wrote a file passes. Retry behaviour is the part that is missed entirely: nothing separates a permanent failure that must stop at one attempt from an outage that must be retried to the ceiling first.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/exportQueue.test.js exists and contains at least one failure case. A file that only repeats the successful export scores zero."
+    },
+    {
+      "name": "Late failures asserted on the terminal job record",
+      "max_score": 30,
+      "description": "For a missing dataset, a revoked grant and an oversized dataset, the suite drives the worker and asserts the stored job has state 'failed' with the exact errorCode - DATASET_MISSING, PERMISSION_REVOKED, DATASET_TOO_LARGE. Expecting submitExport to refuse these, or asserting a throw from it, scores zero: the submit step cannot see any of them. Covering fewer than two of the three scores at most half."
+    },
+    {
+      "name": "The acceptance is asserted as well as the failure",
+      "max_score": 12,
+      "description": "At least one case asserts that a request destined to fail is still accepted at submit time - status 202 with a jobId - before the worker runs. Omitting this scores zero: it is the distinction between a refusal and a late failure."
+    },
+    {
+      "name": "A failed job produces no artifact",
+      "max_score": 16,
+      "description": "Failure cases assert queue.artifacts stays empty. A suite that never inspects the artifact list scores zero - it passes against a worker that wrote the file and then marked the job failed."
+    },
+    {
+      "name": "Permanent failures are not retried",
+      "max_score": 18,
+      "description": "A permanent-failure case asserts attempts is exactly 1 and queue.pending is empty afterwards. Asserting the failure state without the attempt count scores at most half; asserting neither scores zero."
+    },
+    {
+      "name": "The retryable failure is followed through the ceiling",
+      "max_score": 20,
+      "description": "A storage-outage case asserts the job returns to state 'queued' after the first run rather than failing, and that after the queue is drained it is 'failed' with STORAGE_UNAVAILABLE at exactly MAX_ATTEMPTS attempts. Treating the outage as an immediate failure scores zero; asserting the final state without the intermediate requeue or without the attempt count scores at most half."
+    },
+    {
+      "name": "Submit-time rejections enqueue nothing",
+      "max_score": 12,
+      "description": "Cases cover DATASET_REQUIRED, FORMAT_UNSUPPORTED and REQUESTER_REQUIRED with status 400 and jobId null, and assert queue.jobs is still empty and queue.seq did not advance. Asserting only the status scores at most half; omitting these cases scores zero."
+    },
+    {
+      "name": "MUST NOT assert a failure by exclusion",
+      "max_score": 12,
+      "description": "No case asserts merely that the job is not 'succeeded', that errorCode is truthy, or that the artifact count is not 1. Every failure names the exact state and errorCode. Any case relying on a not-equal or truthiness check for the failure itself scores zero on this criterion - a job stuck in 'running' would satisfy it."
+    }
+  ]
+}

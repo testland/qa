@@ -1,0 +1,46 @@
+{
+  "context": "The suite installs a per-test override but the shared setup file only wires activation and teardown - there is no per-test revert, so the override survives into every case that runs after it. Predicted baseline failure: the agent treats this as a test-authoring problem rather than a lifecycle gap. Typical unaided fixes are re-registering the default response at the end of the overriding case, wrapping the override in its own `describe` block, adding `server.use(...handlers)` in an `afterEach`, or simply placing the new case before the overriding one - all of which make `npm test` green while leaving the suite order-dependent, so a shuffled run still fails and the next appended case reintroduces the same bug. The single line that actually fixes it is a per-test revert hook in the shared setup, and an agent that does not know the lifecycle contract rarely produces it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Per-test revert added to the shared setup",
+      "max_score": 32,
+      "description": "The setup file gains an `afterEach` that reverts the request mocks to the file-level defaults - `afterEach(() => server.resetHandlers())` or the same call registered globally. Putting the revert only inside `src/reports.test.js` scores at most half: it fixes this file and leaves every other suite exposed. No revert anywhere scores zero, however green `npm test` happens to be."
+    },
+    {
+      "name": "Suite is genuinely order-independent",
+      "max_score": 20,
+      "description": "Every case passes with cases executed in any order, including with the overriding case first. Achieving green by reordering cases, by pinning execution order (`sequence.shuffle: false`, `describe.sequential`, renaming files), or by moving the new case above the overriding one scores zero - the reported symptom is order-dependence, not a failing assertion."
+    },
+    {
+      "name": "MUST NOT re-register defaults by hand",
+      "max_score": 14,
+      "description": "Scores zero if the fix works by re-declaring the healthy response after the overriding case - a trailing `server.use(...)` restoring the default, a second override at the end of the test body, or an `afterEach` that re-applies the default handler list. That leaves the leak in place and only papers over the one case that exposed it."
+    },
+    {
+      "name": "Failure case still overrides for itself only",
+      "max_score": 14,
+      "description": "The 503 response is still installed for the duration of that one case via the per-test override API. Moving the 503 into the shared default handler list, or introducing a module-level flag the handler branches on, scores zero: both make the failure the project-wide default and break the healthy cases."
+    },
+    {
+      "name": "Activation and teardown hooks preserved",
+      "max_score": 10,
+      "description": "Interception is still activated once before the suite and torn down once after it. Moving activation into `beforeEach`, or dropping the teardown call, scores at most half; removing activation entirely so requests escape to the network scores zero."
+    },
+    {
+      "name": "Third case asserts the passthrough field",
+      "max_score": 8,
+      "description": "A new case asserts `generatedAt` equals the value the default mock returns. Asserting only that the field is defined or truthy scores at most half - the bug being reproduced was a wrong value, not a missing key."
+    },
+    {
+      "name": "Production code and defaults untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `src/reports.js` or change the default response body in `src/mocks/handlers.js`. Changing the default payload so the new assertion passes scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 4,
+      "description": "Nothing is added to `package.json`. The task is solvable with what is installed; adding a mocking or network-blocking library scores zero."
+    }
+  ]
+}

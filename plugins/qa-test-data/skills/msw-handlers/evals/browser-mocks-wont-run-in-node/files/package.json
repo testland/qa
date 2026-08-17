@@ -1,0 +1,14 @@
+{
+  "name": "billing-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "e2e": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^13.16.0",
+    "msw": "^2.6.6",
+    "vitest": "^2.1.8"
+  }
+}

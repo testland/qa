@@ -1,0 +1,51 @@
+{
+  "context": "Names and checks written against the storage rather than the rule, plus one abstraction that is right in one test and wrong in another. Every name mentions statusCode numbers, the approvals array, or the audit array, so a planned change from integer codes to strings would falsify the whole file without any behaviour changing; the module already exposes isPending, isApproved, isRejected, auditTrail and rejectionReason, which none of the tests use. completeReview hides both approvals: acceptable in the audit-trail test, where the trail is the subject, and wrong in the test named for the two-approval rule, which would pass if the rule became one approval or five. Predicted baseline failure: the agent produces smoother names of the same kind - approve updates the approvals array, reject sets the rejected status - keeps the numeric checks because they pass, and treats completeReview as shared setup to preserve everywhere, so the test that claims the two-approval rule still never shows a count.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 6,
+      "description": "npm test completes successfully with all six scenarios present and executing."
+    },
+    {
+      "name": "Names survive the storage change",
+      "max_score": 28,
+      "description": "Every test name states the rule - what a document does, in what situation, and what follows - and would need no edit if statusCode moved from integers to strings or the audit array were renamed. Any name still carrying a status number, the approvals array, the audit array, or a field name scores zero for that test; a name that drops the numbers but still describes updating an array or setting a field scores at most half for that test. Score proportionally across the six."
+    },
+    {
+      "name": "The two-approval rule MUST NOT stay hidden in a helper",
+      "max_score": 24,
+      "description": "The test named for the two-approval rule shows the approvals in its own body: one approval leaving the document unapproved, and the second approving it. Calling completeReview there scores zero however that helper is renamed, and so does a body that performs two approvals with no check between them - neither would fail if the required count changed."
+    },
+    {
+      "name": "Checks go through the module's own predicates",
+      "max_score": 16,
+      "description": "State is asserted with isPending, isApproved, isRejected, auditTrail and rejectionReason rather than statusCode numbers, doc.approvals.length, doc.audit.length or doc.audit[1].reason. Any remaining comparison against a status number scores zero for that check; indexing into the audit array for the rejection reason scores zero. Score proportionally."
+    },
+    {
+      "name": "The helper is kept where it is not the subject",
+      "max_score": 12,
+      "description": "The audit-trail test may keep using completeReview - what it claims is the sequence of recorded events, not the count. Deleting the helper outright and inlining it everywhere scores at most half: the judgement being asked for is per test, not a rule against helpers."
+    },
+    {
+      "name": "Every behaviour still asserted",
+      "max_score": 10,
+      "description": "All nine checks survive: pending after submit, one audit entry after submit, one approval recorded, still pending after one approval, approved after the second, rejected after reject, the recorded reason, the throw for an unsubmitted document, and the audit trail order. Score proportionally."
+    },
+    {
+      "name": "The throw is still pinned to the guard",
+      "max_score": 8,
+      "description": "The unsubmitted-document scenario still asserts that approve throws, matched on the error rather than on a status code. Replacing the throw assertion with a state check, or wrapping the call in a try/catch whose catch block holds the only assertion, scores zero."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify src/approvals.js. The predicates the tests need are already exported."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 5,
+      "description": "A file named naming-review.md exists, pairs each old name with its new one, and says in one line what made the old one unstable."
+    }
+  ]
+}

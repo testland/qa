@@ -1,0 +1,8 @@
+{
+  "name": "notes-search",
+  "version": "1.9.3",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

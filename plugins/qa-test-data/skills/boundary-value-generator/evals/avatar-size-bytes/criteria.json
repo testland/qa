@@ -1,0 +1,46 @@
+{
+  "context": "The published limit is '5 MB' but the compared limit is 5 MiB = 5242880 bytes, and the comparison unit is a single byte. Predicted baseline failure: the agent reads the help-centre framing, probes with 5000000 and 6000000 or with 5 MB plus or minus 1 MB, and calls the limit covered. Every one of those cases passes against a validator with the wrong comparison operator or the wrong constant, so the suite is green and the two tickets stay unexplained. The values that discriminate are 5242879 / 5242880 / 5242881 and 1023 / 1024 / 1025. The second predicted gap is that the agent produces edge cases only and never states an ordinary member of each outcome class, so the suite documents the limits without documenting the behaviour.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/avatar.test.js exists and contains at least one test that imports validateAvatar."
+    },
+    {
+      "name": "Lower limit probed at one-byte resolution",
+      "max_score": 18,
+      "description": "All three of 1023 (TOO_SMALL), 1024 (accepted), and 1025 (accepted) appear as cases with the correct expectation. Values expressed as arithmetic on MIN_BYTES count. Missing 1025 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Upper limit probed at one-byte resolution against the binary value",
+      "max_score": 26,
+      "description": "All three of 5242879 (accepted), 5242880 (accepted), and 5242881 (TOO_LARGE) appear as cases with the correct expectation. Values written as 5 * 1024 * 1024 arithmetic or as MAX_BYTES plus or minus 1 count. Missing 5242879 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "MUST NOT treat the published megabyte figure as the limit",
+      "max_score": 16,
+      "description": "The values carrying the upper adjacency are one byte apart around 5242880. A suite whose upper cases are 5000000 and 5000001, or 5 MB plus or minus 1 MB, or any pair straddling a decimal-megabyte figure, has left the real adjacency untested and scores zero on this criterion. Extra decimal-unit cases alongside correct byte-resolution ones are harmless, but the byte-resolution ones must be present."
+    },
+    {
+      "name": "An ordinary member of each outcome class is covered",
+      "max_score": 14,
+      "description": "The suite covers at least one accepted size well inside the range (for example 204800), at least one undersized value that is not adjacent to the floor (for example 0 or 100), and at least one oversized value that is not adjacent to the ceiling (for example 10485760). These are separate from the edge cases and none may be within one byte of a limit. Covering only one of the three classes scores zero; covering two caps this at half."
+    },
+    {
+      "name": "Non-integer and negative sizes covered",
+      "max_score": 10,
+      "description": "At least one case supplies a value that is not a non-negative safe integer - a fraction, a negative number, a numeric string, null, or a value above Number.MAX_SAFE_INTEGER - and asserts BAD_BYTE_LENGTH."
+    },
+    {
+      "name": "Specific rejection codes asserted",
+      "max_score": 12,
+      "description": "Failing cases assert the exact code - TOO_SMALL, TOO_LARGE, BAD_BYTE_LENGTH - rather than only that ok is false. Asserting only falsiness scores zero here: a size rejected for the wrong reason would still pass."
+    },
+    {
+      "name": "One case per point",
+      "max_score": 8,
+      "description": "Each size is its own test, or is generated per-size by a loop or table-driven helper that yields an individually named case naming the byte count. A single test function holding every assertion scores zero."
+    }
+  ]
+}

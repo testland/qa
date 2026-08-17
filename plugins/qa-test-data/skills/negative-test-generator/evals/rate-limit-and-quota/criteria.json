@@ -1,0 +1,46 @@
+{
+  "context": "Refusal coverage for a handler with two limits that look alike and behave differently. Predicted baseline failure: the agent writes one throttling test that loops 'enough' times and asserts that some call eventually came back 429. That test never pins which call was the last accepted one, so an off-by-one in the limit passes; it asserts nothing about retryAfterMs beyond its presence, if at all; it treats the throttle as terminal and never advances now to show the window reopens; and it usually folds the plan allowance into the same expectation, so the 403 and the 429 become interchangeable. It also inspects only the returned object, which is why the regression the team described - a refused call consuming monthly allowance - would still slip through.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/sendMessage.test.js exists and contains at least one refusal case. A file that only repeats the delivery path scores zero."
+    },
+    {
+      "name": "The limit boundary is pinned on both sides",
+      "max_score": 28,
+      "description": "Within one window the suite asserts the fifth call still returns 202 and the sixth returns 429, rather than looping until some call is refused. A suite that never asserts the status of the last accepted call, or that discovers the refusal with an unbounded loop or a while condition, scores zero: an off-by-one in BURST_LIMIT passes it unchanged."
+    },
+    {
+      "name": "retryAfterMs asserted as an exact number",
+      "max_score": 18,
+      "description": "The throttled case asserts the precise retryAfterMs the handler computes from the window start and the supplied now - for example 59970 for a window opened at 1000 and a call at 1030. Asserting only that retryAfterMs is present, truthy, or greater than zero scores zero."
+    },
+    {
+      "name": "The throttled call has no effect",
+      "max_score": 16,
+      "description": "After a 429 the suite asserts state.delivered length and the account's entry in state.usage are unchanged from before the refused call. Never inspecting state after a refusal scores zero - this is the regression the task describes."
+    },
+    {
+      "name": "The window reopens",
+      "max_score": 14,
+      "description": "A case advances now by at least WINDOW_MS after a refusal and asserts a full burst is accepted again, showing the throttle is temporary. Omitting it scores zero; asserting only one accepted call after the advance rather than the restored burst scores at most half."
+    },
+    {
+      "name": "Allowance exhaustion is a separate refusal",
+      "max_score": 20,
+      "description": "A case drives the free account to its monthly allowance across successive windows and asserts status 403 with QUOTA_EXHAUSTED and retryAfterMs null, plus a later call in a still-later window that is refused the same way. Expecting 429 for the allowance case, or asserting the same status for both limits, scores zero; omitting the proof that it does not clear with the next window scores at most half."
+    },
+    {
+      "name": "Credential and payload refusals covered",
+      "max_score": 8,
+      "description": "An unknown API key asserts 401 with API_KEY_UNKNOWN and an empty or non-string body asserts 400 with BODY_REQUIRED, each also asserting nothing was delivered. Covering neither scores zero."
+    },
+    {
+      "name": "MUST NOT assert a refusal by exclusion",
+      "max_score": 12,
+      "description": "No case asserts merely that the status is not 202, is at least 400, or that a code is set. Every refusal names its exact status and code, so a 500 in place of a 429 fails. Any case relying on a not-equal or truthiness check for the refusal scores zero on this criterion."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "The entry module imports the browser mock setup at the top level and starts it unconditionally, so the fake payloads are a static dependency of the production graph. Predicted baseline failure: the agent wraps only the start call in an environment check - `if (import.meta.env.DEV) worker.start()` - and reports the problem solved. Users stop seeing fake data, but the static import is still at the top of the entry module, the bundler still pulls `mocks/browser.js` and `mocks/handlers.js` into the production chunk, and `grep dist/` still matches 'John Doe'; the stated symptom (payloads present in the build, 40 KB of it) is untouched. The opposite failure is deleting the browser mocks outright, which fixes the build and breaks dev and Cypress. What the skill supplies is the rule that the mock module must be reached only through a guarded dynamic import, never a top-level one.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Mock module removed from the static production graph",
+      "max_score": 30,
+      "description": "`src/main.js` no longer has a top-level static import of the mocks; the module is reached only through a dynamic `import()` evaluated inside the environment guard. A top-level `import { worker } from './mocks/browser.js'` that remains - even with a guarded start call - scores zero, because the bundler still includes the module and its payloads in the production chunk."
+    },
+    {
+      "name": "Startup is behind an environment guard",
+      "max_score": 18,
+      "description": "Interception starts only outside production, keyed on the build-time environment (`import.meta.env.DEV`, `import.meta.env.MODE`, or `process.env.NODE_ENV !== 'production'`). A runtime guard on hostname, a query parameter, or a localStorage flag scores at most half: it keeps the branch and its dependency in the shipped bundle. No guard scores zero."
+    },
+    {
+      "name": "MUST NOT solve it by removing browser mocking",
+      "max_score": 16,
+      "description": "Scores zero if `src/mocks/browser.js` is deleted or emptied, if the Cypress support path loses its mocks, or if the guard is written so that dev and Cypress no longer receive fake responses. The requirement is that mocks stay available everywhere except production."
+    },
+    {
+      "name": "Verification claim matches the build",
+      "max_score": 12,
+      "description": "The answer states how it satisfies `grep -r \"John Doe\" dist/` finding nothing - by pointing at the dynamic import and the guard, or by running the build. Claiming the tree-shaker will drop a statically imported, side-effectful module scores zero: that claim is the defect restated as a justification."
+    },
+    {
+      "name": "Node test path untouched",
+      "max_score": 10,
+      "description": "`vitest.setup.js`, `src/mocks/node.js` and `src/app.test.js` are unchanged and `npm test` still passes. Reworking the Node setup - it never shipped to users - scores at most half; breaking it scores zero."
+    },
+    {
+      "name": "Single definition list preserved",
+      "max_score": 8,
+      "description": "Both entry points still consume `src/mocks/handlers.js`; the endpoint is not duplicated to make the guarding easier, and its payload is unchanged. A second copy of the profile response scores zero."
+    },
+    {
+      "name": "Startup completes before the first request",
+      "max_score": 8,
+      "description": "The guarded start is awaited (or its promise chained) before `loadProfile()` runs, so the first request is not raced. Firing the start and immediately calling `loadProfile()` scores at most half - it works intermittently, which is worse than not working."
+    },
+    {
+      "name": "No new dependencies and product code untouched",
+      "max_score": 4,
+      "description": "MUST NOT add packages or edit `src/app.js`. Introducing a build plugin or an env-var package to do the guarding scores zero."
+    }
+  ]
+}

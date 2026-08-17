@@ -1,0 +1,46 @@
+{
+  "context": "The only sample of a request definition in this repository is written against the previous major version of the installed library, and the strict unhandled-request setting means anything that fails to match blows up the test rather than passing quietly. Predicted baseline failure: the agent copies the shape it can see - a `rest.get(url, (req, res, ctx) => res(ctx.json(...)))` resolver - because it looks like the house style and because that shape is heavily represented in older material; the installed version has no such export, so the suite dies on import. The recovery is usually worse than the original: relaxing the unhandled-request setting so the unmatched requests stop failing, or pinning the library back to the old major, either of which produces a green run that satisfies none of the stated constraints. The correct definitions read path parameters and the parsed request body from the resolver argument and return responses through the response helper, with the status carried in the response init.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Definitions match the installed library's API",
+      "max_score": 32,
+      "description": "Handlers are written with the verb-namespaced factory and the response helper the installed version exposes (`http.get` / `http.post` and `HttpResponse.json`). Any resolver using the old `rest.*` factory or a `(req, res, ctx) => res(ctx.json(...))` signature scores zero - it does not run against what is installed, whatever else is correct."
+    },
+    {
+      "name": "MUST NOT relax the strict unhandled-request setting",
+      "max_score": 16,
+      "description": "Activation keeps failing on requests with no matching definition. Changing `onUnhandledRequest` to `'bypass'`, `'warn'`, or a non-throwing callback scores zero, as does removing the option; the task states twice that it stays."
+    },
+    {
+      "name": "Path parameter read from the resolver",
+      "max_score": 14,
+      "description": "The by-id endpoint reads the id from the resolver's `params` and answers with it. Parsing the id out of the raw URL string by hand scores at most half. Hard-coding a single id so the known-id case passes, with no relation between request and response, scores zero."
+    },
+    {
+      "name": "Created order derived from the request body",
+      "max_score": 14,
+      "description": "The create endpoint awaits the parsed request body and echoes it alongside a generated id, answering 201 through the response init. Returning a fixed object that ignores the posted draft scores zero - the test then cannot tell whether `createOrder` sent anything. Returning 200 and letting the client accept it scores zero as well; `src/orders.js` requires 201 and must not be edited."
+    },
+    {
+      "name": "Unknown id answered with a real 404",
+      "max_score": 12,
+      "description": "The unknown-id case is driven by a response whose HTTP status is 404, so `getOrder` returns `null` through its own branch. Returning 200 with an `{ error }` body, or an empty object, scores zero: the mapping under test keys on the status."
+    },
+    {
+      "name": "Query filtering done from the request URL",
+      "max_score": 12,
+      "description": "The list endpoint reads the `status` parameter from the intercepted request's URL search parameters and filters accordingly, and the test asserts a filtered result differing from the unfiltered set. A handler returning the same list regardless of the query scores zero."
+    },
+    {
+      "name": "One definition per endpoint",
+      "max_score": 10,
+      "description": "The legacy file is removed or replaced, leaving no second declaration of the order endpoints anywhere. Leaving it in place unimported scores at most half; importing both lists scores zero."
+    },
+    {
+      "name": "Suite green with dependencies untouched",
+      "max_score": 6,
+      "description": "`npm test` passes with the four new cases plus the existing label case, and `package.json` is byte-identical. Downgrading or adding a mocking library to make the old resolver shape work scores zero."
+    }
+  ]
+}

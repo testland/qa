@@ -1,0 +1,8 @@
+{
+  "name": "profile-media",
+  "version": "0.9.3",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

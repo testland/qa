@@ -1,0 +1,46 @@
+{
+  "context": "The flow needs a fake endpoint that remembers what an earlier request in the same test wrote, and forgets it before the next test - and the per-test revert already wired in the setup does not do the forgetting, because it restores handler registrations, not whatever state a handler closed over. Predicted baseline failure: the agent either keeps the endpoint stateless and fakes the sequence (installing a canned cart response after the posts, so the assertion is about the mock rather than the flow), or it adds a module-level array in the shared mock file, gets both new cases passing, and assumes the existing revert hook clears it - reintroducing exactly the cross-test bleed the task describes, which surfaces only when the empty-cart case runs last or the run is shuffled. The skill's contribution is the pairing of closure-held state in the handler with a reset that is actually tied to the test lifecycle.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Read-back reflects the writes",
+      "max_score": 28,
+      "description": "The cart endpoint answers from state the POST endpoint recorded during the same test, so `getCart()` returns lines the test actually posted. Installing a pre-baked cart response after the posts - a fixed override that would return the same body whether or not the posts happened - scores zero: the sequence is what the task asks to cover."
+    },
+    {
+      "name": "State is isolated per test",
+      "max_score": 24,
+      "description": "The accumulated cart is empty at the start of every case: the state is created per test (a fresh closure installed as a per-test override) or explicitly cleared in a hook that runs between tests. Cases that only pass in file order score zero, as does state that lives for the lifetime of the module with no reset."
+    },
+    {
+      "name": "MUST NOT assume the handler revert clears the data",
+      "max_score": 16,
+      "description": "Scores zero if module-level state is added to the shared mock file and nothing clears it, on the reasoning that the existing `afterEach` revert handles it. Reverting handler registrations does not empty a variable a handler closed over; this is the specific mistake the task reports having already made once."
+    },
+    {
+      "name": "Order independence demonstrated",
+      "max_score": 14,
+      "description": "All cases pass with the two new ones running first and under a shuffled run. Pinning order (`sequence.shuffle: false`, `describe.sequential`, ordering the file so the empty case is first) scores zero; that is a re-statement of the defect, not a fix."
+    },
+    {
+      "name": "Quantity merge computed in the fake service",
+      "max_score": 12,
+      "description": "Posting the same SKU twice yields one line with quantity 3 because the stateful endpoint merges it - not because the test asserts a hand-written response. A second case that installs a canned single-line response scores at most half; asserting two separate lines for one SKU scores zero."
+    },
+    {
+      "name": "Request body is read from the intercepted request",
+      "max_score": 10,
+      "description": "The POST endpoint derives sku and quantity from the parsed request body (`await request.json()`), and unit prices come from the catalogue in the fake service. A handler that ignores the body and returns fixed lines scores zero - it cannot distinguish the two new cases."
+    },
+    {
+      "name": "New cases assert the computed totals",
+      "max_score": 10,
+      "description": "The two cases assert `total` 1250 and 1500 respectively, plus the line count. Asserting only the line count, or only that the items array is non-empty, scores at most half: the total is what `getCart` computes and the reason the flow is worth testing."
+    },
+    {
+      "name": "Product code untouched and no new dependencies",
+      "max_score": 6,
+      "description": "MUST NOT edit `src/cart.js` or add packages. Adding a client-side cache or an injectable store to `src/cart.js` so the test can drive it scores zero."
+    }
+  ]
+}

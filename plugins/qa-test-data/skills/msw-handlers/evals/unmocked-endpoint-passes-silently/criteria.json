@@ -1,0 +1,46 @@
+{
+  "context": "Interception is already wired correctly; the defect is the default disposition toward requests nobody defined a response for, which lets them travel to the real network and turns a swallowed error into a passing assertion. Predicted baseline failure: the agent notices only the missing endpoint definition, adds it, updates the assertion to the new count, and declares the job done - the suite goes green and the class of bug remains, because the next unmocked endpoint will escape exactly the same way. Agents that do reach for a setting often pick the warning level, reasoning that a console warning is enough signal; a warning still lets the request out and still lets the test pass, which is precisely the reported symptom. The one line that changes behaviour is the strict unhandled-request option on activation, in the shared setup so it covers every file.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Unhandled requests fail the test",
+      "max_score": 32,
+      "description": "Interception is activated with the strict unhandled-request option (`server.listen({ onUnhandledRequest: 'error' })`), so a request with no matching definition throws and fails the test that made it. Any configuration that merely logs and lets the request proceed scores zero, as does leaving activation at its default."
+    },
+    {
+      "name": "MUST NOT choose a permissive unhandled-request mode",
+      "max_score": 16,
+      "description": "Scores zero if `onUnhandledRequest` is set to `'bypass'`, `'warn'`, or a custom callback that logs and returns without throwing. All three keep real traffic leaving the CI job, which is the reported defect; the warning variant additionally leaves the vacuous assertion passing."
+    },
+    {
+      "name": "Strictness applies project-wide",
+      "max_score": 14,
+      "description": "The setting lives in the shared setup that every test file loads, not inside `src/dashboard.test.js`. A per-file activation added alongside the existing shared one scores at most half - it fixes one file and gives the project two competing lifecycles. Requiring each future test file to opt in scores at most half."
+    },
+    {
+      "name": "Missing endpoint defined in the shared mock set",
+      "max_score": 14,
+      "description": "The notifications endpoint is added to `src/mocks/handlers.js` (or an equivalent shared module) returning two notifications, one unread. Declaring it inline inside the test file as a per-test override scores at most half: it is a default the whole project needs, not a case-specific variation."
+    },
+    {
+      "name": "Second case asserts a non-vacuous count",
+      "max_score": 12,
+      "description": "The rewritten case asserts `unread` equals the count implied by the mocked data (1), and would fail if the notifications request were unmocked. Keeping an assertion of `0`, or asserting only that `unread` is a number or that the call resolves, scores zero - the case must be able to detect the failure it currently hides."
+    },
+    {
+      "name": "Interception lifecycle intact",
+      "max_score": 10,
+      "description": "Activation before the suite, revert between tests, teardown afterwards are all still present. Dropping the between-tests revert while adding the strict option scores at most half."
+    },
+    {
+      "name": "MUST NOT block the network by other means",
+      "max_score": 8,
+      "description": "Scores zero for solving it by stubbing or replacing the `fetch` global, adding a network-blocking library, setting a bogus proxy env var, or asserting on console output. The requirement is that the request-interception layer already in place refuses the request and fails the test."
+    },
+    {
+      "name": "Product code untouched and no new dependencies",
+      "max_score": 6,
+      "description": "MUST NOT edit `src/dashboard.js` - including removing its `try`/`catch` so the failure surfaces - and MUST NOT add packages. Making the product rethrow to expose the missing mock scores zero."
+    }
+  ]
+}

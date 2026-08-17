@@ -1,0 +1,46 @@
+{
+  "context": "Rejection coverage for a batch handler whose whole point is that a refused batch writes nothing. Predicted baseline failure: the agent produces a tidy set of cases that assert the returned status and code and stop there - the returned object is what the function hands back, so checking it feels like checking the behaviour. That suite is green whether the handler staged the batch or applied rows as it walked them, which is exactly the regression the team described. The value is in asserting the absence of the side effect - directory size, audit length and the id sequence all untouched after each refusal - and in placing the offending row late in the batch so earlier rows had a chance to leak through.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/importMembers.test.js exists and contains at least one test that exercises a refusal. A file that only re-tests the success path scores zero."
+    },
+    {
+      "name": "Directory state asserted untouched after refusals",
+      "max_score": 30,
+      "description": "Refusal cases assert the observable side effects did not happen: directory.members.size, directory.audit.length and directory.seq all hold their pre-call values. A suite where no case inspects the directory after a refusal scores zero - it cannot distinguish a staged batch from a half-applied one. Inspecting the directory in only one case scores at most half."
+    },
+    {
+      "name": "The offending row sits mid-batch",
+      "max_score": 18,
+      "description": "At least one case sends a batch of three or more rows whose first valid rows precede an invalid one (index 1 or later), asserts the returned index identifies that row, and asserts nothing was written. A suite whose invalid rows are all at index 0 scores zero here: no earlier row existed to leak."
+    },
+    {
+      "name": "Exact status and code per refusal family",
+      "max_score": 14,
+      "description": "Each case pins a specific numeric status and the exact code string the handler returns - 400 with ROW_MALFORMED / EMAIL_INVALID / ROLE_UNSUPPORTED, 409 with EMAIL_DUPLICATE, 422 with BATCH_TOO_LARGE. Any case that asserts only that the status is not 201, or only that imported is not 2, scores zero."
+    },
+    {
+      "name": "A duplicate does not overwrite the stored member",
+      "max_score": 12,
+      "description": "A case imports a member, then re-imports the same email with a different role, and asserts the stored record still carries the original role and that no audit line was appended. Asserting only the 409 scores zero on this criterion."
+    },
+    {
+      "name": "Both sources of duplication covered",
+      "max_score": 10,
+      "description": "One case duplicates an email inside a single batch and a separate case collides with a member already in the directory, each asserting the index of the row that collided. Covering only one of the two scores at most half; covering neither scores zero."
+    },
+    {
+      "name": "Batch envelope refusals covered",
+      "max_score": 10,
+      "description": "Cases cover a batch that is not an array, an empty batch, and a batch above MAX_BATCH, each asserting its own code and asserting index is null. Missing all three scores zero; the oversize case asserting 400 rather than 422 scores at most half."
+    },
+    {
+      "name": "MUST NOT assert refusal loosely",
+      "max_score": 12,
+      "description": "No case asserts merely that a code is present or truthy, that status is greater than or equal to 400, or that the result is 'an error'. Every refusal names the exact code, and where the handler supplies one, the exact index. Any case relying on a truthiness or not-equal check for the refusal itself scores zero on this criterion."
+    }
+  ]
+}

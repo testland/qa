@@ -1,0 +1,46 @@
+{
+  "context": "Two of the three branches need something an HTTP status cannot express: a request that never receives a response, and two different responses to the same URL inside one test. Predicted baseline failure: the agent reaches for a status code for the offline case - a 0, a 503, a 504, or a response with an empty body - none of which reach the client's `catch`, so the case either fails or is quietly rewritten to assert whatever did happen. The near-miss variant is throwing a plain `Error` from inside the request resolver, which the interception layer reports as a failed response rather than a connection-level failure, so the branch still does not run. For the retry case the common shape is a single handler that always answers 503, which exercises the retry but never the success after it. The skill supplies the network-error response primitive and the per-test override mechanism that makes a two-step sequence expressible.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Offline case is a connection-level failure",
+      "max_score": 30,
+      "description": "The unreachable-host case is expressed with the interception library's network-error response (`HttpResponse.error()`), so the client's `fetch` rejects and its `catch` runs. Using any HTTP status (0, 4xx, 5xx, 504) scores zero - those return a response object and the offline branch is never entered."
+    },
+    {
+      "name": "MUST NOT fake the connection failure from outside the interception layer",
+      "max_score": 16,
+      "description": "Scores zero for replacing or spying on the `fetch` global to make it reject, for throwing a plain error inside a request resolver (reported as a failed response, not a connection failure), or for making the test pass by asserting on something other than `{ offline: true }`. The task states the client's own request must run."
+    },
+    {
+      "name": "Retry case sequences two responses for one URL",
+      "max_score": 20,
+      "description": "Within a single test, the first request to the quote URL answers 503 and the second answers success - via a one-shot override, a queue, or a call counter inside the resolver. A handler that always answers 503 scores zero (the retry's success path never runs); asserting only that the call eventually resolves, without demonstrating the first attempt failed, scores at most half."
+    },
+    {
+      "name": "Retry assertion proves the second response was used",
+      "max_score": 12,
+      "description": "The retry case asserts a value that only the second response could produce - a distinct price from the default - rather than the shared default payload. Asserting the same value the happy-path case asserts scores at most half, since a suite where the 503 never happened would pass identically."
+    },
+    {
+      "name": "Error-status case asserts the server message",
+      "max_score": 12,
+      "description": "The 500 case asserts the rejection carries `quote service unavailable`, via `await expect(...).rejects.toThrow(/quote service unavailable/)` or equivalent. A try/catch holding the only assertions scores zero - it passes when nothing is thrown. Asserting merely that it rejects scores at most half; the message mapping is the behaviour under test."
+    },
+    {
+      "name": "Variants are scoped to their own case",
+      "max_score": 12,
+      "description": "Each failure response is installed as a per-test override on top of the shared defaults and does not survive into other cases; the existing happy-path case passes in any order. Editing `src/mocks/handlers.js` to return failures, or leaving an override installed, scores zero."
+    },
+    {
+      "name": "All cases pass and product code untouched",
+      "max_score": 6,
+      "description": "`npm test` exits clean with four cases. MUST NOT edit `src/client.js` - shortening the retry delay, rethrowing, or exposing the attempt counter to make testing easier scores zero."
+    },
+    {
+      "name": "No new dependencies and no timer manipulation",
+      "max_score": 4,
+      "description": "Nothing added to `package.json`; no fake timers introduced to skip the 5 ms retry delay. Adding an HTTP-mocking package alongside the installed one scores zero."
+    }
+  ]
+}

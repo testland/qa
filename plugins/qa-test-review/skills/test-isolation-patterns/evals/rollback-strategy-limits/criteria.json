@@ -1,0 +1,46 @@
+{
+  "context": "A blanket begin-and-rollback wrapper applied to a suite where four files sit outside what a transaction can undo or show. Predicted baseline failure: the agent treats the wrapper as sound and reviews the files for ordinary test smells - it will usually mention that the COMMIT in reporting.test.js is 'inconsistent' without explaining that the test cannot pass without it, because a second pool connection cannot see rows written inside the test's open transaction. The DDL file is the second miss: ALTER TABLE causes an implicit commit in MySQL, so the wrapper's ROLLBACK has nothing left to undo and the column persists into every later file - an agent reasoning from 'a transaction undoes everything' will call that file safe. The queue and cache writes in notifications.test.js are the third: they are outside the database entirely and no amount of rollback touches them. A further common failure is the over-correction - recommending a fresh container or database per test for the whole suite, which throws away the speed the wrapper was adopted for.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Review produced",
+      "max_score": 4,
+      "description": "A file named rollback-review.md exists and covers each of the five test files by name."
+    },
+    {
+      "name": "Cross-connection invisibility identified",
+      "max_score": 24,
+      "description": "reporting.test.js is explained as a case the wrapper cannot serve: rows written inside the test's open transaction are not visible to any other session, and dailySummary reads through its own pool, so the test can only see its own fixture data once that data is committed - which is why the COMMIT was added and why the rollback then has nothing to undo. Omitting this file, or naming it only as 'a pooling problem' or 'a stray COMMIT to remove' without stating that uncommitted rows are invisible to another connection, scores zero. Naming the invisibility but not connecting it to why the COMMIT is there scores at most half."
+    },
+    {
+      "name": "DDL ends the transaction",
+      "max_score": 20,
+      "description": "schema.test.js is flagged because the ALTER TABLE causes the engine to commit implicitly, so both the schema change and everything the test did before it survive the wrapper's ROLLBACK and are inherited by every file that runs afterwards. Scores zero if the file is reported as safe, or if the only complaint is that tests should not change the schema. Noting that DDL is a problem without saying that the earlier inserts in the same test are committed too scores at most half."
+    },
+    {
+      "name": "Non-database surfaces identified",
+      "max_score": 20,
+      "description": "notifications.test.js is flagged because the queue message and the cache key are written outside the database transaction and no rollback removes them, so the next test starts with a non-empty queue and a populated cache. Naming only one of the two surfaces scores at most half. Omitting the file scores zero."
+    },
+    {
+      "name": "Service-managed transaction identified",
+      "max_score": 12,
+      "description": "checkout.test.js is flagged because the code under test issues its own BEGIN and COMMIT, which ends the wrapper's transaction from inside the test; the order and stock changes are committed and the wrapper's ROLLBACK applies to nothing. A remedy is named - a savepoint the wrapper can roll back to, or moving this file to a different reset mechanism."
+    },
+    {
+      "name": "A specific replacement named per flagged file",
+      "max_score": 14,
+      "description": "Each flagged file carries a named mechanism rather than a direction of travel: for example a disposable database or schema for the DDL file, truncation or a committed-then-cleaned dataset for the reporting file, a per-test purge of queue and cache for the notifications file, savepoints for the checkout file. A review that says a file 'needs different isolation' without naming the mechanism scores zero for that file."
+    },
+    {
+      "name": "MUST NOT apply a suite-wide remedy",
+      "max_score": 12,
+      "description": "MUST NOT resolve this by abandoning the wrapper for the whole suite, by recommending a fresh database or container for every test across the board, or by keeping and spreading the COMMIT workaround. The remedies stay scoped to the files that need them, and accounts.test.js - which the wrapper already covers correctly - is left alone. Any of those three blanket answers scores zero here."
+    },
+    {
+      "name": "Decision rule for new tests",
+      "max_score": 10,
+      "description": "The review states a test the author can apply before writing a new test - whether everything the test changes is inside one transaction on one connection, and whether the code under test opens its own connection or commits - rather than only listing today's four findings."
+    }
+  ]
+}

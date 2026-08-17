@@ -1,0 +1,51 @@
+{
+  "context": "Four helpers-worth of judgement, each pointing a different way. The five-line block copied into four tests has clearly earned a builder. setupAndEscalate performs both the setup and the escalation the two tests are named for, so those bodies no longer show what is being exercised and one of them would still pass if escalate were never called. urgentTicketPastTarget serves exactly one test and buys nothing. The single createTicket line written twice at the end of the file is short, plain, and not worth a helper. Predicted baseline failure: the agent treats fewer helpers as worse and more helpers as better - it extracts the repeated block, which is the easy half, keeps setupAndEscalate because it already works and removes duplication, keeps or renames the single-use helper, and wraps the two short createTicket lines in a helper too. The result has less duplication and the same defect: the escalation tests still do not show the call they are about.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 6,
+      "description": "npm test completes successfully."
+    },
+    {
+      "name": "The setup-and-escalate helper MUST NOT keep performing the escalation",
+      "max_score": 28,
+      "description": "The two tests that use setupAndEscalate now call escalate in their own bodies, against a ticket the helper only builds. Keeping a helper that both builds the ticket and escalates it scores zero however it is renamed, and so does a version that returns the escalation result alongside the ticket - the operation the test is named for still happens out of sight. A helper that only prepares a ticket at a given priority and age is fine."
+    },
+    {
+      "name": "The five-line block extracted once",
+      "max_score": 20,
+      "description": "The setup copied verbatim into four tests exists in exactly one place, as a builder or a per-file hook, and the four tests use it. Leaving it duplicated in two or more tests scores zero. A helper that also asserts, or that escalates, scores zero."
+    },
+    {
+      "name": "The single-use helper folded back into its test",
+      "max_score": 18,
+      "description": "urgentTicketPastTarget no longer exists as a helper; the one test that used it constructs its ticket in its own body, where the priority and the 45 minutes are visible next to the check that depends on them. Keeping the helper, renaming it, or moving it into a shared file scores zero. Deleting the test instead of the helper scores zero."
+    },
+    {
+      "name": "Short setup written twice left alone",
+      "max_score": 12,
+      "description": "The two one-line createTicket setups at the end of the file, which read plainly and share nothing but their shape, are not wrapped in a helper. Introducing one scores at most half - the file gains an indirection that saves nothing and hides the values each check depends on."
+    },
+    {
+      "name": "Every behaviour still asserted",
+      "max_score": 12,
+      "description": "All twelve checks remain: breached at 481 minutes, escalate returning true, priority high, escalated true, three notes kept, assignee kept, urgent after a second escalation, urgent from a breached high ticket, not escalated inside target, breached for an urgent ticket at 45 minutes, not breached at 60 minutes, and the recorded assignee. Score proportionally."
+    },
+    {
+      "name": "Each body shows its own operation and starting state",
+      "max_score": 12,
+      "description": "In every resulting test a reader can see the operation being exercised without opening a helper, and can see the priority and age the check depends on either inline or through a clearly named builder. A test whose body is a single helper call and a check scores zero for that test."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify src/tickets.js."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 5,
+      "description": "A file named helper-review.md exists with one line per helper kept, added, or removed, and states the rule applied rather than only the outcome."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "dataset-exports",
+  "version": "0.9.4",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

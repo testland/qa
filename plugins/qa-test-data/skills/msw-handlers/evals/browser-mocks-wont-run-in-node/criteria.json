@@ -1,0 +1,46 @@
+{
+  "context": "The project has a browser-side entry point for its request mocks and needs a second entry point for the Node test process; the two are different adapters over one shared definition list. Predicted baseline failure: the agent tries to make the existing browser entry work in Node - switching the Vitest environment to jsdom/happy-dom, guarding `worker.start()` in a try/catch, polyfilling `navigator.serviceWorker`, or adding a jsdom dependency - none of which produce interception in the Node process. The second common outcome is abandoning the shared definitions entirely and stubbing the `fetch` global inside `src/billing.test.js`, which passes but leaves the project with two unrelated sources of fake data and no coverage of the request the client builds. A third is copying the endpoint list into a new Node-only mocks file, reintroducing exactly the drift the task warns about. The skill supplies the Node adapter and the hook wiring that goes with it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Node adapter over the shared definitions",
+      "max_score": 32,
+      "description": "A Node-side entry point is added that builds an interceptor from the existing `handlers` export (`setupServer(...handlers)` from the library's Node entry). Scores zero if the Vitest suite gets its fake responses any other way - a `fetch` global stub, hand-written module doubles for `src/billing.js`'s dependencies, or an added HTTP-mocking package."
+    },
+    {
+      "name": "MUST NOT reuse or emulate the browser entry point in Node",
+      "max_score": 18,
+      "description": "Scores zero if the Vitest path imports the browser entry, calls `worker.start()`, or is made to 'work' by changing the Vitest environment to jsdom/happy-dom, polyfilling the worker registration, or wrapping the start call in try/catch. The Node process needs its own adapter, not a browser emulation."
+    },
+    {
+      "name": "Lifecycle wired once for the whole run",
+      "max_score": 18,
+      "description": "Activation before the run, revert after each test, teardown after the run - registered in a setup file wired into the Vitest config (`setupFiles`), not repeated inside `src/billing.test.js`. Hooks placed only in the test file score at most half; a missing per-test revert scores at most half; no teardown scores at most half. No activation at all scores zero."
+    },
+    {
+      "name": "MUST NOT duplicate the endpoint definitions",
+      "max_score": 16,
+      "description": "The invoice endpoint is declared in exactly one file, consumed by both the browser and the Node entry points. A second copy of the same endpoint - in a Node-only mocks module, in the setup file, or inline in the test - scores zero: the task states this drift is the failure the team has already been bitten by."
+    },
+    {
+      "name": "Empty-list case is scoped to itself",
+      "max_score": 14,
+      "description": "The empty-invoice case installs its variant response for that case only, layered over the defaults, and the other case still sees the default list regardless of order. Editing `src/mocks/handlers.js` to return an empty list, or introducing a module-level flag the handler branches on, scores zero."
+    },
+    {
+      "name": "Default-data case asserts the computed summary",
+      "max_score": 10,
+      "description": "The first case asserts `count` 2, `total` 128000 and `overdue` `['inv-1']` from the shipped default payload. Asserting only that the call resolves, or only on `count`, scores at most half - the total and the overdue filter are the parts of `loadOutstanding` that a wrong mock shape would break."
+    },
+    {
+      "name": "Existing suite and Cypress entry untouched",
+      "max_score": 6,
+      "description": "`src/money.test.js` still passes unmodified, `cypress/support/e2e.js` still starts the browser mocks, and the response bodies in `src/mocks/handlers.js` are unchanged. Deleting or rewriting the browser entry to make the Node path simpler scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 4,
+      "description": "Nothing added to `package.json`. The Node adapter ships with the library already installed; adding jsdom, an HTTP-mocking package, or a fetch polyfill scores zero."
+    }
+  ]
+}

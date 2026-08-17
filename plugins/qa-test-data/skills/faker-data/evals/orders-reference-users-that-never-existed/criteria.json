@@ -1,0 +1,46 @@
+{
+  "context": "Two independent record factories that have to start producing a connected graph. Predicted baseline failure: the agent leaves the factories alone and fixes the call sites - each test writes `makeOrder({ userId: user.id })`. Every test in the file is now green and meaningful, so it reviews as done, and the factory still hands an orphan order to the next person who calls it; the load seeder, the ageing report and every future test repeat the same wiring by hand or repeat the bug. The related shape is a factory that generates a user internally but does not return it, so the caller cannot build a report that includes it. The consistency requirements are the second discriminator: totals and dates are usually left generated independently because nothing in the current tests reads them, which is precisely why the $0-revenue regression survived. A run that fixes linkage but leaves an order whose total contradicts its own line items has rebuilt half the trap.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 5,
+      "description": "`npm test` exits clean with the existing tests plus the new ones. A failing or uncollectable suite scores zero."
+    },
+    {
+      "name": "Linkage is built into the factory",
+      "max_score": 30,
+      "description": "Calling the order factory with no arguments yields an order attached to a user the caller can reach - the factory creates the user and exposes it (returns the pair, or takes and defaults a user parameter), and an explicit user passed by the caller is used instead of a fresh one. Fixing only the call sites while `makeOrder()` still invents a `userId` scores zero: the next caller gets an orphan. A factory that creates a user internally but gives the caller no way to obtain it scores at most half - the report cannot be built from it."
+    },
+    {
+      "name": "Generated records are internally consistent",
+      "max_score": 18,
+      "description": "An order's total is derived from its own line items rather than generated separately, and `shippedAt` is generated after `placedAt` (or omitted for unshipped orders) using a date range anchored on the placed date. Fixing one of the two scores at most half; fixing neither scores zero. Both are cases of one generated field having to respect another, which independent draws cannot do."
+    },
+    {
+      "name": "A test proves the linkage over a batch",
+      "max_score": 14,
+      "description": "A test builds several users and orders and asserts every order's `userId` resolves to a user in the set. Asserting it for a single hand-wired pair scores at most half - the current bug is exactly that a single pair looks right when wired by hand."
+    },
+    {
+      "name": "The report test can now fail",
+      "max_score": 14,
+      "description": "At least one report assertion checks a non-zero count and a total derived from the generated orders, so dropping the join turns the suite red. If every report assertion would still pass when `customerOrderReport` skips every order, this scores zero - that is the regression the work exists to catch."
+    },
+    {
+      "name": "Data is reproducible run to run",
+      "max_score": 10,
+      "description": "The generator's stream is fixed by an explicit seed applied per test rather than once at module load, so an individual failing test can be re-run over the same graph. No seeding scores zero; a single module-load seed scores at most half."
+    },
+    {
+      "name": "No pasted expected values",
+      "max_score": 8,
+      "description": "MUST NOT assert against literal ids, names or totals captured from a generated run. Expectations are computed from the same generated records. Any pasted literal scores zero: it binds the suite to one version's random sequence and re-breaks on the next dependency bump."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `src/report.js` or add dependencies. The reporting behaviour, including skipping orphan orders, was explicitly not in question; either scores zero here."
+    }
+  ]
+}

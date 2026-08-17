@@ -1,0 +1,46 @@
+{
+  "context": "A suite that is already seeded, where the seed still fails to reproduce anything across machines. The cause is outside the test code: a caret range on the data generator plus an ignored lockfile plus `npm install` on CI means three machines run three different library versions, and a seed only fixes the value sequence within one version - the dataset and the sequence both move between releases. Predicted baseline failure: the agent reads 'same seed, different values' as a seeding-placement problem and rearranges the seeding - moves it into a `beforeEach`, seeds per test file, adds `faker.seed()` calls in individual tests - or blames global state and adds resets. All of that is defensible-looking test hygiene, it changes nothing about the symptom, and the next CI failure is still unreproducible. A second predicted shape is to declare the assertions unsafe and loosen them, which hides the question. The discriminating move is to recognize the determinism contract includes the library version, and to pin it: exact version, committed lockfile, lockfile-respecting install on CI.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 5,
+      "description": "`npm test` exits clean with both existing tests intact. A failing or uncollectable suite scores zero."
+    },
+    {
+      "name": "Cause is identified as a differing library version",
+      "max_score": 14,
+      "description": "The response states that a seed fixes the value sequence only within one version of the generator, so machines on different resolved versions produce different data from the same seed. Attributing the symptom to seeding placement, global state, test ordering, or the runner scores zero - a wrong diagnosis here produces a fix that leaves the symptom in place."
+    },
+    {
+      "name": "The generator version is pinned",
+      "max_score": 26,
+      "description": "`@faker-js/faker` is pinned to one exact version in package.json rather than a caret range, so a fresh install cannot resolve to a different release. Leaving the caret and relying on the lockfile alone scores at most half: the lockfile is the current fix, and any `npm install <pkg>` or automated bump re-floats the range. Not addressing the version at all scores zero."
+    },
+    {
+      "name": "Installs are lockfile-driven, on laptops and on CI",
+      "max_score": 20,
+      "description": "`package-lock.json` stops being ignored and is committed, and the CI workflow installs from it (`npm ci` rather than `npm install`). Full credit requires both - an un-ignored lockfile that CI then bypasses with `npm install` scores at most half, and neither change scores zero."
+    },
+    {
+      "name": "The seed survives",
+      "max_score": 14,
+      "description": "MUST NOT remove the seed, replace 1337 with a clock- or random-derived value, or leave any generating path unseeded as part of the fix. Any of those scores zero: the task's whole premise is that an unseeded run cannot be reproduced, and 'seed with Date.now() and log it' trades one unreproducible setup for another that also loses the shared baseline."
+    },
+    {
+      "name": "The upgrade path is written down",
+      "max_score": 12,
+      "description": "A note in the repo (README, contributing guide, or a comment in the setup file) states that upgrading the generator legitimately changes the values a seed produces and what the team does when that happens. Saying it only in the chat response scores zero; saying nothing about upgrades scores zero."
+    },
+    {
+      "name": "Assertions are not bound to particular values",
+      "max_score": 8,
+      "description": "MUST NOT introduce assertions against literal generated names, ids or counts as part of this work - pinning the version makes such assertions temporarily pass and re-breaks them at the next deliberate upgrade. Any pasted generated literal scores zero."
+    },
+    {
+      "name": "No unrelated churn",
+      "max_score": 5,
+      "description": "The change stays inside dependency pinning, CI install, seeding and documentation. Rewriting the factory, restructuring the suite, or adding dependencies scores zero for this item."
+    }
+  ]
+}

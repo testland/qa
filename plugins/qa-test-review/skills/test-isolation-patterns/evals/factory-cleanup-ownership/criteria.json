@@ -1,0 +1,46 @@
+{
+  "context": "A cleanup hook that names what to delete, written when there was one kind of row and never updated as the helper module grew. Predicted baseline failure: the agent makes the last test pass by extending the hook - adding an org sweep and a key sweep alongside deleteAllUsers - which is green today, still deletes rows another suite is using, and drifts again the moment a fifth factory lands; the task's second requirement is then quietly unmet while the suite is green. The second predicted failure is ordering: an agent that does track what was created usually deletes in creation order, so the org delete is refused because its users still exist, or the user delete is refused because its api key still exists. The idea the task is measuring is that the code that creates a row is the code that should record how to remove it, and that removal runs in the reverse of creation order.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes with all five tests",
+      "max_score": 6,
+      "description": "npm test succeeds, including the final test, with all five tests present and their assertions unchanged."
+    },
+    {
+      "name": "Each factory records its own removal",
+      "max_score": 26,
+      "description": "The registration happens inside the factory functions, so a row cannot be created without its removal being recorded and a new factory is covered by writing the factory alone. Scores zero if the cleanup hook still enumerates row types itself. Tests that push their own handles onto a list in the test body score at most half - it works today and puts the burden back on whoever writes the next test."
+    },
+    {
+      "name": "Removal runs in the reverse of creation order",
+      "max_score": 18,
+      "description": "Api keys are removed before their user, and users before their org, because the per-row deletes refuse otherwise. Full credit needs the ordering to be a property of the mechanism - draining the recorded entries last-created-first - rather than a hand-written sequence that happens to be right for today's three factories."
+    },
+    {
+      "name": "MUST NOT clear whole tables",
+      "max_score": 16,
+      "description": "MUST NOT keep deleteAllUsers or introduce any equivalent whole-table clear, truncate, or sweep of everything of a given type. The stated reason is that the database is shared with suites running at the same time, so a table-wide delete removes rows this suite never created. Any surviving blanket clear scores zero here."
+    },
+    {
+      "name": "The record is emptied per test",
+      "max_score": 10,
+      "description": "What was recorded is drained and reset after each test, so the list does not accumulate across the file and a second test does not try to remove rows a first test already removed. Scores zero if the record grows for the whole run."
+    },
+    {
+      "name": "MUST NOT weaken the tests or the source",
+      "max_score": 10,
+      "description": "MUST NOT change any assertion - in particular the final deep-equality on the counts - and MUST NOT modify src/tenancy.js to relax the referential checks or make deletes cascade. Either scores zero here."
+    },
+    {
+      "name": "Cleanup survives a failing test",
+      "max_score": 10,
+      "description": "The drain runs through the runner's teardown rather than at the end of each test body, so a test that fails part-way through still gives its rows back."
+    },
+    {
+      "name": "Notes state the rule for the next factory",
+      "max_score": 12,
+      "description": "cleanup-design.md says what an author adding a fifth factory must do, explains why a hook that lists row types drifts by construction, and gives the reason whole-table clears are unavailable here. Notes that only describe today's change score at most half."
+    }
+  ]
+}

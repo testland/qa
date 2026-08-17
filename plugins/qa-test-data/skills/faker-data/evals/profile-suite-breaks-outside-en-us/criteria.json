@@ -1,0 +1,46 @@
+{
+  "context": "A single-market factory that has to become a three-market one. Predicted baseline failure: the agent produces the market variation by hand - a `const JA_NAMES = ['佐藤 花子', ...]` array, a `DE_CITIES` list, a postcode assembled as `${randomDigits(3)}-${randomDigits(4)}` - and keeps calling the default generator for everything else. It reads as thorough (three markets, three postcode patterns) and it is a hand-maintained fake: five names per market, no real distribution, and every field the author did not think about is still a US value wearing a market label. The second predicted failure is the assertion side. The initials rule is the one the team already tripped over, so a run usually handles it; the quieter ones - that the address format string puts the postcode last, that a phone number contains no country prefix, that a city name has no spaces - get carried over to the new markets unexamined. A run that just widens the postcode pattern to something permissive enough to match all three markets has removed the check rather than made it market-aware.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes with the existing US tests unchanged",
+      "max_score": 5,
+      "description": "`npm test` exits clean, the three existing tests still assert what they assert today. Deleting, skipping or loosening one of them to make room for the new markets scores zero."
+    },
+    {
+      "name": "Market data comes from the library's own locale datasets",
+      "max_score": 32,
+      "description": "German and Japanese profiles are produced by pointing the generator at those locales - the locale-specific generator exports, or a generator instance constructed with the locale's dataset - so names, cities, streets, postcodes and phone numbers all come from that market's data. Hand-written arrays of names or cities, transliterating US values, or building a locale-shaped postcode from random digits scores zero, no matter how many markets it covers. Pointing only the name field at the locale while the address stays on the default generator scores at most half."
+    },
+    {
+      "name": "No assertion is applied to a market where it does not hold",
+      "max_score": 18,
+      "description": "MUST NOT keep the space-separated-name assumption (splitting on a space, expecting at least two initials) in a market whose names have no space, and MUST NOT keep the Japanese or German profiles on US names to preserve it. Either scores zero here. Also zero if the fix is to make the shared assertion vacuous for everyone - the US behaviour still has to be checked."
+    },
+    {
+      "name": "Each market asserts its own formats",
+      "max_score": 16,
+      "description": "Postcode and phone expectations are per market and describe that market's actual shape. A single permissive pattern that all three markets satisfy scores at most half: it passes, and it no longer detects a market coming back with the wrong country's data - which is exactly the regression this work exists to prevent."
+    },
+    {
+      "name": "The locale is verified to have taken effect",
+      "max_score": 12,
+      "description": "At least one assertion per market would fail if that market silently produced default US data - a postcode pattern that US values cannot satisfy, a check that the city is drawn from that locale, or equivalent. A suite where every new test would still pass on US values scores zero: locale coverage in these libraries is uneven and a missing dataset falls back quietly."
+    },
+    {
+      "name": "Markets are parameterized, not copy-pasted",
+      "max_score": 10,
+      "description": "The market-independent behaviour (address formatting, id presence) is exercised through one table or loop over the markets rather than three duplicated blocks. Three near-identical copies of the file score at most half."
+    },
+    {
+      "name": "Data is reproducible run to run",
+      "max_score": 10,
+      "description": "Every generator instance in play, including the per-market ones, has its random stream fixed by an explicit seed. Seeding the default generator while the market-specific instances run unseeded scores at most half - the markets that are new are then the ones that cannot be reproduced. No seeding anywhere scores zero."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `src/profile.js` or add dependencies. Either scores zero here."
+    }
+  ]
+}

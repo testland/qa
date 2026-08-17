@@ -1,0 +1,46 @@
+{
+  "context": "Pinning amounts that are currently computed the same way the module computes them. The correct answers for 20.00 per hour over 45 hours are gross 95000 cents, withholding 20900 cents and net 74100 cents, and withholding on a 100000 gross is 22000. Every expectation in the file is built either from the module's own exported rates or by calling the very functions under test, so both sides of each assertion move together and a wrong rate stays green. Predicted baseline failure: the agent tidies the arithmetic - declares STANDARD_WEEK_HOURS, OVERTIME_MULTIPLIER and the rate as local constants in the test file instead of importing them, or keeps calling grossPay to build the expected net - which reads cleaner, still passes, and still cannot disagree with the implementation. The distinguishing move is that each expected amount is a stated figure the module cannot influence.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 6,
+      "description": "npm test completes successfully with all three scenarios present and executing."
+    },
+    {
+      "name": "Expectations MUST NOT be built from the module's rates",
+      "max_score": 26,
+      "description": "The test file no longer imports STANDARD_WEEK_HOURS, OVERTIME_MULTIPLIER or WITHHOLDING_RATE, and no expected amount is produced by multiplying or dividing with them. Re-declaring the same rates as local constants in the test file and rebuilding the same arithmetic scores zero on this criterion - the expectation still agrees with the formula by construction, which is the failure the task describes."
+    },
+    {
+      "name": "Net pay stated as an amount, not as a composition of the other two functions",
+      "max_score": 20,
+      "description": "The net-pay test asserts a stated figure. Calling grossPay or withholding inside that test to build what it expects scores zero however it is arranged - including assigning them to intermediate variables first - because a wrong gross and a wrong expectation cancel out."
+    },
+    {
+      "name": "The three amounts are correct and exact",
+      "max_score": 14,
+      "description": "gross 95000, withholding 22000 on the stated 100000 gross, and net 74100, asserted with exact equality. Score proportionally per amount. An approximate or range comparison scores at most half for that amount, and any amount that is wrong scores zero for it."
+    },
+    {
+      "name": "Inputs stay named and each amount records its derivation",
+      "max_score": 12,
+      "description": "The hourly rate, the hours worked and the gross under test remain identified by name or by an equally clear label, and each expected amount carries a short note of how it was arrived at - 40 hours at 20.00 plus 5 hours at time and a half. An expected amount with no derivation recorded anywhere scores at most half; a file that also strips the names off the inputs, leaving bare numbers on both sides, scores zero."
+    },
+    {
+      "name": "Overtime boundary still exercised",
+      "max_score": 8,
+      "description": "The gross-pay scenario still uses hours above the standard week, so the overtime branch runs. Reducing the input to 40 hours or fewer scores zero: the test would then pass with the overtime calculation deleted entirely."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify src/payroll.js, including removing the exported rate constants to force the tests off them. The module is stated to be correct."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 5,
+      "description": "A file named expectation-review.md exists and pairs each test with what the previous version would have accepted and what the new one pins down."
+    }
+  ]
+}

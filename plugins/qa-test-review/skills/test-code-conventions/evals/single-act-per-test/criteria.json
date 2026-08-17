@@ -1,0 +1,51 @@
+{
+  "context": "One test exercises four operations in sequence, alternating between calling and checking, so any failure hides the operations below it. The second test is deliberately correct and is the trap: it calls addTrack twice, but those calls put the queue into its starting state - the operation it holds to account is the one removeTrack call - and its three checks all describe the single outcome that nothing was removed. Predicted baseline failure: the agent labels the long body with setup and exercise comments and renames it, leaving all four operations in one test where a failure still masks the rest; or it goes the other way and mechanically produces one test per call, turning the two setup additions in the second test into tests of their own and splitting that test's three checks into three tests, which multiplies the file without improving what a failure reports.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 6,
+      "description": "npm test completes successfully."
+    },
+    {
+      "name": "No test exercises more than one operation",
+      "max_score": 28,
+      "description": "In every resulting test, exactly one call is the operation being held to account and every check follows it. A body that still alternates between calling an operation and checking it scores zero on this criterion, and MUST NOT be rescued by phase comments: adding setup / exercise / check labels over a body that still calls addTrack, removeTrack and clear in sequence scores zero, because a failure in the first check still prevents the later operations from running at all."
+    },
+    {
+      "name": "Setup is not mistaken for the operation under test",
+      "max_score": 22,
+      "description": "The second scenario keeps its two addTrack calls inside the single test that exercises removeTrack against a missing id. Promoting either of those calls into its own test, or adding checks against them there, scores zero - they establish the starting state the removal is tried against, and turning them into tests is the over-correction the task warns about. The same judgement applies anywhere the restructured file needs a two-track queue before the operation it is testing."
+    },
+    {
+      "name": "Checks describing one outcome are kept together",
+      "max_score": 14,
+      "description": "The three checks stating that nothing was removed - the false return, the length still two, and the total still 390 - stay in one test. Splitting them across three tests scores at most half: they describe a single outcome, and separating them triples the setup while telling a reader nothing new."
+    },
+    {
+      "name": "Every behaviour still asserted",
+      "max_score": 14,
+      "description": "All eight behaviours survive: one track after the first add, 390 seconds with two tracks queued, removeTrack returning true for a queued id, 180 seconds after that removal, an empty queue after clear, removeTrack returning false for an id that is not queued, the length still two, and the total still 390. Score proportionally; each behaviour that disappears is lost coverage."
+    },
+    {
+      "name": "Setup, operation and checks are visually separable",
+      "max_score": 10,
+      "description": "In each test the starting state is established first, the operation is a single identifiable call, and the checks come last, separated by blank lines or headings. Score zero where a check is interleaved between two calls."
+    },
+    {
+      "name": "Names identify the operation and the situation",
+      "max_score": 10,
+      "description": "Each test name says which operation is under test, in what situation, and what should follow, so the failure is readable in a CI log without opening the file. A name giving only the operation scores at most half; names such as playlist queue behaves score zero."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify src/playlist.js."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 5,
+      "description": "A file named operation-review.md exists and, for each resulting test, names the one operation it holds to account and says why the other calls in that body are not it."
+    }
+  ]
+}

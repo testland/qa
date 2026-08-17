@@ -1,0 +1,46 @@
+{
+  "context": "A golden-literal test that has to keep working once the data underneath it starts varying. Predicted baseline failure: the agent generates the order, pins the random stream, runs the suite once, and pastes the resulting lines back in as the new expected array - or takes the same shortcut through an inline snapshot. The suite is green, the diff looks like a modernisation, and the test is now bound to one particular library version's random sequence: the next dependency bump regenerates different names and the array has to be re-pasted again, which is the exact review failure that let the currency regression through. The second predicted shape is over-correction - replacing the assertions with `expect(lines.length).toBeGreaterThan(0)` or a truthiness check, which never re-breaks and never catches anything either. The discriminating answer derives every expectation from the same generated order that was passed in, so the assertion stays specific while the data moves.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 5,
+      "description": "`npm test` exits clean. A failing or uncollectable suite scores zero."
+    },
+    {
+      "name": "Expectations are derived from the input, not recorded from a run",
+      "max_score": 30,
+      "description": "Each assertion computes what it expects from the same generated order - the header contains that order's customer name, there is one line per item in that order, each line's amount equals that item's quantity times its price rendered as money, the total equals the summed line totals. Assertions that merely check the output is non-empty, is an array, or has 'some' lines score at most half: they survive data changes by testing nothing. Any expectation that is a literal captured from a generated run scores zero."
+    },
+    {
+      "name": "No generated output is committed as an expected value",
+      "max_score": 18,
+      "description": "MUST NOT paste generated lines into the test as a golden array, an inline snapshot, or a stored snapshot file, and MUST NOT justify doing so by pinning the seed. Any of those scores zero. The reason is concrete: the generated sequence is only stable for one version of the library, so a routine dependency bump regenerates the values and the expected block has to be re-pasted - the review step that already failed once here."
+    },
+    {
+      "name": "Generated orders actually vary in the ways production broke",
+      "max_score": 16,
+      "description": "Names come from a real person-name dataset rather than a fixed string, and order size varies across a range that reaches beyond the current two items (one to ten as specified). A generator that always emits two items, or a name assembled from random characters, scores at most half - it produces variation that has nothing to do with the two production failures the task names."
+    },
+    {
+      "name": "Money formatting stays covered",
+      "max_score": 14,
+      "description": "Every money value in the output - each item line and the total - is checked against the format rule (leading `$`, exactly two decimals) by pattern, for orders of any size. Checking only the total, or dropping the money-format check entirely because the amounts now vary, scores at most half and zero respectively."
+    },
+    {
+      "name": "Data is reproducible run to run",
+      "max_score": 10,
+      "description": "The generator's random stream is fixed by an explicit seed so a failing order can be re-examined. No seed scores zero; a single seed call at module load scores at most half, since running one test in isolation then produces a different order than the full file."
+    },
+    {
+      "name": "Line structure stays covered",
+      "max_score": 8,
+      "description": "The test still asserts the header / one-line-per-item / total-last structure, derived from the generated order's item count. Losing the structural check while keeping only the formatting one scores zero."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `src/receipt.js` or add dependencies. Either scores zero here."
+    }
+  ]
+}

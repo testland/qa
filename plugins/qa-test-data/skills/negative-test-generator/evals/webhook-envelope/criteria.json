@@ -1,0 +1,46 @@
+{
+  "context": "Rejection coverage for a handler where the interesting content is the status vocabulary and the order of the checks. Predicted baseline failure: the agent produces a competent-looking file in which a wrong media type, an oversized body and unparseable JSON all expect 400, because 'the client sent something bad' maps to 400 by reflex - and, since the fixture returns 415, 411 and 413 for those, several of its cases simply fail, or it reads them off the source one at a time without ever testing which check wins when two apply. The ordering facts are the part a rejection sweep never reaches: an oversized body is refused before the parser sees it, a bad signature is refused before the parser sees it, a wrong media type outranks the size check, and the size is counted in UTF-8 bytes rather than characters.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/receiveWebhook.test.js exists and contains at least one rejection case. A file that only repeats the accepted ping scores zero."
+    },
+    {
+      "name": "Each rejection keeps its own status",
+      "max_score": 30,
+      "description": "The suite asserts 415 for a missing or unsupported media type and an unsupported charset, 411 for a missing length header, 400 for a length mismatch and for unparseable JSON, 413 for an oversized body, 401 for a bad signature, and 422 for a parsed body of the wrong shape. Any case that expects a generic 400 where the handler returns 411, 413, 415 or 422 scores zero, as does a suite that asserts one shared status for the envelope family."
+    },
+    {
+      "name": "The body is proven unread when it is refused early",
+      "max_score": 20,
+      "description": "One case sends an oversized body that is also invalid JSON and asserts 413 with PAYLOAD_TOO_LARGE, and another sends invalid JSON with a wrong signature and asserts 401 with SIGNATURE_INVALID. Each shows the parser was never reached. Neither case present scores zero; one of the two scores at most half."
+    },
+    {
+      "name": "Size is counted in bytes",
+      "max_score": 16,
+      "description": "A case sends a body whose character count is below MAX_BYTES but whose UTF-8 byte length is above it - accented or other multi-byte characters, with Content-Length set to the byte length - and asserts 413. Sizing every case with String.length only scores zero: it is the partner incident described in the task."
+    },
+    {
+      "name": "Check order asserted where two refusals apply",
+      "max_score": 12,
+      "description": "A case sends an oversized body with a non-JSON media type and asserts 415 rather than 413, showing the media-type check runs first. Omitting any such case scores zero."
+    },
+    {
+      "name": "Charset handled as its own rejection",
+      "max_score": 10,
+      "description": "A case sends application/json with a charset other than utf-8 and asserts 415 with CHARSET_UNSUPPORTED, distinct from the missing and unsupported media-type cases. Folding it into the media-type case scores zero."
+    },
+    {
+      "name": "Post-parse shape rejections covered",
+      "max_score": 10,
+      "description": "Cases send a valid JSON array or scalar asserting 422 with BODY_NOT_AN_OBJECT and a valid object with a non-string event asserting 422 with EVENT_REQUIRED. Covering neither scores zero; expecting 400 for these scores at most half."
+    },
+    {
+      "name": "MUST NOT assert rejection by exclusion or by message text",
+      "max_score": 12,
+      "description": "No case asserts merely that the status is not 202, that it is at least 400, or that a code or message string is present or contains some phrase. Every case names the exact status and the exact code constant. Any case relying on a not-equal, truthiness or substring check scores zero on this criterion."
+    }
+  ]
+}

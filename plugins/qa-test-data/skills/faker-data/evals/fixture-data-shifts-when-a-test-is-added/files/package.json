@@ -1,0 +1,13 @@
+{
+  "name": "warehouse-inventory",
+  "version": "6.0.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "9.3.0",
+    "vitest": "2.1.8"
+  }
+}

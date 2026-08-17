@@ -1,0 +1,8 @@
+{
+  "name": "payments-capture",
+  "version": "8.0.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

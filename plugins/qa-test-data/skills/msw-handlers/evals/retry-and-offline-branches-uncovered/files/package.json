@@ -1,0 +1,12 @@
+{
+  "name": "quotes-client",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "msw": "^2.6.6",
+    "vitest": "^2.1.8"
+  }
+}

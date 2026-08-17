@@ -1,0 +1,46 @@
+{
+  "context": "Hostile-input coverage for a handler that accepts most of it on purpose. Predicted baseline failure comes in two shapes and both look reasonable. The first assumes an injection string must be refused and writes cases expecting 400 for a quote-and-comment payload; against this handler those cases fail, because a search term full of quotes is just a term that finds nothing. The second writes the harmless version - call it with the payload, assert it returned 200, or assert it did not throw - which passes identically whether the term was bound as a parameter or concatenated into the statement, and so measures nothing. What distinguishes a real suite here is asserting placement and rendering: the payload appears verbatim in query.params and nowhere in query.sql, the rendered fields come back escaped, and the one position that is interpolated - sort - is refused with its exact code.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/searchNotes.test.js exists and contains at least one case built from a hostile input. A file that only repeats the word search scores zero."
+    },
+    {
+      "name": "Injection payloads asserted by where they land",
+      "max_score": 30,
+      "description": "For each injection payload the suite asserts status 200, that query.sql does not contain the payload or its comment marker, and that query.params[0] contains the payload verbatim. Expecting a 4xx for these payloads scores zero - it contradicts the handler and would drive the parameter binding out. Asserting only the status, or only that no exception was raised, also scores zero."
+    },
+    {
+      "name": "Markup payloads asserted on the rendered output",
+      "max_score": 22,
+      "description": "Markup payloads assert the escaped form in the rendered fields: echoHtml contains no raw angle brackets, and a matching row's titleHtml contains the entity-escaped script tag rather than the literal one. Asserting only the status for markup payloads scores zero; checking echoHtml but never a rendered result row scores at most half."
+    },
+    {
+      "name": "The interpolated position is exercised",
+      "max_score": 16,
+      "description": "Cases send sort values outside the fixed map - including one shaped like an appended clause and one inherited object key such as toString or constructor - and assert 400 with SORT_UNSUPPORTED, plus one case asserting an allowed sort reaches the statement. Leaving sort untested scores zero: it is the only position the term-binding argument does not protect."
+    },
+    {
+      "name": "Payloads drawn from more than one class, several per class",
+      "max_score": 12,
+      "description": "At least two distinct injection strings and two distinct markup strings are used, driven from a table or list rather than hand-written one at a time. One payload per class scores at most half; a single payload overall scores zero."
+    },
+    {
+      "name": "Length boundary and control characters covered",
+      "max_score": 12,
+      "description": "A term of exactly MAX_QUERY_LENGTH characters asserts 200, one character longer asserts 400 with QUERY_TOO_LONG, and a term containing a control character such as a NUL asserts 400 with QUERY_ILLEGAL_CHARACTERS. Covering none of these scores zero; testing the over-length case without the accepted boundary scores at most half."
+    },
+    {
+      "name": "Shape rejections covered",
+      "max_score": 8,
+      "description": "A non-string term asserts QUERY_REQUIRED and a whitespace-only term asserts QUERY_EMPTY, each with status 400. Covering neither scores zero."
+    },
+    {
+      "name": "MUST NOT settle for 'it did not crash'",
+      "max_score": 14,
+      "description": "No hostile-input case has as its only assertion that the call did not throw, that a result object came back, or that the status was 200. Every such case asserts either the exact refusal or the specific safe treatment - bound parameter, escaped output. Any case whose assertions would hold with the payload concatenated into the statement scores zero on this criterion."
+    }
+  ]
+}

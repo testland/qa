@@ -1,0 +1,46 @@
+{
+  "context": "A money field whose limits are 5.00 and 10000.00 but whose smallest expressible step is 0.01, not 1. Predicted baseline failure: the agent carries over integer habits and probes the limits with whole-unit neighbours - 4, 5, 6 and 9999, 10000, 10001 - or tests only the two limits themselves. Those cases all pass against a validator with an off-by-one-cent comparison, so the suite looks thorough and pins nothing: the values that actually distinguish `<` from `<=` at this scale are 4.99, 5.01, 9999.99 and 10000.01. The second predicted miss is the precision rule ordering - an amount like 4.999 is refused for precision, not for being below the floor - which no baseline suite records.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/payout.test.js exists and contains at least one test that imports validatePayout."
+    },
+    {
+      "name": "Lower limit probed at one-cent resolution",
+      "max_score": 24,
+      "description": "All three of 4.99 (BELOW_MIN), 5.00 (accepted), and 5.01 (accepted) appear as cases with the correct expectation. Missing 5.01 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Upper limit probed at one-cent resolution",
+      "max_score": 24,
+      "description": "All three of 9999.99 (accepted), 10000.00 (accepted), and 10000.01 (ABOVE_MAX) appear as cases with the correct expectation. Missing 9999.99 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "MUST NOT probe the limits with whole-unit neighbours",
+      "max_score": 16,
+      "description": "The values adjacent to each limit are one cent away, not one euro away. A suite whose neighbouring cases are 4 and 6, or 9999 and 10001, has left the real adjacency untested and scores zero on this criterion even if those extra cases are also present alongside correct ones - the criterion is satisfied only when 4.99/5.01 and 9999.99/10000.01 are the cases carrying the adjacency. A suite that tests only 5.00 and 10000.00 with nothing on either side also scores zero."
+    },
+    {
+      "name": "Precision rule covered, including its interaction with the range",
+      "max_score": 14,
+      "description": "At least one over-precise amount inside the range (for example 5.005 or 7.001) asserts SUB_CENT_PRECISION, and at least one over-precise amount that is also outside the range (for example 4.999) asserts SUB_CENT_PRECISION rather than BELOW_MIN. Covering only the first of these caps this at half; covering neither scores zero."
+    },
+    {
+      "name": "Specific rejection codes asserted",
+      "max_score": 12,
+      "description": "Failing cases assert the exact code - BELOW_MIN, ABOVE_MAX, SUB_CENT_PRECISION, NOT_A_NUMBER - rather than only that ok is false. Asserting only falsiness scores zero here: the precision rule and the range rule both produce ok:false, so a falsiness-only suite cannot tell which fired."
+    },
+    {
+      "name": "One case per point",
+      "max_score": 10,
+      "description": "Each amount is its own test, or is generated per-amount by a loop or table-driven helper that yields an individually named case naming the amount. A single test function holding every assertion scores zero: the first failure hides the remaining points."
+    },
+    {
+      "name": "Amounts are fixed literals",
+      "max_score": 8,
+      "description": "Every probed amount is written as a literal or derived arithmetically from the exported MIN_CENTS / MAX_CENTS. Amounts drawn from Math.random or an unseeded generator score zero here."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "digest-mailer",
+  "version": "5.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.0",
+    "vitest": "^2.0.0"
+  }
+}

@@ -14,9 +14,9 @@ _Test process, environment, data, reporting, impact, roles, review._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.12.0 | 12 skills + 3 agents | 15 |
-| [qa-test-data](plugins/qa-test-data/) | 1.3.11 | 12 skills + 2 agents | 14 |
+| [qa-test-data](plugins/qa-test-data/) | 1.4.0 | 12 skills + 2 agents | 14 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.0 | 10 skills + 2 agents | 12 |
-| [qa-test-review](plugins/qa-test-review/) | 1.6.16 | 7 skills + 4 agents | 11 |
+| [qa-test-review](plugins/qa-test-review/) | 1.7.0 | 7 skills + 4 agents | 11 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.4.0 | 4 skills + 2 agents | 6 |
 | [qa-team-management](plugins/qa-team-management/) | 1.3.0 | 4 skills + 1 agents | 5 |
 | [qa-test-management](plugins/qa-test-management/) | 1.3.0 | 3 skills + 2 agents | 5 |

@@ -1,0 +1,8 @@
+{
+  "name": "reports-feed",
+  "version": "1.12.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

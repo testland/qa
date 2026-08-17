@@ -1,0 +1,46 @@
+{
+  "context": "A per-test hook that rebuilds structure, reference data and mutable rows as one undifferentiated block. Predicted baseline failure: the agent moves the whole hook to a run-once hook, which is the obvious reading of 'make the expensive part run once' and is what the previous attempt did - the suite then goes red, because one test lowers the VAT rate for PT and the next test reads it, and because invoices written by one test are still there for the next. The recoveries from that are worse than the original: the agent re-adds the full rebuild, or it starts re-seeding reference data before every test, which is most of the cost it was asked to remove. The distinction the task turns on is that the setup block contains three different kinds of thing - structure that is built once, read-only reference data that is loaded once, and mutable rows that must be emptied between tests - and that emptying rows is not the same operation as rebuilding the schema that holds them.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes with all five tests",
+      "max_score": 6,
+      "description": "npm test succeeds and all five tests are present and executing - none skipped, merged, renamed or deleted."
+    },
+    {
+      "name": "Mutable rows are emptied, not rebuilt",
+      "max_score": 26,
+      "description": "Between tests the invoices and customers rows are cleared while the schema and its migrations stay in place. Full credit requires that dropSchema / createSchema / runMigrations no longer appear in a per-test hook. A solution that still tears the schema down and rebuilds it before each test scores zero here whatever else it does, and so does one that leaves the tables uncleared."
+    },
+    {
+      "name": "Structure built once",
+      "max_score": 16,
+      "description": "Schema creation and migrations run once for the file, in a run-once hook, with the reasoning that they describe the shape of the database rather than the state of a test. Scores zero if migrations still run for every test."
+    },
+    {
+      "name": "Reference data loaded once",
+      "max_score": 14,
+      "description": "seedReferenceData runs once rather than before every test. Scores zero if it is still called in the per-test hook - that is the largest single piece of the cost the task asked to remove. Calling it again only as the repair for the one test that changes a rate does not score zero here, provided it is not called before every test."
+    },
+    {
+      "name": "The rate change is contained to its own test",
+      "max_score": 22,
+      "description": "The test that lowers the PT rate is prevented from reaching any other test by a mechanism scoped to that test - restoring the row after it, reloading just the reference data for it, or giving it a country of its own. Scores zero if containment is achieved by reinstating a full reference reload for every test, and zero if nothing contains it. Relying on the current test order so the rate change happens to be harmless scores zero."
+    },
+    {
+      "name": "MUST NOT edit assertions or sources",
+      "max_score": 12,
+      "description": "MUST NOT change any expected value, test name, or file under src/. In particular the third test still expects 4600 and the fifth still expects 0. Any expected value adjusted to absorb what an earlier test left behind scores zero, as does any edit to src/db.js or src/billing.js."
+    },
+    {
+      "name": "Setup lines sorted into kinds",
+      "max_score": 14,
+      "description": "fixture-plan.md separates the four setup calls into structure, shared read-only data, and per-test mutable state, and says where each now runs. A plan that only reports what was moved, without the distinction that drives it, scores at most half."
+    },
+    {
+      "name": "Rule for the next test",
+      "max_score": 8,
+      "description": "The plan says what an author adding a sixth test must do - what they may assume is already there, and what they must clean up or restore if their test writes to shared reference data - rather than describing only today's change."
+    }
+  ]
+}

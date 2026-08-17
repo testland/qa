@@ -1,0 +1,46 @@
+{
+  "context": "An expensive artifact loaded once per file and handed to tests through a factory that spreads it. The spread copies the top level only, so `items` - and the objects inside it - are the same array every test mutates, and two read-only tests carry the failure for two writing tests. Predicted baseline failure: the agent takes the failing assertions at face value and moves the load into a per-test hook, which makes five tests pass and the sixth fail, or it re-spreads at another level (`{ ...catalog, items: [...catalog.items] }`) which fixes the add-a-line test and leaves the discount test mutating the shared item object - the suite goes green on the current ordering and breaks again the first time a test edits a price before one that reads it. The point being measured is that a copy has to reach as deep as the mutation does, and that the shared original should be made unwritable so the next mistake fails where it is made.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes with all six tests",
+      "max_score": 6,
+      "description": "npm test succeeds and all six tests are present with their original names and assertions."
+    },
+    {
+      "name": "The copy reaches every level a test can write to",
+      "max_score": 30,
+      "description": "Each call to the fixture returns structures no other test holds - the items array and the item objects inside it included. Full credit for a genuine deep copy. Scores zero if the returned object still shares the items array. Copying the array but not the item objects inside it scores at most half: the discount test would still be writing into state every later test reads, and it is only the current order that hides it."
+    },
+    {
+      "name": "The expensive load still happens once",
+      "max_score": 16,
+      "description": "loadCatalog stays in a run-once hook. Moving it into a per-test hook scores zero - it is the repair the task explicitly closed off, and the final test fails."
+    },
+    {
+      "name": "The shared original is made unwritable",
+      "max_score": 14,
+      "description": "The once-loaded catalogue is frozen, or otherwise protected, so a test that writes to it fails at the write instead of causing a failure somewhere else. A comment or a note asking authors not to mutate it scores at most half - it is not enforced. Scores zero if nothing addresses requirement 4."
+    },
+    {
+      "name": "MUST NOT change assertions or expected values",
+      "max_score": 12,
+      "description": "MUST NOT adjust any expected number, rename a test, reorder tests so the writes happen after the reads, or skip or merge tests. Reordering in particular scores zero here: it makes the file green while leaving every test's result dependent on its position."
+    },
+    {
+      "name": "MUST NOT modify the source",
+      "max_score": 6,
+      "description": "MUST NOT change src/catalog.js. Making loadCatalog return a fresh deep structure itself, or memoising inside it, moves the fix into production code the task did not authorise and scores zero here."
+    },
+    {
+      "name": "Notes name the level at which the copy stopped",
+      "max_score": 14,
+      "description": "fixture-notes.md states that spreading the catalogue copied only its top-level properties, so every cart pointed at one items array and one set of item objects. Notes that say the tests 'shared state' or 'were not isolated' without identifying that the copy was one level deep score at most half."
+    },
+    {
+      "name": "Rule for the next once-loaded fixture",
+      "max_score": 8,
+      "description": "The notes give the rule - what may be loaded once and shared, what has to be copied per test, and how deep - rather than describing only this file's repair."
+    }
+  ]
+}

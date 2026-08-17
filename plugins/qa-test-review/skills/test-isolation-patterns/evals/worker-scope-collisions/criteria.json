@@ -1,0 +1,46 @@
+{
+  "context": "A suite where per-worker namespacing is already in place and correct, and the remaining failures come from the assumption that it was sufficient. Every resource is unique to a worker and shared by every test inside that worker: two tests in one worker write into the same directory, insert into the same schema, and read the same queue, and each of them asserts a count that only holds on an empty start. Predicted baseline failure: the agent reads the allocator, finds worker ids used everywhere, and reports the suite as parallel-safe, or re-derives the hazards that were already fixed - fixed ports, fixed temp paths, environment writes - which the problem statement says are gone. When an agent does reach the intra-worker problem, the usual remedy is to provision per test, which the task rules out on cost, rather than separating one-time provisioning from a cheap per-test reset. The worker id defaulting to 0 when the variable is absent, the module-level readiness flag, and the fact that nothing cleans up at the start of a run are typically missed entirely.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Review produced",
+      "max_score": 4,
+      "description": "A file named worker-resource-review.md exists and covers the port, the directory, the schema and the queue individually."
+    },
+    {
+      "name": "Per-worker is distinguished from per-test",
+      "max_score": 30,
+      "description": "The review states that the directory, the schema and the queue are unique to a worker but shared by every test that worker runs, so files, rows and messages left by one test are present for the next - which is why the failing pairs always ran in the same worker. Full credit needs this tied to concrete assertions in the fixture, such as the directory count and the row count that only hold on an empty start. A review that concludes the namespacing is sufficient, or that only discusses collisions between workers, scores zero."
+    },
+    {
+      "name": "MUST NOT provision per test",
+      "max_score": 20,
+      "description": "MUST NOT answer by creating a schema or running migrations for every test, and MUST NOT propose running the suite on one worker or serialising the files. Instead the review separates what is provisioned once per worker from what is emptied between tests, and names the emptying mechanism per resource - truncation or a rolled-back transaction for the schema, a per-test subdirectory or a delete of the directory contents, a purge or per-test name for the queue. Recommending per-test provisioning, or serialisation, scores zero here."
+    },
+    {
+      "name": "Missing or reused worker id",
+      "max_score": 16,
+      "description": "The review flags that `TEST_WORKER_ID || 0` silently collapses every process onto worker 0 when the variable is unset or the runner names it differently - so the fallback is the one case where all four workers share a schema, a port and a directory - and that a reused or recycled worker id inherits whatever the previous holder left behind. Naming only one of the two scores at most half."
+    },
+    {
+      "name": "Residue from a killed run",
+      "max_score": 16,
+      "description": "The review connects the first-run-after-a-kill failure to cleanup existing only in the teardown path: a killed job never runs it, `CREATE SCHEMA IF NOT EXISTS` then accepts the leftover schema and the directory still holds the previous run's files. The remedy is that setup makes the resource clean rather than assuming teardown did. Reporting the failure without saying what setup must change scores at most half."
+    },
+    {
+      "name": "Readiness flag identified",
+      "max_score": 10,
+      "description": "The `schemaReady` flag is flagged as a claim held in one process's memory rather than a fact about the database - it stays true after a schema is dropped mid-run, and it is false at the start of a run whose schema is already there and stale, so migrations are decided by the flag rather than by the state of the schema."
+    },
+    {
+      "name": "Port handling",
+      "max_score": 10,
+      "description": "The review notes that one port per worker with no release covers one server at a time and nothing else - adjacent worker ids are one apart so there is no room for a second port, and a process left over from a killed run still holds it - and recommends binding an ephemeral port and reading back what was assigned."
+    },
+    {
+      "name": "A remedy per finding, and the correct parts left alone",
+      "max_score": 12,
+      "description": "Each finding carries a concrete remedy rather than a direction, and the review says which parts of the current code are already right - deriving the names from a worker id at all, and provisioning the schema once rather than per test - so the team does not redo them. A review with findings but no remedies scores zero here; one that recommends rewriting the working parts scores at most half."
+    }
+  ]
+}

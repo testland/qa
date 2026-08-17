@@ -1,0 +1,46 @@
+{
+  "context": "A constant-valued factory that has to start producing collision-free records at volume. Predicted baseline failure: the agent swaps the constants for the plain name / username / email providers and calls it done. That passes a three-record test and fails the 5,000-record one, because the underlying datasets are small - a few thousand first-name/last-name pairs - so duplicate usernames and emails appear well before five thousand draws. The failure is probabilistic, so a run that does not actually execute the batch test will report success. The second predicted shape is uniqueness by disfigurement: appending a counter, a timestamp or a UUID fragment to a constant (`john.doe+7f21@example.com`, `user_4821`). It never collides and it throws away the realism the factory exists for - names like that never exercise the long-name, apostrophe or non-ASCII paths, and they are trivially distinguishable from production data in a staging UI. The discriminating answer uses the generator's own uniqueness facility (or an equivalent guarantee) over real provider values, and clears that uniqueness bookkeeping between tests so one batch cannot exhaust or leak into the next.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 5,
+      "description": "`pytest` exits clean including the new batch test. A failing or erroring run scores zero."
+    },
+    {
+      "name": "Uniqueness is guaranteed, not hoped for",
+      "max_score": 30,
+      "description": "Username and email are produced through a mechanism that cannot repeat within a run - the library's uniqueness facility, or an explicit guarantee such as a rejection loop against a seen-set. Full credit requires both constrained fields covered. Calling the plain providers and relying on the value space to be large enough scores at most half: at 5,000 records the collision is close to certain, and this is the specific failure the batch test exists to catch. Leaving either field constant scores zero."
+    },
+    {
+      "name": "The 5,000-record batch test exists and checks both fields",
+      "max_score": 16,
+      "description": "A test generates the full batch in one run and asserts the number of distinct usernames and distinct emails equals the batch size (or adds all of them to a repository without a conflict being raised). A test that samples ten records scores at most half - it cannot detect what is being claimed."
+    },
+    {
+      "name": "Values stay realistic",
+      "max_score": 16,
+      "description": "Names, usernames and emails are drawn from the person and internet providers rather than composed from indexes. A factory returning `user_1@example.com` / `Test User 1` style values scores zero: uniqueness was one of two requirements and realism was the other, and index-composed data never exercises the apostrophe, long-name or non-ASCII paths."
+    },
+    {
+      "name": "The duplicate path is exercised deliberately",
+      "max_score": 16,
+      "description": "A test adds an account, then adds a second account carrying the same email (via an override), and asserts the repository's specific duplicate-email error is raised. Asserting only that 'an exception' is raised scores at most half - the eight-month bug was a wrong error, not a missing one. No such test scores zero."
+    },
+    {
+      "name": "Uniqueness state does not leak across tests",
+      "max_score": 12,
+      "description": "Whatever tracks already-issued values is reset per test - the library's uniqueness reset call in a fixture, or a per-test generator instance. A module-level uniqueness pool shared by the whole session scores at most half: it survives this suite and starts exhausting or cross-contaminating as soon as a second batch test is added."
+    },
+    {
+      "name": "The batch is reproducible",
+      "max_score": 12,
+      "description": "MUST NOT leave the generation unseeded. The random stream is fixed by an explicit seed so a collision or a failing record can be produced again on demand; an unseeded batch test that fails once in fifty runs is exactly the unreproducible failure this repo already suffers from. No seeding scores zero."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `repository.py`, and the two existing tests keep passing unmodified. Either scores zero here."
+    }
+  ]
+}

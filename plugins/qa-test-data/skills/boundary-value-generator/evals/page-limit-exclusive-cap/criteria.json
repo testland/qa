@@ -1,0 +1,46 @@
+{
+  "context": "The page-size cap is exclusive, so the largest accepted limit is 99 and the round number 100 is a rejection - and the offset is declared with no maximum, which reads as nothing to test. Two predicted baseline failures follow. First, the agent writes the cap the way caps are usually written, covering 99 and 101 or treating 100 as the largest accepted value, and never places a case on 100 asserting LIMIT_TOO_LARGE - which is exactly the argument the integration partner made. Second, it covers the offset's floor and stops, leaving the OFFSET_NOT_SAFE_INTEGER branch with no coverage, because an absent product maximum is not an absent maximum: Number.MAX_SAFE_INTEGER is accepted and Number.MAX_SAFE_INTEGER + 1 is not. Third, both parameters get copy-pasted test bodies rather than a table, so adding a case means duplicating a block.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/pagination.test.js exists and contains at least one test that imports parsePageParams."
+    },
+    {
+      "name": "Limit floor covered on all three points",
+      "max_score": 12,
+      "description": "Limits 0 (LIMIT_TOO_SMALL), 1 (accepted), and 2 (accepted) each appear with the correct expectation. Missing the limit of 2 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Exclusive cap pinned on the cap value itself",
+      "max_score": 28,
+      "description": "Limits 98 (accepted), 99 (accepted), 100 (LIMIT_TOO_LARGE), and 101 (LIMIT_TOO_LARGE) each appear with the correct expectation. The case sitting on 100 is the one that settles the partner's complaint and proves the cap is exclusive: omitting the value 100 entirely scores zero on this criterion regardless of how many other limit cases exist. Having 100 but missing 99 or 98 caps this at half."
+    },
+    {
+      "name": "Offset floor covered on all three points",
+      "max_score": 10,
+      "description": "Offsets -1 (OFFSET_NEGATIVE), 0 (accepted), and 1 (accepted) each appear with the correct expectation. Missing the offset of 1 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "MUST NOT leave the offset's upper end untested because none is documented",
+      "max_score": 24,
+      "description": "The runtime's own maximum stands in for the absent product maximum: Number.MAX_SAFE_INTEGER (9007199254740991) appears as an accepted offset and Number.MAX_SAFE_INTEGER + 1 (equivalently 2 ** 53) appears asserting OFFSET_NOT_SAFE_INTEGER. A suite that probes only the offset floor scores zero here - the OFFSET_NOT_SAFE_INTEGER branch is then wholly uncovered, which is what the incident review asked about. Covering only one of the two values caps this at half. A merely large but still safe offset such as 1e9 does not satisfy this criterion on its own."
+    },
+    {
+      "name": "Cases emitted as data, not copy-pasted bodies",
+      "max_score": 18,
+      "description": "Each parameter's cases live in one declared array of rows carrying the input and the expected outcome, iterated to register an individually named test per row, with the value interpolated into the case name. Copy-pasted test bodies differing only in a literal cap this at half even when every value is present. A single test function looping over rows with all assertions inside one case scores zero: the runner then reports one pass or one fail for the whole parameter and the failing input is invisible."
+    },
+    {
+      "name": "Specific rejection codes asserted",
+      "max_score": 10,
+      "description": "Failing cases assert the exact code - LIMIT_TOO_SMALL, LIMIT_TOO_LARGE, LIMIT_NOT_INTEGER, OFFSET_NEGATIVE, OFFSET_NOT_SAFE_INTEGER, MALFORMED - rather than only that ok is false. Asserting only falsiness scores zero here: the limit is validated before the offset, so a case meant to exercise an offset rule could be failing on the limit instead and still pass."
+    },
+    {
+      "name": "Non-integer inputs covered for both parameters",
+      "max_score": 8,
+      "description": "At least one case supplies a non-integer limit - a fraction, a numeric string, null, or undefined - asserting LIMIT_NOT_INTEGER, and at least one supplies a non-integer offset asserting OFFSET_NOT_SAFE_INTEGER. Covering only one of the two parameters caps this at half."
+    }
+  ]
+}

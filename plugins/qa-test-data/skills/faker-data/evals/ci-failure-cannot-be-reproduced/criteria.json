@@ -1,0 +1,46 @@
+{
+  "context": "A generated-data suite with no determinism control at all: the factory calls the generator at test time and nothing fixes the random stream. Predicted baseline failure: the agent treats 'make the failure reproducible' as a reporting problem - it adds a console.log or a custom error message that dumps the failing cart, and stops there. That looks convincing in the diff (the failing data is now in the log) but does not let anyone re-run the suite over that data, and it does nothing about the ninety-nine other assertions. The near-miss variant is a single seed call at the top of the factory module, which makes the file deterministic in whole-file order only: filter the run, add a test, or reorder and every downstream test silently gets different data. A smaller number of runs will make the suite deterministic by replacing the generated fields with constants, which passes every check except the one that matters - the data stops being varied.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite still passes",
+      "max_score": 5,
+      "description": "`npm test` exits clean with both existing tests running and asserting what they assert today. A suite that no longer collects, or that had an assertion weakened to accommodate the change, scores zero."
+    },
+    {
+      "name": "Every test starts from the same fixed baseline",
+      "max_score": 28,
+      "description": "The random stream is pinned by an explicit seed call, and it is applied per test - a `beforeEach`, a setup file registered as a per-test hook, or an explicit seed at the top of each test - so a given test builds the same data whether the file runs whole, filtered to one test, or with a new test inserted above it. A single seed call evaluated once at module load (top of the factory or top of the spec) scores at most half: the whole file is reproducible but any individual test is not, which is the exact shape that makes a CI failure unreproducible from a filtered local run. No seed call anywhere scores zero."
+    },
+    {
+      "name": "The seed is reported and can be fed back in",
+      "max_score": 20,
+      "description": "The value used is visible in the run output (printed by the setup, attached to the reporter, or written to an artifact) and can be supplied back on the next run - an env var or CLI argument with a sensible default. A hardcoded constant that is never surfaced scores at most half: it is reproducible but the report still tells the developer nothing, and every run exercises the same handful of records forever. Nothing surfaced and no override scores zero."
+    },
+    {
+      "name": "No generation escapes the seed",
+      "max_score": 14,
+      "description": "MUST NOT leave any generating call outside the seeded window - factory values computed at module import time before the hook runs, a second generator instance created elsewhere, `Math.random`/`Date.now` used for ids or quantities, or a seed call placed after the data is built. Any such path scores zero for this item; it is the anti-pattern this scenario exists to catch, because it produces a suite that looks seeded and still drifts."
+    },
+    {
+      "name": "Data stays generated, not frozen",
+      "max_score": 12,
+      "description": "The factory still produces varied values from the data generator for names, emails, SKUs, prices and quantities. Replacing any of those with a constant literal, a fixed array cycled through, or an incrementing counter to buy determinism scores zero - the requirement was reproducible generation, not the removal of generation."
+    },
+    {
+      "name": "Assertions do not depend on particular generated values",
+      "max_score": 8,
+      "description": "New or edited assertions compare against values derived from the same generated input (as the existing tests do), not against literal names, prices or ids captured from a seeded run. Any pasted literal that came out of a generated run scores zero here, since it re-breaks the moment the seed or the library version changes."
+    },
+    {
+      "name": "Repro recipe is written down",
+      "max_score": 8,
+      "description": "A README line, a comment in the setup file, or a contributing note states how to take the value from a failed report and re-run against it, with the concrete command. Only mentioning it in the chat response scores zero; the fix has to survive the conversation."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `src/pricing.js` or add dependencies to package.json. Both were declared out of scope; either scores zero here."
+    }
+  ]
+}

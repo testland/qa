@@ -1,0 +1,51 @@
+{
+  "context": "Raising the test bodies off the widget layer while leaving one test at it deliberately. Three of the four tests are runs of goto / fill / check / click that a reader has to re-simulate to name, and the same five-call sign-in run is written out in two of them. The fourth test is about the tab order of the form itself - its key presses are the subject, so it must stay as it is and must be marked, or the next person to tidy the file will helpfully abstract away the one thing it measures. Predicted baseline failure: the agent improves what it can see - it renames the four tests, adds phase comments, and pulls the repeated sign-in lines into a helper - but leaves the remaining browser calls sitting in the bodies, so the product owner still cannot read them; and it applies the same treatment uniformly, refactoring the tab-order test behind the new sign-in helper or leaving it unmarked so the next author does.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 6,
+      "description": "npm test completes successfully with all four scenarios present and executing."
+    },
+    {
+      "name": "No browser-level calls left in the test bodies",
+      "max_score": 30,
+      "description": "Outside the tab-order test, no test body calls goto, fill, check or click directly; each such run sits behind a named step and the bodies are made of those steps and the checks. A body that keeps even one raw click or fill scores at most half, and a body that is unchanged apart from phase comments or a renamed test scores zero."
+    },
+    {
+      "name": "The tab-order test MUST NOT be rewritten in terms of the new steps",
+      "max_score": 22,
+      "description": "The tab-order test still shows its four key presses and its four focus checks in its own body, and carries a visible marker - a tag in its name, or a one-line note beside it - saying it is meant to stay at that level. Routing its presses through a shared step scores zero: the sequence is what it measures. Leaving it mechanical but with no marker scores at most half."
+    },
+    {
+      "name": "Steps named for what the customer accomplishes",
+      "max_score": 14,
+      "description": "The introduced steps are named for the outcome - signing in, adding the book, placing the order - not for the controls they touch. A helper named after the widgets it drives, such as one that fills the email and password and clicks the button, scores at most half; a numbered or generic name such as setup or step1 scores zero."
+    },
+    {
+      "name": "The sign-in run exists once",
+      "max_score": 12,
+      "description": "The run of calls that signs a customer in is written out in exactly one place, parameterised by the credentials, so both the successful and the failed sign-in go through it. A second copy of that run still present anywhere outside the tab-order test scores zero."
+    },
+    {
+      "name": "The journey stays one test",
+      "max_score": 10,
+      "description": "Signing in, adding the book and placing the order remain a single test, with the sign-in and the cart as its starting state and the order as what it is about. Splitting it into separate tests scores zero - the task states it stays one - and so does leaving it as a fourteen-line run of calls."
+    },
+    {
+      "name": "Every assertion preserved",
+      "max_score": 10,
+      "description": "All ten checks survive with the same expected values: the dashboard route, one item in the cart, the order route, the confirmation text, not signed in, the credentials message, the sign-in prompt, the cart still holding one item, and the four focus positions. Score proportionally."
+    },
+    {
+      "name": "Driver left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify src/browser.js. The steps are built on the driver as it stands."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 5,
+      "description": "A file named journey-review.md exists and lists each step introduced with what it does."
+    }
+  ]
+}

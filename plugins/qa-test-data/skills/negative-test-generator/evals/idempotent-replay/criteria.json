@@ -1,0 +1,46 @@
+{
+  "context": "Retry and rejection coverage for a capture step whose contract is about how often money moves, not about what the second call returns. Predicted baseline failure: the agent writes a replay case that asserts the status of the second call and stops - and because 'a duplicate request' reads as a conflict, it often asserts 409 for an identical retry, which is not what this handler does and which no amount of care in the wording of the test will fix. Even the version that expects 200 rarely counts gateway.charges, so it passes against a handler that charged again and merely echoed the first id. The second gap is the ordering fact the support ticket names: validation runs before the key is recorded, so a refused request leaves its key free, and nothing in a conventional rejection sweep tests that.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/capturePayment.test.js exists and contains at least one test beyond a repeat of the success path. A file with no retry or rejection case scores zero."
+    },
+    {
+      "name": "The replay is asserted by counting charges",
+      "max_score": 30,
+      "description": "The identical-retry case asserts gateway.charges.length is still 1 after the second call, so a handler that charged twice and echoed the first id fails. A suite that asserts only the status, code or chargeId of the replay scores zero on this criterion - none of those detect a second charge."
+    },
+    {
+      "name": "The replay outcome itself is pinned",
+      "max_score": 18,
+      "description": "The identical retry asserts status 200, replayed true, and the same chargeId the first call returned. Asserting 201 or a 4xx for an identical retry scores zero: it contradicts the handler and would drive the replay behaviour back out."
+    },
+    {
+      "name": "A refused request leaves its key reusable",
+      "max_score": 20,
+      "description": "A case sends a request that fails validation under a fresh key, then re-sends a valid body under that same key and asserts status 201 with replayed false and exactly one charge. Omitting this case scores zero; asserting the first refusal without the successful retry under the same key scores at most half."
+    },
+    {
+      "name": "Key reuse with a different body is a conflict that charges nothing",
+      "max_score": 16,
+      "description": "A case reuses a key with a changed amount or customer and asserts status 409 with IDEMPOTENCY_KEY_REUSED, chargeId null, and gateway.charges.length still 1. Asserting the 409 without the charge count scores at most half; asserting neither scores zero."
+    },
+    {
+      "name": "400 and 422 are not merged",
+      "max_score": 12,
+      "description": "Malformed input asserts 400 with its exact code (IDEMPOTENCY_KEY_REQUIRED, CUSTOMER_REQUIRED, AMOUNT_NOT_AN_INTEGER, CURRENCY_UNSUPPORTED) while a well-formed but unacceptable amount asserts 422 with AMOUNT_NOT_POSITIVE or AMOUNT_ABOVE_LIMIT. A suite expecting 400 for the amount cases, or expecting the same status across both families, scores zero."
+    },
+    {
+      "name": "Refusals move no money and record no key",
+      "max_score": 10,
+      "description": "At least one refusal case asserts gateway.charges.length is 0 and gateway.keys.size is 0 after the call. Never inspecting the gateway on a refusal scores zero."
+    },
+    {
+      "name": "MUST NOT skip the wrong-type cases",
+      "max_score": 12,
+      "description": "amountCents is covered both as a string such as '2500' - the shape the retrying mobile client sends - and as a non-integer number such as 25.5, each asserting AMOUNT_NOT_AN_INTEGER. Omitting type mismatches entirely scores zero; covering only one of the two scores at most half."
+    }
+  ]
+}

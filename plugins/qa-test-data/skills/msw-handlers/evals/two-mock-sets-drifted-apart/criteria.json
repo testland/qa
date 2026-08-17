@@ -1,0 +1,46 @@
+{
+  "context": "The same endpoint is declared twice - once inline in the Node interceptor, once inline in the Cypress support file - and the two copies have drifted, which is why the unit suite stayed green against a shape the API no longer returns. Predicted baseline failure: the agent reads it as a stale-fixture bug, edits the payload inside `src/test/server.js` to the documented shape, fixes the mapping in `src/profile.js`, and stops. The suite is green and the structural defect is untouched: there are still two declarations of the profile endpoint, and the next rename lands in one of them again. The other frequent unaided move is to make the mock return both `display_name` and `displayName` (and both plan shapes) so nothing has to be updated, which hides the drift permanently. What the skill supplies is the single shared definition list consumed by a browser adapter and a Node adapter.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "One definition list, two adapters",
+      "max_score": 32,
+      "description": "The profile endpoint is declared in a single shared module (e.g. `src/mocks/handlers.js`) that both the Node interceptor and the Cypress support file import and spread into their respective adapters. Scores zero if the endpoint is still declared in two places, whatever the payloads now say."
+    },
+    {
+      "name": "MUST NOT leave a second declaration behind",
+      "max_score": 16,
+      "description": "Scores zero if any second `http.get('https://api.example.com/profile', ...)` remains anywhere in the repo - including one left in `src/test/server.js` next to the shared import, or a duplicate kept 'for the browser'. Grep-level uniqueness is the deliverable."
+    },
+    {
+      "name": "MUST NOT ship a compatibility payload",
+      "max_score": 14,
+      "description": "The shared definition returns exactly the documented response. Including both `display_name` and `displayName`, or both a string `plan` and a `plan` object, or a top-level `seats` alongside `plan.seats`, scores zero: it makes both readers pass and reproduces the class of bug the task is about."
+    },
+    {
+      "name": "Correct adapter on each side",
+      "max_score": 14,
+      "description": "The Node side builds its interceptor with the Node adapter and the Cypress side with the browser worker adapter, both from the shared list. Swapping them, or making Cypress import the Node interceptor, scores zero; the two environments intercept differently."
+    },
+    {
+      "name": "Mapping updated to the documented shape",
+      "max_score": 12,
+      "description": "`src/profile.js` reads `displayName`, `plan.tier` and `plan.seats`. Keeping fallbacks (`body.displayName ?? body.display_name`) scores at most half - it makes the mapping tolerant of the stale shape and defeats the point of the shared definition. Leaving the old reads scores zero."
+    },
+    {
+      "name": "Unit test asserts against the corrected definition",
+      "max_score": 10,
+      "description": "`src/profile.test.js` asserts name, tier and seats and passes against the shared definition. Weakening the assertions to `toBeDefined()`, or deleting a case, scores zero."
+    },
+    {
+      "name": "Node lifecycle preserved",
+      "max_score": 8,
+      "description": "Activation with the strict unhandled-request setting, per-test revert and teardown all survive the refactor. Losing the strict setting or the revert hook scores at most half."
+    },
+    {
+      "name": "Cypress entry still starts the mocks, no new dependencies",
+      "max_score": 6,
+      "description": "The Cypress support file still starts the browser worker (now from the shared list) and nothing is added to `package.json`. Deleting the Cypress mock startup to make the deduplication trivial scores zero."
+    }
+  ]
+}

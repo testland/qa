@@ -1,0 +1,46 @@
+{
+  "context": "The defect is that the double sits at the wrong layer: replacing the `fetch` global means the URL builder and header construction run into a function that ignores both, so no assertion can reach them. Predicted baseline failure: the agent keeps the global stub and simply inspects the spy - `expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('per_page=50'), ...)` - which looks like a fix and does catch today's bug, but leaves the suite asserting against a hand-written call signature rather than an actual HTTP request; a request built with a `Request` object, a relative URL, or a second argument shape would silently stop being checked, and the SUT is still never exercised against anything resembling a server. The other common unaided move is to leave the credential in the query string and rewrite the assertion to match it. The skill's contribution is interception below `fetch` so the real request object is available to assert on, defined once and shared by both files.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Doubles moved below fetch",
+      "max_score": 32,
+      "description": "Requests are intercepted so that the client's own `fetch` call, URL building and header construction all execute unchanged. Scores zero if any test still replaces, stubs, spies on or wraps the `fetch` global (`vi.stubGlobal('fetch', ...)`, `globalThis.fetch = ...`, `vi.spyOn(globalThis, 'fetch')`) - that is the defect being repaired, not an implementation detail."
+    },
+    {
+      "name": "Assertions read the request that was actually sent",
+      "max_score": 24,
+      "description": "Query parameters and the header are asserted from the intercepted request object (its URL / `searchParams` / `headers`), captured inside the request resolver. Asserting instead on a mock function's recorded call arguments scores at most half: it tests what the client passed to a helper rather than what went over the wire. Not asserting on the request at all scores zero."
+    },
+    {
+      "name": "Header assertion is specific and the query-string route is excluded",
+      "max_score": 16,
+      "description": "The users test asserts the `Authorization` header equals `Bearer <token>` AND that no credential parameter remains in the query string. Asserting only that the header is present, or only that the header contains the token substring, scores at most half. Leaving the credential in the query string and adjusting the assertion to match scores zero."
+    },
+    {
+      "name": "Client fixed to send the credential in the header",
+      "max_score": 14,
+      "description": "`apiFetch` puts the token in the request headers and stops appending `access_token` to the URL. Sending it in both places scores at most half - the gateway rejection is caused by the query-string form still being emitted by a client that believes it is authenticated. Leaving `src/api-client.js` unchanged scores zero."
+    },
+    {
+      "name": "MUST NOT duplicate the mock definitions per test file",
+      "max_score": 12,
+      "description": "The default responses for `/users` and `/users/search` are declared once in a shared module that both test files consume, with the lifecycle wired in one place rather than repeated in each file. Two files each declaring their own full copy of the same endpoint definitions scores zero: that is the duplication the task explicitly asks to remove, and it is how the two files drifted in the first place."
+    },
+    {
+      "name": "Interception lifecycle is wired",
+      "max_score": 12,
+      "description": "Interception is activated before the tests, reverted between tests, and torn down afterwards. Missing the between-tests revert scores at most half; no activation at all - so requests would leave the process - scores zero."
+    },
+    {
+      "name": "Existing result assertions preserved and green",
+      "max_score": 6,
+      "description": "Both files still assert the parsed payloads they assert today (`users`/`page`, and the search match name) and `npm test` exits clean. Deleting a case, or reducing it to an assertion that the call resolves, scores zero."
+    },
+    {
+      "name": "No new dependencies and no real network",
+      "max_score": 4,
+      "description": "MUST NOT add packages to `package.json` or let a request reach `api.example.com`. Reaching for an additional HTTP-mocking library when one is already installed scores zero."
+    }
+  ]
+}

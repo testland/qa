@@ -1,0 +1,8 @@
+{
+  "name": "support-tickets",
+  "version": "3.9.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

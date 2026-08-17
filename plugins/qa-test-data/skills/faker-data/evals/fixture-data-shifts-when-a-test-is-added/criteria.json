@@ -1,0 +1,46 @@
+{
+  "context": "One seed call at module load, a shared object built from it, and tests that also draw from the same running stream. Predicted baseline failure: the agent recognises the shared-mutable-state half of the problem, moves the catalogue construction into a `beforeEach`, and leaves `faker.seed(99)` where it is at the top of the file. Every test is now isolated, the suite passes whole and filtered, and the second reported symptom is completely untouched - the stream keeps advancing across the run, so each test still receives whatever values its position in the file happens to reach, and adding a test above still changes every test below it. That version reviews as a clean fix and reproduces Priya's lost reproduction exactly. The other predicted shape is stabilising the data by replacing generated values with literal SKUs and names, which makes the file deterministic by deleting the thing under discussion. The discriminating move is to reset the seed at the start of every test, so each test draws from the same starting point regardless of what ran before it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes whole and per test",
+      "max_score": 14,
+      "description": "`npm test` is green, and each of the four tests also passes when it is the only one selected. Any test that still needs a predecessor to have run scores zero here - that is the first reported symptom."
+    },
+    {
+      "name": "The seed is reset before each test",
+      "max_score": 32,
+      "description": "An explicit seed call runs at the start of every test - a `beforeEach`, a per-test hook registered in setup, or an explicit call inside each test - so a given test's draws begin from the same point no matter what ran before it. Moving generation into a per-test hook while the single module-load seed call stays scores zero for this item, even though the suite then passes in any order: the values a test receives still depend on its position in the file, which is the second symptom the task describes. No seeding at all also scores zero."
+    },
+    {
+      "name": "No shared mutable fixture between tests",
+      "max_score": 16,
+      "description": "The catalogue and the inventory instance are built per test rather than once at module load. A module-level object that tests mutate scores zero. Rebuilding per test but still sharing one array reference that a test mutates scores at most half."
+    },
+    {
+      "name": "Values stay generated",
+      "max_score": 12,
+      "description": "MUST NOT stabilise the file by writing literal SKUs, product names or prices into the tests, or by freezing the factory to constants. Any such literal scores zero: repeatability was required alongside generated data, not instead of it."
+    },
+    {
+      "name": "Order is not enforced as the fix",
+      "max_score": 12,
+      "description": "MUST NOT resolve the isolation problem by pinning execution order - disabling shuffling, forcing sequential or single-threaded execution, merging the dependent tests into one, or documenting that they must run in order. Any of those scores zero; the requirement was that each test stands alone."
+    },
+    {
+      "name": "Coverage preserved",
+      "max_score": 10,
+      "description": "All four behaviours - full reservation, the in-stock list after depletion, a new arrival joining the list, and over-reservation throwing - are still asserted, with the depletion case now creating its own depleted item. Dropping or weakening one scores zero."
+    },
+    {
+      "name": "Factory left intact",
+      "max_score": 8,
+      "description": "`tests/factories/item.js` still generates each field from the generator, and any change to it serves per-test construction rather than removing generation. Rewriting the factory to accept a fixed data table scores zero."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `src/inventory.js` or add dependencies. Either scores zero here."
+    }
+  ]
+}

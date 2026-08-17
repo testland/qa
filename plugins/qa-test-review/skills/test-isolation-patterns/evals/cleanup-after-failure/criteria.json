@@ -1,0 +1,46 @@
+{
+  "context": "Release written as the last statement of each test body, so it is skipped exactly when it matters - when an assertion above it throws. The file is green, which is the trap: nothing here looks broken. Predicted baseline failure: the agent reads a passing file, sees a name collision, and takes the shortcut of giving each test its own workspace name, which removes the cascade symptom without ever releasing anything - the final test then catches it, but an agent that also weakens or drops that test will believe it succeeded. The second predicted failure is the naive hook pair: acquiring in a before-each and releasing in an after-each, which is correct for the first four tests and leaves a workspace open during the fifth, turning a correct instinct into a red suite. The conditional release and the swallowed release error are usually left untouched because neither one is failing today.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes with all five tests",
+      "max_score": 6,
+      "description": "npm test succeeds and all five tests are present with their original names and assertions."
+    },
+    {
+      "name": "Release no longer sits at the end of the test body",
+      "max_score": 28,
+      "description": "Release runs through a mechanism that still runs when the test throws part-way through - a runner teardown hook, or a construct that guarantees the release regardless of outcome. Scores zero if any test still ends with a bare release statement reachable only when the assertions above it passed. Repeating a manual try/finally inside each of the four test bodies scores at most half: it survives a failure but is re-implemented four times and is exactly what the next author forgets."
+    },
+    {
+      "name": "Release is not conditional on the test result",
+      "max_score": 16,
+      "description": "MUST NOT gate cleanup on whether the test's own check succeeded. The `if (listed)` guard in the third test is gone and no equivalent - a pass flag, a try block with the release only in the success path - replaces it. Any surviving outcome-dependent release scores zero here."
+    },
+    {
+      "name": "Release failures are visible",
+      "max_score": 14,
+      "description": "The empty catch in the fourth test is gone and a failure while releasing now surfaces as a failure rather than being discarded. Replacing it with a catch that logs and continues scores at most half - the run still reports green while cleanup is broken."
+    },
+    {
+      "name": "MUST NOT sidestep by renaming workspaces",
+      "max_score": 14,
+      "description": "MUST NOT give each test its own workspace name, or otherwise make acquisition collision-proof, in place of releasing. That removes the visible symptom while every test still leaks a workspace. Any per-test unique name, counter, or randomised name introduced instead of a release scores zero on this criterion."
+    },
+    {
+      "name": "Teardown does not assume every test acquired",
+      "max_score": 12,
+      "description": "The final test holds no workspace while it runs, and the teardown copes with a test that acquired nothing rather than releasing something it did not open. A solution that acquires for every test in a shared setup hook - which makes the final assertion false - scores zero."
+    },
+    {
+      "name": "MUST NOT modify the source",
+      "max_score": 6,
+      "description": "MUST NOT change src/workspace.js. Relaxing the already-open check, or making close idempotent, is a production change the task did not authorise and scores zero here."
+    },
+    {
+      "name": "Notes explain the cascade",
+      "max_score": 12,
+      "description": "teardown-notes.md states that the first failure left the workspace held, so every later test failed on acquisition, and that those four failures were consequences rather than findings - which is why the one real failure was hard to pick out. Notes that describe only the repair, or that call the problem 'shared state' without connecting it to the buried failure, score at most half."
+    }
+  ]
+}

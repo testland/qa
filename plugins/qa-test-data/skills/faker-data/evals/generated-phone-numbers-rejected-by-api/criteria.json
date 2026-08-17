@@ -1,0 +1,51 @@
+{
+  "context": "Realistic generated values that the system under test refuses. The generator's default phone output is a nationally formatted human-readable number; the API wants E.164. Predicted baseline failure: the agent treats it as a string problem and post-processes - `faker.phone.number().replace(/\\D/g, '')` with `'+1'` glued on the front, or a hand-rolled `'+49' + faker.string.numeric(10)`. Both produce something that passes `isE164`, so the batch test is green and the diff looks minimal; both also reproduce the delivery bug the task already describes, because the country code is now a constant chosen by the test author rather than a property of the number, and the digits behind it belong to a different numbering plan. The other common shape is a filter or retry - generate, validate, discard and try again - which quietly turns an unfixed generator into a green test and hides how often the generator produces something the product would reject. The discriminating answer asks the phone provider for the international form directly, per region, so the value is correct by construction.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 5,
+      "description": "`npm test` exits clean with the three existing tests plus the new batch test. A failing or uncollectable suite scores zero."
+    },
+    {
+      "name": "The generator itself produces the required format",
+      "max_score": 30,
+      "description": "The phone value comes out of the phone provider already in E.164 - the provider's international style option, or an explicit format template passed to it - for each region, rather than being repaired afterwards. Assembling the number from a hardcoded country-code string plus generated digits scores at most half. Leaving the default call and transforming the result scores at most half, and scores zero if the country code applied is a constant shared across regions, which is the delivery failure described in the task."
+    },
+    {
+      "name": "No generate-and-discard loop",
+      "max_score": 16,
+      "description": "MUST NOT make the batch pass by validating inside the factory and retrying, filtering rejected contacts out of the batch, or wrapping registration in a try/catch that swallows the rejection. Any of those scores zero: it converts a generator that produces unusable data into a green test, and the seeding script would still be discarding most of what it makes."
+    },
+    {
+      "name": "The batch proof is large and covers both regions",
+      "max_score": 16,
+      "description": "A test builds 500 contacts and registers every one of them, with both regions represented, asserting no rejection. A test of a handful of contacts scores at most half, and one that checks only the default region scores at most half - the German path is where the previous fix failed."
+    },
+    {
+      "name": "Regional numbers come from that region",
+      "max_score": 14,
+      "description": "German contacts are generated from the German locale's phone data (a locale-specific generator instance or an equivalent), so the digits and the country code agree. A German contact whose digits come from the default locale scores zero here, even if the string satisfies `isE164`."
+    },
+    {
+      "name": "Numbers stay varied",
+      "max_score": 10,
+      "description": "Contacts differ from each other; the value is still generated per contact. A single constant number, or a counter-derived sequence, scores zero - the staging contact list has to be readable as distinct people."
+    },
+    {
+      "name": "The batch is reproducible",
+      "max_score": 10,
+      "description": "MUST NOT leave the batch unseeded. The stream is fixed by an explicit seed so a rejected contact can be produced again; an unseeded 500-record test that fails once a fortnight is unchaseable. No seeding scores zero."
+    },
+    {
+      "name": "Seeding script uses the fixed factory",
+      "max_score": 8,
+      "description": "`scripts/seed-staging.js` still gets contacts from the shared factory and therefore inherits the fix. Duplicating a corrected phone helper inside the script, or leaving the script on the old path, scores zero."
+    },
+    {
+      "name": "Validation left alone",
+      "max_score": 6,
+      "description": "MUST NOT edit `src/validation.js` - not the regex, not the error, not the register function. The rule mirrors the provider's documented requirement and was declared out of scope; any edit scores zero."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Each test file builds its own interceptor with its own inline copy of the shared defaults and its own lifecycle block, so a payload change is an N-file edit and the files that get missed keep passing against a dead shape. Predicted baseline failure: the agent does the literal task - edits the account payload in each of the three visible files, fixes the mapping, adds the seat-limit case with a fourth inline interceptor - and leaves the structure exactly as it found it, which is a green suite that still costs five edits next time. The partial version extracts a shared array of default responses but leaves each file constructing its own interceptor and repeating the three lifecycle hooks, so the wiring is still per-file and a new test file can still forget the revert. What the skill supplies is the split between one default definition module, one setup file wired into the runner, and per-case overrides layered on top.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Defaults declared once",
+      "max_score": 30,
+      "description": "One module exports the default responses for account, invoices and notifications, and every test file relies on it. Scores zero if any test file still declares its own copy of the account response - that is the duplication the task exists to remove. An extracted module that some files import while others keep inline copies scores at most half."
+    },
+    {
+      "name": "Lifecycle wired once for the whole run",
+      "max_score": 22,
+      "description": "Activation, per-test revert and teardown live in a single setup file registered with the runner (`setupFiles` in the Vitest config), and no test file repeats them. Three files each keeping their own hook block scores zero; a shared helper function each file must remember to call scores at most half - a new file that forgets it silently loses interception."
+    },
+    {
+      "name": "Per-case override without touching defaults",
+      "max_score": 18,
+      "description": "The zero-seat case installs its response for that case alone, layered over the defaults, and is reverted afterwards. Editing the shared default to zero seats scores zero; building a whole second interceptor inside that test file scores zero; a module-level flag the default handler branches on scores at most half - it leaks and it puts case logic in the shared file."
+    },
+    {
+      "name": "MUST NOT construct an interceptor per test file",
+      "max_score": 14,
+      "description": "Scores zero if any test file still calls `setupServer(...)`. One interceptor is created for the run; test files add variations to it rather than standing up their own, which is what makes the shared defaults and the shared lifecycle effective."
+    },
+    {
+      "name": "New payload applied in exactly one place",
+      "max_score": 12,
+      "description": "The nested `plan` shape appears once in the repository. Two or more places carrying the account payload scores zero even if all copies now agree - agreement today is the state the task says keeps decaying."
+    },
+    {
+      "name": "Mapping updated and all cases green",
+      "max_score": 10,
+      "description": "`src/account.js` reads `plan.tier` and `plan.seats`, and `npm test` passes with the three existing cases plus the seat-limit case. Adding fallbacks for the old flat shape scores at most half; leaving `src/account.js` unchanged scores zero."
+    },
+    {
+      "name": "Isolation holds across cases",
+      "max_score": 10,
+      "description": "The account cases see 10 seats regardless of order, including when the zero-seat case runs first. A suite that only passes in declaration order scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 4,
+      "description": "Nothing added to `package.json`. The restructure needs only what is installed."
+    }
+  ]
+}

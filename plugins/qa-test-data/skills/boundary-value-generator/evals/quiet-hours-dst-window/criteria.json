@@ -1,0 +1,46 @@
+{
+  "context": "The edges of this window are wall-clock instants, so the smallest step either side is one millisecond and the UTC instant that lands on a given edge is not the same all year. Predicted baseline failure: the agent writes two or three cases per edge on a single calendar date, or constructs instants with new Date(2026, 0, 15, 22, 0) - which resolves in the runner's own zone and therefore passes on the author's laptop and fails in CI - and never re-probes the same wall-clock edge on a date in the other half of the year. That suite goes green while the one-hour offset shift is entirely unpinned, which is precisely the pair of complaints described. The values that discriminate are 2026-01-16T02:59:59.999Z / 03:00:00.000Z / 03:00:00.001Z against 2026-07-16T01:59:59.999Z / 02:00:00.000Z / 02:00:00.001Z - the same local 22:00 edge, one hour apart in UTC.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/quiet-hours.test.js exists and contains at least one test that imports isQuietHours."
+    },
+    {
+      "name": "Evening edge covered on all three points",
+      "max_score": 18,
+      "description": "On at least one date, the suite exercises the instant one millisecond before local 22:00 (quiet false), the instant at local 22:00 (quiet true), and one millisecond after (quiet true). Millisecond-resolution neighbours are required; using one minute or one hour either side caps this at half. Only one or two of the three points scores zero."
+    },
+    {
+      "name": "Morning edge covered on all three points",
+      "max_score": 18,
+      "description": "On at least one date, the suite exercises one millisecond before local 07:00 (quiet true), local 07:00 exactly (quiet false), and one millisecond after (quiet false). Millisecond-resolution neighbours are required; coarser neighbours cap this at half. Only one or two of the three points scores zero."
+    },
+    {
+      "name": "Both halves of the year probed with the correct UTC instants",
+      "max_score": 28,
+      "description": "Each edge is probed on a standard-time date and again on a daylight-time date, with the UTC instants shifted an hour apart accordingly. For the 22:00 edge that is 2026-01-16T03:00:00.000Z (with 02:59:59.999Z and 03:00:00.001Z) and 2026-07-16T02:00:00.000Z (with 01:59:59.999Z and 02:00:00.001Z); for the 07:00 edge it is 2026-01-15T12:00:00.000Z and 2026-07-15T11:00:00.000Z with their millisecond neighbours. Equivalent dates in the same two parts of the year count. Covering both seasons on only one of the two edges caps this at half. Covering a single date for both edges scores zero - that is the failure the two complaints describe."
+    },
+    {
+      "name": "MUST NOT let the runner's clock or zone decide the answer",
+      "max_score": 16,
+      "description": "Every instant is a fixed literal carrying an explicit UTC designator, and the zone is passed as the string 'America/New_York'. A suite that calls Date.now(), new Date() with no argument, a multi-argument new Date(y, m, d, h) - which is interpreted in the runner's local zone - or that derives an offset from the machine, scores zero here: the result changes with the machine and the date the suite runs, which is why the original complaints could not be reproduced."
+    },
+    {
+      "name": "Inclusive start and exclusive end both pinned",
+      "max_score": 14,
+      "description": "The case sitting exactly on local 22:00 asserts quiet true and the case sitting exactly on local 07:00 asserts quiet false. Omitting either exact-edge case caps this at half; omitting both scores zero, since the suite then cannot tell an inclusive comparison from an exclusive one at either end."
+    },
+    {
+      "name": "One case per point",
+      "max_score": 10,
+      "description": "Each instant is its own test, or is generated per-instant by a loop or table-driven helper producing an individually named case that names the instant. A single test function holding all twelve assertions scores zero."
+    },
+    {
+      "name": "Malformed instant covered",
+      "max_score": 8,
+      "description": "At least one case supplies an unparsable instant and asserts the BAD_INSTANT code, rather than only asserting that quiet is falsy - quiet is null in that path, so a falsiness-only assertion cannot distinguish it from a non-quiet instant."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Breaking a suite off one shared, pre-built, mutated object. tests/fixtures.js constructs a single account at import time, grants it a role, and exports that instance; two tests then pass only because an earlier test mutated it, and every test reads its starting state out of another file. Predicted baseline failure: the agent keeps the fixtures module exactly as it is and reaches for a lifecycle hook - a beforeEach that re-grants the role, or a resetFixtures() that puts the shared object back - which makes the suite order-independent while leaving the shared instance and the hidden starting state in place, so a test still cannot be read on its own and the next author still mutates a global. The distinguishing move is that the shared module stops exporting a built account at all and exports a way to build one, with the values each test asserts on visible in that test.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Every test passes alone",
+      "max_score": 10,
+      "description": "npm test passes, and each test also passes when selected on its own with node --test --test-name-pattern. Any test that still depends on another having run scores zero here."
+    },
+    {
+      "name": "The shared module MUST NOT export a built, mutable account",
+      "max_score": 30,
+      "description": "tests/fixtures.js no longer constructs an account at import time and no longer exports one. What it exports, if anything, produces a fresh value per call. Keeping the exported instance and guarding it with a reset function, a beforeEach that re-grants roles, or a deep copy taken at the top of each test all score zero: the shared mutable object is what the task is about, and a reset only hides it."
+    },
+    {
+      "name": "Each test builds the state it asserts on",
+      "max_score": 20,
+      "description": "The three order-dependent tests - an admin keeping the editor permissions, the role count after an unknown role is refused, and a deactivated account being unable to write - each perform their own role grant or their own deactivation. A test that still relies on a grant or a deactivation performed by another test scores zero, whether the other test is in the same file or not."
+    },
+    {
+      "name": "Values under assertion are visible in the test",
+      "max_score": 14,
+      "description": "Where a test asserts on an org id, a role, or a permission, that value is stated in the test rather than reached for through a shared blob. Asserting that a result equals an entry taken from the same shared data the setup used scores at most half, since the two agree by construction."
+    },
+    {
+      "name": "Sharing is at the smallest scope that holds",
+      "max_score": 12,
+      "description": "Setup genuinely common to every test in a file may sit in a per-file hook or a helper; setup that only some tests need is not hoisted above them. Score zero if the rework replaces one global with another - a single file-level object that all tests still read from and write to."
+    },
+    {
+      "name": "All original assertions survive",
+      "max_score": 12,
+      "description": "All eleven assertions remain: org membership, editor writing, admin deleting, admin retaining write, role count after the admin grant, the unknown-role throw, the role count after the refused grant, granting every known role, an active editor reading, reading lost on deactivation, and writing lost on deactivation. Score proportionally; dropping the tests that were awkward to make independent is the failure this criterion catches."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify src/accounts.js."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 5,
+      "description": "A file named fixture-review.md exists, states what was being shared and why it broke isolation, and gives the rule applied for what may still be shared."
+    }
+  ]
+}

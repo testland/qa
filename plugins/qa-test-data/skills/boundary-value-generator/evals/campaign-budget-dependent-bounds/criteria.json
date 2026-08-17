@@ -1,0 +1,46 @@
+{
+  "context": "One field has fixed limits; the other's floor is the first field's value, so that floor is not a number the suite can pin once. Predicted baseline failure: the agent treats the pair as two independent fields, probes the total budget's floor at whatever daily cap it already had in scope - usually a mid-range one - and stops. The suite then reads as complete while the floor has only ever been exercised at a single position, so a comparison written against a constant instead of against dailyCapCents stays green, and the advertiser complaint about the largest daily cap remains unexplained. The values that discriminate are the floor probed twice: 999 / 1000 / 1001 at dailyCapCents 1000, and 99999 / 100000 / 100001 at dailyCapCents 100000.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/campaign.test.js exists and contains at least one test that imports validateCampaign."
+    },
+    {
+      "name": "Daily cap limits covered on all three points at each end",
+      "max_score": 18,
+      "description": "Daily caps 999 (DAILY_CAP_TOO_LOW), 1000 (accepted), 1001 (accepted), 99999 (accepted), 100000 (accepted), and 100001 (DAILY_CAP_TOO_HIGH) each appear with the correct expectation, with the total budget held at a value comfortably inside its own range. Covering one end fully and the other with only the limit itself caps this at half; covering fewer than four of the six points scores zero."
+    },
+    {
+      "name": "Moving floor probed at the bottom of the daily cap range",
+      "max_score": 15,
+      "description": "With dailyCapCents at 1000, total budgets 999 (TOTAL_BELOW_DAILY_CAP), 1000 (accepted), and 1001 (accepted) each appear with the correct expectation. Missing 1001 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Moving floor probed again at the top of the daily cap range",
+      "max_score": 30,
+      "description": "With dailyCapCents at 100000, total budgets 99999 (TOTAL_BELOW_DAILY_CAP), 100000 (accepted), and 100001 (accepted) each appear with the correct expectation. This is the criterion the task exists for: probing the floor at only one daily cap - however thoroughly - scores zero here, because a comparison hard-coded against a constant floor passes every such case. Probing a second daily cap that is not at the top of its range but is clearly different from the first (for example 50000) caps this at half."
+    },
+    {
+      "name": "Total budget ceiling covered on all three points",
+      "max_score": 14,
+      "description": "Total budgets 9999999 (accepted), 10000000 (accepted), and 10000001 (TOTAL_BUDGET_TOO_HIGH) each appear with the correct expectation, with the daily cap held inside its range. Missing 9999999 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "MUST NOT collapse the pairs into one test",
+      "max_score": 12,
+      "description": "Each pair of values is its own test case, or is generated per-pair by a loop or table-driven helper that yields an individually named case naming both amounts. A single test function asserting every pair in sequence scores zero: the first failing pair hides every later one, and with a floor that moves between cases that is exactly the information needed to localise the bug."
+    },
+    {
+      "name": "Specific rejection codes asserted",
+      "max_score": 12,
+      "description": "Failing cases assert the exact code - DAILY_CAP_TOO_LOW, DAILY_CAP_TOO_HIGH, TOTAL_BELOW_DAILY_CAP, TOTAL_BUDGET_TOO_HIGH, and the integer-check codes - rather than only that ok is false. Asserting only falsiness scores zero here: a total budget of 999 against a daily cap of 1000 and a daily cap of 999 are different failures that a falsiness-only suite cannot separate."
+    },
+    {
+      "name": "Pairs are fixed literals",
+      "max_score": 8,
+      "description": "Every probed pair is written as literals or derived arithmetically from the exported MIN_DAILY_CAP / MAX_DAILY_CAP / MAX_TOTAL_BUDGET. Pairs drawn from Math.random or an unseeded generator score zero here, since the floor under test then differs run to run."
+    }
+  ]
+}

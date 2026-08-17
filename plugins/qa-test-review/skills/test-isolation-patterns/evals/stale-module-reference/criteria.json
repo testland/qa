@@ -1,0 +1,46 @@
+{
+  "context": "A clean-up hook that restores settings by building a replacement object. The consumer captured the settings object once when it was imported, so every replacement leaves the client pointing at the original - which is why configure() has no effect inside the file and why calling reset() more often cannot help. A second, independent problem sits behind it: the client memoises the endpoint it derives, so restoring the inputs does not undo the derived value. Predicted baseline failure: the agent reads the failures as ordinary leakage and reaches for more of the same - moving reset() earlier, calling it in an after-hook as well, or adding reset() calls inside the failing tests - none of which can work, because the object the client holds is unreachable through the module's exports once it has been replaced. Agents that do get the settings restore right usually stop there and leave the cached endpoint untouched, which fails the last test. The distinction being measured is between restoring a value and replacing the thing that held it, and between resetting an input and invalidating what was computed from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes with all five tests",
+      "max_score": 6,
+      "description": "npm test succeeds and all five tests are present with their original names and assertions."
+    },
+    {
+      "name": "Restoration reaches the object the client already holds",
+      "max_score": 30,
+      "description": "The per-test restore writes the default values over the existing settings object rather than substituting a new one - which in practice means reset() is no longer the restore mechanism anywhere in the file. Re-creating the module graph so that no consumer is left holding a stale object also earns full credit. Scores zero if reset() survives as the restore, however it is scheduled, since the client can never observe a replacement object."
+    },
+    {
+      "name": "The derived value is invalidated too",
+      "max_score": 22,
+      "description": "The cached endpoint is cleared for each test, not only the settings it was built from. Scores zero if only the settings are restored - the last test then reads a value computed during an earlier test. Clearing it inside the one test that changes the region, rather than for every test, scores at most half."
+    },
+    {
+      "name": "Restoration happens for every test",
+      "max_score": 10,
+      "description": "The restore runs before or after each test rather than once for the file, so a test added at any position starts from the defaults. Scores zero if it is done once, or inline in only the tests that currently need it."
+    },
+    {
+      "name": "MUST NOT modify the sources",
+      "max_score": 10,
+      "description": "MUST NOT change src/settings.js or src/client.js. Rewriting reset() to assign in place, or making the client read settings() on each call instead of holding the object, is the production fix and not what this task authorised - either scores zero here."
+    },
+    {
+      "name": "MUST NOT reorder or weaken the tests",
+      "max_score": 10,
+      "description": "MUST NOT reorder the tests, change an expected value, or skip or merge a test so the file goes green on a particular sequence. Any of those scores zero here."
+    },
+    {
+      "name": "Notes explain the replaced object",
+      "max_score": 16,
+      "description": "reset-notes.md states that the client took hold of the settings object when it was first imported, so replacing that object left the client reading the old one while every later write went to the new one - and that this is why more calls to reset() could not help. Notes that describe the symptom as leaking state, or that blame the caching alone, score at most half."
+    },
+    {
+      "name": "Rule for restoring shared state later",
+      "max_score": 8,
+      "description": "The notes give the forward rule - restore shared state by overwriting the values in the object other code already holds, and invalidate anything derived from it explicitly - rather than describing only this file's repair."
+    }
+  ]
+}

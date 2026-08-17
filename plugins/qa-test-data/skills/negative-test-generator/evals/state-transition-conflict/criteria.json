@@ -1,0 +1,46 @@
+{
+  "context": "Refusal coverage for a state machine guarded by a version precondition. Predicted baseline failure: the agent recognises the families in the source but flattens their statuses, because a refused state change reads as one idea - most attempts expect 400 or 409 for everything, and a suite that expects the same status for a stale version and for a disallowed move is precisely blind to the refactor described in the task. Two further things go untested by default: the two refusals that share status 409 are distinguishable only by their code, so a status-only assertion cannot separate them; and no case checks that a refused command left the order's version and the event log alone, which is the difference between a rejected write and a partially applied one.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/orderState.test.js exists and contains at least one refusal case. A file that only repeats the successful placement scores zero."
+    },
+    {
+      "name": "Each refusal family keeps its own status",
+      "max_score": 28,
+      "description": "The suite asserts 404 for an unknown order, 428 for an absent version precondition, 412 for a stale version, 422 for an unknown status and for a disallowed move, and 409 for the repeat and finalised cases. Any two families sharing an expected status where the handler distinguishes them scores zero, as does a suite expecting 400 for the validation-shaped refusals."
+    },
+    {
+      "name": "Nothing is written by a refusal",
+      "max_score": 26,
+      "description": "After each refusal the suite asserts the order's status and version are exactly what they were before the call and that store.events is still empty. A suite that never inspects the stored order after a refusal scores zero; inspecting it after only one refusal scores at most half."
+    },
+    {
+      "name": "Precedence asserted where two refusals apply",
+      "max_score": 18,
+      "description": "A case sends a stale version together with a move that is also disallowed and asserts VERSION_STALE, showing the precondition is evaluated first, and a case sends an unknown order id together with an invalid status and asserts ORDER_NOT_FOUND. Neither case present scores zero; one of the two scores at most half."
+    },
+    {
+      "name": "The two 409s are separated by code",
+      "max_score": 16,
+      "description": "On the finalised order, asking for the status it already holds asserts ALREADY_IN_STATUS while asking for another status asserts ORDER_FINALISED, both with status 409 and both asserted on the code. Asserting only the numeric status for these scores zero: 409 alone cannot tell the two support responses apart."
+    },
+    {
+      "name": "The version echoed on a refusal is asserted",
+      "max_score": 10,
+      "description": "At least one refusal case asserts currentVersion carries the order's actual current version, which is what lets a client re-read and retry. Never asserting it scores zero."
+    },
+    {
+      "name": "The absent precondition is covered on its own",
+      "max_score": 10,
+      "description": "A case omits ifMatch entirely - and a second passes null - asserting 428 with IF_MATCH_REQUIRED, kept distinct from the stale-version case. Folding the missing precondition into the stale case scores zero."
+    },
+    {
+      "name": "MUST NOT collapse the refusals into one test",
+      "max_score": 12,
+      "description": "The refusal families are separate test functions, or generated per case from a table with individually named cases, so a single failure identifies which family broke. One test containing every refusal assertion in sequence scores zero: the first failing assertion masks every family after it."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "context": "This file needs combining, not splitting, which is the opposite of what a test file usually needs. Eleven of the fourteen tests check one field each of three returned quotes; the three quotes are one outcome apiece and belong in one test each, asserted whole, so a rate change reports every field that moved in one run and a new field costs no new tests. The remaining three tests - 4999 cents, 5000 cents, and the no-mutation check - are genuinely different situations and must stay apart. Predicted baseline failure: the agent reads fourteen small, descriptively named, single-check tests as already exemplary, and limits itself to hoisting the shared orders into a helper or a lifecycle hook while leaving the per-field tests in place - the file looks tidier and the reported failure is still one field at a time. The opposite failure is combining everything, including the two threshold cases, into one quote-works test that can no longer tell which side of the boundary broke.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 6,
+      "description": "npm test completes successfully."
+    },
+    {
+      "name": "Per-field tests for one order combined into one test per scenario",
+      "max_score": 30,
+      "description": "The five light-parcel tests become a single test, the four heavy-order tests become a single test, and the two free-shipping tests become a single test, each asserting the quote that scenario produces as a whole. Leaving any of those groups as one test per field scores zero for that group, even if the shared setup has been deduplicated into a helper or a hook - deduplicating the setup is not the problem the task describes."
+    },
+    {
+      "name": "Distinct situations MUST NOT be combined",
+      "max_score": 20,
+      "description": "The 4999-cent case and the 5000-cent case remain separate tests from each other, and the no-mutation check remains its own test. Folding either threshold case into the other, or into a general quote test, scores zero: a failure would no longer say which side of the boundary moved. Absorbing the no-mutation check into a scenario test scores zero as well, because it is a different claim about the same call."
+    },
+    {
+      "name": "Every field and value survives",
+      "max_score": 18,
+      "description": "All fourteen expectations remain: light parcel 839 / not free / parcel / 2 days / EUR, heavy 4199 / freight / 5 days / not free, free-shipping true / 0, 719 at 4999 cents, 0 at 5000 cents, and the order unchanged. Score proportionally. A combined test that checks only the shipping cost and drops the carrier, estimate or currency loses those fields."
+    },
+    {
+      "name": "A failure still names the field",
+      "max_score": 12,
+      "description": "The combined tests compare the returned object so that a mismatch reports which field differs - deep equality against a stated quote, or per-field equality checks within the one test. Comparing serialised strings scores at most half, and a truthiness or shape-only check scores zero."
+    },
+    {
+      "name": "One call per scenario",
+      "max_score": 8,
+      "description": "Each combined test calls quote once and asserts against the result it captured, rather than calling quote again per field as the current file does."
+    },
+    {
+      "name": "Names describe the scenario and its outcome",
+      "max_score": 8,
+      "description": "After combining, each test name states the situation and what the quote should be, not a single field. A name naming only one field of a test that now asserts five scores at most half."
+    },
+    {
+      "name": "Source left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify src/quote.js."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 5,
+      "description": "A file named quote-test-review.md exists, says what was combined and on what basis, and names what was deliberately left separate."
+    }
+  ]
+}

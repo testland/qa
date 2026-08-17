@@ -1,0 +1,46 @@
+{
+  "context": "Three limits, and the brief's wording does not say whether any endpoint counts. The code answers differently for different limits: both item endpoints are included, but the subtotal limit is excluded, so 50000 cents does not qualify. Predicted baseline failure: the agent paraphrases the brief instead of the comparisons - it writes a 'well under' and a 'well over' case per limit, treats 'up to 500.00' as inclusive in its head, and never puts a case on 50000 at all. That suite passes, and the exact question support asked twice stays unanswered. The values that discriminate are 100 (qualifies) and 50000 (does not), each surrounded by its immediate neighbours, plus an explicit written record of which reading the code implements.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/discount.test.js exists and contains at least one test that imports isEligible."
+    },
+    {
+      "name": "Lower item endpoint covered on all three points",
+      "max_score": 16,
+      "description": "Item counts 9 (TOO_FEW_ITEMS), 10 (eligible), and 11 (eligible) each appear with the correct expectation. Missing 11 caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Upper item endpoint covered on all three points",
+      "max_score": 16,
+      "description": "Item counts 99 (eligible), 100 (eligible), and 101 (TOO_MANY_ITEMS) each appear with the correct expectation. The case on 100 must exist and assert that the order still qualifies - that is one of the two questions support asked. Missing 99 caps this at half; missing the case on 100 scores zero."
+    },
+    {
+      "name": "Subtotal limit pinned as excluded, with both neighbours",
+      "max_score": 28,
+      "description": "Subtotals 49999 (eligible), 50000 (SUBTOTAL_TOO_HIGH), and 50001 (SUBTOTAL_TOO_HIGH) each appear with the correct expectation. The case sitting exactly on 50000 is the one that settles the brief's 'up to' wording; omitting it scores zero on this criterion no matter how many other subtotal cases exist. Having 50000 but missing 49999 caps this at half."
+    },
+    {
+      "name": "MUST NOT probe a limit with only a far-under and a far-over value",
+      "max_score": 14,
+      "description": "Each limit carries cases at the endpoint and at its immediate neighbours in the unit the module compares in - one item, one cent. A suite that covers a limit with a comfortably-inside value and a comfortably-outside value only - for example subtotals of 10000 and 90000, or item counts of 5 and 200 - scores zero on this criterion for that limit; two or three limits covered that way scores zero outright. Those cases stay green when a comparison operator is flipped, which is the failure the tickets describe."
+    },
+    {
+      "name": "Shipped reading of the ambiguous wording recorded",
+      "max_score": 16,
+      "description": "The new file states, in a test name or a comment, which reading each ambiguous endpoint has in the shipped code: both item endpoints count, the subtotal limit does not. A file that records neither scores zero; recording only one of the two caps this at half. Restating the brief's wording without saying how the implementation resolves it earns nothing."
+    },
+    {
+      "name": "The unprobed field is held at an interior value",
+      "max_score": 8,
+      "description": "When a case probes the item count, the subtotal sits comfortably inside its accepted range, and vice versa, so a failing assertion can only be caused by the field under test. A case that moves both fields to an endpoint at once scores zero on this criterion."
+    },
+    {
+      "name": "Specific rejection codes asserted",
+      "max_score": 10,
+      "description": "Failing cases assert the exact code - TOO_FEW_ITEMS, TOO_MANY_ITEMS, SUBTOTAL_TOO_HIGH, BAD_ITEM_COUNT, BAD_SUBTOTAL, MALFORMED - rather than only that eligible is false. Asserting only falsiness scores zero here, since item count is checked before subtotal and a wrong-reason result would still pass."
+    }
+  ]
+}

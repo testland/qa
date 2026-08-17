@@ -1,0 +1,46 @@
+{
+  "context": "A factory that uses the generator only as a source of random strings, so no generated contact can satisfy the code paths that care about format. Predicted baseline failure: the agent keeps the filler-text shape and hand-rolls format compliance - a postcode built as five random digits, a phone assembled from a numeric string with dashes glued on, a date of birth computed by subtracting a random number of days from `Date.now()`. Each of those passes the new tests it was written alongside, which is why it reviews well, and each reintroduces the original defect in a different costume: the values still are not drawn from a real-world dataset, so they never surface the long name, the accented character, the hyphenated city or the extended postcode that broke production. The second predicted failure is on the injection case - a run that asks the generator for the nasty input, or generates it from random characters, produces a test that will never contain a script tag and therefore silently covers nothing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 5,
+      "description": "`npm test` exits clean with both existing tests plus the new ones. Any failure or collection error scores zero."
+    },
+    {
+      "name": "Each field comes from the provider that owns that kind of value",
+      "max_score": 30,
+      "description": "Name from the person provider, email from the internet provider, street / city / postcode from the location provider, phone from the phone provider, account number from the finance provider. Full credit requires all of them; hand-assembling any of these from random digits, characters or filler words scores at most half overall for this item, and leaving two or more fields on filler text scores zero. The point is that the values are drawn from real-world datasets - that is what surfaces long names, accented characters and hyphenated place names."
+    },
+    {
+      "name": "Date of birth is generated inside an adult range",
+      "max_score": 14,
+      "description": "The date comes from the generator's date provider constrained to an age or date window that keeps the contact an adult (a birthdate helper with min/max age, or an explicit date range). A hardcoded date scores zero - that is the current defect. An unconstrained random date, which can produce a contact born last week or in 1804, scores at most half: it makes `isAdult` tests flip between runs."
+    },
+    {
+      "name": "New tests run against factory output",
+      "max_score": 16,
+      "description": "`isDeliverable`, `isAdult` and `maskAccountNumber` each get a test whose input comes from `makeContact` (with overrides where a specific case is needed), not a literal contact object written inline. Full credit needs all three covered. Tests that rebuild a contact literal inline score at most half - that is the drift the team already deleted once."
+    },
+    {
+      "name": "The injection case is a written literal",
+      "max_score": 14,
+      "description": "MUST NOT ask the data generator to produce the adversarial input. The `escapeName` test passes the exact `<script>alert(1)</script>` string as a literal (or an override carrying it). Generating a 'random malicious' / 'special character' / 'random symbols' value for that case scores zero: the generator produces plausible real-world values, so a script tag will never occur by chance and the test would be permanently vacuous."
+    },
+    {
+      "name": "Data is reproducible run to run",
+      "max_score": 10,
+      "description": "The generator's random stream is fixed by an explicit seed so a failing run can be repeated. No seed anywhere scores zero. A seed set once at module load scores at most half, since a filtered run then produces different data than the full run."
+    },
+    {
+      "name": "Ids stay unique across calls",
+      "max_score": 6,
+      "description": "Repeated `makeContact()` calls still produce distinct ids, whether via the existing counter or a generated identifier. Replacing the counter with a value that repeats within a run scores zero."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `src/contact.js` or add dependencies. Either scores zero here; the production behaviour was explicitly not in question."
+    }
+  ]
+}

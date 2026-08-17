@@ -1,0 +1,46 @@
+{
+  "context": "Two length limits counted in two different units - 24 code points and 40 UTF-16 units - on the same string. Predicted baseline failure: the agent probes both limits with 'a'.repeat(n), which makes the two counts identical and therefore proves nothing about which unit either rule uses; worse, the storage limit is unreachable with ASCII, because 41 ASCII characters is 41 code points and trips the product limit first. So the baseline suite has a STORAGE_OVERFLOW branch with literally zero coverage while reporting full boundary coverage of both limits. Reaching it requires astral characters, where one code point costs two UTF-16 units: '\\u{1F600}'.repeat(20) is 20 code points and exactly 40 units (accepted), and .repeat(21) is 21 code points and 42 units (STORAGE_OVERFLOW). The grapheme case is the second half of the same confusion - '\\u{1F469}\\u{200D}\\u{1F469}\\u{200D}\\u{1F467}' is one thing on screen, five code points, eight UTF-16 units.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test file created",
+      "max_score": 4,
+      "description": "A file src/display-name.test.js exists and contains at least one test that imports validateDisplayName."
+    },
+    {
+      "name": "Lower character limit covered on all three points",
+      "max_score": 12,
+      "description": "Names of 0 characters (empty string, TOO_SHORT), 1 character (accepted), and 2 characters (accepted) each appear with the correct expectation. Missing the 2-character case caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Upper character limit covered on all three points",
+      "max_score": 18,
+      "description": "Names of 23 (accepted), 24 (accepted), and 25 (TOO_LONG) code points each appear with the correct expectation - for example 'a'.repeat(23) / .repeat(24) / .repeat(25). Missing the 23-code-point case caps this at half; missing two of the three scores zero."
+    },
+    {
+      "name": "Storage limit actually reached, at one-unit resolution",
+      "max_score": 30,
+      "description": "At least one case asserts the STORAGE_OVERFLOW code, and the limit is probed on all three points using astral characters so the character limit does not fire first: '\\u{1F600}'.repeat(19) = 19 code points / 38 units (accepted), .repeat(20) = 20 code points / 40 units (accepted), .repeat(21) = 21 code points / 42 units (STORAGE_OVERFLOW). Any astral character works in place of U+1F600. No case producing STORAGE_OVERFLOW anywhere scores zero on this criterion - that branch is unreachable with ASCII input, and leaving it uncovered is the whole gap. Producing STORAGE_OVERFLOW but with no accepted case at exactly 40 units caps this at half."
+    },
+    {
+      "name": "A case proves which unit the character limit counts in",
+      "max_score": 20,
+      "description": "At least one accepted or TOO_LONG case uses a string whose UTF-16 length differs from its code-point count while sitting on the character limit - for example '\\u{1F600}'.repeat(8) + 'a'.repeat(16) is 24 code points in 32 units (accepted) and '\\u{1F600}'.repeat(8) + 'a'.repeat(17) is 25 code points in 33 units (TOO_LONG). A suite in which every character-limit probe is pure ASCII scores zero here: for ASCII the two counts are equal, so the case cannot distinguish a code-point rule from a UTF-16 rule and would still pass if the module counted the wrong one."
+    },
+    {
+      "name": "Visible-character mismatch covered and recorded",
+      "max_score": 12,
+      "description": "At least one case uses a name whose on-screen character count differs from its code-point count - for example '\\u{1F469}\\u{200D}\\u{1F469}\\u{200D}\\u{1F467}'.repeat(5), which reads as 5 items on screen but is 25 code points and therefore TOO_LONG - and a test name or comment states that the module counts code points, not what a person sees. Having the case but no written note caps this at half; having neither scores zero."
+    },
+    {
+      "name": "MUST NOT build the probes from randomly chosen characters",
+      "max_score": 10,
+      "description": "Every probe string is a fixed literal, an escape sequence, or a deterministic repeat. Strings assembled from Math.random, an unseeded generator, or a random pick out of a character pool score zero here: the code-point and UTF-16 counts of the result then differ run to run, so the case can drift off the limit it was written to sit on."
+    },
+    {
+      "name": "Specific rejection codes asserted, one case per point",
+      "max_score": 10,
+      "description": "Failing cases assert the exact code - TOO_SHORT, TOO_LONG, STORAGE_OVERFLOW, NOT_A_STRING - rather than only that ok is false, and each probe is its own test or a per-case entry produced by a loop or table-driven helper. Asserting only falsiness scores zero, since TOO_LONG and STORAGE_OVERFLOW are exactly the two outcomes this task is about telling apart. A single test function holding every assertion also scores zero."
+    }
+  ]
+}

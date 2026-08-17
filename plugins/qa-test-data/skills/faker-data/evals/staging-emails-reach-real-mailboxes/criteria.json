@@ -1,0 +1,46 @@
+{
+  "context": "A factory whose address fields resolve to mailboxes that exist. Predicted baseline failure: the agent swaps the obviously wrong call for the generic one - `fake.free_email()` becomes `fake.email()`, and `f\"...@nortonlabs.io\"` becomes `f\"...@{fake.domain_name()}\"`. Both look fixed in review and neither is: the generic address provider still draws from the same free-provider list, and an invented domain name is a real registrable string that someone owns. The second common shape is a hand-rolled f-string against a hardcoded 'example.com', which is safe but drops the provider and usually only gets applied to the field named in the complaint, leaving the website and work address live. The website field is the one most runs forget entirely.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test suite passes",
+      "max_score": 5,
+      "description": "`pytest` exits clean with the two existing tests plus whatever is added. A collection error or a failing test scores zero."
+    },
+    {
+      "name": "Every hostname-bearing value is confined to a reserved domain",
+      "max_score": 30,
+      "description": "Personal address, work address and website all resolve to domains reserved for documentation or testing - the library's safe address/domain providers, or an explicitly reserved domain (example.com / example.org / example.net, or a .test / .invalid / .example name) supplied to the generator. Full credit only if all three fields are covered. Covering the personal address alone scores at most half. Any remaining call that can return a live domain - the free-provider helper, the generic address helper, the generic domain-name helper, a company-flavoured address built on an invented domain - scores zero, because the generic helpers are exactly what produced the bounces."
+    },
+    {
+      "name": "No real or company-owned domain remains",
+      "max_score": 16,
+      "description": "MUST NOT emit an address at a domain anyone can receive mail on, including our own `nortonlabs.io` and the free providers. Any surviving path to such a domain in the factory or the seeding script scores zero here, whether it is a literal, a helper call, or an override left in place for 'realism'."
+    },
+    {
+      "name": "The proof is a large seeded sample, not a spot check",
+      "max_score": 18,
+      "description": "A test builds a few hundred accounts in one run and asserts every hostname sits in the reserved set, and the run is made repeatable by fixing the generator's random stream so a failure can be chased. A test that checks one or three accounts scores at most half - a rare live-domain path is exactly what the previous review missed. An unseeded batch scores at most half: a failure it does catch cannot be reproduced."
+    },
+    {
+      "name": "Values stay varied",
+      "max_score": 14,
+      "description": "Local parts and hostnames still differ per account, from the generator rather than a constant. Every account sharing one address (`qa@example.com` for all) scores zero: it satisfies the safety rule and destroys the staging data. A single reserved domain with varied local parts is fine and scores full."
+    },
+    {
+      "name": "Names and other fields keep their providers",
+      "max_score": 10,
+      "description": "The fix is confined to the hostname-bearing fields; person name, phone, company and id keep coming from their own providers. Downgrading unrelated fields to placeholder strings while fixing the addresses scores zero for this item."
+    },
+    {
+      "name": "Seeding script covered by the same rule",
+      "max_score": 9,
+      "description": "`scripts/seed_staging.py` gets its accounts through the fixed factory (or is itself changed so it cannot produce a live address). Leaving the script on an unfixed path while only the test factory is corrected scores zero - the script is what sent the 214 messages."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 5,
+      "description": "MUST NOT edit `signup.py` or change what the two existing tests assert. Either scores zero here."
+    }
+  ]
+}
