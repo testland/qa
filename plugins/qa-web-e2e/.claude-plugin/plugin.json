@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-web-e2e",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "description": "Web E2E framework wrappers + cross-browser strategy and grids: 8 skills (playwright-testing carrying the cross-browser matrix reference, cypress-testing, selenium-testing, webdriverio-testing, cloud-grid-e2e covering BrowserStack / Sauce Labs / LambdaTest, selenium-grid-4-runner for the self-hosted grid, browser-matrix-strategy-reference with the T1/T2/T3 tiering + compatibility budget + matrix review checklist, and the web-e2e-overview decision guide) and 2 agents (playwright-codegen-reviewer, which also reviews Cypress Studio recordings, and automation-harness-bootstrapper, which scaffolds a full E2E harness skeleton for a repo with no suite).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-web-e2e",

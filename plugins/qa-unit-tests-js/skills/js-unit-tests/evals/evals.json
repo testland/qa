@@ -1,0 +1,71 @@
+{
+  "skill_name": "js-unit-tests",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Unit-test job hangs, then dies\n\n## Problem Description\n\nOur unit-test job on GitHub Actions has two failure modes and we have been\ncancelling it by hand.\n\nOn the `web` package the job never finishes. It prints the test results and\nthen sits there until the 60-minute timeout kills it.\n\nOn the `api` package the job dies partway through with an out-of-memory error.\nIt passes on a developer laptop with 16 cores; the runner has two.\n\nWe also cannot see which test failed without opening the raw log, and we would\nlike the results in a form our reporting tooling can read.\n\n`web` is a Vite project. `api` is a plain Node service on Jest. Both are in one\nrepository and both are run by the same workflow.\n\n## Output Specification\n\nDeliver a corrected `.github/workflows/unit-tests.yml` that:\n\n1. Terminates on its own for both packages.\n2. Survives a two-core runner.\n3. Emits a machine-readable result file per package, uploaded so the reporting\n   tooling can pick it up.\n\nAlso correct the `test` scripts in `web/package.json` and `api/package.json` if\nthey contribute to either failure.\n\nDo not change any test file.",
+      "expected_output": "Deliver a corrected `.github/workflows/unit-tests.yml` that:\n\n1. Terminates on its own for both packages.\n2. Survives a two-core runner.\n3. Emits a machine-readable result file per package, uploaded so the reporting\n   tooling can pick it up.\n\nAlso correct the `test` scripts in `web/package.json` and `api/package.json` if\nthey contribute to either failure.\n\nDo not change any test file.",
+      "files": [
+        "evals/ci-job-hangs-and-ooms/files/.github/workflows/unit-tests.yml",
+        "evals/ci-job-hangs-and-ooms/files/web/package.json",
+        "evals/ci-job-hangs-and-ooms/files/web/vite.config.ts",
+        "evals/ci-job-hangs-and-ooms/files/api/package.json",
+        "evals/ci-job-hangs-and-ooms/files/api/jest.config.js"
+      ],
+      "assertions": [
+        "`web`'s test command is `vitest run` (or passes `--run`). Leaving it as bare `vitest` scores zero - that is watch mode and is the cause of the hang, regardless of anything else the answer fixes. Adding `--watch=false` is acceptable.",
+        "`--watchAll` is gone from `api`'s test command. Replacing it with `--watch` scores zero; both are watch modes.",
+        "The Jest run pins concurrency, e.g. `--maxWorkers=2` (or an equivalent cap on the Vitest side if the same problem is addressed there). Raising the Node heap via NODE_OPTIONS instead scores at most half: it may postpone the OOM but leaves one worker per core spawned on a two-core box, which is the documented cause. Doing nothing about concurrency scores zero.",
+        "Each package emits a JUnit XML (or equivalent structured) report to a file - Jest via a JUnit reporter, Vitest via `--reporter=junit --outputFile=...`. Printing a more verbose console reporter scores zero: the task asks for something the reporting tooling can read, not a nicer log.",
+        "The workflow uploads the report artefact with `if: always()` (or `if: failure()`), and the artefact name is distinct per matrix entry so the two packages do not collide. Uploading without a condition scores at most half; not uploading at all scores zero.",
+        "The Jest invocation passes `--ci`, so a missing snapshot fails the run instead of being written and silently committed later.",
+        "MUST NOT modify or add any test file. Both failures are invocation problems; editing tests to work around them scores zero.",
+        "The matrix still covers `web` and `api`. Dropping a package to make the job pass scores zero."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Coverage says 95%, and it is not true\n\n## Problem Description\n\n`npm run coverage` reports around 95% and the number has been quoted in our\nrelease checklist for months. It is wrong.\n\n`src/pricing.js` has tests. `src/discount.js` and `src/tax.js` have none at\nall - no test file imports them. They are simply absent from the report, so\nthe 95% is 95% of the one file we did test.\n\nWe want a number that means something, and a gate that fails when it slips.\n\n## Output Specification\n\n1. Make the coverage report account for every source file under `src/`,\n   including files no test touches.\n2. Add a gate that fails the run below 80% on lines, statements, branches and\n   functions.\n3. Add the missing tests so the honest number clears that gate. Cover\n   `src/discount.js` and `src/tax.js` including their edge cases - a zero or\n   negative input, and the tier boundaries.\n\n`npm test` and `npm run coverage` must both exit clean when you are done. Do\nnot change `src/pricing.test.js`, and do not change behaviour in any `src/*.js`\nfile.",
+      "expected_output": "1. Make the coverage report account for every source file under `src/`,\n   including files no test touches.\n2. Add a gate that fails the run below 80% on lines, statements, branches and\n   functions.\n3. Add the missing tests so the honest number clears that gate. Cover\n   `src/discount.js` and `src/tax.js` including their edge cases - a zero or\n   negative input, and the tier boundaries.\n\n`npm test` and `npm run coverage` must both exit clean when you are done. Do\nnot change `src/pricing.test.js`, and do not change behaviour in any `src/*.js`\nfile.",
+      "files": [
+        "evals/coverage-gate-reports-95/files/package.json",
+        "evals/coverage-gate-reports-95/files/jest.config.js",
+        "evals/coverage-gate-reports-95/files/src/pricing.js",
+        "evals/coverage-gate-reports-95/files/src/pricing.test.js",
+        "evals/coverage-gate-reports-95/files/src/discount.js",
+        "evals/coverage-gate-reports-95/files/src/tax.js"
+      ],
+      "assertions": [
+        "`collectCoverageFrom` (or `coveragePathIgnorePatterns` plus an equivalent include) is configured to cover `src/**/*.js` regardless of whether a test imports the file. Absent, this scores zero even if every current file ends up covered: the reported number is only correct by accident, and the stated defect - files vanishing from the report - remains. A configuration that lists the two modules by name rather than a directory glob scores at most half; it fixes today's files and not the cause.",
+        "`coverageThreshold.global` sets lines, statements, branches and functions to at least 80. Setting only lines, or setting a value below 80, scores at most half. No threshold at all scores zero.",
+        "`npm test` and `npm run coverage` both pass, meaning the added tests genuinely carry the honest number over the gate. A run that fails the threshold scores zero here.",
+        "The discount tests assert at the tier edges - 2000, 5000 and 10000 - and not merely at values comfortably inside a band. A suite that only checks, say, 3000 and 12000 scores at most half: an off-by-one in a `>=` comparison would survive it, and the boundaries are what the task calls out.",
+        "Negative subtotal, negative amount and unknown tax band are each asserted to throw, keyed on the error type (RangeError / TypeError) rather than on message text. A test that merely calls the function inside try/catch without failing when nothing throws scores zero for that case.",
+        "A subtotal below the lowest tier yields rate 0 and an unchanged total, and the zero tax band yields 0. These are the branches that make the branch-coverage number honest rather than the line number.",
+        "MUST NOT alter logic in src/pricing.js, src/discount.js or src/tax.js, and MUST NOT modify src/pricing.test.js. Adding module exports or changing a comparison to make testing easier scores zero."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# user-service has no tests\n\n## Problem Description\n\n`src/user-service.js` wraps `src/api-client.js`. It returns the fetched user,\nmaps a 404 into `null`, and lets any other failure propagate.\n\nWe need it covered without touching the network. The three cases each need the\nAPI layer to behave differently, so the double has to be steerable per test -\none test wants a user back, one wants a not-found error, one wants a timeout.\n\n`src/api-client.js` itself is not under test here; it is exercised elsewhere.\n\n## Output Specification\n\nAdd `src/user-service.test.js` covering:\n\n1. A found user is returned as-is.\n2. A 404 from the API layer results in `null`, not a thrown error.\n3. Any other API failure propagates to the caller.\n\nThe suite must pass with the project's existing test command, and must not\nreach the network or add new dependencies.",
+      "expected_output": "Add `src/user-service.test.js` covering:\n\n1. A found user is returned as-is.\n2. A 404 from the API layer results in `null`, not a thrown error.\n3. Any other API failure propagates to the caller.\n\nThe suite must pass with the project's existing test command, and must not\nreach the network or add new dependencies.",
+      "files": [
+        "evals/vitest-mock-per-test-return/files/package.json",
+        "evals/vitest-mock-per-test-return/files/src/api-client.js",
+        "evals/vitest-mock-per-test-return/files/src/user-service.js",
+        "evals/vitest-mock-per-test-return/files/src/format.test.js"
+      ],
+      "assertions": [
+        "`npm test` exits clean with all three new cases plus the existing format test executing. A ReferenceError from a hoisted `vi.mock` factory, or any other failure to collect, scores zero here - this is the criterion the hoisting rule actually decides.",
+        "`./api-client.js` is replaced with `vi.mock` (or the module's export is spied). Stubbing global `fetch` instead scores at most half: it works, but it tests through api-client's own error-mapping rather than isolating user-service, so a change in api-client breaks these tests for the wrong reason. Making a real network call scores zero.",
+        "If a `vi.mock` factory is used, any value it references is created inside the factory or via `vi.hoisted()`. A factory referencing a `const`/`let` declared at module scope scores zero, whether or not the author noticed - that is the hoisting defect, and it is the thing this scenario exists to detect.",
+        "The three tests each set the doubled function's behaviour for themselves - `mockResolvedValueOnce` / `mockRejectedValueOnce` or per-test `mockImplementation`. One shared factory implementation that branches on the id it receives scores at most half: it couples the three cases into one function that must be edited whenever any case changes.",
+        "The not-found test asserts the resolved value is `null`. Asserting only that the call does not reject scores at most half - `undefined` would also satisfy that, and the mapping to `null` is the behaviour under test.",
+        "The third test asserts the call rejects, via `await expect(...).rejects` or an equivalent that fails when nothing is thrown. A try/catch whose catch block holds the only assertions scores zero: the test passes when `getUser` returns normally, which is precisely the regression it is meant to catch.",
+        "Doubles are reset between tests - `mockReset`/`mockClear` in a hook, `restoreMocks`/`clearMocks` config, or exclusive use of the `...Once` variants. Tests that rely on the previous test having consumed a queued value score zero.",
+        "MUST NOT add packages to package.json or modify src/format.test.js and src/api-client.js. The task states the double must work with what is installed.",
+        "The new file imports `test`/`expect`/`vi` from 'vitest' rather than relying on globals, matching the existing src/format.test.js and the project's lack of a `globals: true` setting."
+      ]
+    }
+  ]
+}

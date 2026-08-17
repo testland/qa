@@ -55,7 +55,8 @@ describe('Smoke', () => {
   "name": "storefront-e2e",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "e2e": "cypress run"
   },
   "devDependencies": {
     "@testing-library/cypress": "^10.0.2",

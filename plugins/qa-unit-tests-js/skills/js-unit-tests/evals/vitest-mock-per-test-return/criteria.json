@@ -1,0 +1,51 @@
+{
+  "context": "A Vitest project where the module double must return something different in each of three tests. Predicted baseline failure: the agent declares the fixture or the mock function at module scope and closes over it from the `vi.mock` factory. Vitest hoists that factory above the imports, so the module-scope binding is not initialised when the factory runs and the suite dies with a ReferenceError rather than failing an assertion. The two ways out are `vi.hoisted()` or importing the mocked module and steering it per test with `mockResolvedValue` / `mockRejectedValue`; an agent that does not know the hoisting rule tends to produce the broken shape and then, if it runs the suite, thrash on it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 30,
+      "description": "`npm test` exits clean with all three new cases plus the existing format test executing. A ReferenceError from a hoisted `vi.mock` factory, or any other failure to collect, scores zero here - this is the criterion the hoisting rule actually decides."
+    },
+    {
+      "name": "The API module is mocked, not the network",
+      "max_score": 22,
+      "description": "`./api-client.js` is replaced with `vi.mock` (or the module's export is spied). Stubbing global `fetch` instead scores at most half: it works, but it tests through api-client's own error-mapping rather than isolating user-service, so a change in api-client breaks these tests for the wrong reason. Making a real network call scores zero."
+    },
+    {
+      "name": "Mock factory does not close over an uninitialised binding",
+      "max_score": 20,
+      "description": "If a `vi.mock` factory is used, any value it references is created inside the factory or via `vi.hoisted()`. A factory referencing a `const`/`let` declared at module scope scores zero, whether or not the author noticed - that is the hoisting defect, and it is the thing this scenario exists to detect."
+    },
+    {
+      "name": "Each case steers the double independently",
+      "max_score": 16,
+      "description": "The three tests each set the doubled function's behaviour for themselves - `mockResolvedValueOnce` / `mockRejectedValueOnce` or per-test `mockImplementation`. One shared factory implementation that branches on the id it receives scores at most half: it couples the three cases into one function that must be edited whenever any case changes."
+    },
+    {
+      "name": "404 case asserts null rather than a throw",
+      "max_score": 14,
+      "description": "The not-found test asserts the resolved value is `null`. Asserting only that the call does not reject scores at most half - `undefined` would also satisfy that, and the mapping to `null` is the behaviour under test."
+    },
+    {
+      "name": "Propagation case asserts the error escapes",
+      "max_score": 12,
+      "description": "The third test asserts the call rejects, via `await expect(...).rejects` or an equivalent that fails when nothing is thrown. A try/catch whose catch block holds the only assertions scores zero: the test passes when `getUser` returns normally, which is precisely the regression it is meant to catch."
+    },
+    {
+      "name": "Mock state does not leak between tests",
+      "max_score": 10,
+      "description": "Doubles are reset between tests - `mockReset`/`mockClear` in a hook, `restoreMocks`/`clearMocks` config, or exclusive use of the `...Once` variants. Tests that rely on the previous test having consumed a queued value score zero."
+    },
+    {
+      "name": "No new dependencies and no test-file edits",
+      "max_score": 8,
+      "description": "MUST NOT add packages to package.json or modify src/format.test.js and src/api-client.js. The task states the double must work with what is installed."
+    },
+    {
+      "name": "Explicit vitest imports",
+      "max_score": 6,
+      "description": "The new file imports `test`/`expect`/`vi` from 'vitest' rather than relying on globals, matching the existing src/format.test.js and the project's lack of a `globals: true` setting."
+    }
+  ]
+}

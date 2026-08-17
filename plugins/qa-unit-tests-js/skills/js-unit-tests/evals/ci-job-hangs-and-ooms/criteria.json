@@ -1,0 +1,46 @@
+{
+  "context": "Two packages, two different CI defects, both caused by a runner-inappropriate invocation rather than by the tests. Predicted baseline failure: the agent spots `--watchAll` because the flag names the problem, but leaves the `web` script as bare `vitest` - which is also watch mode and is the actual cause of the hang, and reads as correct because it does not carry a watch-looking flag. The OOM fix is likewise a worker-count question rather than a memory setting, and an agent that does not know Jest defaults to one worker per core tends to reach for NODE_OPTIONS heap tuning instead.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The Vitest package runs a single pass",
+      "max_score": 28,
+      "description": "`web`'s test command is `vitest run` (or passes `--run`). Leaving it as bare `vitest` scores zero - that is watch mode and is the cause of the hang, regardless of anything else the answer fixes. Adding `--watch=false` is acceptable."
+    },
+    {
+      "name": "The Jest package runs a single pass",
+      "max_score": 18,
+      "description": "`--watchAll` is gone from `api`'s test command. Replacing it with `--watch` scores zero; both are watch modes."
+    },
+    {
+      "name": "Worker count is pinned for the two-core runner",
+      "max_score": 24,
+      "description": "The Jest run pins concurrency, e.g. `--maxWorkers=2` (or an equivalent cap on the Vitest side if the same problem is addressed there). Raising the Node heap via NODE_OPTIONS instead scores at most half: it may postpone the OOM but leaves one worker per core spawned on a two-core box, which is the documented cause. Doing nothing about concurrency scores zero."
+    },
+    {
+      "name": "Machine-readable results per package",
+      "max_score": 16,
+      "description": "Each package emits a JUnit XML (or equivalent structured) report to a file - Jest via a JUnit reporter, Vitest via `--reporter=junit --outputFile=...`. Printing a more verbose console reporter scores zero: the task asks for something the reporting tooling can read, not a nicer log."
+    },
+    {
+      "name": "Result files are uploaded and survive a failing job",
+      "max_score": 12,
+      "description": "The workflow uploads the report artefact with `if: always()` (or `if: failure()`), and the artefact name is distinct per matrix entry so the two packages do not collide. Uploading without a condition scores at most half; not uploading at all scores zero."
+    },
+    {
+      "name": "Jest runs in CI mode",
+      "max_score": 10,
+      "description": "The Jest invocation passes `--ci`, so a missing snapshot fails the run instead of being written and silently committed later."
+    },
+    {
+      "name": "No test files changed",
+      "max_score": 6,
+      "description": "MUST NOT modify or add any test file. Both failures are invocation problems; editing tests to work around them scores zero."
+    },
+    {
+      "name": "Both packages still run",
+      "max_score": 6,
+      "description": "The matrix still covers `web` and `api`. Dropping a package to make the job pass scores zero."
+    }
+  ]
+}

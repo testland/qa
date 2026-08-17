@@ -1,0 +1,41 @@
+{
+  "context": "Jest only instruments files a test imports, so two entirely untested modules are missing from the denominator and the report reads 95%. Predicted baseline failure: the agent adds the missing tests and sets `coverageThreshold`, both of which are visible from the request, but never sets `collectCoverageFrom`. With the new tests importing both modules the number now looks right, so the omission is invisible - yet the original defect is untouched: the next module added without tests silently drops out of the denominator again and the gate goes on passing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Untested files are forced into the denominator",
+      "max_score": 32,
+      "description": "`collectCoverageFrom` (or `coveragePathIgnorePatterns` plus an equivalent include) is configured to cover `src/**/*.js` regardless of whether a test imports the file. Absent, this scores zero even if every current file ends up covered: the reported number is only correct by accident, and the stated defect - files vanishing from the report - remains. A configuration that lists the two modules by name rather than a directory glob scores at most half; it fixes today's files and not the cause."
+    },
+    {
+      "name": "Gate fails below 80 on all four metrics",
+      "max_score": 20,
+      "description": "`coverageThreshold.global` sets lines, statements, branches and functions to at least 80. Setting only lines, or setting a value below 80, scores at most half. No threshold at all scores zero."
+    },
+    {
+      "name": "Both suites exit clean",
+      "max_score": 18,
+      "description": "`npm test` and `npm run coverage` both pass, meaning the added tests genuinely carry the honest number over the gate. A run that fails the threshold scores zero here."
+    },
+    {
+      "name": "Tier boundaries tested exactly",
+      "max_score": 16,
+      "description": "The discount tests assert at the tier edges - 2000, 5000 and 10000 - and not merely at values comfortably inside a band. A suite that only checks, say, 3000 and 12000 scores at most half: an off-by-one in a `>=` comparison would survive it, and the boundaries are what the task calls out."
+    },
+    {
+      "name": "Rejection paths asserted, including the type",
+      "max_score": 14,
+      "description": "Negative subtotal, negative amount and unknown tax band are each asserted to throw, keyed on the error type (RangeError / TypeError) rather than on message text. A test that merely calls the function inside try/catch without failing when nothing throws scores zero for that case."
+    },
+    {
+      "name": "Zero and no-discount cases covered",
+      "max_score": 10,
+      "description": "A subtotal below the lowest tier yields rate 0 and an unchanged total, and the zero tax band yields 0. These are the branches that make the branch-coverage number honest rather than the line number."
+    },
+    {
+      "name": "Source behaviour unchanged and pricing tests untouched",
+      "max_score": 8,
+      "description": "MUST NOT alter logic in src/pricing.js, src/discount.js or src/tax.js, and MUST NOT modify src/pricing.test.js. Adding module exports or changing a comparison to make testing easier scores zero."
+    }
+  ]
+}

@@ -93,6 +93,9 @@ import './commands';
 {
   "name": "storefront-e2e",
   "private": true,
+  "scripts": {
+    "e2e": "cypress run"
+  },
   "devDependencies": {
     "@testing-library/cypress": "^10.0.2",
     "cypress": "^13.15.0"

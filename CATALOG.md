@@ -28,7 +28,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.1 | 8 skills + 2 agents | 10 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.10.2 | 8 skills + 2 agents | 10 |
 | [qa-mobile](plugins/qa-mobile/) | 1.5.0 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.8.0 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.0 | 7 skills + 1 agents | 8 |
@@ -40,7 +40,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-property-based](plugins/qa-property-based/) | 1.2.17 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.0 | 2 skills + 0 agents | 2 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.3.0 | 2 skills + 0 agents | 2 |
-| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.2.0 | 1 skills + 0 agents | 1 |
+| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.2.1 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.0 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.0 | 1 skills + 0 agents | 1 |
 
