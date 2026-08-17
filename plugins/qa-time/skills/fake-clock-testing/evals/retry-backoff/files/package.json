@@ -1,0 +1,11 @@
+{
+  "name": "payments-client",
+  "version": "2.1.0",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

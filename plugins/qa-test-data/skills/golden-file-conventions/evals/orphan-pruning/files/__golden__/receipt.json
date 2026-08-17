@@ -1,0 +1,6 @@
+{
+  "kind": "receipt",
+  "number": "INV-1001",
+  "paidCents": 3000,
+  "method": "card"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "identity",
+  "version": "2.2.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "fast-check": "^3.19.0"
+  }
+}

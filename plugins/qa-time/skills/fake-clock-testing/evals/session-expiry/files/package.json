@@ -1,0 +1,11 @@
+{
+  "name": "auth-service",
+  "version": "3.0.2",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

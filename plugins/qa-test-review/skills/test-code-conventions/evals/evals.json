@@ -1,0 +1,66 @@
+{
+  "skill_name": "test-code-conventions",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Cart tests pass but do not pin anything down\n\n## Problem Description\n\n`src/cart.test.js` is green. During an incident we discovered it stays green\nwhen the tax calculation is wrong, when the cart returns the wrong number of\nitems, and when the coupon validation does not throw at all.\n\nThe behaviour of `src/cart.js` is correct today. We want the tests to\nactually hold it in place.\n\n## Output Specification\n\n1. Rewrite the assertions in `src/cart.test.js` so each test would fail if the\n   behaviour it describes changed. Keep the same three scenarios and do not\n   change `src/cart.js`.\n2. Produce `assertion-review.md` listing each assertion you replaced, what it\n   would have let through, and what it asserts now.\n\nRun `npm test` before you finish; it must pass.",
+      "expected_output": "1. Rewrite the assertions in `src/cart.test.js` so each test would fail if the\n   behaviour it describes changed. Keep the same three scenarios and do not\n   change `src/cart.js`.\n2. Produce `assertion-review.md` listing each assertion you replaced, what it\n   would have let through, and what it asserts now.\n\nRun `npm test` before you finish; it must pass.",
+      "files": [
+        "evals/assertion-specificity/files/package.json",
+        "evals/assertion-specificity/files/src/cart.js",
+        "evals/assertion-specificity/files/src/cart.test.js"
+      ],
+      "assertions": [
+        "npm test completes successfully with all three tests present and executing.",
+        "The coupon test uses a rejection or throw assertion - assert.throws with the error type or a matching predicate - so a run in which applyCoupon returns normally fails the test. A try/catch whose catch block holds the only assertions scores zero on this criterion however specific those assertions are: the test still passes when no error is raised, which is the defect named in the task.",
+        "The pricing test asserts subtotalCents 1250, taxCents 250 and totalCents 1500 - by deep equality on the returned object or by three exact comparisons. A greater-than-zero check, a check that the total exceeds the subtotal, or an expected value recomputed in the test from the same tax expression the source uses all score zero here.",
+        "The add test asserts the resulting item's sku, priceCents and qty and the item count - by deep equality on cart.items or equivalent. assert.ok on the cart, or on items.length as a truthiness check, scores zero: a length of one is truthy whether or not the item is the one that was added.",
+        "The coupon assertion keys on the CouponError type, its name, or its code property. Matching a substring of the stringified error scores at most half - the message is prose that changes without the behaviour changing.",
+        "MUST NOT modify src/cart.js. The behaviour is stated to be correct; the task is to pin it, not to alter it.",
+        "A file named assertion-review.md exists and pairs each replaced assertion with what it would have let through."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Order tests assert that we called our own code\n\n## Problem Description\n\n`src/orderService.test.js` replaces every collaborator with a stub and then\nasserts which methods were called with which arguments. It passes.\n\nIt also passed through a refactor that broke stock reservation, because the\ncall was still made with the same arguments - only its effect changed. The\ntests describe how the service is wired rather than what it does.\n\n`src/pricing.js` and `src/inventory.js` are ours and have no external\ndependencies. `src/paymentGateway.js` calls a third-party API over the\nnetwork.\n\n## Output Specification\n\n1. Rewrite `src/orderService.test.js` so it asserts what the service\n   produced and what changed as a result, keeping the same three scenarios.\n   Do not change any file under `src/` other than the test.\n2. Produce `mocking-review.md` explaining which collaborators should be\n   substituted and which should not, and why the previous version survived\n   the reservation bug.\n\nRun `npm test` before you finish; it must pass.",
+      "expected_output": "1. Rewrite `src/orderService.test.js` so it asserts what the service\n   produced and what changed as a result, keeping the same three scenarios.\n   Do not change any file under `src/` other than the test.\n2. Produce `mocking-review.md` explaining which collaborators should be\n   substituted and which should not, and why the previous version survived\n   the reservation bug.\n\nRun `npm test` before you finish; it must pass.",
+      "files": [
+        "evals/mocking-rationale/files/package.json",
+        "evals/mocking-rationale/files/src/pricing.js",
+        "evals/mocking-rationale/files/src/inventory.js",
+        "evals/mocking-rationale/files/src/paymentGateway.js",
+        "evals/mocking-rationale/files/src/orderService.js",
+        "evals/mocking-rationale/files/src/orderService.test.js"
+      ],
+      "assertions": [
+        "npm test completes successfully with all three scenarios present and executing.",
+        "Tests construct the real createInventory with seeded stock and assert stockOf after placing an order - two units reserved from a seeded ten leaves eight. Keeping a stubbed reserve that returns a fixed boolean scores zero on this criterion, whatever else is asserted: the reservation effect is exactly what the earlier version could not see.",
+        "MUST NOT replace priceOrder. It is a pure in-process function; the amount on the resulting order is asserted as 1000 for two units at 500. A test that stubs pricing, or that recomputes the expected amount using the same expression the source uses, scores zero here.",
+        "The payment gateway is the one collaborator stubbed or faked, and the rewritten tests do not perform real network calls. Replacing nothing, or continuing to replace all three, scores zero.",
+        "MUST NOT keep call-count and call-argument assertions as the primary claim. Each test asserts the returned order - status, amountCents, chargeId - and the resulting stock. A rewritten file whose main assertions are still that reserve was called once with given arguments scores zero on this criterion.",
+        "The out-of-stock scenario asserts the rejection reason and sku, and that no charge was recorded by the gateway fake - permissible here because absence of an external call is an outcome, not an implementation detail.",
+        "MUST NOT modify any file under src/ other than orderService.test.js.",
+        "A file named mocking-review.md exists, sorts the collaborators by whether they are owned and in-process, and states that a stubbed reserve returning true made the call observable but its effect invisible, so a change to that effect could not fail the suite."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Subscription tests are unreadable in the CI log\n\n## Problem Description\n\nWhen `src/subscription.test.js` fails, the CI output says `works` and nothing\nelse. Whoever is on call opens the file, finds five assertions across three\ndifferent functions in one test, and has to bisect by commenting lines out.\n\nCoverage is adequate. Readability and failure attribution are not.\n\n## Output Specification\n\n1. Restructure `src/subscription.test.js` so a failure names what broke\n   without anyone opening the file. Every assertion that exists today must\n   still exist - this is a restructuring, not a trim.\n2. Produce `test-structure-review.md` explaining what was wrong and the\n   naming pattern you applied.\n\nDo not change `src/subscription.js`.\n\nRun `npm test` before you finish; it must pass.",
+      "expected_output": "1. Restructure `src/subscription.test.js` so a failure names what broke\n   without anyone opening the file. Every assertion that exists today must\n   still exist - this is a restructuring, not a trim.\n2. Produce `test-structure-review.md` explaining what was wrong and the\n   naming pattern you applied.\n\nDo not change `src/subscription.js`.\n\nRun `npm test` before you finish; it must pass.",
+      "files": [
+        "evals/structure-and-naming/files/package.json",
+        "evals/structure-and-naming/files/src/subscription.js",
+        "evals/structure-and-naming/files/src/subscription.test.js"
+      ],
+      "assertions": [
+        "npm test completes successfully.",
+        "All seven behaviours remain asserted: team price 5000, enterprise price 12500, prorate 2500 over fifteen of thirty days, plan name Team, seat cap 25, prorate zero at zero days remaining, and the throw for an unknown plan. Score proportionally; each dropped assertion is lost coverage the task explicitly forbids.",
+        "No test asserts across more than one function, and no test bundles unrelated scenarios. A file that keeps five assertions in a single renamed test scores zero on this criterion - the rename addresses the log line, not the attribution problem.",
+        "Each test name identifies which function is under test, under what condition, and what should happen - readable as a sentence in a CI log without the file. Names such as works, test2, or a bare function name score zero; a name giving the function but no scenario scores at most half.",
+        "Within each test, setup precedes a single invocation of the unit under test, which precedes the assertions - rather than alternating between acting and asserting.",
+        "MUST NOT modify src/subscription.js.",
+        "A file named test-structure-review.md exists, states what was wrong, and gives the naming pattern applied in a form the next person could follow."
+      ]
+    }
+  ]
+}

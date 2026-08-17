@@ -1,0 +1,9 @@
+{
+  "kind": "invoice",
+  "number": "INV-1001",
+  "lines": [
+    { "sku": "A-1", "cents": 1000 },
+    { "sku": "B-2", "cents": 2000 }
+  ],
+  "totalCents": 3000
+}

@@ -1,0 +1,68 @@
+{
+  "skill_name": "fake-clock-testing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Debounced save is untested\n\n## Problem Description\n\n`src/debounce.js` wraps a function so it only runs once the caller stops\ncalling it for `wait` milliseconds. The editor uses it to avoid saving on\nevery keystroke.\n\nNobody has tested it. We need coverage that the wrapped function is not\ncalled during the quiet period, is called exactly once after it, and that\nthe most recent arguments win.\n\nThe suite currently runs in a few hundred milliseconds and we would like to\nkeep it that way.\n\n## Output Specification\n\nAdd a test file `src/debounce.test.js` covering:\n\n1. The wrapped function is not called immediately.\n2. It is called exactly once after the wait period elapses.\n3. Repeated calls inside the window collapse into one call that receives the\n   arguments from the last call.\n4. A call made after a completed cycle starts a new cycle.\n\nLeave `src/save.test.js` alone; it passes and is not part of this work.",
+      "expected_output": "Add a test file `src/debounce.test.js` covering:\n\n1. The wrapped function is not called immediately.\n2. It is called exactly once after the wait period elapses.\n3. Repeated calls inside the window collapse into one call that receives the\n   arguments from the last call.\n4. A call made after a completed cycle starts a new cycle.\n\nLeave `src/save.test.js` alone; it passes and is not part of this work.",
+      "files": [
+        "evals/debounce-flush/files/package.json",
+        "evals/debounce-flush/files/src/debounce.js",
+        "evals/debounce-flush/files/src/save.js",
+        "evals/debounce-flush/files/src/save.test.js"
+      ],
+      "assertions": [
+        "A file src/debounce.test.js exists and contains at least one test.",
+        "The test installs fake timers (jest.useFakeTimers() or equivalent) so no real wall-clock time elapses. A test that reaches its assertions by letting real time pass - any real sleep, real-delay promise, or raised test timeout - scores zero on this criterion regardless of whether it passes.",
+        "The test advances the clock explicitly (advanceTimersByTime / runAllTimers / runOnlyPendingTimers) at the point the debounce window should close. A test that only checks the not-called-yet state without ever advancing scores at most half.",
+        "Fake timers are torn down after the tests - afterEach(jest.useRealTimers) or equivalent. Leaving fake timers installed leaks the mocked clock into whatever runs next. No restoration scores zero here.",
+        "A test makes several calls inside one window and asserts the wrapped function ran exactly once AND received the arguments from the final call. Asserting the call count without the arguments scores at most half.",
+        "A test shows that a call made after a completed cycle triggers a further invocation, proving the internal timer handle was cleared.",
+        "MUST NOT. The test file contains no real-time sleep helper - no `await new Promise(resolve => setTimeout(resolve, N))`, no `await sleep(N)`, no `done` callback fired by a real timer. Even one such call in an otherwise fake-timed file scores zero on this criterion.",
+        "MUST NOT. The test does not request the deprecated legacy implementation - `jest.useFakeTimers('legacy')` or `timers: 'legacy'` config - which does not fake Date.",
+        "The debounce interval used in the test refers to a named constant or a locally declared value rather than a bare repeated literal such as 300 scattered across assertions."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Retry backoff has no test\n\n## Problem Description\n\n`src/retry.js` retries a failing async call with exponential backoff. It is\nused for our payment provider calls, so the retry schedule matters and we\nhave had one incident where it retried far faster than intended.\n\nThere is no test for the delay schedule. We want one that proves the waits\nare 200ms, 400ms, 800ms - and that a test run does not actually take 1.4\nseconds to prove it.\n\n## Output Specification\n\nAdd `src/retry.test.js` covering:\n\n1. A call that succeeds first time is not retried.\n2. A call that fails twice then succeeds resolves with the eventual value,\n   after exactly two waits.\n3. The waits follow the documented exponential schedule.\n4. A call that exhausts every attempt rejects with the last error.\n\n`src/backoff.test.js` already passes; leave it as it is.",
+      "expected_output": "Add `src/retry.test.js` covering:\n\n1. A call that succeeds first time is not retried.\n2. A call that fails twice then succeeds resolves with the eventual value,\n   after exactly two waits.\n3. The waits follow the documented exponential schedule.\n4. A call that exhausts every attempt rejects with the last error.\n\n`src/backoff.test.js` already passes; leave it as it is.",
+      "files": [
+        "evals/retry-backoff/files/package.json",
+        "evals/retry-backoff/files/src/backoff.js",
+        "evals/retry-backoff/files/src/retry.js",
+        "evals/retry-backoff/files/src/backoff.test.js"
+      ],
+      "assertions": [
+        "A file src/retry.test.js exists and contains at least one test.",
+        "Advancing the clock is awaited so the promise chain inside withRetry can proceed - `await jest.advanceTimersByTimeAsync(...)`, `await jest.runAllTimersAsync()`, or an equivalent that yields to the microtask queue between advances. Bare synchronous jest.advanceTimersByTime() with no mechanism for draining the awaited sleep scores zero on this criterion, whether or not the file appears to pass.",
+        "The test asserts the actual waits are 200ms, then 400ms, then 800ms - by advancing to just under a boundary and showing no retry, then crossing it, or by inspecting the scheduled timer delays. Asserting only that 'some delay happened', or only the total elapsed time, scores at most half.",
+        "A test drives all attempts to failure and asserts the returned promise rejects with the last error thrown by the operation, not a generic or wrapped error.",
+        "A test asserts an operation that succeeds immediately is invoked exactly once and no timer is scheduled.",
+        "MUST NOT. The test does not reach its assertions by letting real time pass - no real sleep helper, no raised jest timeout to accommodate 1.4s of waiting, no unfaked setTimeout in the test body. Any single instance scores zero on this criterion.",
+        "MUST NOT leave fake timers installed. The file restores real timers via afterEach(jest.useRealTimers) or equivalent.",
+        "MUST NOT substitute the easy target for the asked-for one. The delay schedule is proven through withRetry's observable behaviour; a file whose schedule assertions only re-check the pure delayForAttempt function - already covered by src/backoff.test.js - scores zero on this criterion."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Session expiry is only tested \"well after\" the deadline\n\n## Problem Description\n\n`src/session.js` expires a session 30 minutes after its last activity, and a\nsweeper evicts expired sessions from the store every minute.\n\nThe existing test proves a session two hours old is expired. That tells us\nnothing about the boundary, and support has reported sessions surviving a few\nminutes past the half hour. We need the boundary pinned down, and we need the\nsweeper covered - right now nothing tests it at all.\n\n## Output Specification\n\nAdd `src/session.test.js` covering:\n\n1. A session is still valid one millisecond before the TTL elapses.\n2. A session is expired exactly at the TTL.\n3. Activity refreshes the deadline.\n4. The sweeper removes expired sessions from the store and leaves live ones.\n\nKeep the existing `src/session.legacy.test.js` passing and unchanged.",
+      "expected_output": "Add `src/session.test.js` covering:\n\n1. A session is still valid one millisecond before the TTL elapses.\n2. A session is expired exactly at the TTL.\n3. Activity refreshes the deadline.\n4. The sweeper removes expired sessions from the store and leaves live ones.\n\nKeep the existing `src/session.legacy.test.js` passing and unchanged.",
+      "files": [
+        "evals/session-expiry/files/package.json",
+        "evals/session-expiry/files/src/session.js",
+        "evals/session-expiry/files/src/session.legacy.test.js"
+      ],
+      "assertions": [
+        "A file src/session.test.js exists and contains at least one test.",
+        "The test fixes the clock with jest.setSystemTime() (or useFakeTimers with a now/doNotFake configuration that pins Date) so Date.now() inside session.js returns a known value. Reaching the boundary only by back-dating lastSeenAt while Date.now() still returns real time scores at most half, because it leaves the sweeper uncontrollable.",
+        "There is an assertion at TTL minus one millisecond returning not-expired AND an assertion at exactly TTL returning expired. Testing only one side, or only a comfortably-past value, scores at most half.",
+        "A test starts the sweeper, advances time across at least one sweep interval, and asserts expired entries were removed from the store while live entries remain. A test that calls the sweep logic directly without ever letting the interval fire scores at most half.",
+        "A test touches a session partway through the window, advances past the original deadline, and asserts the session is still valid.",
+        "MUST NOT. The test does not reassign or monkey-patch the global clock by hand - no `Date.now = jest.fn()`, no `global.Date = class ...`, no jest.spyOn(Date, 'now') left as the sole mechanism. These bypass the timer system so setInterval is unaffected, and they leak if not restored. Any such assignment scores zero on this criterion.",
+        "MUST NOT leave a faked clock installed. The file restores real timers after the tests via afterEach(jest.useRealTimers) or equivalent.",
+        "MUST NOT. No real sleep, no real-delay promise, and no raised test timeout used to wait out the sweep interval."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "skill_name": "negative-test-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Create-project handler has only a happy-path test\n\n## Problem Description\n\n`src/createProject.js` is the request handler behind `POST /projects`. It\nvalidates the payload and returns a status plus a structured body.\n\nThe only test asserts a valid payload returns 201. Every rejection path the\nhandler implements is untested, and last month a validator regression turned\na 400 into a 500 without any test noticing.\n\n## Output Specification\n\nAdd `src/createProject.test.js` covering the rejection paths this handler\nimplements, so that a rejection returning the wrong status or the wrong error\nshape fails the suite.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/createProject.happy.test.js` in place.",
+      "expected_output": "Add `src/createProject.test.js` covering the rejection paths this handler\nimplements, so that a rejection returning the wrong status or the wrong error\nshape fails the suite.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/createProject.happy.test.js` in place.",
+      "files": [
+        "evals/create-project/files/package.json",
+        "evals/create-project/files/src/createProject.js",
+        "evals/create-project/files/src/createProject.happy.test.js"
+      ],
+      "assertions": [
+        "A file src/createProject.test.js exists and contains at least one test.",
+        "Each rejection case asserts a specific numeric status - 400 for validation, 401 for authentication. Any case asserting only that the status is not 201, or only that it is 'an error', scores zero on this criterion: such a test passes on a 500 and cannot catch the regression described in the task.",
+        "Cases assert the specific error key and code - for example body.errors.name equal to TOO_LONG - rather than the presence of an errors object or a substring match on prose. Asserting only that `errors` exists, or matching on message text, scores zero here.",
+        "Both required-field omissions are covered: an absent ownerId and an empty or whitespace-only name, each asserting REQUIRED.",
+        "At least one case supplies a name of the wrong type - number, null, object, array - and asserts NOT_A_STRING. Omitting type mismatches entirely scores zero: it is the most common validator defect class.",
+        "A missing authorization header and a present-but-wrong token are covered as separate cases asserting MISSING_TOKEN and INVALID_TOKEN respectively. Covering only one caps this at half.",
+        "A case supplies an unsupported visibility value and asserts UNSUPPORTED.",
+        "MUST NOT collapse the rejection paths into one test containing many assertions. Cases are separate tests or generated per-case, so a single failure identifies which category broke. A single mega-test scores zero here."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Delete-document authorization paths are untested\n\n## Problem Description\n\n`src/deleteDocument.js` handles `DELETE /documents/:id`. It distinguishes\nseveral refusal reasons deliberately: who you are, what you are allowed to\ndo, whether the document exists as far as you are concerned, and whether it\nis currently locked.\n\nA recent refactor briefly returned the same status for two different refusal\nreasons and no test caught it. Only the success path is covered today.\n\n## Output Specification\n\nAdd `src/deleteDocument.test.js` covering the refusal paths, keeping each\nrefusal reason distinguishable from the others.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/deleteDocument.happy.test.js` in place.",
+      "expected_output": "Add `src/deleteDocument.test.js` covering the refusal paths, keeping each\nrefusal reason distinguishable from the others.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/deleteDocument.happy.test.js` in place.",
+      "files": [
+        "evals/delete-authz/files/package.json",
+        "evals/delete-authz/files/src/deleteDocument.js",
+        "evals/delete-authz/files/src/deleteDocument.happy.test.js"
+      ],
+      "assertions": [
+        "A file src/deleteDocument.test.js exists and contains at least one test.",
+        "At least one case asserts 401 for an authentication failure and at least one asserts 403 for a permission failure, each with its exact status. A suite that asserts only 'the call was refused', or that uses the same expected status for both families, scores zero on this criterion - it cannot catch the refactor described in the task.",
+        "An unknown or absent token asserting MISSING_OR_UNKNOWN_TOKEN and an expired session asserting TOKEN_EXPIRED are covered as separate cases. Covering only one caps this at half.",
+        "A case uses a token from another workspace against an existing document and asserts status 404 with NOT_FOUND. Asserting 403 for this case scores zero: it contradicts the handler's deliberate choice to hide existence, and a test encoding the wrong expectation would drive that behaviour out.",
+        "A case requests an id that does not exist at all and asserts 404 NOT_FOUND, distinct from the cross-workspace case.",
+        "A case uses a viewer token against a document in the same workspace and asserts 403 INSUFFICIENT_ROLE.",
+        "A case targets the locked document with a permitted user and asserts 409 LOCKED, showing the conflict path is reached rather than short-circuited by an earlier check.",
+        "MUST NOT assert refusal loosely. No case asserts merely that the status is not 204, is greater than or equal to 400, or that a code is present. Any such assertion scores zero on this criterion."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Settings update trusts the client's types\n\n## Problem Description\n\n`src/updateSettings.js` applies a partial settings update. Each field has a\ndeclared type, and the handler rejects anything that does not match.\n\nWe shipped a bug where `itemsPerPage` arrived as the string `\"25\"` from an\nolder mobile client and was stored as a string, which broke pagination\ndownstream. The handler does reject it now, but nothing tests that it does -\nand the same hole exists for the other fields.\n\n## Output Specification\n\nAdd `src/updateSettings.test.js` covering the wrong-type rejection for every\nfield this handler accepts, plus the value-level rejections it implements.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/updateSettings.happy.test.js` in place.",
+      "expected_output": "Add `src/updateSettings.test.js` covering the wrong-type rejection for every\nfield this handler accepts, plus the value-level rejections it implements.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/updateSettings.happy.test.js` in place.",
+      "files": [
+        "evals/settings-types/files/package.json",
+        "evals/settings-types/files/src/updateSettings.js",
+        "evals/settings-types/files/src/updateSettings.happy.test.js"
+      ],
+      "assertions": [
+        "A file src/updateSettings.test.js exists and contains at least one test.",
+        "All four fields - theme, notificationsEnabled, itemsPerPage, tags - each have a case supplying a value of the wrong type and asserting WRONG_TYPE on that field. Score proportionally: four fields covered is full marks, three is three quarters, two is half, one or none scores zero.",
+        "A case supplies tags as a genuine array containing a non-string element and asserts WRONG_ELEMENT_TYPE. Covering only 'tags is not an array' scores zero on this criterion - the element branch is a separate rejection the handler implements.",
+        "Each rejection asserts both which field failed and which code was returned. Asserting only ok is false, or only the code without the field, scores at most half: with a shared WRONG_TYPE code the field name is what identifies the defect.",
+        "UNSUPPORTED_VALUE for an unknown theme and OUT_OF_RANGE for itemsPerPage outside 5 to 100 are each covered, using values of the correct type so the value branch is reached rather than short-circuited by the type check.",
+        "At least one case supplies a patch that is null, an array, or a non-object and asserts MALFORMED_PATCH.",
+        "MUST NOT collapse the field sweep into one test with many assertions. Cases are separate tests or generated per-field by a table-driven loop producing individually named cases. A single mega-test scores zero: the first failing field masks the rest."
+      ]
+    }
+  ]
+}

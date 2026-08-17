@@ -1,0 +1,6 @@
+{
+  "kind": "invoice",
+  "number": "INV-1001",
+  "total": "30.00",
+  "currency": "EUR"
+}

@@ -1,0 +1,71 @@
+{
+  "skill_name": "golden-file-conventions",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# One baseline covers the whole dashboard\n\n## Problem Description\n\n`__golden__/dashboard.json` is a single baseline for the entire dashboard\npayload. Any change to any section produces one large diff, and reviewers\napprove it without reading because there is no way to tell which section\nmoved.\n\nLast sprint a change to the activity feed silently altered the billing\nsummary in the same diff and shipped.\n\n## Output Specification\n\n1. Replace the single baseline with per-section baselines so a change to one\n   section produces a diff confined to that section, and every section\n   currently covered stays covered.\n2. Produce `baseline-conventions.md` stating the naming and directory\n   convention you applied, so the next person adding a section follows it\n   without asking.\n\nRun `npm test` before you finish; it must pass.",
+      "expected_output": "1. Replace the single baseline with per-section baselines so a change to one\n   section produces a diff confined to that section, and every section\n   currently covered stays covered.\n2. Produce `baseline-conventions.md` stating the naming and directory\n   convention you applied, so the next person adding a section follows it\n   without asking.\n\nRun `npm test` before you finish; it must pass.",
+      "files": [
+        "evals/mega-baseline-split/files/package.json",
+        "evals/mega-baseline-split/files/src/dashboard.js",
+        "evals/mega-baseline-split/files/src/fixtures.js",
+        "evals/mega-baseline-split/files/__golden__/dashboard.json",
+        "evals/mega-baseline-split/files/src/dashboard.golden.test.js"
+      ],
+      "assertions": [
+        "npm test completes successfully with the golden tests executing rather than skipped or removed.",
+        "There are four separate baseline files, one per section, and the combined __golden__/dashboard.json is no longer the thing being compared. Keeping one baseline file and asserting against parts of it scores zero on this criterion: the reviewer's diff is unchanged, which is the entire problem the task describes.",
+        "header, billingSummary, activityFeed and quickActions each have a baseline and an assertion. Score proportionally; a split that drops any section has traded the reported defect for a coverage hole.",
+        "Each section is asserted in its own named test, so a failure names the section without the reader opening the file. A single test performing four comparisons scores zero here.",
+        "The computed fields - overageCents at 2000, and the enabled flags on the quick actions - are still compared against baseline values rather than recomputed in the test from the same expression the source uses. Recomputing the expected value in the test scores zero: it would agree with any implementation.",
+        "A file named baseline-conventions.md exists and states the naming pattern and directory layout actually used, in a form that determines where a fifth section's baseline would go.",
+        "The naming and layout described in the document are the ones present on disk. A document describing a scheme the delivered files do not follow scores zero on this criterion."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# The golden directory has drifted from the tests\n\n## Problem Description\n\n`__golden__/` has accumulated baselines over two years of refactors. Some\nbelong to tests that no longer exist. At least one test points at a baseline\nthat was never committed, so the suite is currently red.\n\nNobody knows which files are still load-bearing, so nobody deletes anything.\n\n## Output Specification\n\n1. Get the suite green without weakening any test that is currently\n   asserting real behaviour.\n2. Remove the baselines that no test uses.\n3. Produce `golden-directory-audit.md` listing every file in `__golden__/`\n   with its status - in use by which test, or removed and why - plus the rule\n   the team should apply when a baseline stops being referenced.\n\nRun `npm test` before you finish; it must pass.",
+      "expected_output": "1. Get the suite green without weakening any test that is currently\n   asserting real behaviour.\n2. Remove the baselines that no test uses.\n3. Produce `golden-directory-audit.md` listing every file in `__golden__/`\n   with its status - in use by which test, or removed and why - plus the rule\n   the team should apply when a baseline stops being referenced.\n\nRun `npm test` before you finish; it must pass.",
+      "files": [
+        "evals/orphan-pruning/files/package.json",
+        "evals/orphan-pruning/files/src/documents.js",
+        "evals/orphan-pruning/files/src/fixtures.js",
+        "evals/orphan-pruning/files/__golden__/invoice.json",
+        "evals/orphan-pruning/files/__golden__/receipt.json",
+        "evals/orphan-pruning/files/__golden__/legacy-summary.json",
+        "evals/orphan-pruning/files/__golden__/old-invoice-v1.json",
+        "evals/orphan-pruning/files/src/documents.golden.test.js"
+      ],
+      "assertions": [
+        "npm test completes successfully.",
+        "MUST NOT reach green by deletion. __golden__/statement.json now exists and the statement test still runs and still compares against it. Deleting, skipping, commenting out or renaming that test so the runner no longer collects it scores zero on this criterion, as does rewriting it to assert something other than the baseline.",
+        "The new statement baseline contains kind statement, accountId acc_9, openingCents 5000, closingCents 3900 and movementCount 3. A baseline with a wrong closing balance that was made to pass by changing the source instead scores zero here.",
+        "__golden__/legacy-summary.json and __golden__/old-invoice-v1.json are deleted. Removing one scores half; removing neither scores zero.",
+        "MUST NOT prune indiscriminately. invoice.json and receipt.json still exist with their original content, and their tests still pass against them. Deleting or rewriting either scores zero on this criterion.",
+        "A file named golden-directory-audit.md exists and accounts for all five baselines - the three retained or restored with the test that references each, and the two removed with the reason. An audit that omits any file scores at most half.",
+        "The audit states the rule for future drift: a baseline with no referencing test is removed in the same change that removed its test, rather than left in place."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# The report golden file fails on every run\n\n## Problem Description\n\n`src/report.golden.test.js` compares a generated report against a baseline\nchecked in at `__golden__/report.json`. It has never passed on anyone's\nmachine except the one that produced the baseline, so the team runs the suite\nwith that test skipped and nobody looks at it.\n\nWe would like the golden comparison to be worth keeping: stable across\nmachines and runs, while still failing if the report's actual content\nchanges.\n\n## Output Specification\n\n1. Make the golden test pass reliably on any machine, without weakening it to\n   the point that a real content change would slip through.\n2. Produce `golden-review-notes.md`: which parts of the report were volatile,\n   how each is handled now, and what a reviewer should do when this baseline\n   legitimately changes in a future pull request.\n\nRun `npm test` before you finish; it must pass.",
+      "expected_output": "1. Make the golden test pass reliably on any machine, without weakening it to\n   the point that a real content change would slip through.\n2. Produce `golden-review-notes.md`: which parts of the report were volatile,\n   how each is handled now, and what a reviewer should do when this baseline\n   legitimately changes in a future pull request.\n\nRun `npm test` before you finish; it must pass.",
+      "files": [
+        "evals/volatile-baseline/files/package.json",
+        "evals/volatile-baseline/files/src/report.js",
+        "evals/volatile-baseline/files/__golden__/report.json",
+        "evals/volatile-baseline/files/src/report.golden.test.js"
+      ],
+      "assertions": [
+        "npm test completes successfully, with the golden test executing rather than skipped, commented out, or renamed so the runner no longer collects it. A test disabled to reach green scores zero on this criterion.",
+        "reportId, createdAt and sourcePath are still present in the comparison, normalised to placeholders or matched by type or pattern. Removing them from the produced object or the baseline so they are no longer compared scores zero: a report that stops emitting createdAt entirely would then pass unnoticed.",
+        "itemCount, totalCents, currency and the items array are still asserted against the baseline value for value. Loosening these to type checks, a length check, or a subset comparison scores zero - they are the content the baseline exists to protect.",
+        "MUST NOT abandon the baseline. __golden__/report.json still exists and is still read by the test. Replacing it with assertions written inline in the test file scores zero on this criterion.",
+        "Normalisation happens through a named helper or serializer applied to the report, so a future field is handled by extending one place. Ad-hoc deletion or overwriting of individual keys immediately before the assertion scores at most half.",
+        "A file named golden-review-notes.md exists and identifies all three volatile fields with the handling chosen for each.",
+        "The notes tell a reviewer to update the baseline in the same pull request as the change that justifies it, and to read the diff. MUST NOT recommend running the suite with an update or write-baseline flag in continuous integration, or refreshing baselines in a separate follow-up pull request - either makes the baseline a record of whatever the code last produced, and scores zero here.",
+        "sourcePath is made machine-independent - relative to the project root or replaced with a placeholder - rather than the baseline being rewritten with the current machine's absolute path."
+      ]
+    }
+  ]
+}

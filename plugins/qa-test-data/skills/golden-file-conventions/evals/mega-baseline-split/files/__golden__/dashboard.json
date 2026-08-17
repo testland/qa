@@ -1,0 +1,23 @@
+{
+  "header": {
+    "workspaceName": "Acme",
+    "plan": "team",
+    "seatsUsed": 7,
+    "seatsTotal": 10
+  },
+  "billingSummary": {
+    "currency": "EUR",
+    "currentCents": 12000,
+    "projectedCents": 15000,
+    "overageCents": 2000
+  },
+  "activityFeed": [
+    { "kind": "document.created", "actor": "ada", "target": "Roadmap" },
+    { "kind": "member.invited", "actor": "grace", "target": "lin@acme.test" }
+  ],
+  "quickActions": [
+    { "id": "invite", "enabled": true },
+    { "id": "upgrade", "enabled": true },
+    { "id": "export", "enabled": true }
+  ]
+}

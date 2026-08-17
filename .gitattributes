@@ -8,3 +8,8 @@
 *.yml       text
 *.yaml      text
 *.md        text
+
+# Eval scenarios and the artifacts compiled from them are compared byte-for-byte
+# by `npm run evals:check`, and their fixtures are hashed by the run harness.
+# CRLF conversion on a Windows checkout would fail both, so pin them to LF.
+plugins/**/evals/**  text eol=lf

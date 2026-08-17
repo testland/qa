@@ -1,0 +1,8 @@
+{
+  "name": "billing-worker",
+  "version": "2.7.3",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

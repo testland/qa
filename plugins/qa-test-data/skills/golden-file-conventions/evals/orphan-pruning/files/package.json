@@ -1,0 +1,8 @@
+{
+  "name": "documents",
+  "version": "4.0.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

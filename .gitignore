@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 *.pyo
+
+# Node tooling
+node_modules/
+parity-typescript.json

@@ -1,0 +1,11 @@
+{
+  "name": "async-memo",
+  "version": "1.0.3",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "fast-check": "^3.19.0"
+  }
+}

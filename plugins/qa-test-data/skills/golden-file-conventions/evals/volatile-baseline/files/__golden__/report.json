@@ -1,0 +1,13 @@
+{
+  "reportId": "8f14e45f-ceea-467a-9575-9f0ed7f0a4b1",
+  "createdAt": "2026-01-05T09:14:22.517Z",
+  "sourcePath": "/Users/maria/projects/reporting/data/items.json",
+  "itemCount": 3,
+  "totalCents": 4750,
+  "currency": "EUR",
+  "items": [
+    { "sku": "SKU-100", "priceCents": 1500 },
+    { "sku": "SKU-200", "priceCents": 2000 },
+    { "sku": "SKU-300", "priceCents": 1250 }
+  ]
+}

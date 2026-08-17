@@ -1,0 +1,8 @@
+{
+  "name": "uploader",
+  "version": "2.0.4",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "skill_name": "test-isolation-patterns",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Integration suite takes 40 minutes and still flakes\n\n## Problem Description\n\nOur order integration tests spin up a database container in `beforeEach`.\nThere are 94 tests and the container takes roughly 25 seconds to become\nready, which is most of the 40-minute run.\n\nThe obvious move is to start the container once. We tried that a year ago and\nreverted it, because tests started interfering with each other. We would like\na strategy that gets the time back without reintroducing that.\n\nThe suite also inherits through four levels of base class, and nobody is sure\nwhich level owns what.\n\n## Output Specification\n\nProduce `fixture-strategy.md` containing:\n\n1. For each piece of setup in the code below, the scope it should have and\n   why.\n2. How per-test independence is preserved for anything you move to a wider\n   scope - this is the part the previous attempt got wrong.\n3. What to do about the base-class chain.\n4. Anything that is already correctly scoped and should be left alone.\n\nDo not modify the files. This is the strategy the team will review.",
+      "expected_output": "Produce `fixture-strategy.md` containing:\n\n1. For each piece of setup in the code below, the scope it should have and\n   why.\n2. How per-test independence is preserved for anything you move to a wider\n   scope - this is the part the previous attempt got wrong.\n3. What to do about the base-class chain.\n4. Anything that is already correctly scoped and should be left alone.\n\nDo not modify the files. This is the strategy the team will review.",
+      "files": [
+        "evals/fixture-scope-strategy/files/tests/support/BaseTest.js",
+        "evals/fixture-scope-strategy/files/tests/support/AppTest.js",
+        "evals/fixture-scope-strategy/files/tests/support/DomainTest.js",
+        "evals/fixture-scope-strategy/files/tests/support/OrderTest.js",
+        "evals/fixture-scope-strategy/files/tests/orders/checkout.test.js"
+      ],
+      "assertions": [
+        "A file named fixture-strategy.md exists.",
+        "The container and its migrations are recommended at suite, file, or per-worker scope rather than per test, with the reasoning tied to the 25-second startup against 94 tests.",
+        "The document names how each test gets a clean database on a shared container - transaction rollback per test, truncation between tests, a schema or database per worker, or uniquely namespaced rows. Recommending the wider scope without naming a mechanism scores zero on this criterion: that is the recommendation the team already tried and reverted, and the task asks specifically for this part.",
+        "The document flags that AppTest mutates globalConfig, a process-wide object, and that this is currently masked by setup running before every test - so widening any scope leaves the flag set for tests that never asked for it. Omitting this scores zero; naming it only as a style issue rather than a scope hazard scores at most half.",
+        "The catalogue and customer seeds are addressed: either kept per test, or moved wider with unique identifiers so two tests cannot collide on the same customer email. Recommending they move to suite scope unchanged - with a shared customer row every test writes against - scores zero.",
+        "The four-level chain is called out and replaced with something specific - composable helpers or per-resource fixtures assembled where needed - rather than a general recommendation to reduce coupling. No alternative offered scores at most half.",
+        "MUST NOT recommend churn without benefit. The logger created in BaseTest is inexpensive and stateless per test; the document either leaves it as is or explicitly says it needs no change. Recommending work on it alongside the real findings scores zero on this criterion."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Moving the suite to parallel workers\n\n## Problem Description\n\nOur suite runs on a single worker and takes 14 minutes. We want to move it to\nfour parallel workers. A trial run produced failures that did not reproduce\nwhen the failing files were run on their own.\n\nBefore we spend more time on trial runs, we want the suite read for the\nreasons parallel execution breaks it.\n\n## Output Specification\n\nProduce `parallel-readiness.md` containing:\n\n1. Every file below that is unsafe to run alongside another worker, what\n   specifically it shares with other workers, and the failure that produces.\n2. The fix for each, concrete enough to hand to whoever picks up the ticket.\n3. Which files are already safe, so nobody spends time on them.\n4. The order to do the work in, if some fixes unblock others.\n\nDo not modify the test files. This is the assessment the team will work from.",
+      "expected_output": "Produce `parallel-readiness.md` containing:\n\n1. Every file below that is unsafe to run alongside another worker, what\n   specifically it shares with other workers, and the failure that produces.\n2. The fix for each, concrete enough to hand to whoever picks up the ticket.\n3. Which files are already safe, so nobody spends time on them.\n4. The order to do the work in, if some fixes unblock others.\n\nDo not modify the test files. This is the assessment the team will work from.",
+      "files": [
+        "evals/parallel-readiness-audit/files/tests/config.test.js",
+        "evals/parallel-readiness-audit/files/tests/server.test.js",
+        "evals/parallel-readiness-audit/files/tests/logging.test.js",
+        "evals/parallel-readiness-audit/files/tests/db.test.js",
+        "evals/parallel-readiness-audit/files/tests/queue.test.js",
+        "evals/parallel-readiness-audit/files/tests/money.test.js"
+      ],
+      "assertions": [
+        "A file named parallel-readiness.md exists.",
+        "config.test.js is flagged because process.env is per-process and shared by every test in that worker, so one test's write or delete decides another's read. Omitting this scores zero - it is the least visible of the five and the one most likely to be dismissed as normal test code.",
+        "server.test.js is flagged because port 3000 is bound exclusively: the first worker binds and the rest fail to listen.",
+        "logging.test.js is flagged because /tmp/test.log is a single path every worker truncates and appends to, so assertions read another worker's writes.",
+        "db.test.js is flagged because deriving the seed key from the test name is only unique while names are unique - two files with a similarly named test collide in the shared database, and the collision is invisible in the source of either. Omitting this scores zero.",
+        "queue.test.js is flagged because a fixed wait substitutes for a completion signal, and contention on shared workers makes the wait insufficient rather than merely slow. Reporting it only as a performance cost scores at most half.",
+        "MUST NOT flag money.test.js. It touches no shared surface and is explicitly listed among the files needing no work. Reporting it as unsafe scores zero on this criterion: a report that flags everything gives the team no way to prioritise.",
+        "Each flagged file carries a concrete remedy - per-test environment save and restore or injected configuration, an ephemeral port, a per-worker temporary directory, a unique generated key, and an event-based wait. A report that describes hazards without remedies scores zero here.",
+        "The report states an order of work and says which fixes are independent, rather than presenting five items as an unordered list."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Rate limiter tests fail depending on what ran before them\n\n## Problem Description\n\n`src/rateLimiter.test.js` is red. Each test passes when it is the only one in\nthe file; together they fail.\n\nSomeone has already suggested \"just change the expected numbers so they add\nup\" and someone else suggested merging the tests into one. Neither is what we\nwant - the tests describe genuinely different situations and should stay\nseparate and independently meaningful.\n\n## Output Specification\n\nMake the suite pass by removing whatever couples the tests to each other,\nkeeping each test's assertions describing its own scenario from a clean\nstarting point. Do not change `src/rateLimiter.js`.\n\nThen produce `isolation-notes.md`: what the tests were sharing, why the\nfailure moved depending on order, and the rule that keeps this from coming\nback as more tests are added to this file.\n\nRun `npm test` before you finish; it must pass.",
+      "expected_output": "Make the suite pass by removing whatever couples the tests to each other,\nkeeping each test's assertions describing its own scenario from a clean\nstarting point. Do not change `src/rateLimiter.js`.\n\nThen produce `isolation-notes.md`: what the tests were sharing, why the\nfailure moved depending on order, and the rule that keeps this from coming\nback as more tests are added to this file.\n\nRun `npm test` before you finish; it must pass.",
+      "files": [
+        "evals/shared-bucket-leak/files/package.json",
+        "evals/shared-bucket-leak/files/src/rateLimiter.js",
+        "evals/shared-bucket-leak/files/src/rateLimiter.test.js"
+      ],
+      "assertions": [
+        "npm test completes successfully with all three tests present and executing - none skipped, merged, or deleted.",
+        "A per-test hook - beforeEach or its equivalent for the runner - clears the shared buckets before each test runs, so every test begins from an empty limiter. A file that reaches green without any reset scores zero on this criterion, whatever else it changed.",
+        "MUST NOT encode the leak in the expectations. The second test still asserts remaining equals 2 on a first request, and the third still asserts usage of user-a equals 1. Any expected value adjusted to absorb consumption from an earlier test scores zero here - that is the repair the task explicitly rejects.",
+        "MUST NOT merge the three scenarios into one test to make the sequence line up. Three independently named tests remain.",
+        "MUST NOT modify src/rateLimiter.js. Removing the module-level Map, or changing consume to accept injected state, is a production change the task did not authorise. Any edit to that file scores zero on this criterion.",
+        "The result holds whichever order the tests run in - the reset is per-test, not a single clear placed before the file's first test or between two specific ones. A one-off reset that only happens to fix the current ordering scores zero.",
+        "A file named isolation-notes.md exists, names the module-scoped buckets Map as the shared surface, and explains that it persists for the lifetime of the module rather than the lifetime of a test. Notes that describe the symptom without naming what was shared score at most half.",
+        "The notes give the rule for tests added later - state owned outside a test is reset before each test - rather than only describing the repair made today."
+      ]
+    }
+  ]
+}

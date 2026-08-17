@@ -1,0 +1,29 @@
+{
+  "name": "testland-qa-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Repo tooling for the testland-qa marketplace: validation, catalog generation, and eval compilation.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "validate": "tsx scripts/ts/validate.ts .",
+    "compose": "tsx scripts/ts/composition-graph.ts",
+    "catalog": "tsx scripts/ts/generate-catalog.ts",
+    "inventory": "tsx scripts/ts/inventory.ts",
+    "drift": "tsx scripts/ts/check-description-drift.ts",
+    "audit": "tsx scripts/ts/content-audit.ts --strict",
+    "version-check": "tsx scripts/ts/version-bump-check.ts",
+    "evals:build": "tsx scripts/ts/compile-evals.ts",
+    "evals:check": "tsx scripts/ts/compile-evals.ts --check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

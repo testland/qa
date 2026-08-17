@@ -1,0 +1,11 @@
+{
+  "name": "csv-tools",
+  "version": "0.4.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "fast-check": "^3.19.0"
+  }
+}

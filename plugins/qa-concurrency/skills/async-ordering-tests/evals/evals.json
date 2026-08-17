@@ -1,0 +1,64 @@
+{
+  "skill_name": "async-ordering-tests",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Cancelling an upload leaves chunks in flight\n\n## Problem Description\n\n`src/upload.js` uploads a file as a sequence of chunks and accepts an\n`AbortSignal` so the user can cancel. Support has seen cancelled uploads\ncontinue to consume bandwidth, which suggests the signal is not reaching the\nper-chunk work, or that further chunks start after the cancel.\n\nThe existing test aborts before the upload begins. That is the easy case and\nit tells us nothing about a cancel that arrives while a chunk is in flight.\n\n## Output Specification\n\nAdd `src/upload.test.js` covering cancellation that arrives mid-upload:\nthat the in-flight chunk is told to stop, that no further chunk is started,\nthat the caller sees an abort rather than a normal completion, and that\ncleanup runs.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/upload.basic.test.js` in place.",
+      "expected_output": "Add `src/upload.test.js` covering cancellation that arrives mid-upload:\nthat the in-flight chunk is told to stop, that no further chunk is started,\nthat the caller sees an abort rather than a normal completion, and that\ncleanup runs.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/upload.basic.test.js` in place.",
+      "files": [
+        "evals/cancellation-propagation/files/package.json",
+        "evals/cancellation-propagation/files/src/upload.js",
+        "evals/cancellation-propagation/files/src/upload.basic.test.js"
+      ],
+      "assertions": [
+        "A file src/upload.test.js exists and contains at least one test.",
+        "A test holds a chunk upload unresolved - a deferred promise the test settles - calls abort() while it is pending, then releases it. Aborting before the call, or after awaiting the whole upload, scores zero on this criterion: neither reaches the window the ticket describes. Timing the abort with a real-time delay also scores zero, since the window is then not guaranteed.",
+        "The test captures the second argument passed to uploadChunk and asserts it is the same signal the caller supplied, and that it reports aborted once abort() is called. Asserting only that the outer promise rejected leaves the propagation claim untested, and scores zero here.",
+        "The test records which chunks were started and asserts the loop stopped - the chunk after the in-flight one was never begun. This is the bandwidth symptom in the ticket; a suite without it scores zero on this criterion.",
+        "The returned promise is asserted to reject with an error whose name is AbortError, using a rejection assertion rather than a try/catch that could pass silently if no error were thrown.",
+        "A test supplies onCleanup and asserts it was invoked with aborted true and the count of chunks that completed before the cancel.",
+        "MUST NOT. The file contains no setTimeout or delay promise with a nonzero duration used to place the abort inside the in-flight window. Any such call scores zero on this criterion.",
+        "MUST NOT share an AbortController or a started-chunks array across tests at module scope; an already-aborted controller would decide later cases."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Subscribers must see a change before it is persisted\n\n## Problem Description\n\n`src/store.js` batches state changes. Subscribers are notified on the\nmicrotask queue so the UI updates in the same tick, while persistence is\ndeferred to a macrotask so it never blocks rendering.\n\nThat ordering is a real guarantee - a persistence hook that reads the store\nmust never run before subscribers have observed the change - and it is\nentirely untested. Several changes in the same tick are also supposed to\ncoalesce into a single notification.\n\n## Output Specification\n\nAdd `src/store.test.js` proving the ordering guarantee between notification\nand persistence, and proving that multiple changes in one tick produce one\nnotification.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/store.basic.test.js` in place.",
+      "expected_output": "Add `src/store.test.js` proving the ordering guarantee between notification\nand persistence, and proving that multiple changes in one tick produce one\nnotification.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/store.basic.test.js` in place.",
+      "files": [
+        "evals/microtask-before-macrotask/files/package.json",
+        "evals/microtask-before-macrotask/files/src/store.js",
+        "evals/microtask-before-macrotask/files/src/store.basic.test.js"
+      ],
+      "assertions": [
+        "A file src/store.test.js exists and contains at least one test.",
+        "A test reaches a state in which the subscriber has fired and persistence has not - by yielding only to the microtask queue, or by recording both events into one ordered log and asserting the notification index precedes the persistence index. A test that awaits until everything has settled and then asserts final values scores zero on this criterion: it cannot distinguish the guaranteed order from its reverse.",
+        "The point at which the subscriber is expected to have run is reached via `await Promise.resolve()`, queueMicrotask, or an equivalent microtask yield. Using setTimeout - with any delay including zero - or setImmediate as the checkpoint for the notification assertion scores zero here, since those resume after the macrotask boundary and cannot show the intermediate state.",
+        "A later checkpoint yields past the macrotask boundary - setImmediate, setTimeout with zero delay, or an equivalent - and asserts the value was persisted. Asserting persistence without ever crossing that boundary scores zero.",
+        "A test performs several setState calls in one tick and asserts the subscriber was invoked exactly once, receiving the final value. Asserting only the value the subscriber received, without the invocation count, scores at most half - it does not distinguish one notification from three.",
+        "MUST NOT. The file contains no setTimeout or delay promise with a nonzero duration used to wait for work to finish. A zero-delay or setImmediate yield used deliberately as a macrotask checkpoint is acceptable; a 10ms or 50ms 'let it settle' wait is not, and scores zero on this criterion.",
+        "A test unsubscribes and asserts no further notification is received on the next change."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Search results flicker back to the previous query\n\n## Problem Description\n\n`src/searchController.js` runs a search on every keystroke. Users report that\nresults occasionally snap back to what they typed a moment ago: a slow\nrequest for an earlier query lands after a fast request for the current one\nand overwrites it.\n\nThe controller already carries a guard for this. Nothing tests it. The\nexisting test resolves one request at a time, so the out-of-order case never\noccurs.\n\n## Output Specification\n\nAdd `src/searchController.test.js` proving that a response arriving for a\nsuperseded query does not replace the current results, and that the ordering\nunder test is decided by the test rather than by how fast the machine\nhappens to be.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/searchController.basic.test.js` in place.",
+      "expected_output": "Add `src/searchController.test.js` proving that a response arriving for a\nsuperseded query does not replace the current results, and that the ordering\nunder test is decided by the test rather than by how fast the machine\nhappens to be.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/searchController.basic.test.js` in place.",
+      "files": [
+        "evals/stale-response-overwrite/files/package.json",
+        "evals/stale-response-overwrite/files/src/searchController.js",
+        "evals/stale-response-overwrite/files/src/searchController.basic.test.js"
+      ],
+      "assertions": [
+        "A file src/searchController.test.js exists and contains at least one test.",
+        "The test holds each search response open and settles them in a chosen order - deferred promises with externally held resolve functions, a manually driven queue, or an equivalent. Ordering the responses by giving them different real-time delays scores zero on this criterion: the interleave is then decided by the scheduler, not the test.",
+        "A test starts a request for an earlier query, starts a request for a later query, settles the later one first and the earlier one second, then asserts the snapshot holds the later query's results. This is the defect described in the ticket; a suite without this exact sequence scores zero here.",
+        "The stale call's return value is asserted to carry applied false with reason SUPERSEDED, not merely ignored. Asserting only the final snapshot leaves the guard's own contract untested.",
+        "A test settles two sequential queries in their natural order and asserts the second one's results are applied, showing the guard suppresses only genuinely superseded responses rather than everything after the first.",
+        "MUST NOT await the first run before starting the second. Both invocations are started before either is settled; awaiting the first to completion serialises them and removes the condition under test, scoring zero on this criterion.",
+        "MUST NOT. The file contains no setTimeout-based sleep, no real-delay promise, and no 'let things settle' wait. Any single instance scores zero here.",
+        "MUST NOT share one controller across tests at module scope; its sequence counter is mutable state that would carry between cases."
+      ]
+    }
+  ]
+}

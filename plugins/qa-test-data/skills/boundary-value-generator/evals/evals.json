@@ -1,0 +1,62 @@
+{
+  "skill_name": "boundary-value-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Quantity validator only has happy-path coverage\n\n## Problem Description\n\n`src/quantity.js` validates the quantity field on an order line. Warehouse\nreported an order that went through with 1000 units when the cap is 999, and\nanother that was rejected at 1 unit. Both are edge conditions and neither is\ncovered.\n\nThe existing test only checks a mid-range value.\n\n## Output Specification\n\nAdd `src/quantity.test.js` giving this validator systematic edge coverage\naround every bound it enforces, asserting the specific rejection code in each\nfailing case rather than just that it failed.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/quantity.happy.test.js` in place.",
+      "expected_output": "Add `src/quantity.test.js` giving this validator systematic edge coverage\naround every bound it enforces, asserting the specific rejection code in each\nfailing case rather than just that it failed.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/quantity.happy.test.js` in place.",
+      "files": [
+        "evals/order-quantity/files/package.json",
+        "evals/order-quantity/files/src/quantity.js",
+        "evals/order-quantity/files/src/quantity.happy.test.js"
+      ],
+      "assertions": [
+        "A file src/quantity.test.js exists and contains at least one test.",
+        "The suite exercises 0 (below), 1 (at), and 2 (above) with the correct expectation for each. Missing the above-bound point 2 caps this at half; missing two of the three scores zero.",
+        "The suite exercises 998 (below), 999 (at), and 1000 (above) with the correct expectation for each. Missing the below-bound point 998 caps this at half; missing two of the three scores zero.",
+        "Each failing case asserts the specific code - BELOW_MIN, ABOVE_MAX, NOT_INTEGER - rather than only that ok is false. A suite that asserts only falsiness would pass if the validator returned the wrong reason, and scores zero on this criterion.",
+        "MUST NOT bundle the boundary set into a single test function containing six assertions. Each point is its own test case, or is generated per-point through a loop or parameterised helper that produces a separately named case. A single mega-test scores zero here: the first failing assertion hides the rest.",
+        "At least one non-integer input is covered - a float, a numeric string, null, or undefined - asserting NOT_INTEGER.",
+        "MUST NOT. Boundary inputs are literal values, not drawn from Math.random or an unseeded generator. A randomised input makes the run non-reproducible and scores zero on this criterion."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Shipment validator: enum and basket size both untested\n\n## Problem Description\n\n`src/shipment.js` validates a shipment request. It checks the shipping method\nagainst a fixed set of options and enforces how many line items a single\nshipment may carry.\n\nWe removed a shipping method last quarter and nothing failed, which worried\nus - it means the rejection path for an unknown method has no coverage. The\nbasket-size limits have never been tested either.\n\n## Output Specification\n\nAdd `src/shipment.test.js` giving both constraints systematic coverage: the\nfull option set for the enum plus its rejection path, and edge coverage\naround the item-count limits.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/shipment.smoke.test.js` in place.",
+      "expected_output": "Add `src/shipment.test.js` giving both constraints systematic coverage: the\nfull option set for the enum plus its rejection path, and edge coverage\naround the item-count limits.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/shipment.smoke.test.js` in place.",
+      "files": [
+        "evals/shipment-enum-and-size/files/package.json",
+        "evals/shipment-enum-and-size/files/src/shipment.js",
+        "evals/shipment-enum-and-size/files/src/shipment.smoke.test.js"
+      ],
+      "assertions": [
+        "A file src/shipment.test.js exists and contains at least one test.",
+        "All three declared methods - standard, express, pickup - are each exercised in an accepting case. Covering only one or two caps this at half.",
+        "MUST include the rejection path. At least one case supplies a method outside the declared set and asserts UNKNOWN_METHOD. Omitting this scores zero on this criterion - it is the specific coverage gap the task describes, and a suite without it stays green when a method is silently removed.",
+        "Item counts 0 (TOO_FEW_ITEMS), 1 (accepted), and 2 (accepted) are each exercised. Missing the count-2 point caps this at half; missing two of the three scores zero.",
+        "Item counts 49 (accepted), 50 (accepted), and 51 (TOO_MANY_ITEMS) are each exercised, with the large baskets built programmatically rather than written out by hand. Missing the count-49 point caps this at half; missing two of the three scores zero.",
+        "MUST NOT bundle the enum set or the count set into a single test containing many assertions. Cases are separate tests, or generated per-case by a loop or parameterised helper that yields individually named cases. A single mega-test scores zero here.",
+        "Failing cases assert the exact code - TOO_FEW_ITEMS, TOO_MANY_ITEMS, UNKNOWN_METHOD, ITEMS_NOT_ARRAY - rather than only that ok is false. Asserting only falsiness scores zero here, since the validator checks item count before method and a wrong-reason result would still pass."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Username rules are under-tested at the length limits\n\n## Problem Description\n\n`src/username.js` enforces a length range and a character whitelist. Signup\nhas had two bugs at the limits: a 20-character name was rejected once, and a\n2-character name was accepted once.\n\nThe current test covers a single valid name and one obviously bad one.\n\n## Output Specification\n\nAdd `src/username.test.js` giving the length constraint systematic edge\ncoverage, and cover the character rule separately from the length rule so a\nfailure tells you which rule broke.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/username.smoke.test.js` in place.",
+      "expected_output": "Add `src/username.test.js` giving the length constraint systematic edge\ncoverage, and cover the character rule separately from the length rule so a\nfailure tells you which rule broke.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/username.smoke.test.js` in place.",
+      "files": [
+        "evals/username-length/files/package.json",
+        "evals/username-length/files/src/username.js",
+        "evals/username-length/files/src/username.smoke.test.js"
+      ],
+      "assertions": [
+        "A file src/username.test.js exists and contains at least one test.",
+        "Lengths 2 (TOO_SHORT), 3 (accepted), and 4 (accepted) are each exercised. Missing the length-4 point caps this at half; missing two of the three scores zero.",
+        "Lengths 19 (accepted), 20 (accepted), and 21 (TOO_LONG) are each exercised. Missing the length-19 point caps this at half; missing two of the three scores zero.",
+        "MUST NOT let the character rule contaminate the length cases. Every string used to probe a length boundary is built from characters the whitelist allows, so a TOO_SHORT or TOO_LONG assertion can only fail for a length reason. A length probe containing an uppercase letter, space, hyphen, or punctuation scores zero on this criterion.",
+        "MUST NOT. Boundary strings are fixed literals or built by a deterministic repeat such as 'a'.repeat(21) - not drawn from Math.random or an unseeded generator. Any randomly generated input scores zero here.",
+        "At least one case exercises BAD_CHARS using a string of legal length, keeping the character rule independent of the length rule. A suite that only reaches BAD_CHARS through a string that is also the wrong length scores zero on this criterion.",
+        "Failing cases assert the exact code - TOO_SHORT, TOO_LONG, BAD_CHARS, NOT_STRING - rather than only that ok is false. Asserting only falsiness scores zero here."
+      ]
+    }
+  ]
+}

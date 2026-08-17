@@ -1,0 +1,62 @@
+{
+  "skill_name": "fast-check-testing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Async memo: properties over generated keys\n\n## Problem Description\n\n`src/asyncMemo.js` wraps an async loader so concurrent callers for the same\nkey share one in-flight load, and later callers get the cached value.\n\nThe existing test uses the key `\"a\"`. We would like the invariants stated\nover arbitrary keys and arbitrary call patterns instead, because the bug we\nshipped last quarter only appeared for keys that collided with an inherited\nObject property name.\n\n## Output Specification\n\nAdd `src/asyncMemo.property.test.js` stating, over generated input, that the\nloader runs once per distinct key however many callers arrive, and that every\ncaller receives the same value.\n\nLeave `src/asyncMemo.basic.test.js` in place.",
+      "expected_output": "Add `src/asyncMemo.property.test.js` stating, over generated input, that the\nloader runs once per distinct key however many callers arrive, and that every\ncaller receives the same value.\n\nLeave `src/asyncMemo.basic.test.js` in place.",
+      "files": [
+        "evals/async-memo-property/files/package.json",
+        "evals/async-memo-property/files/src/asyncMemo.js",
+        "evals/async-memo-property/files/src/asyncMemo.basic.test.js"
+      ],
+      "assertions": [
+        "A file src/asyncMemo.property.test.js exists and uses fast-check to run at least one property.",
+        "Every fc.assert over an asynchronous property is awaited and uses the async property constructor - `await fc.assert(fc.asyncProperty(...))`. A file calling fc.assert on an async callback without awaiting it, or using the synchronous fc.property with an async body, scores zero on this criterion: such a test passes unconditionally and the surrounding assertions are decoration.",
+        "The memo and its call counter are constructed within the property body, so each generated case starts clean. Constructing them once outside the property makes the loader-count claim depend on how many cases ran before, and scores zero here.",
+        "The number of concurrent callers is itself generated - an integer arbitrary, or an array whose length varies - rather than fixed at two. A property that always issues exactly two calls scores at most half: it restates the existing example test with a generated key.",
+        "The property asserts every caller's resolved value is equal, not merely that the first one is correct.",
+        "The generated key is an unconstrained string, or explicitly includes values such as __proto__, constructor or toString. A key arbitrary narrowed to safe identifiers cannot reach the defect class named in the task and scores zero on this criterion.",
+        "MUST NOT delete or rewrite src/asyncMemo.basic.test.js."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# CSV escaping is tested with the six strings someone thought of\n\n## Problem Description\n\n`src/csvField.js` escapes a value for a CSV cell and parses it back. The\nexisting test covers a handful of hand-picked strings - a comma, a quote, a\nnewline - and passes.\n\nWe keep finding inputs it does not handle. The last one was a value that was\nentirely whitespace; before that, a value containing a quote at the very end.\nPicking more examples by hand has not been working.\n\n## Output Specification\n\nAdd `src/csvField.property.test.js` asserting the round-trip relationship\nbetween `formatField` and `parseField` holds for arbitrary string input, plus\nthe other structural relationships this pair should satisfy.\n\nLeave `src/csvField.examples.test.js` in place.",
+      "expected_output": "Add `src/csvField.property.test.js` asserting the round-trip relationship\nbetween `formatField` and `parseField` holds for arbitrary string input, plus\nthe other structural relationships this pair should satisfy.\n\nLeave `src/csvField.examples.test.js` in place.",
+      "files": [
+        "evals/csv-roundtrip/files/package.json",
+        "evals/csv-roundtrip/files/src/csvField.js",
+        "evals/csv-roundtrip/files/src/csvField.examples.test.js"
+      ],
+      "assertions": [
+        "A file src/csvField.property.test.js exists and uses fast-check to run at least one property.",
+        "A property asserts parseField(formatField(value)) equals value for a generated string, with no expected output computed in the test body. A test that builds the expected escaped form itself and compares against it scores zero on this criterion: it duplicates the implementation and stops being a property.",
+        "The string arbitrary is not narrowed to alphanumerics or a small alphabet - it can produce whitespace-only values, embedded quotes and newlines, which are the cases the team says keep escaping them. An arbitrary restricted so those inputs cannot be generated scores zero here.",
+        "MUST NOT bundle several claims into one property. Each additional relationship - that quoting is applied only when required, that a formatted field never contains an unescaped bare quote, that parseField is a left inverse on plain values - is its own fc.assert call with its own name. A single property carrying multiple unrelated assertions scores zero.",
+        "MUST NOT. The property body contains no assertion tying a generated input to a hard-coded expected output. If a particular input matters, it belongs in the example file, not inside the property. Any such assertion scores zero on this criterion.",
+        "The property run is made reproducible - an explicit seed, or fast-check configured so a failure reports a seed and counterexample the team can replay. A property left with an unseeded default that cannot be replayed from CI output scores at most half.",
+        "MUST NOT delete or rewrite src/csvField.examples.test.js. The property coverage is added alongside it."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Email normalisation needs generated addresses\n\n## Problem Description\n\n`src/emailNormalize.js` normalises an address before we store it: it trims,\nlower-cases the domain, and leaves the local part alone because it is\ncase-sensitive per the RFC.\n\nWe want the invariants stated over generated addresses rather than the four\nexamples currently covered. A previous attempt at this generated random\nstrings and filtered for ones containing an `@`; it ran slowly, discarded\nmost of what it produced, and the maintainer removed it.\n\n## Output Specification\n\nAdd `src/emailNormalize.property.test.js` stating the invariants of\n`normalizeEmail` over generated addresses.\n\nLeave `src/emailNormalize.examples.test.js` in place.",
+      "expected_output": "Add `src/emailNormalize.property.test.js` stating the invariants of\n`normalizeEmail` over generated addresses.\n\nLeave `src/emailNormalize.examples.test.js` in place.",
+      "files": [
+        "evals/email-arbitrary-choice/files/package.json",
+        "evals/email-arbitrary-choice/files/src/emailNormalize.js",
+        "evals/email-arbitrary-choice/files/src/emailNormalize.examples.test.js"
+      ],
+      "assertions": [
+        "A file src/emailNormalize.property.test.js exists and uses fast-check to run at least one property.",
+        "Addresses come from fc.emailAddress(), or from composed parts assembled into an address via map or tuple. Generating broad strings and narrowing with a predicate that tests for an @ scores zero on this criterion - it is the approach the task states was already removed.",
+        "MUST NOT. The file contains no .filter() applied to a broad string arbitrary to force address shape. A narrow filter on an already-constrained arbitrary - excluding one value from an enumerated set - is acceptable; discarding the bulk of generated input is not, and scores zero here.",
+        "A property asserts normalizeEmail(normalizeEmail(x)) equals normalizeEmail(x). This is the invariant that holds for every input including the malformed ones the function passes through unchanged, and it does not require reimplementing the function to state.",
+        "MUST NOT bundle the claims. That the domain of the result is lower-case, and that the local part is unchanged by normalisation, are separate properties with separate names. One property asserting both scores zero on this criterion - a failure would not say which rule broke.",
+        "The generated addresses can differ in case, or case is introduced deliberately by mapping over the generated value. A property drawn only from lower-case addresses cannot exercise the lower-casing rule and scores zero here.",
+        "MUST NOT delete or rewrite src/emailNormalize.examples.test.js."
+      ]
+    }
+  ]
+}

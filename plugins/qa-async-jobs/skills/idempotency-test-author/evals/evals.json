@@ -1,0 +1,64 @@
+{
+  "skill_name": "idempotency-test-author",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Duplicate job deliveries arrive at the same moment, not one after another\n\n## Problem Description\n\n`src/refundJob.js` processes refund jobs from a queue with at-least-once\ndelivery. Two workers can pick up the same job simultaneously - that is the\nnormal failure mode, not a rare one, and it is the case we have never tested.\n\nThe existing test delivers the same job twice, one after the other, and\npasses. That proves the dedup store remembers a completed job. It proves\nnothing about two workers arriving together, which is the situation that\nactually loses money.\n\n## Output Specification\n\nAdd `src/refundJob.test.js` covering simultaneous delivery of the same job,\nasserting the refund is issued exactly once no matter how many workers race\nfor it, and that every racing caller receives the same outcome.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/refundJob.sequential.test.js` in place.",
+      "expected_output": "Add `src/refundJob.test.js` covering simultaneous delivery of the same job,\nasserting the refund is issued exactly once no matter how many workers race\nfor it, and that every racing caller receives the same outcome.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/refundJob.sequential.test.js` in place.",
+      "files": [
+        "evals/concurrent-duplicate/files/package.json",
+        "evals/concurrent-duplicate/files/src/refundJob.js",
+        "evals/concurrent-duplicate/files/src/refundJob.sequential.test.js"
+      ],
+      "assertions": [
+        "A file src/refundJob.test.js exists and contains at least one test.",
+        "At least one test starts two or more handler invocations before awaiting any of them - collecting the promises then resolving together via Promise.all or Promise.allSettled. A test that awaits the first call before issuing the second is sequential no matter how it is named and scores zero on this criterion; it duplicates coverage that already exists in the fixture.",
+        "The concurrent test asserts the gateway issued exactly one refund - issuedCount equal to 1. Asserting only that the two returned values match scores zero: matching responses are compatible with two refunds having been issued.",
+        "The test asserts all racing calls resolve to the same refundId, proving the loser of the race receives the winner's result rather than a null, a rejection, or a second refund.",
+        "At least one test races more than two simultaneous deliveries - five or ten - and still asserts a single refund. A suite that only ever tests two callers scores at most half; the reservation could hold for a pair and fail for a burst.",
+        "MUST NOT. The test does not order the interleave with a real-time delay - no `await new Promise(r => setTimeout(r, N))` between the calls to make the race come out a particular way. Sequencing by sleep makes the result a property of timing on the runner rather than of the handler, and scores zero here.",
+        "MUST NOT share one store or gateway across tests at module scope; each test builds its own so an earlier reservation cannot decide a later result."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Dedup keys are kept forever in one environment and we do not know why\n\n## Problem Description\n\n`src/notificationDedup.js` suppresses duplicate notification sends using a\nkey store with a time-to-live. The TTL exists so the store does not grow\nwithout bound - we had a memory incident traced to a dedup map that was never\npruned.\n\nThe store now takes a clock so its behaviour is testable without waiting. No\ntest currently covers what happens at the TTL boundary, and none covers\nwhether expired keys are actually released rather than merely reported as\nabsent.\n\n## Output Specification\n\nAdd `src/notificationDedup.test.js` covering the suppression window: what\nhappens just inside it, exactly at its edge, and after it, plus evidence that\nexpired entries stop occupying the store.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/notificationDedup.basic.test.js` in place.",
+      "expected_output": "Add `src/notificationDedup.test.js` covering the suppression window: what\nhappens just inside it, exactly at its edge, and after it, plus evidence that\nexpired entries stop occupying the store.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/notificationDedup.basic.test.js` in place.",
+      "files": [
+        "evals/key-ttl-window/files/package.json",
+        "evals/key-ttl-window/files/src/notificationDedup.js",
+        "evals/key-ttl-window/files/src/notificationDedup.basic.test.js"
+      ],
+      "assertions": [
+        "A file src/notificationDedup.test.js exists and contains at least one test.",
+        "There is an assertion one millisecond before the TTL showing the duplicate is still suppressed AND an assertion at exactly the TTL showing it is sent again. Testing only a comfortably-past value scores zero on this criterion; testing one side of the edge only caps it at half.",
+        "A test asserts the store's size() falls once entries expire - through sweep() or through the lazy delete on get(). A suite that only asserts a re-send happens after expiry scores zero here: that behaviour is identical whether or not the memory is ever reclaimed, and reclaiming it is why the TTL exists.",
+        "MUST NOT wait in real time. The test moves time by controlling the now function the store was constructed with. Any real sleep, real-delay promise, or raised timeout used to cross the window scores zero on this criterion.",
+        "A test calls sweep() and asserts how many entries it removed, distinguishing a sweep that found stale entries from one that found none.",
+        "A test holds both a stale and a fresh key, sweeps, and asserts the fresh key still suppresses while the stale one does not. A sweep that removed everything would otherwise pass the criteria above.",
+        "A test shows the dedup key distinguishes users or notification kinds, so suppression of one does not suppress another.",
+        "MUST NOT share a store, transport, or mutable clock variable across tests at module scope; a clock left advanced by one test would silently expire another test's keys."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Payment webhook: only the first delivery is tested\n\n## Problem Description\n\n`src/paymentWebhook.js` credits an account when the payment provider posts a\n`payment.succeeded` event. The provider redelivers events on any non-2xx\nresponse and occasionally redelivers after a successful one, so the same\nevent arrives more than once in normal operation.\n\nThe handler already implements key-based deduplication. The only test applies\none event once. We have no coverage proving a redelivery is safe, and no\ncoverage of what happens when a client reuses a key for a different payload.\n\n## Output Specification\n\nAdd `src/paymentWebhook.test.js` covering the redelivery behaviour of this\nhandler, including what it does when the same key arrives with a payload that\ndoes not match the original.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/paymentWebhook.first.test.js` in place.",
+      "expected_output": "Add `src/paymentWebhook.test.js` covering the redelivery behaviour of this\nhandler, including what it does when the same key arrives with a payload that\ndoes not match the original.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/paymentWebhook.first.test.js` in place.",
+      "files": [
+        "evals/webhook-replay/files/package.json",
+        "evals/webhook-replay/files/src/paymentWebhook.js",
+        "evals/webhook-replay/files/src/paymentWebhook.first.test.js"
+      ],
+      "assertions": [
+        "A file src/paymentWebhook.test.js exists and contains at least one test.",
+        "A test delivers the same event twice and asserts the ledger was credited exactly once - via appliedCount, or a balance that did not double. Asserting only that the two responses are equal scores zero on this criterion: that is satisfied by a handler which credits twice and returns the same shape both times.",
+        "The second delivery is asserted to return the stored response, including the balance recorded at first application, rather than a fresh or empty result.",
+        "A test reuses an existing key with a changed amount, account, or currency and asserts KEY_REUSED_WITH_DIFFERENT_PAYLOAD. Omitting this branch scores zero - it is the difference between deduplicating a redelivery and silently swallowing a genuinely different request.",
+        "The key-reuse test also asserts the ledger was not credited again, proving the rejection happens before the side effect rather than after it.",
+        "A test shows two different keys for the same account both apply, so deduplication is scoped to the key and has not become a blanket suppression.",
+        "A test asserts an event without an idempotency key is rejected with MISSING_KEY and applies no credit.",
+        "MUST NOT share one store or ledger instance across tests at module scope. Each test constructs its own, so a leaked key or balance from an earlier test cannot decide a later one. Shared mutable fixtures score zero on this criterion."
+      ]
+    }
+  ]
+}

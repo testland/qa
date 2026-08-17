@@ -1,0 +1,8 @@
+{
+  "name": "orders",
+  "version": "3.3.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

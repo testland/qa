@@ -1,0 +1,65 @@
+{
+  "skill_name": "cross-tenant-data-leak-tests",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Document access is only tested from inside one tenant\n\n## Problem Description\n\n`src/documentAccess.js` scopes every document operation to the caller's\ntenant. The whole suite runs as a single tenant, so every test passes whether\nor not the scoping works - remove the tenant filter and nothing fails.\n\nWe need coverage that actually attempts access across the boundary.\n\n## Output Specification\n\nAdd `src/documentAccess.test.js` covering cross-tenant access attempts\nagainst each operation this module exposes: read, list, update and delete.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/documentAccess.single.test.js` in place.",
+      "expected_output": "Add `src/documentAccess.test.js` covering cross-tenant access attempts\nagainst each operation this module exposes: read, list, update and delete.\n\nRun `npm test` before you finish; it must pass.\n\nLeave `src/documentAccess.single.test.js` in place.",
+      "files": [
+        "evals/document-idor/files/package.json",
+        "evals/document-idor/files/src/documentAccess.js",
+        "evals/document-idor/files/src/documentAccess.single.test.js"
+      ],
+      "assertions": [
+        "A file src/documentAccess.test.js exists and contains at least one test.",
+        "MUST NOT test the boundary from one side. The fixture seeds documents belonging to at least two different tenants and constructs a session for each. A suite with a single tenantId anywhere in it cannot exercise a boundary and scores zero on this criterion.",
+        "Read, list, update and delete are each attempted by a session from the wrong tenant. Score proportionally: four operations probed is full marks, three is three quarters, two is half, one or none scores zero. Update and delete count as probed only if the attempt targets a document owned by the other tenant.",
+        "The cross-tenant update and delete tests assert the target document is unchanged and still present afterwards - by reading it back as its rightful owner, or through rawGet and countAll. Asserting only that the call returned not_found scores at most half: the refusal status and the absence of a mutation are separate claims.",
+        "For the operations probed, the suite also shows the rightful tenant succeeds. Without a control, a repository broken so that everything returns not_found would satisfy every cross-tenant assertion. Missing controls entirely scores zero here.",
+        "The list test asserts the returned documents all belong to the calling tenant - checking ids or tenantIds - rather than only that the length matches an expected number. A count-only assertion passes if the wrong documents are returned in the right quantity.",
+        "MUST NOT give both tenants documents with the same id values. Distinct ids per tenant mean a leak cannot be masked by a coincidental match, and a filter dropped entirely shows up immediately."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# The tenant isolation suite is green and we do not trust it\n\n## Problem Description\n\n`src/billing.isolation.test.js` is supposed to be our tenant isolation\ncoverage for the billing repository. It passes.\n\nDuring an incident review someone deleted the tenant predicate from\n`listInvoices` locally and the suite stayed green. We would like to know why,\nand we would like a version that does not have that problem.\n\n## Output Specification\n\n1. Produce `isolation-suite-findings.md` explaining why the current suite\n   cannot fail when the tenant predicate is removed. Be specific about which\n   lines cause it.\n2. Replace `src/billing.isolation.test.js` with a version that would fail if\n   the tenant predicate were removed from any of the three operations.\n\nRun `npm test` before you finish; it must pass against the unmodified\nrepository.",
+      "expected_output": "1. Produce `isolation-suite-findings.md` explaining why the current suite\n   cannot fail when the tenant predicate is removed. Be specific about which\n   lines cause it.\n2. Replace `src/billing.isolation.test.js` with a version that would fail if\n   the tenant predicate were removed from any of the three operations.\n\nRun `npm test` before you finish; it must pass against the unmodified\nrepository.",
+      "files": [
+        "evals/privileged-fixture-audit/files/package.json",
+        "evals/privileged-fixture-audit/files/src/billing.js",
+        "evals/privileged-fixture-audit/files/src/billing.isolation.test.js"
+      ],
+      "assertions": [
+        "A file named isolation-suite-findings.md exists, and src/billing.isolation.test.js has been rewritten rather than left as found.",
+        "The findings state that crossTenant true on the shared session makes scoped() return every invoice regardless of tenant, so the tenant predicate is never reached and removing it changes nothing. Omitting this scores zero on this criterion.",
+        "The findings state that both tenants seed an invoice with the id inv_1, so a lookup that crosses the boundary returns a plausible record and cannot be distinguished from a correct one. A findings document that mentions only the privileged flag scores zero here.",
+        "The findings state that the repository is constructed once at module scope and mutated by the void test, so test order affects results and cleanup never happens.",
+        "MUST NOT assert isolation through a privileged session. The new tests build a session per tenant without crossTenant, and any privileged session that remains is used only as an explicitly labelled control, never as the actor in a boundary assertion. A rewritten suite still asserting isolation through crossTenant scores zero.",
+        "For each of listInvoices, getInvoice and voidInvoice there is an assertion that a session from one tenant cannot reach the other tenant's invoice - and for voidInvoice, that the other tenant's record is still not voided afterwards. Score proportionally across the three operations; a suite covering only listing scores at most a third.",
+        "MUST NOT keep the shared instance or the colliding ids. Each test constructs its own repository, and the two tenants' invoices carry different id values."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Tenant isolation test plan for the attachments feature\n\n## Problem Description\n\nWe are adding file attachments to a multi-tenant product. The feature is\nwritten and under review. Before it ships, the team wants a test plan for\ntenant isolation - what needs probing, and how.\n\nOur last isolation review looked only at HTTP handlers and missed a bug where\none tenant's uploads appeared in another tenant's search results.\n\n## Output Specification\n\nProduce a file named `attachment-isolation-test-plan.md` containing:\n\n1. An inventory of every place in this feature where data is stored, indexed,\n   queued, cached or served, and how each one is scoped to a tenant.\n2. For each entry in that inventory, the isolation probes to run against it.\n3. The fixture requirements the plan depends on.\n4. Any place where the code's scoping looks incomplete or absent.\n\nDo not write test code and do not modify the source files. This is the plan\nthe team will review before anyone implements it.",
+      "expected_output": "Produce a file named `attachment-isolation-test-plan.md` containing:\n\n1. An inventory of every place in this feature where data is stored, indexed,\n   queued, cached or served, and how each one is scoped to a tenant.\n2. For each entry in that inventory, the isolation probes to run against it.\n3. The fixture requirements the plan depends on.\n4. Any place where the code's scoping looks incomplete or absent.\n\nDo not write test code and do not modify the source files. This is the plan\nthe team will review before anyone implements it.",
+      "files": [
+        "evals/surface-inventory/files/src/attachments/routes.js",
+        "evals/surface-inventory/files/src/attachments/storage.js",
+        "evals/surface-inventory/files/src/attachments/search.js",
+        "evals/surface-inventory/files/src/attachments/events.js",
+        "evals/surface-inventory/files/src/attachments/cache.js"
+      ],
+      "assertions": [
+        "A file named attachment-isolation-test-plan.md is produced.",
+        "The inventory names the relational store, the object store, the search index, the message topic and its consumer, and the cache as distinct surfaces, each with how it is or is not tenant-scoped. Score proportionally by how many of the five appear as separate entries; three or fewer scores at most half. A plan organised only by HTTP handler scores zero on this criterion.",
+        "The plan states that searchAttachments passes the query straight to the index with no tenant predicate, and that indexed documents carry no tenantId field to filter on. Omitting this scores zero - it is the leak the team already suffered.",
+        "The plan states the cache key `attachment:<id>` is not tenant-scoped, and that getAttachment returns a cached record before the tenant-filtered query runs, so a cached entry is served across tenants. A plan that lists the cache as a surface without naming the unscoped key or the read-before-filter ordering scores at most half.",
+        "The plan states that onAttachmentCreated looks the record up by id with no tenant predicate, and that the message payload carries no tenant context to check against. Treating the queue only as a publish surface, without examining the consumer, scores zero here.",
+        "Each inventory entry carries a concrete probe - the cross-tenant action to attempt and the expected refusal - rather than a general instruction to test isolation. A plan that lists surfaces without per-surface probes scores zero on this criterion.",
+        "The fixture section requires at least two disjoint tenants with non-colliding identifiers, and a session per tenant.",
+        "MUST NOT invent findings. The tenant-prefixed object-storage key and the tenant-filtered findOne in getAttachment are not presented as scoping failures. Flagging either as a leak scores zero here."
+      ]
+    }
+  ]
+}
