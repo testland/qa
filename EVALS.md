@@ -4,6 +4,41 @@ An eval runs an agent on a realistic task twice - once without the skill, once
 with it - and scores the difference. It measures whether a skill changes what
 the agent produces, not whether the skill reads well.
 
+## How many per skill
+
+**Ten.** Measured run-to-run spread on an unchanged skill is about 11 points of
+100 per scenario, so a per-skill mean over n scenarios carries roughly 11/sqrt(n):
+
+| scenarios | per-skill 95% CI | what it can do |
+|---|---|---|
+| 3 | +/-11 | compare the catalogue in aggregate; cannot rank one skill |
+| **10** | **+/-7** | separate a skill that helps from one that does not |
+| 20 | +/-5 | finer ordering, at twice the authoring cost |
+
+Three scenarios per skill is enough to say something about a whole catalogue and
+nothing about any individual member of it. Ten is the point where a per-skill
+number becomes worth quoting.
+
+## Scenarios must target what the skill uniquely supplies
+
+The first run of this format measured 84% of criteria at their ceiling in BOTH
+arms. The instrument was fine - a control skill carrying five arbitrary
+conventions was adopted 5 times out of 5, every repetition. The scenarios were
+the problem: they asked for competent testing, which the unaided model already
+produces.
+
+So the test for a scenario is: **what does the skill say that the model would
+not otherwise do?** A specific flag, a config key whose default is wrong, an API
+whose obvious usage is subtly broken, a row from the skill's anti-pattern table.
+If a capable engineer would do it by reflex, it will score at ceiling in both
+arms and contribute nothing but noise.
+
+Prefer defects that are objectively detectable - a wrong pattern that makes the
+suite fail, hang, or pass when it should not - so the deterministic gate decides
+rather than a judge. Where the subject is judgement rather than code, plant
+cases whose correct answer is to REFUSE, and mix them with determinate ones so
+that neither always-guessing nor always-refusing scores well.
+
 ## Layout
 
 Scenarios live inside the skill they measure, which is also the directory
@@ -57,6 +92,28 @@ that could not discriminate:
    going wrong looks like.
 4. **State the zero and half conditions** in the description, so a partial
    answer lands somewhere defensible instead of on a grader's mood.
+
+## Checking
+
+```bash
+npx tsx scripts/ts/check-scenarios.ts plugins/<plugin>/skills/<skill>   # one skill
+npx tsx scripts/ts/check-all-scenarios.ts                              # every skill
+```
+
+Gates the structure the compiler and the run harness depend on: the three H2
+sections, parseable FILE blocks whose paths stay inside the run directory,
+criteria that parse, a `context` long enough to name a predicted failure, a
+criterion heavy enough to carry the comparison, and an explicit prohibition. It
+warns rather than fails when few criteria state a zero condition.
+
+Two things it deliberately does NOT require, because both rejected sound
+rubrics when it did:
+
+- The prohibition may sit in the criterion **name** or its description, in any
+  case. A rubric is not worse for writing `MUST NOT ...` as the name.
+- A find-all-N audit may spread weight across its findings instead of having one
+  dominant criterion. Two heavy criteria that jointly carry the comparison are
+  accepted.
 
 ## Running
 
