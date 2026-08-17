@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-mobile",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Mobile E2E testing: 8 skills covering native (xcuitest-suite - iOS plus the macOS desktop delta, espresso-suite), cross-platform drivers (appium-testing, detox-testing, maestro-flows), Flutter (flutter-testing), device-matrix dispatcher (mobile-device-matrix-toolkit), and mobile accessibility (mobile-a11y-test-author). Plus 1 agent: mobile-test-author (detects the driver from project markers, scaffolds a from-zero skeleton when no harness exists, then emits one test file per spec). For mobile-WEB viewport emulation, see playwright-testing in qa-web-e2e.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-mobile",

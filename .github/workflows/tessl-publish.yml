@@ -1,8 +1,11 @@
 name: tessl-publish
 
-# Publishes skills to the Tessl registry. On push, only skills whose SKILL.md or
-# .tessl-plugin manifest changed are (re)published, at their manifest version, so
-# unchanged skills keep their aligned versions. workflow_dispatch republishes all.
+# Publishes skills to the Tessl registry. On push, only skills whose SKILL.md,
+# evals/, or .tessl-plugin manifest changed are (re)published, at their manifest
+# version, so unchanged skills keep their aligned versions. Changing any of those
+# therefore requires bumping .tessl-plugin/plugin.json, or the publish is rejected
+# as a duplicate version and the job fails. workflow_dispatch republishes all, and
+# there a duplicate version is the expected no-op rather than an error.
 on:
   push:
     branches: [main]
@@ -37,11 +40,13 @@ jobs:
         run: |
           set -uo pipefail
           if [ -n "${BEFORE:-}" ] && git rev-parse --verify --quiet "${BEFORE}^{commit}" >/dev/null 2>&1; then
+            mode=incremental
             mapfile -t dirs < <(git diff --name-only "$BEFORE" "$AFTER" \
-              | grep -E '^plugins/[^/]+/skills/[^/]+/(SKILL\.md|\.tessl-plugin/plugin\.json)$' \
+              | grep -E '^plugins/[^/]+/skills/[^/]+/(SKILL\.md|\.tessl-plugin/plugin\.json|evals/.*)$' \
               | sed -E 's#^(plugins/[^/]+/skills/[^/]+)/.*#\1#' | sort -u)
             echo "Changed skill dirs: ${#dirs[@]}"
           else
+            mode=full
             mapfile -t dirs < <(find plugins -type f -path '*/.tessl-plugin/plugin.json' \
               | sed -E 's#/\.tessl-plugin/plugin\.json$##' | sort -u)
             echo "Full publish: ${#dirs[@]} skills"
@@ -54,7 +59,14 @@ jobs:
             if out=$(tessl skill publish "$dir" --workspace testland --public 2>&1); then
               echo "$out"; count=$((count + 1))
             elif printf '%s' "$out" | grep -qiE 'not available|already exists|already published'; then
-              echo "$out"; echo "skip: version already published"; skipped=$((skipped + 1))
+              echo "$out"
+              # Incremental mode only lists changed skills, so an unbumped version publishes nothing.
+              if [ "$mode" = full ]; then
+                echo "skip: version already published"; skipped=$((skipped + 1))
+              else
+                failed=$((failed + 1)); echo "$dir (version not bumped)" >> /tmp/tessl-failures.txt
+                echo "::warning::$dir changed but .tessl-plugin/plugin.json version was not bumped"
+              fi
             else
               echo "$out"; failed=$((failed + 1)); echo "$dir" >> /tmp/tessl-failures.txt
               echo "::warning::publish failed for $dir"

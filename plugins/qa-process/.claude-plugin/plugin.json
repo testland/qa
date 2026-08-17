@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-process",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "Test process + methodology: 12 skills (risk-matrix - the risk-based-testing umbrella with registers, storming, calibration, and coverage mapping in references/ - definition-of-done with adherence auditing, test-strategy-author with risk-based test planning, post-mortem-author, smoke-suite-gate, test-pyramid-balancer, e2e-suite-budget, test-case-ideation-from-story, test-case-from-live-feature with the heuristic test-design models, framework-choice-advisor with vendor evaluation and the tool-selection decision record, attack-surface-test-checklist, test-effort-estimation with the change-shape classifier) and 3 agents (release-readiness-checker, quality-coach - the adversarial DoD adherence auditor - and release-engineer, the runbook conductor that walks a release step-by-step with human gates).",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-process",
