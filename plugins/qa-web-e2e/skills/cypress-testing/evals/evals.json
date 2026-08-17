@@ -1,0 +1,65 @@
+{
+  "skill_name": "cypress-testing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Cypress runs green locally, opaque in CI\n\n## Problem Description\n\nOur `cypress.config.ts` is the file the installer generated and nothing has\nbeen added to it. Two consequences keep costing us time.\n\nWhen a spec fails in CI we get a stack trace and nothing else - no way to see\nwhat the page looked like at the point of failure, so the first move is always\n\"run it locally and hope it reproduces\".\n\nAnd developers keep hitting retries locally that they did not ask for, which\nmasks a genuinely broken test during development; we want retries to help the\nCI signal without hiding breakage while someone is writing the test.\n\nSpecs live in `cypress/e2e` and are named `*.cy.ts`. The app runs at\n`http://localhost:3000`. We do not pay for Cypress Cloud.\n\n## Output Specification\n\n1. A complete `cypress.config.ts` configuring the spec location, the base URL,\n   retry behaviour that differs between the interactive and headless runs, and\n   the artefact capture needed to debug a CI failure after the fact.\n2. `.github/workflows/e2e.yml` that starts the app, waits for it to be\n   reachable before running any spec, runs the suite headless, and keeps\n   whatever the run produced when it fails.\n\nFiles are the deliverable; do not explain them in prose.",
+      "expected_output": "1. A complete `cypress.config.ts` configuring the spec location, the base URL,\n   retry behaviour that differs between the interactive and headless runs, and\n   the artefact capture needed to debug a CI failure after the fact.\n2. `.github/workflows/e2e.yml` that starts the app, waits for it to be\n   reachable before running any spec, runs the suite headless, and keeps\n   whatever the run produced when it fails.\n\nFiles are the deliverable; do not explain them in prose.",
+      "files": [
+        "evals/config-retries-and-artifacts/files/cypress.config.ts",
+        "evals/config-retries-and-artifacts/files/cypress/e2e/smoke.cy.ts",
+        "evals/config-retries-and-artifacts/files/package.json"
+      ],
+      "assertions": [
+        "`retries` is the object form distinguishing the two modes, e.g. `{ runMode: 2, openMode: 0 }`. A single number applied to both modes scores zero - it is the exact behaviour the task rejects, because it retries while a developer is writing the test and hides the breakage. Setting only `runMode` and omitting `openMode` scores at most half.",
+        "The config enables screenshots on run failure and video (or explicitly documents video off with screenshots retained). Leaving both at defaults without stating them scores at most half; disabling both scores zero, since being unable to see the failure is the stated problem.",
+        "The workflow polls the URL until it responds - `wait-on`, the `cypress-io/github-action` `wait-on` input, or an equivalent readiness loop - before the specs run. A fixed `sleep` scores at most half: it is a guess that is either too short on a cold runner or wasted time. Starting the server and running Cypress with no readiness gate at all scores zero.",
+        "Screenshots and/or videos are uploaded with `if: always()` or `if: failure()`. An upload step with no condition placed after the test step scores zero - GitHub Actions skips it once the job has failed, which is the only time it matters.",
+        "`specPattern` matches `cypress/e2e/**/*.cy.ts` and `baseUrl` is `http://localhost:3000`, so specs can call `cy.visit('/')`.",
+        "The workflow invokes the headless run (`cypress run` directly or via `cypress-io/github-action`), not `cypress open`.",
+        "MUST NOT require a Cypress Cloud record key - no `--record`, no `--parallel`, no `CYPRESS_RECORD_KEY`. The task states the team does not pay for it, so a workflow that cannot run without it scores zero."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Orders spec only passes in file order\n\n## Problem Description\n\n`cypress/e2e/orders.cy.ts` passes when the whole file runs top to bottom and\nfails the moment anything changes that order. Running a single test with\n`--spec` and `.only`, or letting the runner retry just the failing one, gives\nerrors about an undefined order id.\n\nThe tests hand state to each other through a variable declared at the top of\nthe file: the first test creates an order and stores its id, and the later\ntests read it. That also means the three later tests are not really testing\nwhat their names say - they depend on the first one having succeeded.\n\nWe want each test to stand on its own so we can run, retry, or parallelise any\none of them.\n\n## Output Specification\n\nRework `cypress/e2e/orders.cy.ts` so every test can run alone and in any order:\n\n1. No test may depend on a value produced by another test.\n2. Each test must arrange the order it needs, and that arrangement should not\n   go through the checkout UI when the test is not about checkout - the API is\n   available at `POST /api/orders` and returns the created order as JSON.\n3. Keep the four behaviours under test: the order appears in history, it can be\n   cancelled, a delivered order cannot be cancelled, and the invoice downloads.\n\n`cypress/support/commands.ts` may gain helpers.",
+      "expected_output": "Rework `cypress/e2e/orders.cy.ts` so every test can run alone and in any order:\n\n1. No test may depend on a value produced by another test.\n2. Each test must arrange the order it needs, and that arrangement should not\n   go through the checkout UI when the test is not about checkout - the API is\n   available at `POST /api/orders` and returns the created order as JSON.\n3. Keep the four behaviours under test: the order appears in history, it can be\n   cancelled, a delivered order cannot be cancelled, and the invoice downloads.\n\n`cypress/support/commands.ts` may gain helpers.",
+      "files": [
+        "evals/order-dependent-orders-spec/files/cypress/e2e/orders.cy.ts",
+        "evals/order-dependent-orders-spec/files/cypress/support/commands.ts",
+        "evals/order-dependent-orders-spec/files/cypress/support/e2e.ts",
+        "evals/order-dependent-orders-spec/files/package.json"
+      ],
+      "assertions": [
+        "The file-scoped `createdOrderId` (or any replacement module-level mutable carrying state between tests) is gone. Each test obtains its own order id within its own scope. A solution that keeps a shared outer variable but assigns it in `beforeEach` scores at most half - state is no longer produced by another test, but the variable still exists as a shared channel and hides the dependency.",
+        "Tests that are not about checkout arrange their order with `cy.request` against `POST /api/orders`. Driving the full checkout flow in `beforeEach` for every test scores zero for this criterion: the task states the API is available and that non-checkout tests should not go through the UI, and the UI path is what made the file slow.",
+        "The test named for creating an order through checkout still drives the UI rather than being converted to an API call. Replacing every path with `cy.request` scores zero here - the suite would no longer test checkout at all.",
+        "Login is established per test in a way that works when only one test runs - `beforeEach`, ideally with `cy.session` so it is cached rather than replayed. Leaving authentication in a `before` hook scores zero: `before` does not re-run when Cypress retries an individual test, so the exact scenario the task asks to enable still fails.",
+        "The test asserting a delivered order cannot be cancelled sets that order up in the delivered state rather than reusing a freshly created one. Asserting the cancel button is disabled on an order that was never delivered scores zero - it either passes for the wrong reason or contradicts the cancel test that runs against the same state.",
+        "History, cancellation, refusal to cancel when delivered, and invoice download are all still covered.",
+        "MUST NOT reintroduce ordering by another route - no `.only`, no numbered test names asserting sequence, no `cy.wrap` of a value stored in a previous test, and no reliance on the file running top to bottom."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Cart suite is slow and flakes\n\n## Problem Description\n\n`cypress/e2e/cart.cy.ts` has four tests and every one of them drives the full\nlogin form from scratch before doing anything else. The login flow is about six\nseconds, so the file spends most of its runtime logging in.\n\nIt also flakes roughly one run in five on CI. The failures are always on the\ncart-count assertions, and the author's response was to add sleeps before them,\nwhich reduced the flake rate without removing it.\n\nSelectors are pinned to CSS classes, which broke twice already when the design\nsystem changed.\n\n## Output Specification\n\nRework `cypress/e2e/cart.cy.ts` and add whatever support files it needs so that:\n\n1. The login flow is executed once for the file rather than once per test, and\n   the four tests still each start from a logged-in state that is not polluted\n   by the previous test.\n2. The sleeps are gone and the cart-count assertions are reliable on a slow\n   runner.\n3. Selectors survive a CSS refactor.\n\n`cypress/e2e/search.cy.ts` is out of scope - leave it as it is.",
+      "expected_output": "Rework `cypress/e2e/cart.cy.ts` and add whatever support files it needs so that:\n\n1. The login flow is executed once for the file rather than once per test, and\n   the four tests still each start from a logged-in state that is not polluted\n   by the previous test.\n2. The sleeps are gone and the cart-count assertions are reliable on a slow\n   runner.\n3. Selectors survive a CSS refactor.\n\n`cypress/e2e/search.cy.ts` is out of scope - leave it as it is.",
+      "files": [
+        "evals/repeated-login-and-sleeps/files/cypress/e2e/cart.cy.ts",
+        "evals/repeated-login-and-sleeps/files/cypress/e2e/search.cy.ts",
+        "evals/repeated-login-and-sleeps/files/cypress/support/commands.ts",
+        "evals/repeated-login-and-sleeps/files/cypress/support/e2e.ts",
+        "evals/repeated-login-and-sleeps/files/package.json"
+      ],
+      "assertions": [
+        "Login is wrapped in `cy.session(...)` so the flow runs once and later tests restore the cached session. Extracting the same steps into a custom command or `beforeEach` helper WITHOUT `cy.session` scores zero: the code is tidier but the suite still drives the full login before all four tests, which is the stated problem. Hand-rolled caching that writes a cookie or localStorage value directly scores at most half - it avoids the replay but couples the suite to the auth implementation rather than using the framework's primitive.",
+        "Cart state does not leak between the four tests - each starts from a known cart, via an API reset, a cleanup step, or per-test setup. A solution that caches the session and then lets the running cart total carry from one test into the next scores zero: 'adds two different items' would start from a non-empty cart and its assertion of '2' becomes order-dependent.",
+        "No `cy.wait(<number>)` anywhere in the delivered spec or support files. Any surviving numeric `cy.wait` scores zero for this criterion. Note that `cy.wait('@alias')` on an intercepted request is not a fixed wait and is acceptable.",
+        "The cart-count checks rely on Cypress's built-in retry of `.should(...)`, optionally with an increased `timeout` option or an intercept alias. Replacing the sleeps with `cy.wait(Cypress.config('defaultCommandTimeout'))` or any other duration-based pause scores zero.",
+        "Element lookups use `findByRole` / `findByLabelText` / `findByText` from the already-installed @testing-library/cypress, or explicit `data-testid` hooks - not `.login-form__email`, `.add-to-cart`, `.cart-count` or similar class selectors. Any remaining class-based selector in the reworked file scores at most half.",
+        "MUST NOT modify cypress/e2e/search.cy.ts.",
+        "The delivered spec still tests adding one item, adding two different items, repeating an item, and removing an item. Dropping or merging a case while refactoring scores zero."
+      ]
+    }
+  ]
+}

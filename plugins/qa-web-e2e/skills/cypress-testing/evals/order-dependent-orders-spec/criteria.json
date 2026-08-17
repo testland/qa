@@ -1,0 +1,41 @@
+{
+  "context": "A spec whose tests communicate through a file-scoped `createdOrderId`, plus a `before` hook that logs in once and therefore also breaks under retry. Predicted baseline failure: the agent removes the shared variable by moving order creation into `beforeEach` driven through the checkout UI, which does make the tests independent but multiplies the slowest flow by five and still routes non-checkout tests through checkout. It is also likely to leave the `before` login hook alone - a `before` hook does not re-run when Cypress retries a single test, so the retry the team is trying to enable still fails on auth. The 'delivered order' case additionally cannot be arranged truthfully from a freshly created order, and a solution that ignores that is asserting against the wrong state.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "No cross-test variable remains",
+      "max_score": 26,
+      "description": "The file-scoped `createdOrderId` (or any replacement module-level mutable carrying state between tests) is gone. Each test obtains its own order id within its own scope. A solution that keeps a shared outer variable but assigns it in `beforeEach` scores at most half - state is no longer produced by another test, but the variable still exists as a shared channel and hides the dependency."
+    },
+    {
+      "name": "Setup goes through the API, not the checkout UI",
+      "max_score": 24,
+      "description": "Tests that are not about checkout arrange their order with `cy.request` against `POST /api/orders`. Driving the full checkout flow in `beforeEach` for every test scores zero for this criterion: the task states the API is available and that non-checkout tests should not go through the UI, and the UI path is what made the file slow."
+    },
+    {
+      "name": "The checkout test still exercises the real UI",
+      "max_score": 12,
+      "description": "The test named for creating an order through checkout still drives the UI rather than being converted to an API call. Replacing every path with `cy.request` scores zero here - the suite would no longer test checkout at all."
+    },
+    {
+      "name": "Auth survives a single-test run and a retry",
+      "max_score": 16,
+      "description": "Login is established per test in a way that works when only one test runs - `beforeEach`, ideally with `cy.session` so it is cached rather than replayed. Leaving authentication in a `before` hook scores zero: `before` does not re-run when Cypress retries an individual test, so the exact scenario the task asks to enable still fails."
+    },
+    {
+      "name": "The delivered-order case arranges a delivered order",
+      "max_score": 14,
+      "description": "The test asserting a delivered order cannot be cancelled sets that order up in the delivered state rather than reusing a freshly created one. Asserting the cancel button is disabled on an order that was never delivered scores zero - it either passes for the wrong reason or contradicts the cancel test that runs against the same state."
+    },
+    {
+      "name": "All four behaviours retained",
+      "max_score": 8,
+      "description": "History, cancellation, refusal to cancel when delivered, and invoice download are all still covered."
+    },
+    {
+      "name": "Tests do not encode an execution order",
+      "max_score": 8,
+      "description": "MUST NOT reintroduce ordering by another route - no `.only`, no numbered test names asserting sequence, no `cy.wrap` of a value stored in a previous test, and no reliance on the file running top to bottom."
+    }
+  ]
+}

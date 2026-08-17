@@ -1,0 +1,41 @@
+{
+  "context": "A Playwright spec carrying three distinct defects: eight fixed sleeps, styling-coupled selectors, and one mega-test. Predicted baseline failure: the agent removes the obvious sleeps and swaps some selectors, but keeps at least one `waitForTimeout` around the payment step where a sleep feels safest, and reaches for `page.waitForSelector` as the replacement rather than an auto-waiting assertion - which re-introduces an explicit wait the framework already performs. It is also likely to keep the synchronous `isVisible()` / `textContent()` checks, which read state once and do not retry, so the flake survives the rewrite.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "No fixed-duration waits remain",
+      "max_score": 30,
+      "description": "The delivered spec contains no `waitForTimeout`, no `setTimeout`-based sleep, and no other call that pauses for a hard-coded number of milliseconds. Any single surviving fixed sleep scores zero for this criterion, whatever the rest of the rewrite looks like - the flake is caused by timing assumptions and one remaining sleep preserves it."
+    },
+    {
+      "name": "Waiting is done by retrying assertions, not explicit wait calls",
+      "max_score": 28,
+      "description": "Readiness is expressed as `await expect(locator).toBeVisible()` / `.toHaveText()` / `.toHaveCount()` and similar, which retry until the timeout. Replacing sleeps with `page.waitForSelector` / `waitForLoadState` / `waitForFunction` as the primary mechanism scores at most half: it removes the fixed duration but still hand-rolls waiting the assertion performs. Keeping `expect(await page.isVisible(...)).toBe(true)` or `expect(await page.textContent(...)).toBe(...)` scores zero for that assertion's share, because those evaluate once and cannot retry."
+    },
+    {
+      "name": "Selectors survive a CSS refactor",
+      "max_score": 20,
+      "description": "Element lookups use role, label, text, or an explicit test id rather than class names, `nth-child` positions, or XPath. A spec still selecting on `.btn--primary`, `.product-card`, `.nav-links > li:nth-child(2)` or equivalent scores zero here. Using a stable `data-testid` counts as passing even though it is not role-based."
+    },
+    {
+      "name": "One test per flow",
+      "max_score": 14,
+      "description": "The single mega-test is split so a failure names the flow. At least three separate `test(...)` blocks covering sign-in, cart, and checkout. A single test with comments or `test.step` markers scores at most half - a mid-test failure still does not name the flow in the report."
+    },
+    {
+      "name": "Shared setup is factored, not copy-pasted",
+      "max_score": 8,
+      "description": "Sign-in or navigation needed by more than one test is reached through a helper, fixture, `beforeEach`, or page-object method rather than the same block pasted into each test."
+    },
+    {
+      "name": "login.spec.ts left unchanged",
+      "max_score": 6,
+      "description": "MUST NOT modify tests/login.spec.ts. It is stated to be stable and out of scope; editing it scores zero here."
+    },
+    {
+      "name": "Assertions still cover the original checkpoints",
+      "max_score": 8,
+      "description": "The rewrite still asserts the welcome state after sign-in, a cart count of 1, and the order confirmation. Dropping a checkpoint while cleaning up scores zero for this criterion - the suite must not get more reliable by testing less."
+    }
+  ]
+}

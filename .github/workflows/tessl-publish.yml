@@ -9,6 +9,9 @@ on:
     paths:
       - 'plugins/**/.tessl-plugin/plugin.json'
       - 'plugins/**/SKILL.md'
+      # Eval scenarios ship inside the skill directory and are what the registry
+      # scores the skill against, so an evals-only edit must republish too.
+      - 'plugins/**/evals/**'
       - '.github/workflows/tessl-publish.yml'
   workflow_dispatch:
 

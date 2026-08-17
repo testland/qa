@@ -1,0 +1,51 @@
+{
+  "context": "Config and CI setup, where the correct answers are specific settings rather than general good practice. Predicted baseline failure: the agent produces a plausible config with three browser projects and a workflow that runs `npx playwright test`, but sets `trace: 'on'` or omits trace entirely, installs browsers with a bare `npx playwright install` (which leaves a Linux runner missing system libraries), skips sharding because the prompt did not name the feature, and never guards against a focused test reaching main. Each of those is a specific documented setting rather than something inferable from the request.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Browsers installed with their system dependencies",
+      "max_score": 24,
+      "description": "The workflow installs browsers with `npx playwright install --with-deps` (or installs the OS packages explicitly). A bare `npx playwright install` scores zero: on a clean ubuntu-latest runner the browsers are missing shared libraries and every test fails at launch. Omitting the install step entirely also scores zero."
+    },
+    {
+      "name": "Traces captured on retry, not always and not never",
+      "max_score": 22,
+      "description": "`use.trace` is set to `'on-first-retry'` or `'retain-on-failure'`. `trace: 'on'` scores at most half - it produces the debugging artefact but stores it for every passing run, which is the cost the task explicitly wants avoided. Omitting trace scores zero, since the stated problem is having nothing to debug with."
+    },
+    {
+      "name": "Work is split across parallel CI jobs",
+      "max_score": 20,
+      "description": "The workflow uses `--shard=` driven by a job matrix (or an equivalent split across jobs) so the 20-minute suite does not run serially in one job. Setting only `workers` inside a single job scores at most half: it parallelises within one runner but the task asks to keep wall-clock down across CI. No splitting at all scores zero."
+    },
+    {
+      "name": "Focused tests cannot pass CI",
+      "max_score": 16,
+      "description": "`forbidOnly` is enabled when running in CI (typically `forbidOnly: !!process.env.CI`). This is the stated problem of a suite going green because someone left a test focused. Absent, scores zero."
+    },
+    {
+      "name": "Retries differ between CI and local",
+      "max_score": 12,
+      "description": "`retries` is non-zero on CI and zero (or lower) locally, e.g. `process.env.CI ? 2 : 0`. A single hard-coded retry count for both environments scores at most half - it either hides flake locally or leaves CI brittle."
+    },
+    {
+      "name": "Both a human and a machine-readable report",
+      "max_score": 10,
+      "description": "`reporter` includes the HTML reporter and a machine-consumable one (JUnit or JSON) written to a file. Only one of the two scores at most half."
+    },
+    {
+      "name": "Failure artefacts are uploaded even when the job fails",
+      "max_score": 10,
+      "description": "The workflow uploads the report or test-results directory with `if: always()` (or `if: failure()`). Without the condition the upload step is skipped exactly when a failure makes it necessary, so an unconditional upload step placed after a failing test step scores zero."
+    },
+    {
+      "name": "Three browser projects configured",
+      "max_score": 8,
+      "description": "`projects` defines Chromium, Firefox and WebKit using the `devices` presets."
+    },
+    {
+      "name": "Base URL is configured rather than repeated",
+      "max_score": 6,
+      "description": "`use.baseURL` is set so specs can call `page.goto('/')`, rather than hard-coding the host in each test."
+    }
+  ]
+}

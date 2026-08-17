@@ -18,7 +18,6 @@
     "evals:build": "tsx scripts/ts/compile-evals.ts",
     "evals:check": "tsx scripts/ts/compile-evals.ts --check",
     "new-plugin": "tsx scripts/ts/new-plugin.ts",
-    "fix-links": "tsx scripts/ts/fix-broken-links.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

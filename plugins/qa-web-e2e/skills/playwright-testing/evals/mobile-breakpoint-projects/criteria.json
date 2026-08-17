@@ -1,0 +1,41 @@
+{
+  "context": "Mobile-web coverage without a device lab. Predicted baseline failure: the agent adds projects that hand-set `viewport: { width: 390, height: 844 }` and stop there, which changes the window size but leaves the browser reporting a desktop user agent, a device pixel ratio of 1 and no touch support - so anything gated on touch or DPR still takes the desktop path. It is also likely to drive the phone test with `click()` rather than a touch interaction, and to leave snapshot names unqualified so the phone and desktop runs overwrite each other's baselines.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Device presets used rather than hand-set dimensions",
+      "max_score": 32,
+      "description": "The new projects spread entries from Playwright's `devices` catalog, e.g. `...devices['iPhone 13']` / `...devices['Pixel 7']`. A project that sets `viewport` (and optionally `userAgent`) by hand scores at most half: the window is the right size but `deviceScaleFactor`, `isMobile` and `hasTouch` keep their desktop defaults, which is the difference the task is asking for. Setting only `viewport` with no other device characteristics scores zero."
+    },
+    {
+      "name": "Touch capability is actually enabled",
+      "max_score": 20,
+      "description": "The phone projects report touch support - satisfied automatically by a `devices` preset, or explicitly via `hasTouch: true` and `isMobile: true`. A configuration where the phone projects are still non-touch scores zero, because the hamburger menu behaviour under test is reached by touch."
+    },
+    {
+      "name": "The phone test interacts by touch",
+      "max_score": 18,
+      "description": "The phone path uses `tap()` (or `page.touchscreen`) to open the navigation rather than `click()`. Using `click()` throughout scores at most half - it usually works but does not exercise the interaction the phone user performs, which is what the stated regressions turned on."
+    },
+    {
+      "name": "Both breakpoints asserted, not just the phone",
+      "max_score": 14,
+      "description": "The spec asserts the hamburger control is the navigation below the breakpoint AND the inline bar is the navigation above it, plus the differing product-grid column count. Asserting only the phone side scores at most half: a change that broke the desktop layout would pass."
+    },
+    {
+      "name": "Snapshots cannot collide across device projects",
+      "max_score": 10,
+      "description": "Any screenshot or snapshot is qualified per project - through Playwright's default project-scoped snapshot path, an explicit `snapshotPathTemplate` including the project name, or per-device names passed at the call site. Unqualified shared snapshot names score zero: the second project overwrites the first project's baseline. If the solution takes no screenshots at all, award full marks - the collision cannot occur."
+    },
+    {
+      "name": "Desktop coverage retained",
+      "max_score": 8,
+      "description": "The existing desktop project still runs. Replacing desktop with phones scores zero - the task adds coverage, it does not move it."
+    },
+    {
+      "name": "smoke.spec.ts left unchanged",
+      "max_score": 6,
+      "description": "MUST NOT modify tests/smoke.spec.ts."
+    }
+  ]
+}

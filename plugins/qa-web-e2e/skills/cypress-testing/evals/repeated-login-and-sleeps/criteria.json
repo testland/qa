@@ -1,0 +1,41 @@
+{
+  "context": "A Cypress spec that re-drives the login form in beforeEach, sleeps before assertions, and selects on CSS classes. Predicted baseline failure: the agent extracts the login block into a custom command and calls it from beforeEach, which reads as a tidy refactor but still executes the whole six-second flow before every test - the stated cost is unchanged. Cypress's caching primitive for exactly this is `cy.session`, and an agent that does not know it will either re-run the flow or try to hand-roll caching by setting a cookie or localStorage token directly, which then has to be maintained against the auth implementation.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Auth is cached rather than replayed per test",
+      "max_score": 34,
+      "description": "Login is wrapped in `cy.session(...)` so the flow runs once and later tests restore the cached session. Extracting the same steps into a custom command or `beforeEach` helper WITHOUT `cy.session` scores zero: the code is tidier but the suite still drives the full login before all four tests, which is the stated problem. Hand-rolled caching that writes a cookie or localStorage value directly scores at most half - it avoids the replay but couples the suite to the auth implementation rather than using the framework's primitive."
+    },
+    {
+      "name": "Tests remain independent despite the shared session",
+      "max_score": 16,
+      "description": "Cart state does not leak between the four tests - each starts from a known cart, via an API reset, a cleanup step, or per-test setup. A solution that caches the session and then lets the running cart total carry from one test into the next scores zero: 'adds two different items' would start from a non-empty cart and its assertion of '2' becomes order-dependent."
+    },
+    {
+      "name": "No fixed-duration waits remain",
+      "max_score": 22,
+      "description": "No `cy.wait(<number>)` anywhere in the delivered spec or support files. Any surviving numeric `cy.wait` scores zero for this criterion. Note that `cy.wait('@alias')` on an intercepted request is not a fixed wait and is acceptable."
+    },
+    {
+      "name": "Waiting is left to retrying assertions",
+      "max_score": 12,
+      "description": "The cart-count checks rely on Cypress's built-in retry of `.should(...)`, optionally with an increased `timeout` option or an intercept alias. Replacing the sleeps with `cy.wait(Cypress.config('defaultCommandTimeout'))` or any other duration-based pause scores zero."
+    },
+    {
+      "name": "Selectors survive a CSS refactor",
+      "max_score": 14,
+      "description": "Element lookups use `findByRole` / `findByLabelText` / `findByText` from the already-installed @testing-library/cypress, or explicit `data-testid` hooks - not `.login-form__email`, `.add-to-cart`, `.cart-count` or similar class selectors. Any remaining class-based selector in the reworked file scores at most half."
+    },
+    {
+      "name": "search.cy.ts left unchanged",
+      "max_score": 6,
+      "description": "MUST NOT modify cypress/e2e/search.cy.ts."
+    },
+    {
+      "name": "All four behaviours still covered",
+      "max_score": 8,
+      "description": "The delivered spec still tests adding one item, adding two different items, repeating an item, and removing an item. Dropping or merging a case while refactoring scores zero."
+    }
+  ]
+}

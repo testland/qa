@@ -1,0 +1,41 @@
+{
+  "context": "Cypress config plus CI, where the right answers are specific option shapes. Predicted baseline failure: the agent sets a single `retries: 2`, which is precisely what the task rules out - it wants retries in the headless run and none in the interactive one, and Cypress expresses that as an object with `runMode` and `openMode` keys rather than a number. It is also likely to run the suite before the server is listening, or to insert a fixed sleep instead of polling the URL, and to upload artefacts without a condition so the upload is skipped on the failing run that needed it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Retries differ between headless and interactive",
+      "max_score": 30,
+      "description": "`retries` is the object form distinguishing the two modes, e.g. `{ runMode: 2, openMode: 0 }`. A single number applied to both modes scores zero - it is the exact behaviour the task rejects, because it retries while a developer is writing the test and hides the breakage. Setting only `runMode` and omitting `openMode` scores at most half."
+    },
+    {
+      "name": "Failure artefacts are captured",
+      "max_score": 22,
+      "description": "The config enables screenshots on run failure and video (or explicitly documents video off with screenshots retained). Leaving both at defaults without stating them scores at most half; disabling both scores zero, since being unable to see the failure is the stated problem."
+    },
+    {
+      "name": "CI waits for the app before running specs",
+      "max_score": 20,
+      "description": "The workflow polls the URL until it responds - `wait-on`, the `cypress-io/github-action` `wait-on` input, or an equivalent readiness loop - before the specs run. A fixed `sleep` scores at most half: it is a guess that is either too short on a cold runner or wasted time. Starting the server and running Cypress with no readiness gate at all scores zero."
+    },
+    {
+      "name": "Artefacts survive a failing job",
+      "max_score": 14,
+      "description": "Screenshots and/or videos are uploaded with `if: always()` or `if: failure()`. An upload step with no condition placed after the test step scores zero - GitHub Actions skips it once the job has failed, which is the only time it matters."
+    },
+    {
+      "name": "Spec pattern and base URL configured",
+      "max_score": 12,
+      "description": "`specPattern` matches `cypress/e2e/**/*.cy.ts` and `baseUrl` is `http://localhost:3000`, so specs can call `cy.visit('/')`."
+    },
+    {
+      "name": "Suite runs headless in CI",
+      "max_score": 8,
+      "description": "The workflow invokes the headless run (`cypress run` directly or via `cypress-io/github-action`), not `cypress open`."
+    },
+    {
+      "name": "No paid Cypress Cloud dependency",
+      "max_score": 8,
+      "description": "MUST NOT require a Cypress Cloud record key - no `--record`, no `--parallel`, no `CYPRESS_RECORD_KEY`. The task states the team does not pay for it, so a workflow that cannot run without it scores zero."
+    }
+  ]
+}
