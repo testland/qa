@@ -1,0 +1,41 @@
+{
+  "context": "The badge check is written as an expectation inside a callback that receives the element. That callback runs exactly once, so a stale value fails immediately - which is why raising the element timeout changed nothing: the lookup was never what was slow. Predicted baseline failure: the agent keeps the callback shape and adds waiting around it (a longer timeout, a pause, a reload) because that is what fixes a timing bug in most frameworks, or converts the check into a request-based wait, which fixes the badge case by accident while leaving the same non-retrying shape everywhere else. Two further defects are usually missed entirely: a page-mutating click sitting inside a block that is re-evaluated until it passes - so it fires as many times as the block is evaluated, which is the source of the multiple clicks and the detached-element error - and an absence check that is satisfied before the thing it denies could have appeared, which is a test that has never been able to fail.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Value checks are retried rather than evaluated once",
+      "max_score": 30,
+      "description": "The badge and toast-text checks are expressed so the framework re-evaluates them until they hold - a chained assertion on the element, or an assertion callback whose only content is expectations. Scores zero if any delivered test still asserts a DOM value with a one-shot expectation inside a subject callback (`.then(($el) => expect($el.text())...)`) - that shape is the defect. Converting one of the two badge checks and leaving the other scores at most half."
+    },
+    {
+      "name": "MUST NOT act on the page inside a repeatedly evaluated block",
+      "max_score": 22,
+      "description": "The close click is moved out of the assertion callback into its own command. Scores zero if any click, type, trigger, request or other state change remains inside a callback that the framework retries - it will run once per evaluation, which is precisely the reported multiple-click and detached-element behaviour. Keeping the click inside but guarding it with a flag or a `once` variable scores at most half: it removes the symptom while leaving a non-idempotent retried block."
+    },
+    {
+      "name": "The absence check is anchored to a completed action",
+      "max_score": 20,
+      "description": "The 'no error toast' test first waits for an observable signal that the save finished - the saved confirmation, the button returning to its idle state, or the completed save request - and only then asserts the error toast is absent. Scores zero if the absence assertion still runs directly after the click, since it passes before an error toast could render and the test remains incapable of failing. Adding a fixed pause before the absence check scores zero as well."
+    },
+    {
+      "name": "Raised timeouts are not the fix",
+      "max_score": 12,
+      "description": "The ten-second timeout on the element lookup is no longer load-bearing; any timeout that remains is an addition to a retrying assertion, not a substitute for one. A delivery whose only change is a larger timeout, or one that raises the global command timeout in config, scores zero."
+    },
+    {
+      "name": "No fixed pause introduced",
+      "max_score": 10,
+      "description": "No numeric `cy.wait(<ms>)`, `setTimeout`, or equivalent duration-based pause appears in the delivered files. Any surviving fixed pause scores zero. Waiting on an aliased request is not a fixed pause and is acceptable."
+    },
+    {
+      "name": "Three behaviours preserved",
+      "max_score": 8,
+      "description": "The badge dropping from 4 to 3, the archive toast appearing and closing, and the absence of an error toast on a successful save are all still tested. Deleting the third test rather than making it meaningful scores zero."
+    },
+    {
+      "name": "Selector and assertion style stays consistent",
+      "max_score": 6,
+      "description": "The reworked spec keeps the accessibility-first lookups already used in the file for anything it touches, rather than introducing class selectors such as `.toast-close` at the command level. Mixed styles without reason score at most half."
+    }
+  ]
+}

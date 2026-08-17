@@ -1,0 +1,46 @@
+{
+  "context": "Cutting a third-party dependency out of a browser suite, and checking an HTTP contract without a browser. Predicted baseline failure: the agent reaches for the tools it knows from unit testing. The common moves are installing a request-mocking library, injecting a script into the page that replaces `window.fetch` before the app loads, or standing up a small local server and pointing a base URL at it - all three add machinery the task forbids and none of them intercepts at the browser's network layer, so requests made by the page outside the patched path still leave the machine. For the failure cases the agent typically produces both branches the same way, returning a 500 twice, because a request that never completes is not something a stubbed response models. And for the contract check it usually keeps a browser open and calls the endpoint from inside the page, or hand-rolls a bare `fetch` in the test, missing that the runner ships a request context that already carries the base URL and can run a test with no page at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Partner traffic is intercepted at the browser network layer",
+      "max_score": 30,
+      "description": "The partner host is intercepted with the runner's own routing API - a route registered on the page or the browser context against a URL pattern matching `rates.partner.example` - and answered with a response the test supplies. Scores zero if the interception is done by replacing `window.fetch`/`XMLHttpRequest` inside the page, by an injected init script, by a mock server process, or by a proxy configured outside the test. Registering the route but letting it fall through to the real host scores zero as well."
+    },
+    {
+      "name": "MUST NOT add a dependency or a mock server",
+      "max_score": 16,
+      "description": "`package.json` gains no packages and the solution starts no additional process, container, or local HTTP server. Adding a request-mocking library, an interceptor package, or a `webServer` entry pointing at a stub app scores zero even if the routing is otherwise correct - the runner already carries this capability and the task rules the alternatives out."
+    },
+    {
+      "name": "The two failure modes are produced differently",
+      "max_score": 20,
+      "description": "The server-error case is produced by fulfilling the route with an error status, and the request-never-completes case by aborting the route so the request fails at the network level. Producing both by returning an error status, or both by aborting, scores at most half - the page distinguishes a bad response from a failed request and only one of the two paths gets exercised. Adding only one of the two cases scores at most half. Adding neither scores zero."
+    },
+    {
+      "name": "The contract check runs without a browser page",
+      "max_score": 22,
+      "description": "`tests/cart-api.spec.ts` asserts `GET /api/cart` through the runner's built-in request context, in a test that does not take a `page` and never navigates. Full marks require both a status assertion and assertions on the parsed body's total and currency. Calling the endpoint from inside a page (`page.evaluate(() => fetch(...))`, `page.request` obtained after a `goto`) scores at most half - it still boots a browser and a page for a check that needs neither. Hand-rolling a bare global `fetch` against a hard-coded absolute URL, ignoring the configured base URL, also scores at most half. Leaving the check as a six-step UI journey scores zero."
+    },
+    {
+      "name": "Interception is in place before the page requests rates",
+      "max_score": 12,
+      "description": "The route is registered before the navigation or interaction that triggers the partner call - in a `beforeEach`, at the top of the test, or on the context. A route registered after the click that fires the request scores zero: the real request has already left."
+    },
+    {
+      "name": "The pattern is scoped to the partner, not to everything",
+      "max_score": 10,
+      "description": "The intercept pattern targets the partner host specifically. A catch-all pattern such as `**/*` or `**/api/**` that also swallows the application's own requests scores at most half - the rate tests then assert against a page whose own backend calls were intercepted too. A pattern so narrow it misses the real request path (matching only a bare origin with no path wildcard) scores zero."
+    },
+    {
+      "name": "Rendered assertions preserved and payload-driven",
+      "max_score": 10,
+      "description": "The rate test still asserts the standard option, the £3.99 price and the express option through what the page renders, with those values traceable to the payload the test supplies. Replacing the rendered assertions with assertions on the stubbed payload itself scores zero - that asserts the fixture, not the app."
+    },
+    {
+      "name": "Application source untouched",
+      "max_score": 6,
+      "description": "No application file is added or modified, and no environment flag is introduced for the app to behave differently under test. Proposing a build-time switch that disables the partner call scores zero."
+    }
+  ]
+}

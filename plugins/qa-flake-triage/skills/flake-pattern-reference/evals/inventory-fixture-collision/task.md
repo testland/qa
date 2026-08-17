@@ -24,7 +24,7 @@ contract is in the comment at the top of the file.
 2. Keep both tests and their assertions: forty records for forty rows, and a
    catalog value equal to the sum of the imported rows. Do not modify
    `src/inventory.js`.
-3. Write `random-data-report.md`: what makes one run differ from the next,
+3. Write `inventory-report.md`: what makes one run differ from the next,
    why both failure messages come from the same cause, and what a reviewer
    should reject in a future test in this file.
 

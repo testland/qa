@@ -1,0 +1,7 @@
+{
+  "currency": "GBP",
+  "options": [
+    { "code": "STD", "label": "Standard", "price": "3.99", "eta_days": 4 },
+    { "code": "EXP", "label": "Express", "price": "8.49", "eta_days": 1 }
+  ]
+}

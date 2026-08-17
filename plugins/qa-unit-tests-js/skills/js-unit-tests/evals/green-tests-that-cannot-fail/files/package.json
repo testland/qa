@@ -1,0 +1,12 @@
+{
+  "name": "session-tokens",
+  "version": "2.0.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  }
+}

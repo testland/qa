@@ -1,12 +1,11 @@
 {
-  "context": "`seedArchive` calls an async function and drops the promise on the floor, so the arrange step is still in flight while the assertion runs, and the write can land after the test has finished - which is how the empty-archive test ends up holding another test's order after `reset()`. Predicted baseline failure: the agent restores the `await sleep(...)` the team removed, or lengthens the read wait, or wraps the assertion in a poll-until-true helper - all of which lower the rate without removing the race and are exactly what the incident already tried. The second predicted move is to fix only the two tests with visible symptoms and leave `seedArchive` returning nothing, so the next test written against the helper is flaky again on day one. Diagnoses are predicted to describe 'a timing issue' or 'async race' generically rather than naming that the returned promise is never awaited, and to miss that the cross-test contamination is the same unawaited write landing after the test boundary."
-  ,
+  "context": "`seedArchive` calls an async function and drops the promise on the floor, so the arrange step is still in flight while the assertion runs, and the write can land after the test has finished - which is how the empty-archive test ends up holding another test's order after `reset()`. Predicted baseline failure: the agent restores the `await sleep(...)` the team removed, or lengthens the read wait, or wraps the assertion in a poll-until-true helper - all of which lower the rate without removing the race and are exactly what the incident already tried. The second predicted move is to fix only the two tests with visible symptoms and leave `seedArchive` returning nothing, so the next test written against the helper is flaky again on day one. Diagnoses are predicted to describe 'a timing issue' or 'async race' generically rather than naming that the returned promise is never awaited, and to miss that the cross-test contamination is the same unawaited write landing after the test boundary.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables present and green",
       "max_score": 6,
-      "description": "`node --test` passes with all three originally-named tests present and executing, and `race-diagnosis.md` exists. Any test deleted or skipped scores zero here."
+      "description": "`node --test` passes with all three originally-named tests present and executing, and `archive-diagnosis.md` exists. Any test deleted or skipped scores zero here."
     },
     {
       "name": "Every archive call is awaited",
@@ -21,7 +20,7 @@
     {
       "name": "Diagnosis names the unawaited operation",
       "max_score": 20,
-      "description": "`race-diagnosis.md` states that the archive write returns a promise that nothing awaits, so the read runs against a write that has not landed, and that the same pending write can resolve after the test ends - which is why a later test that reset the store still sees a row. A write-up that says 'a timing race between the write and the read' without identifying the dropped promise scores at most half. One that blames the store's latency, the runner, or test ordering scores zero."
+      "description": "`archive-diagnosis.md` states that the archive write returns a promise that nothing awaits, so the read runs against a write that has not landed, and that the same pending write can resolve after the test ends - which is why a later test that reset the store still sees a row. A write-up that says 'a timing race between the write and the read' without identifying the dropped promise scores at most half. One that blames the store's latency, the runner, or test ordering scores zero."
     },
     {
       "name": "Source and assertions untouched",

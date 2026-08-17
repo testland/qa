@@ -40,7 +40,7 @@
     {
       "name": "Notes explain the cascade",
       "max_score": 12,
-      "description": "teardown-notes.md states that the first failure left the workspace held, so every later test failed on acquisition, and that those four failures were consequences rather than findings - which is why the one real failure was hard to pick out. Notes that describe only the repair, or that call the problem 'shared state' without connecting it to the buried failure, score at most half."
+      "description": "teardown-notes.md states that the first failure left the workspace held, so every later test failed on acquisition, and that those later failures were consequences rather than findings - which is why the one real failure was hard to pick out. Notes that describe only the repair, or that call the problem 'shared state' without connecting it to the buried failure, score at most half."
     }
   ]
 }

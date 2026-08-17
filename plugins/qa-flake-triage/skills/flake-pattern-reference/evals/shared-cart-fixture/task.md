@@ -22,7 +22,7 @@ values are not up for negotiation.
    run and each also passes on its own.
 2. Keep all five tests, their names, and their expected values exactly as
    they are. Do not modify `src/cart.js`.
-3. Write `flake-diagnosis.md`: what the tests were operating on, why the
+3. Write `cart-diagnosis.md`: what the tests were operating on, why the
    failure moved when the file was reordered, and the rule that keeps this
    from returning when a sixth test is added.
 

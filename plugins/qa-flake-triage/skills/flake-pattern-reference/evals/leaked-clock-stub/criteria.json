@@ -5,7 +5,7 @@
     {
       "name": "Deliverables present and green",
       "max_score": 6,
-      "description": "`node --test` passes with all four originally-named tests present, executing, and in their original order, and `leak-diagnosis.md` exists. A test deleted, skipped, or reordered scores zero here."
+      "description": "`node --test` passes with all four originally-named tests present, executing, and in their original order, and `billing-diagnosis.md` exists. A test deleted, skipped, or reordered scores zero here."
     },
     {
       "name": "The replacement is undone after the test that installs it",
@@ -15,7 +15,7 @@
     {
       "name": "Diagnosis names the unrestored global replacement",
       "max_score": 20,
-      "description": "`leak-diagnosis.md` states that the first test reassigns `now` on the shared clock module - a single object every other module holds a reference to - and never restores it, so the freeze applies to everything that runs later. A write-up that says the tests are 'order-dependent' or 'share state' without naming the reassignment and its lack of teardown scores at most half. One that blames `src/timer.js`, `sleep`, or the runner scores zero."
+      "description": "`billing-diagnosis.md` states that the first test reassigns `now` on the shared clock module - a single object every other module holds a reference to - and never restores it, so the freeze applies to everything that runs later. A write-up that says the tests are 'order-dependent' or 'share state' without naming the reassignment and its lack of teardown scores at most half. One that blames `src/timer.js`, `sleep`, or the runner scores zero."
     },
     {
       "name": "Assertions kept at full strength",

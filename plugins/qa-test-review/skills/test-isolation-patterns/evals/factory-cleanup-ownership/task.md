@@ -78,9 +78,7 @@ function issueApiKey(userId) {
   return key;
 }
 
-function revokeApiKey(id) {
-  keys.delete(id);
-}
+function revokeApiKey(id) { keys.delete(id); }
 
 function deleteUser(id) {
   for (const key of keys.values()) {
@@ -96,21 +94,13 @@ function deleteOrg(id) {
   orgs.delete(id);
 }
 
-function deleteAllUsers() {
-  users.clear();
-}
+function deleteAllUsers() { users.clear(); }
 
-function usersIn(orgId) {
-  return [...users.values()].filter((u) => u.orgId === orgId);
-}
+function usersIn(orgId) { return [...users.values()].filter((u) => u.orgId === orgId); }
 
-function keysFor(userId) {
-  return [...keys.values()].filter((k) => k.userId === userId);
-}
+function keysFor(userId) { return [...keys.values()].filter((k) => k.userId === userId); }
 
-function counts() {
-  return { orgs: orgs.size, users: users.size, keys: keys.size };
-}
+function counts() { return { orgs: orgs.size, users: users.size, keys: keys.size }; }
 
 module.exports = {
   createOrg, createUser, issueApiKey, revokeApiKey, deleteUser, deleteOrg,

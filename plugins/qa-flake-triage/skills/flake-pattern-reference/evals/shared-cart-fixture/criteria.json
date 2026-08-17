@@ -15,7 +15,7 @@
     {
       "name": "Diagnosis names in-place mutation of a shared fixture",
       "max_score": 20,
-      "description": "`flake-diagnosis.md` exists and names the actual mechanism: a single fixture object at module scope, mutated in place by `addItem` / `applyDiscount`, so each test inherits the previous test's cart. A write-up that only says the tests 'interfere' or 'share state' without identifying the module-scope literal and the mutating calls scores at most half. A write-up that blames `src/cart.js`, timing, or the runner scores zero."
+      "description": "`cart-diagnosis.md` exists and names the actual mechanism: a single fixture object at module scope, mutated in place by `addItem` / `applyDiscount`, so each test inherits the previous test's cart. A write-up that only says the tests 'interfere' or 'share state' without identifying the module-scope literal and the mutating calls scores at most half. A write-up that blames `src/cart.js`, timing, or the runner scores zero."
     },
     {
       "name": "Expected values untouched",

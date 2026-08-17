@@ -1,29 +1,29 @@
-# API tests fail about half the time, always in one file or the other
+# One of the two API test files dies before its tests run
 
 ## Problem Description
 
-Since we split the API tests into two files, `node --test` fails about half
-the time. The failure lands in `test/health.test.js` on some runs and in
-`test/orders.test.js` on others - never both, and never the same file twice
-in a row for long.
-
-Two error shapes show up:
+Since we split the API tests into two files, `node --test` is red on almost
+every run:
 
 ```
 Error: listen EADDRINUSE: address already in use 127.0.0.1:4300
+    at Server.setupListenHandle [as _listen2] (node:net:1908:21)
 
-expected 404 to equal 200
+✖ test/orders.test.js
 ```
 
-The second one is confusing because the route it is asking for definitely
-exists in `src/server.js`.
+The file that dies reports no test results at all - none of its tests ever
+ran. Which of the two files it is depends on the machine: it is
+`test/orders.test.js` on the CI image and on most laptops, and one developer
+sees `test/health.test.js` instead. On the two-core box we keep for smoke
+runs, the whole suite is green.
 
 Running the files one at a time is always green:
 `node --test test/health.test.js` then `node --test test/orders.test.js`.
 Someone proposed making that the CI command permanently, and someone else
 proposed retrying the suite once on `EADDRINUSE`. We would rather the tests
-just worked, including when we add a third file next sprint and when we run
-the suite twice concurrently on the same machine.
+just worked, including when we add a third file next sprint and when two of
+us run the suite at the same time on the shared dev box.
 
 ## Output Specification
 
@@ -32,8 +32,9 @@ the suite twice concurrently on the same machine.
    would two copies of the suite running side by side on one machine.
 2. Do not modify `src/server.js`. Keep every test and its assertions.
 3. Write `collision-notes.md`: what the two files were competing for, why
-   the second error message appears instead of a bind failure, and what a
-   third test file must do to stay out of this.
+   the file that reports the error is not the file with the problem, why the
+   two-core box is green, and what a third test file must do to stay out of
+   this.
 
 Run `node --test` before you finish; it must pass.
 

@@ -32,10 +32,9 @@ scope for this change.
    `pool.stats().inUse === 0`, checked in the test file itself.
 3. Do not modify anything under `src/`. Keep all seven tests and their
    assertions.
-4. Write `pool-cleanup-notes.md`: what each test consumed and never gave
-   back, why the failure tracked the position in the file rather than the
-   test, why raising `max` to 50 would only postpone it, and what the fix must
-   do when a test fails partway through.
+4. Write `pool-notes.md`: why the failure tracked the position in the file
+   rather than the test, why every test passes on its own, and a verdict on
+   the two proposals above.
 
 Run `node --test` before you finish; it must pass.
 
@@ -65,8 +64,7 @@ function createPool({ max = 5 } = {}) {
     if (free.length === 0 && created >= max) {
       throw new Error(`connection pool exhausted (max ${max})`);
     }
-    const conn =
-      free.pop() || { id: (created += 1), open: true };
+    const conn = free.pop() || { id: (created += 1), open: true };
     inUse += 1;
     return conn;
   }
@@ -120,13 +118,7 @@ function clearTable() {
   table.clear();
 }
 
-module.exports = {
-  insertOrder,
-  findOrder,
-  deleteOrder,
-  countOrders,
-  clearTable,
-};
+module.exports = { insertOrder, findOrder, deleteOrder, countOrders, clearTable };
 
 =============== FILE: test/repository.test.js ===============
 'use strict';
@@ -134,13 +126,8 @@ module.exports = {
 const { test, beforeEach } = require('node:test');
 const assert = require('node:assert/strict');
 const { createPool } = require('../src/pool');
-const {
-  insertOrder,
-  findOrder,
-  deleteOrder,
-  countOrders,
-  clearTable,
-} = require('../src/orderRepository');
+const repo = require('../src/orderRepository');
+const { insertOrder, findOrder, deleteOrder, countOrders, clearTable } = repo;
 
 const pool = createPool({ max: 5 });
 

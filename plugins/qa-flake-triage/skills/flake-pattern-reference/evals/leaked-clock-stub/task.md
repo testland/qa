@@ -31,7 +31,7 @@ We do not want to lose the coverage.
    its own.
 2. Keep all four tests and their assertions - in particular the elapsed
    assertion stays at `>= 10`. Do not modify anything under `src/`.
-3. Write `leak-diagnosis.md`: what the first test does that reaches the last
+3. Write `billing-diagnosis.md`: what the first test does that reaches the last
    two, why moving the tests around changes the result, and the rule that
    makes this safe when the next test in this file needs the same setup.
 

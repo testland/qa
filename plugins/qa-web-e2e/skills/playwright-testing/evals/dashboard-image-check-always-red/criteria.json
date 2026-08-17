@@ -1,0 +1,41 @@
+{
+  "context": "A homegrown screenshot diff that fails on volatile content and on platform font rendering. Predicted baseline failure: the agent keeps `page.screenshot()` and improves the comparison around it - installing an image-diff package, or comparing sizes instead of bytes - and handles the volatile regions by hiding them with injected CSS or by cropping to a `clip` rectangle, which quietly stops testing whatever else sits in that region. The second predicted move is to keep the comparison whole-page and buy the green with tolerance, setting a large allowed-difference number, which is precisely the loosening the task rules out and which then also swallows a real layout break. The Mac-versus-Linux point is usually acknowledged as 'font differences' and left there, without the answer stating that reference images are per-platform and must be produced on the platform CI runs on. Animation is usually addressed with a wait rather than by disabling it, which still leaves a card mid-fade on a slow frame.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Comparison is performed by the runner, not by hand",
+      "max_score": 28,
+      "description": "Both checks use the runner's built-in screenshot assertion against a managed reference image, so a mismatch produces expected/actual/diff attachments in the report and the reference is stored and refreshed by the runner. Scores zero if the delivered spec still calls `page.screenshot()` and compares the result itself, whether by buffer comparison, hashing, or a newly added image-diff library. `fs` and manual baseline paths should be gone from the spec entirely."
+    },
+    {
+      "name": "Volatile regions are masked out of the comparison",
+      "max_score": 26,
+      "description": "The timestamp line, the promo strip, the avatar image and any other moving content are excluded via the assertion's masking option, passed as locators. Full marks require all of the timestamp, promo strip and avatar. Hiding them by injecting CSS (`display: none`, a style override, `stylePath` that blanks them) scores at most half - it changes the layout being compared, so surrounding elements shift and the reference no longer represents the real page. Cropping the comparison to a region that omits them scores at most half for the same reason plus the loss of coverage. Not handling them at all scores zero."
+    },
+    {
+      "name": "MUST NOT buy the green with a loose tolerance",
+      "max_score": 18,
+      "description": "Any difference allowance is small and explicitly stated - a low pixel-ratio or pixel-count ceiling, or a per-pixel colour threshold left near its default. Scores zero if a large tolerance is used in place of masking, or if the volatile regions are unhandled and the allowance is sized to absorb them; that reproduces the situation where a real layout break also passes. Setting no allowance at all is acceptable and scores full marks provided the volatile regions are masked."
+    },
+    {
+      "name": "Reference images are platform-bound and produced on the CI platform",
+      "max_score": 18,
+      "description": "The answer states that reference images are specific to the operating system and browser that produced them, and gives a concrete way to produce the Linux ones for the Linux runners - generating them inside the matching container image, or in a CI job on the same runner, and committing that output. Merely observing that fonts render differently on macOS, without saying where the committed references must come from, scores at most half. Leaving the Mac-authored files as the reference scores zero."
+    },
+    {
+      "name": "Animation and loading are settled before capture",
+      "max_score": 14,
+      "description": "The capture disables animation through the assertion's animation option, so in-flight transitions are stopped rather than waited out. A fixed sleep before the capture scores zero. Waiting only on an element becoming visible scores at most half - the fade is still in progress at that moment, which is the stated cause."
+    },
+    {
+      "name": "Refresh procedure documented with the real command",
+      "max_score": 12,
+      "description": "`docs/visual-testing.md` exists, is 20 lines or fewer, and names the actual command that regenerates reference images plus where they land in the repository. A document that describes the process in prose without the command scores at most half. Missing file scores zero."
+    },
+    {
+      "name": "Both checks survive and the app is untouched",
+      "max_score": 8,
+      "description": "The populated dashboard and the empty state are both still compared, and no application file or markup is modified. Dropping the empty-state check, or adding an attribute or a test-only class to the page to make masking easier, scores zero."
+    }
+  ]
+}

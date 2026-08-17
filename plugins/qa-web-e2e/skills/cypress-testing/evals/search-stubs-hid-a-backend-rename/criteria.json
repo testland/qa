@@ -1,0 +1,41 @@
+{
+  "context": "Every test replaces the search response with a body the test author wrote, so the suite verifies the front end against a fossil of the API. Predicted baseline failure: the agent treats this as a data-freshness problem and edits the canned bodies to the new shape - `items` instead of `results` - which makes today's break visible exactly once and guarantees the same silent drift next time. The second likely move is to keep every route stubbed and add an assertion on the mock's call arguments, which still never lets a real request happen. What the agent is unlikely to know is that the same interception command has two modes: called with a matcher only, it observes and passes the request through, and the observed request/response are then reachable through the alias - so the two tests that describe real service behaviour can run against the real endpoint while the two that need an impossible response stay stubbed. Also unlikely to be known: the alias exposes every matching call, which is how a debounce regression is caught.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Contract tests observe the real endpoint instead of replacing it",
+      "max_score": 32,
+      "description": "The results-list and author-facet tests register the route for observation only - a route matcher with no response body, fixture or reply - so the request reaches the real service and the rendered assertions fail when the shape changes. Rewriting the hard-coded bodies to the new `items` / keyed-facets shape and leaving them stubbed scores zero: that is the drift being repaired, not a fix. Deleting the interception entirely so nothing can be asserted about the call scores at most half."
+    },
+    {
+      "name": "The outgoing request is asserted from the captured call",
+      "max_score": 22,
+      "description": "The search term and a page size of 20 are asserted against the captured request (its URL, query or body) obtained through the route's alias. Asserting instead on a hand-written expectation of what the app 'should' send, without reading a captured request, scores zero. Asserting the term but not the page size, or vice versa, scores at most half."
+    },
+    {
+      "name": "A debounce regression fails the suite",
+      "max_score": 16,
+      "description": "Typing one word is asserted to produce exactly one matching request - via the collection of all calls recorded under the alias, or an equivalent count. Waiting for a single call and asserting nothing about the total scores zero, since a per-keystroke regression still passes. A fixed pause followed by a count scores at most half."
+    },
+    {
+      "name": "Canned bodies moved out of the spec",
+      "max_score": 14,
+      "description": "The empty-results and server-error responses are read from files under the fixtures directory (referenced by name in the route definition, or loaded and reused), not written inline in the spec. Keeping the objects inline but extracting them to a `const` at the top of the same spec scores at most half - the task asks for them to be shareable and reviewable outside the spec."
+    },
+    {
+      "name": "Error and empty states stay stubbed",
+      "max_score": 10,
+      "description": "The empty-results and server-error tests still force those responses. Converting them to observation-only so they depend on the real service scores zero - the task states the service will not produce them on demand, so the tests would become non-deterministic."
+    },
+    {
+      "name": "MUST NOT introduce a fixed pause or change the out-of-scope spec",
+      "max_score": 10,
+      "description": "No numeric `cy.wait(<ms>)` in any delivered file, and `cypress/e2e/checkout.cy.ts` is untouched. Waiting on an aliased request is not a fixed pause and is expected here. Any surviving numeric pause, or any edit to the checkout spec, scores zero."
+    },
+    {
+      "name": "All four behaviours still covered",
+      "max_score": 6,
+      "description": "Results list, author facet counts, empty state and error state each still have a test. Dropping or merging one while refactoring scores zero."
+    }
+  ]
+}

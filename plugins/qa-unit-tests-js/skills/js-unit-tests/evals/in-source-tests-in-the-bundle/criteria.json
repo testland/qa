@@ -1,0 +1,46 @@
+{
+  "context": "Cases written inside the module they exercise, which the runner picks up because the source glob is configured, and which the bundler happily ships because nothing strips them. Predicted baseline failure: the agent reads 'in the bundle' as the whole problem and treats the placement question as settled either way - it moves every case out of both files and deletes the source glob, or it leaves both modules as they are and only tries to make the conditional disappear at build time. The first answer is over-correction that also deletes the one arrangement nobody complained about; the second leaves the pricing cases exactly where the last person failed to find them. And in the moving, cases quietly get merged, renamed into one table-driven loop, or dropped - the run still reports green with fewer of them, which nothing in the diff makes obvious. The graded shape is: substantial logic gets its own test file with every case intact, a four-line helper may keep its attached case, and whatever stays in-source is eliminated by the production build rather than left unreachable.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The pricing cases move into a discoverable test file",
+      "max_score": 30,
+      "description": "The seven pricing cases live in a file whose name matches the project's test pattern, importing priceFor from the module. Leaving them inside src/pricing-rules.js scores zero, whatever else is fixed - discoverability is half the report. Moving them into a file that the runner does not collect (wrong suffix, outside the include pattern) also scores zero."
+    },
+    {
+      "name": "Nothing behind the conditional survives a production build",
+      "max_score": 22,
+      "description": "Any in-source block that remains is removed by the build - the conditional is replaced with a constant at build time so the bundler eliminates the branch, or every in-source block is gone and the source glob with it. Relying on the conditional being false at runtime scores zero: that is the current state, and the code still ships. Deleting the build configuration, or the entry point, to make the question moot scores zero."
+    },
+    {
+      "name": "MUST NOT lose or merge a case in the move",
+      "max_score": 18,
+      "description": "MUST NOT drop, merge, or rewrite any of the seven pricing cases: the same seven inputs (1, 10, 11, 50, 51, the annual case, and the rejected zero) with the same expected values must still be asserted, and the rejection must still be keyed on the error type. Collapsing several into one case with multiple assertions scores at most half; any missing input scores zero."
+    },
+    {
+      "name": "The four-line helper is treated differently from the rule engine",
+      "max_score": 14,
+      "description": "src/slug.js may keep its single attached case - the report says it has never caused trouble - and the configuration that runs it stays in place. Moving it out as well is acceptable and scores full only if the source glob and the build-time elimination are cleaned up consistently with that choice; leaving a dangling source glob that now matches nothing, or a build define for a conditional that no longer exists, scores at most half."
+    },
+    {
+      "name": "Explicit test imports, no injected globals",
+      "max_score": 12,
+      "description": "The new test file imports its test functions by name from the runner, matching the existing style. Turning on global injection in the configuration so bare describe/it/expect resolve scores zero - it is a project-wide change made to save two import lines, and the task rules it out."
+    },
+    {
+      "name": "Pricing logic untouched",
+      "max_score": 10,
+      "description": "The tier table, seat floor, discount rate and the priceFor body are byte-identical. Extracting a helper or exporting internals so the new test file can reach them scores zero."
+    },
+    {
+      "name": "Suite passes with the same case count",
+      "max_score": 8,
+      "description": "npm test exits clean and reports eight cases - the seven pricing cases plus the slug case. A green run reporting fewer scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 6,
+      "description": "package.json is unchanged. Installing a second test framework, a plugin to strip the blocks, or a bundler plugin scores zero - the configuration already in the repository covers this."
+    }
+  ]
+}

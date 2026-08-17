@@ -1,0 +1,41 @@
+{
+  "context": "Every one of these cases is a function of the browser's clock, and the runner can replace that clock and move it forward on demand - so an eleven-day-old trial and a fifteen minute idle timeout are both reachable in milliseconds. Predicted baseline failure: the agent solves the problem at the data layer, because that is the portable answer - it wires the seed script into a hook, or has each test create an account with a back-dated `trialEndsAt`, which removes the manual step but keeps the suite dependent on environment state and still cannot advance an inactivity timer that is already running in the page. For the idle case it usually either leaves the wait, shortens the timeout with a query parameter or a test-only build flag, or calls the sign-out endpoint directly and asserts the result, none of which exercise the timer. The second thing an unaided agent misses is ordering: the banner is decided and the timer is registered while the page loads, so a clock installed after the navigation controls neither - it has to be in place before the application code runs.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Time is controlled by the runner, not by waiting or seeding",
+      "max_score": 32,
+      "description": "The suite replaces the browser's time functions so the trial dates and the idle timeout can be reached instantly. Scores zero if any delivered test still waits for real time to pass, still calls the seed script, or still depends on the age of whatever account the environment holds. Back-dating data so the states are reachable without faking time scores at most half: it unblocks the banner cases but leaves the inactivity timer unreachable and the suite still writing to shared state."
+    },
+    {
+      "name": "The clock is in place before the application loads",
+      "max_score": 20,
+      "description": "Time is faked before the navigation that loads the dashboard, so the banner calculation and the inactivity timer registered during load both use the fake. Installing it after the visit scores zero - the timer that must fire has already been registered against the real clock, so advancing time afterwards does nothing. Doing this in some tests but not the inactivity test scores at most half."
+    },
+    {
+      "name": "The timeout is advanced explicitly rather than waited out",
+      "max_score": 16,
+      "description": "The inactivity test moves the clock past fifteen minutes in one step and then asserts the sign-out. Scores zero if the sign-out is instead triggered by calling an endpoint, by shortening the timeout through a query parameter or test build flag, or by any remaining numeric `cy.wait(<ms>)` - requirement 3 states the timeout must actually elapse from the application's point of view."
+    },
+    {
+      "name": "Now is pinned so the result cannot drift with the calendar",
+      "max_score": 14,
+      "description": "The tests fix the current instant to a known timestamp and derive the trial boundaries from that instant, so the same run reproduces on any date. Faking the clock but deriving the dates from the real current time scores at most half - the first case would still start failing on its own next week, which is one of the reported problems."
+    },
+    {
+      "name": "The data the page reads agrees with the frozen clock",
+      "max_score": 12,
+      "description": "The `trialEndsAt` value the dashboard receives is made consistent with the frozen instant for each of the three banner cases - by controlling the `/api/me` response or by arranging the account through the API within the test. Freezing the clock while leaving the account's real trial date in play scores zero: the three states would still be decided by whatever the environment holds."
+    },
+    {
+      "name": "MUST NOT leave a skipped test or a manual precondition",
+      "max_score": 10,
+      "description": "No `.skip`, no `.only`, and no comment instructing a human to run a script before the file works. Any test left skipped scores zero, since the two states that ship broken are exactly the skipped ones."
+    },
+    {
+      "name": "Four behaviours covered with their original assertions",
+      "max_score": 6,
+      "description": "No banner early in the trial, `3 days left` in the warning state, the expired panel, and the session-expired message after the idle timeout are all still asserted. Weakening an assertion to a mere existence check while refactoring scores at most half."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Two events that fire outside the page that triggered them. Predicted baseline failure: the agent correctly identifies the sleeps as the problem and writes the natural rewrite - `await button.click()` on one line, then `const popup = await page.waitForEvent('popup')` on the next. That reads as the textbook fix and is a race: the window often opens while the click is still being awaited, the listener is attached afterwards, and the wait sits there until the test times out - trading an intermittent crash for an intermittent hang. The same ordering error is made for the download. On the file side, the agent usually keeps reading from disk and merely relocates the guess, pointing at a `downloads/` directory or an `outputDir` path it invents, and often sets a download directory in the config rather than taking the file from the event; it also tends to miss that the downloaded file is discarded when the context closes, so any copy has to be made during the test.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The waiter is created before the action that fires the event",
+      "max_score": 32,
+      "description": "For all three cases - consent window, documentation tab, download - the wait is established before the click, then awaited afterwards: either the promise assigned first and awaited after the click, or the click and the wait passed together to a combinator. Scores zero for any case where the click is fully awaited on its own line and the wait comes after it, even though that form usually passes locally; that ordering is the stated CI failure. Scores zero as well if a sleep is retained anywhere as the actual synchronisation."
+    },
+    {
+      "name": "MUST NOT read the export from an assumed filesystem location",
+      "max_score": 26,
+      "description": "The CSV contents are obtained from the download object the event produced - its stream, its resolved path, or by saving it to a path the test itself controls (a temporary directory or the test's own output directory) and reading that. Scores zero if any assumed location survives: a home directory, a `Downloads` folder, a bare relative `downloads/` path, or a filename the test predicts rather than reads. Configuring the browser to save into a chosen directory and then reading from it by hand scores at most half - the suggested filename is still being guessed."
+    },
+    {
+      "name": "Each additional window is obtained from its event, not from a list",
+      "max_score": 18,
+      "description": "The consent window and the documentation tab are each captured as the page object the event delivers. `context.pages()` indexing, `[1]`, or `pages[pages.length - 1]` scores zero wherever it survives - the list is a snapshot of whatever has opened by then, which is what makes the current test order-dependent and occasionally wrong even when it does not crash."
+    },
+    {
+      "name": "The downloaded file is consumed before the context is gone",
+      "max_score": 14,
+      "description": "The answer reads or copies the download inside the test that produced it, and does not defer it to a later test, an `afterAll`, or a post-run script. Full marks if the answer additionally states why - the file does not outlive the browser context that downloaded it. Reading it in the same test without the reasoning scores full marks for the behaviour; deferring the read to any point after the context closes scores zero."
+    },
+    {
+      "name": "Assertions land on the right window",
+      "max_score": 12,
+      "description": "The consent heading and the Allow control are asserted and clicked on the consent window's own handle, and the connected state is asserted back on the original page. Approving on the original page, or asserting the connected state on the consent window, scores zero. Skipping the added assertion that the consent screen is actually showing scores at most half."
+    },
+    {
+      "name": "Download availability is settled deliberately",
+      "max_score": 10,
+      "description": "The answer either leaves `playwright.config.ts` alone and says explicitly that downloads are already accepted by default, or sets the accept-downloads option explicitly. Scores zero if the answer disables download acceptance, or if it invents an unrelated configuration change (a custom downloads directory, a browser launch flag) presented as required for the test to work."
+    },
+    {
+      "name": "Content assertions preserved",
+      "max_score": 10,
+      "description": "The export test still asserts the exact header row `month,revenue,orders` and a total of five rows, and now also asserts the suggested filename. Reducing the check to 'a download happened' or 'the file is non-empty' scores zero."
+    },
+    {
+      "name": "No hard-coded durations or paths remain",
+      "max_score": 6,
+      "description": "Neither delivered spec contains `waitForTimeout`, a `setTimeout` sleep, `os.homedir()`, or an absolute path literal. Any survivor scores zero here."
+    }
+  ]
+}

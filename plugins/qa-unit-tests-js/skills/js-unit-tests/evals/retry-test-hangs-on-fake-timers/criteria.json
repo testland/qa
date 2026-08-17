@@ -1,0 +1,46 @@
+{
+  "context": "A frozen clock advanced synchronously against code that schedules its wait inside a promise chain. The wait is only registered after the rejection has been delivered to the catch block, which happens on the microtask queue - so the advance runs before any timer exists, nothing fires, and the promise never settles. Predicted baseline failure: the agent reads the hang as 'not advanced far enough', advances by more, advances repeatedly, or moves the advance after the await where the test has already blocked - all of which reproduce the hang identically. Having exhausted those, it abandons the frozen clock and either lets the test sleep for real (green, three seconds, and worse every time an attempt is added) or edits the module's delays. The winning shape interleaves clock advancement with the microtask queue - the asynchronous advance helpers, or an explicit flush between advances - while the promise under test is held, not awaited.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The clock is advanced in a way that lets pending promises run",
+      "max_score": 30,
+      "description": "Between starting the call and asserting on it, the test advances the frozen clock through a mechanism that also drains queued microtasks - the asynchronous advance/run-timers helpers, or a synchronous advance interleaved with an explicit awaited flush - while holding the returned promise rather than awaiting it first. A test that advances synchronously once and then awaits scores zero: that is the shape that hangs. Advancing repeatedly in a synchronous loop, with no point at which the pending chain can run, also scores zero."
+    },
+    {
+      "name": "MUST NOT buy the pass with real time",
+      "max_score": 22,
+      "description": "MUST NOT remove the frozen clock and let the suite actually wait out the backoff, MUST NOT raise the per-test time limit to accommodate waiting, and MUST NOT reduce the delays or attempt count - in the module or by passing options that shrink them below the production values for the retry cases. Any of these scores zero here even though the suite goes green; the whole point of the task is a suite that finishes in about a second while exercising the real schedule."
+    },
+    {
+      "name": "The schedule is asserted, not just the outcome",
+      "max_score": 16,
+      "description": "The three-attempt case asserts the call count before the scheduled wait has elapsed and again after it - showing the next attempt did not fire early. A case that only asserts the final resolved value and a total call count scores at most half: it passes even if the module stopped waiting between attempts entirely."
+    },
+    {
+      "name": "Exhaustion is asserted as a rejection",
+      "max_score": 14,
+      "description": "The all-attempts-fail case asserts the returned promise rejects with the last error, through a rejection matcher or an equivalent that fails when nothing is thrown. A test that only counts attempts, or one whose assertions sit in a callback that never runs when the promise resolves, scores zero - it passes precisely when the behaviour breaks."
+    },
+    {
+      "name": "The real clock is put back",
+      "max_score": 12,
+      "description": "Real timers are restored in a teardown hook or via configuration, so the frozen clock does not remain installed for whatever runs next in the file. Restoring only at the end of one test body scores at most half - a failing assertion earlier in that body skips it."
+    },
+    {
+      "name": "First-attempt case involves no waiting",
+      "max_score": 10,
+      "description": "The success-first-time case asserts a single invocation and that no wait was scheduled or needed. Copying the advance-the-clock dance into a case that has nothing to advance scores at most half."
+    },
+    {
+      "name": "Module untouched and nothing installed",
+      "max_score": 10,
+      "description": "src/retry.js is byte-identical, src/attempts.test.js still passes, and package.json is unchanged. Adding a timer-mocking package, or exporting the internal sleep to stub it, scores zero."
+    },
+    {
+      "name": "Suite passes quickly",
+      "max_score": 8,
+      "description": "npm test exits clean with every case in both files executed, and the whole run takes on the order of a second. A run that passes but takes several seconds because a case waits for real scores zero here."
+    }
+  ]
+}

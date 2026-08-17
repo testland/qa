@@ -1,0 +1,46 @@
+{
+  "context": "Authenticated-state reuse across a suite. Predicted baseline failure: the agent extracts the duplicated `beforeEach` into a shared `signIn(page, role)` helper, or into a `globalSetup` function that logs in and stashes something in a module variable, and reports the duplication as solved. That removes the copy-paste but not the cost - every test still drives the form, so the nine seconds and the auth-service blast radius are both untouched. The agent that does reach for a saved browser-state file usually applies it globally under top-level `use`, which silently signs `tests/login.spec.ts` in as well and turns the one spec that must start anonymous into a test of nothing; and it usually saves a single state file rather than one per role, then invents a role switch inside the tests. Ordering the state-producing run ahead of the specs through the configuration, rather than hoping a `beforeAll` somewhere ran first, is the part that is not guessable from the prompt.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Signed-in state is saved to a file and replayed, not re-driven",
+      "max_score": 32,
+      "description": "Authentication happens once per role and the resulting browser state (cookies plus origin storage) is written to a file that the specs load, so a test that only needs to be signed in never submits the form. A solution where every test still drives the sign-in UI - however well factored into a helper, page object, or `beforeEach` - scores zero: the stated cost is the form submission itself, not the duplicated source lines. Signing in once through the API and re-injecting cookies by hand into every context scores at most half."
+    },
+    {
+      "name": "Two independent role states, kept separate",
+      "max_score": 18,
+      "description": "Admin and member states are produced and stored separately (two files, or one file per role-named artefact) and each spec picks the one it needs. One shared state file plus an in-test role switch scores at most half - the two specs then contend for one session and cannot run in parallel safely. A solution that authenticates only one role and runs billing as a member scores zero."
+    },
+    {
+      "name": "The state-producing run is ordered by the configuration",
+      "max_score": 20,
+      "description": "The configuration guarantees the state exists before the specs run - a dedicated setup project that the browser project declares a dependency on, or an equivalent config-level ordering. A `beforeAll` inside one spec file, a manual `node scripts/auth.js` step the developer must remember, or a bare instruction in a README scores at most half: nothing orders it, and a single-file run (`npx playwright test tests/billing.spec.ts`) starts with no state. No ordering mechanism at all scores zero."
+    },
+    {
+      "name": "MUST NOT sign login.spec.ts in",
+      "max_score": 18,
+      "description": "`tests/login.spec.ts` runs against a browser with no pre-existing session - either because the saved state is applied per-spec rather than globally, or because that file explicitly opts out with an empty state. Scores zero if a globally applied saved state reaches it, because both of its cases then assert against an already-authenticated browser and the second one ('sends an unauthenticated visitor to the form') becomes false. Deleting or skipping the file to dodge the conflict also scores zero."
+    },
+    {
+      "name": "Saved state is excluded from version control",
+      "max_score": 10,
+      "description": "`.gitignore` gains the directory or files the state is written to. The paths listed must actually match where the solution writes - an ignore rule pointing at a directory nothing is written to scores zero, as does leaving `.gitignore` untouched. These files carry live session credentials."
+    },
+    {
+      "name": "Existing assertions survive intact",
+      "max_score": 10,
+      "description": "All six existing cases across the three spec files still assert what they assert today - the project count and name, the project heading, the plan text, the enabled invoice button, and both login cases. Dropping or weakening any assertion while restructuring scores zero for this criterion."
+    },
+    {
+      "name": "Specs no longer carry credentials",
+      "max_score": 8,
+      "description": "The email/password literals live in the setup that produces the state, not repeated inside `tests/dashboard.spec.ts` and `tests/billing.spec.ts`. A spec that still fills in a password anywhere other than `tests/login.spec.ts` scores zero here."
+    },
+    {
+      "name": "Config still delivers the debugging artefacts it had",
+      "max_score": 6,
+      "description": "The rewritten `playwright.config.ts` keeps `baseURL`, `trace: 'on-first-retry'`, the reporter, and the CI retry behaviour. Silently dropping any of them while restructuring the projects array scores zero."
+    }
+  ]
+}

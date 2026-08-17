@@ -1,0 +1,41 @@
+{
+  "context": "Both halves fail for the same underlying reason: the spec runs inside the browser, so it can neither fabricate a trusted file selection convincingly nor touch the file system. Predicted baseline failure: the agent improves the hand-built file object - a proper `DataTransfer`, a bubbling `change`, an `input` event as well - which is more code around the wrong approach and still does not drive the application's own upload path; there is a dedicated command that performs a real selection against an input or a drop zone. For the export half, the agent typically moves the Node imports rather than removing the need for them, or replaces the parse with a string comparison so it can pretend the browser read the file, or keeps a fixed pause because it has no retrying way to wait for a file to appear. The pieces it is unlikely to reach for unaided: a file-reading command that keeps retrying until its assertions pass, and a registered Node-side handler invoked from the test for the work that truly cannot run in the browser - which must return a value or null, or the call fails at run time.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The file is selected through the framework's own file command",
+      "max_score": 28,
+      "description": "The import test attaches the CSV using the built-in file-selection command against the upload input, so the application's upload handling runs. Scores zero if any hand-built `DataTransfer` / `new File` / `dispatchEvent` construction survives, however tidied. Using the command but with the CSV body still written inline in the spec scores at most half - requirement 1 asks for a reusable test data file, referenced by path or loaded from the fixtures directory."
+    },
+    {
+      "name": "MUST NOT import Node modules into a spec",
+      "max_score": 22,
+      "description": "No delivered spec imports or requires `fs`, `path`, `csv-parse` or any other Node-only module. Specs execute in the browser, which is why the file currently fails to load. Any surviving Node import in a spec scores zero, even if the rest of the work is correct."
+    },
+    {
+      "name": "Node-only work runs Node-side and is invoked from the test",
+      "max_score": 20,
+      "description": "Parsing the exported CSV and emptying the download directory are registered as handlers in the configuration's Node-events callback and called from the test. Scores zero if that work is dropped from the suite instead of relocated, or if it is attempted in the browser. Scores at most half if a handler returns nothing - a handler must return a value or explicitly `null`, otherwise the call fails at run time."
+    },
+    {
+      "name": "The download check retries instead of pausing",
+      "max_score": 16,
+      "description": "The exported file is read with a command that keeps retrying until its assertions pass, so a download that lands late still passes and a download that never lands still fails. The five-second pause is gone and no numeric `cy.wait(<ms>)` replaces it. Any surviving fixed pause before reading the file scores zero; asserting only that a button was clicked, without inspecting the file, scores zero as well."
+    },
+    {
+      "name": "The drop-zone case exercises the drop zone",
+      "max_score": 12,
+      "description": "The previously skipped drop case drops the file onto `[data-testid=\"contacts-dropzone\"]` using the drag-drop mode of the same file-selection command. Re-implementing it against the file input, so it duplicates the first test, scores zero."
+    },
+    {
+      "name": "Download location is configured",
+      "max_score": 8,
+      "description": "The downloads directory is set explicitly in configuration and the test reads from that same location rather than a hard-coded guess. Leaving the path hard-coded in the spec while nothing is configured scores at most half."
+    },
+    {
+      "name": "Four live cases with their original assertions",
+      "max_score": 6,
+      "description": "Import via the input, import via the drop zone, export contents, and the empty-download-directory precondition are all present and none is skipped. The export assertions still check three rows and `ada@example.com` in the first. Any remaining `.skip` scores zero."
+    }
+  ]
+}

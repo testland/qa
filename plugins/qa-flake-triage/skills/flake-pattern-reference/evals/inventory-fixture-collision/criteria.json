@@ -5,7 +5,7 @@
     {
       "name": "Deliverables present and green",
       "max_score": 6,
-      "description": "`node --test` passes with both originally-named tests present and executing, and `random-data-report.md` exists. A test deleted or skipped scores zero here."
+      "description": "`node --test` passes with both originally-named tests present and executing, and `inventory-report.md` exists. A test deleted or skipped scores zero here."
     },
     {
       "name": "Test data is reproducible run to run",
@@ -20,7 +20,7 @@
     {
       "name": "Report names uncontrolled test data as the single cause",
       "max_score": 20,
-      "description": "`random-data-report.md` states that the tests generate their input from an uncontrolled random source, that the collision and the rejected price are two consequences of that one fact, and that the failing input is not recoverable after the run - which is why it never reproduces. Explaining only the collision, or presenting the price error as a separate defect, scores at most half. Blaming `src/inventory.js`, CI, or 'rare edge cases in the data' scores zero."
+      "description": "`inventory-report.md` states that the tests generate their input from an uncontrolled random source, that the collision and the rejected price are two consequences of that one fact, and that the failing input is not recoverable after the run - which is why it never reproduces. Explaining only the collision, or presenting the price error as a separate defect, scores at most half. Blaming `src/inventory.js`, CI, or 'rare edge cases in the data' scores zero."
     },
     {
       "name": "No retry, rerun, or quarantine as the fix",

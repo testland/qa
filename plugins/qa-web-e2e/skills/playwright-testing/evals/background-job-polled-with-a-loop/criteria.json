@@ -1,0 +1,41 @@
+{
+  "context": "The values being waited on are an HTTP response body and a browser-storage entry - not elements - so the automatic retrying that covers element checks does not reach them, and the agent has to know there is a retrying wrapper for arbitrary async values at all. Predicted baseline failure: the agent recognises the loop as bad and replaces it with a tidier loop - a `pollUntil` helper, a recursive retry function, or the same loop with `page.waitForTimeout` swapped in for `setTimeout` - and calls the flake fixed. It reads as a clean refactor and it still sleeps a fixed interval, still caps at a number nobody chose, and still fails with a message that omits the last observed value. The other predicted moves are `page.waitForFunction` for the storage value (evaluated in the page, so it cannot see the API at all, and its timeout failure reports nothing about the value) and raising the suite-wide `timeout` in `playwright.config.ts` to absorb the slow job, which slows every unrelated failure to that ceiling.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Non-element values are waited on with the framework's retrying wrapper",
+      "max_score": 34,
+      "description": "Both the job status (read from the API) and the stored summary (read out of the page) are checked through the built-in construct that re-invokes an async callback and retries the assertion until it holds - `expect.poll(...)` around the value, or an `expect(async () => { ... }).toPass()` block. A hand-written loop, a recursive retry helper, a `waitUntil`/`pollUntil` utility written for this task, or any construct that sleeps a caller-chosen interval scores zero: that is the defect, and re-implementing it more neatly does not remove the arbitrary cap or the useless failure message. `page.waitForFunction` for the storage value scores at most half - it retries, but it runs inside the page and its timeout reports no observed value. `page.waitForFunction` or `waitForResponse` used for the job status scores zero, since the status comes from an API call the page never makes."
+    },
+    {
+      "name": "Failures report the last observed value and what was awaited",
+      "max_score": 20,
+      "description": "The waits carry a human-readable message identifying what was being waited for (the `message` option or equivalent), and the mechanism chosen is one that surfaces the last value it saw when it gives up. Full marks require an explicit message on at least the job-status wait. A correct retrying wait with no message anywhere scores at most half. A solution whose failure output is still a bare value comparison scores zero - the readable failure is half the stated problem."
+    },
+    {
+      "name": "MUST NOT raise the suite-wide timeout to absorb the slow job",
+      "max_score": 16,
+      "description": "Longer allowances are passed to the individual waits that need them (a `timeout` option on the poll, or `test.setTimeout` scoped to this one test where the whole test genuinely needs longer). Increasing `timeout` or `expect.timeout` in `playwright.config.ts` scores zero: it makes every unrelated failure in the suite take that long to report, which the task rules out explicitly."
+    },
+    {
+      "name": "The retry cadence is not a fixed sleep the author picked",
+      "max_score": 12,
+      "description": "Nothing in the delivered spec sleeps for a hard-coded duration - no `setTimeout` helper, no `waitForTimeout`. Where the solution specifies a polling cadence it does so through the wait's own interval option rather than a sleep in the test body. A surviving fixed sleep scores zero here."
+    },
+    {
+      "name": "The row count stops being read once",
+      "max_score": 12,
+      "description": "The final check is expressed so it re-evaluates - a retrying count assertion on the locator, or the count read inside the retrying wrapper. Leaving `expect(await page.getByRole('row').count()).toBeGreaterThan(3)` scores zero: it samples once, and the stated failure is that the table has not finished rendering at that instant."
+    },
+    {
+      "name": "All three checks survive with the same thresholds",
+      "max_score": 10,
+      "description": "The spec still requires the job to reach `done`, the stored summary to report exactly 4200 rows, and more than three rendered rows. Weakening a threshold (accepting any non-null summary, asserting at least one row) or dropping a check scores zero - the test must not become reliable by asserting less."
+    },
+    {
+      "name": "Unrelated spec and application code untouched",
+      "max_score": 6,
+      "description": "`tests/reports-page.spec.ts` is unchanged and no application code is added or modified. Introducing a test hook into the app so the storage write can be observed scores zero."
+    }
+  ]
+}

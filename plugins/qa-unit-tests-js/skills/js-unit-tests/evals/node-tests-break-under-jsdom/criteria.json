@@ -1,0 +1,41 @@
+{
+  "context": "A Node service whose whole suite runs under a browser-shaped environment, so a backend module that uses a Node global blows up. Predicted baseline failure: the agent takes the shim route the ticket already floated - a setup file assigning TextEncoder/TextDecoder onto globalThis - or rewrites the module to avoid the global. Either turns the suite green, which is why it looks finished, and both leave a backend service running every test in a browser-ish sandbox where the next Node global (structuredClone, Buffer semantics, streams) fails the same way. The environment is a per-project choice with a documented per-file override; an agent that does not know the override exists treats it as all-or-nothing and shims instead.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Backend modules run under the runtime they ship to",
+      "max_score": 30,
+      "description": "The project default is switched to a Node environment, explicitly stated in configuration. Leaving the browser environment as the project-wide default and instead marking the checksum file as the exception scores at most half - it fixes the one file while every test added later to this service still inherits a browser sandbox. Leaving the default untouched scores zero."
+    },
+    {
+      "name": "The DOM test keeps its browser globals",
+      "max_score": 20,
+      "description": "src/receipt-widget.test.js still runs with document available, via a per-file override, a multi-project configuration, or a path-scoped override. Deleting, skipping, or rewriting that test to stop touching the DOM scores zero, as does a solution where it now fails."
+    },
+    {
+      "name": "No globals were shimmed into the environment",
+      "max_score": 22,
+      "description": "MUST NOT introduce a setup file, polyfill import, or inline assignment that defines TextEncoder, TextDecoder, document, window, or any other missing global. Any such shim scores zero here even if the suite passes - it is the fix the task explicitly rejected, and it papers over the environment mismatch rather than resolving it."
+    },
+    {
+      "name": "Environment selection is explicit, not inherited",
+      "max_score": 10,
+      "description": "The resulting configuration names the environment for the project rather than relying on the runner's default. Deleting the setting entirely and depending on the version default scores at most half: it happens to be right today and silently changes with a major upgrade."
+    },
+    {
+      "name": "Production modules unchanged",
+      "max_score": 8,
+      "description": "src/checksum.js and src/receipt-widget.js are byte-identical. Swapping the encoder for a Buffer call, or passing document in as an argument to make the widget environment-agnostic, scores zero - the task is to run the code as it ships."
+    },
+    {
+      "name": "Both files pass",
+      "max_score": 8,
+      "description": "npm test exits clean with all four tests reported as executed. A run where either file is skipped or filtered out scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 8,
+      "description": "package.json dependencies and devDependencies are unchanged. Adding a polyfill package, an alternate DOM implementation, or a second environment package scores zero."
+    }
+  ]
+}

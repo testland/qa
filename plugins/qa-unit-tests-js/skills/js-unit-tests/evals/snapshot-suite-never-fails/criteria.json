@@ -1,0 +1,46 @@
+{
+  "context": "A suite made entirely of whole-output comparisons, with the generated baselines ignored by version control so CI writes them fresh every run. Predicted baseline failure: the agent fixes the process half - unignores the baseline directory, commits a baseline, maybe adds the CI flag - and leaves all three cases as whole-output comparisons. That reads as a complete answer because the mechanical defect is gone, but the tests still assert nothing in particular: the next wrong total is a diff like any other, accepted with a regeneration, exactly as the tax-rounding regression was. What has to change is what the cases assert - concrete values for the amounts and the currency - with whole-output comparison demoted to at most a shape check.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Cases assert concrete values, not just that the output is unchanged",
+      "max_score": 32,
+      "description": "Each of the three cases asserts the reference, the per-line amounts, the net, the tax and the total as literal expected values. A suite that still relies on whole-output comparison as its only verification scores zero here even with a committed baseline. Asserting a subset - for instance the total only, or a substring match on the reference - scores at most half, since the tax rounding that caused the incident would survive it."
+    },
+    {
+      "name": "The zero-tax and rounding cases pin the arithmetic",
+      "max_score": 18,
+      "description": "The dollar case asserts a tax line of exactly zero, the dollar symbol, and a total equal to the net; the EUR cases assert a tax that only comes out right under round-half-up rather than truncation. Cases whose numbers would be identical under either rounding rule score at most half - that is the defect the incident was about."
+    },
+    {
+      "name": "Remaining whole-output comparisons have a committed baseline",
+      "max_score": 16,
+      "description": "If any whole-output comparison survives, the ignore rule for the generated baseline directory is removed and the baseline file is written into the repository. Keeping such a comparison while the directory stays ignored scores zero. Removing every whole-output comparison instead is fully acceptable and scores full marks here."
+    },
+    {
+      "name": "CI refuses to create a missing baseline",
+      "max_score": 14,
+      "description": "The CI invocation runs the runner in its non-interactive mode so a missing baseline fails the job instead of being written and passing. Leaving the workflow calling the bare test script scores zero if any whole-output comparison remains; it scores full if every such comparison was replaced with explicit assertions, since there is then no baseline to write."
+    },
+    {
+      "name": "MUST NOT reach green by regenerating or deleting",
+      "max_score": 12,
+      "description": "MUST NOT delete any of the three cases, MUST NOT weaken one to a truthiness or type check, and MUST NOT resolve a mismatch by regenerating the baseline from current output and calling it verified. Any of these scores zero for this criterion."
+    },
+    {
+      "name": "The formatter is untouched",
+      "max_score": 10,
+      "description": "src/format-invoice.js is byte-identical. Reordering the lines, changing the rounding, or extracting helpers to make assertions easier scores zero - the formatter is the fixed, correct side of this task."
+    },
+    {
+      "name": "Suite passes",
+      "max_score": 8,
+      "description": "npm test exits clean with three cases reported. A run whose new assertions do not match what the current formatter produces scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 6,
+      "description": "package.json is unchanged. Adding a serializer, a matcher library, or an alternate assertion package scores zero."
+    }
+  ]
+}

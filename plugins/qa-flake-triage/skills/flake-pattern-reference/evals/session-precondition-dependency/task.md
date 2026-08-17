@@ -9,9 +9,10 @@ We added a hotfix pipeline that runs a single test by name before deploying:
 with `Error: no active session`. The same two tests are green in the normal
 full-file run, and have been for months.
 
-We also tried moving the sign-out test to the top of the file while debugging
-something unrelated, and four tests went red at once. Moving it back made
-them green again. Nobody changed `src/session.js` in either direction.
+We also moved the sign-out test up a couple of slots while debugging
+something unrelated, and two other tests went red in the full run as well.
+Moving it back made them green again. Nobody changed `src/session.js` in
+either direction.
 
 The hotfix pipeline is not going away, and we want to be able to add tests
 anywhere in the file without auditing what runs before them.
@@ -23,10 +24,9 @@ anywhere in the file without auditing what runs before them.
    `--test-name-pattern`, in any position in the file.
 2. Keep all five tests and their assertions about what each scenario should
    produce. Do not modify `src/session.js`.
-3. Write `order-dependency-notes.md`: which tests were depending on which
-   other tests and for what, why the failure list changed when the file was
-   reordered, and the rule that keeps a newly added test from re-creating
-   this.
+3. Write `session-notes.md`: why two tests fail alone and pass in the full
+   run, why moving one unrelated test changed which tests were red, and the
+   rule that keeps a newly added test from re-creating this.
 
 Run `node --test` before you finish; it must pass.
 

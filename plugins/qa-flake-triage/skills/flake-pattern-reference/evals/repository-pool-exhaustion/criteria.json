@@ -5,7 +5,7 @@
     {
       "name": "Deliverables present and green",
       "max_score": 6,
-      "description": "`node --test` passes with all seven originally-named tests present and executing, and `pool-cleanup-notes.md` exists. A test deleted, skipped, or moved to another file scores zero here."
+      "description": "`node --test` passes with all seven originally-named tests present and executing, and `pool-notes.md` exists. A test deleted, skipped, or moved to another file scores zero here."
     },
     {
       "name": "Every acquired connection is returned",
@@ -25,7 +25,7 @@
     {
       "name": "Notes name the unreturned resource and the position effect",
       "max_score": 20,
-      "description": "`pool-cleanup-notes.md` states that each test consumed one of five connections and never released it, that the failure therefore lands on the sixth checkout regardless of which test that is - which is why it followed the slot and not the test - and that a test passing on its own proves nothing about a suite that shares a finite pool. A write-up that says only 'the pool is exhausted' without naming the missing release scores at most half. Blaming `src/pool.js`, the max, or the runner scores zero."
+      "description": "`pool-notes.md` states that each test consumed one of five connections and never released it, that the failure therefore lands on the sixth checkout regardless of which test that is - which is why it followed the slot and not the test - and that a test passing on its own proves nothing about a suite that shares a finite pool. A write-up that says only 'the pool is exhausted' without naming the missing release scores at most half. Blaming `src/pool.js`, the max, or the runner scores zero."
     },
     {
       "name": "No raised limit, retry, or file split as the fix",

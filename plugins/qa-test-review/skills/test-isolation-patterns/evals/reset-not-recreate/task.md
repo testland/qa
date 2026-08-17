@@ -5,7 +5,7 @@
 `tests/billing.test.js` rebuilds everything before every test: it drops the
 schema, creates it, runs the migrations and loads the reference data. In the
 real project that is 34 migrations and about 1,200 rows of country, tax and
-currency reference data - roughly 1.2 seconds per test, and the file below is
+currency reference data - roughly 1.5 seconds per test, and the file below is
 one of many that do the same thing. Across 900 tests that hook is 22 of the
 26 minutes CI spends on this suite.
 
@@ -13,10 +13,9 @@ The stand-in `src/db.js` in this task does the same work instantly, so you
 will not feel the cost here; treat the schema build and the reference load as
 expensive and everything else as cheap.
 
-Nobody wants to touch the hook because the last person who tried made the
-suite pass locally and fail in CI, and the change was reverted. The tests
-themselves are fine and the team wants them to keep asserting exactly what
-they assert now.
+Nobody wants to touch the hook because the last person who tried got a red
+suite out of it and the change was reverted. The tests themselves are fine and
+the team wants them to keep asserting exactly what they assert now.
 
 ## Output Specification
 

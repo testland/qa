@@ -5,7 +5,7 @@
     {
       "name": "Deliverables present and green",
       "max_score": 6,
-      "description": "`node --test` passes with all three originally-named tests present and executing, and `ordering-diagnosis.md` exists. A test deleted or skipped scores zero here."
+      "description": "`node --test` passes with all three originally-named tests present and executing, and `profile-diagnosis.md` exists. A test deleted or skipped scores zero here."
     },
     {
       "name": "Assertions no longer depend on position",
@@ -20,7 +20,7 @@
     {
       "name": "Diagnosis names the arbitrary result order",
       "max_score": 20,
-      "description": "`ordering-diagnosis.md` states that the tests asserted on the order in which concurrent lookups happened to finish, that this order is not part of the function's contract, and that the near-uniform latencies are why the usual order is the requested one - so the assertion held by luck, not by rule. A write-up that says only 'a race condition' or 'timing' without identifying the order assumption scores at most half. Blaming the runner, the machine, or `Promise.all` scores zero."
+      "description": "`profile-diagnosis.md` states that the tests asserted on the order in which concurrent lookups happened to finish, that this order is not part of the function's contract, and that the near-uniform latencies are why the usual order is the requested one - so the assertion held by luck, not by rule. A write-up that says only 'a race condition' or 'timing' without identifying the order assumption scores at most half. Blaming the runner, the machine, or `Promise.all` scores zero."
     },
     {
       "name": "No wait, retry, or serialisation as the fix",

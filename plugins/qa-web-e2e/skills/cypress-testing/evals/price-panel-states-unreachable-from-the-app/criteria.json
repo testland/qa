@@ -1,0 +1,41 @@
+{
+  "context": "The runner already installed here can mount a single component in a real browser and drive it with the same commands and assertions the browser suite uses, which is exactly what 'render the panel on its own, under the tooling we already have' asks for. Predicted baseline failure: the agent adds a unit-test stack instead - Vitest or Jest plus a DOM testing library - because that is the reflex for component-level coverage; it satisfies the six states while breaking requirement 6, doubling the runners in the repository and leaving assertions in a second dialect. The other common outcome is more browser-flow specs that stub the pricing response, which re-introduces the server the task wants removed. If the agent does reach the right mode, the parts it usually leaves undone are the configuration needed to start it - a dev server declaration naming this project's framework and bundler, a separate spec pattern, a separate support file - and the typing of the render helper, which is why the previous attempt ended in a cast: adding a command to the command object requires declaring it on the chainable interface, not asserting around it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "States are covered by mounting the component under the existing runner",
+      "max_score": 30,
+      "description": "The new specs render `PriceBreakdown` directly with props, in the component mode of the runner already in the repository. Scores zero if the coverage is delivered as a separate unit-test framework (Vitest, Jest, a DOM testing library harness) - requirement 6 forbids a second framework - and zero if it is delivered as more browser-flow specs that navigate the app or stub the pricing endpoint."
+    },
+    {
+      "name": "MUST NOT reach the render helper through a cast or a suppression",
+      "max_score": 22,
+      "description": "The helper is registered as a command and declared on the chainable interface so it type-checks. Scores zero if the delivery contains `cy as any`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck` or an equivalent escape anywhere it is used - that is the failure the previous attempt made and the task explicitly rejects. Calling the imported render function directly in every spec without registering it as a command scores at most half: it type-checks, but requirement 5 asks for it on the same command object."
+    },
+    {
+      "name": "The mode is configured well enough to start",
+      "max_score": 18,
+      "description": "`cypress.config.ts` gains a component section declaring a dev server whose framework and bundler match this project - React with Vite, as the dependencies show. Scores zero if no component configuration is added at all. Naming a bundler or framework the project does not use, or leaving a placeholder, scores at most half - the mode would not start."
+    },
+    {
+      "name": "Component specs are separated from browser specs",
+      "max_score": 12,
+      "description": "The new specs live under their own spec pattern with their own support file, and the existing browser spec pattern still matches only `cypress/e2e/**/*.cy.ts`. Placing component specs where the browser pattern picks them up scores zero - the existing suite would try to run them against a server."
+    },
+    {
+      "name": "Six states, each with a meaningful assertion",
+      "max_score": 14,
+      "description": "Calculating, failure with retry, empty cart, tax exempt, discount applied, and a non-dollar currency each have a test asserting what is rendered, and the failure test asserts the retry callback is invoked when the button is clicked. Five or fewer states scores at most half; asserting only that something rendered, without checking the state-specific text, scores zero for the states concerned."
+    },
+    {
+      "name": "CI can run the new mode",
+      "max_score": 8,
+      "description": "`package.json` gains a script that runs the component mode headlessly, alongside the untouched `e2e` script. Replacing or renaming the existing `e2e` script scores zero."
+    },
+    {
+      "name": "Untouched files stay untouched",
+      "max_score": 6,
+      "description": "`src/components/PriceBreakdown.tsx` and `cypress/e2e/checkout.cy.ts` are unchanged, and no test framework dependency is added. Editing the component to make it easier to render - adding test ids, splitting it, exporting extra helpers - scores zero."
+    }
+  ]
+}

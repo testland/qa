@@ -23,6 +23,11 @@ if (!skillDir) {
 const evalsDir = join(skillDir, 'evals');
 const scenarios = dirNames(evalsDir).filter((d) => exists(join(evalsDir, d, 'criteria.json')));
 
+// A prompt naming the skill measures reading comprehension, not the skill. The
+// slug and its spaced form are the two shapes that actually leak in practice.
+const skillName = skillDir.split(/[\\/]/).pop() ?? '';
+const leakTerms = [skillName, skillName.split('-').join(' ')].filter((t) => t.length > 6);
+
 let bad = 0;
 const problems: string[] = [];
 const warnings: string[] = [];
@@ -46,6 +51,14 @@ for (const s of scenarios) {
   if (!/^# \S/m.test(raw)) flag(s, 'no H1 title');
 
   const { prompt, expectedOutput, fixtures } = parseTask(raw);
+
+  // Check the prompt only: a fixture may legitimately contain a path or config
+  // key that happens to match, and the agent sees the fixtures either way.
+  for (const term of leakTerms) {
+    if (new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(prompt)) {
+      flag(s, `prompt names the skill ("${term}") - it measures reading, not the skill`);
+    }
+  }
   if (fixtures.length === 0) flag(s, 'no FILE blocks parsed');
   if (!expectedOutput) flag(s, 'Output Specification section is empty');
   if (prompt.length < 200) flag(s, `prompt suspiciously short (${prompt.length} chars)`);

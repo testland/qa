@@ -9,8 +9,7 @@ function createPool({ max = 5 } = {}) {
     if (free.length === 0 && created >= max) {
       throw new Error(`connection pool exhausted (max ${max})`);
     }
-    const conn =
-      free.pop() || { id: (created += 1), open: true };
+    const conn = free.pop() || { id: (created += 1), open: true };
     inUse += 1;
     return conn;
   }

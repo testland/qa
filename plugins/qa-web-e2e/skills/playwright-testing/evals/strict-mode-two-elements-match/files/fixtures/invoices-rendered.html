@@ -1,0 +1,49 @@
+<!-- what /invoices renders with the current seed data; reference only -->
+<header class="page-header">
+  <h1>Invoices</h1>
+  <button type="button">Save</button>
+</header>
+
+<table>
+  <thead>
+    <tr><th>Invoice</th><th>Customer</th><th>Status</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>INV-1001</td><td>Northwind</td>
+      <td><span class="chip">Paid</span></td>
+      <td>
+        <button type="button">Download</button>
+        <button type="button">Edit</button>
+      </td>
+    </tr>
+    <tr>
+      <td>INV-1002</td><td>Contoso</td>
+      <td><span class="chip">Paid late</span></td>
+      <td>
+        <button type="button">Download</button>
+        <button type="button">Edit</button>
+      </td>
+    </tr>
+    <tr>
+      <td>INV-1003</td><td>Fabrikam</td>
+      <td><span class="chip">Unpaid</span></td>
+      <td>
+        <button type="button">Download</button>
+        <button type="button">Edit</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div role="dialog" aria-label="Edit invoice" hidden>
+  <h2>Edit invoice</h2>
+  <label for="ref">Reference</label>
+  <input id="ref" name="ref" />
+  <footer>
+    <button type="button">Cancel</button>
+    <button type="button">Save</button>
+  </footer>
+</div>
+
+<div role="status" aria-live="polite"></div>

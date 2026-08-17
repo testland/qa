@@ -1,0 +1,41 @@
+{
+  "context": "The bundler resolves path prefixes from jsconfig.json; the test runner has its own resolver and knows nothing about that file. Predicted baseline failure: the agent treats it as an import problem rather than a runner-configuration problem - it rewrites the two aliased requires in src/report.js to relative paths, or adds a resolver package. The suite goes green and the app still builds, so the answer reads as complete, while the actual defect is untouched: the runner still cannot resolve a prefix, so the forty other modules and every one added next week fail the same way the moment a test imports them. The fix is a resolver mapping in the runner config that mirrors the path map, keyed by prefix rather than by module.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The runner is taught the path map",
+      "max_score": 32,
+      "description": "The runner configuration maps the import prefixes to directories with a wildcard - both `@lib/*` and `@config/*` - mirroring the jsconfig paths entries, so any module under those trees resolves. A mapping that enumerates the two modules by name instead of wildcarding the prefix scores at most half: it green-lights today's file and not the forty others. No mapping at all scores zero, however green the suite ends up."
+    },
+    {
+      "name": "Source imports were not rewritten",
+      "max_score": 22,
+      "description": "MUST NOT change the require/import statements in src/report.js or any other source module, and MUST NOT relocate files to make relative paths work. Converting `@lib/money` to `./lib/money` scores zero for this criterion regardless of what else is delivered - the task names that workaround and rejects it."
+    },
+    {
+      "name": "Both test files pass",
+      "max_score": 14,
+      "description": "npm test exits clean, with src/report.test.js actually resolving and running rather than being skipped or renamed. A run that still reports a module-resolution failure scores zero."
+    },
+    {
+      "name": "New cases assert the reported behaviour",
+      "max_score": 12,
+      "description": "Cases are added for an empty line list and for a VAT figure that requires rounding - the rounding case must use an input where truncation and rounding differ, so it would catch a change from Math.round to a truncation. A case whose VAT lands on an exact cent scores at most half."
+    },
+    {
+      "name": "Existing tests and source behaviour untouched",
+      "max_score": 10,
+      "description": "src/lib/money.test.js is unmodified and no source module changes behaviour. Adding an export, loosening an assertion, or altering the VAT calculation to simplify the new tests scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 10,
+      "description": "package.json is unchanged apart from nothing at all. Installing a resolver plugin, a transform, or a path-alias package scores zero - the runner already supports this mapping natively."
+    },
+    {
+      "name": "The mapping is anchored to the project root",
+      "max_score": 8,
+      "description": "The mapped targets are expressed relative to the project root rather than to the config file's own directory by accident - the mapping must still resolve when the runner is invoked from a subdirectory. A mapping that only works because of the current working directory scores at most half."
+    }
+  ]
+}

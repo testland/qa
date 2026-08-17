@@ -32,9 +32,10 @@ ones.
    consecutive `node --test` runs should be green.
 2. Do not modify `src/orderStore.js`, and do not change what any test
    asserts.
-3. Write `race-diagnosis.md`: what exactly is racing what, why the empty
-   archive test can see another test's order, and what to check for in review
-   so the next test in this file does not do the same thing.
+3. Write `archive-diagnosis.md`: why the same three tests give different
+   answers on different runs, why the empty-archive test can see an order
+   another test created, and what to check for in review so the next test in
+   this file does not do the same thing.
 
 Run `node --test` before you finish; it must pass.
 

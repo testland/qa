@@ -1,0 +1,8 @@
+{
+  "name": "storefront-e2e",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "typescript": "^5.6.3"
+  }
+}

@@ -3,13 +3,8 @@
 const { test, beforeEach } = require('node:test');
 const assert = require('node:assert/strict');
 const { createPool } = require('../src/pool');
-const {
-  insertOrder,
-  findOrder,
-  deleteOrder,
-  countOrders,
-  clearTable,
-} = require('../src/orderRepository');
+const repo = require('../src/orderRepository');
+const { insertOrder, findOrder, deleteOrder, countOrders, clearTable } = repo;
 
 const pool = createPool({ max: 5 });
 

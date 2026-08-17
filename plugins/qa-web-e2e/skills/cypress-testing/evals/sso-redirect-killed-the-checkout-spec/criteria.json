@@ -1,0 +1,41 @@
+{
+  "context": "A single test spans three sites, and the runner refuses to drive a page outside the origin the test started on unless the commands for that page are wrapped in a block declared for that exact origin. Predicted baseline failure: the agent uncomments the steps and simply runs them after the redirect, which reproduces the original cross origin error verbatim; or it reaches for the historical escape hatch of switching off browser web security in the config, which is Chromium-only and therefore breaks the Firefox job the task requires; or it declares the identity-provider steps out of scope and stubs the redirect away, deleting the coverage the task exists to restore. The second, subtler failure is specific to the correct fix: the block for the other origin is not a closure - it is serialized and executed in a separate browsing context - so a solution that references the generated address or the environment password from the surrounding scope throws a reference error at run time even though it reads perfectly. Values must be handed in explicitly through the block's arguments.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Off-site steps run inside a block scoped to that origin",
+      "max_score": 32,
+      "description": "The identity-provider commands and the payment-page commands are each enclosed in a block declared for that specific origin, so the runner is told which site those commands belong to. Scores zero if the uncommented commands are simply issued after the redirect - that is the exact error being repaired. One of the two pages handled and the other left commented out or stubbed away scores at most half."
+    },
+    {
+      "name": "Run-specific data is passed into the block explicitly",
+      "max_score": 26,
+      "description": "The generated address and the environment password reach the identity-provider steps through the block's argument-passing option, not by referring to the outer `runEmail` / `ssoPassword` bindings. Referencing the surrounding variables inside the block scores zero: the block is executed in a separate context and does not close over them, so the delivered test throws a reference error. Hard-coding a literal address inside the block scores at most half - it runs, but the task states each run needs its own address."
+    },
+    {
+      "name": "MUST NOT switch off browser web security as the fix",
+      "max_score": 18,
+      "description": "The configuration does not disable web security (`chromeWebSecurity: false` or equivalent) to make the redirects work. It applies to Chromium only, so the Firefox job the task requires would still fail, and it hides the origin boundary instead of describing it. Any such setting introduced scores zero. Also scores zero if the redirects are avoided by stubbing the identity provider or the payment page out of the flow."
+    },
+    {
+      "name": "Each origin is named precisely and separately",
+      "max_score": 12,
+      "description": "Two distinct blocks are used, one per site, each naming the origin with its scheme and full host (`https://auth.example.com`, `https://pay.example-psp.com`). A single block covering both sites, or an origin given as a bare host or a wildcard where a precise match is required, scores at most half."
+    },
+    {
+      "name": "The off-site pages are actually asserted, not just clicked through",
+      "max_score": 14,
+      "description": "The identity-provider block asserts `Acme Books` is visible and the payment block asserts `$41.98` is visible, in addition to performing the input. A delivery that performs the steps but drops both assertions scores zero - the incidents the task describes were on those pages, so typing without checking restores nothing."
+    },
+    {
+      "name": "Control returns to the application and the outcome is asserted",
+      "max_score": 10,
+      "description": "After the payment block, the test asserts the order confirmation on the application's own origin, outside the off-site blocks. Leaving the confirmation assertion inside the payment-page block scores zero: it would be looking for the application's text on the payment provider's page."
+    },
+    {
+      "name": "No commented-out coverage remains",
+      "max_score": 6,
+      "description": "The delivered spec contains no commented-out commands or assertions. Re-commenting any step, or leaving a `.skip`, scores zero."
+    }
+  ]
+}

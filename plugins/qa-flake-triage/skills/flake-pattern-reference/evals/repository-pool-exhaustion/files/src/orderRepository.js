@@ -33,10 +33,4 @@ function clearTable() {
   table.clear();
 }
 
-module.exports = {
-  insertOrder,
-  findOrder,
-  deleteOrder,
-  countOrders,
-  clearTable,
-};
+module.exports = { insertOrder, findOrder, deleteOrder, countOrders, clearTable };

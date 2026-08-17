@@ -1,13 +1,14 @@
-# One broken assertion reported five failures and we could not find the real one
+# One broken assertion reported four failures and we could not find the real one
 
 ## Problem Description
 
 On Tuesday a change to the workspace code made the second test in
-`tests/workspace.test.js` fail. CI reported five failures. Four of them were
-`workspace build is already open`, which is not what broke - the second test
-never got as far as releasing its workspace, so every test after it failed on
-acquisition, and the message from the one test that actually found the bug was
-buried in the middle of the output.
+`tests/workspace.test.js` fail. CI reported four failures. Two of them were
+`workspace build is already open` and one was the guard at the end of the file
+that checks nothing is left open. None of those three is what broke - the
+second test never got as far as releasing its workspace, so every test after it
+failed on acquisition, and the message from the one test that actually found
+the bug was buried in the middle of the output.
 
 Two of the tests in that file have a second problem we noticed while reading
 it: one of them only releases the workspace when its check succeeded, and one
@@ -27,7 +28,7 @@ test fails, it fails alone.
 4. The last test asserts that nothing is left open. It must still pass, and
    whatever you add must not leave it holding a workspace of its own.
 5. Run `npm test` before you finish; it must pass.
-6. Produce `teardown-notes.md` explaining why one failing test produced five
+6. Produce `teardown-notes.md` explaining why one failing test produced four
    failing tests, why the real failure was hard to find in that output, and
    the rule for tests added to this file later.
 

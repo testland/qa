@@ -11,7 +11,7 @@ const DIRECTORY = {
 const BASE_LATENCY = { 'u-1': 20, 'u-2': 55, 'u-3': 90, 'u-4': 125 };
 
 function loadProfile(id) {
-  const cold = Math.random() < 0.08;
+  const cold = Math.random() < 0.06;
   return new Promise((resolve) => {
     setTimeout(
       () => resolve({ ...DIRECTORY[id] }),

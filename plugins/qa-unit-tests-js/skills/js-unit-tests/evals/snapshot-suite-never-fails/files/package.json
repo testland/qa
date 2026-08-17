@@ -1,0 +1,11 @@
+{
+  "name": "invoice-render",
+  "version": "1.4.1",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

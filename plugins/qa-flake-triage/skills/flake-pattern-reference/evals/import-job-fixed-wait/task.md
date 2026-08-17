@@ -26,9 +26,9 @@ bulk imports.
    does on an idle laptop.
 2. Do not modify `src/importer.js`, and keep both tests asserting the same
    final counts they assert today.
-3. Write `wait-strategy.md`: why the current wait works on a laptop and not
-   on a busy runner, what the test waits on instead now, and why raising the
-   wait further would not have fixed it.
+3. Write `import-test-notes.md`: why the file is green on a laptop and red on
+   a busy runner, what changed to make that stop mattering, and a verdict on
+   the two proposals in the PR (the 500ms wait and the retries).
 
 Run `node --test` before you finish; it must pass.
 

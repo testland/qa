@@ -5,7 +5,7 @@
     {
       "name": "Deliverables present and green",
       "max_score": 6,
-      "description": "`node --test` passes with all five originally-named tests present, and `order-dependency-notes.md` exists. Any test deleted, merged, or skipped scores zero here."
+      "description": "`node --test` passes with all five originally-named tests present, and `session-notes.md` exists. Any test deleted, merged, or skipped scores zero here."
     },
     {
       "name": "Every test arranges its own precondition",
@@ -20,7 +20,7 @@
     {
       "name": "Notes name the implicit precondition dependency",
       "max_score": 20,
-      "description": "`order-dependency-notes.md` identifies the mechanism concretely: the display-name and admin-permission tests consumed the sign-in performed by the first test, and `signOut` in the fourth test destroys that state for anything declared after it, which is why the failure set moved when the file was reordered. A write-up that says only 'the tests are order-dependent' without naming which test supplied what to which scores at most half. Blaming the test runner, the `--test-name-pattern` flag, or `src/session.js` scores zero."
+      "description": "`session-notes.md` identifies the mechanism concretely: the display-name and admin-permission tests consumed the sign-in performed by the first test, and `signOut` in the fourth test destroys that state for anything declared after it, which is why the failure set moved when the file was reordered. A write-up that says only 'the tests are order-dependent' without naming which test supplied what to which scores at most half. Blaming the test runner, the `--test-name-pattern` flag, or `src/session.js` scores zero."
     },
     {
       "name": "No quarantine, retry, or enforced ordering as the fix",

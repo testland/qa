@@ -1,0 +1,41 @@
+{
+  "context": "Three ambiguous lookups in a table that grew from one row to three. Predicted baseline failure: the agent reads the error as 'too many matches' and disambiguates positionally - keeping or extending `.first()`, or switching to `.nth(1)` / `.last()`. That makes the suite green in one move and looks like a competent fix, but it re-creates exactly the failure the team described: the assertion is bound to a slot in the match order, so re-ordered or re-seeded data silently retargets it and a wrong value in the intended row goes unreported. The second common unaided move is to answer the ambiguity by adding `data-testid` attributes to the markup, which the task forbids and which is unavailable when the DOM is not yours. The third is to solve the `Paid` / `Paid late` collision by loosening the assertion to a regex or `toContainText`, which keeps it matching three chips. The non-obvious material is that a lookup can be scoped by the row or dialog that contains it, filtered by the text it sits next to, and required to match a label exactly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT disambiguate by position",
+      "max_score": 30,
+      "description": "The delivered spec contains no `.first()`, `.last()`, `.nth(...)`, `:nth-child`, index subscript on a matched list, or any other selection by ordinal. Any single surviving positional pick scores zero for this criterion regardless of how good the rest is - that construct is the defect the team already shipped a regression behind, not a stylistic preference."
+    },
+    {
+      "name": "Row-level actions are scoped to a named invoice",
+      "max_score": 26,
+      "description": "The Download click is reached through the row identified by its invoice number - a row-scoped lookup then the button inside it, or a lookup narrowed by the text that appears in that row. Full marks require the invoice number (e.g. `INV-1002`) to appear in the spec as the thing that selects the row. Narrowing by customer name instead is equally acceptable. A lookup that is merely made unique some other way, without binding to a specific row, scores at most half. No scoping at all scores zero."
+    },
+    {
+      "name": "The dialog Save is distinguished from the header Save",
+      "max_score": 20,
+      "description": "The Save click is scoped to the dialog that contains it - the dialog element (by its role or its accessible name) chained to the button inside. Scores zero if the spec clicks a page-wide Save lookup that still matches both buttons, or if it dodges the collision by pressing Enter / submitting the form instead of asserting the dialog's own control."
+    },
+    {
+      "name": "Status text matching is exact and pinned to one invoice",
+      "max_score": 18,
+      "description": "The status assertion matches the full chip label rather than a substring - exact text matching, or an anchored pattern - and is scoped to a specific invoice's row. Matching `Paid` loosely so it also matches `Paid late` scores zero. Making the match exact but leaving it page-wide scores at most half: `Unpaid` and `Paid late` are then excluded but the assertion still does not say which invoice it is about."
+    },
+    {
+      "name": "Markup untouched",
+      "max_score": 10,
+      "description": "No test id, id, class, `aria-label` or other attribute is added to `fixtures/invoices-rendered.html`, and the answer does not present editing the app as the fix. The task states the markup is fixed; proposing an attribute as the primary remedy scores zero even if a locator-only alternative is mentioned afterwards."
+    },
+    {
+      "name": "All three behaviours still covered",
+      "max_score": 8,
+      "description": "Three tests remain, covering the download, the dialog save, and an invoice status, each ending in the assertion it ends in today. Deleting a case, or reducing one to a bare visibility check on the table, scores zero."
+    },
+    {
+      "name": "Assertions stay retrying",
+      "max_score": 6,
+      "description": "Checks remain in the `await expect(locator)...` form. Converting any of them to a one-shot read such as `expect(await locator.textContent())` or `expect(await locator.count())` while restructuring scores zero for this criterion - it trades an ambiguity bug for a timing bug."
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## Problem Description
 
-`test/profiles.test.js` fails about one run in six. Two failure shapes, both
+`test/profiles.test.js` fails about one run in five. Two failure shapes, both
 from the same file:
 
 ```
@@ -36,7 +36,7 @@ changing.
    that all four requested profiles come back, and the second must still
    verify that the profile for `u-2` is on the `platform` team. Do not modify
    `src/profiles.js`.
-3. Write `ordering-diagnosis.md`: what the assertions were relying on, why it
+3. Write `profile-diagnosis.md`: what the assertions were relying on, why it
    holds most of the time, and the rule for asserting on the output of this
    function in future tests.
 
@@ -70,7 +70,7 @@ const DIRECTORY = {
 const BASE_LATENCY = { 'u-1': 20, 'u-2': 55, 'u-3': 90, 'u-4': 125 };
 
 function loadProfile(id) {
-  const cold = Math.random() < 0.08;
+  const cold = Math.random() < 0.06;
   return new Promise((resolve) => {
     setTimeout(
       () => resolve({ ...DIRECTORY[id] }),

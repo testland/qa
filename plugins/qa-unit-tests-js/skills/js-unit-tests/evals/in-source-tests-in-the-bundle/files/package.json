@@ -1,0 +1,15 @@
+{
+  "name": "pricing-rules",
+  "version": "4.2.0",
+  "private": false,
+  "type": "module",
+  "main": "dist/pricing-rules.js",
+  "scripts": {
+    "test": "vitest run",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}

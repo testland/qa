@@ -5,7 +5,7 @@
     {
       "name": "Deliverables present and green",
       "max_score": 6,
-      "description": "`node --test` passes with both originally-named tests present and executing, and `wait-strategy.md` exists. A test deleted or skipped scores zero here."
+      "description": "`node --test` passes with both originally-named tests present and executing, and `import-test-notes.md` exists. A test deleted or skipped scores zero here."
     },
     {
       "name": "Assertions gated on the completion signal",
@@ -20,7 +20,7 @@
     {
       "name": "Write-up names the fixed-duration wait as the mechanism",
       "max_score": 20,
-      "description": "`wait-strategy.md` states that the assertion was gated on a fixed elapsed duration rather than on the import finishing, and that the duration was tuned to an idle machine, so any slowdown - contention, a bigger fixture, a colder runner - moves the import past it. A write-up that attributes the failure to 'CI being slow' or 'flaky infrastructure' without naming the fixed wait as the defect scores at most half. Blaming `src/importer.js` or the chunk size scores zero."
+      "description": "`import-test-notes.md` states that the assertion was gated on a fixed elapsed duration rather than on the import finishing, and that the duration was tuned to an idle machine, so any slowdown - contention, a bigger fixture, a colder runner - moves the import past it. A write-up that attributes the failure to 'CI being slow' or 'flaky infrastructure' without naming the fixed wait as the defect scores at most half. Blaming `src/importer.js` or the chunk size scores zero."
     },
     {
       "name": "Explains why a longer wait is not the fix",
