@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: `Cannot find module` is a resolution error the agent has seen a thousand times in Node, so it answers as a Node problem - move the helper, use an absolute path built from a variable, pin the dependency, add a `NODE_PATH`, bundle the helper, or run the collection from a different working directory. Every one of those is confidently wrong here, because the test script does not execute in Node: it runs inside the runner's sandbox, which exposes a fixed set of pre-loaded libraries and cannot require project files or arbitrary packages at all. The wrong answer is invisible to a reviewer, reads as competent debugging, and burns another sprint of the ticket that is already a week old.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Names the sandbox boundary as the cause",
+      "max_score": 30,
+      "description": "The answer states that test scripts execute in a sandboxed JavaScript environment which cannot load project files or npm packages, and that no path change, dependency pin, or working-directory change can make `require('../lib/signing')` or `require('jsonwebtoken')` resolve. Scores zero if the primary explanation is a path, a working directory, a missing install, a bundling step, or a `NODE_PATH`. Scores at most half if it only says 'this does not work here' without identifying that only the sandbox's own pre-loaded libraries are available."
+    },
+    {
+      "name": "Replacement uses only what the sandbox provides",
+      "max_score": 24,
+      "description": "The delivered HMAC check is expressed with libraries the sandbox pre-loads (Postman's bundled crypto helper such as `CryptoJS`, plus chai / lodash) or with `pm.*` primitives. Scores zero if the replacement still contains any `require` of a project path or of a package the sandbox does not bundle, or if it keeps calling the deleted helper. Scores at most half if it produces pseudo-code rather than a script that could be pasted into the collection."
+    },
+    {
+      "name": "Honest verdict on the token check",
+      "max_score": 16,
+      "description": "The callback-token check is either reimplemented within the sandbox's means, or declared not expressible there with a specific named home proposed for it - a named code-first API-test tool, or a named service-side test - concrete enough to act on. Scores zero if the check is quietly dropped, left commented out, or replaced by something weaker (decoding the token without verifying it) while being presented as equivalent."
+    },
+    {
+      "name": "MUST NOT leave the signing secret in the repository",
+      "max_score": 14,
+      "description": "`whsec_live_8fd41c0b77e94a2f` is gone from the collection and does not reappear in any other committed file; the value is referenced as a variable supplied at run time. Any surviving literal scores zero, including one moved into a committed environment file or a config sample."
+    },
+    {
+      "name": "Blast radius stays at one request",
+      "max_score": 10,
+      "description": "Only `verify signature` changes; the other requests keep their scripts and the collection stays in place. Recommending the team abandon this tool and rewrite all fifteen requests elsewhere scores at most half - it answers a question that was explicitly ruled out of scope. Actually delivering rewrites of the other requests, in this or any other tool, scores zero."
+    },
+    {
+      "name": "Dead helper and dependency accounted for",
+      "max_score": 8,
+      "description": "The answer says what becomes of `lib/signing.js` and the `jsonwebtoken` devDependency added to chase this bug - kept for a stated reason, or removed. Leaving both unmentioned scores zero: the next developer finds a helper the collection cannot use and repeats the week."
+    },
+    {
+      "name": "Delivered script is syntactically valid",
+      "max_score": 6,
+      "description": "The rewritten script is valid JavaScript, and if a full collection file is delivered it parses as a v2.1 collection with the script attached to the right item. Prose with no runnable script scores zero."
+    }
+  ]
+}

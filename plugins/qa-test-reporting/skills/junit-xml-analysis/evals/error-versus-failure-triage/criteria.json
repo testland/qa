@@ -1,0 +1,46 @@
+{
+  "context": "The report holds 14 testcases across three suites: 4 carry a <failure> child (an assertion that came back false) and 4 carry an <error> child (an exception thrown before the assertion ran). Predicted baseline failure: the agent produces one combined 'failed: 8' figure, because that is what every off-the-shelf summary prints and because the two elements look interchangeable in the XML. The output then looks right - 8 matches the CI badge - while destroying exactly the split the task asked for. A second predicted error is routing by test name or message wording: dbRoundTrip_persistsOrder reads like infrastructure but carries a <failure>, and assertsTotal reads like an assertion but carries an <error> (a NullPointerException). A third is treating the whole error bucket as infrastructure, which sends a genuine null-pointer defect to the platform team.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and notes delivered",
+      "max_score": 5,
+      "description": "scripts/triage.js runs and writes triage.json, test/triage.test.js exists, triage-notes.md exists, and npm test passes with the pre-existing test/xml.test.js still present and passing."
+    },
+    {
+      "name": "Assertion failures and errors counted separately",
+      "max_score": 30,
+      "description": "The output carries two distinct counts - exactly 4 assertion failures and exactly 4 errors - rather than one combined figure. A single 'failed: 8' number anywhere in triage.json or the notes, with no separate error count, scores zero: MUST NOT treat <error> and <failure> as the same outcome. Producing the split only in the prose while triage.json still emits a lumped count scores at most half."
+    },
+    {
+      "name": "Overall totals exact",
+      "max_score": 10,
+      "description": "14 tests total, 6 passed, 0 skipped. Any other total scores zero; a total that is right but with passed derived as 14 minus a lumped failure count scores at most half."
+    },
+    {
+      "name": "Classification driven by the result element, not the test name",
+      "max_score": 18,
+      "description": "dbRoundTrip_persistsOrder is classified as an assertion failure and loadsCatalogue as an error, matching the elements rather than the names. Any routing rule based on substrings of the test name or on keywords in the message ('db', 'connection', 'timeout') as the primary decision scores zero - the task states names are unreliable and the fixture contains two traps for exactly that."
+    },
+    {
+      "name": "Error bucket subdivided rather than assumed to be infrastructure",
+      "max_score": 14,
+      "description": "Of the 4 errors, 3 are external-dependency problems (Connection refused db01-staging:3306, pool timeout after 30000ms, socket read timed out) and 1 is a NullPointerException in assertsTotal, which is a code defect and belongs with the application team. Sending all 4 errors to the platform team scores at most half; not distinguishing them at all scores zero on this criterion."
+    },
+    {
+      "name": "Per-suite breakdown present",
+      "max_score": 8,
+      "description": "triage.json carries per-suite counts: CheckoutTest 2 failures / 1 error / 2 passed, InvoiceTest 1 failure / 2 errors / 2 passed, IndexTest 1 failure / 1 error / 2 passed. Overall-only output scores zero here."
+    },
+    {
+      "name": "Executable test covers the distinction",
+      "max_score": 10,
+      "description": "test/triage.test.js contains at least one assertion proving a testcase carrying <error> is not counted in the failure total (and vice versa), and it passes. A test file that only asserts the grand total scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Routing rule written down",
+      "max_score": 8,
+      "description": "triage-notes.md states the rule in terms of which child element the testcase carries, and names which of the 14 tests go to which team. Notes that describe the run without stating a reusable rule score at most half."
+    }
+  ]
+}

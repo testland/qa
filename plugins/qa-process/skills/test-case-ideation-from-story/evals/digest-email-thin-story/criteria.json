@@ -1,0 +1,46 @@
+{
+  "context": "A deliberately under-specified story: it never says who receives the digest, whose 08:00 Monday is meant, what happens in a week with no activity, or what observable trace a send leaves. Predicted baseline failure: the agent fills the holes silently and confidently. It writes rows asserting 'the digest is sent at 08:00 in the recipient's local timezone' and 'all workspace members receive it', which the story does not say, and the resulting document reads as a complete, professional case list. That is the exact failure the team already shipped once - the matrix masks the gap instead of surfacing it, and the delivery lead making Monday's call sees a story that looks ready.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/NOTIF-31.md exists and contains both a table of cases and identifiable prose. Scores zero if written elsewhere."
+    },
+    {
+      "name": "The specific missing elements are named",
+      "max_score": 30,
+      "description": "The document names, as blocking gaps, at least three of: who the recipients are (all members / active members / opted-in members / trial accounts), whose timezone 08:00 refers to, what the observable result of a send is beyond the email arriving (a record, a suppression, a next-send timestamp), what happens when the 7-day window contains no activity, and how unsubscribe interacts with a digest that is arguably transactional. Scores zero if the document proceeds to a full case list without naming any gap. Naming gaps only as a general remark such as 'some details need clarification', without saying which fields, scores at most half."
+    },
+    {
+      "name": "MUST NOT assert an invented reading as though the story stated it",
+      "max_score": 20,
+      "description": "No row may put a decision the story never made into its expected result as settled fact - recipient set, timezone, no-activity behaviour, or unsubscribe precedence. Two or more such rows score zero here. Rows that state the same content but are explicitly flagged as resting on an assumption do not count against this criterion."
+    },
+    {
+      "name": "Provisional rows are tied to the question they depend on",
+      "max_score": 16,
+      "description": "Rows that can only be executed once a gap is closed carry a visible marker linking them to that specific open question, so re-work after refinement is bounded. Scores zero if provisional and settled rows are indistinguishable. A single blanket disclaimer at the top of the document, with nothing per row, scores at most half."
+    },
+    {
+      "name": "Scheduling ambiguity treated as a first-class gap",
+      "max_score": 12,
+      "description": "The document raises that 'Monday at 08:00' is undefined across timezones for a 400-person workspace and that the story does not say whether the send is per-workspace or per-recipient. Scores zero if a timezone interpretation is chosen and used without comment."
+    },
+    {
+      "name": "Quiet-week and suppression paths raised",
+      "max_score": 12,
+      "description": "Cases or questions cover a workspace with nothing to report in the window, and a recipient who has unsubscribed or been deactivated between scheduling and sending. Scores zero if both are absent."
+    },
+    {
+      "name": "Readiness verdict is explicit",
+      "max_score": 10,
+      "description": "The document states plainly whether the story can be estimated as written or needs refinement first, with the gaps as the reason. Scores zero if the reader has to infer the answer from the presence of open questions."
+    },
+    {
+      "name": "Still enumerates what is derivable",
+      "max_score": 8,
+      "description": "The document is not only a list of questions: it contains executable cases for the parts the story does settle - the 7-day content categories, the links back into the workspace, the unsubscribe link's presence. Scores zero if no concrete cases are produced at all."
+    }
+  ]
+}

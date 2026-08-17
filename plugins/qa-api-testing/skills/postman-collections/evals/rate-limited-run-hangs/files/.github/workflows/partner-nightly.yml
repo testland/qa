@@ -1,0 +1,28 @@
+name: partner-nightly
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  partners:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - name: Run partner collection
+        run: |
+          npx newman run collections/partners.postman_collection.json \
+            -e environments/partner-production.postman_environment.json \
+            -r cli,junit \
+            --reporter-junit-export results.xml \
+            --insecure
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: partner-results
+          path: results.xml

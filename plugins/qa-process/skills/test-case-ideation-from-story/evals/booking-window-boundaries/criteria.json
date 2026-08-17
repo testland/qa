@@ -1,0 +1,46 @@
+{
+  "context": "Three numeric limits (2-hour lead time, 90-day horizon, 3 upcoming appointments) plus a 24-hour cancellation threshold, in a story that never says whether any of them is inclusive. Predicted baseline failure: the agent produces one case per limit expressed comfortably inside or comfortably outside it - 'books a slot tomorrow' and 'cannot book a slot in the past' - which exercises the middle of the range and never the limit itself, so an off-by-one on the comparison operator passes every row. It also silently picks an interpretation of 'no less than 2 hours' and of 'upcoming' rather than recording that the story does not decide either. Both failures are invisible to a casual reader because the resulting list mentions all three limits by name and reads as complete.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/BOOK-77.md exists and contains a markdown table with rows. Scores zero if the output is prose only or written elsewhere."
+    },
+    {
+      "name": "Both sides of every limit are exercised",
+      "max_score": 30,
+      "description": "For each of the three limits - 2-hour lead time, 90-day horizon, 3 upcoming appointments - the table contains a case at the last permitted value and a case at the first refused value (for example: a slot exactly 2 hours away and one 1 minute inside that; day 90 and day 91; a patient holding 2 then 3 then a 4th attempt). Scores zero if two or more of the three limits are covered on one side only, or with a value far from the limit ('a slot next week', 'a date next year'). Scores at most half if exactly one limit is one-sided."
+    },
+    {
+      "name": "Undecided inclusivity recorded rather than assumed",
+      "max_score": 18,
+      "description": "The document states, as an open question or flagged assumption, that the story does not say whether exactly 2 hours ahead is bookable and whether cancellation exactly 24 hours before is free. Scores zero if one interpretation is written into the expected results with nothing marking it as a choice the story did not make. Raising only one of the two scores at most half."
+    },
+    {
+      "name": "Daylight-saving / timezone case present",
+      "max_score": 14,
+      "description": "At least one row targets the conversion between the stored UTC instant and the clinic's local rendering - a slot on the night the clocks change, or a lead-time / horizon calculation spanning the transition. Scores zero if timezone never appears in any precondition or expected value; the implementation note is the only place this is stated, so omitting it means the note was not read as test input."
+    },
+    {
+      "name": "Definition of 'upcoming' probed",
+      "max_score": 12,
+      "description": "At least one row makes the 3-appointment cap turn on what counts toward it - a cancelled appointment, or one whose start time has passed but which is not yet closed. Scores zero if every cap row assumes three plain future bookings."
+    },
+    {
+      "name": "MUST NOT repeat one successful booking with cosmetic variation",
+      "max_score": 12,
+      "description": "The table must not contain three or more rows that differ only by slot duration (15 / 30 / 60) or by which arbitrary future slot was chosen, while asserting the same outcome. Duration only earns separate rows where the expected result differs. Three or more such interchangeable rows score zero here."
+    },
+    {
+      "name": "Rows classified for the run they belong to",
+      "max_score": 10,
+      "description": "Each row carries a classification drawn from a small fixed vocabulary that separates a short confidence pass from fuller coverage and from edge and rejection work - for example smoke / regression / edge / negative. Scores zero if there is no classification column. An ad-hoc column with per-row free text and no consistent vocabulary scores at most half."
+    },
+    {
+      "name": "Refusal rows pin what the patient ends up with",
+      "max_score": 9,
+      "description": "Rows for refused bookings state both what the patient is told and that no appointment was created and no SMS was sent. Scores zero if refusal rows expect only 'an error is shown'."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Two ready-made stories compete and both are wrong. The error text is an authentication failure, so the first instinct is credentials; the team has already burned a day there and the notes rule it out. The second instinct is the migration that merged inside the window, which gives genuine code proximity to a database failure and is the theory a revert is queued against. The decisive evidence is quiet: the same floating tag `ci-postgres:16` resolved to a different digest between the last green run and the first red one, the container's own startup log announces that from image tag 16-4 the app role password comes from CI_DB_PASSWORD in the container environment, and the workflow passes that variable to the test step only. The notes also record that re-running the unchanged commit from the last green run fails today, which excludes every application change at once. Predicted baseline failure: a confident verdict of 'the secret is wrong, rotate it' or 'the migration broke setup, revert it', with the digest difference and the 16-2 to 16-4 image line never mentioned.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-integration-4791.md exists and addresses this failure."
+    },
+    {
+      "name": "Service image change identified as the cause",
+      "max_score": 28,
+      "description": "The document states that the floating tag ghcr.io/acme/ci-postgres:16 resolved to a different image between run 4770 and run 4791, citing both digests (2c9e5b... then 9f4ad0...) or the 16-2 to 16-4 image-tag line, or the 16.4 to 16.9 server version. It must connect that to the behaviour change the container itself logs: from 16-4 the app role password is taken from CI_DB_PASSWORD in the container environment, which is unset there, so the role is created with a random password. Naming an environment change without identifying the image as the thing that changed scores at most half. Concluding 'the secret is wrong' or 'the migration broke it' scores zero."
+    },
+    {
+      "name": "Application changes excluded by the replayed commit",
+      "max_score": 18,
+      "description": "The document excludes b7c2e18 and every other commit in the window using the recorded re-run of the unchanged commit b39ff02, which was green Monday morning and fails today. Full credit also notes the failure happens in globalSetup before any migration or test runs. Dismissing the migration on plausibility alone ('an index cannot cause an auth error') scores at most half. Not addressing the migration scores zero, because a revert is already queued against it."
+    },
+    {
+      "name": "MUST NOT recommend rotating, re-saving, or changing the secret",
+      "max_score": 13,
+      "description": "Scores zero if the recommended action is to rotate CI_DB_PASSWORD, re-save it, or check the secret store again. The notes already record that the value is unchanged and re-saving changed nothing; repeating it sends the team back to the day they lost. Naming the variable as something that must now also reach the service container is not a rotation and does not lose points here."
+    },
+    {
+      "name": "MUST NOT file this as a defect against an application team",
+      "max_score": 12,
+      "description": "Scores zero if the document opens or recommends a defect ticket against the data team, the API team, or the author of the migration, or recommends the revert. This failure is a change in the environment the tests run against; routing it to a product team sends work to people who cannot act on it and fills the tracker with a false positive."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 12,
+      "description": "Each alternative considered is listed with the specific observation that rules it out - unchanged runner image and label across the whole window, no quarantine or flake list in the repo, a clean break rather than an intermittent pattern (20 consecutive identical failures plus a same-commit retry), failure before any test executes. Full credit needs at least three entries carrying observed values. 'Not a flaky test' with no value attached scores zero for that entry."
+    },
+    {
+      "name": "Next action is pinning and provisioning, routed to the image owner",
+      "max_score": 12,
+      "description": "The recommended action pins the service image to a digest or an immutable tag and gets CI_DB_PASSWORD into the service container's environment, routed to the platform team that builds ci-postgres. Full credit states the routing. Recommending a rerun, a revert, or 'ask the data team' as the next action scores zero."
+    },
+    {
+      "name": "One call, not a hedge",
+      "max_score": 8,
+      "description": "The document commits to a single answer rather than listing credentials, the migration, and the image as co-equal candidates for someone else to sort out. A three-way hedge scores zero here."
+    }
+  ]
+}

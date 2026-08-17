@@ -1,0 +1,8 @@
+{
+  "name": "orders-service",
+  "version": "12.4.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

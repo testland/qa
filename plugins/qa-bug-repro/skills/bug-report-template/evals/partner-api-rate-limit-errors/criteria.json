@@ -1,0 +1,46 @@
+{
+  "context": "A partner report whose prose claims 429 rate limiting while the pasted response is a 500 with 47 of 600 requests still remaining, and which supplies no plan tier, no host, no client version, no timezone and no failure count. Predicted baseline failure: the agent accepts the reporter's framing, titles the report as a rate-limit problem, and writes one merged urgency that serves as both the impact judgement and the queue position - often justified by the word 'partner'. It also invents the plan tier, resolves 14:02 into a specific timezone, and supplies a client version for 'whatever was current when we integrated'.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the exact path",
+      "max_score": 5,
+      "description": "A markdown file exists at reports/partner-api-errors.md covering this report. Any other path scores zero."
+    },
+    {
+      "name": "The prose-versus-response contradiction is the report's headline finding",
+      "max_score": 30,
+      "description": "The email says 429 rate limiting; the paste shows HTTP 500 internal_error with x-ratelimit-remaining 47 of 600 and retry-after 0. Full points if the document records the response verbatim, states plainly that the evidence does not support the reporter's rate-limit description, and leaves both accounts on the record rather than deciding which is true. Scores zero if the document reports this as a rate-limit failure, or omits the 500 and the remaining-quota headers. Scores at most half if both appear but the conflict is not called out."
+    },
+    {
+      "name": "MUST NOT merge impact and queue position into one judgement",
+      "max_score": 24,
+      "description": "Full points if what the failure does to a caller is assessed from the failure itself, and where it sits in the queue is recorded separately with its own reasoning and marked as the partnerships manager's call - noting that the plan tier needed for that call is unknown. Scores zero if a single label serves both, if one is restated as the other ('major, so P1'), or if the word 'partner' alone is used to set both."
+    },
+    {
+      "name": "No invented account or client facts",
+      "max_score": 22,
+      "description": "Plan tier, host, region, API key, client library version and per-batch failure count are all absent, and the reporter says he cannot supply the first and last of these. Full points if each is carried as unknown with who could answer it. Scores zero if any plan name, region, host, version number, or failure count or percentage is asserted."
+    },
+    {
+      "name": "Timestamps carried as ambiguous",
+      "max_score": 14,
+      "description": "The mail header has no timezone, '14:02' has no zone, and the response date header is explicitly GMT. Full points if the document keeps the response's GMT timestamp exact and marks the reporter's own times as unzoned. Scores zero if an unzoned time is converted or presented as though its zone were known."
+    },
+    {
+      "name": "Request identifier preserved exactly",
+      "max_score": 14,
+      "description": "req_9f2ac41e0b77 is the only handle we have on a specific failed call. Full points if it appears verbatim and is named as the starting point for a log lookup. Omitting it scores zero; altering any character scores zero."
+    },
+    {
+      "name": "Outstanding items listed with the right owner",
+      "max_score": 16,
+      "description": "The document itemises what to ask the partner (client version, per-batch counts, whether retries happen, whether other endpoints fail) and what we must look up ourselves (plan tier by account, whether the request ID appears in our logs, whether other callers see 500s on this endpoint). Full points when the two are distinguished. One undifferentiated list scores at most half; nothing scores zero."
+    },
+    {
+      "name": "Title describes the observed failure, not the reporter's diagnosis",
+      "max_score": 10,
+      "description": "The title names the endpoint and the observed response. Titles that call this a rate-limit problem, or that prescribe raising the limit, score zero."
+    }
+  ]
+}

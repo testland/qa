@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent treats the fan-out as a robustness problem rather than a test-design problem. It typically keeps the upstream-status flags but wraps the downstream checks in `if` guards or try/catch, or converts the re-assertions into conditional skips while still writing verdicts into variables - so the report gets quieter without the design fault being removed, and the next person adds a flag again. The other common shape is deleting the downstream checks that failed, which does reduce the count to one but also stops testing `get totals` and `submit order`. Both read as a fix in a diff: the numbers improve and nothing obviously broken remains on screen.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT re-assert an upstream request's verdict",
+      "max_score": 30,
+      "description": "No check in `add item`, `get totals`, or `submit order` asserts on whether an earlier request succeeded. Every surviving `upstream session was created` / `upstream item was added` style check scores zero for this criterion, whatever else improved - each request's checks must be about that request's own response. Keeping the check but wrapping it in a conditional also scores zero: the assertion is still there, it just fires less often."
+    },
+    {
+      "name": "No verdict is stored in a variable",
+      "max_score": 16,
+      "description": "The `sessionOk` and `itemAdded` boolean flags are gone from the scripts entirely. Scores zero if either write survives, even unread - a stored pass/fail flag is the mechanism the fan-out is built from and leaving it invites the assertions back."
+    },
+    {
+      "name": "Derived data still flows, through a collection-scoped variable",
+      "max_score": 24,
+      "description": "The session id produced by `create session` still reaches the three downstream requests, set with `pm.collectionVariables.set` (accepting `pm.environment.set` as a lesser but working alternative at most half, since it mutates the shared environment rather than run-scoped state). Scores zero if the chain is broken: a hard-coded session id, a removed `set`, or downstream URLs no longer resolving `{{sessionId}}` all leave the collection unrunnable."
+    },
+    {
+      "name": "Coverage preserved, once each",
+      "max_score": 16,
+      "description": "Every behaviour checked today is still checked: session creation returns 201, adding an item returns 200, totals return 200, the totals value matches what adding the item reported, the order submits 201, and the order state is `placed`. Dropping any of these scores zero for this criterion - the point is fewer reported failures per real fault, not fewer checks."
+    },
+    {
+      "name": "Missing precondition handled without inventing failures",
+      "max_score": 12,
+      "description": "A downstream request that finds no session id skips or reports one clear diagnostic, rather than emitting a set of derived assertion failures. Full credit for a skip / early return / single explicit message; zero if the answer's handling for a missing id is to add more failing assertions."
+    },
+    {
+      "name": "MUST NOT alter the requests",
+      "max_score": 8,
+      "description": "Request names, order, methods, URLs, headers, and bodies are byte-identical to the fixture, and there are still exactly four items. Any edit to a request, or a reordering, scores zero - only the test scripts were in scope."
+    },
+    {
+      "name": "Deliverable is the rewritten collection",
+      "max_score": 6,
+      "description": "The answer delivers the full collection JSON, parseable, with each script still attached as that item's `event` entry. Prose describing the changes without the file scores zero."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+2026-08-10T09:10:33Z ##[group]Initialize containers
+2026-08-10T09:10:33Z Starting service container "db"
+2026-08-10T09:10:33Z /usr/bin/docker pull ghcr.io/acme/ci-postgres:16
+2026-08-10T09:10:39Z Digest: sha256:2c9e5b7708aa41d6ef03bb90c4d5127ee6b0a4419d3f8c2a5ad61be7d0c381bd
+2026-08-10T09:10:39Z Status: Downloaded newer image for ghcr.io/acme/ci-postgres:16
+2026-08-10T09:10:41Z db_1  | 2026-08-10 09:10:41.502 UTC [1] LOG:  starting PostgreSQL 16.4 (Debian 16.4-1.pgdg120+1)
+2026-08-10T09:10:41Z db_1  | [ci-postgres image 16-2] running /docker-entrypoint-initdb.d/20-roles.sql
+2026-08-10T09:10:42Z db_1  | 2026-08-10 09:10:42.700 UTC [1] LOG:  database system is ready to accept connections
+2026-08-10T09:10:55Z  Test Files  38 passed (38)
+2026-08-10T09:10:55Z       Tests  511 passed (511)
+2026-08-10T09:11:02Z ##[error]none - job succeeded

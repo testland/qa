@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent writes a broad PDF-rendering checklist - fonts, layout, pagination, margins, currencies, page counters, multi-page invoices - and treats the old defect list, if it uses it at all, as one more section rather than as the standard of comparison the lead is actually asking for. It reads complete and burns both blocks on generic sweeping. The unaided version also gives the blocks no objective, offers no ordering among the historical defects (INV-780 and INV-402 sit against the engine's changed font fallback and are the highest-yield starting points; INV-733 sits against the new second-pass footer), records only pass/fail so an acceptable visual difference has nowhere to go, and ends without tying findings to the references a later reader needs or naming what the third block would target.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan file delivered",
+      "max_score": 5,
+      "description": "docs/qa/invoice-renderer-blocks.md exists and plans Tuesday's two blocks. Scores at most half for a differently named deliverable. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "Prior defect history used as the standard of comparison",
+      "max_score": 30,
+      "description": "The closed-defect list is the explicit yardstick for whether the swap is a no-op, with a stated order: defects whose mechanism the new engine changed come first - font fallback (INV-780, INV-402), overflow behaviour (INV-204), pagination and the second-pass footer (INV-640, INV-733), delegated number formatting (INV-311, INV-701). Scores zero if the plan is a general rendering checklist that never uses the history as the comparison standard. Scores at most half if the defects are re-run as a flat list in reference order with no prioritisation tied to what the engines actually do differently."
+    },
+    {
+      "name": "One bounded objective per block naming what must be learned",
+      "max_score": 24,
+      "description": "Each 60-minute block carries exactly one objective naming the area, what Marc compares against (old-engine output for the same invoice id, the 40-invoice anonymised set, the originals attached to the closed defects), and what we must know by the end. Scores zero if the two blocks are undifferentiated halves of one checklist. Scores at most half if the objective is a bare target such as 'regression test the renderer'."
+    },
+    {
+      "name": "Coverage beyond the historical list",
+      "max_score": 18,
+      "description": "The plan works ground the old defect list cannot cover, driven by the documented engine differences - shrink-to-fit before clipping, rows pushing whole instead of splitting, locale-delegated number formatting on currencies with no defect history, scripts in the 40-invoice set that were never involved in a reported bug. Scores zero if the plan is only a re-run of the closed defects, which would miss regressions in areas that never failed before."
+    },
+    {
+      "name": "Records separate regressions, acceptable differences, and questions",
+      "max_score": 15,
+      "description": "The in-block record distinguishes a genuine regression from a visible difference that is acceptable (a row pushing whole rather than splitting may be an improvement) from a question for finance or the product owner (is a shrink-to-fit company name acceptable on a window-envelope invoice?). Scores zero if findings are captured as pass or fail only - by-eye comparison of two engines produces mostly differences, and undifferentiated diffs are unusable."
+    },
+    {
+      "name": "MUST NOT hand back untraceable findings or an open-ended continuation",
+      "max_score": 18,
+      "description": "Each block's hand-back ties every finding to something a later reader can follow - the historical defect reference, the invoice id, or a newly raised defect id - and names the target of the third block explicitly, drawn from what was not reached. Scores zero if findings are narrative observations with nothing to trace them by, or if the plan ends with 'continue testing next week' rather than a named target. Scores at most half if one of the two is present."
+    },
+    {
+      "name": "Time is allocated within each block",
+      "max_score": 12,
+      "description": "The 60 minutes are broken down so the plan is visibly executable - regenerating and pulling comparison invoices, actual comparison, and writing up a suspected regression each get an allowance. Scores zero if the block contains more comparison work than an hour of by-eye review can hold with no acknowledgement."
+    },
+    {
+      "name": "Flagged work stays out",
+      "max_score": 8,
+      "description": "The redesigned template behind the flag, the payment-link block, invoice calculations and email delivery are excluded. Scores zero if any block plans work against the flagged template or the payment-link block."
+    }
+  ]
+}

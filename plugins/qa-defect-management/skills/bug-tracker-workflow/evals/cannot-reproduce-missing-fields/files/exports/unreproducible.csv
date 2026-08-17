@@ -1,0 +1,9 @@
+id,title,state,resolution,severity,priority,reporter,environment,build,steps,attachments,dev_note
+QA-2210,"App logs the user out at random",Closed,Cannot Reproduce,2 - High,P2,support.desk,,,"3 steps, no timing given",none,"tried for 40 minutes on my machine, no repeat"
+QA-2214,"Camera permission dialog appears twice on first launch",Closed,Cannot Reproduce,3 - Medium,P3,f.okafor,"iOS 18.1 / iPhone 13 / app 7.4.0","9912","6 numbered steps incl. fresh install","screen recording, device log","attempted on 2 physical devices and 3 simulator images at build 9912 and 9930, dialog appears once"
+QA-2219,"Card charged twice when the payment sheet is dismissed",Open,Cannot Reproduce,1 - Critical,P1,support.desk,,,"none - customer paraphrase only",none,"no way to try this without knowing the device or the flow used"
+QA-2223,"Report export is empty for some users",Closed,Cannot Reproduce,2 - High,P2,l.fontaine,"prod",,"see video","video link expired 2026-07-30","no steps left to follow once the video went"
+QA-2228,"Sorting by name puts lowercase after uppercase",Closed,Not a Bug,4 - Low,P4,f.okafor,"web 4.18.2 / Chrome 128 / prod","4.18.2","4 steps","screenshot","documented ordering, product confirmed as intended 2026-07-22 with link to spec"
+QA-2231,"Checkout suite failure: assert_total_matches",Closed,Cannot Reproduce,2 - High,P2,ci.pipeline,,,"failing assertion and diff pasted from the run","link to pipeline run 88214","could not repeat locally"
+QA-2236,"Notifications stop after the app is backgrounded overnight",Closed,Cannot Reproduce,3 - Medium,P3,f.okafor,"Android 14 / Pixel 7 / app 7.4.1","10044","5 steps incl. 8-hour wait","battery stats export","reproduced the setup, waited 8 hours, notifications delivered"
+QA-2240,"Search box freezes",Closed,Cannot Reproduce,3 - Medium,P3,support.desk,,,"1 line: it freezes",none,"nothing to go on"

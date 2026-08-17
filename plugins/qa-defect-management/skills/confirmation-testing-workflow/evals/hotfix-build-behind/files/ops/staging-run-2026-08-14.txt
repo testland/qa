@@ -1,0 +1,10 @@
+o.kaminski, 2026-08-14 09:10 UTC, staging.
+
+for i in $(seq 1 40); do curl -s -o /dev/null -w "%{http_code} " \
+  -H "x-api-key: k_partner_test" https://api.staging.internal/v1/ping; done
+
+200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200
+200 200 200 200 200 200 200 200 200 200 200 429 429 429 429 429 429 429 429
+429 429
+
+Body of the first 429: {"error":"rate_limited","retry_after":60}

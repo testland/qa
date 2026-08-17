@@ -1,0 +1,46 @@
+{
+  "context": "A developer-written acceptance script (HTTP verbs, a database table, an HL7 message, an S3 key, a job queue) that has to be re-aimed at a ward manager who signs the contract, against a five-row schedule of contractual items, with three seeded patients of which only one is actually usable for the full journey. Predicted baseline failure: the agent rewrites the same seven steps into friendlier prose while keeping the mechanisms visible ('confirm the discharge record is saved with status FINAL', 'check the message is sent to the integration queue', 'verify the PDF is generated'), keeps the malformed-identifier rejection step because it looks like good coverage, invents a generic patient ('use a test patient on the ward') instead of naming 4B-1102 and avoiding 4B-1103 and 4B-1104, produces no mapping back to AC-3.1 through AC-3.5, and ends the document without the written confirmation the invoice depends on. It reads well and would still fail the session.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at uat/UAT-003-discharge-summary.md. Any other path scores zero."
+    },
+    {
+      "name": "No step requires technical access or vocabulary",
+      "max_score": 28,
+      "description": "MUST NOT ask the signer to do or observe anything outside the product's screens. Zero if any step retains an HTTP method or endpoint path, a status code, a database table or column name, the HL7 message type, the S3 bucket or key, a bearer token, or a queue/job. Each surviving item of that kind is disqualifying regardless of how it is worded; softening 'POST /api/v2/.../discharge' into 'submit the discharge API call' still scores zero. Steps that stay on screen but use internal field names verbatim score at most half."
+    },
+    {
+      "name": "Each contractual item is mapped to the actions that demonstrate it",
+      "max_score": 22,
+      "description": "The document contains an explicit correspondence between AC-3.1, AC-3.2, AC-3.3, AC-3.4 and AC-3.5 and the numbered action(s) that show each one, with a place to mark each as met or not met. All five present and individually mapped earns full marks; three or four mapped scores at most half; a document that merely lists the criteria without tying them to specific actions scores zero."
+    },
+    {
+      "name": "Session setup names the exact patient, ward, accounts and release",
+      "max_score": 20,
+      "description": "Before the first action the document states the environment URL, the release under acceptance (v3.4.0), the login Sister Adeyemi uses, and patient record 4B-1102 by identifier. Choosing 4B-1103 (no GP practice, so the GP-delivery item cannot pass) or 4B-1104 (already discharged) scores zero, as does 'a patient on Ward 4B' or any invented record number. Missing the release or the login caps this at half."
+    },
+    {
+      "name": "The rejection case is out of this run",
+      "max_score": 14,
+      "description": "MUST NOT mix the invalid-identifier rejection into the acceptance run - the schedule places it outside this round and last session it caused a dispute. Zero if a malformed / invalid / error case appears among the actions the signer performs. Removing it and noting where it belongs instead earns full marks."
+    },
+    {
+      "name": "Every action states an outcome the signer can judge",
+      "max_score": 16,
+      "description": "Each action is paired with something visible on screen, on paper, or in the practice mailbox viewer, described concretely (the medication count for 4B-1102, the clinician name being required, the printed summary from PRN-4B-01, the letter appearing in the mailbox viewer within about five minutes). Any action left with no stated outcome, or with an outcome such as 'the discharge works' or 'everything looks correct', scores zero."
+    },
+    {
+      "name": "Written confirmation section fit for the contract",
+      "max_score": 12,
+      "description": "The document ends with a dated confirmation area for both the person running the session and the customer signatory, referencing Schedule 3 of the statement of work dated 2026-02-11 and the criteria being confirmed. A bare 'Tester: ____' line with no customer signatory and no reference to the agreement scores at most half; no confirmation area at all scores zero."
+    },
+    {
+      "name": "Failure capture during the session",
+      "max_score": 8,
+      "description": "A structured place to record anything that goes wrong, tying the problem to the action number it occurred on plus severity or a defect reference. Absent scores zero."
+    }
+  ]
+}

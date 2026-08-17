@@ -1,0 +1,41 @@
+{
+  "context": "Two Java API test classes each pin the target host in source, and one request path carries the absolute staging URL. Predicted baseline failure: the agent moves the host into a shared constant, a `@BeforeAll` in an abstract base class, a `src/test/resources/*.properties` file, or an environment-variable read. All of those read as a clean refactor and all of them satisfy 'not duplicated', but none of them is selectable per build invocation from a single non-interactive Windows step - the constant and the properties file still require an edit, and the environment variable has to be exported into the process before the run and unset after it, three times in one step. The build-tool-native answer is a JVM system property with a defaulted fallback, read once at test start, so the three runs differ only by their command line. A casual reader sees 'the URL is no longer duplicated' and marks the task done.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Host is supplied per build invocation with a default",
+      "max_score": 30,
+      "description": "The base URI is resolved from a JVM system property with an inline fallback, e.g. `RestAssured.baseURI = System.getProperty(\"api.baseURI\", \"http://localhost:8080\")`, so the three release runs differ only by a `-D...` argument. Scores zero if the host still lives in a Java constant, an abstract base class field, or any file that has to be edited to change environment. Scores at most half if the value is read only from the process environment (`System.getenv`) or only from a classpath properties file - both work, but neither is settable per invocation of the same command inside the single scripted step the task describes."
+    },
+    {
+      "name": "Local default preserved",
+      "max_score": 10,
+      "description": "Running the build with no extra argument targets `http://localhost:8080`. Scores zero if the fallback is a remote environment, or if omitting the argument produces a null/empty base URI or an exception."
+    },
+    {
+      "name": "MUST NOT leave environment hostnames in test source",
+      "max_score": 14,
+      "description": "No `acme-pay.internal`, `https://`, or other absolute environment host literal survives anywhere under `src/test/java` - including the request path in `listsLineItems`, which must become a relative path. Any surviving absolute host literal in a test class scores zero for this criterion, even if the `@BeforeAll` assignment was fixed."
+    },
+    {
+      "name": "One mechanism, not two",
+      "max_score": 12,
+      "description": "Both classes obtain the host the same way - a shared setup helper, a base class, or the identical one-line resolution in each `@BeforeAll`. Scores zero if the two classes end up using different mechanisms (e.g. one system property, one environment variable), which is the duplicated-knowledge failure the task asks to remove."
+    },
+    {
+      "name": "The three release commands are shown",
+      "max_score": 10,
+      "description": "The answer includes the literal commands for dev, staging and prod-canary that the release step would run, differing only in the environment value. Scores zero if no command is given. Scores at most half if commands are given but do not actually exercise the delivered mechanism (e.g. shows `-Denv=staging` while the code reads a differently-named key)."
+    },
+    {
+      "name": "Assertions and class structure untouched",
+      "max_score": 8,
+      "description": "MUST NOT change any status-code or body assertion, rename either class, split them, or add test methods. Any altered or added assertion scores zero for this criterion."
+    },
+    {
+      "name": "No new machinery introduced",
+      "max_score": 6,
+      "description": "No new dependency, config framework, environment-enum class, or YAML/properties loader is added for a one-value lookup. Scores zero if a new dependency appears in `pom.xml`; scores at most half if a bespoke `Environment`/`Config` class is introduced to wrap a single value."
+    }
+  ]
+}

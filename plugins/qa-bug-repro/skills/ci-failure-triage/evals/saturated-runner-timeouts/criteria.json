@@ -1,0 +1,46 @@
+{
+  "context": "The organisation has already decided this is a payments performance problem, and the log's own framing supports it: the payments test is named in the failure, it fails most often, and a performance PR is in flight. Everything that contradicts that sits one level out from the failing test - two unrelated suites timed out in the same run, passing tests across every suite ran three to six times their off-peak duration, the post-job capture shows load average 13.94 and 31.2% steal on a 2 vCPU box shared with another team's backfill jobs, the failures concentrate in a single weekday window, and no code on any of the affected call graphs changed in the window. Predicted baseline failure: a verdict that the payments authorisation path is slow, routed back to the payments team, or a verdict that the test is flaky and should get a retry or a longer timeout - both of which keep a team working on a problem they cannot fix.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-payments-timeout.md exists and addresses this failure."
+    },
+    {
+      "name": "Identified as shared-infrastructure contention, not a payments problem",
+      "max_score": 28,
+      "description": "The document concludes the failure comes from the machine the suite runs on rather than from the payments code or the payments test, and routes it to whoever owns the CI runner pool or the suite's time budget. Concluding the payments path is slow scores zero. Concluding the test is non-deterministic and should be quarantined or retried scores zero. Naming contention without routing it away from the payments team scores at most half."
+    },
+    {
+      "name": "Evidence drawn from beyond the failing test",
+      "max_score": 22,
+      "description": "Full credit needs at least three of: the two unrelated suites (inventory, search) that timed out in the same run; passing tests taking 8-13s in a run whose off-peak median is far lower; load average 13.94 on 2 vCPU; %steal 31.20; the shared pool being used by the data platform's backfill jobs. Building the case only from the payments test's own numbers scores zero, because the whole discrimination is that the evidence is not in that test."
+    },
+    {
+      "name": "Time clustering established from the history",
+      "max_score": 16,
+      "description": "The document uses the history table: 17 of 21 runs in the 08:00-10:00 UTC window carry a timeout against 1 of 29 outside it, five different tests are affected, and the same payments test's passing duration moves from 1.9s off-peak to 14.8s in that window. Full credit states the consequence - the pattern belongs to the window, not to the test. Reporting the clustering as evidence that the test is flaky scores zero."
+    },
+    {
+      "name": "MUST NOT route this to the payments team as a defect",
+      "max_score": 14,
+      "description": "Scores zero if the document opens or recommends a defect or performance ticket against the payments team, endorses PR #3391 as the remedy, or names the authorisation call as the thing to fix. The document should say directly that the payments team's current work will not close a 20-second gap and that the instruction they are working to is misdirected."
+    },
+    {
+      "name": "MUST NOT prescribe a retry, a quarantine, or a longer timeout",
+      "max_score": 11,
+      "description": "Scores zero if the recommended action is to retry the test, wrap it in a retry helper, mark it as known-flaky, or raise the 20000ms timeout. Each hides a saturated runner and trains the team to ignore the signal. Recommending a suite time-budget review is not a timeout raise and does not lose points."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 12,
+      "description": "Alternatives are listed with the observation that rules each out - no commits under src/payments, src/inventory, or src/search in the window; the runner image and label unchanged across all 50 runs; no quarantine or flake list in the repo; the failure is not confined to one test so it is not that test's own non-determinism. Full credit needs at least three entries with observed values."
+    },
+    {
+      "name": "Next action addresses the pool or the schedule",
+      "max_score": 10,
+      "description": "The recommended action targets the runner pool, the co-tenancy with the backfill jobs, or the suite's time budget, and names who owns it. A next action aimed at payments code or at the test file scores zero."
+    }
+  ]
+}

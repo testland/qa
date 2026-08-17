@@ -1,0 +1,46 @@
+{
+  "context": "A spec whose most visible content is a six-item list of accepted formats, under a hard sixteen-row review budget. Predicted baseline failure: the agent spends six of its rows on 'uploads a PDF', 'uploads a JPG', 'uploads a PNG' and so on - six restatements of one behaviour that differ only by extension and all assert the same outcome - and then has no budget left for the classes that actually fail: a file whose contents disagree with its extension, a 0-byte file, a file at exactly the size cap, the eleventh attachment, and the scan-pending state. The result reads as complete because every stated format is named, which is precisely why it survived two releases.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/CLM-512.md exists and contains a markdown table with rows. Scores zero if prose only or written elsewhere."
+    },
+    {
+      "name": "Row budget spent on distinct behaviour, not on format restatement",
+      "max_score": 30,
+      "description": "Accepted formats are collapsed into one or two rows - a single representative, or one parameterised row naming the set - and the freed rows go to classes with different outcomes. To score full marks at least six of these must appear: rejected format, contents disagreeing with the extension, 0-byte file, file at exactly 25 MB, file above 25 MB, tenth vs eleventh attachment, connection dropped mid-upload, scan-pending state, scan-failed state, claim not in state `open`, name at or over 200 characters, non-ASCII or emoji file name. Fewer than three scores zero. Three to five scores at most half."
+    },
+    {
+      "name": "MUST NOT repeat one class once per accepted extension",
+      "max_score": 15,
+      "description": "Four or more rows that differ only by which accepted format was uploaded while asserting the same outcome score zero on this criterion. HEIC may earn its own row because the story gives it a different client path; the other five do not."
+    },
+    {
+      "name": "Declared type versus actual content",
+      "max_score": 14,
+      "description": "A row uploads a file whose real content does not match its extension or declared type - an executable or archive renamed to .pdf, a text file named .xlsx - and pins that it is refused rather than stored. Scores zero if the table only ever varies the extension. This is one of the three named production defects."
+    },
+    {
+      "name": "Size limit exercised at the limit",
+      "max_score": 14,
+      "description": "Rows exist for a file at exactly 25 MB and for one just above it, plus a 0-byte file. Scores zero if the only size row is 'a very large file is rejected'. Scores at most half if the cap is covered on one side only or the 0-byte case is missing."
+    },
+    {
+      "name": "Attachment count limit exercised at the limit",
+      "max_score": 10,
+      "description": "A row adds the tenth attachment successfully and another attempts an eleventh, pinning that the existing ten are unchanged. Scores zero if the cap appears only as 'cannot exceed the limit' with no count in the precondition."
+    },
+    {
+      "name": "Rows classified for the release pass they belong to",
+      "max_score": 12,
+      "description": "Each row carries a classification from a small fixed vocabulary separating the per-release confidence pass from fuller coverage, edge work and rejection work - for example smoke / regression / edge / negative. Scores zero if there is no classification column. Free-text per-row priority with no consistent vocabulary scores at most half."
+    },
+    {
+      "name": "Stable per-row identifier keyed to the story",
+      "max_score": 8,
+      "description": "Rows carry identifiers including the story key, in a form like CLM-512-TC-04. Scores zero with no identifier column; bare sequence numbers with no story key score at most half."
+    }
+  ]
+}

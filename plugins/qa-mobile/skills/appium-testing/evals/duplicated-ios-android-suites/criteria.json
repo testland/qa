@@ -1,0 +1,46 @@
+{
+  "context": "The whole point of this stack is that one suite runs against several capability sets: the runner config takes a list of capability entries and executes the same specs once per entry, and the runner's own service can start and stop the automation server around the run so no manual terminal is involved. Predicted baseline failures, all of which look like a tidy refactor: (a) the agent merges the two specs but keeps two config files and two npm scripts, so the drift moves from the specs to the configs and the single-command requirement is unmet; (b) it keeps one config and selects a single capability set at runtime from an env var, which still needs two invocations and lets someone run only half; (c) it reaches for the multi-device / multiremote form, which is semantically wrong here - that drives an iPhone and an Android handset simultaneously inside one test rather than running the suite twice; (d) it leaves the manual server start in place as a documented prerequisite. A reviewer skimming the diff sees one spec file where there were two and stops reading.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "One runner config carries several capability entries",
+      "max_score": 30,
+      "description": "A single config's `capabilities` is a list holding both the Android (UiAutomator2) and the iOS (XCUITest) entry, so one command runs the whole suite against both. Two config files left in place scores zero. One config that selects a single capability set from an environment variable, requiring two invocations, scores at most half. Using the multi-device / multiremote object form scores zero - that runs both devices inside one test rather than running the suite once per device, which is not what was asked for and quietly halves the coverage."
+    },
+    {
+      "name": "Single spec file covers both platforms",
+      "max_score": 24,
+      "description": "One cart spec exists and both capability entries run it. Two per-platform spec files remaining scores zero, even if they now share a helper. A spec kept singular but wrapped in a platform conditional that skips most of the body on one platform scores at most half."
+    },
+    {
+      "name": "Server lifecycle handled by the runner",
+      "max_score": 16,
+      "description": "The config registers the runner's automation-server service (`services: ['appium']` or equivalent) so the server is started and stopped around the run. A solution that instead adds a `pretest` shell script backgrounding the server scores at most half - it removes the manual step but hand-rolls readiness and cleanup. Leaving the manual second-terminal start documented as a prerequisite scores zero."
+    },
+    {
+      "name": "MUST NOT leave per-platform test code behind",
+      "max_score": 12,
+      "description": "MUST NOT. Anti-pattern row 'Per-platform separate test code'. The `test/android/` and `test/ios/` spec copies, and their npm scripts, are gone rather than kept alongside the new shared spec. Any surviving duplicate of the cart flow scores zero here - the reported harm is drift between two copies, and two copies plus a third shared one is worse than what they started with."
+    },
+    {
+      "name": "Coverage parity restored",
+      "max_score": 10,
+      "description": "The merged spec asserts both the add and the remove path, so iOS gains the assertion it was missing. Merging down to the smaller iOS version, dropping the removal assertions, scores zero - the escaped bug is the removal path."
+    },
+    {
+      "name": "Element lookups stay shared, not branched",
+      "max_score": 10,
+      "description": "The spec uses one locator per element for both platforms, as the accessibility identifiers already match. Introducing an `if (isIOS)` ladder that returns a different locator per platform for elements the task says are already aligned scores at most half; introducing platform-specific XPath scores zero."
+    },
+    {
+      "name": "Per-platform driver selection preserved",
+      "max_score": 8,
+      "description": "The Android entry still names the UiAutomator2 backend and the iOS entry still names XCUITest, each keeping its own app artefact path. Collapsing to one backend, or pointing both entries at the same app file, scores zero."
+    },
+    {
+      "name": "One command runs everything",
+      "max_score": 8,
+      "description": "package.json exposes a single script that runs the whole suite across both platforms. Leaving two scripts that must both be run scores zero; leaving two scripts plus an aggregate that chains them with `&&` scores at most half."
+    }
+  ]
+}

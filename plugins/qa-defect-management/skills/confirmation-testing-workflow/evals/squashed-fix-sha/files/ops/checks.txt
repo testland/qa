@@ -1,0 +1,5 @@
+$ curl -s https://cart.staging.internal/internal/build-info
+{"service":"cart-service","commit":"d4c7a03","branch":"main","deployedAt":"2026-08-03T08:14:52Z"}
+
+$ git merge-base --is-ancestor a17f2d9 d4c7a03; echo $?
+1

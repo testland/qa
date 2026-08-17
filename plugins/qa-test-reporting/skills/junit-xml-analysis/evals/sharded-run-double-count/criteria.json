@@ -1,0 +1,41 @@
+{
+  "context": "Four report files describe 12 distinct tests. shard-3.xml and shard-3-rerun.xml cover the same 4 tests - the first attempt was killed by the provider (2 testcases carry 'worker process exited unexpectedly'), the second finished clean at a later timestamp. Predicted baseline failure: the agent adds the suite-level tests attributes, or concatenates every <testcase> element, and reports 16 tests with 2 errors, which looks plausible because it is arithmetic on real numbers and matches the PR comment the team already has. The second predicted failure is the correction that overshoots: de-duplicating on the test name alone collapses tests/cart.spec.ts 'adds an item' and tests/wishlist.spec.ts 'adds an item' into one test and reports 11 - the number the team already saw once and could not explain. A third is labelling the two aborted testcases as flaky because they failed once and passed once, which puts a provider-side machine kill into the flake budget.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Merge script, tests, and notes delivered",
+      "max_score": 5,
+      "description": "scripts/merge-shards.js runs and writes merged-summary.json, test/merge-shards.test.js exists, merge-notes.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Distinct test total is 12",
+      "max_score": 30,
+      "description": "merged-summary.json reports exactly 12 tests. Reporting 16 - the sum of the four suite-level tests attributes, or of all testcase elements - scores zero, whatever the notes say. Reporting 12 in the prose while merged-summary.json still emits 16 scores at most half."
+    },
+    {
+      "name": "Identity is classname plus name, never name alone",
+      "max_score": 20,
+      "description": "MUST NOT aggregate on the test name by itself. tests/cart.spec.ts 'adds an item' and tests/wishlist.spec.ts 'adds an item' must both survive the merge as separate tests; a total of 11, or any output where only one 'adds an item' row exists, scores zero. The key must be stated explicitly in merge-notes.md."
+    },
+    {
+      "name": "Re-run supersedes the attempt it replaces",
+      "max_score": 18,
+      "description": "The four shard-3 tests are counted once each with their re-run outcome, giving 12 passed, 0 failed, 0 errored overall. Carrying the 2 aborted attempts into the headline error count scores zero. Choosing the later attempt by an argument the notes state - the timestamp attribute, or file ordering made explicit - is required; silently keeping whichever file was read last scores at most half."
+    },
+    {
+      "name": "Aborted attempt surfaced rather than deleted or mislabelled",
+      "max_score": 12,
+      "description": "merged-summary.json lists the 2 tests with more than one attempt (tests/checkout.spec.ts 'charges the card' and 'emails a receipt') and shows the first attempt ended with 'worker process exited unexpectedly'. Discarding the aborted attempt with no trace scores at most half. Counting these as flaky tests, or feeding them to a flake rate, scores at most half: both attempts carry the identical worker-exit message on the same shard, which is a machine-level abort, not per-test nondeterminism."
+    },
+    {
+      "name": "Executable test covers the duplicate shard",
+      "max_score": 10,
+      "description": "test/merge-shards.test.js asserts the merged total for a fixture containing a shard and its re-run, and passes. A test that only checks the script produced a file scores zero; one that checks totals but never exercises a duplicated shard scores at most half."
+    },
+    {
+      "name": "Merge rule written for reuse",
+      "max_score": 8,
+      "description": "merge-notes.md states what the old total was actually summing, the identity used for a test across shards, and the rule for combining a re-run with the attempt it replaces. Notes that only report last night's numbers score at most half."
+    }
+  ]
+}

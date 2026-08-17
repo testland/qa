@@ -1,0 +1,46 @@
+{
+  "context": "Four rejection scenarios that differ only in the code entered and the message returned, each with its own single-line step definition. Predicted baseline failure: the agent deduplicates the JavaScript - one parameterised `When I enter the promo code {string}` - but leaves the feature as five separate scenarios that now each hard-code a code string, so adding the seventh rejection still means pasting a fourth line block into the feature. The other predicted failure is the reverse: the agent produces a table-driven form but keeps a per-case step definition alive, or folds the accepted-code scenario into the same table with an empty expected message, which silently changes that case into an assertion that an error with no text appeared. Both diffs look like a real cleanup because the file gets shorter either way.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Rejections expressed once, driven by a data block",
+      "max_score": 32,
+      "description": "The four existing rejections plus the new one are covered by a single templated scenario whose varying values live in an inline table of rows below it, one row per case, with a header row naming the columns. Scores zero if the feature still contains one scenario per rejection case, however much the step code was deduplicated. Scores at most half if the varying values are pushed into the step code (a list in JavaScript, a fixture file, or a loop that registers scenarios) rather than being visible in the feature file - support reads this file and must be able to add a row there."
+    },
+    {
+      "name": "Placeholders bind the row values into the step sentences",
+      "max_score": 20,
+      "description": "The templated scenario's step lines carry placeholders whose names match the table's column headers exactly, so each row substitutes into the sentence. Scores zero if the table is present but the step lines still name a literal code or message, or if a placeholder name has no matching column (the run then fails to substitute). Scores at most half if the values are passed as a table attached to a step (a table argument the step body iterates) instead of driving one execution per row - that is one scenario that loops, not a case per row, and a single failing row no longer names itself in the report."
+    },
+    {
+      "name": "One parameterised When and one parameterised Then",
+      "max_score": 20,
+      "description": "The five bespoke `When` definitions are replaced by a single definition capturing the entered code, and the message assertion stays a single parameterised definition. Scores zero if any per-case definition survives (`I enter an expired code`, `I enter nothing`, and so on). Scores at most half if the count is reduced but more than one `When` definition remains for entering a code."
+    },
+    {
+      "name": "The empty-code case still works through the same path",
+      "max_score": 12,
+      "description": "The 'Please enter a code' case is covered by a row like every other rejection, and the empty value it needs is actually delivered to `validate` as an empty string. Scores zero if the case was dropped, or if the row passes a literal such as `empty`, `\"\"`, or `none` that reaches `validate` as that text and only passes because the code is also unknown - the assertion would then be right for the wrong reason."
+    },
+    {
+      "name": "New already-used case added as data only",
+      "max_score": 14,
+      "description": "`USEDONCE` / 'This code has already been used' is covered, and covering it required adding a row and no new step definition. Scores zero if it is absent, or if it arrived with its own bespoke step definition."
+    },
+    {
+      "name": "The accepted-code scenario stays separate",
+      "max_score": 12,
+      "description": "'A valid code is accepted' remains its own scenario asserting acceptance. Scores zero if it was merged into the rejection table with a blank or placeholder message column - that case asserts a different outcome, and merging it produces a row claiming an error message that is empty."
+    },
+    {
+      "name": "MUST NOT push implementation into the sentences",
+      "max_score": 10,
+      "description": "MUST NOT rewrite the step text into implementation terms - no `I call validate(\"EXPIRED50\")`, no input ids, selectors, or module names in the feature. Any such line scores zero here: the file is read in sprint review by people who do not write JavaScript, and coupling the sentences to the implementation is what the rework must avoid."
+    },
+    {
+      "name": "src/promos.js untouched and all outcomes still asserted",
+      "max_score": 6,
+      "description": "`src/promos.js` is unchanged and every message assertion from the original file still appears. Scores zero if production code was edited or a message assertion was weakened to a substring or truthiness check."
+    }
+  ]
+}

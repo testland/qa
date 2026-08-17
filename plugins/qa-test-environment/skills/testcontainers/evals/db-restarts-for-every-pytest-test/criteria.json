@@ -1,0 +1,41 @@
+{
+  "context": "A function-scoped fixture starts, migrates, and destroys a database per test, and the suite's independence is an accident of that. Predicted baseline failure: the agent widens the fixture scope to session, which is the right direction and looks like the whole answer, but then (a) drops independence on the floor - `test_lists_every_account` asserting exactly two accounts and `test_totals_across_all_accounts` asserting an exact total both break or, worse, pass only in file order; (b) keeps `start()` / `stop()` around a bare `yield`, so a failure in `run_migrations` leaks the container and Ctrl-C leaves it running; and (c) either breaks the migration test or reverts the whole suite to per-test startup to keep it working. A tempting shortcut is to switch on cross-run container reuse to make the eleven minutes disappear, which is documented as unsuited to CI and does nothing about isolation.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Fixture contract preserved",
+      "max_score": 5,
+      "description": "`db_url` still exists under that name and still yields a connection URL that the existing tests can pass straight into `AccountRepository` / `Ledger`. Renaming it, or requiring every test to be edited to take a different fixture, scores zero."
+    },
+    {
+      "name": "One database for the whole run, not one per test",
+      "max_score": 24,
+      "description": "The container is started once for the session and migrations run once against it. Module-scoped or class-scoped, which still restarts several times, scores at most half. Leaving function scope in place while optimising elsewhere scores zero."
+    },
+    {
+      "name": "Independence is re-established deliberately",
+      "max_score": 26,
+      "description": "Because the database now outlives a test, the answer adds an explicit per-test reset - a transaction rolled back after each test, truncation of the tables between tests, or a schema/database per test inside the one container - and says which. Scores zero if tests are simply left to share accumulated state: `test_lists_every_account` and `test_totals_across_all_accounts` assert exact counts and totals, so a shared unreset database makes the suite order-dependent while still going green on a first run. Editing those assertions to tolerate leftover rows also scores zero."
+    },
+    {
+      "name": "Teardown survives an exception and an interrupt",
+      "max_score": 16,
+      "description": "Container removal is guaranteed even if migrations raise or the run is interrupted - the container is managed by its context manager (a `with` block wrapping the `yield`) or an equivalent finalizer, not by a bare `start()` ... `yield` ... `stop()` sequence. The bare sequence scores at most half: it works on the happy path and leaks on the runs the task names."
+    },
+    {
+      "name": "The migration test keeps its empty database",
+      "max_score": 14,
+      "description": "`test_migration.py` still gets a database with no application schema, arranged for that test alone - its own container, its own fresh schema/database inside the shared container, or an equivalent - without reverting the other tests to per-test startup. Deleting the test, changing what it asserts, or forcing the whole suite back to per-test scope for its sake scores zero."
+    },
+    {
+      "name": "MUST NOT reach for cross-run container reuse as the speed fix",
+      "max_score": 12,
+      "description": "The answer does not enable reuse of containers across test runs - no `TESTCONTAINERS_REUSE_ENABLE` in the repo or in CI, no reuse flag on the container. Scores zero if it appears: reuse is documented as an experimental, local-only mechanism unsuited to CI, and it addresses neither the per-test startup count nor isolation."
+    },
+    {
+      "name": "No sleeps and no skipped tests",
+      "max_score": 6,
+      "description": "No fixed delays are introduced between tests to let state settle, and no test is skipped, xfailed, or reordered with a plugin to make the run green."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+$ curl -s https://wallet.staging.internal/internal/build-info
+{"service":"wallet-service","commit":"e0ff31d","branch":"main","deployedAt":"2026-08-12T11:26:08Z"}
+
+$ git merge-base --is-ancestor 5ad9f10 e0ff31d; echo $?
+0

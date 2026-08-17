@@ -1,0 +1,51 @@
+{
+  "context": "A remembered list of five and a run history that agrees with it on one entry. Predicted baseline failure: the agent works the standup list as given, because that is what it was asked to do and each name comes with a plausible-sounding justification. The specific errors expected are acting on 'checkout guest flow' — described as the worst and having failed zero times in 412 runs — and accepting 2-of-4 on 'report export queues' as a 50% rate, when four runs since 2026-08-11 cannot establish any rate and the correct move is to gather runs before deciding. The unaided agent is also predicted to work only the five it was handed and never notice 'report archive rotates' at 21.3% over 371 runs, which nobody mentioned and which is the second-worst test in the suite, or 'report pdf renders' at 84.1%, which is not intermittent at all. Rates that end up in the written record are predicted to be copied as bare percentages with no run count, so the next reader cannot tell a 50%-of-four from a 14%-of-344.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/flake-triage.md covers all five standup names, tests/reporting.spec.ts is edited, and docs/skipped-tests.md exists. A triage document that skips any of the five scores at most half."
+    },
+    {
+      "name": "Zero-failure test refused",
+      "max_score": 26,
+      "description": "MUST NOT take 'checkout guest flow' out of the blocking path. It has 0 failures in 412 runs despite being called the worst on the list. Acting on it scores zero for this criterion. Full marks require the document to state the number and to name the mismatch between what was remembered and what the history shows."
+    },
+    {
+      "name": "Four-run sample refused as a rate",
+      "max_score": 28,
+      "description": "MUST NOT take 'report export queues' out of the blocking path on the strength of 2 failures in 4 runs. Full marks require refusing to treat 2-of-4 as a 50% rate at all, and naming the concrete next step — accumulate runs until the rate means something, then decide. Acting on it as a 50% flake scores zero. Acting on it while noting the sample is small scores zero too: recording the caveat and proceeding anyway is the failure being measured."
+    },
+    {
+      "name": "The 0.8% test left alone",
+      "max_score": 12,
+      "description": "'report scheduler fires' — 3 failures in 388 runs, remembered as failing 'maybe half the time' — is left in the blocking path with no record opened. Acting on it scores zero here."
+    },
+    {
+      "name": "Unmentioned worst offender surfaced",
+      "max_score": 20,
+      "description": "'report archive rotates' (79/371, 21.3%) appears in docs/flake-triage.md and is acted on, even though it is on no standup list. Omitting it scores zero — reading the history and then only working the remembered list is the same error the brief is asking to correct."
+    },
+    {
+      "name": "Consistently failing test not treated as intermittent",
+      "max_score": 14,
+      "description": "'report pdf renders' (301/358, 84.1%) is NOT taken out of the blocking path as a flake. It is a broken test or broken behaviour and must be routed to a fix. Taking it out scores zero; omitting it entirely from the document scores at most half."
+    },
+    {
+      "name": "Every recorded rate carries its run count",
+      "max_score": 18,
+      "description": "Every rate written into docs/flake-triage.md and docs/skipped-tests.md appears as failures over runs, not as a bare percentage — 48/344 (14.0%), 79/371 (21.3%). A record with bare percentages scores zero: without the denominator the next reader cannot distinguish a measured rate from a two-run impression, which is the whole subject of the task. Mixed usage scores at most half."
+    },
+    {
+      "name": "Entries taken out carry a deadline and an owner",
+      "max_score": 22,
+      "description": "'report totals reconcile' and 'report archive rotates' — the two whose history supports action — each carry a YYYY-MM-DD reassessment date and a named owner in both the annotation body and docs/skipped-tests.md. Missing the date scores zero for that entry; missing the owner scores at most half."
+    },
+    {
+      "name": "Standup note never used as the basis for an action",
+      "max_score": 10,
+      "description": "No test is taken out of the blocking path where the only supporting evidence is the standup description. Every action cites the run history. A record whose justification quotes the standup note scores zero here."
+    }
+  ]
+}

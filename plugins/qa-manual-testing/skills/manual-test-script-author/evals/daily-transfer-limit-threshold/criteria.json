@@ -1,0 +1,46 @@
+{
+  "context": "A five-line limit case whose threshold, account, currency and ordering are all unstated, against a reference file that publishes the limit for two tiers but deliberately not for the third (Youth, ticket still open, named owner), plus a cumulative calendar-day counter in UTC+2, a one-time passcode above 1,000 ZAR that lands in a sandbox inbox, and a QA console that can clear the day's accumulated total. Predicted baseline failure: the agent produces a clean two-scenario table that still says 'an amount exceeding the daily limit' or invents a round number, or picks the youth account and asserts a limit for it that nobody has defined; it omits the passcode step entirely so the tester is stranded at the confirm screen; it says nothing about the counter being cumulative, so its own 'over the limit' step poisons the 'under the limit' step that follows; and it treats the timezone as irrelevant. Every one of those is what the three testers already did.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at qa/TC-451-daily-transfer-limit.md. Any other path scores zero."
+    },
+    {
+      "name": "Case is anchored to an account whose limit is actually published",
+      "max_score": 24,
+      "description": "The setup names one specific seeded login and its tier, and that account is qa.std1@veldbank.example (5,000.00 ZAR) or qa.prem1@veldbank.example (25,000.00 ZAR). Building the threshold steps on qa.youth1@veldbank.example scores zero, because no limit exists for that tier to assert against. 'The test customer' or an invented login scores zero."
+    },
+    {
+      "name": "Exact amounts with currency, positioned against the published threshold",
+      "max_score": 22,
+      "description": "The steps state concrete figures in ZAR that sit either side of the chosen tier's published limit - for example 5,000.01 or 6,000.00 over and 4,000.00 under for Standard - rather than 'an amount over the limit'. Any amount stated without a currency, or any step left as 'over the limit' / 'under the limit', scores zero. Figures given but inconsistent with the chosen account's tier limit score at most half."
+    },
+    {
+      "name": "The undefined Youth limit is raised, not invented",
+      "max_score": 22,
+      "description": "The document explicitly records that the Youth tier's daily limit is not published, references ticket PROD-2291 or its owner in Retail Product, and poses it as a question to confirm. Stating any specific number as the Youth limit anywhere in the document scores zero. Omitting the point entirely scores zero. Mentioning it only as a passing aside with no owner or ticket scores at most half."
+    },
+    {
+      "name": "Cumulative counter handled so the case can be re-run the same day",
+      "max_score": 20,
+      "description": "The document states that the day's outbound total accumulates across attempts, orders the steps so the allowed transfer is not spoiled by the blocked one or by a previous run, and names the QA console limits reset (or an equivalent explicit restore) as the step that makes a same-day re-run valid. Saying nothing about the accumulated total scores zero. Noting it without giving the tester an action scores at most half."
+    },
+    {
+      "name": "Step-up passcode is part of the procedure",
+      "max_score": 14,
+      "description": "Any step sending more than 1,000.00 ZAR includes obtaining the one-time passcode from the message sandbox URL, with the expected arrival time. A case that walks from amount entry straight to a result without the passcode step is not executable and scores zero here."
+    },
+    {
+      "name": "Reset boundary stated in an unambiguous timezone",
+      "max_score": 12,
+      "description": "The document states that the allowance resets at 00:00 SAST (UTC+2) and warns against running across that boundary, which is what made the Lisbon run behave backwards. No timezone stated anywhere scores zero. 'Resets at midnight' with no zone scores zero."
+    },
+    {
+      "name": "Every step has one observable result, plus failure capture",
+      "max_score": 12,
+      "description": "MUST NOT leave a step without something to observe. Each step states a single checkable outcome - the specific refusal message or on-screen state, the resulting balance or reference - and the document contains a structured place to record failures with expected versus observed. Any step with no expected result, or an expected result of 'it works' / 'is blocked correctly' with nothing observable named, scores zero."
+    }
+  ]
+}

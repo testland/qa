@@ -1,0 +1,46 @@
+{
+  "context": "Five entries with no owner, where two of the five cannot be routed from the supplied data and the sources deliberately conflict. Predicted baseline failure: the agent fills every Owner cell, because a table with a blank column reads as an unfinished job and completing it feels like the task. It is predicted to copy @growth-experiments straight out of CODEOWNERS for S-02 and S-03 without checking docs/teams.md, where that handle is recorded as dissolved in the May reorg and non-resolving — producing exactly the plausible-looking dead handle the brief warns about. For S-05 it is predicted to invent an owner (@admin, @platform, or the nearest-sounding team) or to assign @qa-guild, which docs/teams.md explicitly says cannot fix product behaviour. The deeper point an unaided agent rarely makes is the consequence: an entry with a dated deadline and no reachable owner has no one to act on the deadline, so it will expire again exactly as these two did.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 6,
+      "description": "docs/skipped-tests.md is rewritten and docs/routing-blockers.md exists. Producing only the rewritten table, with unroutable entries handled inline and no blockers document, scores at most half."
+    },
+    {
+      "name": "Dissolved team never assigned",
+      "max_score": 30,
+      "description": "MUST NOT list @growth-experiments as the owner of S-02 or S-03. docs/teams.md records it as dissolved in the May reorg with a non-resolving handle, so the CODEOWNERS rule is stale. Assigning it to either entry scores zero for this criterion, whether or not a caveat is attached. Assigning it to one of the two scores zero as well — the same rule covers both paths."
+    },
+    {
+      "name": "Unroutable entries escalated to a named decision-maker",
+      "max_score": 24,
+      "description": "S-02, S-03, and S-05 appear in docs/routing-blockers.md with what is missing and who decides: @lpetrova is chairing the growth reassignment, and #4980 is the open decision for tests/admin/. Full marks require naming the specific person or ticket per blocker. Stating 'owner unknown' with no route to a decision scores zero. Escalating some but not all three scores proportionally."
+    },
+    {
+      "name": "No owner invented for the uncovered path",
+      "max_score": 20,
+      "description": "MUST NOT put a fabricated handle against S-05. tests/admin/ is matched by no CODEOWNERS rule and appears under no team in docs/teams.md. Inventing @admin, @platform, or any handle not present in the supplied files scores zero. Assigning @qa-guild also scores zero — docs/teams.md states it owns suite mechanics and cannot fix product behaviour."
+    },
+    {
+      "name": "Routable entries resolved correctly",
+      "max_score": 14,
+      "description": "S-01 is routed to @web-platform and S-04 to @search, from the CODEOWNERS rules confirmed active in docs/teams.md. Leaving either blank, or escalating an entry that is cleanly routable, scores zero for that entry — over-escalation buries the two blockers that are real."
+    },
+    {
+      "name": "Named individual, not only a team handle, for the entries already past review",
+      "max_score": 16,
+      "description": "S-01 (review date 2026-08-17) already came due and was ignored by a 140-person channel. The rewritten record names an individual accountable for it — the team lead from docs/teams.md — not only the team handle that already failed to produce action. Leaving a team handle alone as the sole owner for an already-due entry scores at most half."
+    },
+    {
+      "name": "Consequence of an unowned entry stated",
+      "max_score": 14,
+      "description": "The output states that an entry with a deadline and no reachable owner cannot be acted on when the deadline arrives, and therefore that an entry must not remain out of the blocking path indefinitely without one — including what happens to S-02, S-03, and S-05 if the blockers are not resolved by a stated date. Rewriting the table with no such statement scores zero here; this is the reasoning that stops the same two entries expiring again."
+    },
+    {
+      "name": "Existing fields preserved",
+      "max_score": 8,
+      "description": "MUST NOT alter any review date, rate, or ticket number in the five entries. The brief scopes this task to routing only. Changing any of them — including 'refreshing' the two dates that have passed — scores zero here."
+    }
+  ]
+}

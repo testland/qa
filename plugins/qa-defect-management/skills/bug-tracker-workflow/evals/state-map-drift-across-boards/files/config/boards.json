@@ -1,0 +1,38 @@
+{
+  "jira-eng": {
+    "base": "https://acme.atlassian.net",
+    "project": "ENG",
+    "transitions": { "start": "21", "fixed": "31", "close": "41" },
+    "description_format": "text"
+  },
+  "jira-ops": {
+    "base": "https://acme.atlassian.net",
+    "project": "OPS",
+    "transitions": { "start": "21", "fixed": "31", "close": "41" },
+    "description_format": "text"
+  },
+  "linear-mobile": {
+    "team": "MOB",
+    "states": { "start": "In Progress", "fixed": "In Review", "close": "Done" },
+    "lookup_by": "name",
+    "priority_for_urgent": 4
+  },
+  "ado-payments": {
+    "org": "https://dev.azure.com/acme",
+    "project": "Payments",
+    "states": { "start": "Active", "fixed": "Resolved", "close": "Closed" },
+    "severity_field": "Microsoft.VSTS.Common.Severity",
+    "content_type": "application/json"
+  },
+  "ado-platform": {
+    "org": "https://dev.azure.com/acme",
+    "project": "Platform",
+    "states": { "start": "Active", "fixed": "Resolved", "close": "Closed" },
+    "severity_field": "Microsoft.VSTS.Common.Severity",
+    "content_type": "application/json-patch+json"
+  },
+  "github-web": {
+    "repo": "acme/web",
+    "close_call": "PATCH /issues/{n} {\"state\": \"closed\"}"
+  }
+}

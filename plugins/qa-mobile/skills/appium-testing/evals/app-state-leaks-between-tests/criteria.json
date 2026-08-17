@@ -1,0 +1,41 @@
+{
+  "context": "App state between tests is controlled by a session capability, not by test code: the reset capability is false by default, and leaving it false makes the server reinstall the app for each new session so every session starts from a fresh install. This fixture has explicitly turned that off and then hand-rolled UI cleanup to compensate. Predicted baseline failure: the agent never touches the capability - it rewrites the teardown to be defensive (try/except around each removal, a 'navigate home' helper, a state-machine that works out which screen the app is on), or it calls app lifecycle commands that terminate and relaunch the app without clearing its data, so the onboarding flag and the cart contents survive anyway. Both produce a diff full of resilient-looking cleanup code that still leaks the exact state causing the failures, and a reviewer reading the diff sees a more careful teardown and approves it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Reset is driven by the session capability",
+      "max_score": 32,
+      "description": "The fresh-install state comes from the capability that controls app reset - `appium:noReset` set to false or removed so the default applies, optionally with `appium:fullReset` for a full uninstall/reinstall. A solution that leaves `noReset` true and compensates in test code scores zero, however careful the compensation is. Adding only `fullReset: True` while `noReset: True` also remains scores at most half, because the two are being set to contradictory intents."
+    },
+    {
+      "name": "MUST NOT keep the state-preserving capability enabled",
+      "max_score": 14,
+      "description": "MUST NOT. Anti-pattern row 'Ignoring noReset between tests'. `\"appium:noReset\": True` must not survive in the committed default path. Any remaining default that preserves app state across sessions scores zero here - it is the single line that causes every symptom described."
+    },
+    {
+      "name": "Session scope no longer spans the whole run",
+      "max_score": 18,
+      "description": "The driver fixture is function-scoped (or the app is otherwise reinstalled / its data cleared per test), so the reset actually happens between tests rather than once per run. Keeping `scope=\"session\"` while flipping the reset capability scores at most half: the capability applies at session creation, so one session for the whole file still leaks state between tests. No change to scoping and no per-test reset scores zero."
+    },
+    {
+      "name": "UI-driven cleanup removed",
+      "max_score": 12,
+      "description": "The `_clean_up` walk and the autouse teardown fixture that calls it are gone. Keeping them, or replacing them with a more defensive UI walk wrapped in try/except, scores zero - the stated harm is that a mid-test failure leaves the app on an unexpected screen and the teardown then fails too."
+    },
+    {
+      "name": "Tests no longer depend on run order",
+      "max_score": 12,
+      "description": "Each test dismisses onboarding and builds the state it needs, and no test relies on residue from another. A solution that keeps a shared session and merely reorders or renames the tests to make the current order work scores zero."
+    },
+    {
+      "name": "Cost is stated and a fast local loop is offered",
+      "max_score": 8,
+      "description": "The answer says plainly that reinstalling per test costs wall-clock time, and gives the team an opt-out for local iteration - an environment variable or pytest option that keeps state for a single-test loop, clearly marked as not for CI. Silence on the trade-off scores zero; an opt-out that becomes the default in CI scores zero."
+    },
+    {
+      "name": "Coverage preserved",
+      "max_score": 8,
+      "description": "All three tests survive with their assertions intact - badge reads '1', then '2', then '0'. Merging them into one test to sidestep the isolation problem, or dropping an assertion, scores zero."
+    }
+  ]
+}

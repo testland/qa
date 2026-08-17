@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="shard-1" tests="4" failures="0" errors="0" skipped="0" time="31.204" timestamp="2026-08-11T02:04:11">
+  <testcase classname="tests/cart.spec.ts" name="adds an item" time="6.204"/>
+  <testcase classname="tests/cart.spec.ts" name="removes an item" time="5.880"/>
+  <testcase classname="tests/cart.spec.ts" name="updates the quantity" time="7.010"/>
+  <testcase classname="tests/login.spec.ts" name="rejects a bad password" time="12.110"/>
+</testsuite>

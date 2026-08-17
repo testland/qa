@@ -1,0 +1,41 @@
+{
+  "context": "One CI job running every scenario, a global setup that seeds 5,000 rows before all of them, and two unfinished scenarios commented out of the feature file. Predicted baseline failure: the agent splits the suite by file - a fast job that runs `features/checkout.feature` and a nightly one that runs everything - and hard-codes those paths in the workflow's run commands. That satisfies the stopwatch and violates the two constraints that matter: the selection now lives in YAML rather than in the repo, and it is pinned to file layout, so the next fast scenario added to `reporting.feature` silently joins the nightly-only set. For the seed, the unaided agent typically moves the seeding call into the reporting step definitions or guards the global setup with an `if` on the scenario or feature name, both of which re-break the moment a scenario is renamed. The commented-out scenarios usually come back uncommented with no mechanism to keep them out of either run, which turns a stale comment into a failing pipeline.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Selection is driven by annotations on the scenarios",
+      "max_score": 30,
+      "description": "Scenarios (or features) carry annotations - `@smoke`, `@slow`, `@wip` or similar - and each job selects with an expression over them. Scores zero if job membership is determined by feature file paths, directory layout, or an explicit list of files, which requirement 4 rules out. Scores at most half if annotations are added but a job still names feature paths to reach its subset."
+    },
+    {
+      "name": "The expression lives in a committed runner profile",
+      "max_score": 22,
+      "description": "Named profiles in `cucumber.js` (or the equivalent committed config) carry the selection expression and the workflow invokes them by name. Scores at most half if the selection expression is written inline in the workflow's `run:` line, or assembled from workflow inputs - it works, but requirement 4 asks for it in the repo where the team can change it without touching CI. Scores zero if there is no committed selection at all."
+    },
+    {
+      "name": "Unfinished scenarios return as scenarios and stay out of both runs",
+      "max_score": 18,
+      "description": "The two split-payment scenarios appear as uncommented Gherkin and are excluded from both jobs by the same annotation mechanism - not by comments, not by deletion, and not by a separate ignore file. Leaving them commented out scores zero. Bringing them back with no exclusion, so they run and fail, also scores zero."
+    },
+    {
+      "name": "The 5,000-row seed runs only where it is needed",
+      "max_score": 20,
+      "description": "The seeding setup is registered so the runner invokes it only for the scenarios that need the catalogue - a setup registration filtered by the same annotation the selection uses. Scores zero if it still runs before every scenario. Scores at most half if the seed is guarded by an `if` inside the global setup that inspects the scenario or feature name, or if it was moved into a step definition body: both work today and break the next time somebody renames a scenario or writes a report scenario that forgets the step."
+    },
+    {
+      "name": "Two jobs, one fast on pull requests and one scheduled",
+      "max_score": 12,
+      "description": "The workflow has a pull-request-triggered job running the fast selection and a `schedule`-triggered job running everything. Scores zero if only one job remains, or if the nightly job also excludes the slow scenarios - the full suite has to run somewhere."
+    },
+    {
+      "name": "Machine-readable results emitted",
+      "max_score": 10,
+      "description": "Both runs write a machine-consumable report file from the runner's own formatters (JUnit XML, or the message/JSON format converted for the reporter) in addition to the human-readable output, and the workflow keeps it. Emitting only console output scores zero; emitting the file but never uploading or publishing it scores at most half."
+    },
+    {
+      "name": "MUST NOT fork the step definitions",
+      "max_score": 10,
+      "description": "MUST NOT create a second copy of any step definition, or split the step files into per-suite directories that each define the same sentences. Doing so scores zero: the two jobs would drift apart, and the shared vocabulary is the only thing keeping the feature files consistent."
+    }
+  ]
+}

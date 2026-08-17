@@ -1,0 +1,46 @@
+{
+  "context": "The project has no asyncio_mode setting, so the plugin runs in its default mode, where a coroutine fixture declared with the plain pytest decorator is never handled by the async plugin - the test receives the raw async generator. The symptom points at the fixture body, which is correct, so the predicted baseline failure is that the agent 'fixes' the wrong thing: it inlines the connect/close pair back into each test, wraps the fixture body in a manual loop call, or converts the fixture to a sync function returning a coroutine. Each of those makes the AttributeError disappear, so a casual reader sees a green suite and never notices that the shared-setup requirement was quietly abandoned or that a second loop is now being spun up per test.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 30,
+      "description": "`pytest` collects and passes all three tests. Any remaining AttributeError, collection error, or a test that is skipped rather than executed scores zero - this is the observable the whole scenario turns on."
+    },
+    {
+      "name": "The coroutine fixture is declared so the async plugin owns it",
+      "max_score": 28,
+      "description": "Either the fixture is declared with the async-aware fixture decorator from the plugin, or the project config is switched to the mode in which the plain decorator is handled for coroutine fixtures - and in that case the config change is actually written to pyproject.toml, not just described. Leaving `@pytest.fixture` on the `async def` fixture while the config keeps its current mode scores zero even if the tests were made to pass some other way."
+    },
+    {
+      "name": "Setup is still shared, not inlined",
+      "max_score": 22,
+      "description": "Both fixture-using tests still receive the store from one fixture. Copying `await Store.connect()` / `await s.close()` into each test body scores zero. Moving the setup into a helper coroutine that each test awaits itself scores at most half: it deduplicates the text but abandons the fixture teardown that the task requires."
+    },
+    {
+      "name": "No manual event loop is created anywhere",
+      "max_score": 20,
+      "description": "MUST NOT call `asyncio.run(...)`, `new_event_loop()`, `get_event_loop()`, or `run_until_complete` in the fixture or in any test. Driving the fixture body with its own loop makes the assertions pass while putting the fixture and the test on different loops, which breaks the moment a shared lock or connection is involved. Any such call scores zero."
+    },
+    {
+      "name": "Teardown still runs after each test",
+      "max_score": 14,
+      "description": "The store is closed after the test that used it - a yield fixture with the close after the yield, or an equivalent finalizer. A fixture that returns the store with no close path scores zero; closing before the yield scores zero."
+    },
+    {
+      "name": "Assertions and test names are unchanged",
+      "max_score": 10,
+      "description": "The three test functions keep their names and their assertions. Weakening `assert await store.get('a') == 1` to a truthiness check, or deleting a test, scores zero."
+    },
+    {
+      "name": "Production module untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `app/store.py`. Adding a sync shim, a `__await__`, or a context manager to the production class to accommodate the test harness scores zero."
+    },
+    {
+      "name": "No new dependencies",
+      "max_score": 5,
+      "description": "`requirements-dev.txt` gains no new packages. Adding an alternative async test plugin to sidestep the problem scores zero."
+    }
+  ]
+}

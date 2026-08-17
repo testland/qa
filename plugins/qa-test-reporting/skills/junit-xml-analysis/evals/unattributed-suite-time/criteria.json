@@ -1,0 +1,41 @@
+{
+  "context": "The e2e suite declares time=\"612.4\" while its nine testcases account for 118.7 seconds, leaving 493.7 seconds - 80.6% of the suite - carried by the suite element and by no testcase. The unit suite declares 0.93 and its cases account for 0.93 exactly, so the gap is specific to e2e. Predicted baseline failure: the agent sums the per-test durations, reports the suite as taking 119.63 seconds, and treats the wall-clock difference as unexplained or as CI overhead outside the report - which is the dashboard's existing answer and the one that stalled the budget request. The suite's own time attribute is present in the file and is the number that reconciles with CI. A second predicted failure is arithmetic on durations that are not measurements: three testcases carry time=\"0\" and one carries no time attribute at all, which naive parsing turns into 0 and which then appear as the fastest tests or drag down a mean.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and write-up delivered",
+      "max_score": 5,
+      "description": "scripts/duration-report.js runs and writes durations.json, test/duration-report.test.js exists, durations.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Declared and attributed durations reconciled",
+      "max_score": 32,
+      "description": "For e2e: declared 612.4 s, attributed by testcases 118.7 s, gap 493.7 s, roughly 19.4% accounted for (80.6% not). Publishing the sum of the testcase durations as the suite's duration scores zero. Reporting the gap without the suite's own declared figure - so the ten and a half minutes stay unexplained - scores zero. Numbers off by more than rounding score at most half."
+    },
+    {
+      "name": "Unmeasured durations excluded from the arithmetic",
+      "max_score": 20,
+      "description": "MUST NOT treat the four e2e entries without a usable duration as zero-second measurements. 'changes the password', 'signs out' and 'loads the dashboard' carry time=\"0\" and 'exports a csv' carries no time attribute at all; all four are listed as unmeasured. Presenting any of them as the fastest tests, or averaging them in as 0, scores zero. Handling the three zeros but silently coercing the missing attribute to 0 scores at most half."
+    },
+    {
+      "name": "The consistent suite identified",
+      "max_score": 12,
+      "description": "The unit suite is reported as fully accounted for - 0.93 declared against 0.93 attributed - so the finding is scoped to e2e. Flagging both suites, or reporting a gap for unit, scores zero here."
+    },
+    {
+      "name": "The gap attributed to work outside any testcase",
+      "max_score": 14,
+      "description": "durations.md names what occupies the 493.7 seconds: suite-level setup and teardown, fixtures, browser or session startup and per-file hooks - time inside the suite that no testcase carries - and points the optimisation effort there rather than at the individual tests. Concluding only that the report is wrong or that CI overhead is to blame scores at most half."
+    },
+    {
+      "name": "Executable test covers the accounting",
+      "max_score": 10,
+      "description": "test/duration-report.test.js asserts the gap for a fixture whose suite time exceeds the sum of its cases and asserts a case with no time attribute is not counted as zero, and passes. One of the two covered scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Answer written for the budget review",
+      "max_score": 8,
+      "description": "durations.md answers the question that was asked - why a suite reported as two minutes occupies ten and a half - in a form somebody can take back to the review, rather than only publishing a table."
+    }
+  ]
+}

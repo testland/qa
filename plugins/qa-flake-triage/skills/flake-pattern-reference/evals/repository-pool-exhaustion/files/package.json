@@ -1,0 +1,8 @@
+{
+  "name": "orders-repository",
+  "version": "3.7.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

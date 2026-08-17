@@ -1,0 +1,46 @@
+{
+  "context": "The ticket names a commit that is genuinely not in the build, and a captured check already prints the negative answer. The predicted unaided answer takes that at face value and reports the fix as not deployed - sending the ticket back to the developer or to the platform team and burning a cycle on a deployment problem that does not exist. The branch commit a17f2d9 ceased to exist as a reachable commit when the pull request was squashed; the change landed as 6e0b4c1, which is two commits behind the deployed d4c7a03. The correct output re-runs the check against the commit that actually landed, finds the build does contain the fix, re-runs only the committed reproduction, and moves the defect on - recording that the ticket's commit id is a pre-merge one and will always answer 'not contained'.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-3318.md exists and states a decision. Scores zero if absent."
+    },
+    {
+      "name": "Resolves the disagreement to the squashed commit, not to a deployment gap",
+      "max_score": 32,
+      "description": "The record concludes that the build DOES contain the fix, and the reason given is that PR #812 was squash-merged so the branch commit a17f2d9 is not on main while 6e0b4c1 is. Concluding that staging is missing the fix, that a redeploy is needed, or that the developer must re-merge scores zero. Concluding 'contains the fix' with no explanation of why the captured check printed the negative answer scores at most half."
+    },
+    {
+      "name": "Re-checks containment against the landed commit and the deployed commit",
+      "max_score": 20,
+      "description": "The record shows the containment question re-asked with 6e0b4c1 against the deployed d4c7a03 - either by running it or by reasoning explicitly from ops/git-log-main.txt, where 6e0b4c1 is two commits behind d4c7a03 on the same branch - and states the affirmative result. Asserting containment without tying it to those two identifiers scores zero."
+    },
+    {
+      "name": "Moves the defect to Verified on reproduction evidence",
+      "max_score": 16,
+      "description": "The decision is that the defect can move to Verified, supported by a re-run of tests/cart-discount.repro.test.js with its real output pasted in. A decision to hold or block, after containment was established and the reproduction passes, scores zero - the evidence supports a clean answer here. Deciding Verified with no re-run output scores at most half."
+    },
+    {
+      "name": "MUST NOT run the whole suite in place of the reproduction",
+      "max_score": 12,
+      "description": "MUST NOT. The evidence attached is the run of the single reproduction file, not a bare 'npm test' / full-suite green as the confirming artifact. Pasting whole-suite output as the confirmation evidence scores zero on this criterion; running the suite additionally and clearly separately does not."
+    },
+    {
+      "name": "Records that the reproduction was red before the change",
+      "max_score": 10,
+      "description": "The record notes that tests/cart-discount.repro.test.js was red at 0aa9e51 (CI job 4471) before the fix, so its green state is a real before-and-after rather than a test that has never failed. Omitting this scores zero."
+    },
+    {
+      "name": "Tells the next reader which commit id to use",
+      "max_score": 10,
+      "description": "The record states plainly that 6e0b4c1 is the identifier for this fix on main and that the ticket's a17f2d9 is a pre-merge branch commit which will keep answering 'not contained'. Leaving the ticket's stale id unqualified scores zero."
+    },
+    {
+      "name": "Both endpoints and the environment are named",
+      "max_score": 8,
+      "description": "The record names the environment (staging, cart-service) and the deployed commit d4c7a03 alongside the fix commit, so the check can be repeated exactly. Missing the deployed commit caps this at half."
+    }
+  ]
+}

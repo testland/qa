@@ -25,7 +25,7 @@
     {
       "name": "Derived values still asserted by value",
       "max_score": 10,
-      "description": "The computed fields - overageCents at 2000, and the enabled flags on the quick actions - are still compared against baseline values rather than recomputed in the test from the same expression the source uses. Recomputing the expected value in the test scores zero: it would agree with any implementation."
+      "description": "The computed fields - overageCents at 2000, and the enabled flags on the quick actions - are still compared against baseline values. MUST NOT recompute an expected value in the test from the same expression the source uses; doing so scores zero, because such an assertion agrees with the implementation whether or not the implementation is right."
     },
     {
       "name": "Conventions document produced",

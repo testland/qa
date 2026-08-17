@@ -1,0 +1,46 @@
+{
+  "context": "Both fixtures and expectations are derived from whatever the machine's clock reads at the moment the test runs, and the first test pins a UTC-anchored instant against a rule that compares local calendar fields - so the answer depends on the machine's region and on how close the run is to local midnight. The function already accepts an explicit reference instant, which the tests never pass. Predicted baseline failure: the agent sets `process.env.TZ = 'UTC'` at the top of the file and stops - which does fix the Tokyo colleague and does nothing for the 23:45 run, because a UTC machine has a local midnight too. Other predicted shortcuts: widening the assertion to accept 'Upcoming' or 'Due today', moving the due time from 23:30 to midday without freezing the clock (which shrinks the window instead of removing it), or skipping the test when the current hour is late. Diagnoses are predicted to name the region difference and miss that both symptoms are the same defect - the test reads the ambient clock - and that a UTC pin alone leaves the midnight-boundary failure in place.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with all three originally-named tests present and executing, and `date-handling-notes.md` exists. A test deleted or skipped scores zero here."
+    },
+    {
+      "name": "Tests run against a fixed instant, not the ambient clock",
+      "max_score": 28,
+      "description": "Every test passes an explicit reference instant into `isDueToday` / `dueLabel` (or otherwise pins the clock) instead of letting the functions default to the current time, and no fixture is built from `Date.now()` or `new Date()` with no argument. Full credit requires all three tests to be independent of when they run. Pinning only the two failing tests scores at most half. A fix that leaves any assertion computed from the live clock scores zero."
+    },
+    {
+      "name": "Fixture and expectation share one frame of reference",
+      "max_score": 18,
+      "description": "The due timestamps are derived from the same pinned instant in the same calendar frame the rule uses, so the result holds in Tokyo, Los Angeles, and UTC alike - for example building the due time from the local calendar fields of the frozen instant, or fixing both the instant and the zone the run assumes. Setting `process.env.TZ` alone, with the current time still read live, scores at most half. Leaving a UTC-anchored literal compared against local calendar fields scores zero."
+    },
+    {
+      "name": "Notes name the ambient clock as the shared cause",
+      "max_score": 20,
+      "description": "`date-handling-notes.md` states that both failures come from the tests reading the machine's current time and region: the thirty-minute test only fails when 'now plus thirty minutes' crosses local midnight, and the 23:30 UTC literal lands on the next local calendar day for anyone far enough east. A write-up that explains only the regional failure, or only the late-night one, scores at most half. One that blames `src/dueDate.js`, the local-day rule, or 'flaky CI' scores zero."
+    },
+    {
+      "name": "No skip, retry, or tolerance widening",
+      "max_score": 14,
+      "description": "MUST NOT reach green by retrying, by skipping the test near midnight or on non-UTC machines, by quarantining the file out of the nightly run, by accepting more than one label, or by asserting a looser condition than the test name claims. Any of these offered as the fix scores zero for this criterion."
+    },
+    {
+      "name": "Production source unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify `src/dueDate.js`. Switching the comparison to UTC getters would change a confirmed product rule and scores zero here."
+    },
+    {
+      "name": "Boundary is now covered rather than avoided",
+      "max_score": 10,
+      "description": "The pinned instants keep the behaviour the tests were describing - a due time that is genuinely later the same day, and one that is genuinely half an hour out - rather than relocating everything to midday so nothing ever sits near a boundary. Full credit if a reader can see the tests still exercise the same situations; zero if the scenarios were moved to safe times to dodge the problem."
+    },
+    {
+      "name": "Forward rule stated",
+      "max_score": 8,
+      "description": "The notes give the rule for the next test in this file - a date-sensitive test supplies its own instant and states the zone its expectation assumes - rather than only describing today's edit."
+    }
+  ]
+}

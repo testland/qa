@@ -1,0 +1,11 @@
+# Manual run, 2026-08-14 15:20 UTC, same commit as e2e-5510 (9c40b17),
+# workflow patched to `runs-on: ubuntu-24.04-20260805.2` to reproduce the
+# pre-roll environment.
+2026-08-14T15:20:11Z Image: ubuntu-24.04   Version: 20260805.2.0
+2026-08-14T15:20:14Z Using browser chromium 139.0.7258.66 (playwright build 1187)
+2026-08-14T15:20:55Z   x   tests/settings/settings-save.spec.ts:26:3 › saves notification preferences
+2026-08-14T15:20:55Z     Error: locator.click: Error: strict mode violation:
+2026-08-14T15:20:55Z       getByRole('button', { name: 'Save' }) resolved to 2 elements:
+2026-08-14T15:20:55Z         1) <button class="btn-primary" type="submit">Save</button>
+2026-08-14T15:20:55Z         2) <button class="toolbar-action" type="button">Save</button>
+2026-08-14T15:20:55Z   1 failed, 34 passed (1m41s)

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="playwright" tests="4" failures="2" errors="0" time="14.220">
+  <testsuite name="[chromium] checkout.spec.ts" tests="2" failures="1" errors="0" skipped="0" time="7.110">
+    <testcase classname="checkout.spec.ts" name="renders" time="2.104">
+      <failure message="expected the order summary to be visible" type="AssertionError"/>
+    </testcase>
+    <testcase classname="checkout.spec.ts" name="completes an order" time="5.006"/>
+  </testsuite>
+  <testsuite name="[firefox] checkout.spec.ts" tests="2" failures="1" errors="0" skipped="0" time="7.110">
+    <testcase classname="checkout.spec.ts" name="renders" time="2.240">
+      <failure message="expected the order summary to be visible" type="AssertionError"/>
+    </testcase>
+    <testcase classname="checkout.spec.ts" name="completes an order" time="4.870"/>
+  </testsuite>
+</testsuites>

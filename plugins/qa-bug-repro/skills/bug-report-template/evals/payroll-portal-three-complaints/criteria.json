@@ -1,0 +1,46 @@
+{
+  "context": "One customer email containing three unrelated failures - a missing export column, a sign-in redirect loop for two named-but-unidentified users, and a slow report page - each underspecified. Predicted baseline failure: the agent writes one tidy report titled something like 'Multiple issues in payroll portal', lists the three symptoms as bullets under a single description, assigns them one shared urgency, and fills in the blanks that make each one look complete: an identity provider for the sign-in loop, a load time in seconds for the slow page, an export template name. The result is a single tracker item that will close when one third of it is fixed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the exact path",
+      "max_score": 5,
+      "description": "A markdown file exists at reports/palewell-hr-intake.md covering this email. Any other path scores zero."
+    },
+    {
+      "name": "MUST NOT combine the unrelated failures into one item",
+      "max_score": 28,
+      "description": "The export column, the sign-in loop, and the slow report page are three separate failures in three areas. Full points if the file contains three independently assignable write-ups, each with its own title and its own detail. Scores zero if they share one title, one description block, or one set of steps such that closing one would close the others. Listing them as bullets inside a single item scores zero."
+    },
+    {
+      "name": "No invented technical detail per item",
+      "max_score": 25,
+      "description": "The email supplies no identity provider, no browser or version for the two affected employees, no page load timing, no export template name, no employee names or IDs, and no build. Full points if each item carries its own missing facts as unknown. Scores zero if any such value is asserted - a named SSO provider, a numeric load time, a specific export template, an invented employee identifier - even when qualified as 'presumably'."
+    },
+    {
+      "name": "Per-item questions for the customer",
+      "max_score": 18,
+      "description": "Each of the three items carries its own list of what Rachel must supply for that item specifically. Full points when the questions are item-specific and answerable in one reply. One shared undifferentiated question list scores at most half. No questions anywhere scores zero."
+    },
+    {
+      "name": "The onset contradiction is surfaced on the slow-page item",
+      "max_score": 14,
+      "description": "Rachel writes both 'since Monday' and 'never been quick since we came on board in June'. Full points if the slow-report item records both and marks onset as unresolved, since the two imply different investigations. Scores zero if one date is adopted as the start of the problem without noting the other."
+    },
+    {
+      "name": "Items are cross-linked as one intake",
+      "max_score": 10,
+      "description": "The three items reference each other or a shared origin, so the reader can see they arrived in one email from one customer. Full points for explicit cross-references; scores zero if the items are presented with no indication of common origin."
+    },
+    {
+      "name": "Impact and scheduling urgency treated as separate judgements",
+      "max_score": 12,
+      "description": "The three items differ in what they do to the user, and the Friday payroll run is a business constraint rather than a property of any defect. Full points if user impact is assessed per item and the deadline is recorded as scheduling context. Scores zero if a single urgency is applied to all three, or if impact and scheduling order are stated as the same value with no separate reasoning."
+    },
+    {
+      "name": "Titles are single-clause and behavioural",
+      "max_score": 8,
+      "description": "Each item's title states one observable failure and its surface, with no 'and' joining two failures and no prescribed fix. A title containing two failures scores zero for that item."
+    }
+  ]
+}

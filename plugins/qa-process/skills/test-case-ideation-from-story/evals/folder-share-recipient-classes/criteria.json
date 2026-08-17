@@ -1,0 +1,46 @@
+{
+  "context": "The story's central input is a reference to another entity - an email address that must resolve to a person, and a folder that must still exist and still be shareable by this actor at the moment of confirmation. Predicted baseline failure: the agent enumerates the visible variation it can see in the acceptance criteria (three access levels, change access, remove access) and treats the recipient as a given, so the invalid classes of the reference itself - address that resolves to nobody, address that resolves to a deactivated account, address that resolves to an account in a different workspace - are missing entirely. Those are exactly the two escalations described. The gap is invisible to a casual reader because a list covering viewer / commenter / editor / change / remove looks like thorough coverage of the dialog.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/SHARE-204.md exists and contains a markdown table with rows. Scores zero if prose only or written elsewhere."
+    },
+    {
+      "name": "Invalid classes of the recipient reference covered",
+      "max_score": 32,
+      "description": "Separate rows cover an address that matches no account, an address matching an account that exists but is deactivated or deleted, and an address matching an account that belongs to a different workspace or tenant than the folder. Scores zero if none of the three appears. Scores at most half if only one of the three appears. The cross-workspace row must pin that access is not granted to the foreign account rather than leaving the outcome as 'an error'."
+    },
+    {
+      "name": "The folder side of the reference is probed too",
+      "max_score": 16,
+      "description": "At least one row changes the folder's state or the actor's standing between opening the dialog and confirming - folder moved to trash, folder ownership transferred, actor's own access revoked mid-flow. Scores zero if every row assumes the folder is present, owned by the actor, and unchanged throughout."
+    },
+    {
+      "name": "Actor permission dimension enumerated",
+      "max_score": 14,
+      "description": "The table has a row per actor standing attempting the share - owner, editor, viewer - rather than only the owner. Because the story states editors and viewers are undecided, the non-owner rows must either state the expected refusal or be marked as blocked on the product decision. Scores zero if only the owner ever shares. Covering non-owners without noting the story leaves their behaviour open scores at most half."
+    },
+    {
+      "name": "Existing-access-via-parent case present",
+      "max_score": 12,
+      "description": "A row shares with someone who already has access inherited from a parent folder, and pins whether the explicit grant raises, lowers, or is refused. Scores zero if inheritance never appears; it is stated in the notes and is the classic source of silently downgraded access."
+    },
+    {
+      "name": "External-domain policy case present",
+      "max_score": 10,
+      "description": "A row shares with an address outside the workspace's verified domains while the admin restriction is on, and one covers the restriction being off. Scores zero if the restriction is never a precondition anywhere."
+    },
+    {
+      "name": "Refusal rows assert that no access was granted",
+      "max_score": 10,
+      "description": "Each refusal row's expected result includes the negative postcondition - the target does not appear in the people list and cannot open the folder - not only what the sharer sees on screen. Scores zero if every refusal row asserts only a message."
+    },
+    {
+      "name": "MUST NOT list individual dialog interactions as rows",
+      "max_score": 10,
+      "description": "Rows must be scenarios, not steps. A row whose whole content is one interaction with the dialog - 'opens the share dialog', 'types an email address', 'selects editor from the dropdown' - is a procedure step, not a case. Two or more such rows score zero here."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+[project]
+name = "kv-store"
+version = "0.4.1"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

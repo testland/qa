@@ -1,0 +1,41 @@
+{
+  "context": "Four step bodies that each parse a written money amount, and four more that each look a plan up themselves. Predicted baseline failure: the agent extracts a `toPence(text)` helper (and reuses the existing `planNamed`), calls them from each step body, and reports the duplication removed. That is the obvious refactor and it is wrong for this task twice over - the step bodies still convert, so 'what a step is handed' is still answered per function, and the helper cannot deliver requirement 2, because an unquoted `£1,200.00` is not capturable by the existing `{string}` (which requires quotes) or by `{float}` (which stops at the £ and the comma). An agent that keeps `{string}` and merely deletes the quotes from the feature produces a suite where the amount steps no longer match at all; an agent that reaches for `{float}` produces one that matches `£60.00` only if it also leaves the £ outside the capture, and silently drops the thousands separator. The failure hides well because the first three scenarios still pass either way.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "A registered money placeholder does the conversion",
+      "max_score": 32,
+      "description": "A custom placeholder for money is registered with the runner (`defineParameterType` with a name, a regexp covering the £ sign and an optional thousands separator, and a transformer) and used inside the step expressions. Scores zero if the conversion still happens inside any step body, including via a shared helper called from each step - a helper leaves the callback receiving raw text, which is what requirement 1 forbids. Scores at most half if a placeholder is registered but its transformer returns the text or a float rather than the integer pence the domain uses."
+    },
+    {
+      "name": "The transformer survives a thousands separator",
+      "max_score": 18,
+      "description": "The registered money conversion handles `£1,200.00` and yields 120000, and the new scenario passes. Scores zero if the regexp or transformer would stop at the comma (a bare `parseFloat` after stripping only `£`, or a regexp such as `£\\d+(\\.\\d+)?` that cannot match the comma at all - in which case the step goes unmatched). Scores at most half if the comma is handled but the amount is carried as a float rather than integer pence, reintroducing the rounding the domain avoids."
+    },
+    {
+      "name": "A registered plan placeholder hands over the plan object",
+      "max_score": 18,
+      "description": "Plan names are converted the same way - one registered placeholder whose transformer returns the object from `src/billing.js` - so the callbacks receive a plan, not a name. Scores zero if any step body still calls `planNamed` itself. Note that the pre-existing `planNamed` helper does not satisfy this criterion: the point is where the conversion happens, not whether a function exists."
+    },
+    {
+      "name": "Quotes gone, sentences otherwise unchanged",
+      "max_score": 14,
+      "description": "Money amounts in the feature appear unquoted and every other word of every step sentence is as it was. Scores zero if the quotes remain, or if the amount steps were reworded (for example to `Then they are charged 60.00 pounds today`) to dodge the capture problem."
+    },
+    {
+      "name": "Registration is loaded once for the whole suite",
+      "max_score": 10,
+      "description": "The placeholders are registered exactly once, in code the runner loads for every scenario - typically under `features/support/`, which the existing config already requires. Registering the same name twice scores zero: the runner throws on a duplicate placeholder name and no scenario runs."
+    },
+    {
+      "name": "MUST NOT add per-value step definitions",
+      "max_score": 12,
+      "description": "MUST NOT sidestep the capture problem with definitions bound to specific values - `Given('a customer on the Enterprise plan', ...)`, `Then('they are charged £60.00 today', ...)` or similar. Any hard-coded-value definition scores zero here; the file would gain a definition for every amount and plan the specification ever mentions."
+    },
+    {
+      "name": "All four scenarios pass and production code is untouched",
+      "max_score": 8,
+      "description": "The three original scenarios plus the new one are present and their assertions unchanged in meaning, and `src/billing.js` is byte-identical. Editing production code, or relaxing a `strictEqual` to a loose comparison so string and number amounts compare equal, scores zero."
+    }
+  ]
+}

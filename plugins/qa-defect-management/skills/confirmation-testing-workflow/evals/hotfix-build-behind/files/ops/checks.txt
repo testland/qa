@@ -1,0 +1,4 @@
+Ran by o.kaminski, 2026-08-14 08:55 UTC, on a full clone.
+
+$ git merge-base --is-ancestor 8de41f6 origin/main; echo $?
+0

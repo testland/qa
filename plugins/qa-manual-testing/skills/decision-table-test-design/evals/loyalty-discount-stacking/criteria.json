@@ -1,0 +1,41 @@
+{
+  "context": "Three independent switches - loyalty card, order total at or above EUR 75, promo code entered - give exactly 8 combinations, and the note discusses only four of them in passing. Predicted baseline failure: the agent writes a tidy table with one row per sentence in the note (cardholder, big order, promo code, plain order), stating each rule's outcome correctly, and never enumerates the settings the note is silent about. The card-plus-code case is then either missing entirely or silently resolved to whichever discount the agent thinks is larger, and the plain no-card-no-code-small-order case is missing because the note never mentions it. This is invisible to a casual reader: every row present is correct, the document reads as complete, and the two settings that will actually reach production undecided are the two that are not on the page.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named discount-rules-analysis.md exists and contains a table of settings with expected results. Scores zero if the file is absent or contains only prose with no per-setting table."
+    },
+    {
+      "name": "All eight settings enumerated",
+      "max_score": 30,
+      "description": "The document accounts for all 8 combinations of the three switches (card yes/no x total at or above EUR 75 yes/no x promo code yes/no), each with a stated expected result. Combinations may be presented merged where one switch provably does not change the result, provided the merge is explicit about which switch stopped mattering and every one of the 8 is traceable into a row. Scores zero if the document covers only the settings the note discusses, or if fewer than 8 combinations can be traced. Scores at most half if all 8 appear but some carry no stated expected result."
+    },
+    {
+      "name": "Card-plus-code conflict raised, not resolved",
+      "max_score": 25,
+      "description": "The two settings where a cardholder also enters a promo code (with the order total on either side of EUR 75) are identified as unresolved: the note forbids combining percentage discounts but never says which one wins. Scores zero if the document assigns one of them - 10% or 15% - as the expected result without marking it as an assumption that product must confirm. Scores at most half if raised for only one of the two totals, or raised only in a closing 'questions' paragraph without the affected settings being marked in the table itself."
+    },
+    {
+      "name": "Unstated default is present and labelled",
+      "max_score": 12,
+      "description": "The setting with no card, no code, and a total below EUR 75 appears with an explicit expected result (full price plus EUR 4.90 shipping) and the document notes the note never states it. Scores zero if that setting is absent from the table. Scores at most half if present but presented as if the note stated it."
+    },
+    {
+      "name": "Shipping and discount kept as separate results",
+      "max_score": 14,
+      "description": "The shipping outcome (free vs EUR 4.90) and the basket discount are treated as separate results, so a setting can carry both. Scores zero if the document has a single 'outcome' value per setting that reports a discount for some settings and a shipping result for others, since that shape cannot express the four settings where both apply."
+    },
+    {
+      "name": "Order total marked as not affecting the discount",
+      "max_score": 10,
+      "description": "The document states somewhere that the EUR 75 threshold changes shipping only and never changes which percentage applies. Scores zero if the document instead ties a discount to the order total, which the note does not say."
+    },
+    {
+      "name": "MUST NOT propose cases only for the settings that earn a discount",
+      "max_score": 18,
+      "description": "Anti-pattern guard. The proposed QA cases include settings where no discount applies and where shipping is charged - not only the card, big-order, and promo-code settings the note describes. Scores zero if every proposed case has at least one switch on and no case covers the plain-order path, since the gaps in this note live in the settings that earn nothing."
+    }
+  ]
+}

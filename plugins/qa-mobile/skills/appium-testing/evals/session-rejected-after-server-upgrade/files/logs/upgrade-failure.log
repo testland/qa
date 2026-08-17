@@ -1,0 +1,12 @@
+[HTTP] --> POST /wd/hub/session
+[HTTP] {"capabilities":{"platformName":"Android", ... }}
+[HTTP] <-- POST /wd/hub/session 404 4 ms - 211
+
+# after retrying against the bare host:
+
+[HTTP] --> POST /session
+[HTTP] {"capabilities":{"platformName":"Android","automationName":"UiAutomator2", ... }}
+[W3C] Encountered internal error running command: BadParametersError: Bad parameters:
+[W3C] The following capabilities were provided, but are not recognized by Appium:
+[W3C]   automationName, deviceName, app, appPackage, appActivity, newCommandTimeout.
+[HTTP] <-- POST /session 400 21 ms - 1043

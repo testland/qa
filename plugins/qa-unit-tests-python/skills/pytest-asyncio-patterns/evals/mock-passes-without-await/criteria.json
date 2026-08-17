@@ -1,0 +1,46 @@
+{
+  "context": "The double records the call the moment the coroutine function is invoked, whether or not the coroutine is ever awaited, so the existing call-based assertion is green against code that never actually publishes. Predicted baseline failure: the agent goes straight to the missing `await` in app/orders.py, declares the bug fixed, and leaves the assertion in its call-based form - or 'strengthens' it by adding argument checks, a call-count check, or an `assert publisher.publish.called`, none of which distinguish a called-but-not-awaited coroutine from a real publish. The suite then looks more thorough and is still blind to the exact regression that cost three weeks, which no reader can see from a green run.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Publisher assertion distinguishes awaited from merely called",
+      "max_score": 32,
+      "description": "The publish assertion is the await-based form (awaited-once-with / awaited-with / an explicit await-count check) rather than the call-based family. An assertion that only checks calls, call args, call count, or `.called` scores zero regardless of how precise the argument matching is - it passes against the unfixed service, which is the whole defect."
+    },
+    {
+      "name": "The strengthened test was shown to fail before the fix",
+      "max_score": 20,
+      "description": "The response reports running the tightened test against the unmodified `app/orders.py` and observing a failure, and names the failure. Asserting that it 'would fail' without running it scores at most half. Fixing the service first and never demonstrating a red state scores zero - the ordering is the evidence that the new assertion actually discriminates."
+    },
+    {
+      "name": "Missing await restored in the service",
+      "max_score": 14,
+      "description": "`app/orders.py` awaits the publish call. Leaving it unawaited, or wrapping it in a fire-and-forget task solely to make the assertion pass, scores zero; scheduling it as a background task with no awaited join scores at most half because the tightened assertion would then be racing the task."
+    },
+    {
+      "name": "Rejected order proves the publisher was never awaited",
+      "max_score": 16,
+      "description": "The new rejection case asserts the publisher was not awaited (await-based negative assertion or an await-count of zero) in addition to the raised ValueError. Using only the call-based negative form scores at most half; adding no publisher assertion at all to that case scores zero."
+    },
+    {
+      "name": "Repository assertions get the same treatment",
+      "max_score": 12,
+      "description": "`repo.save` is asserted with the await-based family too. Leaving `assert_called_once_with` on the repository scores zero for this item - the task explicitly asks for it, and the same silent failure applies there."
+    },
+    {
+      "name": "Doubles stay awaitable",
+      "max_score": 10,
+      "description": "MUST NOT swap the async doubles for MagicMock or a hand-rolled object whose method returns a plain value. Awaiting such a double raises TypeError, and 'fixing' that by removing the await from the service scores zero."
+    },
+    {
+      "name": "Suite green after the fix",
+      "max_score": 8,
+      "description": "`pytest` passes with all four cases executing (three original plus the new rejection case). A remaining failure, an error, or a skipped async test scores zero."
+    },
+    {
+      "name": "No real infrastructure and no new packages",
+      "max_score": 6,
+      "description": "MUST NOT introduce a real broker, a network call, or a new dependency in `requirements-dev.txt`. The doubles stay in-process."
+    }
+  ]
+}

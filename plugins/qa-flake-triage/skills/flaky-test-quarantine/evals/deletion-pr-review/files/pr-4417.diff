@@ -1,0 +1,16 @@
+PR #4417 — remove chronically flaky order tests
+Author: @rmatthews   Approvals: 2
+
+  tests/orders.spec.ts | 40 ----------------------------------------
+  1 file changed, 40 deletions(-)
+
+Deleted test cases:
+  - 'order refund returns funds to source'
+  - 'order status transitions to shipped'
+  - 'order csv statement downloads'
+  - 'order print label opens dialog'
+
+PR description:
+  These four have burned about 30 developer-hours this quarter. None of them
+  has ever caught a real bug that I know of. Removing them takes the E2E job
+  from ~1 in 3 red to ~1 in 20. We can always write them again properly later.

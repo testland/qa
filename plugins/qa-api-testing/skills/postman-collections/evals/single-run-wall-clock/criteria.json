@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: asked directly whether the runner has a parallel flag, an unaided agent tends to answer by analogy with test runners it knows and emits something like `--parallel 8`, `--workers`, `-j 5`, or a config key that does not exist - the run then either errors on an unknown option or silently ignores it, and a reviewer reading the diff has no way to tell. The second predicted failure is fixing the wall clock inside one job (backgrounding several runs with `&`, or a bash loop) rather than across CI jobs, which keeps every request on one runner. The third is per-job report files that all write to `results.xml`, so the matrix jobs overwrite each other's artifact and only one survives.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT invent an intra-run parallelism flag",
+      "max_score": 30,
+      "description": "The answer states plainly that this runner executes the requests of a run serially and offers no in-process concurrency, and no `newman run` invocation anywhere in the deliverable carries `--parallel`, `--workers`, `--concurrency`, `-j`, or similar. Emitting any such flag scores zero for this criterion even if the rest of the design is right - it is the specific wrong answer the ticket asked to be checked. Dodging the question (never answering it either way) scores at most half."
+    },
+    {
+      "name": "Concurrency achieved across CI jobs",
+      "max_score": 24,
+      "description": "The workflow declares a job matrix (or an equivalent set of parallel jobs) so the five slices run on separate runners at the same time. A single job running five commands sequentially scores zero. Backgrounding several runs with `&` inside one job scores at most half - it does overlap the work but on one runner, and a failure's exit status is easy to lose."
+    },
+    {
+      "name": "Work split along the existing folder boundaries",
+      "max_score": 16,
+      "description": "Each job runs one domain - either a per-domain collection file produced by splitting the original, or the original targeted a folder at a time. Both are acceptable; the split must follow the five named folders, since they are the units the requests already group into and the shared login is in one of them. An arbitrary split (by request index, alphabetically, by an invented grouping) scores at most half. No split at all scores zero."
+    },
+    {
+      "name": "Per-job reports do not collide",
+      "max_score": 14,
+      "description": "Each job exports its report to a path carrying the matrix value (for example `results-${{ matrix.suite }}.xml`) and the uploaded artifact name is likewise unique per job. Every job writing `results.xml` and uploading under the same artifact name scores zero - the jobs then overwrite one another and four of the five reports are lost, which looks fine until someone needs them."
+    },
+    {
+      "name": "MUST NOT leave the matrix jobs without a bail condition",
+      "max_score": 12,
+      "description": "The invocation carries a bail flag - `--bail failure` to stop at the first failing assertion, or `--bail folder` to stop the containing folder. Absent scores zero: the stated complaint is that a failure in one domain still costs twenty more minutes of run time before it is reported."
+    },
+    {
+      "name": "Cross-slice dependency addressed",
+      "max_score": 10,
+      "description": "The answer notices that the token set by `auth/login` is consumed by the other four folders and says how each independent job obtains it (running the login request as part of each slice, or injecting a token as a variable). Silently splitting so that four jobs run with an unset `{{token}}` scores zero - every one of them would fail on the first request."
+    },
+    {
+      "name": "Coverage and scope preserved",
+      "max_score": 8,
+      "description": "All five folders still run on every pull request and no assertion is rewritten. Dropping `admin` (or any folder) from the PR gate to hit the time budget scores zero."
+    }
+  ]
+}

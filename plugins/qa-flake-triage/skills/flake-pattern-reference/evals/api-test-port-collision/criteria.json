@@ -1,0 +1,41 @@
+{
+  "context": "Both files bind the same hard-coded port, and the runner executes files concurrently by default - so one file loses the bind, and whichever file did bind answers the other file's requests, producing a 404 for a route that only the other server serves. Predicted baseline failure: the agent takes one of the two options the team already floated - serialise the run (`--test-concurrency=1`, or running the files one at a time in the CI command) or retry on `EADDRINUSE` - both of which leave the collision in place and cap the suite's parallelism forever. The next most likely output is giving the second file port 4301, which removes today's clash while keeping the pattern that caused it, and still breaks the moment a third file, a second concurrent run, or another process on the box wants that number. Diagnoses are predicted to say 'port conflict in parallel tests' without explaining the 404, which is the more interesting half: the request reached the wrong server.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with all four originally-named tests present across the two files, and `collision-notes.md` exists. A test or a whole file deleted, merged, or skipped scores zero here."
+    },
+    {
+      "name": "Each file binds a port the OS assigns",
+      "max_score": 30,
+      "description": "Both files listen on port 0 (or otherwise obtain a port that cannot be claimed by another process) and build their base URL from `server.address().port` after listening. Full credit requires both files converted and no hard-coded port number left anywhere in the tests. Assigning each file a different fixed port scores at most half - it survives today's suite and not a third file, a second concurrent run, or another process holding the number. Any solution that keeps a shared fixed port scores zero."
+    },
+    {
+      "name": "No serialisation, retry, or quarantine as the fix",
+      "max_score": 16,
+      "description": "MUST NOT reach green by forcing the files to run one at a time (`--test-concurrency=1`, a changed test script, `describe`-level concurrency settings, merging the two files into one), by retrying on `EADDRINUSE`, by sleeping before binding, or by skipping a file. Any of these offered as the fix scores zero for this criterion."
+    },
+    {
+      "name": "Notes name the contended resource and explain the 404",
+      "max_score": 20,
+      "description": "`collision-notes.md` identifies the hard-coded port as the resource two concurrently-running files compete for, and explains that the 404 comes from the losing file's requests being answered by the other file's server, which does not serve that route. A write-up covering only the bind error scores at most half. One that attributes the failures to the runner, to flaky networking, or to `src/server.js` scores zero."
+    },
+    {
+      "name": "Servers are still shut down",
+      "max_score": 10,
+      "description": "Each file still closes its server after its tests, so the fix does not trade a port clash for a process that never exits. A file left without teardown scores zero here."
+    },
+    {
+      "name": "Source and assertions untouched",
+      "max_score": 8,
+      "description": "MUST NOT modify `src/server.js`, and the assertions - 200 and the health body, 404 for an unknown route, the orders payload, the total in cents - all stand unchanged. Any edit scores zero here."
+    },
+    {
+      "name": "Rule stated for the next file",
+      "max_score": 8,
+      "description": "The notes state what a third test file must do - take a port from the OS rather than choosing a number, and derive its URL from the bound address - rather than only describing the two files changed today."
+    }
+  ]
+}

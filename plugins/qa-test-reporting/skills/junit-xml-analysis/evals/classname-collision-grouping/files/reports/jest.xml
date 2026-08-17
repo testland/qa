@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="5" failures="2" errors="0" time="1.431">
+  <testsuite name="CartSummary" tests="3" failures="1" errors="0" skipped="0" time="0.810">
+    <testcase classname="CartSummary" name="renders" time="0.412">
+      <failure message="expected 3 line items but received 2" type="Error"/>
+    </testcase>
+    <testcase classname="CartSummary" name="shows the empty state" time="0.208"/>
+    <testcase classname="CartSummary" name="formats the total" time="0.190"/>
+  </testsuite>
+  <testsuite name="Header" tests="2" failures="1" errors="0" skipped="0" time="0.621">
+    <testcase classname="Header" name="renders" time="0.377">
+      <failure message="expected the logo to be in the document" type="Error"/>
+    </testcase>
+    <testcase classname="Header" name="shows the user menu" time="0.244"/>
+  </testsuite>
+</testsuites>

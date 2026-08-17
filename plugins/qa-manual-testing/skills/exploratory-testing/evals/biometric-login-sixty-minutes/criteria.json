@@ -1,0 +1,51 @@
+{
+  "context": "Predicted baseline failure: the agent treats the eleven requested angles as a work list and produces a plan that covers all eleven, usually as a table with a row each and a couple of steps per row. It reads responsive and complete, and it is the wrong answer: eleven angles in sixty minutes is roughly five minutes each, which converts a targeted hour into eleven shallow passes and guarantees the account-takeover angles get the same five minutes as screenshot exposure. The unaided output also states no objective, makes no cut with a justification, and produces a pass/fail table rather than a report the gate can act on - no statement of what was not reached, no tester judgement on whether to roll out, no next target if the gate is held.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Report file delivered",
+      "max_score": 5,
+      "description": "docs/security/biometric-gate-check.md exists and is specific to this rollout gate. A differently named or multi-file deliverable scores at most half. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "MUST NOT attempt all eleven angles - the list is cut and the cut is justified",
+      "max_score": 32,
+      "description": "The output explicitly keeps a small number of angles - roughly two to four - and explicitly defers the rest, each decision justified against the account-takeover risk. Full marks require the kept set to include the angles that bear on someone else getting in (items 2, 3, 10, 11 are the strong candidates) and the deferred set to be named rather than silently dropped. Scores zero if all eleven are planned for the hour - eleven shallow five-minute passes crowd out the one or two that matter - or if the plan covers everything without saying what it is giving up. Scores at most half if angles are dropped with no stated reason."
+    },
+    {
+      "name": "A single stated objective for the hour",
+      "max_score": 22,
+      "description": "One objective naming the area, what the tester works with (the four clean handsets, two customer profiles, the searchable auth-service staging log), and what the bank needs to know by the end - phrased as information to be discovered, not as tasks to be completed. Scores zero if the deliverable is only a table of angles with expected results and no stated objective. Scores at most half if the objective is a bare target like 'verify biometric login works'."
+    },
+    {
+      "name": "Sized to sixty minutes with time actually allocated",
+      "max_score": 18,
+      "description": "The hour is broken down so a reader can see it fits - minutes against the kept angles, an allowance for device setup and enrolment, and an allowance for chasing anything found. Scores zero if the plan is unbounded or plainly exceeds an hour, or if it schedules a second sitting the lead said does not exist."
+    },
+    {
+      "name": "Concrete attack ideas on the kept angles",
+      "max_score": 14,
+      "description": "The kept angles are turned into specific things to try - enrol customer A, add a new fingerprint on the device, attempt unlock; change the password on web while the app is backgrounded and check the key handle in the auth log; enrol customer B on a handset already enrolled for customer A. Scores at most half for generic restatements of the angle titles. Scores zero if no concrete ideas are given."
+    },
+    {
+      "name": "Findings split between defects and rulings needed",
+      "max_score": 12,
+      "description": "The recording structure distinguishes a defect from an observation that needs an app-sec or product ruling (for example: is a biometric surviving a fire-and-forget revoke failure a bug or accepted design?). Scores zero if everything is recorded as a single pass/fail column."
+    },
+    {
+      "name": "Gate report carries coverage gaps and a tester judgement",
+      "max_score": 18,
+      "description": "The report states what was covered, what was found, what was not reached including the deferred angles, what obstructed the hour, and the tester's own qualitative read on whether the 5% rollout should proceed. Scores at most half if the qualitative read is absent. Scores zero if the report is a bug list or a pass/fail matrix with no coverage statement."
+    },
+    {
+      "name": "Named next target if the gate is held",
+      "max_score": 10,
+      "description": "The output names what the following block of testing would target, drawn from the deferred angles or from whatever the hour surfaces. Scores zero if there is no continuation - the deferred angles must go somewhere rather than evaporate."
+    },
+    {
+      "name": "MUST NOT plan rooted or jailbroken device work",
+      "max_score": 8,
+      "description": "Scores zero if the plan includes rooted or jailbroken handling, back-end key management, or anything else the lead assigned to the vendor penetration test. The lab has no such devices; planning it burns the hour on work that cannot be performed."
+    }
+  ]
+}

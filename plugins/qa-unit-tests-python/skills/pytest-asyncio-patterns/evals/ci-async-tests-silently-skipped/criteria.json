@@ -1,0 +1,41 @@
+{
+  "context": "The project's configuration file already selects the mode in which unmarked coroutine tests run, and it is correct - but the CI command passes the opposite mode on the command line, and the command line wins over the configuration file. Predicted baseline failure: the agent opens pyproject.toml, sees the correct setting, concludes the configuration is fine, and looks elsewhere - blaming the Python version, the install step, or the reporting flags - or it 'fixes' the project by adding markers to the tests, which the task forbids and which leaves the contradictory flag in place for the next module. An agent that does not know the precedence order has no reason to suspect the one line that is actually wrong, and the workflow reads as unremarkable.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The contradictory mode flag is removed from the CI command",
+      "max_score": 32,
+      "description": "The `--asyncio-mode=strict` argument is gone from the workflow's pytest invocation, or replaced with the automatic mode so it agrees with pyproject.toml. Leaving the flag in place scores zero no matter what else changes - it is the single cause. Deleting the whole pytest step, or replacing it with a command that runs a subset of tests, scores zero."
+    },
+    {
+      "name": "The precedence is stated in the explanation",
+      "max_score": 20,
+      "description": "The explanation says that the command-line argument overrode the project's configured mode, which is why the same repository behaved differently under CI than locally. An explanation that blames the tests, the runner image, the Python version, or a missing dependency scores zero. Naming the flag as the culprit without saying it outranked the config file scores at most half."
+    },
+    {
+      "name": "A silent non-execution now fails the job",
+      "max_score": 22,
+      "description": "A guard is added so that coroutine tests being skipped or unhandled cannot pass again - warnings promoted to errors in pyproject.toml or via the CI invocation, or an equivalent enforcement that turns the unhandled-coroutine condition into a failure. No guard at all scores zero. A comment in the workflow reminding future readers, or relying on someone noticing the skipped count in the artifact, scores zero; a guard that only covers this one warning category by exact name scores at most half."
+    },
+    {
+      "name": "Tests and application untouched",
+      "max_score": 16,
+      "description": "MUST NOT edit anything under `tests/` or `app/rates.py`. Adding async markers to the tests scores zero even though it would make the job run them - the task explicitly rules it out, and it treats the symptom in one module while the flag keeps mis-running every future one."
+    },
+    {
+      "name": "The rest of the pipeline is preserved",
+      "max_score": 10,
+      "description": "The job still installs from requirements-dev.txt, still writes the JUnit report, and still uploads it unconditionally. Dropping the report or the upload to simplify the command scores zero."
+    },
+    {
+      "name": "Sync test still runs",
+      "max_score": 6,
+      "description": "The synchronous test is still collected and executed by whatever invocation is delivered. A change that narrows the run to async tests only scores zero."
+    },
+    {
+      "name": "Workflow remains valid",
+      "max_score": 6,
+      "description": "`.github/workflows/tests.yml` is well-formed YAML with the same trigger and job name. A truncated or syntactically broken workflow scores zero regardless of the fix it contains."
+    }
+  ]
+}

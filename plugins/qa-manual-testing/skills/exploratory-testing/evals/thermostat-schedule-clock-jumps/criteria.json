@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent produces a daylight-saving test checklist - spring forward, fall back, ambiguous hour, holiday override across the boundary, offline device, timezone changes - a dozen or more items, each phrased as a scenario to verify. It reads knowledgeable and is unexecutable, because almost every item on it needs a clock jump and Rita has two. The unaided output typically never mentions the jump budget at all, never says what is prepared before a jump so the ten-minute propagation is not dead time, states no objective for the window, and closes with 'report findings to the team' - which in this squad means a chat thread nobody can find later, the exact failure the lead called out.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan file delivered",
+      "max_score": 5,
+      "description": "docs/qa/thermostat-schedule-window.md exists and plans Thursday's window. Scores at most half for a differently named deliverable. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "The two clock jumps are budgeted as the scarce resource",
+      "max_score": 32,
+      "description": "The plan commits each of the two jumps to a specific target moment chosen for what it can reveal - the ambiguous repeated hour containing the 02:15 refresh, and a post-changeover moment for a device that was offline across it are the strongest candidates - and states what is configured and staged before each jump so one jump answers more than one question. Scores zero if the plan needs more than two jumps, or if the jump limit is never accounted for. Scores at most half if two jumps are named but nothing is staged in advance, so each jump answers a single narrow question."
+    },
+    {
+      "name": "The propagation dead time is used",
+      "max_score": 16,
+      "description": "The roughly twenty minutes of propagation is assigned work that needs no jump - service-side timezone changes from the admin console, the 'away until' rejection reported by a developer and never written up, app-restart survival of the hold, holiday override entry and validation. Scores zero if the propagation time is unplanned or the plan implies waiting."
+    },
+    {
+      "name": "A single bounded objective naming what must be learned",
+      "max_score": 22,
+      "description": "The window carries one stated objective naming the area, what it is worked with (the bench thermostats, the admin console, an offline device, the nightly refresh), and what the team needs to know before the beta ring - framed as information to discover rather than items to verify. Scores zero if the deliverable is a checklist of changeover scenarios with no objective. Scores at most half if the objective is a bare target such as 'test daylight-saving handling'."
+    },
+    {
+      "name": "Untouched areas named",
+      "max_score": 14,
+      "description": "The plan states which parts of the schedule feature go untested in this window and why - spring-forward behaviour, multi-week programmes, the 48-hour fallback beyond the one case worked, weekend versus weekday resolution. Scores zero if the plan implies the whole feature is covered in 90 minutes."
+    },
+    {
+      "name": "Records separate defects, unexplained device behaviour, and rig problems",
+      "max_score": 14,
+      "description": "The in-window record distinguishes a defect from device behaviour that is merely unexplained (the device holds absolute times; is a stale programme after a jump a bug or the documented fallback?) and from rig problems that cost time (jump propagation slower than expected, a bench device stuck). Scores zero if there is one undifferentiated findings list."
+    },
+    {
+      "name": "MUST NOT leave the record in a chat thread",
+      "max_score": 16,
+      "description": "The write-up is a durable file in a stated location that a person can find later, with named contents - what was covered, what was found, what was not reached, what obstructed the window, and Rita's own read on changeover risk - a named reader and a deadline. Scores zero if the plan says to post findings to the squad channel, to 'share with the team', or leaves the artifact's home unstated. Scores at most half if the file exists but no reader or review time is named."
+    },
+    {
+      "name": "Rig constraints respected",
+      "max_score": 8,
+      "description": "Nothing in the plan requires firmware flashing, the hardware lab, a third clock jump, multi-zone homes, or the voice-assistant integration. Scores zero if any planned activity is impossible on Thursday's bench."
+    }
+  ]
+}

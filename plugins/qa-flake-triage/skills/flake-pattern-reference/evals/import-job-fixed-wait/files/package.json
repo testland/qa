@@ -1,0 +1,8 @@
+{
+  "name": "catalog-importer",
+  "version": "2.2.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

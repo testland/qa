@@ -1,0 +1,41 @@
+{
+  "context": "Four tests assert only `statusCode(200)`, so a `200` carrying an empty collection, a null object, or an HTML error page all pass. Predicted baseline failure: the agent adds body assertions, but reaches for existence matchers - `body(\"products\", notNullValue())`, `body(\"$\", not(empty()))` on the envelope, or `body(not(emptyString()))` - all of which still pass against `{\"products\":[]}` and `{\"product\":null}`, the exact payloads from the incident. The reworked file looks materially better in review (there are body assertions now!) while remaining blind to the outage it was written for. The second predictable miss is the content type: an HTML error page served with `200` satisfies every path assertion the agent writes only if it never asserts the response is JSON, and content type is the one check that catches it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Collection endpoints assert non-emptiness, not mere presence",
+      "max_score": 30,
+      "description": "The list, reviews and search tests assert the size of the returned collection - e.g. `body(\"products\", hasSize(greaterThan(0)))` or `body(\"hits.sku\", hasItem(...))` - so `{\"products\":[]}` fails. Scores zero if any collection endpoint asserts only `notNullValue()`, `isA(List.class)`, or `not(nullValue())` on the array, since `[]` satisfies all of those and that is precisely the payload the replica returned. Scores at most half if only one of the three collection endpoints gets a size-bearing assertion."
+    },
+    {
+      "name": "The single-object endpoint fails on a null object",
+      "max_score": 16,
+      "description": "The `SKU-1001` test asserts a named field inside the object - e.g. `body(\"product.sku\", equalTo(\"SKU-1001\"))` - so `{\"product\":null}` fails. Scores zero if it asserts only `body(\"product\", notNullValue())` on the envelope key without descending into it, or if it only checks the response body is non-empty."
+    },
+    {
+      "name": "Content type is asserted where the HTML incident applies",
+      "max_score": 16,
+      "description": "The reviews test asserts the response content type is JSON - e.g. `contentType(ContentType.JSON)` in the response phase. Scores zero if no content-type assertion is added anywhere. Note that sending `accept(ContentType.JSON)` on the request is already present in the fixture and does not count: it states a preference, it does not verify what came back."
+    },
+    {
+      "name": "Assertions are field-path plus matcher inside the response chain",
+      "max_score": 14,
+      "description": "Body checks are expressed as path/matcher pairs in the response phase (`body(\"path.to.field\", matcher)`), using statically imported matchers. Scores zero if the tests extract the body into a String or Map and assert on it with `assertEquals`/`assertTrue` afterwards, which breaks the single-chain reading the rest of the module uses."
+    },
+    {
+      "name": "MUST NOT reintroduce whole-body comparison",
+      "max_score": 12,
+      "description": "No test asserts the entire body against a fixture string or a serialized JSON blob (`body(equalTo(bigJsonString))`, `assertEquals(expectedJson, response.asString())`, or a golden file added to resources). Any such assertion scores zero for this criterion - the task explicitly rules out the fixture-comparison approach the team already abandoned."
+    },
+    {
+      "name": "Per-test incident mapping supplied",
+      "max_score": 8,
+      "description": "Each of the four tests is annotated in the answer with which incident it now catches (empty replica / HTML error page / both). Scores zero if no mapping is given, or if it claims a status-code assertion would have caught either incident."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 6,
+      "description": "Still four tests, same four endpoints, no additional HTTP calls, no new dependency in `pom.xml`. Scores zero if a dependency is added or a new test method appears."
+    }
+  ]
+}

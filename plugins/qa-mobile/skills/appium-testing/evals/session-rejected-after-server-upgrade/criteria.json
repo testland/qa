@@ -1,0 +1,41 @@
+{
+  "context": "The server rejects the session because the current major only accepts standard W3C capability keys unless every non-standard key carries the vendor namespace prefix, and because the current major serves sessions at the root path rather than the legacy hub suffix. Predicted baseline failure: the agent treats 'not recognized by Appium' literally and makes the error go away by deleting or renaming the rejected keys (dropping appPackage / appActivity / newCommandTimeout, renaming app to appPath), by re-wrapping them in a legacy desiredCapabilities envelope, by bumping or downgrading the client library, or by suggesting the server be pinned back. It is also likely to keep the /wd/hub path because every tutorial written before the major bump contains it. The failure is invisible to a casual reader because the resulting capability object still looks like a perfectly ordinary capability object, and a reviewer without the device in front of them cannot tell that it will never start a session.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Non-standard capabilities carry the vendor prefix",
+      "max_score": 32,
+      "description": "Every capability that is not a W3C standard key is namespaced with the `appium:` prefix - `appium:automationName`, `appium:deviceName`, `appium:app`, `appium:appPackage`, `appium:appActivity`, `appium:bundleId`, `appium:newCommandTimeout`. Prefixing none of them scores zero. Prefixing some but leaving one or more non-standard keys bare scores at most half: the server rejects the request on the first unprefixed key, so a partially prefixed object still never starts a session. Using a vendor-options object under a single prefixed key that the client library documents as equivalent also earns full marks."
+    },
+    {
+      "name": "platformName is left unprefixed",
+      "max_score": 10,
+      "description": "`platformName` is a standard W3C capability and stays bare. Writing `appium:platformName` scores zero for this criterion - prefixing a standard key is the mirror-image mistake and produces a session with no platform selected."
+    },
+    {
+      "name": "Session endpoint no longer carries the legacy hub suffix",
+      "max_score": 22,
+      "description": "`test/hooks.js` connects to the server root - `path: '/'`, an omitted path, or a base URL of `http://<host>:<port>` with nothing appended. Any surviving `/wd/hub` (in `path`, in a hard-coded URL, or in a default for an env var) scores zero, because that is the 404 in the log. Adding a server-side flag that re-serves the old path instead of fixing the client scores at most half - it fixes this repo by reconfiguring shared infrastructure."
+    },
+    {
+      "name": "MUST NOT resolve the error by removing capabilities or reverting the server",
+      "max_score": 14,
+      "description": "MUST NOT. Anti-pattern row 'Mixing Appium 1.x and 2.x docs'. Deleting any of the rejected keys (`appPackage`, `appActivity`, `app`, `newCommandTimeout`, `bundleId`) to silence the rejection, re-wrapping the set in a legacy `desiredCapabilities` envelope, or recommending the server be pinned back to the previous major scores zero. The stated constraint is that the intent of both capability sets is preserved on the current major."
+    },
+    {
+      "name": "Both platform capability sets survive",
+      "max_score": 8,
+      "description": "The Android and the iOS capability sets are both present and both fixed. Fixing only one, or commenting one out with a TODO, scores zero."
+    },
+    {
+      "name": "Driver selection is preserved per platform",
+      "max_score": 8,
+      "description": "The Android set still selects the UiAutomator2 automation backend and the iOS set still selects XCUITest. Collapsing both to one backend, or dropping the backend key entirely because it appeared in the rejection list, scores zero."
+    },
+    {
+      "name": "cart.spec.js left unchanged",
+      "max_score": 6,
+      "description": "MUST NOT modify `test/cart.spec.js`. It is declared out of scope; editing it scores zero here."
+    }
+  ]
+}

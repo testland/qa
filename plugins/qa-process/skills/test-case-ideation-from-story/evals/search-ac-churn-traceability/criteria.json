@@ -1,0 +1,46 @@
+{
+  "context": "A story with numbered acceptance criteria that churn between sprints, plus behaviour that lives only in a mockup caption and behaviour that is written nowhere. Predicted baseline failure: the agent produces a competent, well-organised list of search cases in which no row records where it came from. The list looks excellent and is unusable for the stated problem - when AC-4 moves again, the reviewer is back to reading every row's steps and guessing. A weaker second failure is fake traceability: attributing an implied case (special characters, back navigation, a query one character long) to whichever AC bullet is nearest, which makes the document look traceable while pointing the re-run at the wrong rows.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/SRCH-88.md exists and contains a markdown table with rows. Scores zero if prose only or written elsewhere."
+    },
+    {
+      "name": "Every row records the specific line it derives from",
+      "max_score": 32,
+      "description": "The table has a dedicated field on every row naming the exact origin of that row - AC-4, AC-6, 'Frame 4 caption', or a quoted story sentence. Scores zero if no such field exists, or if it exists on fewer than half the rows. Scores at most half if the field is present throughout but identifies only the section ('acceptance criteria', 'mockup') rather than which specific bullet or caption."
+    },
+    {
+      "name": "MUST NOT use a generic or empty origin",
+      "max_score": 15,
+      "description": "An origin field whose value is 'Story', 'AC', 'Spec', 'Requirements', or blank defeats the entire purpose - it cannot answer 'which rows does the AC-4 rewrite affect'. Three or more rows carrying a generic value score zero here; one or two score at most half."
+    },
+    {
+      "name": "Implied rows are marked as implied, not attributed to a bullet",
+      "max_score": 18,
+      "description": "Rows covering behaviour no line of the story states - a one-character query, punctuation or wildcard characters in the query, filters that exclude everything, back navigation restoring filter state, a shared URL opened in a fresh session - carry an origin that says so explicitly ('implied by AC-7, not stated', 'no AC covers this'). Scores zero if such rows are attributed to an unrelated AC bullet as though the bullet stated them, which is worse than a blank field because it misdirects the re-run. Scores zero as well if no implied rows exist at all."
+    },
+    {
+      "name": "Mockup-caption behaviour captured and traced to the caption",
+      "max_score": 12,
+      "description": "The empty-results state - query echoed back, chips still active, clear-filters re-running the query - has at least one row whose origin names the Frame 4 caption rather than an AC bullet. Scores zero if the empty state is missing entirely; covering it but tracing it to an AC bullet that does not mention it scores at most half."
+    },
+    {
+      "name": "The open question on AC-6 is carried, not resolved",
+      "max_score": 12,
+      "description": "The document records that the tie-break behaviour for equally-scored results is undecided, and any row touching ordering is marked as blocked on that decision. Scores zero if a tie-break behaviour is asserted as expected output as though the story had decided it."
+    },
+    {
+      "name": "Rejection and empty paths present",
+      "max_score": 10,
+      "description": "At least two rows cover paths that do not return a normal result page - query under the minimum length, no matches, page number beyond the last page. Scores zero if every row ends in results being shown."
+    },
+    {
+      "name": "Rows are cases, not interactions",
+      "max_score": 8,
+      "description": "Each row is a scenario a tester could pick up and run. Rows whose whole content is a single interaction ('types into the search box', 'clicks a filter chip') are procedure steps; two or more score zero here."
+    }
+  ]
+}

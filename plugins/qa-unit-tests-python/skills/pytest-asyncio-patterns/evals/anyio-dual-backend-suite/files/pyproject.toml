@@ -1,0 +1,8 @@
+[project]
+name = "fanout"
+version = "0.3.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"

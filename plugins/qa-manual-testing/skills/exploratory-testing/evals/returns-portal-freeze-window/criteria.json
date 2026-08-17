@@ -1,0 +1,51 @@
+{
+  "context": "Predicted baseline failure: the agent produces a long, tidy-looking checklist of refund scenarios - full return, partial return, expired window, override code, gift card, shipping fee, and so on - grouped under headings like 'Functional' and 'Edge cases'. It reads thorough and is wrong for this request in four ways: it is sized for a day rather than two 45-minute blocks, it gives the store-credit mismatch no more weight than any other line, it produces no artifact the lead can read on Friday (no per-block hand-back, no statement of what is still unknown, no tester judgement on shipping), and it names no condition for stopping. Undifferentiated checklists also silently absorb the vendor card-capture screens back into scope because 'refund flow' implies them.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan file delivered",
+      "max_score": 5,
+      "description": "docs/testing/returns-v2-thursday.md exists and is a plan for Thursday, not a generic test-plan template. Wrong filename or a plan spread across several files scores at most half. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "One bounded objective per block, stating what is to be learned",
+      "max_score": 32,
+      "description": "Each of the two blocks carries exactly one stated objective that names the area under test, the data or tooling to be used, and what the block should teach us that we do not already know - for example 'work mixed card-plus-store-credit partial returns with the three seeded credit accounts to find out whether the displayed refund and the settled refund can disagree'. Scores zero if the output is an undifferentiated list of things to click or verify with no per-block objective. Scores at most half if the objectives are bare targets ('test partial refunds', 'test overrides') with no statement of what the block is meant to reveal."
+    },
+    {
+      "name": "The 90 minutes are actually allocated and the plan is sized to fit",
+      "max_score": 22,
+      "description": "Both blocks are held to 45 minutes, work is assigned to a specific block rather than to an undated pile, and the sandbox constraint is respected by placing authorisation-dependent work in the first block. Full marks additionally require an explicit list of parts left untouched because the time does not exist. Scores zero if the plan lists more work than 90 minutes can hold with no acknowledgement, or if no coverage is declared out of reach."
+    },
+    {
+      "name": "Store-credit mismatch is prioritised over breadth",
+      "max_score": 20,
+      "description": "The mixed-tender partial refund risk drives the first block's objective and gets concrete attack ideas - varying credit balance versus item price, partial versus full return, the displayed-versus-recalculated amounts, credit not being restored between runs. Scores at most half if it appears merely as one row among many equally weighted areas. Scores zero if breadth coverage of the portal displaces it."
+    },
+    {
+      "name": "In-flight notes separate confirmed behaviour, defects, and open questions",
+      "max_score": 15,
+      "description": "The recording structure has distinct places for things confirmed to work, suspected defects, and questions that need a finance or product decision rather than a code fix (for example: is shipping refundable on a mixed-tender full return?). Scores zero if there is one undifferentiated notes area, or if only defects are captured."
+    },
+    {
+      "name": "Per-block hand-back that closes the loop",
+      "max_score": 18,
+      "description": "Each block ends in a written hand-back to the lead covering what was covered, what was found, what remains unknown or untouched, what obstacles cost time, and the tester's own qualitative read on release confidence. Scores at most half if the hand-back is a bug list only. Scores zero if the qualitative read on whether this is safe to ship is absent, or if the only output is the notes themselves."
+    },
+    {
+      "name": "Stopping condition and time accounting",
+      "max_score": 14,
+      "description": "The plan states a condition under which the block is abandoned early (for example environment down, credit accounts drained, more than half the block consumed by setup) and what happens to the remaining time, and states how the 45 minutes are broken down afterwards between actually testing, chasing a defect, and setup or environment overhead. Half marks if only one of the two is present. Scores zero if neither is present - a plan with no abandon rule and no time breakdown cannot tell a productive block from a lost one."
+    },
+    {
+      "name": "MUST NOT bundle both objectives into one block or exceed the block length",
+      "max_score": 12,
+      "description": "Scores zero if any block carries two objectives at once ('block 1: partial refunds and override codes and gift cards'), if the two blocks are merged into one long sitting, or if any block is scheduled beyond 45 minutes. One focused objective per block is the whole point of splitting them."
+    },
+    {
+      "name": "Out-of-scope boundary respected",
+      "max_score": 8,
+      "description": "The vendor card-capture screens, load/performance, and the browser matrix are excluded and, ideally, named as excluded. Scores zero if the plan includes steps that drive into the vendor card-capture screens."
+    }
+  ]
+}

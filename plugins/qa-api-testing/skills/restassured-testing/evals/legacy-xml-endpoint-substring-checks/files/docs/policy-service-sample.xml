@@ -1,0 +1,19 @@
+<policy id="POL-1001" version="3">
+  <status>ACTIVE</status>
+  <holder>
+    <firstName>Ada</firstName>
+    <lastName>Lovelace</lastName>
+  </holder>
+  <coverage type="COMPREHENSIVE">
+    <limitCents>500000</limitCents>
+    <excessCents>0</excessCents>
+  </coverage>
+  <underwriting>
+    <decision>APPROVED</decision>
+    <reviewedBy>uw.system</reviewedBy>
+  </underwriting>
+  <auditTrail>
+    <entry actor="uw.system" note="APPROVED after manual review"/>
+    <entry actor="ops.batch" note="renewal notice queued"/>
+  </auditTrail>
+</policy>

@@ -1,0 +1,12 @@
+key,summary,status,resolution,severity,priority,assignee,verified_by,verified_at,fix_version,transition_history,closed_at
+ENG-4101,"Session drops when switching workspaces",Closed,Done,2 - High,P2,d.novak,,,"2026.07.02","New|Open|Assigned|In Progress|Fixed|Closed",2026-07-08
+ENG-4108,"Invoice PDF missing tax line for VAT-exempt accounts",Closed,Done,2 - High,P2,s.park,q.alvarez,2026-07-14,"2026.07.16","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-07-16
+ENG-4112,"Search returns results from deleted projects",Closed,Won't Do,3 - Medium,P3,,,,"","New|Closed",2026-07-11
+ENG-4115,"Bulk import silently drops rows over 10k",Closed,Done,1 - Critical,P1,m.oyelaran,,,"","New|Open|Assigned|Closed",2026-07-19
+ENG-4120,"Webhook retries fire twice after a 502",Closed,Done,2 - High,P2,d.novak,d.novak,2026-07-23,"2026.07.23","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-07-23
+ENG-4122,"Timezone offset wrong on the audit log export",Closed,Done,3 - Medium,P3,l.fontaine,q.alvarez,2026-07-27,"2026.07.30","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-07-30
+ENG-4130,"SSO login loops for users in two directories",Closed,Done,1 - Critical,P1,s.park,ci-bot,2026-08-03,"2026.08.06","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-08-03
+ENG-4133,"Keyboard shortcut conflicts with browser find",Closed,Won't Do,4 - Low,P4,,,,"","New|Open|Deferred|Closed",2026-08-04
+ENG-4136,"Export job times out over 500k rows",Closed,Done,2 - High,P2,m.oyelaran,q.alvarez,2026-08-07,"2026.08.10","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-08-10
+ENG-4140,"Password reset accepts an expired token",Closed,Done,1 - Critical,P1,s.park,,,"2026.08.11","New|Open|Assigned|In Progress|Fixed|Closed",2026-08-11
+ENG-4144,"Column sort resets after inline edit",Closed,Done,4 - Low,P4,l.fontaine,q.alvarez,2026-08-12,"2026.08.13","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-08-13

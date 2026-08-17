@@ -1,0 +1,46 @@
+{
+  "context": "ECONNREFUSED against a service port is the most legible infrastructure error there is, and the whole two-week ticket history is built on reading it that way. The fixture refutes that reading in three places at once: the container is digest-pinned and identical across all 50 runs, it reported healthy with zero restarts in every failing run, and other suites used it successfully in the same run. What is left is a pattern in the history - all 8 failures put session.spec.ts on the same worker as cache/eviction.spec.ts and after it, all 42 passes put them on different workers - plus the log line where eviction's teardown closes a module-level client that session then reuses. Predicted baseline failure: the agent repeats the platform reading ('the cache was briefly unavailable, an environment issue') or hedges between infrastructure and test code, and recommends a rerun or a connection retry - which is exactly what the team has been doing for two weeks.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-session-redis.md exists and addresses this failure."
+    },
+    {
+      "name": "Identified as an intermittent coupling inside the suite",
+      "max_score": 28,
+      "description": "The document concludes this is a non-deterministic failure caused by the tests themselves - one spec file's teardown closing a client another spec file reuses - and not a fault in the service or the environment. Concluding the cache service or the environment failed scores zero. Concluding it is a product defect scores zero. Reaching 'a test problem of some kind' without naming the shared-client teardown mechanism scores at most half."
+    },
+    {
+      "name": "Worker co-location pattern extracted from the history",
+      "max_score": 22,
+      "description": "The document uses the history table as the load-bearing evidence: all 8 failures had cache/eviction.spec.ts on the same worker and scheduled earlier, all 42 passes had it elsewhere. Full credit connects that to the afterAll line in the log and to the module-level singleton in src/testing/redisClient.ts, which reconnects only when the variable is null and is never reset by closeClient. Missing the co-location pattern scores zero - without it the failure looks random."
+    },
+    {
+      "name": "MUST NOT classify this as an environment or infrastructure failure",
+      "max_score": 18,
+      "description": "Scores zero if the document routes the failure to the platform team, calls the environment or the service container the cause, or describes it as the environment having drifted. The connection error names a port, not a cause, and the document must state why the environment reading is refuted: image pinned by digest and unchanged across 50 runs, restarts=0 and health=healthy in every failing run, other suites connecting successfully in the same run."
+    },
+    {
+      "name": "MUST NOT offer a rerun as the disposition",
+      "max_score": 11,
+      "description": "Scores zero if the recommended next action is to rerun the job, or if the document endorses the current rerun-until-green habit. Reruns here change the worker assignment and destroy the evidence; the correct next action confirms the pattern and then applies the team's process for intermittent tests."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 12,
+      "description": "Each alternative is listed with the observation that rules it out - no commits under src/session, src/cache or src/testing/redisClient.ts since 2026-07-20; no quarantine or flake list exists; the failure is intermittent rather than a clean break (8 of 50); no other test failed in this run. Full credit needs at least three entries with observed values."
+    },
+    {
+      "name": "Worker-count change assessed rather than blamed",
+      "max_score": 10,
+      "description": "The commit raising jest workers from 2 to 4 is addressed: it changes how often the two files land together but is not itself the fault, and the coupling would still be present at any worker count. Blaming the worker bump as the cause, or recommending a return to 2 workers as the remedy, scores zero. Not mentioning it at all scores at most half."
+    },
+    {
+      "name": "Next action is confirmation then the team's intermittent-test process",
+      "max_score": 10,
+      "description": "The recommended action confirms the pattern deliberately - forcing the two files onto one worker in that order, or running session.spec.ts after eviction.spec.ts - and then hands off through whatever the team does with confirmed intermittent tests, routed to the suite's owners. Jumping straight to a code change in redisClient.ts as the deliverable scores at most half."
+    }
+  ]
+}

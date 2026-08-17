@@ -1,0 +1,23 @@
+2026-08-17T09:14:02Z ##[group]Runner Image
+2026-08-17T09:14:02Z Image: ubuntu-24.04   Version: 20260810.1.0   Label: acme-e2e-pool   Hardware: 4 vCPU / 16 GB
+2026-08-17T09:14:02Z ##[endgroup]
+2026-08-17T09:14:05Z ##[group]Run npx playwright test --project=chromium
+2026-08-17T09:14:44Z   ok  tests/search.spec.ts:18:3 › loads the empty search page (1.9s)
+2026-08-17T09:15:02Z   ok  tests/search.spec.ts:24:3 › shows the recent-search list (2.1s)
+2026-08-17T09:15:37Z [api] GET /search?q=lap 200 in 14812 ms (queries: 412)
+2026-08-17T09:15:37Z   x   tests/search.spec.ts:31:3 › shows results for a partial query
+2026-08-17T09:15:37Z     Test timeout of 30000ms exceeded.
+2026-08-17T09:15:37Z     Error: expect(locator).toBeVisible() failed
+2026-08-17T09:15:37Z     Locator:  getByTestId('result-row').first()
+2026-08-17T09:15:37Z     Expected: visible
+2026-08-17T09:15:37Z     Timeout:  15000ms
+2026-08-17T09:15:37Z       at tests/search.spec.ts:36:44
+2026-08-17T09:15:59Z [api] GET /account 200 in 96 ms (queries: 2)
+2026-08-17T09:16:01Z   ok  tests/account.spec.ts:12:3 › shows the plan card (2.2s)
+2026-08-17T09:16:24Z   ok  tests/checkout.spec.ts:9:3 › completes a card payment (4.8s)
+2026-08-17T09:16:31Z   1 failed, 28 passed (2m26s)
+2026-08-17T09:16:32Z ##[group]Post job: resource capture
+2026-08-17T09:16:32Z 09:16:32 up 4 min,  load average: 1.42, 1.11, 0.62
+2026-08-17T09:16:32Z Average:     all   21.40    0.00    4.02    0.31    0.00   74.27
+2026-08-17T09:16:32Z ##[endgroup]
+2026-08-17T09:16:33Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,46 @@
+{
+  "context": "The device-identifying capability is meant to be a logical device name that the driver resolves against whatever is actually installed - a generic 'iPhone Simulator' / 'Android Emulator' - with the OS version left unpinned so the driver picks an available one, and with any genuinely specific target injected from the environment rather than committed. Predicted baseline failure: the agent hoists the model and version into module constants or a DEVICES dict at the top of the file, wires them to environment variables, and then commits 'iPhone 16' and '18.0' as the defaults, because that is what the log says the machine has. The file now looks configurable and is exactly as brittle as before - the next Xcode bump breaks it again, and the CI Linux image still has no emulator by that name. A second predicted failure is pinning `platformVersion` to whatever value appears in the failure log, which is the single field most likely to drift.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT commit a specific device model as the effective default",
+      "max_score": 30,
+      "description": "MUST NOT. Anti-pattern row \"Hard-coded device name ('iPhone 15')\". The default that runs when no environment variable is set must be a generic logical device - 'iPhone Simulator', 'Android Emulator', or an equivalent non-model string - not a phone model. Committing 'iPhone 16' / 'Pixel_7_API_34' / any concrete model as the default scores zero, whether it sits inline or in a constants block at the top of the file: moving a hard-coded model up ten lines does not stop the next hardware refresh from breaking the suite."
+    },
+    {
+      "name": "OS version is no longer pinned",
+      "max_score": 20,
+      "description": "`platformVersion` is omitted from the committed capability sets, so the driver resolves against an installed version, and is only added when supplied from outside. Keeping a hard-coded version string - including replacing '17.4' with '18.0' - scores zero. Keeping the key with an empty-string or None default that is still always sent scores at most half."
+    },
+    {
+      "name": "Specific targets are injected, not edited in",
+      "max_score": 16,
+      "description": "A developer who does need a particular model or version can supply it through the environment (or a pytest option / untracked config file) without touching the committed file, and the code passes it through when present. If the only way to change the device remains editing conftest.py, this scores zero, since the reported harm is nine commits of people editing conftest.py."
+    },
+    {
+      "name": "Unresolvable device fails with an actionable message",
+      "max_score": 12,
+      "description": "Session-creation failure is caught and re-raised or reported with a message naming the variable to set and the target platform. Letting the raw server error propagate scores zero. A message that says 'no device found' without naming what to set scores at most half."
+    },
+    {
+      "name": "Both platforms still supported",
+      "max_score": 10,
+      "description": "The iOS and Android paths both survive, each keeping its own automation backend (XCUITest and UiAutomator2) and its own app artefact. Dropping or disabling one platform to make the file portable scores zero."
+    },
+    {
+      "name": "MUST NOT make the failure disappear by skipping",
+      "max_score": 8,
+      "description": "MUST NOT convert an unresolvable device into a skipped or passing run - no `pytest.skip` on session-creation failure, no try/except that yields a null driver. A suite that goes green on a machine with no device is worse than one that fails; this scores zero."
+    },
+    {
+      "name": "test_cart.py left unchanged",
+      "max_score": 6,
+      "description": "MUST NOT modify tests/test_cart.py. It is out of scope; editing it scores zero here."
+    },
+    {
+      "name": "Capabilities keep their current-major shape",
+      "max_score": 8,
+      "description": "Any capability the rewrite adds or moves keeps the `appium:` vendor prefix on non-standard keys and leaves `platformName` bare. An added capability written without the prefix is silently ignored by the server, so it scores zero for this criterion."
+    }
+  ]
+}

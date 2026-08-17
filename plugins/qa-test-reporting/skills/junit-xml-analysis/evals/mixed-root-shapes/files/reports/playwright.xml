@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="playwright" tests="2" failures="0" errors="0" time="9.876">
+  <testsuite name="[chromium] checkout.spec.ts" tests="2" failures="0" errors="0" skipped="0" time="9.876">
+    <testcase classname="checkout.spec.ts" name="completes an order" time="5.006"/>
+    <testcase classname="checkout.spec.ts" name="keeps the cart on failure" time="4.870"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent builds a combination matrix - flags across the top, fare families and layouts down the side - and either enumerates dozens of rows or applies a textbook reduction (pairwise coverage, one row per flag) without connecting the choice to the money risk. Both look rigorous; neither fits two hours, and neither states what is being accepted by leaving combinations untried. The unaided output also gives each block no objective beyond 'cover the matrix', records everything as pass/fail so a surprising-but-maybe-intended pricing behaviour has nowhere to go, and stops at 'document findings' with no named reader and no path from Nadia's notes to Thursday 09:00 - the exact failure the lead described from the March rollout.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan file delivered",
+      "max_score": 5,
+      "description": "docs/qa/seatmap-rollout-check.md exists and plans Wednesday's two blocks. Scores at most half for a differently named deliverable. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "A small named combination set, justified by the money risk",
+      "max_score": 30,
+      "description": "The plan names a specific handful of combinations to work - not a matrix - and justifies the selection against a paid seat being given away or charged twice: free_for_bundle plus premium_pricing on a Flex booking, the same pair on a Basic booking, and the wide-body bassinet-row data configuration are the combinations that carry the risk. Scores zero if the output enumerates the full space or presents a coverage matrix as the plan. Scores at most half if the set is reduced by a generic technique with no tie to the pricing risk."
+    },
+    {
+      "name": "Untried combinations named, with the exposure stated",
+      "max_score": 22,
+      "description": "The plan says which combinations are deliberately never tried in these two hours and what we accept by not trying them - for example infant_block interactions or hold_seat on narrow-body Basic going to the gate unexercised. Scores zero if silence stands in for the decision, which leaves the gate meeting believing the space was covered."
+    },
+    {
+      "name": "One bounded objective per block, naming what the gate needs to know",
+      "max_score": 22,
+      "description": "Each 60-minute block carries exactly one objective naming the area, what it is worked with (per-booking flag overrides, test bookings per fare family, staging pricing line items), and what the Thursday gate needs to know. Scores zero if the blocks are labelled only 'block 1: flags' and 'block 2: more flags', or if the objectives are matrix rows. Scores at most half if the objective is a bare target with no learning goal."
+    },
+    {
+      "name": "Variation beyond the flag settings",
+      "max_score": 14,
+      "description": "The plan names what to vary inside a chosen combination - timing against the 20-minute hold, changing the passenger list after the map has loaded, switching layout, market-level data configuration, going back and re-entering the map - rather than treating a combination as a single one-shot check. Scores zero if the only variation described is toggling the flags."
+    },
+    {
+      "name": "Records separate defects from behaviour needing a commercial ruling",
+      "max_score": 13,
+      "description": "The in-block record distinguishes a defect from behaviour that is surprising but may be intended and needs a commercial decision - a suppressed-but-present pricing line item, a bassinet row priced as premium by data configuration. Scores zero if everything is captured as pass or fail."
+    },
+    {
+      "name": "MUST NOT leave findings unread until the gate",
+      "max_score": 18,
+      "description": "The hand-back has a named reader and a stated deadline that lands before Thursday 09:00, with a path from Nadia's record into the gate meeting. Scores zero if the plan ends at 'record findings' or 'document results' with no reader, no review time, and no route to the decision - notes nobody reads before the gate are the failure the lead is trying to prevent."
+    },
+    {
+      "name": "Out-of-scope boundary respected",
+      "max_score": 8,
+      "description": "Payment capture, loyalty tiers and the mobile boarding pass are excluded. Scores zero if a block plans payment-capture work the payments squad owns."
+    }
+  ]
+}

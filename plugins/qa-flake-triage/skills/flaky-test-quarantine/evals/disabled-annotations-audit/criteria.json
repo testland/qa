@@ -1,0 +1,46 @@
+{
+  "context": "Four tests that do not execute, each switched off in a different shape, and the request is framed as producing a list. Predicted baseline failure: the agent produces an accurate inventory of the current state — bare @Disabled, @Disabled(\"flaky\"), @Disabled with a ticket, one commented-out block — and stops there, because the deliverable named in the brief is a list and the list is now correct. What it is predicted not to do is change the file so that each remaining exclusion carries an end point: a deadline and an owner in the annotation value itself, where the next reader of the source sees it. It is also predicted to leave webhookRetriesOnGatewayTimeout disabled because the annotation still says it is waiting on #221, without checking that #221 closed on 2026-05-14 and that nightly has passed it 90 consecutive times; and to leave the commented-out legacyXmlExportMatchesSchema block in place as harmless, when the method it calls no longer exists on the service and the endpoint was withdrawn in 2025.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 6,
+      "description": "The Java file is produced in a committable state and docs/disabled-tests.md exists with one row per still-excluded test. A document that inventories the file without the file being changed scores at most half."
+    },
+    {
+      "name": "Every remaining exclusion carries a deadline in the annotation itself",
+      "max_score": 30,
+      "description": "Each test still excluded after the change carries an explicit YYYY-MM-DD reassessment date inside the @Disabled value, not only in the markdown document. A bare @Disabled or @Disabled(\"flaky\") left in the file scores zero. A date that lives only in docs/disabled-tests.md scores at most half — the file is what the next developer reads, and the divergence between the two is how this state arose."
+    },
+    {
+      "name": "Every remaining exclusion names an owner",
+      "max_score": 16,
+      "description": "Each remaining @Disabled value names the responsible handle, resolved from the owners note: @web-platform / @kdavies for refund, @integrations / @tobrien for import. An exclusion with a date but no owner scores at most half; none at all scores zero."
+    },
+    {
+      "name": "Re-enabling the test whose blocker closed",
+      "max_score": 22,
+      "description": "webhookRetriesOnGatewayTimeout has its @Disabled removed and goes back to executing, because #221 closed on 2026-05-14 and it has passed 90 of 90 nightly runs since. Leaving it disabled with a refreshed date scores zero — the stated reason for excluding it no longer exists, and carrying it forward on a new deadline is how a four-month exclusion becomes a permanent one. Re-enabling it without citing the closed ticket and the passing runs scores at most half."
+    },
+    {
+      "name": "Dead commented-out block deleted",
+      "max_score": 18,
+      "description": "The legacyXmlExportMatchesSchema block is deleted from the file. The endpoint was withdrawn on 2025-08-30 and `exportLegacyXml` no longer exists on the service, so it can never be re-enabled. Restoring it as a @Disabled test with a deadline and an owner scores zero — that is bookkeeping for a test with nothing left to assert. Leaving the comment in place scores zero; the brief rules it out explicitly."
+    },
+    {
+      "name": "Measured rate recorded for the two that stay off",
+      "max_score": 14,
+      "description": "refundPostsToLedger (20/90, 22.2%) and bulkImportHandlesDuplicates (8/90, 8.9%) carry their measured rate with the run count. 'flaky' with no number, or a percentage with no denominator, scores at most half."
+    },
+    {
+      "name": "Untracked exclusion given a ticket",
+      "max_score": 12,
+      "description": "refundPostsToLedger was switched off the day before a freeze with no ticket ever opened, on a path that is still shipped and still changing. The output must require a tracked ticket for it and say so, rather than recording 'no ticket' as a fact and moving on. Leaving the ticket field blank scores zero."
+    },
+    {
+      "name": "Executing test untouched",
+      "max_score": 6,
+      "description": "MUST NOT disable, annotate, or modify orderTotalsIncludeTax, which currently runs and appears in no report. Any change to it scores zero here."
+    }
+  ]
+}

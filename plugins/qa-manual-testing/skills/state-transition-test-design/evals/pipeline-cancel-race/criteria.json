@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the prompt hands the agent the word race and a team already asking for load testing, so the pack turns into concurrency work - cases that instruct the tester to fire a cancel and a success callback simultaneously, or in a loop, with a definite expected state attached. That expectation cannot be grounded: whichever arrives first is what the service acts on, and a manual case that asserts an outcome for a genuine tie will pass or fail by luck and teach the team nothing. The behaviour that actually explains the incident is ordinary and sequential - a success report arriving while the run is already cancelling must still finish the run as cancelled - and it sits in a state the existing pack never enters at all. Nine states against five inputs is 45 combinations, 13 of which do something and 25 of which sit in the five finished rows. The discriminating output covers the cancelling row and the finished rows in order, and puts true simultaneity outside the pack rather than faking an expected result for it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/pipeline-run-tests.md exists and contains a model plus numbered manual cases with per-step expected results."
+    },
+    {
+      "name": "The cancelling state is covered as a state in its own right",
+      "max_score": 26,
+      "description": "Cases start from a run that is already cancelling and apply each input: a success report and a failure report each leaving the run cancelled with artefacts discarded, the timeout still killing it, a second cancel request refused, and a claim refused. Omitting the success-arrives-while-cancelling case scores zero - it is the incident. Covering that one but none of the others caps this at half."
+    },
+    {
+      "name": "MUST NOT write cases that assert an outcome for simultaneous arrivals",
+      "max_score": 18,
+      "description": "MUST NOT. Any case whose steps require two inputs to be sent at the same instant, or in parallel, with a definite expected state, scores zero on this criterion. Ordering must be explicit in every case. Naming true simultaneity as something these cases cannot decide, and routing it elsewhere, is what the third deliverable asks for."
+    },
+    {
+      "name": "The five finished states are used as starting points",
+      "max_score": 22,
+      "description": "Cases seed runs in succeeded, failed, cancelled, timed out and expired and apply late inputs to them - the runner callback that arrives after the run is already over, a cancel on a finished run, a claim on an expired one - expecting the run page unchanged and the artefact list untouched. Four or five of the finished states covered earns full marks; two or three caps at half; none scores zero."
+    },
+    {
+      "name": "MUST NOT model the scheduler's internal phases as states",
+      "max_score": 14,
+      "description": "MUST NOT. Treating pod-pending, image-pull, warm-pool-hit or node-bind as states, or writing an expected result that refers to them, scores zero here. The fixture states they appear in scheduler metrics only, so no tester running this pack can observe one."
+    },
+    {
+      "name": "All 45 state/input combinations accounted for",
+      "max_score": 14,
+      "description": "The model covers 9 states against 5 inputs - 45 combinations - each either producing a result or explicitly marked as producing none. Thirty-eight or more accounted for earns full marks; 28 to 37 caps at half; recording only the thirteen or so that do something scores zero."
+    },
+    {
+      "name": "Both timeouts and both give-up paths are distinguished",
+      "max_score": 12,
+      "description": "The model distinguishes a run giving up in the queue (expired, no runner ever claimed it) from a run killed against its execution limit (timed out), and cases cover the limit expiring from provisioning, from running, and from cancelling. Collapsing the two into one outcome caps this at half."
+    },
+    {
+      "name": "Expected results come from the run page or the API",
+      "max_score": 10,
+      "description": "Every expectation names what the run page displays or what GET /runs/{id} returns, not what the runner or the scheduler did internally."
+    }
+  ]
+}

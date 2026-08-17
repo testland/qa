@@ -1,0 +1,2 @@
+Daily reconciliation, finance-ops, 2026-08-12.
+Wallets with a stored balance below zero: 14 (yesterday: 12).

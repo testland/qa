@@ -1,0 +1,46 @@
+{
+  "context": "Both failures arrive pre-labelled as flaky by a teammate, and each carries an artifact that looks like corroboration. Only one is real: notifications.spec.ts:88 has a structured entry in a checked-in flake-list.yml, with a recorded pattern that matches the observed failure shape and six prior same-shaped failures in 50 runs. The invoice test's only claim to flakiness is a source comment pointing at an issue that was closed 'could not reproduce' five months ago; its actual record is 31 consecutive passes, a same-commit retry that reproduced the identical wrong total, and a commit in the window that rewrites exactly the arithmetic under assertion (per-line rounding now sums to 14382 instead of 14400). Predicted baseline failure: the agent honours both labels and calls both flaky - or, having noticed the invoice one is suspicious, still cites the source comment and issue #4412 as evidence about it - and a tax-rounding regression clears the merge queue on a rerun.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-smoke-3310.md exists and handles both failures separately rather than as one item."
+    },
+    {
+      "name": "Invoice failure identified as a real regression",
+      "max_score": 26,
+      "description": "invoice.spec.ts:57 is called a genuine defect, not a flake, and the document names the change: c8e1f40 moved from rounding the summed net once to rounding each line, producing 14382 against the expected 14400. Full credit cites the 31-run green streak and the same-commit retry reproducing the identical value. Calling it flaky, unknown, or 'needs a rerun to tell' scores zero. Calling it a probable regression without naming the change scores at most half."
+    },
+    {
+      "name": "MUST NOT treat the source comment or issue #4412 as evidence of flakiness",
+      "max_score": 18,
+      "description": "Scores zero if the document cites the '// flaky in CI sometimes' comment, or issue #4412, as support for calling the invoice test flaky, quarantined, or known-bad. A comment is not a decision anyone recorded. Naming the comment in order to reject it - stating that it is informal, that #4412 was closed as could-not-reproduce, and that it appears in no flake list - earns full credit."
+    },
+    {
+      "name": "Notifications failure identified as already-quarantined",
+      "max_score": 20,
+      "description": "notifications.spec.ts:88 is identified as a test already under a formal quarantine record, citing flake-list.yml entry #12 by its contents (pattern async-wait, issue NOTIF-771, owner @notifications) and stating that the observed 15000ms toast-visibility timeout matches the recorded pattern. Full credit also notes the six same-shaped failures in 50 runs. Re-triaging it from scratch as a new product or environment problem scores zero. Calling it flaky purely because a teammate said so, with no reference to the list entry or the pattern match, scores at most half."
+    },
+    {
+      "name": "Different handling for the two, stated as such",
+      "max_score": 14,
+      "description": "The document makes explicit that a checked-in quarantine record and a code comment are not the same kind of evidence, and that this is why the two failures are handled differently. Producing two correct answers without articulating the distinction scores at most half; producing the same answer for both scores zero."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 11,
+      "description": "For each failure, the alternatives considered are listed with the observation that rules each out - runner image unchanged for 11 days, invoice test never failed in the previous 50 runs, notifications failure carries no code change on its call graph, eslint bump is not on either call graph. Full credit needs at least two entries with observed values per failure."
+    },
+    {
+      "name": "Next actions differ and neither is a bare rerun of the invoice test",
+      "max_score": 12,
+      "description": "The notifications failure is returned to the existing quarantine process (rerun permitted there, and full credit notes the 2026-09-01 review-by date is approaching). The invoice failure is routed to whoever owns src/billing with the reproduction preserved. Recommending a rerun as the disposition of the invoice failure scores zero: the retry already ran and reproduced."
+    },
+    {
+      "name": "No stacked verdicts",
+      "max_score": 7,
+      "description": "Neither failure is given two co-equal answers ('flaky, but possibly also a real bug - rerun and see'). A hedged answer on either failure scores zero here, because it routes to nobody and the merge queue stays blocked."
+    }
+  ]
+}

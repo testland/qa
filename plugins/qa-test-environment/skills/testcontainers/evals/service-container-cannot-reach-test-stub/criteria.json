@@ -1,0 +1,41 @@
+{
+  "context": "The direction here is the reverse of the usual one: a container has to reach a server listening in the test process, not the other way round. The stub's address is correct from the test JVM and useless inside the container, where `localhost` is the container. Predicted baseline failure: the agent substitutes a host-oriented address it half-remembers - `host.docker.internal`, a `--add-host=host.docker.internal:host-gateway` extra host, the machine's LAN IP from `InetAddress.getLocalHost()`, or the docker bridge gateway address - or it moves the stub into its own container, which the task forbids because the test configures and verifies it in-process. It is also likely to keep the pinned port, since a dynamic port makes the address problem feel harder, and to keep or lengthen the three-second pause because the failure superficially resembles a startup race.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Stub stays in the test JVM with its stubbing and verification",
+      "max_score": 5,
+      "description": "The stub server still runs in-process, per-test stubs are still registered from the test, and `paymentsStub.verify(...)` still runs there. Moving the stub into a container, or dropping the verification, scores zero."
+    },
+    {
+      "name": "The test-process port is explicitly made reachable from the container network",
+      "max_score": 28,
+      "description": "The test publishes the stub's listening port to the container side before the container starts, using the runtime's host-port exposure mechanism, so the container has a route to it. Scores zero if nothing is done to make the port reachable and the fix is purely a change of hostname string. Scores at most half if the exposure happens after the container is started, where the container may already have failed its readiness check."
+    },
+    {
+      "name": "The container is given the runtime's host-internal hostname",
+      "max_score": 24,
+      "description": "MUST NOT hand the container `localhost`, `127.0.0.1`, a resolved LAN IP, or a bridge-gateway IP: any of those scores zero. `PAYMENTS_BASE_URL` must use the documented internal hostname that the runtime maps back to the test machine (`host.testcontainers.internal`). `host.docker.internal` scores at most half - it depends on the container engine and on an extra-host entry that is not present here, which is why an answer using it can pass on one developer's machine and fail on the Linux runner."
+    },
+    {
+      "name": "The stub port is dynamic again",
+      "max_score": 16,
+      "description": "The `STUB_PORT = 8089` constant is gone and the stub takes a free port at run time, with the actual port read back and used to build both the exposure and the URL handed to the container. Keeping any pinned number scores zero - the task states other integration classes collide on it."
+    },
+    {
+      "name": "MUST NOT wait by sleeping",
+      "max_score": 16,
+      "description": "The `Thread.sleep(3000)` is removed and nothing fixed-duration replaces it. Scores zero if any sleep, pause, or fixed delay survives anywhere in setup, including a shorter one framed as a safety margin. Full credit requires the remaining wait to be an observable condition (the container's health endpoint) or an honest absence of a wait where the stub is already listening after `start()` returns."
+    },
+    {
+      "name": "Teardown covers both, in a safe order",
+      "max_score": 8,
+      "description": "The container is stopped before the stub it depends on, and both are released even if setup failed partway. Scores zero if the stub is stopped first or if a failure between the two starts leaves either running."
+    },
+    {
+      "name": "No engine-level escape hatches",
+      "max_score": 6,
+      "description": "No host networking mode, no docker-socket mount, no change to how the image is built. Any of these scores zero for this criterion."
+    }
+  ]
+}

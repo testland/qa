@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="web-e2e" tests="5" failures="0" errors="0" time="18.500">
+  <testsuite name="storefront" tests="5" failures="0" errors="0" skipped="0" time="18.500" timestamp="2026-08-11T03:12:40">
+    <testcase classname="checkout.spec.ts" name="checkout flow" time="12.480"/>
+    <testcase classname="search.spec.ts" name="search page loads" time="3.210"/>
+    <testcase classname="auth.spec.ts" name="login" time="1.870"/>
+    <testcase classname="shell.spec.ts" name="nav renders" time="0.940"/>
+    <testcase classname="shell.spec.ts" name="formats currency" time="0.000"/>
+  </testsuite>
+</testsuites>

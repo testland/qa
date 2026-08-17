@@ -1,0 +1,41 @@
+[2026-08-15T23:41:02Z] pipeline: main / test (attempt 1 of 1)
+[2026-08-15T23:41:02Z] agent: linux-amd64-medium  image: ci-node20:stable  workspace: /builds/acme/reporting
+[2026-08-15T23:41:03Z] $ git rev-parse --short HEAD
+[2026-08-15T23:41:03Z] e77a10c
+[2026-08-15T23:41:03Z] $ git log -1 --pretty=%s
+[2026-08-15T23:41:03Z] docs: fix broken links in the README
+[2026-08-15T23:41:04Z] $ npm install
+[2026-08-15T23:41:06Z] npm warn old lockfile
+[2026-08-15T23:41:06Z] npm warn ideal tree: package-lock.json not found; a lockfile will be created but is not committed in this repository
+[2026-08-15T23:41:45Z] added 1204 packages, and audited 1205 packages in 41s
+[2026-08-15T23:41:45Z] 118 packages are looking for funding
+[2026-08-15T23:41:46Z] found 0 vulnerabilities
+[2026-08-15T23:41:47Z] $ npx vitest run
+[2026-08-15T23:41:52Z]  RUN  v2.1.4 /builds/acme/reporting
+[2026-08-15T23:42:11Z]  ✓ tests/reporting/summary.spec.ts (12 tests) 1841ms
+[2026-08-15T23:42:19Z]  ✓ tests/reporting/csv-export.spec.ts (7 tests) 902ms
+[2026-08-15T23:42:24Z]  ❯ tests/reporting/invoice-export.spec.ts (5 tests | 1 failed) 1120ms
+[2026-08-15T23:42:24Z]    × exports the grand total in the account currency
+[2026-08-15T23:42:24Z]      → expected '1.234,50 €' to be '€1,234.50' // Object.is equality
+[2026-08-15T23:42:24Z]
+[2026-08-15T23:42:24Z]  FAIL  tests/reporting/invoice-export.spec.ts > exports the grand total in the account currency
+[2026-08-15T23:42:24Z] AssertionError: expected '1.234,50 €' to be '€1,234.50'
+[2026-08-15T23:42:24Z]
+[2026-08-15T23:42:24Z] - Expected
+[2026-08-15T23:42:24Z] + Received
+[2026-08-15T23:42:24Z]
+[2026-08-15T23:42:24Z] - €1,234.50
+[2026-08-15T23:42:24Z] + 1.234,50 €
+[2026-08-15T23:42:24Z]
+[2026-08-15T23:42:24Z]  ❯ tests/reporting/invoice-export.spec.ts:38:42
+[2026-08-15T23:42:24Z]      36|   const row = exportInvoice(invoice, { account });
+[2026-08-15T23:42:24Z]      37|
+[2026-08-15T23:42:24Z]      38|   expect(row.grandTotal).toBe('€1,234.50');
+[2026-08-15T23:42:24Z]         |                                          ^
+[2026-08-15T23:42:24Z]      39| });
+[2026-08-15T23:42:24Z]
+[2026-08-15T23:42:24Z]  Test Files  1 failed | 14 passed (15)
+[2026-08-15T23:42:24Z]       Tests  1 failed | 233 passed (234)
+[2026-08-15T23:42:24Z]    Duration  37.12s
+[2026-08-15T23:42:25Z] exit status 1
+[2026-08-15T23:42:25Z] pipeline: FAILED

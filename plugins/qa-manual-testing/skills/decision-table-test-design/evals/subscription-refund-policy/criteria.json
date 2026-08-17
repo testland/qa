@@ -1,0 +1,41 @@
+{
+  "context": "Three facts - cancelled within 14 days, annual plan, more than 10 hours of compute used - give exactly 8 combinations. The note produces at least four genuinely different results: a full refund to the card, a pro-rata refund, no refund with the subscription continuing to the end of the paid period, and a usage-deducted balance issued as account credit. Predicted baseline failure: the agent builds a table whose result column is refund-shaped - full refund, partial refund, no refund - and folds account credit into 'partial refund' and end-of-period continuation into 'no refund'. Once account credit has no result of its own, the table cannot express the conflict it exists to surface: within 14 days with heavy usage, one sentence promises money back and another sends it to credit. The document then reads as an authoritative one-pager, and it reproduces exactly the mistake support has been making.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named refund-rules-analysis.md exists and contains a per-combination table. Scores zero if absent or if it only paraphrases the note."
+    },
+    {
+      "name": "MUST NOT leave an outcome from the note without a result of its own",
+      "max_score": 28,
+      "description": "Anti-pattern guard. Account credit for the usage-deducted balance appears as its own result, distinct from a card refund, and the monthly-plan outcome where the subscription continues to the end of the paid period appears as its own result, distinct from a bare 'no refund'. Scores zero if either is folded into another result. Scores at most half if both are named in prose but the table's result column still carries only refund sizes."
+    },
+    {
+      "name": "All eight combinations accounted for",
+      "max_score": 25,
+      "description": "All 8 combinations of the three facts are traceable in the table, each with a stated result or an explicit open question. Combinations may be merged where a fact provably makes no difference, provided the merge names it. Scores zero if fewer than 8 can be traced or if the table is organised by the note's sentences. Scores at most half if 8 appear but some carry no result."
+    },
+    {
+      "name": "The 14-day versus usage conflict raised",
+      "max_score": 24,
+      "description": "The two combinations where a customer cancels within 14 days having used more than 10 hours of compute - annual and monthly - are flagged as governed by two sentences that disagree: refunded in full to the card, versus usage deducted and the balance issued as credit. Scores zero if a single result is stated for those combinations without marking the conflict. Scores at most half if raised for only one plan type."
+    },
+    {
+      "name": "The monthly heavy-usage gap raised",
+      "max_score": 14,
+      "description": "The combination of a monthly plan cancelled after 14 days with more than 10 hours used is flagged: there is no refund to deduct from, yet the deduction sentence is written without condition, so what the customer receives is undefined. Scores zero if that combination is silently assigned 'no refund' with no note that the usage sentence appears to apply to it."
+    },
+    {
+      "name": "Plan type identified as irrelevant inside 14 days",
+      "max_score": 12,
+      "description": "The document states that within 14 days the plan type makes no difference to the result and merges or annotates the two combinations accordingly, rather than listing an annual and a monthly early cancellation as two distinct rules. Scores zero if the document claims plan type changes the early-cancellation result."
+    },
+    {
+      "name": "Cases cover the non-refund paths",
+      "max_score": 12,
+      "description": "The proposed QA cancellations include at least one monthly cancellation after 14 days (service continues to period end) and at least one heavy-usage cancellation. Scores zero if every proposed case results in money returned to a card."
+    }
+  ]
+}

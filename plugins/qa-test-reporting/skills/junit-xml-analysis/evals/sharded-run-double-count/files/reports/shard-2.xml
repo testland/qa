@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="shard-2" tests="4" failures="0" errors="0" skipped="0" time="28.740" timestamp="2026-08-11T02:04:09">
+  <testcase classname="tests/wishlist.spec.ts" name="adds an item" time="6.440"/>
+  <testcase classname="tests/wishlist.spec.ts" name="moves to the cart" time="7.120"/>
+  <testcase classname="tests/search.spec.ts" name="filters by brand" time="8.900"/>
+  <testcase classname="tests/search.spec.ts" name="paginates" time="6.280"/>
+</testsuite>

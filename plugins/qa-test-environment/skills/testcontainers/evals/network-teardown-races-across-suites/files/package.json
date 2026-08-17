@@ -1,0 +1,12 @@
+{
+  "name": "storefront-integration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "integration": "vitest run"
+  },
+  "devDependencies": {
+    "testcontainers": "^10.16.0",
+    "vitest": "^2.1.8"
+  }
+}

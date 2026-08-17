@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent produces one case per status change - assign, reply, resolve, reopen, close - which is precisely the pack the prompt says already exists and already passes. Every individual transition gets exercised, so the coverage looks total, but each case starts from a freshly seeded ticket and ends one step later, and neither incident is reachable that way. Both bugs live in the join between two consecutive transitions at a status that can be entered by more than one route: reopen-then-reply exposes the unrestarted first-response clock, and reopen-then-resolve-then-wait exposes the stale auto-close deadline. The discriminating output identifies which statuses have several routes in, then runs each route into the events that follow it, rather than exercising every transition once in isolation.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/ticket-lifecycle-tests.md exists and contains a model plus numbered manual cases with per-step expected results."
+    },
+    {
+      "name": "Statuses reachable by more than one route are identified with their routes",
+      "max_score": 24,
+      "description": "The document names Open as reachable by assignment from New, by a customer reply from PendingCustomer, and by a reopen from Resolved; and Resolved as reachable from Open, from PendingCustomer, and again after a reopen. Naming only the reopen route because it is the one in the incident caps this at half. A document that lists transitions without ever noting that a status has several ways in scores zero."
+    },
+    {
+      "name": "Cases run a route in followed by the next event",
+      "max_score": 28,
+      "description": "At least four cases consist of an identified route into a status followed by an event out of it, with expected results after both steps. The set must include reopen-then-agent-replies (first-response clock restarted from the reopen, not the original assignment) and reopen-then-agent-resolves-then-auto-close (the 72 hours run from the second resolution). A pack in which every case is a single transition from a seeded starting status scores zero. Covering only the two sequences from the incidents caps this at half."
+    },
+    {
+      "name": "MUST NOT present one end-to-end walk as the coverage",
+      "max_score": 14,
+      "description": "MUST NOT. A pack whose spine is a single walk - new, assigned, replied, resolved, closed - with the reopen appended as one more case, scores zero here. One walk touches a handful of the transitions and none of the joins, which is the pack the team already has."
+    },
+    {
+      "name": "MUST NOT dump every possible two-step sequence",
+      "max_score": 12,
+      "description": "MUST NOT. Mechanically enumerating every pair of consecutive transitions across all five statuses - a list of a hundred-plus sequences with no ordering or rationale - scores zero on this criterion. The sequences must be scoped to the statuses with multiple routes in, with a stated reason for the scoping, and the pack must remain runnable in a day as the prompt requires."
+    },
+    {
+      "name": "Events that must be refused are covered",
+      "max_score": 16,
+      "description": "Cases exist for events the workflow gives no behaviour to: a reopen on a closed ticket, a customer reply on a resolved ticket (the portal reply box is disabled and only Reopen gets back in), a resolve or reply on a ticket nobody owns, and the auto-close timer firing on a ticket that is not resolved. Each expects the status unchanged. Fewer than three such cases caps this at half; none scores zero."
+    },
+    {
+      "name": "All 35 status/event combinations accounted for",
+      "max_score": 12,
+      "description": "The model covers 5 statuses against 7 events - 35 combinations - each either producing a result or explicitly marked as producing none. Thirty or more accounted for earns full marks; 22 to 29 caps at half."
+    },
+    {
+      "name": "Clock expectations are stated per step",
+      "max_score": 12,
+      "description": "Where a case touches a status change that starts, stops, or should restart a clock, the step's expected result says what the SLA panel should read - clock restarted at zero, auto-close due 72 hours from now - not just the new status. Cases that assert only the status score at most half on this criterion."
+    }
+  ]
+}

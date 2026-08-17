@@ -1,0 +1,46 @@
+{
+  "context": "A 36-entry flat post-deploy list containing two entries that are multi-hour projects (item 19's twelve reports in three formats, item 10's live refund plus bank follow-up), one entry that cannot be done at deploy time at all (item 13's nightly batch), a dozen entries with no stated good result, and a page that is mutated in place so past runs leave no record. Predicted baseline failure: the agent produces a nicely grouped, well-formatted checklist that still carries most of the 36 entries because dropping coverage feels wrong, keeps or lightly rewords the twelve-report and settlement-batch entries, converts 'check the dashboard' into 'verify the dashboard loads correctly' without naming what is on it, uses no account or transaction values from the data file, attaches no time allowance, and adds no header fields or coverage statement - so the run still takes far longer than the window and a completed copy still proves nothing about which deploy it belonged to.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at docs/checklists/prod-smoke-v3.md and the two earlier files are untouched. Editing prod-smoke-v1.md or prod-smoke-v2.md, or writing to the wiki page, scores zero."
+    },
+    {
+      "name": "Cut to something that fits the window",
+      "max_score": 26,
+      "description": "MUST NOT ship a sweep that cannot be finished in the stated time. The entry count is reduced to roughly 10-16 and the arithmetic of the stated allowances lands at fifteen minutes or under. Carrying more than 20 entries scores zero. Retaining the twelve-report export entry (item 19) or the live-transaction refund plus bank follow-up (item 10) in any form scores zero regardless of count, because either alone consumes the whole window."
+    },
+    {
+      "name": "The entry that cannot be done at deploy time is removed and said so",
+      "max_score": 16,
+      "description": "The nightly settlement batch check (item 13) does not appear as something the on-call performs, and the document says somewhere why it is not in scope or where it moves to. Keeping it scores zero. Dropping it silently, with no coverage note, scores at most half."
+    },
+    {
+      "name": "Every entry names a specific thing that tells the engineer it is fine",
+      "max_score": 24,
+      "description": "Each surviving entry is one line and pairs an action with a concrete observable - a named value, count, label, status or page element - not 'check X' or 'verify X works' or 'looks OK'. Entries citing the supplied values (TXN-SBX-000117 at 42.00 USD, PO-SBX-0042 at 1,204.75 USD status Paid, the Daily settlement report, switching between SBX-9 and SBX-10) earn full marks. If any entry survives with no stated outcome, or with 'looks OK' / 'works correctly' as its outcome, this scores zero. Outcomes present but generic throughout scores at most half."
+    },
+    {
+      "name": "Time allowance per section and for the run",
+      "max_score": 14,
+      "description": "Entries are grouped by area and each group carries an explicit minute budget, with a total. Groups but no budgets, or a single overall figure with no per-group breakdown, scores at most half. No timing information at all scores zero."
+    },
+    {
+      "name": "A completed run identifies which deploy it was",
+      "max_score": 14,
+      "description": "Header fields capture at minimum who ran it, the date and time, and the build or release identifier (the footer `build: <sha>` or the #deploys message), so a filled-in copy is evidence about one specific deploy. The versioned filename is retained rather than the document instructing anyone to edit in place. Missing the build/release field scores at most half; no header fields scores zero."
+    },
+    {
+      "name": "Correct account and merchant scoping",
+      "max_score": 10,
+      "description": "The setup names oncall.smoke@paylane.example and confines the run to Sandbox Merchant (SBX-9) / (SBX-10). Any entry that would act on a merchant outside the sandbox pair - in particular any refund - scores zero for this criterion."
+    },
+    {
+      "name": "Failure capture and stated non-coverage",
+      "max_score": 10,
+      "description": "MUST NOT leave failures to the deploy channel. There is a structured place to record a failed entry with what was seen and a defect reference, AND a short statement of what this sweep intentionally does not cover. Missing either scores at most half; missing both scores zero."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+[HTTP] --> POST /session/8f21.../element  (send-code)
+[HTTP] <-- POST /session/8f21.../element 200 91 ms
+[Appium] Shutting down because we waited 60 seconds for a command
+[Appium] Removing session 8f21... from our master session list
+[HTTP] --> POST /session/8f21.../element  (code-field)
+[HTTP] <-- POST /session/8f21.../element 404 6 ms - 812
+[debug] NoSuchDriverError: A session is either terminated or not started

@@ -1,0 +1,46 @@
+{
+  "context": "A five-line paragraph - 'given the warehouse is set up, when the operator scans the pallet the usual way, then receiving works' - bundling a clean receipt, an over-receipt and a short receipt, against a data file that supplies the operator badge, the dock-door binding without which no scan is accepted, the mandatory LPN-then-bin scan order (with the reverse-order message that operators keep raising as a false defect), five still-open purchase orders out of eight, and the exact handheld text for each outcome. Predicted baseline failure: the agent emits well-formed Given/When/Then but keeps the vagueness intact - 'Given the warehouse is configured for receiving', 'Given a purchase order exists for 120 units', 'When the operator scans the pallet', 'Then the goods are received successfully' - inventing generic PO and LPN placeholders instead of using PO-88404 onward, omitting the dock-door binding and the scan order entirely so a night-shift operator still cannot reach the first scan, and assigning every scenario to the same PO, which the second scenario can no longer receive against.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at docs/receiving-scenarios.md, written as Given / When / Then. Any other path scores zero; prose-only steps with no Given/When/Then shape score at most half."
+    },
+    {
+      "name": "One behaviour per scenario",
+      "max_score": 22,
+      "description": "The three behaviours - receipt matching the order, over-receipt, short receipt - are separate scenarios so a failure names one of them. Full marks also for splitting over-receipt into within-tolerance and above-tolerance. A single scenario covering more than one of the three scores zero. Two of the three covered scores at most half."
+    },
+    {
+      "name": "Shared setup replaces 'the warehouse is set up'",
+      "max_score": 26,
+      "description": "MUST NOT leave a vague precondition. The setup states concretely: the handheld and client, the operator badge OP-1020, binding to dock door DD-03, the SKU WID-2200 with 120 units ordered, the LPN labelling, and the destination bin RCV-A-01. Any surviving 'the warehouse is set up', 'the system is configured', 'the operator is logged in' with no badge, or an omitted dock-door binding scores zero, since without the binding the first scan is refused. Setup present but missing the bin or the SKU scores at most half."
+    },
+    {
+      "name": "The scan order is spelled out",
+      "max_score": 20,
+      "description": "The scenarios state that the pallet licence plate is scanned before the destination bin, and the document records that `Unexpected scan - expecting LPN` from scanning in the reverse order is correct behaviour rather than a defect - the false defect the night shift keeps filing. 'Scans the pallet the usual way' or any wording that does not fix the order scores zero. Correct order stated but the false-defect note omitted scores at most half."
+    },
+    {
+      "name": "Then steps assert the handheld or console text with figures",
+      "max_score": 24,
+      "description": "MUST NOT assert that receiving worked. Each Then names what appears, with values - `Receipt complete 120/120`, the PO moving to `Received` / `Received (over)` / `Partially received`, `Over tolerance - supervisor override required`, the discrepancy note under Receiving > Discrepancies. Any Then of the form 'receiving works', 'the goods are received successfully', 'the system handles it correctly' scores zero. Concrete outcomes in most scenarios with one vague one scores at most half."
+    },
+    {
+      "name": "Purchase orders allocated so the pool survives",
+      "max_score": 20,
+      "description": "Each scenario is given its own open purchase order from PO-88404 to PO-88408 - never PO-88401 to PO-88403, which are already closed - and the document tells a tester what to do when their scenario's order has been consumed, plus states that the pool only refills at the quarterly rebuild. Reusing one PO across scenarios that each close it scores zero. Assigning distinct open POs but giving no guidance for a consumed one scores at most half. Using invented PO numbers scores zero."
+    },
+    {
+      "name": "Supervisor override covered where it is required",
+      "max_score": 12,
+      "description": "The above-tolerance scenario includes scanning supervisor badge S-4471, and states that nothing is received until it is. An over-receipt scenario that stops at the refusal message without the override path scores at most half; omitting the badge identity scores zero."
+    },
+    {
+      "name": "Failure capture",
+      "max_score": 8,
+      "description": "A structured place to record which scenario and step failed, expected versus observed, and a defect reference. Absent scores zero."
+    }
+  ]
+}

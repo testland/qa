@@ -1,0 +1,46 @@
+{
+  "context": "Greenfield coverage for a multi-row import, where the input rows and the expected rejections both want to be tabular and the malformed file wants to appear verbatim. Predicted baseline failure: the agent writes four `Given a supplier file listing ... with quantity ... at ...` lines, or invents `Given the file contains \"BOOK-001,4,12.50\"` repeated per row, because that reuses machinery it already sees. The subtler failure belongs to agents that do attach a tabular block to a step: the argument the runner passes into the callback is a table object, not an array, so code written as `rows[0][1]` or `rows.map(([sku, qty]) => ...)` reads plausibly and throws at runtime, and code that passes the table's parsed rows straight into `importRows` hands it `quantity: \"4\"` - every cell arrives as text - so `Number.isInteger` rejects rows the scenario says are valid and the author concludes the domain is wrong. The verbatim file usually arrives as a single quoted string with a `\\n` in it, which nobody in support can read.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Input rows given as one tabular block with named columns",
+      "max_score": 26,
+      "description": "The four rows are attached to a single step as an inline table whose first line names the columns. Scores zero if the scenario contains one step per row, or passes the rows as a delimited string. Scores at most half if a table is used with no header line, so the columns are unnamed in the file support reads and the step code has to index by position."
+    },
+    {
+      "name": "The step reads the table through the object it is handed",
+      "max_score": 26,
+      "description": "The step definition consumes the tabular argument through the table object's own accessors (`hashes()`, `raw()`, `rowsHash()`), not by treating the parameter as an array. Scores zero if the delivered code indexes the parameter directly (`table[0]`, `table.map(...)`, destructuring it as an array of arrays) - that is not what the callback receives and the step throws. Scores at most half if the code reaches into an internal property of the argument instead of calling its accessors."
+    },
+    {
+      "name": "Cells converted to the types the domain requires",
+      "max_score": 22,
+      "description": "Quantities reach `importRows` as integers and prices as numbers. Scores zero if the parsed rows are passed through unconverted: every cell arrives as text, `Number.isInteger('4')` is false, and all four rows are rejected for quantity - a delivered scenario that then asserts two acceptances simply fails, and one that asserts four rejections is asserting the test harness's bug as if it were the product's behaviour."
+    },
+    {
+      "name": "Expected rejections stated once as data",
+      "max_score": 16,
+      "description": "The two rejections, each with its row and its reason, are expressed as a single tabular block attached to one assertion step and compared as a set. Scores zero if there is one assertion step per rejected row, or if the assertion only counts rejections without pinning which row got which reason - the two rejection reasons are the thing support asked to see."
+    },
+    {
+      "name": "Malformed file appears verbatim across its own lines",
+      "max_score": 16,
+      "description": "The two-line `sku,qty,price` file is attached to a step as a multi-line verbatim block, and the scenario asserts the exact message `Missing columns: quantity`. Scores at most half if the contents are squeezed into a quoted single-line string with escaped newlines. Scores zero if the malformed case is missing, or if the file contents are constructed in the step code rather than stated in the scenario."
+    },
+    {
+      "name": "Existing sentences reused, new ones parameterised",
+      "max_score": 10,
+      "description": "`When the file is imported`, `the import accepts {int} row(s)` and `nothing is rejected` are reused rather than re-declared, and any new definition captures its values instead of hard-coding them. Redefining an existing sentence scores zero - the runner then has two definitions matching one line and refuses to run it."
+    },
+    {
+      "name": "MUST NOT write implementation-shaped steps",
+      "max_score": 10,
+      "description": "MUST NOT phrase the new steps in implementation terms - no `When importRows is called`, no file paths, no function or module names in the feature. Any such line scores zero here; support reads this file and is the group that owns the rejection wording."
+    },
+    {
+      "name": "Existing scenario and production code intact",
+      "max_score": 6,
+      "description": "The single-row scenario still passes unchanged and `src/price-import.js` is byte-identical. Editing production code to accept text quantities scores zero - it would change what the product does to make a test convenient."
+    }
+  ]
+}

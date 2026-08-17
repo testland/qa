@@ -1,0 +1,41 @@
+{
+  "context": "One module-level network plus a reference count is shared by every spec file, and teardown removes the network before the containers attached to it. Predicted baseline failure: the agent fixes the visible error only - it reverses the two teardown lines, or wraps the network removal in try/catch, or adds a retry around it - and keeps the shared singleton. The job stops going red, so the change looks successful, while the cross-file data bleeding the team also reported is untouched and the reference count still means running one spec file alone tears down containers another file is using. The second predicted failure is keeping the shared network for 'efficiency' and papering over isolation with per-file table prefixes.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both spec files still run with a working database and cache",
+      "max_score": 5,
+      "description": "Every test in `checkout.test.js` and `inventory.test.js` survives with its assertions, each still getting a database URL and a cache URL. Deleting a spec file or a test scores zero."
+    },
+    {
+      "name": "MUST NOT keep one network shared by unrelated spec files",
+      "max_score": 30,
+      "description": "Each spec file creates its own network and its own containers on it; the module-level `network` / `postgres` / `redis` singletons and the `users` reference count are gone. Scores zero if any shared-across-files instance survives - including a lazily created singleton, a globalSetup that builds one stack for the whole run, or a reference count moved elsewhere. The shared network is what makes teardown race when two files finish at once and is why the files see each other's rows."
+    },
+    {
+      "name": "Teardown order cannot leave endpoints attached",
+      "max_score": 22,
+      "description": "Containers on a network are stopped before the network itself is removed, and the order is unconditional rather than incidental. Scores zero if the network is still removed first, and zero if the error is suppressed with try/catch, `.catch(() => {})`, an ignore-list, or a retry loop around network removal - suppressing it leaves the resource ordering wrong and hides the next occurrence."
+    },
+    {
+      "name": "Running one spec file alone works and leaves nothing behind",
+      "max_score": 16,
+      "description": "With a single spec file selected, setup succeeds and teardown removes that file's containers and network. Scores zero if any construct remains whereby one file's teardown depends on another file having run, or whereby a file that never ran owns the teardown."
+    },
+    {
+      "name": "No cross-file state",
+      "max_score": 12,
+      "description": "The two files cannot see each other's rows or cache keys, because they no longer share a database instance. Achieving separation only by naming conventions - per-file table prefixes, key prefixes, separate schemas inside one shared database - scores at most half: it works until someone forgets the prefix and it does not fix the shared teardown."
+    },
+    {
+      "name": "Container-to-container addressing preserved",
+      "max_score": 8,
+      "description": "Whatever network arrangement is delivered, the aliases the services use to find each other still resolve on the network they are attached to, and the test process still reaches them through the runtime-published host port. Scores zero if a service is left pointing at an alias that no longer exists on its network."
+    },
+    {
+      "name": "No delays added around teardown",
+      "max_score": 7,
+      "description": "MUST NOT insert a sleep or fixed delay before removing the network to let endpoints detach. Scores zero if one appears."
+    }
+  ]
+}

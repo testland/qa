@@ -1,0 +1,41 @@
+{
+  "context": "Two API tests assert a handful of hand-picked fields, so renames, type changes and nulls in fields nobody asserted go unnoticed. Predicted baseline failure: the agent writes more Hamcrest assertions - the very thing the task says will not scale - or hand-rolls a shape check in Java by deserializing the body with Jackson and walking the tree, or adds a raw JSON-Schema library and calls it outside the response chain on an extracted string. The HTTP client in use supports schema assertions natively, but only if the separate schema-validator artifact is added to the build; an agent that assumes the core dependency includes it will emit a `matchesJsonSchemaInClasspath(...)` call against a `pom.xml` that cannot resolve it, which reads as correct in a diff and fails at compile time. The second invisible failure is a 'schema' that is really just the sample response with no `required` list and no types - it accepts the renamed field, the retyped price, and the null facets, so the deliverable exists and protects nothing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Schema assertion is wired through the HTTP client, with the artifact it needs",
+      "max_score": 32,
+      "description": "Both tests assert the response against a schema inside the response chain (e.g. `body(matchesJsonSchemaInClasspath(\"schemas/search-products.json\"))`) AND `io.rest-assured:json-schema-validator` is added to `pom.xml` at test scope. Scores zero if the shape check is hand-rolled in Java (Jackson tree walk, custom Hamcrest matcher, reflection over a POJO) or if it is just more field assertions. Scores at most half if the schema matcher is used but the required artifact is not added to the build, or if a third-party schema library is invoked on an extracted body string outside the response chain."
+    },
+    {
+      "name": "Schema files are real JSON Schema, not sample payloads",
+      "max_score": 20,
+      "description": "One schema file per endpoint containing `type`, `properties` with declared types, and a `required` list covering the fields the client depends on, including the types of objects inside `hits`/`suggestions` arrays. Scores zero if the delivered file is the example response copied verbatim, or has no `required` list - without `required`, a renamed field still validates, which is incident one. Scores at most half if `required` is present at the top level only and array element objects are left unconstrained."
+    },
+    {
+      "name": "The three documented changes go red",
+      "max_score": 16,
+      "description": "The answer walks each change and the schema actually rejects it: `total_count` renamed (caught by `required`), `price_cents` integer becoming a `price` string (caught by declared type plus `required`), `facets` null instead of an array (caught by `\"type\": \"array\"`, since JSON Schema type `array` does not accept `null` unless the schema says so). Scores zero if the walkthrough is absent or if any of the three would still validate against the delivered schema. Scores at most half if two of the three are demonstrably caught."
+    },
+    {
+      "name": "Schema lives in its own reviewable file on the test classpath",
+      "max_score": 12,
+      "description": "Schemas are separate `.json` files under test resources and referenced by classpath-relative name. Scores zero if the schema is embedded as a Java string literal, or referenced by an absolute filesystem path that only resolves on the author's machine."
+    },
+    {
+      "name": "Existing assertions preserved",
+      "max_score": 10,
+      "description": "Every assertion already in `SearchApiIT` - status, content type, `query`, `hits` size, `hits[0].sku`, `suggestions` size, `suggestions[0].term` - is still present. Scores zero if any is dropped on the grounds that the schema now covers it: the schema checks shape, those assertions check values."
+    },
+    {
+      "name": "MUST NOT substitute whole-body comparison",
+      "max_score": 8,
+      "description": "No assertion compares the entire response body against the sample document in `docs/search-api-responses.md` or a copy of it. Any such assertion scores zero for this criterion - it fails on every legitimate data change and produces an unreadable diff when it does."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 6,
+      "description": "Two tests, two endpoints, no new HTTP calls, no work on the other eleven endpoints. Scores zero if new test methods or endpoints appear."
+    }
+  ]
+}

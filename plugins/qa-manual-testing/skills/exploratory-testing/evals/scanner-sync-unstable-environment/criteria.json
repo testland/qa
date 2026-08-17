@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent writes a competent-looking sync test plan - queue while offline, reconnect, verify delivery, test the 500 cap, test duplicate suppression, test the dead list - and attaches a generic reporting template. What it does not produce is the thing the lead actually asked for: a per-block accounting that distinguishes minutes spent testing from minutes lost to the lab, a threshold that declares a block's findings untrustworthy, and an agreed rule for what happens when the sandbox reboots mid-block. Without that, an hour where forty minutes went to MDM provisioning and a sandbox re-seed reads exactly like an hour of real testing, which is the failure the previous engagement produced. Baseline output also tends to slide into raising defects against the 3PL vendor's system.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan file delivered",
+      "max_score": 5,
+      "description": "docs/qa/scanner-sync-tuesday.md exists and covers all three blocks. Scores at most half if only a single generic plan is produced with no per-block structure. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "Per-block time accounting with named categories",
+      "max_score": 30,
+      "description": "Each 60-minute block is accounted for in categories that at minimum separate actual test work, environment and setup overhead (MDM provisioning, sandbox re-seed), and time spent investigating and writing up a suspected defect; idle time waiting on a reboot may be its own category. Scores zero if time is reported as a single lump ('60 minutes on sync testing') or not reported at all. Scores at most half if categories are listed but no block is expected to state actual minutes against them."
+    },
+    {
+      "name": "A trustworthiness threshold and an agreed rule for a bad block",
+      "max_score": 26,
+      "description": "The plan names a concrete threshold at which the block's findings are not to be trusted - for example setup and environment overhead above roughly a third of the block, or real test time below half of it - states what Tomas does the moment he hits it (stop, narrow the objective, or abandon and re-book rather than push on), and states what happens to that block's findings afterwards. Scores zero if there is no stopping or discard rule. Scores at most half if a rule exists but attaches to no threshold anyone could check."
+    },
+    {
+      "name": "One bounded objective per block, naming what is to be learned",
+      "max_score": 22,
+      "description": "Each block carries exactly one objective naming the area, the resources used (a specific handheld, the shielded box, wifi toggling, the diagnostics dead list), and what we need to learn - for example whether a scan accepted by the warehouse system can be resent after a mid-flush disconnect. Scores zero if the deliverable is one undifferentiated list of sync scenarios spread across the day. Scores at most half if the blocks carry bare area labels rather than stated learning goals."
+    },
+    {
+      "name": "Records separate app defects, lab problems, and decisions needed",
+      "max_score": 15,
+      "description": "The in-block record distinguishes defects in our app, obstacles caused by the lab that cost time (sandbox reboot, MDM delay, the cracked scanner window handheld), and things needing a product decision (should the dead list be visible to pickers?). The lab-obstacle bucket is what makes the time accounting reviewable rather than self-reported. Scores zero if there is one undifferentiated findings list."
+    },
+    {
+      "name": "Per-block hand-back including coverage gaps and a qualitative read",
+      "max_score": 16,
+      "description": "Each block closes with what was covered, what was found, what was not reached, what obstructed it, and Tomas's own read on how much he trusts the queue. Scores at most half if the qualitative read is missing. Scores zero if the only output is a defect list or a single end-of-day summary covering all three blocks together."
+    },
+    {
+      "name": "MUST NOT leave the time breakdown unused",
+      "max_score": 12,
+      "description": "The plan states who looks at the per-block breakdown, when, and what decision it drives - approving the invoice, re-booking a block, or investing in the lab. Scores zero if the breakdown is collected but no reader, no review point, and no consequence is named; numbers that nobody acts on are overhead, not measurement."
+    },
+    {
+      "name": "3PL boundary respected",
+      "max_score": 8,
+      "description": "The plan keeps Tomas on our app and the sync behaviour and states that defects in the 3PL warehouse system's own screens are out of bounds. Scores zero if planned work directs him at the vendor's screens or at raising tickets against their system."
+    }
+  ]
+}

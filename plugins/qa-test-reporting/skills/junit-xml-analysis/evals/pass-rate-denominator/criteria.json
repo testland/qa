@@ -1,0 +1,41 @@
+{
+  "context": "20 testcases were collected, 9 carry a <skipped> child, 1 carries a <failure>, and 10 executed and passed. The board's formula - (total minus failures) over total - gives 19/20 = 95% by silently scoring every skipped test as a pass. Predicted baseline failure: the agent reproduces a denominator of 20, because the suite attribute says tests=\"20\" and that is the only total in the file, and reports something in the 90s that looks close enough to the existing board figure to pass review. The correct rate over tests that actually ran is 10/11 = 90.9%, and the real finding is that 9 of 20 (45%) of the suite did not execute at all. A second predicted failure is treating all 9 skips as one undifferentiated number, which hides that 6 are hardware-gated and legitimate while 3 are switched off by an unconditional skip pointing at QA-4421. A third is the overcorrection: recommending the build fail whenever any test is skipped, which would break every run on CI hardware that has no GPU.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and report delivered",
+      "max_score": 5,
+      "description": "scripts/pass-rate.js runs and writes pass-rate.json, test/pass-rate.test.js exists, pass-rate.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Rate computed over executed tests only",
+      "max_score": 30,
+      "description": "The headline pass rate is 10/11 = 90.9% (accept 90.9%, 0.909, or 91% rounded). Any rate whose denominator is 20 scores zero, including the board's 95% and a 'corrected' 10/20 = 50%. The denominator must exclude the 9 tests carrying a <skipped> child; deriving it from the suite's skipped attribute rather than from the elements is acceptable only if the two are reconciled."
+    },
+    {
+      "name": "Non-execution quantified",
+      "max_score": 18,
+      "description": "The report states 9 of 20 tests did not execute - 45% of the suite - and 11 executed. Missing the share, or reporting a skip count that is not 9, scores zero."
+    },
+    {
+      "name": "Skips split by recorded reason",
+      "max_score": 16,
+      "description": "The 9 are separated into 6 hardware-gated (message 'requires a CUDA device', all in tests.ml.test_inference) and 3 switched off unconditionally (message 'disabled 2026-03-04, see QA-4421', all in tests.checkout.test_promo), with the 3 named as the actionable set. A single undifferentiated '9 skipped' figure scores at most half; not surfacing the reason at all scores zero."
+    },
+    {
+      "name": "Gate recommendation does not fail on skips",
+      "max_score": 12,
+      "description": "MUST NOT recommend failing the build when the skipped count is greater than zero. Skipping is legitimate for the 6 hardware-gated tests on runners with no GPU, and a gate on skipped > 0 breaks every run. A recommendation that gates on the unconditional/ticketed skips, on a skip budget, or on the executed-count trend earns the points; 'fail if anything is skipped' scores zero."
+    },
+    {
+      "name": "Executable test covers the denominator",
+      "max_score": 10,
+      "description": "test/pass-rate.test.js asserts the rate for a fixture containing at least one skipped test, proving skips are outside the denominator, and passes. A test that only asserts a total scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Definitions stated",
+      "max_score": 8,
+      "description": "pass-rate.md defines executed, passed, and the rate precisely enough that another person recomputes the same number next month, and states plainly that the previous formula counted non-executed tests as passes. Numbers with no definition score at most half."
+    }
+  ]
+}

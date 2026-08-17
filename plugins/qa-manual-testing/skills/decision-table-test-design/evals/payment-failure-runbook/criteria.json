@@ -1,0 +1,46 @@
+{
+  "context": "Only three of the runbook's facts are properties of a single decline - the reason, the plan, whether a backup card is on file - giving 8 combinations. The other two, 'third failed attempt within the cycle' and 'suspended in an earlier cycle', are positions in a sequence: a tester cannot set them before one failure, they have to be arrived at by producing failures in order. Predicted baseline failure: the agent lists all five as ordinary yes/no facts, produces a 32-row table, and reports it as full coverage of the runbook. That table is not wrong row by row - it is unverifiable, because half its rows describe a state no single-event test can arrange, and the ordering behaviour that actually generates the complaints (when the third failure lands, what happens if the second succeeds) is not expressible in it at all. The document reads as more thorough than the correct answer, which is the reason the error survives review.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named payment-failure-analysis.md exists and contains a table of combinations with expected actions. Scores zero if absent."
+    },
+    {
+      "name": "MUST NOT list sequence positions as single-event facts",
+      "max_score": 30,
+      "description": "Anti-pattern guard. 'Third failed attempt within the cycle' and 'suspended in an earlier billing cycle' must not appear as ordinary yes/no facts in the same list as the decline reason, plan and backup card, because a tester cannot arrange either before triggering one failure. Scores zero if the table is keyed on four or five facts including one of these. Scores at most half if they are included but flagged in a footnote while the table still enumerates them as switches."
+    },
+    {
+      "name": "The single-event table is built on exactly three facts",
+      "max_score": 25,
+      "description": "The table covers all 8 combinations of decline reason (insufficient funds or expired), plan (annual or monthly) and backup card on file, each with a stated action or an explicit open question. Merging is acceptable where a fact provably makes no difference, provided the merge names it. Scores zero if fewer than 8 combinations are traceable, or if the table is organised by runbook sentence. Scores at most half if 8 appear but several carry no action."
+    },
+    {
+      "name": "The sequence rules carried forward, not dropped",
+      "max_score": 22,
+      "description": "The attempt-count rule and the prior-suspension rule are explicitly carried into point 5 as behaviour this table does not cover, with a proposal for covering them as ordered runs of failures (for example: fail, fail, fail within one cycle and assert suspension on the third; a prior-suspension account failing once). Scores zero if they are simply absent from the document. Scores at most half if named as out of scope with no proposal for how to cover them."
+    },
+    {
+      "name": "Expired card versus backup card conflict raised",
+      "max_score": 20,
+      "description": "The two combinations with an expired card and a backup card on file are flagged as unsettled: one sentence forbids a retry and sends an email, another says to charge the backup immediately. Scores zero if a single action is stated for them without marking the conflict. Scores at most half if raised for only one plan type."
+    },
+    {
+      "name": "Plan marked irrelevant where nothing further happens",
+      "max_score": 12,
+      "description": "The document states that plan type makes no difference when a backup card charge closes the incident, since no grace period runs, and merges or annotates those combinations. Scores zero if the annual and monthly variants of the successful-backup case are presented as two distinct behaviours."
+    },
+    {
+      "name": "Actions listed distinctly",
+      "max_score": 12,
+      "description": "The distinct actions - retry after three days, charge the backup immediately and close, send the update-card email, start a 14-day grace period, start a 5-day grace period, suspend - appear as separate results rather than being collapsed into 'retry' and 'suspend'. Scores zero if the two grace periods are treated as one action or the email is folded into 'no retry'."
+    },
+    {
+      "name": "Proposed failures map to combinations",
+      "max_score": 10,
+      "description": "Each failed payment QA is asked to trigger names the combination it exercises and its expected action. Scores zero if the list is unmapped or consists only of the insufficient-funds path."
+    }
+  ]
+}

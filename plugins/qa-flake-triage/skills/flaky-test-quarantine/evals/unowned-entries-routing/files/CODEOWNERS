@@ -1,0 +1,5 @@
+# Ownership for the e2e suite
+tests/checkout/          @web-platform
+tests/growth/            @growth-experiments
+tests/search/            @search
+# tests/admin/ intentionally left out during the 5.2 split, see #4980

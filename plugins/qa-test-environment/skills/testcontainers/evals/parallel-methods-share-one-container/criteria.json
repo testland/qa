@@ -1,0 +1,41 @@
+{
+  "context": "Four test methods run concurrently against a single container declared as a shared static field, and two of them assert on whole-table counts. Predicted baseline failure: the agent reads this as a test-data collision and fixes the data - unique SKUs per test, a UUID prefix, a per-test schema qualifier, or wrapping the count assertions in something order-tolerant - while leaving method-level parallelism switched on against the shared container. That makes the duplicate-key symptom go away and reads as a clean fix, but the count assertions are still racing, the schema-creation race that produced 'relation does not exist' is untouched, and the container-managing extension is being driven in a mode its own documentation states is untested and unsupported for parallel execution. The second predicted failure is the opposite over-correction: giving every test method its own container, which is deterministic but slower than the twelve minutes the team started from.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test methods of a container-backed class no longer run concurrently against one shared container",
+      "max_score": 30,
+      "description": "MUST NOT: the delivered configuration must not leave `parallel=methods` / `parallel.mode.default=concurrent` in force for methods sharing one container. Full credit for either resolution: methods run sequentially (parallelism moved to class level, or removed), or each test method gets its own container. Scores zero if a shared container is still driven by concurrent test methods, whatever data changes accompany it. Note the documented position that this integration has only been tested with sequential execution - an answer that keeps concurrent methods and claims it is safe scores zero."
+    },
+    {
+      "name": "Configuration and test code state one coherent arrangement",
+      "max_score": 20,
+      "description": "`pom.xml`, `junit-platform.properties`, and the test class agree on what runs concurrently and on which database each test sees, and the answer says which. Scores zero if the failsafe `parallel` setting and the JUnit properties disagree, or if one of the two files is left describing the old arrangement. Scores at most half if the arrangement is only implied by code with no statement of it anywhere."
+    },
+    {
+      "name": "Determinism comes from isolation, not from renaming rows",
+      "max_score": 18,
+      "description": "The count assertions are made deterministic by controlling what is in the table when the test runs - per-test cleanup, a transaction rolled back, or a per-test database - rather than by making keys unique. Unique SKUs alone score at most half: they stop the duplicate-key error and leave `SELECT count(*)` racing exactly as before. Rewriting the count assertions to be tolerant of extra rows scores zero - it deletes the behaviour under test."
+    },
+    {
+      "name": "Schema creation cannot race a test",
+      "max_score": 14,
+      "description": "The `CREATE TABLE` is guaranteed to complete before any test touches the table, for whatever container arrangement was chosen - one-time setup per container, not per method with `IF NOT EXISTS` as a race guard. Leaving `@BeforeAll` schema creation against a container that tests may reach first, or papering over it with `CREATE TABLE IF NOT EXISTS`, scores zero."
+    },
+    {
+      "name": "Speed is not thrown away",
+      "max_score": 12,
+      "description": "The answer keeps parallelism where it is safe - class-level concurrency with a container per class, or an equivalent - rather than reverting everything to a single sequential thread with one shared container. Reverting to fully sequential with no compensating measure scores at most half. Starting a fresh container for each of the four methods with no acknowledgement of the cost scores at most half."
+    },
+    {
+      "name": "All four tests survive intact",
+      "max_score": 6,
+      "description": "Every test method and assertion is still present; nothing is disabled, tagged out, merged, or converted into a single combined test."
+    },
+    {
+      "name": "No timing hacks introduced",
+      "max_score": 8,
+      "description": "MUST NOT introduce sleeps, staggered start delays, or retry-until-count-matches loops to space concurrent methods apart. Any of those scores zero."
+    }
+  ]
+}

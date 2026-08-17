@@ -1,0 +1,41 @@
+{
+  "context": "A suite whose config turns off the setting that makes unimplemented and unfinished steps fail, so scenarios that were never wired report as passing runs. Predicted baseline failure: the agent implements the five missing step definitions - the visible half of the job - and stops, leaving `strict: false` in place, so the next renamed sentence goes silently unwired exactly as this one did. For the requested fast check, the unaided agent typically invents one: a Node script that globs `features/**/*.feature`, regex-matches step lines, and compares them against strings scraped out of the step files. That reimplements, badly, a mode the runner already has - it loads the features and the step code and reports unmatched and duplicate matches without executing anything - and the home-grown parser will disagree with the runner on parameterised expressions the moment one uses an optional word or an alternation.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Fast wiring check uses the runner's own non-executing mode",
+      "max_score": 30,
+      "description": "The check invokes the runner in the mode that loads every feature and every step definition, reports unmatched lines, and executes no step - `cucumber-js --dry-run` (optionally combined with a format flag). Scores zero if there is no fast check at all. Scores at most half if the check is a hand-written script, grep, regex scan, or third-party linter over the feature files: it answers the question approximately, disagrees with the runner on any non-trivial expression, and becomes a second thing to maintain."
+    },
+    {
+      "name": "Unwired and unfinished steps now fail the run",
+      "max_score": 26,
+      "description": "`strict: false` is gone from `cucumber.js` - removed or set to true - so undefined and pending steps fail. Scores zero if it survives anywhere in the delivered config or is re-added as a CLI flag, since that single line is why the pipeline was green while two scenarios never ran. Scores at most half if strictness is enforced only in the pipeline (a `--strict` flag in the workflow) while the committed config still relaxes it locally: the task requires both."
+    },
+    {
+      "name": "The check is its own pipeline step and can fail the build",
+      "max_score": 12,
+      "description": "The workflow runs the wiring check as a step or job of its own, before or alongside the full run, with no `continue-on-error` and no `|| true`. Scores zero if the check exists only as an npm script that nothing in the pipeline invokes."
+    },
+    {
+      "name": "Gift-card sentences wired to the existing implementation",
+      "max_score": 16,
+      "description": "All five previously undefined sentences have definitions that call `pay` from `src/checkout.js` and assert the gift-card outcomes, including that the partial payment charges only the remainder to the card. Scores zero if any of the five is still undefined or was left returning 'pending'. Scores at most half if a definition asserts nothing and merely records state, since the shipped bug was a wrong charge amount."
+    },
+    {
+      "name": "New definitions capture the amounts from the sentence",
+      "max_score": 12,
+      "description": "The gift-card and charge amounts arrive as captured parameters of the step expression, not as literals inside the function body. Definitions written as `Given('a gift card worth $30.00', ...)` or `Then('the card is charged $20.00', ...)` score zero: a second scenario with a different amount would need a second definition."
+    },
+    {
+      "name": "MUST NOT add a second runner",
+      "max_score": 12,
+      "description": "MUST NOT introduce a second test framework alongside the feature runner - no `node --test`, Jest, Mocha, or Vitest suite added to prove the gift-card behaviour or to verify wiring. Doing so scores zero: it leaves two runners and two sets of assertions covering the same behaviour, which is the maintenance cost this suite exists to avoid."
+    },
+    {
+      "name": "Both gift-card scenarios still run",
+      "max_score": 10,
+      "description": "The two gift-card scenarios are present, unannotated for exclusion, uncommented, and inside whatever the pipeline runs. Deleting them, commenting them out, or arranging for the run to exclude them scores zero - that reproduces the green-and-uncovered state the task is about."
+    }
+  ]
+}

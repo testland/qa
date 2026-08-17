@@ -1,0 +1,41 @@
+{
+  "context": "packages/api holds two testcases of its own and two child <testsuite> elements that hold five more; the file has 11 testcases in total. Predicted baseline failure: the agent walks the root's direct <testsuite> children and reads each one's direct <testcase> children - the shape almost every example parser uses - and silently reports 6 tests, losing the whole auth and jobs subtrees including a failure. The output looks healthy because nothing errors and the suites it does report are internally consistent. The opposite error is summing the tests attribute of every <testsuite> element, which double-counts packages/api's roll-up of 7 against its children's 3 and 2 and yields 16. The fixture also carries an <error> in packages/api/jobs alongside two assertion failures, which a lumped 'failures: 3' hides.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and write-up delivered",
+      "max_score": 5,
+      "description": "scripts/flatten.js runs and writes suite-metrics.json, test/flatten.test.js exists, suite-metrics.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Total is 11 testcases",
+      "max_score": 30,
+      "description": "suite-metrics.json reports 11 tests. Reporting 6 scores zero - that is the non-recursive walk that drops the nested subtrees. Reporting 16 scores zero - that is the sum of every testsuite's tests attribute. A correct total in the prose while suite-metrics.json emits 6 or 16 scores at most half."
+    },
+    {
+      "name": "Tests attributed to the suite that owns them",
+      "max_score": 20,
+      "description": "Rows are packages/api 2, packages/api/auth 3, packages/api/jobs 2, packages/web 4, each identified by its full path. Attributing the auth failure or the jobs error to packages/api scores zero; emitting a flat list of 11 tests with no per-suite rows scores zero; correct counts but with only the leaf name ('auth', 'jobs') rather than the path scores at most half."
+    },
+    {
+      "name": "Parent counts recognised as roll-ups",
+      "max_score": 15,
+      "description": "The write-up states that packages/api's tests=\"7\" includes its descendants' tests, so a suite's own attribute cannot be added to its children's, and names this as the source of 16. Stating the number 16 is wrong without saying why scores at most half."
+    },
+    {
+      "name": "Error kept out of the failure count",
+      "max_score": 12,
+      "description": "MUST NOT report 3 failures. The run has 2 assertion failures (packages/api/auth 'issues a token', packages/web 'submits the order') and 1 error (packages/api/jobs 'runs the nightly rollup', Connection refused: redis:6379), counted and owned separately. A combined figure scores zero on this criterion."
+    },
+    {
+      "name": "Executable test covers nesting",
+      "max_score": 10,
+      "description": "test/flatten.test.js asserts against a fixture with a testsuite inside a testsuite and proves the nested testcases are counted once, and passes. A test with only a single-level fixture scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Both wrong numbers explained",
+      "max_score": 8,
+      "description": "suite-metrics.md accounts for 6 and 16 specifically, rather than asserting the correct total and moving on."
+    }
+  ]
+}

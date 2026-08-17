@@ -1,0 +1,46 @@
+{
+  "context": "The team can take tests out of the blocking path but has no mechanism that ever brings them back, and two of the four annotations in the file are not readable by any mechanism at all. Predicted baseline failure: the agent writes a scheduled workflow and a grep script that parse the two well-formed annotations and quietly return nothing for the other two, because those two have no date to extract — the mechanism reports 'no stale entries' on a file containing one entry six months past its date and one with no date ever set. Rewriting the two malformed annotations into the parseable form is the step most likely to be skipped, since the request is phrased as building a report. The agent is also predicted to hang the check off the existing e2e workflow or add a failing lint step, both explicitly ruled out, and to have the job close or re-enable stale entries by itself.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Scheduled mechanism produced",
+      "max_score": 8,
+      "description": "A GitHub Actions workflow file exists on a cron schedule with a manual trigger, plus whatever script it runs. A workflow with no schedule, or a manual-only trigger, scores at most half — the whole complaint is that nobody remembers to check."
+    },
+    {
+      "name": "Malformed annotations rewritten into a readable form",
+      "max_score": 30,
+      "description": "The 'checkout applies regional tax' annotation (no dates at all) and the 'notification digest sends' annotation ('temporarily disabled ... jamie, july') are rewritten into the same structured form as the two well-formed entries, each gaining an explicit YYYY-MM-DD deadline and a resolved owner handle from docs/notes.md. Leaving either in free prose scores zero for that entry — a report that cannot read an entry does not know it exists, which is the failure being fixed. Rewriting them without adding a deadline scores zero."
+    },
+    {
+      "name": "Already-stale entries surface on the first run",
+      "max_score": 22,
+      "description": "The mechanism compares each entry's deadline against the current date, so 'search returns paged results' (2026-03-13, more than five months past) and the newly dated 'checkout applies regional tax' entry are reported the first time it runs. An implementation whose window starts from the day it was installed, or that only reports entries that expire in future, scores zero. A design that reports staleness but never states the comparison date scores at most half."
+    },
+    {
+      "name": "Nothing is acted on automatically",
+      "max_score": 20,
+      "description": "MUST NOT have the job delete a test, remove an annotation, extend a deadline, or put a test back into the blocking path on its own. It surfaces and routes — an issue, a message, a report — and a person decides. Any auto-remediation step scores zero for this criterion, however guarded."
+    },
+    {
+      "name": "Report routes to the named owner, not a channel",
+      "max_score": 14,
+      "description": "The output of the run is addressed per entry to the owner recorded in the annotation, rather than dumped into one undirected message or artifact. An implementation that only prints a list to the job log scores at most half."
+    },
+    {
+      "name": "The e2e job is left alone",
+      "max_score": 12,
+      "description": "MUST NOT add the check to .github/workflows/e2e.yml, and MUST NOT introduce anything that fails a build or a pull request when an entry goes stale. Doing either scores zero — the brief rules it out explicitly and it recreates the red trunk the annotations existed to avoid."
+    },
+    {
+      "name": "Format document is short and shows the fields",
+      "max_score": 12,
+      "description": "docs/skip-format.md states the required fields — date out, ticket, measured rate, investigation state, deadline, owner — and shows one complete example that the mechanism parses. A document that lists fields but shows no example scores at most half; one that omits the deadline or owner field scores zero."
+    },
+    {
+      "name": "Tests left in their current state",
+      "max_score": 6,
+      "description": "MUST NOT change any test body, and MUST NOT put any of the four back into the blocking path in this change — including 'notification digest sends', whose blocking queue work shipped on 2026-07-29 and which will therefore be a strong candidate at the next review. Returning it now scores zero here; noting it in the record for the owner to act on is correct."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+PR #812 - fix(cart): clamp discount to line subtotal
+base: main  <-  head: fix/3318-negative-line-total
+
+Commits on the branch (3):
+  8ac1120 test(cart): failing repro for negative line total
+  c9d5e41 fix: clamp to zero
+  a17f2d9 review feedback: use Math.max
+
+elena-r squashed and merged 3 commits into main on 2026-07-30.
+Merged as 6e0b4c1. The branch was deleted.
+
+Repository setting: "Squash merging" is the only enabled merge method.

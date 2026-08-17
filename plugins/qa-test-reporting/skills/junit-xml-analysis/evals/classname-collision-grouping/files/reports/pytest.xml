@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" tests="4" failures="2" errors="0" skipped="0" time="2.884">
+    <testcase classname="tests.api.test_orders" name="test_create" time="0.902">
+      <failure message="assert response.status_code == 200" type="AssertionError"/>
+    </testcase>
+    <testcase classname="tests.api.test_orders" name="test_list" time="0.410"/>
+    <testcase classname="tests.api.test_refunds" name="test_create" time="1.204">
+      <failure message="assert refund.state == 'issued'" type="AssertionError"/>
+    </testcase>
+    <testcase classname="tests.api.test_refunds" name="test_void" time="0.368"/>
+  </testsuite>
+</testsuites>

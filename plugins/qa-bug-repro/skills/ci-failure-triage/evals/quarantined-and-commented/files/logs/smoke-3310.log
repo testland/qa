@@ -1,0 +1,24 @@
+2026-08-14T11:02:41Z ##[group]Run npx playwright test --project=chromium --reporter=list
+2026-08-14T11:02:44Z [flake-guard] loaded flake-list.yml (1 active entry, 0 expired)
+2026-08-14T11:03:58Z   ok 1 tests/cart/add-remove.spec.ts:14:3 › removes the last line item (7.2s)
+2026-08-14T11:04:20Z   ok 2 tests/cart/coupon.spec.ts:9:3 › rejects an expired coupon (5.9s)
+2026-08-14T11:05:02Z   x  3 tests/notifications.spec.ts:88:3 › shows the toast after a comment
+2026-08-14T11:05:02Z [flake-guard] tests/notifications.spec.ts:88 matches flake-list.yml entry #12
+2026-08-14T11:05:02Z [flake-guard]   pattern: async-wait   quarantined: 2026-06-02   review-by: 2026-09-01   owner: @notifications
+2026-08-14T11:05:02Z     Error: Timed out 15000ms waiting for expect(locator).toBeVisible()
+2026-08-14T11:05:02Z     Locator: getByTestId('toast')
+2026-08-14T11:05:02Z     Expected: visible
+2026-08-14T11:05:02Z       at tests/notifications.spec.ts:94:38
+2026-08-14T11:06:33Z   x  4 tests/billing/invoice.spec.ts:57:3 › totals a multi-line invoice
+2026-08-14T11:06:33Z     Error: expect(received).toEqual(expected)
+2026-08-14T11:06:33Z     - Expected  - 1
+2026-08-14T11:06:33Z     + Received  + 1
+2026-08-14T11:06:33Z       Object {
+2026-08-14T11:06:33Z         "currency": "EUR",
+2026-08-14T11:06:33Z     -   "totalCents": 14400,
+2026-08-14T11:06:33Z     +   "totalCents": 14382,
+2026-08-14T11:06:33Z       }
+2026-08-14T11:06:33Z       at tests/billing/invoice.spec.ts:64:31
+2026-08-14T11:06:40Z   ok 5 tests/billing/dunning.spec.ts:21:3 › retries a failed charge (6.4s)
+2026-08-14T11:06:52Z   2 failed, 41 passed (3m58s)
+2026-08-14T11:06:53Z ##[error]Process completed with exit code 1.

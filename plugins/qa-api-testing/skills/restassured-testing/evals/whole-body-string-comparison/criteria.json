@@ -1,0 +1,46 @@
+{
+  "context": "A single `body(equalTo(wholeDocument))` assertion against a checked-in snapshot. Predicted baseline failure: the agent keeps the whole-document comparison and makes it tolerant instead of decomposing it - stripping the three volatile keys from both sides before comparing, normalizing with a regex, or writing a small recursive JSON comparison helper. That preserves the exact property the team is complaining about: the failure is still 'these two documents differ', so the log still prints blobs and the regenerate-the-file reflex still works. The other predicted miss is silent coverage loss - decomposing into field assertions but only asserting the four or five interesting fields, dropping `shipping.*` and the second item, so the rework quietly narrows what the test protects while looking like a strict improvement.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Decomposed into per-field assertions",
+      "max_score": 32,
+      "description": "The single whole-document comparison is replaced by multiple `body(\"<path>\", <matcher>)` assertions in the response chain, so a failure names one path. Scores zero if any form of whole-document comparison survives - including comparing after removing volatile keys, comparing normalized/sorted JSON, or a custom deep-equality helper - because the failure output is still a document diff. Scores at most half if the decomposition happens outside the response chain (extract to a Map/String, then `assertEquals` per key)."
+    },
+    {
+      "name": "Volatile fields asserted on shape, not value",
+      "max_score": 18,
+      "description": "`created_at`, `trace_id` and `etag` are each asserted present and well-formed rather than equal to a recorded value - e.g. `notNullValue()` plus a `matchesPattern`/`startsWith` on at least one of them. Scores zero if all three are simply dropped from the test, which satisfies 'stops failing' by removing the check. Scores at most half if all three get bare presence checks with no format assertion on any of them."
+    },
+    {
+      "name": "MUST NOT weaken to a status-only test",
+      "max_score": 10,
+      "description": "The delivered test still asserts response content, not just `statusCode(200)`. Deleting the body assertions to stop the daily failures scores zero for this criterion."
+    },
+    {
+      "name": "Nested and array fields use path expressions",
+      "max_score": 14,
+      "description": "`shipping.carrier`, `shipping.tracking_number`, `shipping.country`, and the item fields are asserted via path syntax such as `items[0].sku`, `items.sku`, or `items[1].unit_price_cents`. Scores zero if nested objects or the items array are asserted as a whole against a literal structure, or if the array is checked only by size."
+    },
+    {
+      "name": "No coverage silently dropped",
+      "max_score": 12,
+      "description": "The answer lists the fields now covered, and every field in the snapshot file is accounted for as covered, shape-checked, or deliberately excluded with a reason. Scores zero if fields present in `order-42.json` are neither asserted nor mentioned. Scores at most half if a list is given but omits `shipping.*` or the second array element."
+    },
+    {
+      "name": "Snapshot file resolved",
+      "max_score": 10,
+      "description": "`expected/order-42.json` is deleted, or explicitly demoted to documentation with the runtime read removed from the test. The answer also states what to do instead of regenerating it. Scores zero if the file is still read at runtime by the delivered test."
+    },
+    {
+      "name": "Would catch the two documented regressions",
+      "max_score": 10,
+      "description": "The delivered assertions fail on `status` changing case and on a changed `sku` format - i.e. `status` is matched case-sensitively against the expected value and `sku` is matched against a pattern or exact value rather than merely being non-null. Scores zero if either regression would still pass, e.g. `body(\"status\", equalToIgnoringCase(\"shipped\"))` or `body(\"items[0].sku\", notNullValue())`."
+    },
+    {
+      "name": "Scope respected",
+      "max_score": 6,
+      "description": "No new dependency or plugin in `pom.xml`, no additional HTTP calls, same endpoint. Scores zero if a dependency is added."
+    }
+  ]
+}

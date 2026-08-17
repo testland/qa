@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent renames the three `tests` blocks to something descriptive - `login checks`, `invoice checks` - and considers the job done. That keeps one reported result per request, so the report still cannot say which of four behaviours broke, and a reviewer sees better names in the diff and approves. The mechanism the agent is not expected to apply is that each individual named check becomes one row in the machine-readable report, so granularity of reporting is decided by how the assertions are grouped, not by how they are named. The second predicted miss is the bare assertion at the top of the second script: unless it is moved inside a named check, a failure there throws out of the script and every check below it is never reported - which is exactly the silent-disappearance symptom described, and the agent is likely to leave it where it is because it looks like ordinary code.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "One named check per behaviour",
+      "max_score": 30,
+      "description": "Each distinct behaviour gets its own `pm.test('<name>', ...)` call - status, token shape, expiry, response time, content type, invoice count, and so on - because each call is one row in the report. A request that still funnels several behaviours through a single `pm.test` scores zero for that request's share, however good the name is; the report would still report one result. Full credit needs all three requests split."
+    },
+    {
+      "name": "No assertion outside a named check",
+      "max_score": 22,
+      "description": "The bare `pm.expect(...).to.eql(3)` at the top of the `list invoices` script is moved inside a named check. Scores zero if any assertion, throw, or unguarded `pm.response.json()` dereference remains at script top level ahead of the checks - that is the construct that silently swallowed the rest of the script's results."
+    },
+    {
+      "name": "Print statements converted to real checks",
+      "max_score": 16,
+      "description": "Both `console.log` warnings become named assertions that can fail the run (currency of the first invoice, page size). Scores zero if either survives as a log line or an `if` with no assertion; scores at most half if one of the two is converted."
+    },
+    {
+      "name": "MUST NOT assert on an earlier request's recorded outcome",
+      "max_score": 12,
+      "description": "The `pay invoice` script no longer checks `loginOk`, and the `loginOk` flag is no longer written in `login`. Scores zero if the flag or its assertion survives: a login failure would keep manufacturing an extra failure in a request that never got a chance to run properly, which is noise of exactly the kind this task is removing."
+    },
+    {
+      "name": "Names identify the behaviour and the request",
+      "max_score": 12,
+      "description": "Check names read as statements about behaviour - `login returns a token`, `invoices are returned in EUR` - and are unique across the collection so a row in the report is unambiguous. Names like `test 1`, `status`, `assertion`, or three requests each having a check called `returns 200` score at most half. Any check still named `tests` scores zero - that name is the reported symptom."
+    },
+    {
+      "name": "Coverage preserved",
+      "max_score": 12,
+      "description": "All twelve behaviours checked in the fixture are still checked: four in `login`, five in `list invoices` (count, status, content type, id property, plus the two log conditions), and the payment's status, state, and amount. Dropping any of them while restructuring scores zero."
+    },
+    {
+      "name": "Requests untouched and JSON valid",
+      "max_score": 6,
+      "description": "Method, URL, headers, body, name, and order of all three requests are unchanged; the token hand-off from `login` still works; the delivered file parses as a v2.1 collection. Any request edit scores zero."
+    }
+  ]
+}

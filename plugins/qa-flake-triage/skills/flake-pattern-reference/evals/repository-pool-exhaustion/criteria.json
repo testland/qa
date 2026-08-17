@@ -1,0 +1,41 @@
+{
+  "context": "Every test checks out a connection from a five-connection pool and none of them ever gives one back, so the file works until it has more tests than the pool has connections and then fails at the sixth slot regardless of which test occupies it. Predicted baseline failure: the agent takes one of the two options already on the table - raise `max`, or split the file - both of which buy slots rather than return connections, and both of which fail again at the new limit. A subtler predicted miss is releasing on the last line of each test body: it passes today and leaks again the first time an assertion fails partway through, which is precisely when a test run is already in trouble. Diagnoses are predicted to describe 'the pool running out' without naming the missing return of a finite resource, and to skip the reason the failure tracked the position in the file rather than the test.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with all seven originally-named tests present and executing, and `pool-cleanup-notes.md` exists. A test deleted, skipped, or moved to another file scores zero here."
+    },
+    {
+      "name": "Every acquired connection is returned",
+      "max_score": 28,
+      "description": "Each test returns its connection to the pool - typically acquiring in a per-test setup hook and releasing in a per-test teardown hook, or wrapping the body so the release runs on the way out. Full credit requires no acquire path left without a matching release. A release placed on the final line of each test body scores at most half: a failing assertion above it skips the release and the exhaustion returns exactly when the suite is already red. Reaching green with connections still leaked scores zero."
+    },
+    {
+      "name": "Release survives a failing test",
+      "max_score": 14,
+      "description": "The return of the connection is guaranteed whether the test passed or threw - a teardown hook the runner always executes, or `try` / `finally` around the body. A fix whose release only runs on the success path scores zero for this criterion."
+    },
+    {
+      "name": "The file proves it leaves nothing checked out",
+      "max_score": 10,
+      "description": "The test file itself asserts that the suite ends with `pool.stats().inUse === 0`. Missing this check scores zero here; asserting it only inside one test rather than after the suite scores at most half."
+    },
+    {
+      "name": "Notes name the unreturned resource and the position effect",
+      "max_score": 20,
+      "description": "`pool-cleanup-notes.md` states that each test consumed one of five connections and never released it, that the failure therefore lands on the sixth checkout regardless of which test that is - which is why it followed the slot and not the test - and that a test passing on its own proves nothing about a suite that shares a finite pool. A write-up that says only 'the pool is exhausted' without naming the missing release scores at most half. Blaming `src/pool.js`, the max, or the runner scores zero."
+    },
+    {
+      "name": "No raised limit, retry, or file split as the fix",
+      "max_score": 14,
+      "description": "MUST NOT reach green by raising `max` above 5, creating a second pool, creating a pool per test to sidestep the cap, retrying the acquire, splitting the file so fewer tests share the pool, or skipping tests. Any of these offered as the fix scores zero for this criterion. The notes must also say why a larger `max` only moves the failure to a later slot."
+    },
+    {
+      "name": "Source unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify anything under `src/` - not the pool's default max, not `release` to tolerate double-returns, not the repository. Any edit there scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "ci-reports",
+  "private": true,
+  "scripts": { "test": "node --test" }
+}

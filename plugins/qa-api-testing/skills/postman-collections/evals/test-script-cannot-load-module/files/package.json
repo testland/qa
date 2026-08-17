@@ -1,0 +1,9 @@
+{
+  "name": "acme-api-tests",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "newman": "^6.2.1"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Two tests never establish the precondition they assert on - they read a session that an earlier test signed in, so they only pass in a run that includes their predecessor, and the sign-out test is a live grenade whose position decides who fails. Predicted baseline failure: the agent sees a green full run, concludes the single-test pipeline is 'running the tests wrong', and either recommends running the file whole, wraps the file in a `describe` with a shared `before` hook (which still leaves one sign-in shared by all tests and still breaks under a single-name selection), or adds sign-in calls only to the two tests that currently fail while leaving the sign-out test able to strand any test declared after it. The write-up is predicted to say the tests 'depend on order' without naming that the missing piece is a per-test arrangement of the precondition plus a reset of the module-level session between tests.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with all five originally-named tests present, and `order-dependency-notes.md` exists. Any test deleted, merged, or skipped scores zero here."
+    },
+    {
+      "name": "Every test arranges its own precondition",
+      "max_score": 26,
+      "description": "Each test that asserts on an active session establishes that session itself (directly or through a per-test hook that runs for every test), so no test reads a session created by a sibling. Full credit requires this for all five tests, including the auditor test, not only the two that were failing. Adding sign-in calls to just the two red tests scores at most half. Leaving any test dependent on a sibling's side effect scores zero."
+    },
+    {
+      "name": "Leftover session state is cleared between tests",
+      "max_score": 14,
+      "description": "The module-level session is reset for every test - a per-test hook calling `signOut` or equivalent - so an earlier sign-in cannot silently satisfy a later test's precondition and mask the same bug returning. A fix that only adds arrangements without clearing inherited state scores at most half; a single reset placed once at the top of the file scores zero."
+    },
+    {
+      "name": "Notes name the implicit precondition dependency",
+      "max_score": 20,
+      "description": "`order-dependency-notes.md` identifies the mechanism concretely: the display-name and admin-permission tests consumed the sign-in performed by the first test, and `signOut` in the fourth test destroys that state for anything declared after it, which is why the failure set moved when the file was reordered. A write-up that says only 'the tests are order-dependent' without naming which test supplied what to which scores at most half. Blaming the test runner, the `--test-name-pattern` flag, or `src/session.js` scores zero."
+    },
+    {
+      "name": "No quarantine, retry, or enforced ordering as the fix",
+      "max_score": 14,
+      "description": "MUST NOT resolve this by declaring the tests must run together, pinning or documenting a required order, merging the five scenarios into one sequential test, retrying, raising a timeout, or marking a test `skip` / `todo` so the single-name pipeline stays green. Any of these offered as the fix scores zero for this criterion."
+    },
+    {
+      "name": "Production source unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify `src/session.js`. Replacing the module-level `active` with an injectable store, or making `permissions()` tolerate a missing session, is a production change the task did not authorise and scores zero here."
+    },
+    {
+      "name": "Assertions still describe their own scenario",
+      "max_score": 10,
+      "description": "Each test still asserts what its name claims - the display-name test still checks `'Ada L.'`, the admin test still checks all three permissions, the auditor test still checks `['read']`. Weakening an assertion (for example wrapping it in a null check or accepting either outcome) to survive a missing precondition scores zero."
+    },
+    {
+      "name": "Forward rule stated",
+      "max_score": 8,
+      "description": "The notes give the rule that governs tests added later - a test arranges everything it asserts on and leaves no state behind - rather than only describing which lines were changed today."
+    }
+  ]
+}

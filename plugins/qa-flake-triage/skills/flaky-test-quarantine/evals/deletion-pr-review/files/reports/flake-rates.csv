@@ -1,0 +1,5 @@
+test_name,runs_30d,failures_30d,failure_rate,covers,last_related_incident
+order refund returns funds to source,290,26,9.0%,refund path end to end,INC-2288 refund double-post 2026-08-09
+order status transitions to shipped,290,33,11.4%,fulfilment state machine,none
+order csv statement downloads,290,49,16.9%,statement export,none
+order print label opens dialog,290,58,20.0%,label printing (removed in 5.4 on 2026-06-30),none

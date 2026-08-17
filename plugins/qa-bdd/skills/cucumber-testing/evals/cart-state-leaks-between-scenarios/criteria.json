@@ -1,0 +1,41 @@
+{
+  "context": "Step code that keeps `cart` and `promoAccepted` in module scope, written with arrow callbacks. Predicted baseline failure: the agent recognises the module-level variables as the bug and moves the state onto `this` - but leaves the callbacks as arrow functions, which are not bound to the per-scenario context object the runner creates, so `this` is not the scenario's context and the suite dies at the first assignment. The near-miss variant is just as likely: the agent keeps arrow functions and swaps the two variables for a module-level object, Map or `beforeEach`-assigned singleton, which reads as a tidy refactor in the diff while preserving exactly the channel that made parallel runs wrong. Both failures are invisible to a casual reader because the obvious smell - a bare `let` at the top of the file - is gone.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Per-scenario state object",
+      "max_score": 30,
+      "description": "State lives on the scenario context the runner instantiates fresh for each scenario - `this.cart` / `this.promoAccepted`, with a context class registered via `setWorldConstructor` if one is introduced. Scores zero if any mutable value used by more than one step still lives at module scope, whatever its shape: a bare `let`, an object literal, a `Map` keyed by scenario name, or a module-level singleton reset in a hook. The task is that nothing produced during one scenario is reachable in the next, and a keyed module-level store still is."
+    },
+    {
+      "name": "Callbacks can actually reach that state",
+      "max_score": 22,
+      "description": "Every step callback that touches the scenario context is a `function () {}` (or a named function), not an arrow. Delivering `this.cart` inside arrow callbacks scores zero for this criterion and is the dominant silent failure: arrow functions capture the enclosing `this`, so the step never sees the runner's context object and the suite throws on the first access. Callbacks that touch no state may stay arrows."
+    },
+    {
+      "name": "Parallelism left switched on",
+      "max_score": 14,
+      "description": "`parallel: 2` survives in `cucumber.js`. Removing it, setting it to 1, or adding a flag that serialises the run scores zero - the task states explicitly that the suite must be correct under parallel execution, not spared from it."
+    },
+    {
+      "name": "Both freeloading scenarios declare their own cart",
+      "max_score": 16,
+      "description": "'An unknown promo is rejected' and 'The promo survives a repeated item' each declare the cart they assert against, using the existing sentences, and their expected totals still match what they now set up. Leaving either scenario to inherit a cart scores zero. Adding a declaration but leaving the old expected total unchanged when the new setup produces a different number scores at most half - the file would be internally inconsistent."
+    },
+    {
+      "name": "src/cart.js untouched",
+      "max_score": 6,
+      "description": "`src/cart.js` is byte-identical. Editing production code to work around test state scores zero."
+    },
+    {
+      "name": "MUST NOT split the parameterised steps",
+      "max_score": 10,
+      "description": "MUST NOT replace `the cart contains {int} of {string} at ${float}` or `the total is ${float}` with per-value definitions such as `the cart contains 2 of \"BOOK-001\"` or `the total is $25.00`. Any hard-coded-value duplicate of an existing parameterised definition scores zero here: it makes the file pass while starting exactly the step-definition drift the suite has so far avoided."
+    },
+    {
+      "name": "Five behaviours retained",
+      "max_score": 8,
+      "description": "Item count, promo applied to a multi-line cart, promo rejection, a second item-count case, and the promo on a repeated item all still have a scenario. Deleting or merging a scenario to remove the state dependency scores zero - the suite must not get correct by testing less."
+    }
+  ]
+}

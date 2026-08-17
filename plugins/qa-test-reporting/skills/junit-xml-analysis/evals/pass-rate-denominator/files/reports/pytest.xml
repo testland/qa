@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" tests="20" failures="1" errors="0" skipped="9" time="41.882" timestamp="2026-08-11T04:02:11">
+    <testcase classname="tests.checkout.test_cart" name="test_add_item" time="0.412"/>
+    <testcase classname="tests.checkout.test_cart" name="test_remove_item" time="0.388"/>
+    <testcase classname="tests.checkout.test_cart" name="test_quantity_limits" time="0.501"/>
+    <testcase classname="tests.checkout.test_promo" name="test_percentage_discount" time="0.220"/>
+    <testcase classname="tests.checkout.test_promo" name="test_expired_code" time="0.244"/>
+    <testcase classname="tests.checkout.test_promo" name="test_stacked_codes" time="0.0">
+      <skipped type="pytest.skip" message="disabled 2026-03-04, see QA-4421"/>
+    </testcase>
+    <testcase classname="tests.checkout.test_promo" name="test_case_insensitive_code" time="0.0">
+      <skipped type="pytest.skip" message="disabled 2026-03-04, see QA-4421"/>
+    </testcase>
+    <testcase classname="tests.checkout.test_promo" name="test_free_shipping_code" time="0.0">
+      <skipped type="pytest.skip" message="disabled 2026-03-04, see QA-4421"/>
+    </testcase>
+    <testcase classname="tests.api.test_orders" name="test_create" time="1.902"/>
+    <testcase classname="tests.api.test_orders" name="test_list" time="0.884"/>
+    <testcase classname="tests.api.test_orders" name="test_cancel" time="1.117">
+      <failure message="assert order.state == 'cancelled'" type="AssertionError"/>
+    </testcase>
+    <testcase classname="tests.api.test_orders" name="test_refund" time="1.240"/>
+    <testcase classname="tests.ml.test_preprocess" name="test_normalises_input" time="2.104"/>
+    <testcase classname="tests.ml.test_preprocess" name="test_rejects_empty_batch" time="1.880"/>
+    <testcase classname="tests.ml.test_inference" name="test_batch_scoring" time="0.0">
+      <skipped type="pytest.skip" message="requires a CUDA device"/>
+    </testcase>
+    <testcase classname="tests.ml.test_inference" name="test_single_scoring" time="0.0">
+      <skipped type="pytest.skip" message="requires a CUDA device"/>
+    </testcase>
+    <testcase classname="tests.ml.test_inference" name="test_scoring_timeout" time="0.0">
+      <skipped type="pytest.skip" message="requires a CUDA device"/>
+    </testcase>
+    <testcase classname="tests.ml.test_inference" name="test_model_versioning" time="0.0">
+      <skipped type="pytest.skip" message="requires a CUDA device"/>
+    </testcase>
+    <testcase classname="tests.ml.test_inference" name="test_fallback_to_cpu" time="0.0">
+      <skipped type="pytest.skip" message="requires a CUDA device"/>
+    </testcase>
+    <testcase classname="tests.ml.test_inference" name="test_warm_start" time="0.0">
+      <skipped type="pytest.skip" message="requires a CUDA device"/>
+    </testcase>
+  </testsuite>
+</testsuites>

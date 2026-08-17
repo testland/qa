@@ -1,0 +1,10 @@
+Paired run, staging, 2026-08-13 14:05-14:20 UTC. n.farah + l.pereira.
+
+Doc doc_1 opened in two browsers, both showing version 3.
+n.farah saved "quarterly numbers updated".            saved, no error
+l.pereira saved "added the appendix" ~20s later.      banner: "This document
+                                                       changed elsewhere -
+                                                       reload to continue"
+Reopened doc_1: n.farah's text is there, l.pereira's is not.
+
+Could not reproduce the overwrite in 3 further attempts. Calling it fixed.

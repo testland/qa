@@ -1,0 +1,46 @@
+{
+  "context": "The fixture hands the agent a twelve-step click-through walkthrough alongside the story, which is an unusually strong pull toward transcribing it. Predicted baseline failure: the agent produces a table whose rows are the walkthrough's steps with better wording - 'user enters a workspace name', 'user selects a plan', 'user presses Send invites' - which is a procedure, not a set of cases: the rows cannot fail independently, and the coverage is exactly one path. The second predicted failure is carrying the walkthrough's internals - #company-name, PlanPicker, POST /v2/onboarding/complete - into the rows, in a wizard that is about to be rebuilt. Both look like faithful, detailed work to a casual reader, which is why the last contractor's list was accepted.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/ONB-23.md exists and contains a markdown table with rows. Scores zero if prose only or written elsewhere."
+    },
+    {
+      "name": "MUST NOT transcribe the walkthrough as rows",
+      "max_score": 30,
+      "description": "Rows must be independently meaningful scenarios, not the walkthrough's steps re-tabulated. A row whose whole content is one interaction with one control - entering the name, pressing Continue, selecting a plan, confirming a component renders - is a procedure step. Scores zero if half or more of the rows correspond one-to-one with the numbered walkthrough steps, or if the table walks the four wizard steps in order as its organising principle. Scores at most half if three or more single-interaction rows remain."
+    },
+    {
+      "name": "Interruption and resumption covered",
+      "max_score": 18,
+      "description": "Rows cover leaving the wizard partway and returning - signing in again and resuming at the first incomplete step, refreshing mid-step, navigating back to a completed step and changing an answer. Scores zero if every row runs the wizard start to finish in one sitting, which is the named gap. One such row scores at most half."
+    },
+    {
+      "name": "MUST NOT carry the current build's internals into rows",
+      "max_score": 14,
+      "description": "Steps and expected results must describe behaviour. Any row naming #company-name, PlanPicker, or POST /v2/onboarding/complete inherits the walkthrough's coupling to a build that is being replaced. Two or more such rows score zero here; one scores at most half."
+    },
+    {
+      "name": "Input classes at the wizard's stated limits",
+      "max_score": 14,
+      "description": "Rows exercise the workspace-name rules at their edges (1, 2, 40 and 41 characters, and a name already used on the account) and the invite step by count (none, one, 25, 26) rather than by a single 'invites some teammates' row. Scores zero if neither limit is exercised at its edge. Covering one of the two scores at most half."
+    },
+    {
+      "name": "Optional-path and entry-point variants present",
+      "max_score": 12,
+      "description": "Rows cover skipping both optional steps, skipping one and not the other, and arriving with a plan pre-selected by the query parameter. Scores zero if the wizard is only ever completed on the same path the walkthrough takes."
+    },
+    {
+      "name": "Rows classified for the release pass they belong to",
+      "max_score": 12,
+      "description": "Each row carries a classification from a small fixed vocabulary separating the per-release confidence pass from fuller coverage, edge work and rejection work - for example smoke / regression / edge / negative. Scores zero if there is no classification column; free-text per-row priorities with no consistent vocabulary score at most half."
+    },
+    {
+      "name": "Identifier and observable outcome per row",
+      "max_score": 10,
+      "description": "Rows carry an identifier including the story key and an expected result a tester can observe. Scores zero if rows have no identifier, or if expected results are predominantly 'the step completes' / 'it works'."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "billing-core",
+  "version": "6.3.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

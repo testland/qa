@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent writes cases that visit all four situations - start, answer, pause, resume, submit, plus a terminate and a window-close variant - and then reports coverage as four of four situations, or as a count of its own cases, which reproduces the lead's spreadsheet in prose. Reaching every situation is satisfiable by a single walk and says almost nothing: with 4 situations and 7 events there are 28 combinations, of which about 9 do something, so a four-of-four claim can sit on top of 19 untested combinations. The one that ended up in front of the board - an answer posted directly to the public endpoint after the attempt ended - is one of them. The discriminating output states which criterion it is claiming, counts against the transitions or the full combination grid rather than the four situations, and says plainly what ticking four screens leaves unmeasured.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/exam-attempt-coverage.md exists and contains a model plus numbered manual cases with per-step expected results."
+    },
+    {
+      "name": "Coverage is counted against transitions, not situations",
+      "max_score": 28,
+      "description": "The coverage statement names what is being counted and gives covered-over-total where the total is the number of transitions the model defines (about 9) or the full 28 situation/event combinations. A figure computed over the four situations scores zero. A pack with cases but no explicit denominator anywhere scores zero. A denominator stated but never divided into - no figure given - caps at half."
+    },
+    {
+      "name": "MUST NOT let reaching every situation stand as the coverage claim",
+      "max_score": 16,
+      "description": "MUST NOT. Any statement that the attempt is fully covered, or covered to some percentage, on the grounds that every situation or screen is exercised scores zero here. The prompt asks for this claim to be answered, not repeated."
+    },
+    {
+      "name": "The lead's claim is answered explicitly",
+      "max_score": 18,
+      "description": "The document states what ticking all four screens does establish (each screen is reachable) and what it does not (the events that arrive while in a situation, and everything the service is supposed to refuse), and connects that to how the board's incident got through. A generic remark that the coverage is weak, with no statement of what is left unmeasured, caps at half."
+    },
+    {
+      "name": "Answers posted outside the working situation are covered",
+      "max_score": 20,
+      "description": "Cases exist for a direct call to POST /attempts/{id}/answers while the attempt is paused (the overlay shows no questions, so a save can only come from outside the app) and after the attempt has ended (the board's incident), each expecting the call refused, the answers unchanged and the situation unchanged. Missing the after-ended case scores zero on this criterion; missing only the paused case caps it at half."
+    },
+    {
+      "name": "All 28 situation/event combinations accounted for",
+      "max_score": 14,
+      "description": "The model covers 4 situations against 7 events - 28 combinations - each either producing a result or explicitly marked as producing none. Twenty-four or more accounted for earns full marks; 17 to 23 caps at half."
+    },
+    {
+      "name": "The window closing is exercised from the paused situation",
+      "max_score": 12,
+      "description": "A case covers the exam window closing while the attempt is paused - the spec says the window ends the attempt wherever the candidate is - and expects the attempt ended with the answers held at that moment. Covering the window closing only from the working situation caps this at half."
+    },
+    {
+      "name": "Cases are runnable steps with per-step expected situation",
+      "max_score": 10,
+      "description": "Each step states what the candidate's screen and the proctor console should show afterwards, so a tester can verify the situation without inspecting the service. Steps whose expectation is only 'the request fails' score at most half."
+    }
+  ]
+}

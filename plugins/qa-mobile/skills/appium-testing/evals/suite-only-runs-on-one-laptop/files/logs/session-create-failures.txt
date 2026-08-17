@@ -1,0 +1,8 @@
+# developer laptop, Xcode 16, iOS target
+[XCUITest] Error: Unable to find a device matching 'iPhone 15 Pro' with
+[XCUITest] platform version '17.4'. Available devices: iPhone 16, iPhone 16 Pro,
+[XCUITest] iPhone 16 Pro Max, iPad Pro 13-inch (M4)
+
+# CI linux image, android target
+[UiAutomator2] Error: Could not find a connected device or emulator named
+[UiAutomator2] 'Pixel_7_API_34'. Connected: emulator-5554

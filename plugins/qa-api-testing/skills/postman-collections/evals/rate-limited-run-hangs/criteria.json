@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent solves both problems in script space, because that is where it can see code. Pacing becomes a `setTimeout`-based sleep or a rewritten wait loop in the pre-request script (the same design as the March workaround, just tidier), and the hang becomes a job-level `timeout-minutes` on the workflow, which caps the bill but still lets a stuck request eat the whole budget and never says which request stuck. Both changes look like fixes in review and both leave the run's actual pacing and per-request deadline unset, because they belong to flags on the runner rather than to anything in the collection.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Pacing is a run option, not a script",
+      "max_score": 28,
+      "description": "The run passes a between-request delay flag (`--delay-request <ms>`) with a value consistent with 10 requests per second. Scores zero if pacing is still implemented inside the collection - a spin loop, a `setTimeout`, a sleep request, or a rewritten pre-request wait - or if the answer only adds retry logic for 429 responses, which paces nothing and doubles the traffic."
+    },
+    {
+      "name": "Per-request deadline bounds the hang",
+      "max_score": 24,
+      "description": "The run passes a per-request timeout (`--timeout-request <ms>`) with a concrete value. Setting only a job-level `timeout-minutes` scores at most half: it stops the six-hour bill but still burns the whole budget and does not identify the request that hung, nor let the remaining requests run. Neither scores zero."
+    },
+    {
+      "name": "MUST NOT run against the live partner system",
+      "max_score": 20,
+      "description": "The workflow runs with `environments/partner-sandbox.postman_environment.json`. Leaving `partner-production`, or the `api.partners.acme.io` host, in the scheduled run scores zero regardless of everything else - the collection creates payouts, so a nightly run against live moves real money and the documented rate limit being discussed is the sandbox's."
+    },
+    {
+      "name": "Workaround removed from the collection",
+      "max_score": 14,
+      "description": "Both `prerequest` spin loops are gone from the delivered collection. Any surviving `while (Date.now() ...)` scores zero; replacing the spin with a `setTimeout` or another in-script wait also scores zero - the pacing must move out of the collection, not change shape inside it."
+    },
+    {
+      "name": "Pacing number is derived, not guessed",
+      "max_score": 10,
+      "description": "The answer shows the arithmetic linking the chosen delay to 10 requests per second (for example 100 ms minimum spacing, with headroom stated) and to the resulting run length for sixty requests. A bare number with no derivation scores at most half; a delay that plainly violates the documented limit scores zero."
+    },
+    {
+      "name": "MUST NOT disable TLS verification by default",
+      "max_score": 10,
+      "description": "`--insecure` is removed, or kept only against the sandbox with an explicit one-line justification that it is a test server. Keeping `--insecure` on a run that reaches any live host scores zero, and keeping it unexplained scores at most half - it silently disables certificate verification for every request in the run."
+    },
+    {
+      "name": "Assertions and requests untouched",
+      "max_score": 6,
+      "description": "Both requests keep their method, URL, body, and both checks each; the `test` scripts are unchanged. Any edit to an assertion scores zero."
+    }
+  ]
+}

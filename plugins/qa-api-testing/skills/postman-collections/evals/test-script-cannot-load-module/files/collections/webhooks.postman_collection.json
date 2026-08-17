@@ -1,0 +1,66 @@
+{
+  "info": {
+    "_postman_id": "ff000000-0000-4000-8000-000000000070",
+    "name": "webhooks",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "register webhook",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"url\":\"https://acme.io/hooks/partner\"}" },
+        "url": { "raw": "{{baseUrl}}/v1/webhooks", "host": ["{{baseUrl}}"], "path": ["v1", "webhooks"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('webhook registered', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('hookId', pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "verify signature",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"hook\":\"{{hookId}}\",\"event\":\"payout.settled\"}" },
+        "url": {
+          "raw": "{{baseUrl}}/v1/webhooks/{{hookId}}/replay",
+          "host": ["{{baseUrl}}"],
+          "path": ["v1", "webhooks", "{{hookId}}", "replay"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const { hmacSha256 } = require('../lib/signing');",
+              "const jwt = require('jsonwebtoken');",
+              "const SECRET = 'whsec_live_8fd41c0b77e94a2f';",
+              "",
+              "pm.test('signature header matches the body', () => {",
+              "  const expected = hmacSha256(SECRET, pm.response.text());",
+              "  pm.expect(pm.response.headers.get('x-acme-signature')).to.eql(expected);",
+              "});",
+              "",
+              "pm.test('callback token is issued for our audience', () => {",
+              "  const claims = jwt.verify(pm.response.json().callback_token, SECRET);",
+              "  pm.expect(claims.aud).to.eql('acme-partners');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

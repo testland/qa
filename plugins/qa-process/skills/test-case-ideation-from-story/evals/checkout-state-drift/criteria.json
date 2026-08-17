@@ -1,0 +1,46 @@
+{
+  "context": "A checkout story whose real risk is that everything it reads - stock, price, session token, cart contents - is captured when the page renders and used when the money moves. Predicted baseline failure: the agent writes a thorough payment-focused list (declined card, expired card, insufficient funds, wrong address) in which every row assumes the state at page load still holds at submit, so nothing covers stock sold out in between, a price change, an expired token, or the provider taking the money while the order write fails. A second predicted failure is that the rows quote the pasted tech design - PayNowButton, /v3/checkout/confirm, orders_staging, PaymentIntent - so the list has to be rewritten the first time any of those is renamed. Both are invisible on a read-through: the list looks exhaustive on the payment axis and precise because of the internal names.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/CHK-660.md exists and contains a markdown table with rows. Scores zero if prose only or written elsewhere."
+    },
+    {
+      "name": "State that changes between render and submit",
+      "max_score": 30,
+      "description": "At least three rows put a change between the precondition and the action rather than inside it: the last unit of a line sold to someone else, a price or delivery cost changing, the session token expiring during the 30 minutes on the page, the cart edited in another tab, the saved card removed or expiring in the meantime. Scores zero if every row assumes the cart, stock, prices and session observed at page load still hold at submit. One or two such rows score at most half."
+    },
+    {
+      "name": "Money-moved-but-order-not-recorded path",
+      "max_score": 20,
+      "description": "At least one row covers the provider confirming the charge while the order is not durably created - the 20-second timeout elapsing with the outcome unknown, or the promotion failing after the charge. Its expected result must state what the shopper is charged and what a support agent can observe, not merely 'an error page is shown'. Scores zero if the only failure rows are the provider declining. A row that names the timeout but expects only an error message scores at most half."
+    },
+    {
+      "name": "Repeat submission produces one charge",
+      "max_score": 16,
+      "description": "A row covers the action being submitted twice - double press, browser back then re-submit, or a retry after a timeout - and pins that exactly one charge and one order exist afterwards. Scores zero if repeat submission never appears. Asserting only that a second confirmation page is shown, without pinning the charge count, scores at most half."
+    },
+    {
+      "name": "MUST NOT couple rows to the pasted tech design",
+      "max_score": 14,
+      "description": "Steps and expected results must describe behaviour, not internals. Any row naming PayNowButton, POST /v3/checkout/confirm, PaymentIntent, or orders_staging in its steps or expected result is implementation-coupled and churns with the first refactor. Three or more such rows score zero here; one or two score at most half. Naming an internal only in a precondition that has no behavioural equivalent is not penalised."
+    },
+    {
+      "name": "Unspecified outcomes are declared unspecified",
+      "max_score": 12,
+      "description": "Where the story does not define what should happen - stock disappearing mid-flow, the timeout, a partial write - the row says the behaviour is not specified and states the proposed contract as a proposal, rather than inventing an expected result and presenting it as required. Scores zero if every such row asserts an outcome the story never gives with nothing marking it."
+    },
+    {
+      "name": "Precondition names the state, not just the actor",
+      "max_score": 10,
+      "description": "Preconditions specify the state that matters - stock level on the line, saved card present, session age, cart contents - by fixture or by value. Scores zero if preconditions are uniformly 'logged-in user with items in cart'."
+    },
+    {
+      "name": "Postconditions cover more than the confirmation page",
+      "max_score": 10,
+      "description": "Expected results across the table include stock decremented, order created with the charged amount, and the confirmation email, not only what the shopper sees. Scores zero if every expected value is a screen observation."
+    }
+  ]
+}

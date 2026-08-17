@@ -1,0 +1,10 @@
+date,board,action,http_status,outcome
+2026-07-29,jira-eng,transition,400,"Transition id 31 is not valid for issue ENG-6120 in its current status"
+2026-07-30,linear-mobile,transition,200,"issueUpdate reported success:false - no workflow state matched the name 'Done'; the script used the first state returned instead and MOB-884 moved back to Backlog"
+2026-08-01,jira-ops,create,400,"description: Operation value must be an Atlassian Document"
+2026-08-03,ado-platform,transition,400,"TF401320: The field 'State' contains the value 'Active' which is not in the list of supported values"
+2026-08-04,ado-platform,create,400,"The field 'Severity' does not exist on work item type 'Bug' in this project"
+2026-08-05,ado-payments,transition,415,"Unsupported Media Type"
+2026-08-07,ado-payments,transition,200,"work item 7741 moved to Resolved; a priority change a triager saved 20 seconds earlier is no longer on the item"
+2026-08-10,linear-mobile,create,200,"MOB-902 created for a production outage and landed in the queue below routine work"
+2026-08-12,github-web,close,200,"issue #3312 closed by the duplicate handler; the closed ticket reads as finished work and the person who reported it asked which release the fix is in"

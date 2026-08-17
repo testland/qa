@@ -1,0 +1,41 @@
+{
+  "context": "A repo with one stakeholder-read feature file and one internal SDK unit-test file, plus a manager's instruction to convert the second into feature files. Predicted baseline failure: the agent complies. It writes `features/retry.feature` with scenarios like 'Given a base delay of 100 milliseconds / When the second attempt is scheduled / Then the delay is 200 milliseconds', writes the matching step definitions, and often deletes or empties `test/retry.test.js`. The result passes, the diff looks like tidy consistency work, and the cost is invisible in review: three direct assertions become a feature file, a step file and a translation layer that nobody outside the four engineers will ever read, for a package with no business-facing behaviour. The secondary predicted failure is on the note - an agent that does push back usually justifies it with 'unit tests are faster' rather than the reason that decides it, which is whether a non-engineering reader exists for those files.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT deliver feature files for the retry package",
+      "max_score": 30,
+      "description": "No `.feature` file, and no step definitions, are delivered for the backoff maths in `@acme/retry`. Delivering them scores zero, whatever their quality: the package has no reader outside the four engineers who wrote it, so the translation layer buys nothing and doubles the surface. Delivering the feature file while also arguing against it in the note scores at most half - the deliverable is what the manager will act on."
+    },
+    {
+      "name": "test/retry.test.js survives intact",
+      "max_score": 14,
+      "description": "The three existing assertions still exist and still exercise doubling, the cap, and jitter. Deleting the file, emptying it, or replacing its assertions with a wrapper around new step code scores zero. Reorganising it (renaming, splitting into three files) while keeping all three behaviours asserted is fine."
+    },
+    {
+      "name": "The note names the deciding factor",
+      "max_score": 20,
+      "description": "The written note explains the recommendation in terms of who reads the file - that the refund policy has a non-engineering reader who reviews and edits it, and the retry package does not, so the readable-specification format earns its cost in one place and not the other. Scores at most half if the note argues only from generality - speed, boilerplate, 'unit tests are simpler', 'the SDK is low level' - without connecting the decision to the absence of a stakeholder reader. Scores zero if there is no note, or if the note simply reports having done what was asked."
+    },
+    {
+      "name": "Digital-order rule covered in the reviewed feature",
+      "max_score": 20,
+      "description": "`features/refunds.feature` gains a scenario asserting that a digital order is refused with 'Digital orders are final'. Scores zero if the rule is covered only in JavaScript, or not at all. Scores at most half if the scenario asserts merely that the refund was refused without pinning the reason, since the existing refusal scenario already covers a refusal and the two would be indistinguishable."
+    },
+    {
+      "name": "The new scenario reuses the existing sentences",
+      "max_score": 14,
+      "description": "The new scenario is written from the step definitions that already exist - the category is supplied through the existing `a delivered order worth ${float} in the {string} category` sentence and the outcome through `the refund is refused because {string}` - and adds no new step definition. Adding a bespoke `Given a digital order` or `Then digital orders are final` definition scores zero: both duplicate a parameterised definition that already covers the case."
+    },
+    {
+      "name": "src/ untouched",
+      "max_score": 6,
+      "description": "`src/refund-policy.js` and `src/retry.js` are byte-identical. Any edit to production code scores zero."
+    },
+    {
+      "name": "The recommendation is actionable, not a hedge",
+      "max_score": 10,
+      "description": "The response states one recommended end state for `test/retry.test.js` plainly enough for the manager to act on. Presenting two options without a recommendation, or asking the reader to decide, scores at most half. Silently doing nothing about the second request and not mentioning it scores zero."
+    }
+  ]
+}

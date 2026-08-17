@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="shard-3" tests="4" failures="0" errors="2" skipped="0" time="19.880" timestamp="2026-08-11T02:14:07">
+  <testcase classname="tests/checkout.spec.ts" name="applies a promo code" time="9.410"/>
+  <testcase classname="tests/checkout.spec.ts" name="charges the card" time="4.220">
+    <error message="worker process exited unexpectedly" type="WorkerError"/>
+  </testcase>
+  <testcase classname="tests/checkout.spec.ts" name="emails a receipt" time="0.010">
+    <error message="worker process exited unexpectedly" type="WorkerError"/>
+  </testcase>
+  <testcase classname="tests/account.spec.ts" name="updates the address" time="6.240"/>
+</testsuite>

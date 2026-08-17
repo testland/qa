@@ -1,0 +1,46 @@
+{
+  "context": "A story whose behaviour is decided by three independent conditions at once - who is approving (agent / supervisor), how much is still refundable (at or under 200.00 EUR / above it), and whether the order is inside the 60-day returns window. Predicted baseline failure: the agent writes a plausible list that gives each rule its own row - one 'agent refunds 50 EUR', one 'over-limit goes to supervisor', one 'past 60 days is blocked' - and never crosses them, so the combination that caused the last two escapes (an over-limit amount on an already-partially-refunded order, and an over-limit amount at the returns cut-off) is absent. This is invisible to a casual reader because every individual rule appears to be covered and the list looks complete; nothing on the page reveals that the input space has holes.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/PAY-318.md exists and contains a markdown table with at least one row per column header. Scores zero if the output is prose without a table, or is written to a different path."
+    },
+    {
+      "name": "Full condition space accounted for",
+      "max_score": 32,
+      "description": "The eight combinations of {agent, supervisor} x {remaining amount at or below 200.00 EUR, remaining amount above it} x {within 60 days, past 60 days} are each traceable either to a row of their own or to a row that explicitly names the combinations it stands for (for example 'both roles, past 60 days - blocked before the amount is evaluated'). Scores zero if fewer than six of the eight combinations can be located and nothing in the document accounts for the remainder. Scores at most half if six or seven are located, or if the reader has to infer the folding rather than read it."
+    },
+    {
+      "name": "Agent limit measured against the remaining amount",
+      "max_score": 18,
+      "description": "At least one row puts the order in `partially_refunded` state and makes the approval path turn on the amount still refundable rather than the original total - for example an order originally 900.00 EUR with 150.00 EUR remaining being approvable by an agent. Scores zero if partially-refunded state never appears as a precondition anywhere in the table. Scores at most half if the state appears but the row does not pin which amount the 200.00 EUR limit is compared against."
+    },
+    {
+      "name": "Refund destination branch covered",
+      "max_score": 12,
+      "description": "A row covers the expired-or-removed card path and states store credit as the destination, distinct from at least one row asserting the refund returns to the original card. Scores zero if refund destination is never an expected outcome."
+    },
+    {
+      "name": "MUST NOT ship a table with no rejection rows",
+      "max_score": 12,
+      "description": "At least two rows describe an attempt that is refused or diverted rather than executed - refund started past the 60-day cut-off, an agent submitting above their limit, or a refund exceeding the remaining amount. Scores zero if every row ends in a successful refund. A single rejection row scores at most half."
+    },
+    {
+      "name": "Stable per-row identifier keyed to the story",
+      "max_score": 10,
+      "description": "Every row carries an identifier that includes the story key, in a form like PAY-318-TC-01, so a row can be referenced in review and stays stable across iterations. Scores zero if rows have no identifier column. Scores at most half if identifiers are bare sequence numbers (1, 2, 3) with no story key."
+    },
+    {
+      "name": "Expected outcome is observable",
+      "max_score": 10,
+      "description": "Each row's expected result names something a tester can observe - resulting order state, refund destination, queued-for-supervisor state, email sent, amount unchanged. Rows whose expected value is 'works as expected', 'error shown', or 'refund is handled correctly' score zero for that row; score the criterion proportionally across rows."
+    },
+    {
+      "name": "Precondition stated per row",
+      "max_score": 8,
+      "description": "Each row states the system state it requires before the action - order state, order age, remaining refundable amount, actor role - rather than leaving it to be inferred from the title. Scores zero if there is no precondition field at all."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+$ git log --oneline --since=2026-08-12
+5d1c7aa (2026-08-12 17:31) chore: tidy discount rounding
+9e30b12 (2026-08-12 14:08) docs: add a runbook for the docs-index fixture
+
+$ git show 5d1c7aa -- src/pricing/applyDiscount.ts
+@@ export function applyDiscount({ subtotal, rate }: Args): number {
+-  return Math.round(subtotal * (1 - rate));
++  return Math.ceil(subtotal * (1 - rate));
+ }
+
+$ git show 9e30b12 --stat
+ docs/runbooks/docs-index-fixture.md | 41 +++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)

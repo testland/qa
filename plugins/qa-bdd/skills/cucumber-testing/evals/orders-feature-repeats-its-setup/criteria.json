@@ -1,0 +1,41 @@
+{
+  "context": "Four scenarios that each repeat three setup lines, two of them technical (database reset, API authentication) and one of them a business fact (the catalogue entry), plus a fourth scenario whose customer differs from the other three. Predicted baseline failure: the agent sees four identical prefixes and hoists all of them into the shared block at the top of the feature, including `a customer \"Dana\" with a confirmed email` - which appears in three of the four scenarios and is contradicted by the fourth. The file then declares a confirmed Dana for a scenario about an unconfirmed Milo, and it still passes, because the fourth scenario adds Milo afterwards and asserts on Milo; the contradiction is inert at runtime and invisible to a reviewer skimming a shorter, tidier feature. The second predicted failure is treating the technical lines as feature content: they get hoisted into the same shared block instead of moving into runner-managed setup, so support still reads about seed tokens, and the reset stays at the start of a scenario rather than after it, leaving a failed scenario's rows behind exactly as before.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Only universally-true lines are hoisted",
+      "max_score": 28,
+      "description": "The shared setup block at the top of the feature contains the catalogue line and nothing that is untrue of any scenario in the file. Hoisting `a customer \"Dana\" with a confirmed email` scores zero: it is false for the fourth scenario, which then reads as declaring two customers with contradictory states, and a later reader cannot tell which one the scenario means. Scores at most half if the block is correct but the confirmed-customer line was also left duplicated in the three scenarios that need it when it could not be hoisted - that is acceptable - versus being dropped from them entirely, which breaks them."
+    },
+    {
+      "name": "Repetition removed via a feature-level shared block",
+      "max_score": 20,
+      "description": "The common line appears once in the feature, in a block the runner applies to every scenario in the file, and the per-scenario copies are gone. Scores zero if the four scenarios still each carry the catalogue line. Scores zero as well if the repetition was removed by deleting the line from the feature and moving the catalogue setup entirely into code - the catalogue price is a business fact the support team needs to see."
+    },
+    {
+      "name": "Technical setup moves out of the feature into runner setup code",
+      "max_score": 26,
+      "description": "The database reset and the seed-token authentication run automatically before every scenario via runner-invoked setup registered in support code (a `Before` registration in `features/support/`), and neither sentence appears anywhere in the feature. Scores zero if either sentence survives in the feature, including inside the shared block - the task states support must not have to read them. Scores at most half if the setup was moved into code but is invoked from inside another step definition rather than registered as scenario setup, since a scenario that omits that step then runs unauthenticated."
+    },
+    {
+      "name": "Cleanup runs after each scenario, including failures",
+      "max_score": 18,
+      "description": "State is cleared in teardown that the runner invokes after every scenario regardless of outcome (an `After` registration). Scores zero if reset happens only before a scenario: a failing scenario then leaves its rows for whatever runs next, which is the second problem described. Registering teardown that runs once after the whole file, rather than after each scenario, scores at most half."
+    },
+    {
+      "name": "Orphaned step definitions deleted",
+      "max_score": 8,
+      "description": "The `the test database is empty` and `the API client is authenticated with the seed token` definitions are gone from the step file once nothing references them. Leaving them in place scores zero for this criterion - they are now unreferenced code that invites the next author to write those lines back into a feature."
+    },
+    {
+      "name": "MUST NOT leave implementation-shaped lines in the feature",
+      "max_score": 12,
+      "description": "MUST NOT leave or introduce sentences in `features/orders.feature` that describe the plumbing rather than the behaviour - no database, token, client, endpoint, or table names. Any such surviving line scores zero here."
+    },
+    {
+      "name": "Behaviour preserved and production code untouched",
+      "max_score": 8,
+      "description": "All four scenarios are present with their original assertions, the fourth still arranges an unconfirmed customer, and `src/orders.js` is byte-identical. Dropping a scenario, weakening an assertion, or editing production code scores zero."
+    }
+  ]
+}

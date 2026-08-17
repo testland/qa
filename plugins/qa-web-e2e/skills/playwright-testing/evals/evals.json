@@ -18,7 +18,8 @@
         "`reporter` includes the HTML reporter and a machine-consumable one (JUnit or JSON) written to a file. Only one of the two scores at most half.",
         "The workflow uploads the report or test-results directory with `if: always()` (or `if: failure()`). Without the condition the upload step is skipped exactly when a failure makes it necessary, so an unconditional upload step placed after a failing test step scores zero.",
         "`projects` defines Chromium, Firefox and WebKit using the `devices` presets.",
-        "`use.baseURL` is set so specs can call `page.goto('/')`, rather than hard-coding the host in each test."
+        "`use.baseURL` is set so specs can call `page.goto('/')`, rather than hard-coding the host in each test.",
+        "MUST NOT modify tests/smoke.spec.ts. The task is configuration and CI; editing the spec to make the pipeline behave scores zero, because it moves the problem into the suite the config is supposed to serve."
       ]
     },
     {

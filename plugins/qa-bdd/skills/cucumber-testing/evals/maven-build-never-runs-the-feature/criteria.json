@@ -1,0 +1,41 @@
+{
+  "context": "A Maven project with step definitions and a feature file but nothing that makes the JUnit 5 platform discover them: no engine dependency, the feature sitting under src/test/java where Maven never copies it onto the test classpath, and no glue configuration. Predicted baseline failure: the agent reaches for the JUnit 4 recipe that dominates the tutorials it has seen - a runner class annotated `@RunWith(Cucumber.class)` with `@CucumberOptions(features = ..., glue = ...)`, backed by the `cucumber-junit` artifact. On a project with only `junit-jupiter` on the classpath that runner is inert: Surefire's platform provider finds no engine that claims it, `mvn test` stays green, and the change looks like it worked. The second predicted miss is the feature file's location - agents routinely point `features =` at `src/test/java/...` and leave the file there, which works from an IDE with the source folder on the classpath and fails under Maven.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Discovery goes through the JUnit 5 platform",
+      "max_score": 28,
+      "description": "A test class marked as a JUnit Platform suite selects the feature and includes the cucumber engine - `@Suite` plus `@IncludeEngines(\"cucumber\")` and a classpath selector for the feature location. Scores zero if no discovery mechanism is delivered at all. Scores at most half for a `@RunWith(Cucumber.class)` / `@CucumberOptions` runner class: that is the JUnit 4 path, and this project has no JUnit 4 and no vintage engine, so the delivered build still runs zero scenarios."
+    },
+    {
+      "name": "The engine dependency is actually added",
+      "max_score": 22,
+      "description": "`pom.xml` gains `io.cucumber:cucumber-junit-platform-engine` (test scope) plus whatever the suite annotations need on the classpath - `org.junit.platform:junit-platform-suite`, or the api and engine artifacts. Scores zero if the pom is unchanged, since `cucumber-java` alone only provides the annotations and never runs anything. Scores at most half if `io.cucumber:cucumber-junit` (the JUnit 4 module) is added instead, or if the suite annotations are used without the artifact that provides them, leaving the delivered pom uncompilable."
+    },
+    {
+      "name": "The feature file is moved onto the test classpath",
+      "max_score": 20,
+      "description": "`checkout.feature` is relocated under `src/test/resources`, in a directory path matching the package the selector names. Leaving it under `src/test/java` scores zero: Maven copies only `src/test/resources` into `target/test-classes`, so a classpath selector finds nothing and the run reports no features. Configuring Maven to copy `.feature` files out of `src/test/java` as an extra resource directory scores at most half - it works, but it fights the standard layout that every later contributor will assume."
+    },
+    {
+      "name": "Glue is configured to reach CheckoutSteps",
+      "max_score": 16,
+      "description": "The package holding the step definitions is declared to the runner - a glue configuration parameter on the suite class, or a `cucumber.glue` entry in `junit-platform.properties`. Scores at most half if glue is never stated and the setup happens to work only because the feature resource and the step class share a package; the reviewer should be able to see where glue comes from. Scores zero if the delivered configuration points glue at a package that does not contain `CheckoutSteps`."
+    },
+    {
+      "name": "MUST NOT keep the hand-written duplicate",
+      "max_score": 14,
+      "description": "`CartAssertionsTest` is removed, or reduced to assertions no scenario covers, once the scenarios run. MUST NOT leave it asserting the same two behaviours the first two scenarios describe: that is two suites and two sets of assertions maintained for one behaviour, and it is what hid the broken wiring for a month. Leaving it untouched and unmentioned scores zero; keeping it with a written justification that names behaviour outside the feature's scope scores full marks."
+    },
+    {
+      "name": "MUST NOT convert the scenarios to Java tests",
+      "max_score": 12,
+      "description": "MUST NOT resolve the problem by rewriting `checkout.feature` as JUnit test methods and deleting the feature. Doing so scores zero - the delivered build would be green with no scenarios in it, which is the state being reported as the bug."
+    },
+    {
+      "name": "Sentences and production code untouched",
+      "max_score": 8,
+      "description": "The three scenarios and every step sentence in `CheckoutSteps.java` are unchanged, and `src/main/java/com/acme/checkout/Cart.java` is byte-identical. Any edit to a step expression or to production code scores zero."
+    }
+  ]
+}

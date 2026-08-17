@@ -1,0 +1,41 @@
+{
+  "context": "Two IT classes each pin their database to a chosen host port so a compile-time JDBC constant matches. Predicted baseline failure: the agent treats this as a numbering problem rather than an addressing problem - it hands each class its own port constant, reads the port from an environment variable set by CI, or scans for a free port and then pins the container to it. All three read as a fix and all three still collide, because the port is claimed before the database exists and nothing stops a fourth concurrent job from picking the same number. The agent is also likely to leave `TestDatabase` as a holder of static connection constants, which is the thing that forces the pinning in the first place.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both IT classes still start their own database and keep their tests",
+      "max_score": 5,
+      "description": "`OrderRepositoryIT` and `AuditLogIT` both survive with every test method and assertion intact, each still bringing up its own database. Deleting a class, merging the two, or dropping the duplicate-id test scores zero."
+    },
+    {
+      "name": "Connection settings are read back from the started database at run time",
+      "max_score": 32,
+      "description": "The JDBC URL is assembled after startup from the host and the port the container runtime actually published for the database's exposed port. Full credit requires this for both classes and for the `Migrations.applyTo(...)` call. Assembling the URL from any value known before the container starts - a constant, a per-class field, a system property, a CI environment variable - scores zero, because that value has to be reserved in advance and that is what collides."
+    },
+    {
+      "name": "MUST NOT keep a fixed host-port binding",
+      "max_score": 20,
+      "description": "No pinned host port remains anywhere: no `setPortBindings`, no `host:container` port string, no `-p 5432:5432`. Scores zero if any survives. Picking a free port in the test process and then pinning the container to it also scores zero - the gap between choosing the port and binding it is exactly the race the team already has, and the runtime already reports the port it allocated."
+    },
+    {
+      "name": "The shared helper no longer carries connection constants",
+      "max_score": 14,
+      "description": "`TestDatabase` stops exposing a fixed `JDBC_URL` (and the duplicate literal inside `AuditLogIT` is gone); it either takes the running database's details or is replaced by per-class accessors sourced from the container. Leaving a public constant URL that any class could accidentally use scores at most half even if the tests themselves no longer read it."
+    },
+    {
+      "name": "No literal host or host port anywhere in the repository",
+      "max_score": 12,
+      "description": "Grep for `localhost`, `127.0.0.1`, `5432:`, `5433` in the delivered files returns nothing outside the container's own exposed-port declaration (the container-internal 5432 is legitimate). Any surviving host-side literal scores zero for this criterion."
+    },
+    {
+      "name": "Each class releases its database when its tests finish",
+      "max_score": 8,
+      "description": "The container is stopped or its lifecycle is delegated to the test framework's own container management so it is torn down per class. Removing teardown entirely while adding nothing that guarantees it scores zero."
+    },
+    {
+      "name": "Startup readiness is still an explicit condition, not elapsed time",
+      "max_score": 8,
+      "description": "The database is still gated on an observable readiness condition before migrations run. Introducing a fixed sleep or delay to compensate for the new dynamic addressing scores zero."
+    }
+  ]
+}

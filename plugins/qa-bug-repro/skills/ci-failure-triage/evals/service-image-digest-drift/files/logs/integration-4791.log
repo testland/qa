@@ -1,0 +1,37 @@
+2026-08-11T09:11:47Z ##[group]Initialize containers
+2026-08-11T09:11:47Z Starting service container "db"
+2026-08-11T09:11:47Z /usr/bin/docker pull ghcr.io/acme/ci-postgres:16
+2026-08-11T09:11:52Z 16: Pulling from acme/ci-postgres
+2026-08-11T09:11:58Z Digest: sha256:9f4ad0c1e7b2f83c11d0a4e6bb27c9f1a3d85e0c6741bb2e9a70cf3d51e88b04
+2026-08-11T09:11:58Z Status: Downloaded newer image for ghcr.io/acme/ci-postgres:16
+2026-08-11T09:11:59Z /usr/bin/docker create --name db_1 --label acme --network github_network_a1 -p 5432:5432 -e POSTGRES_DB=app_test ghcr.io/acme/ci-postgres:16
+2026-08-11T09:12:00Z ##[endgroup]
+2026-08-11T09:12:00Z ##[group]Service container db logs
+2026-08-11T09:12:01Z db_1  | The files belonging to this database system will be owned by user "postgres".
+2026-08-11T09:12:02Z db_1  | 2026-08-11 09:12:02.114 UTC [1] LOG:  starting PostgreSQL 16.9 (Debian 16.9-1.pgdg120+1)
+2026-08-11T09:12:02Z db_1  | [ci-postgres image 16-4] running /docker-entrypoint-initdb.d/10-extensions.sql
+2026-08-11T09:12:03Z db_1  | [ci-postgres image 16-4] running /docker-entrypoint-initdb.d/20-roles.sql
+2026-08-11T09:12:03Z db_1  | NOTICE:  role "app" does not exist, creating
+2026-08-11T09:12:03Z db_1  | [ci-postgres image 16-4] NOTE: from image tag 16-4 the "app" role password is read from CI_DB_PASSWORD in the container environment; earlier tags baked the shared development password into 20-roles.sql
+2026-08-11T09:12:03Z db_1  | WARNING: CI_DB_PASSWORD is unset in this container; falling back to a random 32-byte password
+2026-08-11T09:12:04Z db_1  | 2026-08-11 09:12:04.881 UTC [1] LOG:  database system is ready to accept connections
+2026-08-11T09:12:04Z ##[endgroup]
+2026-08-11T09:12:05Z ##[group]Run npm run test:integration
+2026-08-11T09:12:19Z > acme-api@3.14.0 test:integration
+2026-08-11T09:12:19Z > vitest run --config vitest.integration.config.ts
+2026-08-11T09:12:24Z
+2026-08-11T09:12:24Z  FAIL  tests/integration/globalSetup.ts [ globalSetup ]
+2026-08-11T09:12:24Z error: password authentication failed for user "app"
+2026-08-11T09:12:24Z     at Parser.parseErrorMessage (node_modules/pg-protocol/src/parser.ts:369:69)
+2026-08-11T09:12:24Z     at Socket.<anonymous> (node_modules/pg/lib/connection.js:117:12)
+2026-08-11T09:12:24Z   Serialized Error: {
+2026-08-11T09:12:24Z     "code": "28P01",
+2026-08-11T09:12:24Z     "severity": "FATAL",
+2026-08-11T09:12:24Z     "routine": "auth_failed",
+2026-08-11T09:12:24Z     "connection": "postgresql://app@127.0.0.1:5432/app_test"
+2026-08-11T09:12:24Z   }
+2026-08-11T09:12:24Z
+2026-08-11T09:12:24Z  Test Files  0 passed (0)
+2026-08-11T09:12:24Z       Tests  no tests
+2026-08-11T09:12:24Z Errors  1 error
+2026-08-11T09:12:25Z ##[error]Process completed with exit code 1.

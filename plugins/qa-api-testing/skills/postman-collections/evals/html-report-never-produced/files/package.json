@@ -1,0 +1,8 @@
+{
+  "name": "acme-api-tests",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "newman": "^6.2.1"
+  }
+}

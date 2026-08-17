@@ -1,0 +1,46 @@
+{
+  "context": "A network-bound API suite runs serially, and the previous attempt at concurrency failed because the module drives the HTTP client's global static configuration (`RestAssured.authentication`, `RestAssured.baseURI`, `RestAssured.basePath`) from inside test methods. Predicted baseline failure: the agent reaches for build-level parallelism - Maven `-T`, Surefire/Failsafe `forkCount` or `<parallel>methods</parallel>` - which is process-level, does not parallelize within a class under the JUnit Platform provider, and does nothing about the shared static state; or it asserts the HTTP client has its own concurrency setting, which it does not. The `401` diagnosis is where the unaided run is most likely to be confidently wrong: rate limiting and token expiry are the intuitive answers and both are wrong here. One thread calling the shopper switch while another is mid-request against an admin endpoint is invisible unless you notice the auth scheme is a static field, and any concurrency change that leaves those statics in place reproduces the same intermittent failures the team already reverted once.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Concurrency enabled at the test-framework level, committed to the repo",
+      "max_score": 28,
+      "description": "Parallel execution is turned on through JUnit 5 - `junit.jupiter.execution.parallel.enabled=true` plus a mode/strategy in `src/test/resources/junit-platform.properties`, or the same keys as `configurationParameters` in the Failsafe plugin block, together with concurrent execution declared for the suite (`@Execution(CONCURRENT)` or the parallel default mode). Scores zero if the answer claims the HTTP client parallelizes on its own, or proposes only rewriting to another test framework. Scores at most half if the only mechanism is Maven `-T` / `forkCount` / `<parallel>`, which forks JVMs rather than running the tests of a class concurrently and leaves the shared-state defect untouched."
+    },
+    {
+      "name": "The 401s are traced to shared mutable client state",
+      "max_score": 22,
+      "description": "The explanation names `RestAssured.authentication` (and the other statics in `CatalogSupport`) as process-global, and describes one thread replacing the auth scheme while another thread's request is in flight, so an admin call goes out with a shopper token. Scores zero if the `401`s are attributed to rate limiting, token expiry, connection pooling, server flakiness, or a race in the service under test. Scores at most half if 'shared state' is named generally without identifying the static auth configuration as the specific offender."
+    },
+    {
+      "name": "Global static configuration replaced by per-request configuration",
+      "max_score": 20,
+      "description": "The delivered code no longer assigns `RestAssured.authentication` (nor mutates `baseURI`/`basePath` from a test method) - credentials and target are attached per request, e.g. `given().auth().oauth2(token)` or a request specification built per test rather than installed globally. Scores zero if any write to a `RestAssured.*` static field survives inside a test method or a helper invoked from one. Scores at most half if auth is fixed but `baseURI`/`basePath` are still assigned statically at class setup with no note about why that is safe."
+    },
+    {
+      "name": "The three conflicting tests are isolated individually",
+      "max_score": 14,
+      "description": "`seedsPromoItem`, `deletesPromoItem` and `listsAllItems` are constrained relative to each other - `@Execution(SAME_THREAD)`, `@ResourceLock` on a shared key, or `@Isolated` - while the remaining tests still run concurrently. Scores zero if the whole class or the whole suite is pushed back to single-threaded execution to accommodate them, which forfeits the speed-up the task asks for."
+    },
+    {
+      "name": "Expected wall clock stated",
+      "max_score": 8,
+      "description": "The answer gives a concrete expectation for the new runtime and ties it to the chosen degree of parallelism. Scores zero if no figure is given, or if the figure implies a speed-up beyond the configured parallelism."
+    },
+    {
+      "name": "MUST NOT reintroduce a hard-coded base URI or token",
+      "max_score": 8,
+      "description": "The target host still resolves from the injected value with its local default, and both tokens still come from the environment. Any literal host or token appearing in the delivered code while removing the static helpers scores zero for this criterion."
+    },
+    {
+      "name": "No masking of concurrency failures",
+      "max_score": 8,
+      "description": "MUST NOT add sleeps, retries, `@RepeatedTest`, or a rerun-failing-tests flag to make the parallel run look stable. Any such addition scores zero for this criterion."
+    },
+    {
+      "name": "Assertions and endpoints untouched",
+      "max_score": 6,
+      "description": "Same six tests, same endpoints, same assertions including the `total` of 412. Scores zero if any assertion is changed or a test is added or removed."
+    }
+  ]
+}

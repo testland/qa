@@ -1,0 +1,46 @@
+{
+  "context": "Taken literally the card has five yes/no facts, so 32 applications - but 'score 780 or above' cannot hold while 'score 700 or above' is false, which makes 8 of the 32 impossible, and the large-loan discount does nothing below 700, which makes the loan-size fact irrelevant across another 8. Predicted baseline failure: the agent writes one section per line of the card, restates each adjustment correctly, and produces a test list of six or seven illustrative applications with no statement of how many distinct applications exist or how the list was cut down from them. Where it does build a table, it treats the two score facts as independent and prices rows such as 'score below 700 but 780 or above', which no applicant can be. The output looks disciplined - correct arithmetic, tidy sections - and its coverage is unmeasurable, which is exactly the failure the previous attempt shipped.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named loan-rate-card-analysis.md exists and contains a table of application kinds with rates. Scores zero if absent or if it contains only per-adjustment prose."
+    },
+    {
+      "name": "Full size of the problem stated before reduction",
+      "max_score": 22,
+      "description": "The document states how many applications the five facts describe in principle - 32 - before narrowing, and shows that number rather than starting from an already-shortened list. An equivalent statement is acceptable if the score facts are restructured first, provided the document says what the restructure removed. Scores zero if no count of the whole space appears anywhere. Scores at most half if a count appears but is wrong and unexplained."
+    },
+    {
+      "name": "The two score facts handled as one number",
+      "max_score": 28,
+      "description": "The document recognises that 'score 780 or above' entails 'score 700 or above', and either marks the 8 applications where the first is true and the second false as impossible, or restructures the two facts into a single input with three bands (below 700, 700 to 779, 780 or above). Scores zero if the two are priced as independent yes/no facts anywhere in the table, since that produces rows for applicants who cannot exist. Scores at most half if the entailment is mentioned in prose but the table still carries independent rows for both."
+    },
+    {
+      "name": "Reachable count reconciled",
+      "max_score": 18,
+      "description": "The document lands on 24 genuinely possible applications (three score bands times the other three facts) and says how it got there from 32. Scores zero if no reconciliation between the starting number and the final table size appears. Scores at most half if the arithmetic is stated but does not add up."
+    },
+    {
+      "name": "Large-loan discount identified as inert below 700",
+      "max_score": 16,
+      "description": "The document states that loan size changes nothing for applicants scoring below 700 - a EUR 30,000 loan and a EUR 5,000 loan both price at the base rate plus or minus the other adjustments - and merges or annotates those applications instead of listing each loan size separately. Scores zero if the document prices a large-loan discount for a sub-700 applicant anywhere."
+    },
+    {
+      "name": "MUST NOT hand over the unreduced set as the test list",
+      "max_score": 20,
+      "description": "Anti-pattern guard. The proposed test list is a reduced set derived from the table - roughly 20 applications once the impossible score pairs are removed and loan size is dropped below 700 - not 32 individually written cases, and not a handful of illustrative examples with no stated relationship to the table. Scores zero if 32 cases are enumerated one per combination with no reduction, and scores zero if the list is a short sample with no statement of what it leaves uncovered."
+    },
+    {
+      "name": "Referred-versus-priced ambiguity raised",
+      "max_score": 14,
+      "description": "The document flags that the card both refers sub-700 long-term applications to underwriting and prints a price for them, and asks which the system should do rather than deciding. Scores zero if a rate is stated for those applications with no note, and scores zero if they are silently dropped from the table."
+    },
+    {
+      "name": "Rates are computed, not described",
+      "max_score": 10,
+      "description": "Each row carries a numeric APR - for example a 780-plus applicant with a current account, a 72-month term and a EUR 30,000 loan prices at 7.5. Scores zero if rows carry adjustment names rather than resulting rates. Scores at most half if rates are present but more than two are arithmetically wrong."
+    }
+  ]
+}

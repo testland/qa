@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: with nothing in the fixture hinting at consolidation, the unaided agent authors one request per market - five written out and a note to repeat the pattern - or invents a parameterisation the tool cannot execute: a JavaScript array of markets inside a pre-request script looped with `pm.sendRequest`, the list stored as a collection variable, or a shell `for` loop invoking the runner once per row. All three produce something that reads like a covered matrix. The first two never exercise the request under test as a reported request; the third turns a single five-minute step into forty process launches. The runner's own iteration-data mechanism - one external CSV or JSON file fed in at run time, one pass per row through the same request - is the thing the agent is not expected to reach for.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Markets fed in as an iteration data file",
+      "max_score": 32,
+      "description": "The market list is a standalone CSV or JSON file passed to the run with the iteration-data flag (`-d` / `--iteration-data`), in the shape that flag consumes: a CSV whose header row names the variables, or a JSON array of flat objects. Scores zero if the list lives inside the collection (collection variables, a script-level array, one item per market) or if a data file is authored but never wired into the command. Scores at most half if the file's shape cannot be iterated row-per-pass (nested objects, a wrapper key around the array, a markdown table left as-is)."
+    },
+    {
+      "name": "MUST NOT author one request per market",
+      "max_score": 20,
+      "description": "The delivered collection contains exactly one price request. Scores zero if it holds one item per country, or five items plus an instruction to duplicate for the remaining 35 - a 40-item collection is precisely the review burden finance asked to avoid, and it puts their list back behind an engineering change."
+    },
+    {
+      "name": "Request and checks read the current row",
+      "max_score": 22,
+      "description": "The request body substitutes the row's country (`{{country}}` or equivalent) and the checks compare the response against that row's expected currency and tax treatment, read through `pm.iterationData.get(...)` or equivalent substitution. Scores zero if the expected currency or tax flag is hard-coded to one market's value: the suite then passes all 40 passes while only ever proving one, and the report is green either way. Parameterising the body but not the expectations scores at most half."
+    },
+    {
+      "name": "One invocation covers every market",
+      "max_score": 14,
+      "description": "The delivered command is a single run of the collection with the data file attached. A shell loop calling the runner per row, a CI matrix per country, or forty steps score zero - the task rules each out explicitly and the budget is one step."
+    },
+    {
+      "name": "A failing market is named in the report",
+      "max_score": 10,
+      "description": "Check names or assertion messages interpolate the row's country so the report identifies the market that broke. All passes reporting under identical static names scores at most half - correct, but triage still means reading the raw log, which the task calls out. Scores zero if the design cannot distinguish markets at all, for example a single aggregate check over the whole run."
+    },
+    {
+      "name": "House conventions followed",
+      "max_score": 8,
+      "description": "The host comes from `{{baseUrl}}` and the key from `{{apiKey}}` via the `x-api-key` header, matching the orders collection, and the run passes the staging environment file with `-e`. A literal hostname or a literal key anywhere in the new collection scores zero."
+    },
+    {
+      "name": "Delivered collection is a valid v2.1 document",
+      "max_score": 8,
+      "description": "Parses as JSON with the v2.1 `info.schema` value, an `item` array, a structured `request.url`, and the test script attached as an `event` entry whose `script.exec` is an array of lines - the same shape as the orders collection. A hand-invented JSON shape, or a script stored as a single string where the house file uses a line array, scores at most half. No collection file delivered scores zero."
+    },
+    {
+      "name": "Orders collection untouched",
+      "max_score": 6,
+      "description": "`collections/orders.postman_collection.json` is unmodified. Editing it, or folding pricing requests into it, scores zero."
+    }
+  ]
+}

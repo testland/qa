@@ -1,0 +1,41 @@
+{
+  "context": "The three suite elements declare tests 12 + 5 + 4 = 21, failures 2, errors 0, skipped 2. The file actually contains 23 testcase elements: 17 passing, 1 failure, 1 error, 4 skipped. web.CheckoutSpec declares failures=\"2\" while its body holds one <failure> and one <error>, and declares skipped=\"0\" while holding two <skipped>. api.OrdersSpec declares tests=\"5\" while holding 7 testcases, its tests count excluding the 2 it reports separately as skipped. api.RefundsSpec's summary is accurate. Predicted baseline failure: the agent reads the suite attributes, since they are the only totals in the file and are exactly what a summary line is for, and republishes 21 / 2 / 0 / 2 - the same wrong numbers the gate already publishes, which look authoritative because they came from the report. A second predicted failure is recounting correctly but keeping the vendor's habit of reporting the error inside the failure count. A third is declaring the whole file untrustworthy rather than identifying which suite drifts and in which direction.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and write-up delivered",
+      "max_score": 5,
+      "description": "scripts/verify-report.js runs and writes verified-counts.json, test/verify-report.test.js exists, verified-counts.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Totals derived from the testcase elements",
+      "max_score": 30,
+      "description": "The published totals are 23 tests, 17 passed, 1 failure, 1 error, 4 skipped. Publishing 21 tests, or 2 failures, or 0 errors, or 2 skipped - any figure taken from the suite attributes - scores zero. Correct numbers in the prose while verified-counts.json still emits the declared ones scores at most half."
+    },
+    {
+      "name": "Drift reported per suite and directionally",
+      "max_score": 18,
+      "description": "Both disagreements are named specifically: web.CheckoutSpec declares 12 tests / 2 failures / 0 skipped against a body of 12 testcases, 1 failure, 1 error and 2 skipped; api.OrdersSpec declares 5 tests against 7 testcase elements because its count leaves out the skipped ones. Reporting only that 'the numbers do not match' with no per-suite direction scores at most half; missing either suite scores zero."
+    },
+    {
+      "name": "Error not folded into failures",
+      "max_score": 14,
+      "description": "MUST NOT reproduce the suite element's habit of counting the error inside failures. 'charges the card' carries an <error> and is reported as an error, separately from the 1 assertion failure. Any published figure of 2 failures with no error count scores zero on this criterion - this is the exact hole the gate fell through."
+    },
+    {
+      "name": "The accurate suite identified as accurate",
+      "max_score": 12,
+      "description": "api.RefundsSpec is reported as consistent - 4 declared, 4 found, no disagreement. Marking all three suites as untrustworthy scores zero here: a check that flags everything gives the gate nothing to act on."
+    },
+    {
+      "name": "Executable test covers the recount",
+      "max_score": 10,
+      "description": "test/verify-report.test.js asserts against a fixture whose suite attributes disagree with its testcase elements and proves the derived counts win, and passes. A test built only on a self-consistent fixture scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Authority stated for the future",
+      "max_score": 8,
+      "description": "verified-counts.md states which figures the metrics job should treat as authoritative and why, so this does not have to be re-litigated at the next vendor upgrade. Reporting Friday's numbers only scores at most half."
+    }
+  ]
+}

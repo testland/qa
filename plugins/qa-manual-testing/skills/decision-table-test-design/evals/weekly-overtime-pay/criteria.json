@@ -1,0 +1,41 @@
+{
+  "context": "Five facts - over 40 hours, public holiday work, salaried rather than hourly, shift starting after 22:00, union member - describe 32 weeks, which reduce to 16 genuinely different pay cases: night premium and union membership both stop mattering for salaried staff, and union membership stops mattering for hourly staff in a week with no holiday work. Predicted baseline failure: the agent writes an accurate narrative of the five rules and a test list of six to ten illustrative weeks with no stated relationship to the 32 - so the works council's question is answered with 'these look representative'. The opposite failure is nearly as common: 32 rows written out one per arrangement, including four separate salaried night-shift union weeks that are the same case. Neither is visibly wrong; both leave the count unjustified, and both usually price the hourly overtime-plus-holiday week that the extract never resolves.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named overtime-rules-analysis.md exists and contains a table of pay cases. Scores zero if absent or if it contains only per-rule prose."
+    },
+    {
+      "name": "Total number of weeks stated",
+      "max_score": 18,
+      "description": "The document states that the five facts describe 32 different weeks before any reduction. Scores zero if no total appears. Scores at most half if a number appears that is not 32 and is not derived from a stated restructuring of the facts."
+    },
+    {
+      "name": "Reduction to sixteen cases with named reasons",
+      "max_score": 32,
+      "description": "The table lands on 16 genuinely different cases and the document names which fact stops mattering for which group: night premium and union membership for salaried employees (16 weeks reducing to 4 cases), and union membership for hourly employees in a week with no holiday work (8 weeks reducing to 4 cases). Scores zero if no reduction is attempted and the document offers an unexplained sample of weeks. Scores at most half if a reduced table is produced without naming which fact was dropped where, or if the arithmetic between 32 and the table size does not reconcile."
+    },
+    {
+      "name": "MUST NOT hand over one case per arrangement",
+      "max_score": 20,
+      "description": "Anti-pattern guard. The list QA is asked to run must not be 32 individually written weeks, four of which are the same salaried week retyped with different night and union flags. Scores zero if the deliverable enumerates all 32 as separate test weeks with no reduction. Note this criterion is about the test list, not the enumeration: accounting for all 32 while testing 16 is the intended result and scores full marks."
+    },
+    {
+      "name": "Overtime-plus-holiday gap raised",
+      "max_score": 22,
+      "description": "The document flags that the extract never says how the 1.5x overtime rate and the 2x or 2.5x holiday rate interact for an hourly employee who works a public holiday in a week over 40 hours, and lists those four cases as open. Scores zero if a combined treatment is stated as expected behaviour - whichever is higher, multiplied together, holiday hours excluded from the 40 - since the extract supports none of those. Scores at most half if raised for only the union or only the non-union variant."
+    },
+    {
+      "name": "Coverage stated against the case count",
+      "max_score": 14,
+      "description": "The document states what its test list covers in terms of the case count - every one of the genuinely different cases, with the open ones marked as blocked - rather than describing the list as representative or thorough. Scores zero if no coverage statement tied to a number appears."
+    },
+    {
+      "name": "Salaried treatments are results, not absences",
+      "max_score": 12,
+      "description": "Time off in lieu at 1x and the day in lieu appear as pay treatments in the table for salaried weeks. Scores zero if salaried rows carry 'no overtime' or 'not applicable' with no accrual result, since the accrual is what payroll has to produce."
+    }
+  ]
+}

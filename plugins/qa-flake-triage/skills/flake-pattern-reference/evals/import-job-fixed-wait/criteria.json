@@ -1,0 +1,41 @@
+{
+  "context": "The test sleeps for a duration guessed from how long the import takes on an idle machine, then asserts on a job that is still running when the machine is busy. The handle already exposes a completion promise, so a deterministic signal is available and unused. Predicted baseline failure: the agent takes the path the team already floated - raise the sleep to 500ms, or add retries - which lowers the rate, keeps the race, and makes the suite slower for every run. The next most likely output is a hand-rolled polling loop (`while (!job.isDone()) await sleep(5)`), which is more robust than the sleep but still a wait invented by the test while the API's own completion signal sits unused. Diagnoses are predicted to say 'CI is slow' rather than naming that the assertion is gated on elapsed wall-clock time instead of on the event it actually depends on.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with both originally-named tests present and executing, and `wait-strategy.md` exists. A test deleted or skipped scores zero here."
+    },
+    {
+      "name": "Assertions gated on the completion signal",
+      "max_score": 30,
+      "description": "Each test awaits the job's own completion promise (`whenDone()`) before asserting, so the result does not depend on how long the machine took. Full credit requires this in both tests with no time-based wait remaining. A hand-written polling loop on `isDone()` with a deadline scores at most half - it survives a slow machine but reimplements a signal the handle already provides. Anything that still asserts after a fixed duration scores zero."
+    },
+    {
+      "name": "No longer wait, retry, or timeout bump",
+      "max_score": 16,
+      "description": "MUST NOT reach green by raising the 60ms sleep, adding a second sleep, retrying the test, configuring `--test-retries`, raising the per-test timeout, or marking the file `skip` / `todo` in CI. Any of these as the mechanism that makes the suite pass scores zero for this criterion."
+    },
+    {
+      "name": "Write-up names the fixed-duration wait as the mechanism",
+      "max_score": 20,
+      "description": "`wait-strategy.md` states that the assertion was gated on a fixed elapsed duration rather than on the import finishing, and that the duration was tuned to an idle machine, so any slowdown - contention, a bigger fixture, a colder runner - moves the import past it. A write-up that attributes the failure to 'CI being slow' or 'flaky infrastructure' without naming the fixed wait as the defect scores at most half. Blaming `src/importer.js` or the chunk size scores zero."
+    },
+    {
+      "name": "Explains why a longer wait is not the fix",
+      "max_score": 12,
+      "description": "The write-up says explicitly that a larger sleep only lowers the failure rate - it cannot bound it, because the wait is unrelated to the work - and that this is why 30ms to 60ms moved the number without ending the failures. Omitting this reasoning scores zero for this criterion even if the code fix is correct."
+    },
+    {
+      "name": "Source and assertions untouched",
+      "max_score": 8,
+      "description": "MUST NOT modify `src/importer.js` (including shrinking the chunk delay) and MUST NOT weaken an assertion - 250, 500, and the finished flag all stand. Changing an exact count to a lower bound or a `>=` comparison scores zero here."
+    },
+    {
+      "name": "Suite is not slower than the work it measures",
+      "max_score": 8,
+      "description": "The fixed suite finishes as fast as the import itself allows rather than always burning a fixed budget - no residual unconditional pause left in either test."
+    }
+  ]
+}

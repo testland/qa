@@ -1,0 +1,28 @@
+2026-08-17T07:02:11Z ##[group]Runner Image
+2026-08-17T07:02:11Z Image: ubuntu-24.04   Version: 20260810.1.0
+2026-08-17T07:02:11Z ##[endgroup]
+2026-08-17T07:02:12Z ##[group]Run mvn -B -Pe2e verify -Dbase.url=https://staging.acme.internal
+2026-08-17T07:02:58Z [INFO] Running com.acme.e2e.CheckoutSmokeTest
+2026-08-17T07:03:41Z [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 42.8 s
+2026-08-17T07:03:42Z [INFO] Running com.acme.e2e.ReferralSignupTest
+2026-08-17T07:04:19Z [ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 37.1 s
+2026-08-17T07:04:19Z [ERROR] submitsAReferralCode  Time elapsed: 37.1 s  <<< ERROR!
+2026-08-17T07:04:19Z org.openqa.selenium.NoSuchElementException:
+2026-08-17T07:04:19Z no such element: Unable to locate element:
+2026-08-17T07:04:19Z   {"method":"css selector","selector":"[data-qa=referral-code-input]"}
+2026-08-17T07:04:19Z   (Session info: chrome=141.0.7390.54)
+2026-08-17T07:04:19Z   at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:390)
+2026-08-17T07:04:19Z   at com.acme.e2e.pages.ReferralPage.codeInput(ReferralPage.java:24)
+2026-08-17T07:04:19Z   at com.acme.e2e.ReferralSignupTest.submitsAReferralCode(ReferralSignupTest.java:31)
+2026-08-17T07:04:20Z [INFO] Running com.acme.e2e.AccountSettingsTest
+2026-08-17T07:04:55Z [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 34.6 s
+2026-08-17T07:04:57Z [INFO] Results:
+2026-08-17T07:04:57Z [ERROR] Errors: com.acme.e2e.ReferralSignupTest.submitsAReferralCode
+2026-08-17T07:04:57Z [INFO] Tests run: 11, Failures: 0, Errors: 1, Skipped: 0
+2026-08-17T07:04:59Z ##[group]Run actions/upload-artifact@v4
+2026-08-17T07:04:59Z   with:
+2026-08-17T07:04:59Z     name: e2e-artifacts
+2026-08-17T07:04:59Z     path: e2e-artifacts/**
+2026-08-17T07:04:59Z ##[warning]No files were found with the provided path: e2e-artifacts/**. No artifacts will be uploaded.
+2026-08-17T07:04:59Z ##[endgroup]
+2026-08-17T07:05:00Z ##[error]Process completed with exit code 1.

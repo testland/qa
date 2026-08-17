@@ -1,0 +1,46 @@
+{
+  "context": "The summary line an engineer sees first is a 60s hook timeout in order-history.spec.ts, and a checkout commit landed two days earlier, so the ready-made story is 'the order-history seed got slower, raise the timeout or file a performance bug against checkout'. The decisive material is buried: a V8 heap-limit abort and an oom-killer line forty lines above the summary, exit code 137, and a runner-label change in a separate file that cut the box from 8 vCPU / 32 GB to 2 vCPU / 7 GB. The history also shows run 9829 already contained the checkout commit and passed on the larger runner, which excludes the code change outright - but that row only matters if the agent compares runner_label across rows instead of reading the history as a pass/fail streak. Predicted baseline failure: a confident single-cause story built on the timeout, ending in 'raise the timeout' or a ticket routed to the checkout team.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-nightly-9871.md exists and addresses this failure."
+    },
+    {
+      "name": "Termination identified as memory exhaustion, not a timeout",
+      "max_score": 26,
+      "description": "The document states the worker was killed for running out of memory and cites at least two of: 'FATAL ERROR: Reached heap limit', the SIGKILL of pid 4127, the 'Out of memory: Killed process 4127' kernel line, exit code 137. It must also state that the 60s hook timeout is downstream of the killed worker rather than the failure itself. Building the call on the timeout scores zero. Mentioning the heap error in passing while still treating the timeout as the failure scores at most half."
+    },
+    {
+      "name": "Cause attributed to the runner-size change",
+      "max_score": 24,
+      "description": "The document ties the failure to commit a11c93e moving the job from ubuntu-latest-8-cores (8 vCPU / 32 GB) to ubuntu-latest (2 vCPU / 7 GB) at 2026-08-10 14:02, and notes that every run on the new label failed while every run in the window on the old label passed. Naming a memory problem without connecting it to the runner change scores at most half. Attributing the cause to application code scores zero."
+    },
+    {
+      "name": "Checkout commit explicitly excluded using run 9829",
+      "max_score": 16,
+      "description": "The document excludes 7f20b6d by evidence, not by assertion: run 9829 on 2026-08-10T13:58 already contained that commit and passed, and the commit touches only a header component and its CSS with no change to orderHistory.ts or seedOrders.ts. Excluding it with only 'it looks presentational' scores at most half. Not addressing the checkout commit at all scores zero, because it is the theory the team currently holds."
+    },
+    {
+      "name": "MUST NOT route this to the checkout team as a product defect",
+      "max_score": 14,
+      "description": "Scores zero if the document recommends opening a defect or performance ticket against the checkout team, names the checkout code as the thing to fix, or proposes a code change to seedOrders/order history. Routing a change in the CI environment to a product team fills the defect tracker with false positives and sends the work to people who cannot act on it."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 12,
+      "description": "Every alternative the agent weighed is listed with the concrete observation that rules it out - for example 'no quarantine or flake-list entry exists for any test in this repo', 'the failure is not intermittent: 3 of 3 runs on the new label failed', 'the process died before the clock ran out'. Full credit needs at least three such entries with observed values. Generic dismissals such as 'this does not look like a flaky test' score zero for that entry."
+    },
+    {
+      "name": "Next action is the runner configuration, owned by CI",
+      "max_score": 11,
+      "description": "The recommended action restores or re-pins the runner size (or raises the memory ceiling deliberately) and is routed to whoever owns the CI workflow. Recommending a further timeout increase, a retry wrapper, or a memory-profiling exercise against checkout code as the primary action scores zero."
+    },
+    {
+      "name": "One call, not a hedge",
+      "max_score": 8,
+      "description": "The document commits to a single answer. Presenting two co-equal candidates ('either the runner shrank or the checkout change leaks memory - both need work') scores zero here even if the evidence sections are good, because a split call routes to nobody."
+    }
+  ]
+}

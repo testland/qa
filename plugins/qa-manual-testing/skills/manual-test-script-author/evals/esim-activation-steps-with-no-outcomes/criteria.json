@@ -1,0 +1,41 @@
+{
+  "context": "Nine bare instructions with no stated outcome anywhere, referring to 'the usual test SIM', against a lab file that names two usable handsets and one that cannot do eSIM at all, a pool of single-use activation codes with a tracker that only works if testers mark what they consumed, an inverted Wi-Fi requirement between the download and the service check, and five concrete success signals. Predicted baseline failure: the agent produces a neat table and fills the expected-result column with restatements of the action - 'the code is scanned successfully', 'the plan activates', 'the call connects' - rather than the lab's named signals; it says to use 'an available test activation code' instead of naming one from the unconsumed range and never mentions marking it consumed; it either omits the network state or sets Wi-Fi on throughout, which silently invalidates the service check; and it does not notice that one lab handset cannot run the case at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at qa/TC-esim-activation.md. Any other path scores zero."
+    },
+    {
+      "name": "Every step carries a device-observable outcome",
+      "max_score": 28,
+      "description": "MUST NOT leave a step without something the tester looks at. Each step is paired with one concrete signal, drawn from the lab file where applicable - the plan listed as 'Kestrel 20GB' under Mobile Service, the status bar reading 'Kestrel' with at least one bar, the plan name plus remaining data on the app home screen, the echo line 0800 555 0101 playing audio back, the SMS from short code 1717 within two minutes. Any step left with no expected result scores zero. Expected results present but written as restatements of the action ('the code is scanned', 'activation succeeds', 'it works') score zero. Concrete signals on most steps but one or two restatements score at most half."
+    },
+    {
+      "name": "A specific unconsumed activation code is named",
+      "max_score": 22,
+      "description": "The setup names an actual code from the unconsumed range, ESIM-Q3-06 through ESIM-Q3-12. 'The usual test SIM', 'an available code', 'a test eSIM QR', or naming any of ESIM-Q3-01 to ESIM-Q3-05 (already consumed) scores zero."
+    },
+    {
+      "name": "The pool is left usable for the next tester",
+      "max_score": 20,
+      "description": "The case ends with the tester marking the code consumed in qa/esim-code-tracker.md, and states that deleting the profile from the handset does not release the code. Ending with a device profile deletion presented as if it restored the code scores at most half. No closing action about the tracker at all scores zero."
+    },
+    {
+      "name": "Handset, OS and app build pinned to a device that can run it",
+      "max_score": 18,
+      "description": "The setup names iPhone 14 (iOS 18.4) or Pixel 8 (Android 15) with carrier app 7.4.0. Naming the Galaxy S23 - which cannot download an eSIM on carrier app 5.9.2 - scores zero. 'A supported handset' or 'any lab device' scores zero. Naming a device without its OS or app build scores at most half."
+    },
+    {
+      "name": "Wi-Fi state stated per phase, in the right direction",
+      "max_score": 18,
+      "description": "The steps put the handset on lab Wi-Fi for the profile download and explicitly require Wi-Fi off before the service checks, with the reason that otherwise the call and data ride the office network. Wi-Fi unmentioned scores zero. Wi-Fi mentioned once for the whole run, or required off during the download, scores zero because the case then fails or proves nothing."
+    },
+    {
+      "name": "Failure record an engineer can reproduce from",
+      "max_score": 12,
+      "description": "MUST NOT leave defects to a chat thread. A structured block captures at minimum the failing step, the expected signal, what the device actually showed, the handset and OS, the code used, and severity or a defect reference. A bare notes line scores at most half; nothing scores zero."
+    }
+  ]
+}

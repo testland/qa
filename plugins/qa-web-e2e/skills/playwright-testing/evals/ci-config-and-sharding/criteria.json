@@ -46,6 +46,11 @@
       "name": "Base URL is configured rather than repeated",
       "max_score": 6,
       "description": "`use.baseURL` is set so specs can call `page.goto('/')`, rather than hard-coding the host in each test."
+    },
+    {
+      "name": "Existing spec left alone",
+      "max_score": 6,
+      "description": "MUST NOT modify tests/smoke.spec.ts. The task is configuration and CI; editing the spec to make the pipeline behave scores zero, because it moves the problem into the suite the config is supposed to serve."
     }
   ]
 }

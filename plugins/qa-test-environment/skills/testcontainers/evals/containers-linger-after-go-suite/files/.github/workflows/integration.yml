@@ -1,0 +1,21 @@
+name: integration
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  it:
+    runs-on: [self-hosted, linux, x64]
+    env:
+      TESTCONTAINERS_RYUK_DISABLED: "true"
+      TESTCONTAINERS_REUSE_ENABLE: "true"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      - run: go test ./internal/... -tags=integration -timeout 20m
+      - name: clean up docker
+        if: always()
+        run: make ci-cleanup

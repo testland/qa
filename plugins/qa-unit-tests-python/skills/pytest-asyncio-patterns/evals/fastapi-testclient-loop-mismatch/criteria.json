@@ -1,0 +1,46 @@
+{
+  "context": "The synchronous test client runs the application in a worker thread on its own loop, so state prepared by a coroutine fixture on the test's loop is unreachable from the handler. Predicted baseline failures, in order of likelihood: the agent keeps the synchronous client and works around the loop split by seeding through an HTTP POST, by monkeypatching the private `_items` dict, or by overriding the dependency with a plain object that has no lock - all of which go green while no longer exercising the shared inventory the endpoint really uses. The second predicted failure is reaching for the async client with the `app=` keyword, which the pinned httpx version removed, producing an immediate TypeError. The third is writing coroutine tests without a marker in this strict-mode project, so they are skipped and the run still reports success.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Requests are driven through an in-process ASGI transport on the test's own loop",
+      "max_score": 32,
+      "description": "The tests use an async HTTP client wired to the application through an ASGI transport, awaited from inside the coroutine test, so fixture and handler share one loop. Keeping the synchronous thread-backed test client scores zero. Standing up a real server (uvicorn, a port, a subprocess) scores zero - the task forbids binding a socket."
+    },
+    {
+      "name": "Client is constructed the way the pinned httpx supports",
+      "max_score": 20,
+      "description": "The async client receives an explicit transport object wrapping the app, plus a base URL. Passing the application via an `app=` keyword to the client scores zero: that shortcut is gone in the pinned version and the suite dies with a TypeError before any assertion runs. Not pinning down a base URL such that requests cannot be made with relative paths scores at most half."
+    },
+    {
+      "name": "Seeded state is read back through the endpoint",
+      "max_score": 18,
+      "description": "The seeded-SKU test takes `seeded_inventory` and asserts the endpoint returns its quantity. Seeding via an HTTP call instead of the fixture scores at most half. Reaching into `Inventory._items`, replacing the inventory dependency with a lock-free stand-in, or asserting against `inventory.get()` directly rather than the HTTP response scores zero - each removes the interaction the scenario exists to cover."
+    },
+    {
+      "name": "Coroutine tests are marked so they actually run",
+      "max_score": 16,
+      "description": "In this strict-mode project every coroutine test carries the async marker (per test or via a module-level marker), or the project mode is explicitly changed in pyproject.toml. Coroutine tests with neither score zero: they are collected, skipped, and the run still reports success, which is worse than a failure."
+    },
+    {
+      "name": "Any new coroutine fixture uses the async-aware decorator",
+      "max_score": 12,
+      "description": "MUST NOT declare a new coroutine fixture with the plain pytest decorator in this project - the existing `seeded_inventory` shows the required form. A new `async def` fixture on `@pytest.fixture` scores zero; a client fixture that is synchronous and returns an un-entered async client scores at most half."
+    },
+    {
+      "name": "404 case asserts the status",
+      "max_score": 12,
+      "description": "An unknown SKU is asserted to come back 404. Asserting only on the detail message, or only that the response is not 200, scores at most half; no such case scores zero."
+    },
+    {
+      "name": "Existing coverage survives",
+      "max_score": 10,
+      "description": "Health and empty-listing behaviours are still asserted. Deleting either scores zero. Leaving them on the synchronous client while the new tests use the async one scores at most half: the module then carries two client styles and the next author copies the wrong one."
+    },
+    {
+      "name": "Application and pins untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `app/main.py` or change any version in `requirements-dev.txt`. Removing the lock from `Inventory`, or bumping httpx to restore the removed keyword, scores zero."
+    }
+  ]
+}

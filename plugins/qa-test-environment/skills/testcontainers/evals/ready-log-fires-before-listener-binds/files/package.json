@@ -1,0 +1,14 @@
+{
+  "name": "orders-integration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "integration": "vitest run"
+  },
+  "devDependencies": {
+    "pg": "^8.13.1",
+    "testcontainers": "^10.16.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

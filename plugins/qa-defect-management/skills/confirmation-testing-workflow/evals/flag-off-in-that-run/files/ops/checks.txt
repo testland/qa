@@ -1,0 +1,5 @@
+$ curl -s https://docs.staging.internal/internal/build-info
+{"service":"docs-service","commit":"74b0c62","branch":"main","deployedAt":"2026-08-12T16:10:27Z"}
+
+$ git merge-base --is-ancestor 2ea5f19 74b0c62; echo $?
+0

@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: because time is abundant rather than scarce, the agent produces an unbounded afternoon - a long feature-by-feature walkthrough ('explore sign-in, then browse, then playback, then downloads, then profiles') with no stretch boundaries, no per-stretch objective, and no stopping points. It reads like a thorough onboarding plan and fails the actual request: four unbroken hours of unsupervised looking around is exactly what the previous two hires did, attention degrades long before 17:00, and nothing reviewable comes out. The unaided version also treats orientation and defect-hunting as one undifferentiated activity, so nothing learned early is used to aim anything later, and it typically produces a notes dump rather than an artifact with a stated fate on Tuesday.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Onboarding file delivered",
+      "max_score": 5,
+      "description": "docs/onboarding/dani-first-afternoon.md exists and plans this specific afternoon. A generic onboarding checklist with no time structure scores at most half here and zero on the bounding criterion below. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "The afternoon is split into bounded stretches, none of them a marathon",
+      "max_score": 30,
+      "description": "The four hours are divided into three or more working stretches of roughly 45 to 90 minutes each, with breaks or hand-off points between them, and each stretch's length is stated. Scores zero if the afternoon is presented as one continuous activity or as an ordered feature list with no time boundaries. Scores at most half if stretches exist but their lengths are unstated or if any single stretch runs past two hours."
+    },
+    {
+      "name": "One objective per stretch, stating what she should be able to answer",
+      "max_score": 26,
+      "description": "Each stretch carries exactly one objective naming the area, the resources used (a specific seeded account, a specific device, the licence stub), and the question it should answer by the end. Scores zero if stretches are labelled only with area names ('browse', 'playback'). Scores at most half if objectives are activity descriptions ('look at playback') rather than statements of what will be known afterwards."
+    },
+    {
+      "name": "The first stretch is orientation and it aims the later ones",
+      "max_score": 22,
+      "description": "The first stretch is explicitly about learning how the product behaves and what its risk areas are, not about hunting defects, and the plan states that at least one later objective is chosen only after that stretch - with the criteria for choosing it. Scores zero if all objectives are fixed in advance with no dependency on what she learns, which is the flat-checklist failure mode. Scores at most half if the ordering is stated but nothing downstream actually depends on the orientation output."
+    },
+    {
+      "name": "Notes separate product knowledge, suspected defects, and questions",
+      "max_score": 15,
+      "description": "The in-stretch record has distinct places for how-the-product-works observations, suspected defects, and questions for the squad - the third bucket matters most for a new joiner, since much of what looks wrong on day one is really a question (kids-profile deep link, per-platform back-button differences). Scores zero if there is one undifferentiated notes area."
+    },
+    {
+      "name": "A 17:00 hand-off with a stated fate",
+      "max_score": 16,
+      "description": "The afternoon ends in a written hand-off covering what she covered, what she found, what she did not reach, what obstructed her, and her own read on the product's shakiest areas - plus who reads it and when on Tuesday. Scores at most half if the hand-off exists but nobody is named to read it or no review time is set. Scores zero if the deliverable is raw notes with no closing summary."
+    },
+    {
+      "name": "MUST NOT propose one unbroken multi-hour sitting",
+      "max_score": 12,
+      "description": "Scores zero if any single stretch of continuous focused testing exceeds two hours, or if the plan reads as 'spend the afternoon exploring the app' with the four hours treated as one block. Attention degrades past the two-hour mark and the output stops being reviewable."
+    },
+    {
+      "name": "Off-limits areas named",
+      "max_score": 8,
+      "description": "The production licence service, real subscriber accounts, and code changes are named as out of bounds for the afternoon. Scores zero if any planned activity would send traffic to the production licence service or use a real subscriber account."
+    }
+  ]
+}

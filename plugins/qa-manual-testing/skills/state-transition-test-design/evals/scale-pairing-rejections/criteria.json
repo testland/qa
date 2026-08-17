@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent writes a handful of cases that each sweep several stale events into one reproduction - 'send a code result while unpaired, then tap Scan during a scan, then select a device while pairing; expected: the app ignores all of them'. It reads as efficient and it covers the ground on paper, but it is exactly the ticket shape described in the prompt: the first failing step aborts the case and hides every step after it, so one fix makes the case pass while the rest stay broken. There are 5 situations and 5 events, 25 combinations, of which roughly 8 do something and roughly 17 should be refused. The discriminating output gives each refused combination its own numbered case with its own precondition, so a run produces one verdict per combination instead of one verdict for the batch.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/pairing-tests.md exists and contains numbered manual test cases with steps and expected results."
+    },
+    {
+      "name": "Refused combinations are covered one per case",
+      "max_score": 30,
+      "description": "The combinations the service should refuse each get their own numbered case with its own precondition and a single triggering event. Twelve or more of the roughly seventeen refused combinations covered this way earns full marks; six to eleven caps at half; a pack that covers refusals only inside multi-event cases scores zero here."
+    },
+    {
+      "name": "MUST NOT chain refused events inside one case",
+      "max_score": 18,
+      "description": "MUST NOT. Any case whose steps fire two or more events that should each be refused - a sequence of stale deliveries checked in one run - scores zero on this criterion. The prompt states outright that this masked two of six defects last release; a pack that repeats the shape has not addressed the reported problem."
+    },
+    {
+      "name": "All 25 situation/event combinations accounted for",
+      "max_score": 16,
+      "description": "The model covers 5 situations against 5 events - 25 combinations - each either producing a result or explicitly marked as producing none. Twenty-two or more accounted for earns full marks; 15 to 21 caps at half; recording only the combinations that do something scores zero."
+    },
+    {
+      "name": "The high-risk refusals are present by name",
+      "max_score": 16,
+      "description": "Cases exist for a code result arriving on an already paired scale (the late delivery for an abandoned attempt), a code result arriving while the device is unpaired, Scan arriving while discovery is already running, and a device selection arriving while code entry is open. Missing the code-result-while-paired case caps this at half."
+    },
+    {
+      "name": "Expected results name what the screen shows",
+      "max_score": 12,
+      "description": "Each refusal expectation states the situation is unchanged and names the visible evidence - the Devices screen still shows the live weight, the code field is still open, no new device appears in the list. An expected result of 'the event is ignored' or 'nothing happens', with nothing observable attached, scores at most half."
+    },
+    {
+      "name": "The transitions that do work are covered too",
+      "max_score": 12,
+      "description": "The eight or so working transitions are exercised, including both routes back to having no scale (code rejected, and connection lost during pairing) and the two different consequences of losing a connection - abandoning an in-progress pairing versus leaving a paired scale out of range. Treating both connection losses as one case scores at most half."
+    },
+    {
+      "name": "Preconditions let each case run cold",
+      "max_score": 10,
+      "description": "Every case states the situation the device must be in before step 1, so cases can be run individually and in any order rather than only as a continuation of the previous case."
+    }
+  ]
+}

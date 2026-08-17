@@ -1,0 +1,41 @@
+{
+  "context": "A session fixture that starts a broker and then blocks on a flat 25-second sleep. Predicted baseline failure: the agent removes the constant but keeps elapsed time as the mechanism - a shorter sleep plus a longer one 'just in case', a retry loop whose body is `time.sleep(1)` with no upper bound, or a client-connect poll bolted on *after* the sleep rather than replacing it. Those look like readiness checks and are graded as if they were, but they still burn a fixed cost on a fast machine and they still let the fixture return before the broker can serve. The agent is also likely to leave the failure path unchanged, so a broker that never comes up still surfaces as `NoBrokersAvailable` inside the first test, and to leak the container when startup fails because `stop()` sits after the `yield`.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Fixture contract preserved",
+      "max_score": 5,
+      "description": "`broker` still exists, still session-scoped, still yields the bootstrap-server string, and `tests/test_order_events.py` is byte-identical. Editing the tests to add retries scores zero for this criterion."
+    },
+    {
+      "name": "Readiness is a condition on the container's own startup",
+      "max_score": 30,
+      "description": "The broker's readiness is expressed as a wait condition attached to the container start - an emitted log line, the service port accepting connections, or a container health check - so that start does not return until the condition holds and every consumer of the fixture is safe by construction. A hand-rolled client-connect poll written in the fixture body after start scores at most half: it does gate on an observable signal, but it lives outside the container lifecycle and only protects this one fixture. Anything where elapsed time decides scores zero."
+    },
+    {
+      "name": "MUST NOT decide readiness by elapsed time",
+      "max_score": 20,
+      "description": "No `time.sleep`, no `asyncio.sleep`, no fixed delay of any length remains on the path between starting the broker and yielding its address. Scores zero if any survives, including a small 'just to be safe' sleep after a real readiness check and including a sleep used as the body of an unbounded retry loop."
+    },
+    {
+      "name": "Failure is bounded and reported as setup failure",
+      "max_score": 14,
+      "description": "There is an explicit upper limit on how long the fixture waits, and exceeding it raises during setup with a message identifying the broker. Full credit needs both the limit and the clear error. A wait with no upper bound - which hangs the CI job instead of failing it - scores zero."
+    },
+    {
+      "name": "Container is released when readiness fails",
+      "max_score": 12,
+      "description": "If the broker never becomes usable, the container is still removed. Leaving `container.stop()` after the `yield` as the only teardown scores zero: an exception raised before the yield skips it and leaks the container on precisely the runs the team is trying to fix."
+    },
+    {
+      "name": "No fixed cost on a fast machine",
+      "max_score": 10,
+      "description": "A broker ready in four seconds lets the first test start at about four seconds. Any construction with a floor - sleep-then-check, a poll whose first attempt is preceded by a delay, a fixed number of retry rounds - scores at most half."
+    },
+    {
+      "name": "Nothing else about the run changes",
+      "max_score": 6,
+      "description": "The topic, the image tag, and the assertions are untouched, and no test is skipped or marked xfail to make the suite green."
+    }
+  ]
+}

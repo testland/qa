@@ -1,0 +1,46 @@
+{
+  "context": "Eight tickets. APP-3011 came back while the change meant to fix it (#4412, never reverted, flag still enabled) is still running in production and the ticket has no owner - the tracker and the deployed code disagree and nobody is holding either. APP-3020 is on its fourth attempt at the same defect, which is a signal about the fix approach, not about the last attempt. APP-3025 is the same defect as APP-3011 re-filed by support under different wording. APP-3031 was closed and then contradicted by a customer comment nine days ago with no state change. APP-3044 came back and was then swept to the top of the incoming queue, which cleared its assignee and erased that it is a recurrence. APP-3040 (two earlier failures caused by a stale test bed, confirmed twice since) and APP-3050 and APP-3055 need nothing. Predicted baseline failure: the agent produces a tidy per-ticket status table and stops at the tracker - it does not notice that APP-3011's shipped change is still live and so proposes closing or re-assigning the ticket without saying what happens to the code, and it treats APP-3020's fourth reopen as just another in-progress item. It is also likely to keep APP-3025 as a separate new ticket (it reads as a genuine new report), to count APP-3025 and APP-3044 in the week's new-defect figure, and to accept APP-3044's position in the incoming queue because the board says New.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "recurrence-audit.md and recurrence-actions.csv both exist, the CSV carrying key,current_state,target_state,owner,action. Missing either scores zero."
+    },
+    {
+      "name": "Live shipped change on APP-3011 addressed, and the ticket not closed",
+      "max_score": 30,
+      "description": "APP-3011 is identified as a ticket whose fix (#4412) is still merged and still enabled in production while the defect is live, and the plan states the decision owed on that change itself - revert it or replace it - as part of this ticket, with a named owner picked up now that the original assignee left. MUST NOT propose closing APP-3011, and MUST NOT stop at 'reassign and reopen' with no statement about the shipped change: an audit that only moves the ticket scores at most half. Not mentioning the unreverted change at all scores zero."
+    },
+    {
+      "name": "Repeated-recurrence ticket escalated on the pattern",
+      "max_score": 18,
+      "description": "APP-3020's four attempts are called out as evidence that the approach, not the latest patch, is the problem - the size check living in four places - and it is routed to a root-cause step rather than a fifth patch. Reporting it as merely in progress scores zero."
+    },
+    {
+      "name": "Contradicted close reopened rather than re-filed",
+      "max_score": 16,
+      "description": "APP-3031 is returned to an open state on the strength of the customer comment from 2026-08-09, on the existing ticket. MUST NOT open a fresh ticket for the recurrence - the original carries the fix history that makes the recurrence meaningful. Proposing a new ticket scores zero here."
+    },
+    {
+      "name": "Re-filed recurrence collapsed into the original",
+      "max_score": 14,
+      "description": "APP-3025 is identified as the same defect as APP-3011 despite the different wording (same symptom, same release, same schedule) and is closed against APP-3011 with the link recorded, rather than being worked as a new report. Keeping it as an independent new ticket scores zero."
+    },
+    {
+      "name": "Swept ticket returned to the fix path, not the incoming queue",
+      "max_score": 12,
+      "description": "APP-3044 is identified as a recurrence that lost its marker and its owner to the board sweep, and is routed back to the engineer who owned the fix rather than left sitting at the top of the incoming queue as if newly reported. Treating it as a genuine new report scores zero."
+    },
+    {
+      "name": "Weekly figure corrected",
+      "max_score": 14,
+      "description": "The audit states that recurrences do not belong in the new-defect count and gives the corrected figure with the excluded keys named (APP-3025 and APP-3044 at minimum). A statement of principle with no corrected figure or no named exclusions scores at most half."
+    },
+    {
+      "name": "Untouched tickets stated",
+      "max_score": 10,
+      "description": "APP-3040 is defended as needing nothing - its two earlier failures were a stale test bed, and it has been confirmed twice since - and APP-3050 and APP-3055 are stated as fine as they are. Flagging APP-3040 on its reopen count alone scores zero on this criterion."
+    }
+  ]
+}

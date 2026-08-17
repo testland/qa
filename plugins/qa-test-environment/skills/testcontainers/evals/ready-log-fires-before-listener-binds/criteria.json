@@ -1,0 +1,41 @@
+{
+  "context": "The helper already waits on a log line, so it does not look broken - which is the trap. Postgres emits `database system is ready to accept connections` during bootstrap and again when the listener actually binds, so a wait satisfied by the first occurrence resolves before the server accepts clients; the two-second delay is the team papering over that gap. Predicted baseline failure: the agent sees an existing wait strategy plus a sleep, concludes the sleep is redundant or the timeout is too small, and 'fixes' it by raising the startup timeout, moving the delay into a retry, or swapping the log wait for a port check - none of which addresses the fact that the signal it is waiting on fires twice and the first one is meaningless. A confident-looking answer here is the failure mode.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Exported contract preserved",
+      "max_score": 5,
+      "description": "`startDatabase()` still resolves to `{ url, stop() }`, still runs `migrate(url)` before resolving, and `test/orders.test.ts` is unedited. Changing the tests, or moving migration into the specs, scores zero."
+    },
+    {
+      "name": "The readiness signal accounts for the line being emitted more than once",
+      "max_score": 32,
+      "description": "The fix is grounded in the actual startup behaviour: the ready line appears during bootstrap and again when the listener binds, so the wait is keyed to the later occurrence (an occurrence count on the log match) rather than the first one. Full credit for a wait that matches the required number of occurrences, or for a wait that gates on an actual successful connection or query against the database. Raising the startup timeout, or asserting the log match harder without addressing how many times it fires, scores zero - the timeout was never the constraint and the task says so."
+    },
+    {
+      "name": "MUST NOT keep a fixed delay",
+      "max_score": 18,
+      "description": "The two-second `setTimeout` is gone and no fixed delay of any length replaces it anywhere on the startup path - not before the wait, not after it, not inside `migrate`. Scores zero if any survives, including a shorter one described as a safety margin."
+    },
+    {
+      "name": "The port-check shortcut is not treated as sufficient on its own",
+      "max_score": 14,
+      "description": "Full credit when readiness is proven by something the database itself answers - the later log occurrence, or a real connection/query attempt. Replacing the log wait with a bare port-listening check alone scores at most half: it removes the sleep but does not establish that the server will serve a connection, which is the exact failure the team is seeing."
+    },
+    {
+      "name": "Bounded failure with a startup-shaped error",
+      "max_score": 12,
+      "description": "A database that never becomes usable fails within a bounded period and the error names database startup. An unbounded retry loop scores zero - it converts a fast failure into a hung CI job."
+    },
+    {
+      "name": "Container released when readiness or migration fails",
+      "max_score": 10,
+      "description": "If the wait times out or `migrate` throws, the container is still stopped rather than leaked. Returning early or letting the error escape with no teardown scores zero."
+    },
+    {
+      "name": "Addressing left alone",
+      "max_score": 6,
+      "description": "The URL is still built from the runtime host and the runtime-mapped port. Replacing them with a pinned host port while reworking the wait scores zero for this criterion."
+    }
+  ]
+}

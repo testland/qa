@@ -1,0 +1,46 @@
+{
+  "context": "The script does already look for an existing ticket before opening one, so the obvious fix is already in place - what fails is the behaviour when the lookup itself does not answer. find_existing swallows every exception into an empty list, and it never checks the response status, so an HTTP 403 during the rate-limited hour on 5 August also produced an empty list. An empty list is indistinguishable from 'no existing ticket', so the job opened #5112 and #5113 as if the board were clean. Predicted baseline failure: the agent reads the code, sees the search-then-comment path, and concludes the logic is correct but flaky - so it recommends a retry with backoff, or raising the search limit, and then lets the job create the ticket anyway on the grounds that losing a CI failure is worse than a duplicate. That reasoning is what produced the sixteen tickets. The correct behaviour when the lookup is unavailable is to not create, and to surface the failure so the gap is visible. Secondary predicted misses: the two different-signature tickets (#5117 assert_refund_total, #5119 assert_invoice_lines) get swept into the collapse because they are in the same file with the same title prefix, and the hard-coded token gets a passing mention rather than a rotation, since it is 'just a script'.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "filer-fix.md and issue-cleanup.csv both exist, the CSV carrying number,action,target,reason with a row for each of the sixteen tickets. A CSV missing tickets scores at most half."
+    },
+    {
+      "name": "Unavailable lookup must not fall through to a create",
+      "max_score": 32,
+      "description": "The fix states that when the lookup fails - exception, non-2xx, or rate-limited - the job does not open a ticket; it stops and surfaces the failure (leaving the build red or alerting) so the gap is visible. MUST NOT propose creating anyway to avoid losing the failure, and MUST NOT treat retry-with-backoff as sufficient on its own: retry first, then stop if it still fails, is acceptable; retry then create is not, and scores zero for this criterion however it is worded."
+    },
+    {
+      "name": "The 5 August behaviour explained from the code",
+      "max_score": 20,
+      "description": "The report traces #5112 and #5113 to find_existing returning an empty list on a 403 - because the response status is never checked and the except clause returns [] - and states that an empty result and a failed lookup are currently the same value to the caller. Quoting the `except Exception: return []` line or the unchecked `r.json().get(\"items\", [])` line earns this; a generic 'error handling could be improved' scores at most half; not connecting the two tickets to the code scores zero."
+    },
+    {
+      "name": "Different failures kept out of the collapse",
+      "max_score": 18,
+      "description": "#5117 (assert_refund_total, refund ledger) and #5119 (assert_invoice_lines, invoice renderer) are identified as separate defects and are left open on their own, not closed against the main ticket. Collapsing either scores zero. The report should also note why title-prefix matching alone would have merged them, which is the same weakness the lookup query has."
+    },
+    {
+      "name": "Surviving ticket chosen for what it carries",
+      "max_score": 14,
+      "description": "#5101 is named as the ticket that stays open, on the grounds that it is the only one holding the full stack trace, runner image and commit sha, and the other thirteen same-signature tickets are closed against it with the reason recorded and a link to it. Choosing a later ticket, or closing them with no reason and no link, scores at most half."
+    },
+    {
+      "name": "Recurrence lands on the existing ticket",
+      "max_score": 12,
+      "description": "The fixed job comments the new run link on the already-open ticket when the signature matches, rather than opening anything. A fix that only deduplicates by exact title and does not mention what happens on the hit scores at most half."
+    },
+    {
+      "name": "Credential handled as a leak, not a style problem",
+      "max_score": 12,
+      "description": "The literal token on line 3 is called out for removal into the CI secret store / environment, AND the exposed token is stated to need revoking and replacing because it has already been shared in a channel. Moving it to an environment variable without saying the current one must be rotated scores at most half."
+    },
+    {
+      "name": "Matching is signature-based, not title-based",
+      "max_score": 10,
+      "description": "The proposed lookup keys on the failing assertion and location rather than the whole rendered title, so a second assertion in the same file does not match the first. Not addressing how matches are decided scores zero."
+    }
+  ]
+}

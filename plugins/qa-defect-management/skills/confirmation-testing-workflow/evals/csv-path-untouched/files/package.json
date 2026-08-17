@@ -1,0 +1,8 @@
+{
+  "name": "customer-import",
+  "version": "1.9.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

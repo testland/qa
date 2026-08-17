@@ -1,0 +1,69 @@
+{
+  "info": {
+    "_postman_id": "aa000000-0000-4000-8000-000000000040",
+    "name": "partners",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "ptk_live_9c1f4ab7d0e24b1c8a5f", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "list partner accounts",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "x-gateway-key", "value": "gwk_live_5510af2ce9b34d77" }],
+        "url": {
+          "raw": "{{baseUrl}}/partner/v2/accounts",
+          "host": ["{{baseUrl}}"],
+          "path": ["partner", "v2", "accounts"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('accounts returns 200', () => pm.response.to.have.status(200));",
+              "pm.test('accounts payload is a list', () => {",
+              "  pm.expect(pm.response.json().accounts).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create partner payout",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "x-gateway-key", "value": "gwk_live_5510af2ce9b34d77" }
+        ],
+        "body": { "mode": "raw", "raw": "{\"account\":\"acct_7\",\"amount_cents\":1500}" },
+        "url": {
+          "raw": "{{baseUrl}}/partner/v2/payouts",
+          "host": ["{{baseUrl}}"],
+          "path": ["partner", "v2", "payouts"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('payout returns 201', () => pm.response.to.have.status(201));",
+              "pm.test('payout is pending', () => {",
+              "  pm.expect(pm.response.json().status).to.eql('pending');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

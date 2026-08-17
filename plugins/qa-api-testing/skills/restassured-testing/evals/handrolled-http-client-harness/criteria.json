@@ -1,0 +1,41 @@
+{
+  "context": "Three API tests written against the JDK HTTP client with hand-rolled JSON navigation, in a module that already has a fluent HTTP testing client on its dependency list. Predicted baseline failure: the agent adopts the library but uses it as a plain HTTP client - `Response response = given()...get(path);` followed by `assertEquals(200, response.statusCode())` and `response.jsonPath().getString(\"sku\")` fed into JUnit assertions. Every stated symptom survives that translation: the request and its expectations are still in different statements, the failure message is still `expected: <200> but was: <503>` with no request or response context, and the reviewer still has to read top to bottom to learn what is asserted. The whole value of the library is that expectations are declared in the response phase of the same chain, where a failed assertion reports the path, the expected matcher, and the actual document. A reviewer skimming the diff sees the old imports gone and calls it migrated.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Each test is one request-through-expectations chain",
+      "max_score": 32,
+      "description": "Every test is a single fluent statement in which the request setup, the HTTP verb, and all expectations appear in sequence, with assertions declared in the response phase (`then().statusCode(...).body(path, matcher)`). Scores zero if the rewrite keeps the extract-then-assert shape - assigning the response to a local variable and checking it with `assertEquals`/`assertTrue` afterwards - even if the request is now built with the library. Scores at most half if the chain is used for the status code but body values are extracted into locals and asserted separately, or if only some of the three tests are converted."
+    },
+    {
+      "name": "Manual JSON navigation removed",
+      "max_score": 18,
+      "description": "No `ObjectMapper`, `JsonNode`, or bespoke extraction helper remains; body values are addressed by path expression with matchers. Scores zero if either competing helper survives or if `readTree` appears anywhere in the delivered file. Scores at most half if the tree walking is replaced by `jsonPath().get(...)` calls that are then asserted with JUnit rather than matched in the response phase."
+    },
+    {
+      "name": "Bearer credential uses the client's auth support",
+      "max_score": 12,
+      "description": "The token is attached via the library's OAuth2/bearer support (`auth().oauth2(System.getenv(\"API_TOKEN\"))`). Scores zero if the credential is hard-coded or dropped. Scores at most half if the `Authorization: Bearer ...` header is still assembled by hand with string concatenation, which is what the fixture already does."
+    },
+    {
+      "name": "Fluent static imports used",
+      "max_score": 10,
+      "description": "The canonical static imports are in place - the request entry point and the Hamcrest matchers - so tests read as prose. Scores zero if calls are fully qualified throughout (`io.restassured.RestAssured.given()`, `org.hamcrest.Matchers.equalTo`) or if matchers are re-implemented as lambdas."
+    },
+    {
+      "name": "Checked exceptions gone",
+      "max_score": 10,
+      "description": "No test method declares `throws Exception` or any checked exception, and no try/catch is introduced to hide one. Scores zero if any `throws` clause remains on a test method."
+    },
+    {
+      "name": "Same three behaviours and values preserved",
+      "max_score": 12,
+      "description": "All expected values carry over: sku `SKU-1001`, warehouse `WH-BER`, `on_hand` greater than zero, the `^SKU-\\d{4}$` pattern on the listed item, a non-empty items collection, status `201`, `reservation_id` present, state `held`, quantity `2` - and the answer lists them. Scores zero if a value is silently dropped. Scores at most half if the values are preserved but no list is provided for the reviewer."
+    },
+    {
+      "name": "MUST NOT introduce a hard-coded host, token, or new dependency",
+      "max_score": 8,
+      "description": "The base URI still resolves from the injected value with its localhost default, the token still comes from the environment, and `pom.xml` gains nothing. Any literal host or credential in the delivered code, or any added dependency, scores zero for this criterion."
+    }
+  ]
+}

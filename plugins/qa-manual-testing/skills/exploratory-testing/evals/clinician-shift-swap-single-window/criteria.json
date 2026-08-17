@@ -1,0 +1,51 @@
+{
+  "context": "Predicted baseline failure: the agent writes a numbered manual test script - 'Step 1: log in as Nurse A. Step 2: offer shift. Expected: shift appears on board' - or a flat checklist of every rule in the brief, one line per rule. It looks professional and it is the one thing the lead explicitly said he does not want, because it removes the tester's judgement and cannot hold a finding the author did not anticipate. It also typically ignores the single-window constraint (no prioritisation, no statement of what will not be reached in 90 minutes), treats the double-booking and skill-mix risk as equal to notification and UI polish, and produces no artifact for the ward managers - no statement of what was left untouched and no tester judgement on whether the pilot should proceed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan file delivered",
+      "max_score": 5,
+      "description": "docs/qa/shift-swap-friday-window.md exists and addresses this specific pilot. Scores at most half if the filename or location differs. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "A single bounded assignment naming what must be learned",
+      "max_score": 30,
+      "description": "The window carries exactly one stated assignment that names the area, the resources or technique used to work it (the W-TEST seed roster, the band-5 competency data, manager reversal), and what the team must know by the end - explicitly framed as information to discover, not work to perform. Scores zero if the output is a step-numbered script or a flat verification checklist with no stated assignment. Scores at most half if the assignment is a bare target such as 'test shift swaps' or 'validate the roster rules' with no statement of what it should reveal."
+    },
+    {
+      "name": "Fits one 90-minute window with named untouched areas",
+      "max_score": 22,
+      "description": "The work is sized for a single 90-minute sitting and the plan says out loud what will not be reached in that time - for example manager reversal, night-shift rolling-week arithmetic, or the 4-hour cutoff - rather than implying everything is covered. Scores zero if the plan enumerates more ground than 90 minutes can hold with no acknowledgement of the limit, or if it schedules work beyond the single window."
+    },
+    {
+      "name": "Patient-safety risk drives the assignment",
+      "max_score": 20,
+      "description": "Leaving a shift without a qualified nurse and double-booking a person are the risk the assignment is built around, and the cache-versus-live profile divergence and the reversal-skips-rest-period gap are used as concrete attack angles. Scores at most half if these appear as equal-weight rows beside notification wording and layout. Scores zero if breadth coverage of the whole flow displaces the safety risk."
+    },
+    {
+      "name": "MUST NOT prescribe an ordered script - seeds, not steps",
+      "max_score": 15,
+      "description": "Starting ideas are offered as things to try and vary - band-4 nurse claiming a band-5-required shift, claim made after the cached board went stale, night shift spanning a week boundary, reversal after a rest-period-tight swap - explicitly framed as pick-up-and-abandon seeds, with the tester free to follow what he finds. Scores zero if the ideas are written as ordered steps with expected results, or if the assignment prescribes the how rather than stating the what and leaving the method to the tester. A prescribed script is the format the lead rejected and it caps what the window can find at what the author already imagined."
+    },
+    {
+      "name": "Recording structure separates behaviour, defects, and blockers",
+      "max_score": 14,
+      "description": "The in-window record has distinct places for confirmed-good behaviour, suspected defects, and process or environment problems that cost time (missing test data, seed roster exhausted, catch-all mailbox hiding notifications). Scores zero if there is a single undifferentiated notes section or only a bug list."
+    },
+    {
+      "name": "Closing write-up with coverage gaps and a tester judgement",
+      "max_score": 18,
+      "description": "The window closes with a written report covering what was worked, what was found, what was left uncovered and what to work next, what obstructed the tester, and his own qualitative read on whether the pilot should go ahead. Scores at most half if the qualitative confidence read is missing - that is the signal the ward managers actually need. Scores zero if the only closing artifact is a defect list."
+    },
+    {
+      "name": "Named reader and a deadline for the write-up",
+      "max_score": 10,
+      "description": "The plan names who reads the write-up and by when, close enough to the window that the detail is still fresh and before Monday's go decision. Scores zero if the write-up is filed nowhere and read by nobody, or if the plan leaves review timing unstated."
+    },
+    {
+      "name": "MUST NOT expand beyond W-TEST or into the mobile app",
+      "max_score": 10,
+      "description": "Scores zero if any part of the plan directs the tester at wards holding copied production assignment data, or at the mobile app or payroll export. The data boundary is a hard rule, not a preference."
+    }
+  ]
+}

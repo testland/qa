@@ -1,0 +1,42 @@
+name: mobile
+
+on:
+  pull_request:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - run: npm install -g appium
+
+      - name: start server
+        run: appium &
+
+      - name: run tests
+        run: npx wdio run wdio.conf.js
+        env:
+          ANDROID_APP: ./build/app-debug.apk
+
+      - name: upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: results
+          path: reports/
+
+#  ios:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v5
+#      - run: npm ci
+#      - run: npm install -g appium
+#      - run: appium &
+#      - run: npx wdio run wdio.conf.js
+#    # disabled 2026-04: simulator never boots on the runner, ask #qa-help

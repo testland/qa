@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="com.acme.checkout.CheckoutTest" tests="5" failures="2" errors="1" skipped="0" time="18.442" timestamp="2026-08-11T02:10:04">
+    <testcase classname="com.acme.checkout.CheckoutTest" name="appliesPromoCode" time="0.412"/>
+    <testcase classname="com.acme.checkout.CheckoutTest" name="rejectsExpiredPromo" time="0.388"/>
+    <testcase classname="com.acme.checkout.CheckoutTest" name="totalsIncludeTax" time="0.501">
+      <failure message="expected 1210 but was 1200" type="java.lang.AssertionError"/>
+    </testcase>
+    <testcase classname="com.acme.checkout.CheckoutTest" name="dbRoundTrip_persistsOrder" time="1.204">
+      <failure message="expected order status SETTLED but was PENDING" type="java.lang.AssertionError"/>
+    </testcase>
+    <testcase classname="com.acme.checkout.CheckoutTest" name="loadsCatalogue" time="15.937">
+      <error message="Connection refused: db01-staging:3306" type="java.sql.SQLNonTransientConnectionException"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="com.acme.billing.InvoiceTest" tests="5" failures="1" errors="2" skipped="0" time="30.118" timestamp="2026-08-11T02:10:23">
+    <testcase classname="com.acme.billing.InvoiceTest" name="rendersLineItems" time="0.221"/>
+    <testcase classname="com.acme.billing.InvoiceTest" name="roundsVatHalfUp" time="0.198"/>
+    <testcase classname="com.acme.billing.InvoiceTest" name="assertsTotal" time="0.302">
+      <error message="Cannot invoke String.length() because rate is null" type="java.lang.NullPointerException"/>
+    </testcase>
+    <testcase classname="com.acme.billing.InvoiceTest" name="emailsTheInvoice" time="0.640">
+      <failure message="expected 1 message in the outbox but was 0" type="java.lang.AssertionError"/>
+    </testcase>
+    <testcase classname="com.acme.billing.InvoiceTest" name="archivesPaidInvoices" time="28.757">
+      <error message="Timeout waiting for a connection from pool after 30000ms" type="java.sql.SQLTransientConnectionException"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="com.acme.search.IndexTest" tests="4" failures="1" errors="1" skipped="0" time="22.906" timestamp="2026-08-11T02:10:54">
+    <testcase classname="com.acme.search.IndexTest" name="indexesNewProducts" time="0.804"/>
+    <testcase classname="com.acme.search.IndexTest" name="ranksExactMatchFirst" time="0.611"/>
+    <testcase classname="com.acme.search.IndexTest" name="reindexesOnSchemaChange" time="21.100">
+      <error message="Read timed out" type="java.net.SocketTimeoutException"/>
+    </testcase>
+    <testcase classname="com.acme.search.IndexTest" name="highlightsMatchedTerms" time="0.391">
+      <failure message="expected the matched term to be wrapped but it was not" type="java.lang.AssertionError"/>
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,46 @@
+{
+  "context": "A GitHub Actions job runs an integration suite and surfaces nothing. Predicted baseline failure: the agent fixes the obvious three - secret, environment, `continue-on-error` - and then 'improves visibility' by dropping `-q`, which just makes the raw log longer, or adds an artifact upload with no `if:` condition. Two specific things go wrong and neither is visible in review. First, a step with no `if: always()` is skipped when the preceding step fails, so a report-publishing or artifact step added the obvious way runs only on green builds - exactly inverted from what the team asked for. Second, the tests here run in the integration-test phase under Failsafe, so their JUnit XML lands in `target/failsafe-reports/`; an agent that pattern-matches on the more common Maven layout will point the reporter at `target/surefire-reports/` and get an empty result set on every run, which looks like a working workflow until someone checks whether anything was ever published.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Per-test results are published from the correct reports directory",
+      "max_score": 26,
+      "description": "A step surfaces the JUnit XML written by the integration-test phase - `target/failsafe-reports/TEST-*.xml` - through a test-reporting action or an equivalent check/annotation mechanism, so failed test names appear on the pull request. Scores zero if no reporting step exists, or if visibility is addressed only by removing `-q`. Scores at most half if a reporter is added but pointed at `target/surefire-reports` or a generic `**/target/*-reports/*.xml` glob that does not match what this build actually writes for its HTTP tests."
+    },
+    {
+      "name": "Collection steps run on failure",
+      "max_score": 22,
+      "description": "Every step that publishes or uploads results carries `if: always()` (or an equivalent always-run condition). Scores zero if any such step lacks it - by default GitHub Actions skips subsequent steps once one fails, so a failed run would still produce nothing, which is the exact complaint. Scores at most half if one of two collection steps has the condition and the other does not."
+    },
+    {
+      "name": "MUST NOT keep a credential in the workflow file",
+      "max_score": 14,
+      "description": "The token is supplied as `${{ secrets.* }}` through the step or job `env`, and no literal token string remains anywhere in the file. Any literal secret value, including as a fallback or in a comment, scores zero for this criterion."
+    },
+    {
+      "name": "Reports retained as artifacts",
+      "max_score": 12,
+      "description": "The reports directory is uploaded as a build artifact so it can be opened after the run. Scores zero if nothing is uploaded. Scores at most half if the upload path does not match the directory the build writes."
+    },
+    {
+      "name": "Run targets staging, not production",
+      "max_score": 10,
+      "description": "The host is supplied on the command line as `https://staging.acme.internal`. Scores zero if the production host remains, or if the argument is dropped entirely - which silently falls back to the localhost default and makes every test fail on the agent."
+    },
+    {
+      "name": "MUST NOT let a failing suite report success",
+      "max_score": 10,
+      "description": "`continue-on-error: true` is removed and not replaced by `|| true`, `--fail-never`, `--fail-at-end` used to swallow the exit code, or an automatic re-run of failed tests. Any surviving mechanism that lets a failing suite finish green scores zero for this criterion."
+    },
+    {
+      "name": "Dependency cache and Java version",
+      "max_score": 8,
+      "description": "Maven dependency caching is enabled (e.g. `cache: 'maven'` on the setup-java step or an explicit cache of the local repository) and Java 21 / temurin is retained. Scores zero if caching is not addressed or if the Java version changes."
+    },
+    {
+      "name": "Log output usable and scope respected",
+      "max_score": 6,
+      "description": "`-q` is dropped or replaced with batch mode so the run's own output is readable, and neither `PricingIT.java` nor `pom.xml` is modified. Scores zero if either file is changed."
+    }
+  ]
+}

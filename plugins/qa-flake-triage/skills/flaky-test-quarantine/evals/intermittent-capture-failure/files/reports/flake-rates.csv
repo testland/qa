@@ -1,0 +1,3 @@
+test_name,runs_30d,failures_30d,failure_rate,fails_on_projects
+payment capture succeeds,312,26,8.3%,chromium+tablet-768
+payment page renders card form,312,19,6.1%,tablet-768

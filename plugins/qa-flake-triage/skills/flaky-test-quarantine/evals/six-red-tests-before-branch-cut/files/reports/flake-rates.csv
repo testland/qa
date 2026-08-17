@@ -1,0 +1,7 @@
+test_name,line,runs_30d,failures_30d,failure_rate,first_failure,last_pass,runs_since_first_failure,failures_since_first_failure
+checkout applies regional tax,12,304,37,12.2%,2026-06-02,2026-08-16,232,37
+search returns paged results,20,304,21,6.9%,2026-05-11,2026-08-16,281,21
+admin bulk export completes,28,304,61,20.1%,2026-08-11,2026-08-10,61,61
+profile avatar upload succeeds,36,304,2,0.7%,2026-07-29,2026-08-16,17,2
+report pdf export downloads,44,304,219,72.0%,2026-07-02,2026-08-15,304,219
+cart merges guest session,52,304,131,43.1%,2026-04-18,2026-08-16,304,131

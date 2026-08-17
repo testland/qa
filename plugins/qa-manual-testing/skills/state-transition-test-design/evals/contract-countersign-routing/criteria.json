@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent treats reviewer-approves as one action with one outcome and writes a case 'reviewer approves - contract becomes Approved', which is exactly the bug the prompt describes. The prose says two approvals are required, so the agent may mention the count in passing, but its model still carries a single approve entry out of InReview pointing at Approved, and no case ever asserts the contract's status immediately after the first approval. The same action produces two different results depending on how many approvals are already recorded, and those two results need separate entries and separate cases - the first approval leaving the contract InReview at '1 of 2', the second moving it to Approved. Without that split there are 5 actions and 6 statuses; with it there are 6 columns and 36 combinations, and the missing combination is the one that shipped a signed contract finance never saw.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/contract-approval-tests.md exists and contains a model plus numbered manual test cases with per-step expected results."
+    },
+    {
+      "name": "Approving is modelled as two distinct entries with different outcomes",
+      "max_score": 30,
+      "description": "The model carries two separate entries for a reviewer approving a contract in review: one that applies when no approval has been recorded yet and leaves the contract InReview showing 1 of 2, and one that applies on the second approval and moves it to Approved. Each is qualified by the condition that selects it. A model with a single approve entry pointing at Approved scores zero - that is the shipped defect. Splitting the two in prose but carrying one undifferentiated entry in the model caps this at half."
+    },
+    {
+      "name": "The first approval has its own case asserting the contract did not move",
+      "max_score": 20,
+      "description": "A numbered case has one reviewer approve and asserts, as a step expectation, that the status still reads InReview and the header shows 1 of 2 - before any second approval is applied. A pack in which the only approval case clicks approve twice and checks the end state scores zero on this criterion."
+    },
+    {
+      "name": "MUST NOT collapse the two approvals into a single unasserted step",
+      "max_score": 16,
+      "description": "MUST NOT. A step of the form 'both reviewers approve' or 'approve as legal, then as finance - expected: contract is Approved', with no expected result stated between the two approvals, scores zero here. The intermediate expectation is the whole point; a case that skips it passes against a service that clears the contract on the first click."
+    },
+    {
+      "name": "Actions that must be refused are covered",
+      "max_score": 20,
+      "description": "Cases exist for a reviewer approving a contract that is already Approved or already Signed (the reviewer who opens a days-old notification email), for the sender withdrawing a Signed contract (finance's compliance control), and for the counterparty following a live signing link against a contract that is InReview, in ChangesRequested, or Void. Each expects a refusal with the status unchanged. Fewer than three such cases caps this at half; none scores zero."
+    },
+    {
+      "name": "All 36 status/action combinations accounted for",
+      "max_score": 14,
+      "description": "The model covers 6 statuses against 6 action entries - 36 combinations, because approving splits in two - with each combination either producing a result or explicitly marked as producing none. Using 30 combinations because approving was not split caps this at half. Fewer than 24 accounted for scores zero."
+    },
+    {
+      "name": "The approval count is a stated precondition and its reset is exercised",
+      "max_score": 14,
+      "description": "Cases state how many approvals are already recorded as part of their setup, and at least one case runs the sequence: one approval, changes requested, resubmit, one approval - asserting the contract is back to 1 of 2 and still InReview rather than cleared. Stating the counter as a precondition without ever exercising the reset caps this at half."
+    },
+    {
+      "name": "Every step names the status the tester should see",
+      "max_score": 10,
+      "description": "Expected results reference the contract's status and header as displayed in the tool, not internal terms like 'the approval is persisted' or 'the endpoint returns 200'."
+    }
+  ]
+}

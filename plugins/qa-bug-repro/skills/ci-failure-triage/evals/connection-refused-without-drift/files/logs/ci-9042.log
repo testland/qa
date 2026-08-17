@@ -1,0 +1,28 @@
+2026-08-16T13:20:41Z ##[group]Initialize containers
+2026-08-16T13:20:41Z /usr/bin/docker pull redis@sha256:1f9c4e0d77bb35a1a04c6b2f0e58a1d3c9e2b7a80f4d61c8e3a2b5d70f9c1a44
+2026-08-16T13:20:48Z Status: Image is up to date
+2026-08-16T13:20:49Z ##[endgroup]
+2026-08-16T13:20:52Z ##[group]Run npx jest --ci --maxWorkers=4
+2026-08-16T13:21:34Z PASS tests/cache/warmup.spec.ts (w1)
+2026-08-16T13:22:02Z PASS tests/orders/checkout.spec.ts (w3)
+2026-08-16T13:22:19Z PASS tests/cache/eviction.spec.ts (w2)
+2026-08-16T13:22:19Z   [test] cache/eviction afterAll: closing shared redis client (src/testing/redisClient.ts:41)
+2026-08-16T13:22:41Z PASS tests/orders/refunds.spec.ts (w3)
+2026-08-16T13:22:58Z FAIL tests/session/session.spec.ts (w2)
+2026-08-16T13:22:58Z   ● renews an expiring session
+2026-08-16T13:22:58Z     Error: connect ECONNREFUSED 127.0.0.1:6379
+2026-08-16T13:22:58Z         at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1607:16)
+2026-08-16T13:22:58Z         at Object.getClient (src/testing/redisClient.ts:28:20)
+2026-08-16T13:22:58Z         at Object.<anonymous> (tests/session/session.spec.ts:22:26)
+2026-08-16T13:23:10Z PASS tests/session/logout.spec.ts (w4)
+2026-08-16T13:23:22Z PASS tests/cache/ttl.spec.ts (w1)
+2026-08-16T13:23:40Z Test Suites: 1 failed, 21 passed, 22 total
+2026-08-16T13:23:41Z ##[group]Post job: service container "redis"
+2026-08-16T13:23:41Z redis_1 | 1:M 16 Aug 2026 13:20:50.114 * Ready to accept connections tcp
+2026-08-16T13:23:41Z redis_1 | 1:M 16 Aug 2026 13:23:40.882 * DB saved on disk
+2026-08-16T13:23:41Z $ docker inspect --format '{{.State.Status}} restarts={{.RestartCount}} health={{.State.Health.Status}}' redis_1
+2026-08-16T13:23:41Z running restarts=0 health=healthy
+2026-08-16T13:23:41Z $ docker exec redis_1 redis-cli info clients | head -2
+2026-08-16T13:23:41Z connected_clients:3
+2026-08-16T13:23:41Z blocked_clients:0
+2026-08-16T13:23:42Z ##[error]Process completed with exit code 1.

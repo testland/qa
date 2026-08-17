@@ -1,0 +1,46 @@
+{
+  "context": "The fixture's caching scope was widened but the loop the fixture body runs in was not, so the semaphore binds to the fixture's loop and every test then touches it from its own fresh loop. Predicted baseline failure: the agent narrows the fixture back toward per-test (or per-module) construction, or rebuilds the pool internals inside each test, and reports success because the suite goes green - while the 200 ms handshake is back on every test, which is invisible in a pass/fail readout. The partial version of the same failure is setting the loop lifetime on only one side (the fixture or the tests): the error persists, and an agent that never runs the suite ships it anyway.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes",
+      "max_score": 28,
+      "description": "`pytest` runs green - three pool tests plus the two sync DSN tests. Any remaining 'bound to a different event loop' / 'attached to a different loop' error scores zero."
+    },
+    {
+      "name": "Fixture and tests share one loop lifetime",
+      "max_score": 32,
+      "description": "The loop lifetime is widened to session on BOTH sides: the pool fixture runs in a session-lived loop (fixture-level loop scope, or the project-wide default fixture loop scope in pyproject.toml) AND the tests that consume it run in that same loop (per-test marker loop scope, or the project-wide default test loop scope). Setting it on only one side scores at most half - that is the state the suite is already in, and it does not pass. Setting neither scores zero."
+    },
+    {
+      "name": "The handshake still runs once per session",
+      "max_score": 24,
+      "description": "The pool fixture remains session-cached. Narrowing it to function scope scores zero, and narrowing it to module or class scope scores at most half - both reintroduce the 200 ms cost the task exists to avoid. Constructing `Pool()` directly in a test to bypass `create_pool` also scores zero."
+    },
+    {
+      "name": "No manual loop plumbing",
+      "max_score": 16,
+      "description": "MUST NOT reach for `asyncio.run(...)`, `new_event_loop()`, `set_event_loop()`, a hand-rolled `event_loop` fixture, or `run_until_complete` to force the pool and the tests together. Any of these scores zero even if the suite passes: they replace the plugin's loop management with a second one, and the deprecated custom-loop fixture route is a dead end."
+    },
+    {
+      "name": "Teardown still closes the pool",
+      "max_score": 12,
+      "description": "The pool is closed after the last test that uses it, from the same fixture. Dropping the close scores zero; moving the close into a test body scores at most half."
+    },
+    {
+      "name": "Production module untouched",
+      "max_score": 8,
+      "description": "MUST NOT edit `app/pool.py` - notably, do not move the semaphore creation into `execute` or make it lazily rebuilt. Reshaping the production object so the test harness stops complaining scores zero."
+    },
+    {
+      "name": "Assertions preserved",
+      "max_score": 6,
+      "description": "The three pool tests keep their assertions and their independence from each other. Merging them into one test to dodge the per-test loop scores zero."
+    },
+    {
+      "name": "Change is explained",
+      "max_score": 5,
+      "description": "The response names which file each change went into and why both sides had to move together. A bare diff with no explanation scores zero for this item only."
+    }
+  ]
+}

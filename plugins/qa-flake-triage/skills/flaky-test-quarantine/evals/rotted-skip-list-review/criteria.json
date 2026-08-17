@@ -1,0 +1,51 @@
+{
+  "context": "The team proposes extending every date by ninety days, and each of the five entries actually needs a different decision. Predicted baseline failure: the agent produces a tidy table with all five dates moved to 2026-11-15, which reads as diligent housekeeping and is the exact behaviour that turned this list into an eight-month graveyard. The specific misses expected are Q-01, which has already been extended twice and whose owning team no longer exists — extending it a third time is the failure mode, and the correct output either deletes or rewrites the test; Q-03, whose ticket closed as fixed and shipped on 2026-07-20 and which should simply go back into the blocking path rather than being carried forward at all; and Q-04, whose feature was removed from the product in May, making the test dead code to be deleted rather than an entry to be re-dated. Q-02 is not expired and touching it is churn. An unaided agent is also unlikely to record an extension counter, so the cap it just applied cannot be enforced next time.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/skip-review-2026-08-17.md exists with a per-entry verdict, docs/skipped-tests.md is rewritten, and tests/e2e.spec.ts is edited. Missing any one scores at most two thirds."
+    },
+    {
+      "name": "Q-01 not extended a third time",
+      "max_score": 30,
+      "description": "MUST NOT carry Q-01 forward with a new date. It has been off since 2025-12-08, already extended twice, cause never found, and its owning team was dissolved in February. The correct verdict is to delete or rewrite the test, or to force a decision by a named current owner within days — not another extension. Any output that gives Q-01 a fresh re-check date and leaves it on the list scores zero. Deleting or rewriting it without saying why the repeated-extension history is the trigger scores at most half."
+    },
+    {
+      "name": "Blanket ninety-day extension refused",
+      "max_score": 20,
+      "description": "The proposal to push every date out ninety days is explicitly rejected in docs/skip-review-2026-08-17.md, with the reason: a uniform extension applied to every entry regardless of its history is what allowed an entry to survive eight months. Silently doing something different without addressing the proposal scores at most half. Applying the uniform ninety days scores zero."
+    },
+    {
+      "name": "Q-03 returned to the blocking path",
+      "max_score": 16,
+      "description": "Q-03's annotation is removed from tests/e2e.spec.ts and its entry is removed from docs/skipped-tests.md, because #4412 closed as fixed and shipped on 2026-07-20. The output must also require confirming the test is green — a repeated run of that test — before the entry is closed out. Re-dating Q-03 scores zero. Removing the annotation with no verification step scores at most half."
+    },
+    {
+      "name": "Q-04 deleted as dead code",
+      "max_score": 15,
+      "description": "Q-04 is deleted from tests/e2e.spec.ts and from the list, because the CSV import feature was removed from the product on 2026-05-19 — the test asserts behaviour that no longer exists. Giving it a date and an owner scores zero. Deleting it purely because it has no expiry date, without connecting it to the removed feature, scores at most half."
+    },
+    {
+      "name": "Q-05 extended once, and marked as the last extension",
+      "max_score": 16,
+      "description": "Q-05 is the one entry a further extension fits: expired 2026-08-10, extended once, ticket open with active work landing within two weeks. It gets a new dated deadline, keeps its owner, and the record states this is its final extension — a further one requires deleting or rewriting the test instead. Extending it without recording that it is now at the limit scores at most half."
+    },
+    {
+      "name": "Q-02 left untouched",
+      "max_score": 10,
+      "description": "MUST NOT change Q-02's date, owner, or annotation. Its deadline of 2026-08-27 has not yet passed and a fix is in review. Re-dating it as part of a sweep scores zero on this criterion — the review is supposed to act on expiry, not on the calendar day the review happened to run."
+    },
+    {
+      "name": "Extension count carried in the rewritten record",
+      "max_score": 14,
+      "description": "The rewritten docs/skipped-tests.md keeps a per-entry count of how many times an entry has been extended, so the limit is enforceable at the next review rather than reconstructed from memory. Dropping the column, or resetting counts to zero on rewrite, scores zero. Keeping the column but not stating the limit anywhere scores at most half."
+    },
+    {
+      "name": "Every surviving entry has an owner and a date",
+      "max_score": 12,
+      "description": "No entry remains on the rewritten list without both a named owner handle and a YYYY-MM-DD deadline. Q-01's blank owner and Q-04's blank date must be resolved by removal or escalation, never left blank. Any surviving entry with an empty owner or empty date scores zero here."
+    }
+  ]
+}

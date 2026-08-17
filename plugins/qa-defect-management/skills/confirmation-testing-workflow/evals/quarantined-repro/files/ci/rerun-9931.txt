@@ -1,0 +1,13 @@
+CI job 9931 - manual rerun requested by j.novak
+build commit: a4d0c92   branch: main
+
+Running 1 spec (quarantined set, retries enabled)
+
+  tests/e2e/filter-counts.spec.js
+    attempt 1: FAILED - TimeoutError: waiting for selector
+               ".facet-panel[data-loaded=true]" exceeded 30000ms
+    attempt 2: passed (11.4s)
+
+  1 passed (1 flaked)
+
+Exit code 0

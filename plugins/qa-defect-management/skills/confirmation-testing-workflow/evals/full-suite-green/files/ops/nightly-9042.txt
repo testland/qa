@@ -1,0 +1,10 @@
+Nightly suite 9042
+build commit: b309fe4   branch: main   started 2026-08-12T01:00:04Z
+
+  unit          1,204 passed
+  integration     512 passed
+  end-to-end      126 passed
+
+  1,842 passed, 0 failed, 14 skipped (28m 51s)
+
+Exit code 0

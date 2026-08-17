@@ -1,0 +1,8 @@
+Ran by m.duarte, 2026-08-12 09:40 UTC, staging admin API + Mailhog.
+
+1. Created qa-4102@example.com, digest_opt_in on, email verified.   OK
+2. POST /admin/users/u_88213/archive -> 204                          OK
+3. Triggered digest for workspace w_qa                               OK
+4. Mailhog inbox for qa-4102@example.com after 5 minutes: empty.
+
+No digest arrived. Looks fixed to me.

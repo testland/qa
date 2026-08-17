@@ -1,0 +1,46 @@
+{
+  "context": "Two teams keep their features and step code in separate directories and believe that separates them. A broadly worded regular expression added on one side now also matches a sentence on the other, and the runner refuses those lines. Predicted baseline failure: the agent treats it as a naming collision and 'fixes' it locally - renaming the checkout sentence, or adding a directory-scoped run for each area - both of which the task forbids or leaves broken, and neither of which corrects the belief that produced the problem. The explanation is where the unaided run usually falls down hardest: it reports that two definitions matched, which the error already said, without stating the fact the two engineers need, which is that every definition the run loads is offered to every scenario in that run and the directory layout has no bearing on it. That reads as a complete answer, so the team reorganises directories next sprint and is surprised again.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The explanation states that definitions are suite-wide",
+      "max_score": 30,
+      "description": "The written explanation says that every step definition loaded by the run is available to every scenario in it, regardless of which directory the file or the feature sits in, so billing's broadly worded expression also matched checkout's sentence. Scores at most half if it only says that two definitions matched the same line, which the error message already states and leaves the directory belief intact. Scores zero if it repeats or endorses the belief that the directories scope the step code, or if no explanation is written."
+    },
+    {
+      "name": "The two definitions can no longer match the same sentence",
+      "max_score": 26,
+      "description": "The overlap is removed at the definition level - the broad `(.*)` field capture is narrowed so it cannot match `promo`, or the two are consolidated into one shared definition serving both areas. Scores zero if both definitions survive in a form that still matches `I enter \"WELCOME10\" in the promo field`, whatever else changed. Scores at most half if the overlap is resolved by relying on load order or on a flag that silences the conflict rather than by making the expressions distinct."
+    },
+    {
+      "name": "One run still covers both areas",
+      "max_score": 16,
+      "description": "The suite remains a single run covering checkout and billing. Splitting into two invocations with disjoint load paths - one for each directory - scores zero: it makes today's run green while leaving two definitions that claim the same sentence, so the first person to run the whole suite, or to add a third area, hits it again."
+    },
+    {
+      "name": "All four scenarios pass",
+      "max_score": 14,
+      "description": "Both checkout scenarios and both billing scenarios execute and pass, including the blank-reference case that asserts 'Reference is required'. Scores zero if any scenario is deleted, excluded, or left ambiguous. Scores at most half if billing's reference field is no longer exercised through the sentence the feature uses."
+    },
+    {
+      "name": "Feature wording untouched",
+      "max_score": 10,
+      "description": "Every line of both `.feature` files is unchanged. Renaming `the promo field` or `the reference field` to dodge the collision scores zero - the wording is signed off, and renaming one side leaves the underlying overlap in place for the next broad expression."
+    },
+    {
+      "name": "A stated convention, applied",
+      "max_score": 12,
+      "description": "The answer names a rule that prevents recurrence - for example that step expressions name the specific thing they act on rather than capturing a free-form segment, or that shared sentences live in one common step file - and the delivered files follow it. Scores zero if no convention is stated, or if the stated convention is contradicted by the delivered code."
+    },
+    {
+      "name": "MUST NOT duplicate the sentence under another name",
+      "max_score": 10,
+      "description": "MUST NOT resolve the clash by adding a third, slightly reworded definition (`I type {string} into the promo field`, `I enter {string} in the checkout promo field`). Doing so scores zero: it grows the step vocabulary with synonyms for one action, which is how a step library becomes unsearchable and how the next collision gets written."
+    },
+    {
+      "name": "src/ untouched",
+      "max_score": 6,
+      "description": "`src/promo.js` and `src/invoice.js` are byte-identical. Any production-code edit scores zero."
+    }
+  ]
+}

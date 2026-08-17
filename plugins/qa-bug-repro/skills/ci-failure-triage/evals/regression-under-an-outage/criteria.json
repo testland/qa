@@ -1,0 +1,51 @@
+{
+  "context": "A confirmed outage gives the whole build a single tidy explanation, and 13 of the 14 reds genuinely fit it: identical FetchError, identical ECONNREFUSED address, identical beforeAll frame in one shared fixture. The fourteenth is a one-cent arithmetic mismatch in a pricing test that has 43 consecutive passes behind it, sits in a suite whose siblings passed in the same run, has a code change on its call graph in the window, and failed again on the retry. The commit subject reads 'chore: tidy discount rounding', so anyone classifying from subjects rather than the hunk sees harmless cleanup; the hunk swaps Math.round for Math.ceil, which is exactly a one-cent-high result. Predicted baseline failure: one build-level verdict - 'this build is the docs-index outage, rerun it' - or a per-failure list in which the pricing test is folded into the outage group or waved off as noise, so a rounding regression ships at noon.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-build-8842.md exists and covers the build."
+    },
+    {
+      "name": "Pricing failure separated from the outage group",
+      "max_score": 26,
+      "description": "discount.spec.ts is treated as its own failure with its own write-up, and the document states what distinguishes it: a different error shape (an arithmetic assertion, not a connection error), a different fixture path, and sibling tests in the same suite passing in the same run. Folding it into the outage group, or listing it under 'also failed, rerun' scores zero. Naming it as different without giving the distinguishing observation scores at most half."
+    },
+    {
+      "name": "Pricing failure identified as a real regression with its cause",
+      "max_score": 24,
+      "description": "The document calls it a genuine product defect and names the change: 5d1c7aa replaced Math.round with Math.ceil in applyDiscount, which produces 8001 where 8000 is expected. Full credit cites the hunk, the 43-run green streak, and the retry on the same commit failing again. Reaching 'probably a real bug, someone should look' without naming the hunk scores at most half. Classifying it as a flake, as outage fallout, or as environmental scores zero."
+    },
+    {
+      "name": "MUST NOT classify from the commit subject alone",
+      "max_score": 12,
+      "description": "Scores zero if the document reasons from 'chore: tidy discount rounding' as evidence of anything - either dismissing the commit as harmless cleanup because the subject says tidy, or blaming it purely because the subject mentions discounts, without quoting or describing the actual change. The hunk is supplied; a call built on the subject line is unfalsifiable."
+    },
+    {
+      "name": "MUST NOT issue a single verdict for the whole build",
+      "max_score": 12,
+      "description": "Scores zero if the document produces one build-level answer ('build 8842 failed because docs-index was down') instead of treating the reds as separate failures with separate causes. Batching a red build into one verdict is how the real failure inside it disappears."
+    },
+    {
+      "name": "Outage group correctly grouped and dispositioned",
+      "max_score": 10,
+      "description": "The 13 docs suites are handled as one group on stated grounds - same FetchError, same ECONNREFUSED 10.4.2.19:8080, same beforeAll frame in tests/support/docsIndexFixture.ts:22, none of them ever failed before this build - with a one-line disposition, and the document says they carry no information about the pricing failure. Grouping them without stating the shared evidence scores at most half."
+    },
+    {
+      "name": "Rerun plan answered directly",
+      "max_score": 11,
+      "description": "The document states plainly that rerunning does not clear the pricing failure and says so with the reason: the retry at 03:44 already ran the same commit and failed the same way. Answering 'rerun once the service is back and see what is left' without noting that the retry evidence already exists scores at most half. Endorsing the rerun-and-carry-on plan scores zero."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 10,
+      "description": "For the pricing failure, the alternatives are listed with the observation that kills each - no quarantine or flake list exists in the repo, runner image unchanged for 11 days, no prior failure of this test in 50 runs so it is not an intermittent pattern, error is an arithmetic mismatch rather than a connection or timeout. Full credit needs at least three entries with observed values."
+    },
+    {
+      "name": "Next action names the owner and preserves the reproduction",
+      "max_score": 9,
+      "description": "The recommended action routes the pricing regression to whoever owns src/pricing and keeps the failing case captured before anyone edits the code. Recommending an immediate revert or a code fix as the deliverable, rather than routing and capture, scores at most half."
+    }
+  ]
+}

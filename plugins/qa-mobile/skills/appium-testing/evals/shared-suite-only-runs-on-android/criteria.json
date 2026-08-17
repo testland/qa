@@ -1,0 +1,41 @@
+{
+  "context": "Two skill-specific facts decide this task. First, feature coverage is per automation backend, not per framework: `startActivity`, `pressKeyCode`, `toggleWiFi`, `openNotifications` and `mobile: shell` are UiAutomator2-side commands with no XCUITest counterpart, so a shared suite either uses a cross-platform substitute (a deep-link launch through the URL-handling capability, an in-app back control, an in-app assertion instead of a shell read) or declares the test platform-limited. Second, this framework is an out-of-process HTTP server: every element lookup and every getText is a round trip costing on the order of a hundred to a few hundred milliseconds, which is why a 200-iteration tight loop is unnoticeable against a local emulator and costs minutes against a farm on the other end of a network. Predicted baseline failure: the agent wraps the failing calls in try/catch or an `if (isAndroid)` guard that returns early - leaving six tests green and empty, which is what the team already has - and never explains which backend supports what; and it leaves the sync helper alone, or 'optimises' it by adding a fixed pause inside the same unbounded loop, because a loop with no sleep in it reads as fast. Both failures are invisible on a dashboard that still says 22/22.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Failing calls identified as backend-specific with a per-platform verdict",
+      "max_score": 28,
+      "description": "`docs/platform-support.md` goes call by call - activity launch, keycode press, wifi toggle, notification shade, device shell - and states for each whether the Android backend and the iOS backend support it, with the substitute where one exists. A document that lists the tests without naming the backends, or that asserts blanket cross-platform support, scores zero. Covering only some of the five calls scores at most half."
+    },
+    {
+      "name": "Shared paths use commands both backends implement",
+      "max_score": 22,
+      "description": "Where a cross-platform route exists it is taken - launching the deep link through the session's URL handling rather than an activity name, using the app's own back control rather than a platform keycode, asserting the breadcrumb through the app UI or an app-exposed hook rather than a device shell read. Wrapping the original call in try/catch and continuing scores zero. Replacing an Android-only call with a different Android-only call scores zero."
+    },
+    {
+      "name": "Polling helper reduced to a bounded wait",
+      "max_score": 22,
+      "description": "`waitForSync` becomes a wait with an explicit timeout and an explicit polling interval (the client's own wait-until primitive, or an equivalent bounded loop with a deadline and a delay), so the number of round trips is a function of elapsed time rather than a fixed two hundred. Leaving the tight 200-iteration loop scores zero. Keeping the 200-iteration bound and adding a fixed pause inside it scores at most half - it costs less but still has no deadline and still hard-codes the iteration count."
+    },
+    {
+      "name": "Slowness explained as protocol round-trip cost",
+      "max_score": 14,
+      "description": "The answer states that each element lookup and text read is an HTTP command to an out-of-process server, costing on the order of 100-300ms and considerably more against a remote farm, so a fixed 200-iteration loop is hundreds of round trips. Explaining the difference as 'the farm devices are slower' or 'the network is slow' without naming the per-command round trip scores zero; no explanation scores zero."
+    },
+    {
+      "name": "Platform-limited tests are reported as not run",
+      "max_score": 14,
+      "description": "Any test that genuinely cannot run on iOS is excluded through the runner's skip mechanism with a stated reason, so the report shows it as skipped. An early `return` inside the test body, a guard that leaves the test green with no assertions, or leaving the external skip list as the mechanism scores zero - the task states that a silently green test is worse than a red one."
+    },
+    {
+      "name": "MUST NOT split the suite per platform",
+      "max_score": 12,
+      "description": "MUST NOT. Anti-pattern row 'Per-platform separate test code'. Moving the six tests into an android-only spec directory, or creating an iOS twin of any spec, scores zero even though it would make the run green - the task states the merged suite is being kept."
+    },
+    {
+      "name": "No test deleted and assertions preserved",
+      "max_score": 8,
+      "description": "All six tests still exist and still assert what they asserted for the platform that supports them. Deleting a test, or reducing it to a launch with no assertion, scores zero."
+    }
+  ]
+}

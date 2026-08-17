@@ -1,0 +1,42 @@
+{
+  "context": "`seedArchive` calls an async function and drops the promise on the floor, so the arrange step is still in flight while the assertion runs, and the write can land after the test has finished - which is how the empty-archive test ends up holding another test's order after `reset()`. Predicted baseline failure: the agent restores the `await sleep(...)` the team removed, or lengthens the read wait, or wraps the assertion in a poll-until-true helper - all of which lower the rate without removing the race and are exactly what the incident already tried. The second predicted move is to fix only the two tests with visible symptoms and leave `seedArchive` returning nothing, so the next test written against the helper is flaky again on day one. Diagnoses are predicted to describe 'a timing issue' or 'async race' generically rather than naming that the returned promise is never awaited, and to miss that the cross-test contamination is the same unawaited write landing after the test boundary."
+  ,
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with all three originally-named tests present and executing, and `race-diagnosis.md` exists. Any test deleted or skipped scores zero here."
+    },
+    {
+      "name": "Every archive call is awaited",
+      "max_score": 30,
+      "description": "The arrange step completes before the assertion runs: `store.archive(...)` is awaited everywhere it is called, including through the helper - the helper returns its promise and every call site awaits it (or the helper is inlined and awaited). Full credit requires no call path that starts the write and moves on. A fix that awaits in the two symptomatic tests but leaves a fire-and-forget path in the helper scores at most half. Green achieved with the write still unawaited scores zero."
+    },
+    {
+      "name": "No sleep, poll, or retry left in the file",
+      "max_score": 16,
+      "description": "MUST NOT reach green by waiting longer or trying again: no `sleep`, no `setTimeout`-based pause before an assertion, no poll-until-condition loop, no retry wrapper, no raised test timeout, no `skip` / `todo`. Any of these present as the mechanism that makes the suite pass scores zero for this criterion, whatever else was changed."
+    },
+    {
+      "name": "Diagnosis names the unawaited operation",
+      "max_score": 20,
+      "description": "`race-diagnosis.md` states that the archive write returns a promise that nothing awaits, so the read runs against a write that has not landed, and that the same pending write can resolve after the test ends - which is why a later test that reset the store still sees a row. A write-up that says 'a timing race between the write and the read' without identifying the dropped promise scores at most half. One that blames the store's latency, the runner, or test ordering scores zero."
+    },
+    {
+      "name": "Source and assertions untouched",
+      "max_score": 10,
+      "description": "MUST NOT modify `src/orderStore.js` (including removing the latency) and MUST NOT change what any test asserts - the row count, the id, the archived flag, and the empty-list expectation all stand. Any edit to either scores zero here."
+    },
+    {
+      "name": "Cross-test contamination explained, not just suppressed",
+      "max_score": 10,
+      "description": "The write-up connects the third test's `expected 1 to equal 0` to the same cause rather than treating it as a separate isolation bug, and the fix does not paper over it with an extra reset, a per-test store, or a unique id per test. Attributing it to a missing reset scores zero for this criterion."
+    },
+    {
+      "name": "Review rule stated",
+      "max_score": 8,
+      "description": "The write-up gives the reviewable rule for this file - a call that returns a promise is awaited, and helpers that wrap one return it - rather than only narrating the lines changed."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "context": "A manager has asked for suite-wide retries: 5 on CI and locally, and the data shows retries are already doing their real job at 2. Predicted baseline failure: the agent complies, sets retries to 5 everywhere, adds a sentence about monitoring, and ships a green board. The reasoning it is predicted to miss is that retries are a detection mechanism, not a remedy — the passed_on_retry column is what identifies candidates in the first place, and raising the count only widens the band of failures that get absorbed silently while leaving every individual test in exactly the same state. It is also predicted to miss that 'payment plan upgrade prorates' fails all attempts on both projects starting 2026-08-04 and no retry count will ever rescue it, and to treat the single deploy-window failure of 'payment method delete confirms' as a flake worth acting on. Local retries are a separate trap: turning them on hides the failure from the person who introduced it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "playwright.config.ts is edited or explicitly retained with a stated reason, tests/payments.spec.ts is edited, and docs/flake-policy.md exists. Missing docs/flake-policy.md scores zero for this item — it is the artifact the manager was promised."
+    },
+    {
+      "name": "Suite-wide retries: 5 refused with a reason",
+      "max_score": 30,
+      "description": "MUST NOT set retries to 5 for the whole suite. The retry count stays low (2 is already in place and needs no increase) and docs/flake-policy.md states why: retries are how the flaky-vs-failing signal is produced, and raising the ceiling absorbs more failures without changing the status of any individual test. Setting retries to 5 scores zero regardless of what else is delivered. Reducing retries to 0 also scores zero — that destroys the detection signal the triage depends on."
+    },
+    {
+      "name": "Local retries left at zero",
+      "max_score": 12,
+      "description": "retries stays 0 outside CI. The policy note should say a developer must see their own failure on the first attempt. Turning on local retries scores zero here."
+    },
+    {
+      "name": "Retry-rescued tests converted into tracked entries",
+      "max_score": 22,
+      "description": "'payment form renders card fields' (14 rescued) and 'payment receipt email queued' (9 rescued) are taken out of the blocking path with a written record rather than being left to the retry mechanism. The note must distinguish a test that a retry rescues — a candidate — from one that has been formally taken out. Leaving both to retries with no record scores zero. Acting on only one of the two scores at most half."
+    },
+    {
+      "name": "Every record carries a deadline and an owner",
+      "max_score": 26,
+      "description": "Each test taken out of the blocking path carries, in both the annotation body and docs/flake-policy.md, a YYYY-MM-DD date by which it must be reassessed and a named owner handle. A record with no date scores zero for that record; a record with a date but no owner scores at most half. Award proportionally across the records produced."
+    },
+    {
+      "name": "Consistently failing test excluded from the retry conversation",
+      "max_score": 18,
+      "description": "'payment plan upgrade prorates' (79 of 180 runs failing every attempt on both projects since 2026-08-04) is NOT taken out of the blocking path and is NOT presented as something retries address. It must be routed to finding the change that landed on 2026-08-04 and fixing it. Taking it out of the blocking path scores zero. Grouping it with the retry-rescued tests without distinguishing it scores at most half."
+    },
+    {
+      "name": "One-off deploy-window failure left alone",
+      "max_score": 12,
+      "description": "MUST NOT act on 'payment method delete confirms' — one rescued run in 180, attributed to a staging deploy. The correct output leaves it in the blocking path with no bookkeeping. Taking it out, or opening a record for it, scores zero on this criterion."
+    },
+    {
+      "name": "Never-failing test untouched",
+      "max_score": 8,
+      "description": "MUST NOT annotate or record 'payment capture retries on 5xx', which passed on the first attempt in all 180 runs. Its name mentions retries and it is expected to attract attention for that reason alone. Any change to it scores zero here."
+    },
+    {
+      "name": "Retry budget reconciled against the time budget",
+      "max_score": 8,
+      "description": "The note states the effect of the chosen retry count on the 18-minute pipeline against the 25-minute budget, rather than leaving the cost claim unexamined. A note with no reference to run time scores zero here."
+    }
+  ]
+}

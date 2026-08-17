@@ -1,0 +1,46 @@
+{
+  "context": "Ten queue items against a one-business-day decision window. Three urgent items are past it with no human owner: BUG-771 (six days, nobody assigned), BUG-790 (five days, assigned to an automation account, which is not an owner), and BUG-793 (four days, decision recorded but still nobody assigned). Two low-urgency items are also past the window - BUG-782 at nine days and BUG-799 at ten - and BUG-799 additionally cannot be decided at all because it has no classification and an unreachable reporter. Three items must not be touched: BUG-780 and BUG-796 are exactly at one day, and BUG-786 is a legitimately deferred item with a recorded product decision and a review date, which also demonstrates that a damaging defect can sit at low urgency on purpose. Predicted baseline failure: the agent filters on the urgency column, reports only the P1 rows, and accepts BUG-790 as owned because the assignee field is non-empty; it then proposes to raise the damage rating on the unowned urgent items so they get picked up, or to close the nine- and ten-day-old items as stale - both of which read as decisive queue hygiene and both of which destroy the data the report exists to produce. BUG-786 is also commonly swept up as 'critical and untouched for 34 days'.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "triage-queue-report.md and assignment-plan.csv both exist, the CSV carrying id,days_over,decision_owed,owner,note. Missing either scores zero."
+    },
+    {
+      "name": "Unowned urgent items named, including the bot-assigned one",
+      "max_score": 28,
+      "description": "BUG-771, BUG-790 and BUG-793 are all reported as past the window with no owner. BUG-790 must be called out despite having qa-bot in the assignee field - an automation account is not a person who can decide anything. Reporting only BUG-771 and BUG-793 and treating BUG-790 as owned scores at most half; naming fewer than two of the three scores zero."
+    },
+    {
+      "name": "Low-urgency breaches reported too",
+      "max_score": 14,
+      "description": "BUG-782 (9 days) and BUG-799 (10 days) are reported as past the decision window. The window applies to everything newly reported, not only to urgent items. A report that covers only the P1 rows scores zero here."
+    },
+    {
+      "name": "Severity not used as a scheduling lever",
+      "max_score": 16,
+      "description": "MUST NOT propose raising the severity value on BUG-771, BUG-790 or BUG-793 (or on any other row) to attract attention, and MUST NOT propose setting severity from the priority column or the reverse. How damaging a defect is and when it gets worked are recorded separately and moved for separate reasons. Any proposed severity edit made for scheduling reasons scores zero here."
+    },
+    {
+      "name": "Aged items get a decision, not a cleanup close",
+      "max_score": 12,
+      "description": "BUG-782 and BUG-799 are routed to a recorded decision - accepted with an owner, or turned down with a stated reason. MUST NOT propose closing them as stale, inactive, or old; a close with no decision behind it leaves nothing in the tracker saying what was concluded. Any 'close the aged items' recommendation scores zero here."
+    },
+    {
+      "name": "Items inside the window or legitimately parked left alone",
+      "max_score": 16,
+      "description": "BUG-780 and BUG-796 (both at exactly one day) and BUG-802 and BUG-774 (both already owned with a decision recorded) are stated as needing nothing. BUG-786 must be defended as a deliberate deferral with product sign-off and a review date, not reported as neglected. Listing BUG-786 as a breach scores zero on this criterion; flagging either one-day item scores at most half."
+    },
+    {
+      "name": "Undecidable item handled as undecidable",
+      "max_score": 12,
+      "description": "BUG-799 is called out as impossible to decide in its current shape - no classification of any kind, and an unreachable reporter - with the specific information needed and where it should sit meanwhile. Treating its blank priority as low urgency scores zero."
+    },
+    {
+      "name": "Each action has a named owner",
+      "max_score": 8,
+      "description": "Every row in assignment-plan.csv names the person or role who owes the next decision, not just the ticket. Rows with an empty or generic owner ('the team') score at most half."
+    }
+  ]
+}

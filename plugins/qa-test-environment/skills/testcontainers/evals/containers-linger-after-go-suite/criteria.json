@@ -1,0 +1,41 @@
+{
+  "context": "Containers survive the suite for three separate reasons, and only the first one is visible in the test files. Predicted baseline failure: the agent fixes the obvious one - it moves the deferred removal above the error check or converts it to a test-scoped cleanup, adds the missing removal in the queue test, drops the Makefile step - and leaves the workflow `env:` block alone, because `TESTCONTAINERS_RYUK_DISABLED` and `TESTCONTAINERS_REUSE_ENABLE` read like performance knobs rather than the two settings that (a) switch off the label-matching reaper that removes containers when the process is killed or the job is cancelled, and (b) deliberately keep containers alive between runs. A change that only touches the Go files therefore looks complete and still leaks on exactly the cancellation and timeout paths the team described.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both test files register removal for their container",
+      "max_score": 6,
+      "description": "Neither test can finish without its container being removed on the normal path. `queue_test.go` gaining removal at all is required for any credit here."
+    },
+    {
+      "name": "The abnormal-exit path is restored, not worked around",
+      "max_score": 30,
+      "description": "`TESTCONTAINERS_RYUK_DISABLED` is removed from the workflow so the label-matching sidecar reaper is active again, and the answer says plainly that this is what covers process kill, job cancellation, and timeout - cases no in-process defer or cleanup callback can cover. Leaving the flag set scores zero, however good the Go-side cleanup is. Replacing it with a hand-written trap/signal handler in the test binary scores at most half: it is more code for a case the runtime already handles and it still misses SIGKILL."
+    },
+    {
+      "name": "Cleanup is registered so that a failed start is also removed",
+      "max_score": 22,
+      "description": "Removal is tied to the test's own cleanup lifecycle and registered so it also covers the case where the container came up partially and the test then aborts - i.e. it is registered before or independently of the `if err != nil { t.Fatal }` check, using a form that tolerates a nil container. A `defer` left below the error check scores zero; a cleanup registered after a successful start only, with the failed-start path still leaking, scores at most half."
+    },
+    {
+      "name": "MUST NOT leave cross-run reuse enabled in CI",
+      "max_score": 16,
+      "description": "`TESTCONTAINERS_REUSE_ENABLE` is removed from the workflow. Keeping it scores zero: it is documented as unsuited to CI, it is a direct cause of containers persisting between runs, and the task explicitly asks for the `env:` block to be reviewed."
+    },
+    {
+      "name": "Blanket cleanup is gone from both places",
+      "max_score": 12,
+      "description": "The workflow step and the `ci-cleanup` Makefile target are both deleted. Deleting only the step and leaving the target - or keeping any variant that removes containers the suite did not create, such as `docker system prune` or `docker rm -f $(docker ps -aq)` - scores zero."
+    },
+    {
+      "name": "No hand-rolled inventory substituted",
+      "max_score": 9,
+      "description": "The answer does not introduce a bespoke registry of container ids, a name-prefix scan, or a background goroutine that deletes containers by naming convention. Any of those scores zero for this criterion - the runtime already labels its resources and reaps them by label."
+    },
+    {
+      "name": "Assertions unchanged",
+      "max_score": 5,
+      "description": "The two tests still assert the same things against the same images; nothing is skipped or converted to a fake."
+    }
+  ]
+}

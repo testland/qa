@@ -1,0 +1,41 @@
+{
+  "context": "The cross-platform locator strategy for this stack depends on a contract with the app code: the same identifier string is set as `accessibilityIdentifier` on the iOS view and as `contentDescription` (or a matching `resource-id`) on the Android view, after which one accessibility-id lookup resolves on both platforms. Predicted baseline failure: the agent swaps the XPath for an id-based lookup, or for platform-specific query languages (`-android uiautomator`, `-ios predicate string`), keeping the per-platform conditional it was asked to remove; and it writes an instrumentation document that says 'add a test id to each element' or invents a generic `testID` attribute without ever naming what the iOS engineer and the Android engineer must actually set. Both teams then guess differently, the identifiers do not match, and the shared locator resolves on one platform only. The failure is invisible to a casual reader because the rewritten test file looks clean and short - the missing half of the fix lives in a document nobody diffs.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Instrumentation doc names the platform-native attribute per side",
+      "max_score": 32,
+      "description": "The document tells the iOS team to set `accessibilityIdentifier` and the Android team to set `contentDescription` (or an equally explicit `resource-id` instruction), and states that the value must be the identical string on both platforms. Naming only one platform's attribute scores at most half. A document that says 'add a test id' / 'add an accessibility label' without naming either platform's attribute scores zero, since that is the instruction that already failed the team once. Inventing a cross-platform attribute that does not exist on either platform also scores zero."
+    },
+    {
+      "name": "Lookups use the accessibility-identifier strategy",
+      "max_score": 24,
+      "description": "Elements are located by accessibility id (`AppiumBy.accessibilityId(...)` or the client's documented equivalent), matching the identifiers the document asks the app teams to set. Replacing the XPath with platform-specific query strategies (`AppiumBy.androidUIAutomator`, `AppiumBy.iOSNsPredicateString`, `AppiumBy.className`) scores at most half: it survives a rename but keeps two locators per element. Replacing the XPath with different XPath scores zero."
+    },
+    {
+      "name": "MUST NOT keep XPath as the lookup strategy",
+      "max_score": 14,
+      "description": "MUST NOT. Anti-pattern row 'XPath selectors as default'. No `AppiumBy.xpath` call, and no absolute tree path, remains in CartTest.java. A single surviving XPath scores zero here - the reported breakage is a container being nested one level deeper, which every remaining absolute path still fails on."
+    },
+    {
+      "name": "One locator per element, no platform conditional",
+      "max_score": 14,
+      "description": "The `isIos()` ternaries and per-platform helper branches are gone; each element is described once. A file that keeps the conditional but points both branches at the same accessibility id scores at most half. Keeping a real two-branch ladder scores zero - the stated harm is that a change to one branch silently leaves the other stale."
+    },
+    {
+      "name": "Slow-lookup complaint is addressed, not ignored",
+      "max_score": 8,
+      "description": "The answer states why the old lookups were slow on iOS - a tree query has to be evaluated across the element hierarchy, and each query is a round trip to an out-of-process server - and that the new strategy is a direct attribute match. Silence on the performance point scores zero for this criterion; an explanation that blames the simulator or the device scores zero."
+    },
+    {
+      "name": "Assertion meaning preserved",
+      "max_score": 8,
+      "description": "Both tests still assert the badge reads '1' after adding and '0' after removing the last item. Weakening either assertion (asserting the badge merely exists or is displayed) while rewriting the locators scores zero."
+    },
+    {
+      "name": "LoginTest left unchanged",
+      "max_score": 5,
+      "description": "MUST NOT modify LoginTest.java. It is out of scope; editing it scores zero here."
+    }
+  ]
+}

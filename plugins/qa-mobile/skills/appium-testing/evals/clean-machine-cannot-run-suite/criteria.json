@@ -1,0 +1,51 @@
+{
+  "context": "In the current major the per-platform automation backends are not bundled with the server: each is a separately installed, server-managed driver, added by short name through the server's own driver subcommand and listed back by it. Predicted baseline failure: the agent reads 'could not find a driver' as a missing npm package or a missing SDK and adds `npm install -g appium-uiautomator2-driver` / an `appium-xcuitest-driver` devDependency, or piles on more Android SDK and Xcode environment plumbing, or writes 'ensure the drivers are installed' into the onboarding doc without a command. Every one of those leaves a clean machine in exactly the state described. The secondary prediction is on the authored files: capabilities written without the vendor namespace (rejected outright by this major), a hard-coded simulator or emulator model, and an onboarding doc that still tells the developer to keep a server running in a second terminal even though the runner can own that lifecycle. The failure is invisible to a casual reader because the script grows several plausible install lines and still exits 0, and the new config file looks like every capability example written before the major bump.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Platform backends installed through the server's own driver installer",
+      "max_score": 32,
+      "description": "The script installs the automation backends by name through the server's driver subcommand - `appium driver install uiautomator2` and `appium driver install xcuitest`. Installing them as npm packages (globally or as devDependencies), or not installing them at all, scores zero: that is exactly the state the machines are already in. Installing only the Android backend scores at most half - the task asks for machines prepared for both."
+    },
+    {
+      "name": "Readiness check queries the server's driver inventory",
+      "max_score": 16,
+      "description": "Verification asks the server what it has registered - `appium driver list` (installed-only form is fine) - and exits non-zero naming the missing backend. A check limited to `appium --version`, `which appium`, `node --version` or a port probe scores at most half: all of those already pass on the broken machines. No verification step scores zero."
+    },
+    {
+      "name": "iOS-only work gated to macOS",
+      "max_score": 12,
+      "description": "The XCUITest backend and the Xcode prerequisites are installed only on macOS (uname / OSTYPE guard or equivalent) and the Linux path completes successfully with Android alone. Installing the iOS backend unconditionally scores at most half. A script that hard-fails on Linux, or demands Xcode everywhere, scores zero."
+    },
+    {
+      "name": "Authored capabilities carry the vendor prefix",
+      "max_score": 18,
+      "description": "In `wdio.conf.js`, every non-standard capability is namespaced - `appium:automationName`, `appium:deviceName`, `appium:app` (or `appium:appPackage` / `appium:appActivity`) - with `platformName` left bare. A capability object with no prefixes scores zero: this major rejects the session outright, so the delivered suite never runs. Prefixing some but not all scores at most half."
+    },
+    {
+      "name": "Smoke test locates elements by the identifiers the app already ships",
+      "max_score": 12,
+      "description": "`test/specs/smoke.spec.js` uses the accessibility identifiers named in the notes (`email-field`, `password-field`, `sign-in`, `account-home`) through the accessibility-id strategy, and asserts the account screen is reached. Inventing XPath over the view hierarchy, or locating by visible label text, scores zero. A test that drives the flow but asserts nothing scores zero."
+    },
+    {
+      "name": "Server lifecycle owned by the runner, not a second terminal",
+      "max_score": 10,
+      "description": "The config registers the runner's automation-server service so the server starts and stops around the run, and the onboarding doc drops the keep-a-terminal-open step. A `pretest` script backgrounding the server scores at most half - it removes the manual step but hand-rolls readiness. Leaving the second-terminal instruction in place scores zero."
+    },
+    {
+      "name": "MUST NOT pin a specific device model",
+      "max_score": 10,
+      "description": "MUST NOT. Anti-pattern row \"Hard-coded device name ('iPhone 15')\". The committed capability set names a generic logical device ('Android Emulator' and equivalent), not a phone model or a hand-created AVD name, and does not pin an OS version. Any concrete model or version literal scores zero - it breaks on the first machine that does not happen to have it, which is the whole failure mode the team is trying to escape."
+    },
+    {
+      "name": "Onboarding doc matches what was delivered",
+      "max_score": 8,
+      "description": "`docs/onboarding.md` describes the reworked flow: what the script now does, the macOS-only steps marked as such, and a command that actually runs the smoke test. A doc left describing the old flow scores zero; one that says 'run the script' while still listing stale manual steps scores at most half."
+    },
+    {
+      "name": "Web suite untouched",
+      "max_score": 5,
+      "description": "MUST NOT modify e2e/login.spec.js. It is the web suite and out of scope; editing it scores zero here."
+    }
+  ]
+}

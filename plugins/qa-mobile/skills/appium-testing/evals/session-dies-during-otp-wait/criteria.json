@@ -1,0 +1,46 @@
+{
+  "context": "The server closes any session that receives no command for its idle window, and that window is a per-session capability defaulting to sixty seconds. The mailbox helper blocks in Python without issuing a single driver command, so a 90-second wait crosses the idle window and the server reclaims the session; runs where the mail arrives in 40 seconds stay under it, which is exactly the observed pass/fail split. Predicted baseline failure: the agent reads 'session terminated' as a client, network, or device problem and proposes longer implicit waits, a reconnect helper, an explicit wait wrapper, moving the mailbox poll into a thread, or simply re-creating the driver after the wait - and where it does find the idle timeout, it is likely to set it as a server command-line flag for everyone, to disable it outright by setting it to zero, or to write the capability without the vendor prefix, in which case the current server silently ignores it and the failure returns unchanged on the next slow mailbox. All of those diffs look like a fix and pass review, because the test passes on any run where the mail happens to arrive quickly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Fix raises the session idle-timeout capability",
+      "max_score": 30,
+      "description": "The session is created with `appium:newCommandTimeout` set above the worst observed mailbox wait (comfortably more than 90 seconds, e.g. 180-240). Full marks also for the alternative that keeps the session non-idle by issuing a real driver command inside the wait loop on the test side, provided the loop is bounded. Only changing pytest timeouts, implicit waits, or client-side socket timeouts scores zero - none of them affect when the server reclaims the session."
+    },
+    {
+      "name": "Diagnosis names the server-side idle window",
+      "max_score": 24,
+      "description": "`docs/otp-flake.md` states that the server ends a session that has received no command for its idle period (default sixty seconds), that the blocking mailbox poll issues no commands, and that this is why the fast runs survive and the slow ones do not. Attributing the failure to the network, the emulator, the app, the mailbox service, or the runner's timeout scores zero. Naming a timeout without saying it is the server reclaiming an idle session scores at most half."
+    },
+    {
+      "name": "MUST NOT write the capability in the pre-prefix form",
+      "max_score": 14,
+      "description": "MUST NOT. Anti-pattern row 'Mixing Appium 1.x and 2.x docs'. The capability must be namespaced (`appium:newCommandTimeout`). A bare `newCommandTimeout` key is not a standard W3C capability, so the current server does not apply it - the deliverable then looks fixed and behaves identically to today. Unprefixed scores zero here."
+    },
+    {
+      "name": "The idle safety net is not disabled",
+      "max_score": 14,
+      "description": "The timeout is raised to a bounded value, not switched off. Setting it to 0 (or any value meaning 'never'), or telling the team to start the server with the check disabled, scores zero: the stated constraint is that abandoned sessions must still be reclaimed, because the device farm bills by the minute."
+    },
+    {
+      "name": "Scope limited to the sessions that need it",
+      "max_score": 10,
+      "description": "The longer window applies to the one test (or a marked subset) rather than becoming the default for all forty-one. Raising it globally in the shared capability set scores at most half. Changing it on the shared server process rather than in capabilities scores zero - it changes behaviour for every suite on that machine."
+    },
+    {
+      "name": "No retries or reruns added",
+      "max_score": 8,
+      "description": "MUST NOT add rerun plugins, retry decorators, or a re-create-the-driver-and-try-again path. The task states retries were already tried and are excluded; adding them scores zero."
+    },
+    {
+      "name": "mailbox.py untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify helpers/mailbox.py - it belongs to another team. Editing it, including 'just' shortening its poll interval, scores zero here."
+    },
+    {
+      "name": "Test still asserts a successful sign-in",
+      "max_score": 6,
+      "description": "The test still enters the code and asserts the account home screen is displayed. Weakening the assertion, or wrapping the flow so that a lost session is treated as a skip, scores zero."
+    }
+  ]
+}

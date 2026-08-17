@@ -1,0 +1,33 @@
+$ git log --oneline --since=2026-08-08 --until=2026-08-12
+a11c93e (2026-08-10 14:02) ci: move the nightly job to the standard runner pool
+7f20b6d (2026-08-09 11:40) feat(checkout): show gift-card balance in the order-history header
+c0d4471 (2026-08-08 16:05) docs: update the release checklist
+
+$ git show a11c93e -- .github/workflows/nightly.yml
+@@ jobs:
+   nightly-suite:
+-    runs-on: ubuntu-latest-8-cores
++    runs-on: ubuntu-latest
+     strategy:
+       matrix:
+         shard: [1, 2, 3, 4]
+
+$ git show 7f20b6d --stat
+ src/checkout/OrderHistoryHeader.tsx        | 14 ++++++++++----
+ src/checkout/OrderHistoryHeader.module.css |  6 ++++++
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+$ git show 7f20b6d -- src/checkout/OrderHistoryHeader.tsx
+@@ export function OrderHistoryHeader({ account }: Props) {
+   return (
+     <header className={styles.header}>
+       <h2>Order history</h2>
++      {account.giftCardBalance > 0 && (
++        <span className={styles.balance}>Gift card: {format(account.giftCardBalance)}</span>
++      )}
+     </header>
+   );
+ }
+
+$ git log --oneline --since=2026-08-08 -- src/checkout/orderHistory.ts src/checkout/seedOrders.ts
+(no commits)

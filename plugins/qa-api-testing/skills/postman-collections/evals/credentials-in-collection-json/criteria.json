@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent recognises the secret and moves it - out of the collection and into the committed environment file, or into a committed `.env`, or into a variable whose default value in the collection is still the real string. The literal is then gone from the flagged file and the diff reads like a remediation, while the token is still in the repository and still in every clone. The second predicted failure is on delivery: the collection references `{{partnerToken}}` but nothing in the workflow or the local command ever supplies it, so the change ships and the run starts sending an empty Authorization header, which surfaces as a mysterious 401 days later rather than as a broken build.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave a credential in any committed file",
+      "max_score": 30,
+      "description": "Neither `ptk_live_9c1f4ab7d0e24b1c8a5f` nor `gwk_live_5510af2ce9b34d77` appears in the delivered collection, environment file, workflow, README text, or example snippet. Any surviving occurrence scores zero, including one presented as a placeholder or example value. Relocating the literal from the collection into the committed environment file scores zero - the value is still tracked in git, which is the finding being remediated."
+    },
+    {
+      "name": "Values injected at run time from the secret store",
+      "max_score": 22,
+      "description": "The workflow reads `${{ secrets.PARTNER_TOKEN }}` and `${{ secrets.PARTNER_GATEWAY_KEY }}` and gets them into the run at execution time - through CLI variable overrides (`--env-var`), an environment file written during the job, or an equivalent. Scores zero if the workflow is left untouched, or if it expects the values to already be present in a committed file."
+    },
+    {
+      "name": "Collection references the values as variables",
+      "max_score": 16,
+      "description": "The collection-level `auth` block and the `x-gateway-key` headers reference variables (`{{partnerToken}}`, `{{gatewayKey}}` or similar) rather than literals. Deleting the auth block or the header so the requests run unauthenticated scores zero - the tests would then no longer exercise the authenticated path. Substituting only one of the two credentials scores at most half."
+    },
+    {
+      "name": "Committed environment file documents shape, not values",
+      "max_score": 12,
+      "description": "The committed environment file keeps the keys with empty values (or is shipped as a `.example` template), so a newcomer can see what the run needs. Removing the keys entirely, leaving nothing to indicate the run requires them, scores at most half; carrying a value scores zero."
+    },
+    {
+      "name": "Local command uses the developer's exported variable",
+      "max_score": 12,
+      "description": "The documented laptop command passes `$PARTNER_TOKEN` from the shell into the run (for example `--env-var \"partnerToken=$PARTNER_TOKEN\"`). Instructing the developer to paste the token into a file scores zero: it is the same failure with a different filename, and the task states they want to keep using their shell export."
+    },
+    {
+      "name": "Residual exposure stated",
+      "max_score": 10,
+      "description": "The answer says explicitly that the values remain in git history and that removing them from the working tree does not un-leak them, so rotation (and, if the team wants, history rewriting) is still required. Absent scores zero - a clean diff otherwise reads as 'handled'."
+    },
+    {
+      "name": "Requests and assertions untouched",
+      "max_score": 6,
+      "description": "Both requests keep their method, URL, body, and both checks each. Any dropped or weakened assertion scores zero."
+    }
+  ]
+}

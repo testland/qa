@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="monorepo" tests="11" failures="2" errors="1" time="19.884">
+  <testsuite name="packages/api" tests="7" failures="1" errors="1" skipped="0" time="12.402">
+    <testcase classname="api.health" name="responds 200" time="0.021"/>
+    <testcase classname="api.health" name="reports the build sha" time="0.014"/>
+    <testsuite name="packages/api/auth" tests="3" failures="1" errors="0" skipped="0" time="1.620">
+      <testcase classname="api.auth.login" name="rejects a bad password" time="0.310"/>
+      <testcase classname="api.auth.login" name="issues a token" time="0.290">
+        <failure message="expected status 200 but was 401" type="AssertionError"/>
+      </testcase>
+      <testcase classname="api.auth.session" name="expires after the ttl" time="1.020"/>
+    </testsuite>
+    <testsuite name="packages/api/jobs" tests="2" failures="0" errors="1" skipped="0" time="10.747">
+      <testcase classname="api.jobs.nightly" name="runs the nightly rollup" time="10.240">
+        <error message="Connection refused: redis:6379" type="ECONNREFUSED"/>
+      </testcase>
+      <testcase classname="api.jobs.nightly" name="skips on a holiday" time="0.507"/>
+    </testsuite>
+  </testsuite>
+  <testsuite name="packages/web" tests="4" failures="1" errors="0" skipped="0" time="7.482">
+    <testcase classname="web.Cart" name="adds an item" time="1.204"/>
+    <testcase classname="web.Cart" name="removes an item" time="1.180"/>
+    <testcase classname="web.Checkout" name="submits the order" time="4.020">
+      <failure message="expected the confirmation panel to be visible" type="AssertionError"/>
+    </testcase>
+    <testcase classname="web.Checkout" name="keeps the cart on failure" time="1.078"/>
+  </testsuite>
+</testsuites>

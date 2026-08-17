@@ -1,0 +1,46 @@
+{
+  "context": "The two reports record durations in different units. web-e2e.xml is in seconds: its five testcases sum to 18.500 and the suite declares time=\"18.500\". order-service.xml is in milliseconds: its five testcases sum to 4231 while the suite declares time=\"4.231\", a factor of exactly 1000. Predicted baseline failure: the agent reads every time attribute as the same unit - nothing in the file says otherwise and both are valid decimal numbers - and produces a ranking led by reservesStock at 2400, appliesDiscount at 1200 and validatesAddress at 620, which is precisely the list the team already has and does not believe. The correct top three in seconds are checkout flow 12.48, search page loads 3.21, reservesStock 2.40. Two further traps: order-service.xml has a bare <testsuite> root with no <testsuites> wrapper, so a parser that reaches for the wrapper drops all five backend tests; and two testcases carry time=\"0.000\" / time=\"0\", which are below the runner's resolution rather than instantaneous.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and write-up delivered",
+      "max_score": 5,
+      "description": "scripts/slowest.js runs and writes slowest.json, test/slowest.test.js exists, slow-tests.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Unit mismatch detected and normalised",
+      "max_score": 32,
+      "description": "The order-service durations are identified as milliseconds and converted before ranking, so the single list is in one stated unit. A ranking that places reservesStock, appliesDiscount and validatesAddress in the top three scores zero. Mixing units in one list - reservesStock shown as 2400 next to checkout flow as 12.48 - scores zero even if the prose mentions the discrepancy."
+    },
+    {
+      "name": "Correct top three",
+      "max_score": 20,
+      "description": "checkout flow 12.48 s, search page loads 3.21 s, reservesStock 2.40 s, in that order. Two of three correct scores at most half; the totals must also be per report in the stated unit (18.500 s and 4.231 s)."
+    },
+    {
+      "name": "Detection derived from the report, not the vendor",
+      "max_score": 14,
+      "description": "The rule compares a suite's declared time attribute against the sum of its testcases' times and treats a factor of about 1000 as milliseconds. Naming the units by guessing from the runner, the language, the filename, or the magnitude of the numbers alone scores at most half - the task asks for a check that works on a report nobody has seen before."
+    },
+    {
+      "name": "Zero durations excluded from measured figures",
+      "max_score": 12,
+      "description": "MUST NOT present formats currency (0.000) or formatsTotal (0) as measured durations. Both appear in the separate untrusted list; quoting either as a performance number, or ranking them as the fastest tests, scores zero. Silently dropping them with no mention scores at most half."
+    },
+    {
+      "name": "Both root shapes read",
+      "max_score": 12,
+      "description": "All ten testcases appear, including the five under order-service.xml's bare <testsuite> root. A run that finds only the five web tests, or that reports the backend suite as empty, scores zero: the root may be <testsuites> or a bare <testsuite> and the script must handle both."
+    },
+    {
+      "name": "Executable test covers normalisation",
+      "max_score": 10,
+      "description": "test/slowest.test.js asserts the ranking across a millisecond report and a second report, and passes. A test that only checks output exists scores zero; one that never exercises the mixed units scores at most half."
+    },
+    {
+      "name": "Previous ordering explained",
+      "max_score": 6,
+      "description": "slow-tests.md says specifically why the old list was ordered as it was, rather than only publishing the corrected one."
+    }
+  ]
+}

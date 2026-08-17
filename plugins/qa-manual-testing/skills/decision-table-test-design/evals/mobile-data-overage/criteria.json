@@ -1,0 +1,46 @@
+{
+  "context": "Four facts - unlimited plan, past the 100 GB threshold, roaming in the EU, Speed Pass held - give exactly 16 combinations, and each produces two results: a charge and a connection speed. Four of the 16 (past the threshold while roaming, on either plan, with or without the add-on) are covered by sentences that contradict each other: never charged, billed at the domestic rate, and EUR 3 per GB. Predicted baseline failure: the agent produces one 'what happens' column per combination and, faced with the contradiction, applies the most-specific-rule instinct - EUR 3 per GB wins because it names the exact situation - and writes it down as the expected result with no note. The document then looks decisive and complete, and it silently makes the commercial decision the task reserved for legal. The same single-column shape also collapses the Speed Pass, which changes nothing about money and everything about speed above the threshold.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named data-billing-analysis.md exists and contains a per-combination table. Scores zero if absent or if it only paraphrases the note."
+    },
+    {
+      "name": "The four contradictory combinations marked unresolved",
+      "max_score": 30,
+      "description": "Every combination that is past the threshold and roaming in the EU - four of the 16, covering both plan types and both add-on states - is marked as unresolved, with the competing readings shown (no charge or domestic rate versus EUR 3 per GB). Scores zero if any of them carries a single confident charge with no note, including the common resolution that the most specific sentence wins. Scores at most half if the conflict is described in prose but the table still shows one number, or if it is raised only for the unlimited plan and not for the metered one."
+    },
+    {
+      "name": "All sixteen combinations accounted for",
+      "max_score": 24,
+      "description": "All 16 combinations of the four facts are traceable, each carrying a charge result and a speed result (or an explicit unresolved marking). Merging is acceptable where a fact provably changes neither result, provided the merge names it. Scores zero if fewer than 16 can be traced. Scores at most half if 16 appear but the speed result is missing from most of them."
+    },
+    {
+      "name": "Charge and speed kept as two results",
+      "max_score": 20,
+      "description": "The table gives each combination both a money result and a speed result rather than one merged verdict. Scores zero if there is a single outcome column, since no single value can express a customer who is charged nothing and throttled, or charged and not throttled."
+    },
+    {
+      "name": "MUST NOT merge combinations whose speed results differ",
+      "max_score": 20,
+      "description": "Anti-pattern guard. Speed Pass must not be marked as making no difference across the whole table on the grounds that it never changes the charge: above the threshold it decides between 1 Mbit and full speed. Scores zero if the document drops the add-on as irrelevant everywhere, or merges two above-threshold combinations that differ only in the add-on. Marking it irrelevant below the threshold, where it changes neither result, is correct and is not penalised."
+    },
+    {
+      "name": "Below-threshold irrelevance stated with its scope",
+      "max_score": 12,
+      "description": "The document states that Speed Pass changes nothing while the customer is under 100 GB and names that as the scope, rather than either ignoring the add-on or scheduling separate tests for it in every combination. Scores zero if the regression list still runs both add-on states for every under-threshold customer with no note."
+    },
+    {
+      "name": "Unlimited domestic under-threshold case present",
+      "max_score": 10,
+      "description": "The combinations where nothing notable is happening - unlimited, domestic, under the threshold - appear with explicit results (no charge, full speed). Scores zero if the table only contains combinations where a charge or a reduction occurs."
+    },
+    {
+      "name": "Test customers map to combinations",
+      "max_score": 10,
+      "description": "Each proposed QA customer names the combination it exercises and both expected results. Scores zero if the customer list is unmapped, or if it excludes the unresolved combinations entirely rather than listing them as blocked pending a decision."
+    }
+  ]
+}

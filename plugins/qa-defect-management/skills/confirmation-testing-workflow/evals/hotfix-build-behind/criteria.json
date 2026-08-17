@@ -1,0 +1,46 @@
+{
+  "context": "A containment check was run and printed the affirmative answer, and the environment behaves exactly as the ticket says it should. The predicted unaided answer takes both at face value and closes the ticket. The check was asked about the wrong thing: it compared 8de41f6 against origin/main, which only shows the fix is on the branch. Staging is not on main - it reports commit c15aa72 on hotfix/2.9.3, a line cut from 1f3ba02, which is the commit BEFORE the fix, so the same check against the commit staging actually reports would answer that the fix is absent. The 429s therefore came out of a build without the fix and say nothing about it. The correct output re-asks the question against the deployed commit and withholds the decision.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-9004.md exists and states a decision. Scores zero if absent."
+    },
+    {
+      "name": "Re-asks containment against the commit the environment reports",
+      "max_score": 32,
+      "description": "The record establishes from ops/git-log.txt that hotfix/2.9.3 branches at 1f3ba02, which precedes 8de41f6, so the deployed c15aa72 does not descend from the fix - and says so using those commit ids. Accepting the origin/main result as the containment evidence scores zero. Doubting the deployment without tracing it to the branch point scores at most half."
+    },
+    {
+      "name": "MUST NOT treat 'the fix is on main' as a property of the running build",
+      "max_score": 20,
+      "description": "MUST NOT. The colleague's check against origin/main must not be presented as showing that staging contains the fix. Any use of it as containment evidence for the environment scores zero on this criterion, as does relying on the 2.9.3 version number or the deploy timestamp for the same purpose."
+    },
+    {
+      "name": "Refuses to move the defect to Verified",
+      "max_score": 22,
+      "description": "The decision is that the question is unanswered and the defect stays where it is. Recommending Verified scores zero. Recommending a reopen or 'not fixed' also scores zero: nothing failed, so the fix is not implicated."
+    },
+    {
+      "name": "States what the 429s do and do not show",
+      "max_score": 16,
+      "description": "The record says the observed 429s came from a build that does not contain 8de41f6 and therefore cannot be evidence about the fix, whatever produced them. Reporting the run as a pass, or as partial reassurance that the behaviour is now correct, scores zero."
+    },
+    {
+      "name": "Gives the concrete action that closes the gap",
+      "max_score": 16,
+      "description": "The record names the specific step: get a build that descends from 8de41f6 onto the environment under verification - or run the reproduction against an environment already serving main - then repeat the same reproduction and decide. 'Retest later' with no build requirement scores zero."
+    },
+    {
+      "name": "Records the identifiers needed to repeat the check",
+      "max_score": 10,
+      "description": "The record names the fix commit 8de41f6, the environment, and its reported commit c15aa72 on hotfix/2.9.3, so the check can be re-run verbatim. Missing the deployed commit or its branch caps this at half."
+    },
+    {
+      "name": "Does not substitute the local unit test for the environment result",
+      "max_score": 8,
+      "description": "The green tests/rateLimit.test.js run is not offered as evidence about staging; if it is mentioned, the record is clear it speaks to the source tree only. Presenting it as confirmation for the environment scores zero."
+    }
+  ]
+}

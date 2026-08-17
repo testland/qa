@@ -1,0 +1,46 @@
+{
+  "context": "A thirty-four-step payroll case bundling five distinct behaviours, containing an explicit backward reference (step 19 compares against a figure noted at step 9), a step that repeats an earlier step for a second employee, and a commit at step 24 that permanently consumes the pay period so the case is single-use. The data file supplies five seeded employees, Finance's expected gross per employee, a separate approver login needed to commit, and a ten-minute company-clone procedure that is the only way to get the period back. Predicted baseline failure: the agent reformats the thirty-four steps into a clean table with an expected-result column, possibly adding headings such as 'New starter' and 'Leaver' inside the same case, so a failure still cannot be attributed; it keeps the step-19-references-step-9 comparison because it looks like a real assertion; it writes expected results as descriptions ('pro-rata is correct', 'bonus is taxed') rather than the published figures; it names no employee references; and it says nothing about the period being consumable, so the second run is blocked exactly as before.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at tests/payroll-run-scripts.md. Any other path scores zero."
+    },
+    {
+      "name": "Split into separately runnable parts, one behaviour each",
+      "max_score": 28,
+      "description": "MUST NOT keep the five behaviours inside one case. The coverage is divided into at least five identified parts - ordinary run, mid-month joiner, leaver, court-ordered deduction, bonus - each with its own identifier, and a failure in one names one behaviour. A single case with internal section headings still scores zero. Four parts scores at most half; fewer scores zero."
+    },
+    {
+      "name": "No part depends on another having been run",
+      "max_score": 24,
+      "description": "MUST NOT carry a cross-reference between parts. Zero if any step reads a value 'from step N' of another part, says 'continue from', 'repeat the above for', or otherwise assumes an earlier part's state. Each part must instead state its own starting conditions - the company, the pay period, the login(s), and the specific employee reference it acts on. A part that states conditions but still contains one backward reference scores at most half."
+    },
+    {
+      "name": "Each part names its employee and its expected figures",
+      "max_score": 22,
+      "description": "Parts cite the seeded references (E-1001 through E-1005) and assert Finance's published values - 3,400.00 / 1,625.81 / 2,910.00 / 2,200.00 / 3,100.00 GBP - as the pass condition where the part covers that employee. Expected results phrased as 'the pro-rata amount is correct', 'the bonus is taxed', or 'the figures match' score zero for this criterion. Naming employees but not asserting the published figures scores at most half."
+    },
+    {
+      "name": "Repeatability of the consumable pay period is handled",
+      "max_score": 20,
+      "description": "The document states that committing a period consumes it permanently, and gives each part a workable answer: a distinct open period per part where a commit is involved (2026-03 / 2026-04 / 2026-05), or the sandbox company clone (HARBOR-UK-<yourname>, about ten minutes) named as the setup step. Silence on this scores zero. Mentioning the constraint without telling the tester what to do scores at most half. Assigning several commit-consuming parts to the same period scores at most half."
+    },
+    {
+      "name": "Approver login accounted for where a run is committed",
+      "max_score": 12,
+      "description": "Any part that commits a pay run names qa.approver@harborpay.example as required, since the Administrator login cannot commit alone. A part that ends in a commit while listing only the Administrator login scores zero for this criterion."
+    },
+    {
+      "name": "Index table with identifiers, coverage and run time",
+      "max_score": 12,
+      "description": "A table at the top lists each part with its identifier, what it covers, and an approximate duration, so a tester with an hour can pick one. Missing durations caps this at half; no index table scores zero."
+    },
+    {
+      "name": "Failure capture",
+      "max_score": 8,
+      "description": "A structured place to record a failed step - which part, which step, expected versus observed figure, severity or defect reference. Absent scores zero."
+    }
+  ]
+}

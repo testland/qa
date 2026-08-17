@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent produces a coverage matrix over the year-end scope - a row per feature area with priority High/Medium/Low and a column of test ideas - and calls the six blocks a schedule by pasting area names against days. It reads organised and fails on the three things that matter here. It plans more work than 540 minutes can hold and never says what is being given up. It fixes all six blocks in advance with no mechanism for Wednesday's findings to change Thursday, which is the exact complaint the lead raised. And its end-of-campaign artifact is a summary of what was tested rather than an aggregate that supports the go/no-go, with no owner against any action - a page that gets read once and drives nothing. Baseline output also commonly re-tests tax rates and thresholds that the payroll-core team owns.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Campaign file delivered",
+      "max_score": 5,
+      "description": "docs/qa/year-end-campaign.md exists and covers the Wednesday-to-Friday campaign. Scores at most half for a differently named or split deliverable. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "A ranked backlog of bounded pieces, longer than the budget",
+      "max_score": 30,
+      "description": "More than six candidate pieces are listed, each stated as an area plus what it is worked with plus what it should tell us, and ranked by risk of a customer-visible year-end failure - with the partially accepted submission, the rewritten amended path, the new reject-list parsing and the chunked submission near the top. Scores zero if the output is a feature coverage matrix or a flat list of things to verify with no per-piece learning goal. Scores at most half if pieces are bounded but unranked, or ranked by a label like High/Medium with no rationale tied to the year-end risk."
+    },
+    {
+      "name": "Six blocks allocated, with the remainder explicitly dropped",
+      "max_score": 24,
+      "description": "Exactly six 90-minute blocks are filled - named tester, named day, one piece per block - and the candidates that do not fit are stated as deliberately not done this time. Scores zero if the plan schedules more than six blocks, leaves the allocation implicit, or lists work with no acknowledgement that most of the backlog will not be reached."
+    },
+    {
+      "name": "The plan adapts mid-campaign",
+      "max_score": 20,
+      "description": "The output states what kind of Wednesday result would re-order Thursday and Friday (an area found sound, a blocker, a defect cluster suggesting a deeper problem), who makes the call, and when it is made. Full marks require at least one later block to be left deliberately unassigned or provisional so there is capacity for what Wednesday surfaces. Scores zero if all six blocks are fixed up front with no revision mechanism."
+    },
+    {
+      "name": "Per-block record and hand-back",
+      "max_score": 14,
+      "description": "Each block has a stated in-block record that separates confirmed-good behaviour, defects, and obstacles, and a hand-back covering what was covered, what was found, what was not reached and what to work next, plus the tester's own read on that area. Scores at most half if the hand-back lacks the uncovered-areas statement or the qualitative read - both are what the Monday page depends on. Scores zero if blocks end with nothing written down, or if the only record is a defect list."
+    },
+    {
+      "name": "MUST NOT produce an aggregate nobody acts on",
+      "max_score": 16,
+      "description": "The one-page rollup names the decisions it supports (go/no-go, which areas remain unexplored, whether more time is needed) and puts a named owner against each action it produces. Scores zero if the page merely reports counts - blocks run, defects found, areas touched - with no decision attached and no owner, or if it exists but nobody is named to act on it."
+    },
+    {
+      "name": "Stopping and escalation condition",
+      "max_score": 12,
+      "description": "The campaign has a stated condition for enough (top-ranked pieces worked and their questions answered) and for escalation (a top-ranked area still unexplored by Friday, or a blocker that consumed a block). Scores zero if the campaign simply ends when the blocks run out with no criterion."
+    },
+    {
+      "name": "Payroll-core ownership boundary respected",
+      "max_score": 8,
+      "description": "Tax rates, thresholds and statutory calculation are excluded and named as owned elsewhere. Scores zero if any allocated block tests the calculation engine's rates or thresholds."
+    }
+  ]
+}

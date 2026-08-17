@@ -1,0 +1,7 @@
+test_name,runs,passed_first_attempt,passed_on_retry,failed_all_attempts,notes
+payment capture retries on 5xx,180,180,0,0,never failed
+payment form renders card fields,180,166,14,0,locator timeout on card iframe
+payment receipt email queued,180,171,9,0,queue poll races assertion
+payment refund posts to ledger,180,178,0,2,fails only on tablet-768 viewport
+payment plan upgrade prorates,180,101,0,79,fails on both projects since 2026-08-04
+payment method delete confirms,180,179,1,0,single failure during a staging deploy

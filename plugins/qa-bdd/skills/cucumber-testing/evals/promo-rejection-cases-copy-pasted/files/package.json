@@ -1,0 +1,10 @@
+{
+  "name": "promo-specs",
+  "private": true,
+  "scripts": {
+    "bdd": "cucumber-js"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.9.0"
+  }
+}

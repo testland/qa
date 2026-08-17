@@ -1,0 +1,41 @@
+{
+  "context": "A Maven module where an HTTP-driving test class is named `*Test.java`, so the default test phase runs it alongside real unit tests. Predicted baseline failure: the agent separates the two kinds with JUnit tags plus a Surefire `<excludedGroups>`, or with a Maven profile, or by moving the API class into a separate source directory wired up by hand. Those are all defensible-looking and all leave both suites bound to the same lifecycle phase and the same reports directory, so 'one command runs everything' still means passing an extra argument - the exact fragility the team already has with `-Dtest='!*Api*'`. The build tool already has a two-phase convention for this (unit tests in the test phase via Surefire, integration tests in the integration-test/verify phase via Failsafe, selected by the `*IT.java` filename suffix); an agent that doesn't know it will invent a mechanism instead of using the one the tooling already enforces.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Split uses the build's integration-test phase and naming convention",
+      "max_score": 32,
+      "description": "The HTTP-driving class is renamed to the `*IT.java` suffix and picked up by the Failsafe plugin bound to the `integration-test` and `verify` goals, so the default test phase never sees it and `mvn verify` runs both. Scores zero if the split relies on `@Tag` + `<excludedGroups>`, a Maven profile, a manually wired extra source root, or a naming pattern the plugins are not configured to honour. Scores at most half if the class is renamed to `*IT.java` but the answer does not wire Failsafe, or wires Failsafe without renaming - either half leaves the split non-functional."
+    },
+    {
+      "name": "Failsafe is declared with both goals",
+      "max_score": 16,
+      "description": "`maven-failsafe-plugin` appears in `pom.xml` with an execution binding `integration-test` and `verify`. Scores zero if the plugin is absent, or if only `integration-test` is bound - without `verify` a failing API test does not fail the build, which turns a green build into a false signal."
+    },
+    {
+      "name": "MUST NOT keep flags, aliases or per-method disabling as the mechanism",
+      "max_score": 12,
+      "description": "No `-Dtest=` exclusion pattern, no shell alias, and no `@Disabled`/`@Ignore` used to keep tests out of a phase. The `@Disabled` currently on `cancelsAnOrder` must be removed as part of the fix, since the phase split is what should have kept it out of the fast stage. Any surviving or newly added `@Disabled`, or a documented flag as the primary mechanism, scores zero for this criterion."
+    },
+    {
+      "name": "Fresh clone goes green on the default command",
+      "max_score": 12,
+      "description": "The answer states that `mvn test` on a machine with no server running now passes, and this is true of the delivered configuration. Scores zero if the default phase still executes the HTTP class, or if the claim is made but the configuration does not support it."
+    },
+    {
+      "name": "Per-stage commands named",
+      "max_score": 10,
+      "description": "The answer says explicitly which command the fast stage runs and which command the full stage runs. Scores zero if no commands are given, or if the same command is proposed for both stages."
+    },
+    {
+      "name": "Test bodies unchanged",
+      "max_score": 8,
+      "description": "MUST NOT alter any assertion, endpoint, request setup, or test logic - only the filename, class name, package/location, and annotations that gate execution may change. Any edited assertion scores zero for this criterion."
+    },
+    {
+      "name": "Reports separated",
+      "max_score": 6,
+      "description": "The answer notes that the two phases write to different reports directories (`target/surefire-reports` vs `target/failsafe-reports`) or otherwise addresses where each stage's results land. Scores zero if a CI report path is asserted that does not match the delivered configuration."
+    }
+  ]
+}

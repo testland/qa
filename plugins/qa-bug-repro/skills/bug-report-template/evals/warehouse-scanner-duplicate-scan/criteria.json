@@ -1,0 +1,46 @@
+{
+  "context": "A floor complaint that closely matches an already-open tracker item (WMS-2214, double count during Wi-Fi handoff, three duplicates already merged, reproduced on the older fleet near a specific access point), reported by someone who has gone home. Predicted baseline failure: the agent writes a clean standalone report and files it as new - the open-items export is provided but reads like background, so it goes unused - and it fills the gaps that make the report look finished: a fleet, an app version, a frequency, and the aisle range, all of which the note explicitly does not contain. The result is the fourth duplicate of an item that is already waiting on the network team.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the exact path",
+      "max_score": 5,
+      "description": "A markdown file exists at reports/handheld-double-count.md covering this complaint. Any other path scores zero."
+    },
+    {
+      "name": "MUST NOT propose filing a new item without checking the open ones",
+      "max_score": 30,
+      "description": "Full points if the document identifies WMS-2214 as a probable match, cites the specific overlapping evidence (double count on scan, older fleet, aisle-J access point, prior nights-supervisor report), and recommends adding to it rather than opening a new entry. Scores zero if the document recommends or assumes a new tracker entry with no reference to the open items. Scores at most half if WMS-2214 is mentioned in passing without a stated recommendation about where this belongs."
+    },
+    {
+      "name": "No invented fleet, version, or location",
+      "max_score": 25,
+      "description": "The note gives no fleet, no app version, no aisle range and no device model, and the transcriber says so explicitly. Full points if each is carried as unknown. Scores zero if the document states which fleet was involved, supplies an app or OS version, or resolves 'the far aisles' into a specific range - including by inferring the fleet from WMS-2214's earlier reproduction, which is a different observation."
+    },
+    {
+      "name": "Match is stated as probable, not confirmed",
+      "max_score": 16,
+      "description": "The overlap is suggestive but the fleet and location are unknown, so identity with WMS-2214 cannot be established. Full points if the document names what must be confirmed before merging (fleet, aisle, whether the trigger was held, app version). Scores zero if the report declares them the same defect as settled fact."
+    },
+    {
+      "name": "Questions phrased for a two-minute answer from the floor",
+      "max_score": 16,
+      "description": "The document lists what Ade or the pickers must supply, specific enough to answer without investigation, and accounts for Ade being unavailable until Sunday. Full points for a concrete list; generic 'gather more detail' scores at most half; nothing scores zero."
+    },
+    {
+      "name": "The mis-pallet consequence is recorded and marked second-hand",
+      "max_score": 12,
+      "description": "'One of them says it put a tote on the wrong pallet last week' is the highest-impact fact in the note and is hearsay with no date, tote, or pallet. Full points if it appears, is marked unverified, and is named as needing confirmation. Omitting it entirely scores zero; presenting it as a confirmed incident scores zero."
+    },
+    {
+      "name": "Frequency stated as unquantified",
+      "max_score": 12,
+      "description": "'Not every tote' and 'happens more down the far aisles' are the only frequency signals, and the workaround means the floor has stopped reporting it. Full points if the document says the rate is unquantified and notes that under-reporting hides the true rate. Scores zero if a rate, percentage, or 'intermittent, roughly X in Y' figure is supplied."
+    },
+    {
+      "name": "User impact and scheduling order reasoned separately",
+      "max_score": 10,
+      "description": "The impact on a picker (wrong pallet, slowed picks, workaround exists) is assessed on its own, and where it sits in the queue is a separate judgement referencing the existing item's blocked state. Scores zero if a single label serves both, or if the existing item's queue position is copied across as if it were the impact assessment."
+    }
+  ]
+}

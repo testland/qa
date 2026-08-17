@@ -1,0 +1,46 @@
+{
+  "context": "Nothing in this project makes pytest able to run a coroutine test, so every test opens and closes its own loop, and that is precisely why no fixture can hand a live object to a test. Predicted baseline failure: the agent keeps the loop in the author's hands - it writes a fixture that returns an unconnected client and leaves each test to drive its own coroutine, or it builds a shared loop in a fixture and calls `run_until_complete` from inside each test, or it wraps the fixture body in its own `asyncio.run`. All of those go green on this small module, so a reader sees four passing tests and no sign that the loop is still being created per call site, that the fixture's teardown never runs on the same loop as the test, and that the boilerplate the task asked to delete has only moved.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Tests are coroutines the framework runs",
+      "max_score": 30,
+      "description": "All four tests are `async def` and are executed by the test runner, with the enabling package added to `requirements-dev.txt` and configured (mode setting in pyproject.toml, or a marker on each test). Tests that remain synchronous and drive a coroutine themselves score zero. Async tests that are collected but reported skipped rather than run also score zero."
+    },
+    {
+      "name": "No loop is created or driven by test code",
+      "max_score": 26,
+      "description": "MUST NOT contain `asyncio.run(...)`, `new_event_loop()`, `get_event_loop()`, `set_event_loop()`, or `run_until_complete` anywhere in `tests/`, including inside fixtures. A single remaining occurrence scores zero: it is the defect the module was brought in for, and it is what makes the shared fixture impossible."
+    },
+    {
+      "name": "One fixture yields a connected client to every test",
+      "max_score": 22,
+      "description": "A single coroutine fixture connects a `FeedClient`, yields it, and closes it afterwards; all four tests take it as an argument. A fixture that returns an unconnected client, leaving each test to await `connect()`, scores at most half. Per-test inline connect/close scores zero."
+    },
+    {
+      "name": "The fixture is declared so the async plugin handles it",
+      "max_score": 14,
+      "description": "The coroutine fixture is declared consistently with the mode the project ends up configured in - the async-aware fixture decorator if the strict default is kept, the plain decorator only if the automatic mode is actually written into pyproject.toml. A coroutine fixture left on the plain decorator under the default mode scores zero: the test would receive the generator object, not the client."
+    },
+    {
+      "name": "Timeout case asserts a timeout, not a slow pass",
+      "max_score": 16,
+      "description": "A test asserts that a 50 ms deadline against a 500 ms call raises a timeout - `pytest.raises(TimeoutError)` (or the asyncio alias) around a deadline-bounded await. Sleeping and then asserting on elapsed time scores at most half; asserting only that the call eventually returns scores zero."
+    },
+    {
+      "name": "Existing assertions survive",
+      "max_score": 10,
+      "description": "The topic, source, and sequence-increment behaviours are all still asserted, with the sequence case still making two calls on one client. Dropping or weakening any of the three scores zero."
+    },
+    {
+      "name": "Suite passes",
+      "max_score": 8,
+      "description": "`pytest` runs green with all four tests executing. Any failure, error, or unhandled-coroutine warning about a test that did not run scores zero."
+    },
+    {
+      "name": "Production module untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `app/feed.py`. Adding a synchronous wrapper or a context manager to the client to suit the tests scores zero."
+    }
+  ]
+}

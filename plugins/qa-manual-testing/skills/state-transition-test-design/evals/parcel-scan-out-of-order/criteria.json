@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent writes the journey - hub scan, loaded, delivered - plus a failed-delivery variant and a return variant, which is a superset of the pack the team already has and which the prompt already says passes. Delivered and returned appear only as the last row of a case, never as a starting point. But the incident began from a delivered parcel: with 4 statuses and 5 scan types there are 20 combinations, only 6 of which do anything, and the 10 combinations that start from one of the two finished statuses are where every out-of-order upload lands. The discriminating output seeds a parcel as delivered and as returned and fires all five scan types at each, expecting the tracking page not to move.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/parcel-tracking-tests.md exists and contains a model plus numbered manual cases with per-step expected results."
+    },
+    {
+      "name": "Both finished statuses are used as starting points for every scan type",
+      "max_score": 30,
+      "description": "Cases start from an already delivered parcel and from an already returned parcel and apply each of the five scan types, expecting the tracking page still to read Delivered or Returned to sender with no new leg started. Eight or more of these ten combinations covered earns full marks; four to seven caps at half; covering only the incident's own combination - a failed-delivery scan on a delivered parcel - caps at half. No case starting from a finished status scores zero."
+    },
+    {
+      "name": "MUST NOT ship the journey walk as the pack",
+      "max_score": 18,
+      "description": "MUST NOT. A pack whose cases are all forward progressions along the journey - through the hubs, onto the van, to the door, with the failure and return branches as additional forward paths - scores zero here. That pack exists, it passes, and the parcel in the incident still went back out for delivery."
+    },
+    {
+      "name": "All 20 status/scan combinations accounted for",
+      "max_score": 16,
+      "description": "The model covers 4 statuses against 5 scan types - 20 combinations - each either producing a result or explicitly marked as producing none. Eighteen or more accounted for earns full marks; 13 to 17 caps at half; recording only the six that do something scores zero."
+    },
+    {
+      "name": "Mis-scans on a live parcel are covered",
+      "max_score": 14,
+      "description": "Cases exist for a hub scan arriving on a parcel that is out for delivery (the mis-scan operations wants refused) and for a loading scan arriving on a parcel already on a van, and for a delivery confirmation or failure arriving on a parcel that is in transit and not on any van. Each expects the status unchanged. Fewer than two of these caps at half."
+    },
+    {
+      "name": "The hub self-scan is modelled as a transition",
+      "max_score": 12,
+      "description": "A hub scan on an in-transit parcel - which adds a scan line and leaves the status where it is - appears in the model as a transition with its own case, rather than being dropped because the status label does not change."
+    },
+    {
+      "name": "Expected results are what the public tracking page shows",
+      "max_score": 10,
+      "description": "Every expectation names what the customer-facing page reads after the scan is applied - the status line, whether a new leg or courier name appears, whether the delivery photo is still there. Expectations phrased only as 'the scan is ignored' or 'no state change' with nothing visible attached score at most half."
+    }
+  ]
+}

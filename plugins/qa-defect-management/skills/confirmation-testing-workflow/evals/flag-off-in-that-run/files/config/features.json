@@ -1,0 +1,8 @@
+{
+  "default": { "strictDocumentVersioning": false },
+  "environments": {
+    "production": { "strictDocumentVersioning": true },
+    "staging": { "strictDocumentVersioning": false },
+    "dev": { "strictDocumentVersioning": true }
+  }
+}

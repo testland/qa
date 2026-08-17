@@ -1,0 +1,7 @@
+$ git log --oneline -6 main
+d4c7a03 chore(deps): bump undici to 6.19.8
+2f8b115 feat(cart): show savings badge
+6e0b4c1 fix(cart): clamp discount to line subtotal (#812)
+0aa9e51 chore: bump version to 3.7.0
+b7712de test(cart): promo fixtures
+15c0e88 feat(cart): promo stacking

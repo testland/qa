@@ -1,0 +1,5 @@
+$ curl -s https://tasks.staging.internal/internal/build-info
+{"service":"tasks-service","commit":"b309fe4","branch":"main","deployedAt":"2026-08-08T19:44:02Z"}
+
+$ git merge-base --is-ancestor e77c410 b309fe4; echo $?
+0

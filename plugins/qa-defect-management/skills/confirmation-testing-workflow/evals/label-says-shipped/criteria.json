@@ -1,0 +1,46 @@
+{
+  "context": "Every surface signal points at 'fixed': the source visibly filters archived users, the unit test is green, the release notes name the ticket, the deploy pipeline is green, and a colleague's staging walkthrough saw no digest. The predicted unaided answer is a confident 'Verified - fix confirmed in 2.14.0, closing', because nothing looks wrong. What is actually missing is the one link nobody checked: staging reports a version label, a release name and a deploy timestamp, but no source commit, so there is no way to show the running build descends from 4b91ce7. Version strings are bumped in separate commits, deploys get rolled back, and release branches get cut from unexpected bases - so the label is a claim about the build, not a property of it. The correct output refuses to move the ticket and reports the missing build metadata as a finding.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-4102.md exists and states a decision about the defect. Scores zero if no such file is produced or it only restates the bug report."
+    },
+    {
+      "name": "Refuses to move the defect to Verified",
+      "max_score": 30,
+      "description": "The record's decision is that the defect cannot move to Verified on the available evidence, and the stated reason is that there is no way to show the build running on staging contains fix commit 4b91ce7. Recommending Verified - including 'Verified, with a note' or 'Verified pending confirmation' - scores zero. Recommending 'not fixed' or a reopen scores zero too: nothing here suggests the fix is wrong."
+    },
+    {
+      "name": "Names the missing build identity and the step that supplies it",
+      "max_score": 18,
+      "description": "The record states specifically that staging exposes only version/release/timestamp fields and no source commit, and names a concrete action that would resolve it - add the built commit to /internal/build-info, or obtain the commit from the deploy job's record - then re-decide. Naming the gap without any concrete next step scores at most half. Vague 'needs more testing' scores zero."
+    },
+    {
+      "name": "MUST NOT treat the release note, version label or green pipeline as proof of what is running",
+      "max_score": 16,
+      "description": "MUST NOT. The record must not offer '2.14.0 includes this fix', 'the release notes list BUG-4102', 'deployPipeline: green', or the 14:02 deploy timestamp as evidence that the staging build contains the fix. Any of these presented as containment evidence scores zero on this criterion, even if the final decision happens to be correct."
+    },
+    {
+      "name": "Separates the local test result from the deployed build",
+      "max_score": 12,
+      "description": "The record makes clear that the green unit test in tests/digest.test.js was run against the source tree, and says nothing about which build staging is executing. Citing the passing unit test as evidence about staging scores zero here."
+    },
+    {
+      "name": "The colleague's staging run is recorded as unattributable, not as a pass",
+      "max_score": 12,
+      "description": "The 2026-08-12 run is carried into the record with its actual observation (no digest arrived after 5 minutes) and explicitly marked as not attributable to a known build. Paraphrasing it as 'confirmed fixed on staging' or dropping it scores zero."
+    },
+    {
+      "name": "Identifies both endpoints of the check it could not complete",
+      "max_score": 10,
+      "description": "The record names the fix commit 4b91ce7 on main and the environment under verification (staging, digest-worker), so the reader knows exactly which two things failed to be tied together. Missing either identifier caps this at half."
+    },
+    {
+      "name": "Verdict is stated unambiguously at the top",
+      "max_score": 8,
+      "description": "The record opens with a single explicit decision label rather than burying the conclusion in prose, so a release manager reading only the first lines cannot mistake it for approval. Any clear label is acceptable. A record whose opening could be read as approval scores zero."
+    }
+  ]
+}

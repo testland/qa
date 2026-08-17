@@ -1,0 +1,41 @@
+{
+  "context": "Keep-alive is switched on and the container is marked for it, yet a new container appears every run - because the class stops the container in its teardown, which destroys the very thing that was meant to persist. Predicted baseline failure: the agent does not connect the teardown to the symptom, because stopping a container you started reads as correct hygiene and every other integration-test lesson reinforces it. It instead looks for the cause in the flag, the image tag, or the container definition - adding a fixed container name, a label, or a hand-rolled 'is it already running' check - and leaves the `@AfterAll` stop in place, so the loop is still 40 seconds. The second predicted miss is the CI side: the workflow keeps opting into keep-alive because 'both should behave the same', which is exactly the documented misuse and the direct cause of the leftover-index failure the team described.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT stop the container that is meant to persist",
+      "max_score": 30,
+      "description": "The teardown that stops or closes the kept-alive container is removed, and the answer names it as the reason nothing was ever reused. Scores zero if any stop/close/terminate on that container survives - including one guarded by a flag that is on in the default local path, and including delegating the same teardown to the test framework's automatic container management. Removing it without recognising why scores at most half."
+    },
+    {
+      "name": "Opt-in is scoped to the individual machine, not the shell environment",
+      "max_score": 20,
+      "description": "Keep-alive is enabled through the per-user configuration file the runtime reads (`~/.testcontainers.properties` with the reuse property), and `docs/local-integration.md` says so. Telling the developer to export an environment variable into `~/.bashrc` / `~/.zshrc` scores at most half: it works, but it is the mechanism that leaks into every shell on the machine, including a self-hosted runner's, and the task explicitly rules it out. Requiring a flag on every command scores zero - the task rules that out too."
+    },
+    {
+      "name": "CI no longer opts in",
+      "max_score": 20,
+      "description": "`TESTCONTAINERS_REUSE_ENABLE` is removed from the workflow `env:` block. Scores zero if it stays under any condition, including behind an `if:` or set to a value that still enables it. Keep-alive is documented as an experimental, local-development mechanism that is not suited to CI, and the workflow runs on a shared self-hosted runner where it produced the leftover-index failure."
+    },
+    {
+      "name": "A changed definition produces a fresh container",
+      "max_score": 12,
+      "description": "The answer relies on the built-in behaviour that a container is only reattached while its configuration is unchanged, rather than defeating it. Pinning a fixed container name, a hand-written label, or a 'find a running container by name and attach to it' helper scores zero: those reattach to a stale container after the image tag or environment changes, which is the failure mode the task rules out in point 3."
+    },
+    {
+      "name": "Index state is handled for a container that outlives the run",
+      "max_score": 14,
+      "description": "Because the container now survives, the answer addresses what the tests inherit from the previous run - the index is recreated or otherwise reset at the start of the class, so a second run does not assert against documents from the first. Full credit for keeping (or making explicit) a deterministic starting index state; scores zero if reuse is enabled with no consideration of leftover data, since that reproduces the CI symptom locally."
+    },
+    {
+      "name": "Documentation states the one-time step",
+      "max_score": 10,
+      "description": "`docs/local-integration.md` is updated to the actual step a developer performs once on their machine, and no longer instructs anyone to export the setting or to remove containers by hand as routine practice."
+    },
+    {
+      "name": "Tests unchanged",
+      "max_score": 6,
+      "description": "Both test methods and their assertions survive, still running against the same image and the same readiness condition."
+    }
+  ]
+}

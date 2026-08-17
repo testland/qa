@@ -1,0 +1,68 @@
+{
+  "info": {
+    "_postman_id": "a1000000-0000-4000-8000-000000000001",
+    "name": "orders (staging)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "create order",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"sku\":\"WIDGET-1\",\"qty\":2}" },
+        "url": {
+          "raw": "https://staging-api.acme.io/v1/orders",
+          "protocol": "https",
+          "host": ["staging-api", "acme", "io"],
+          "path": ["v1", "orders"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('create order returns 201', () => {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "pm.test('create order echoes the sku', () => {",
+              "  pm.expect(pm.response.json().sku).to.eql('WIDGET-1');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "https://staging-api.acme.io/v1/orders/1001/cancel",
+          "protocol": "https",
+          "host": ["staging-api", "acme", "io"],
+          "path": ["v1", "orders", "1001", "cancel"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('cancel order returns 200', () => {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('cancel order reports state cancelled', () => {",
+              "  pm.expect(pm.response.json().state).to.eql('cancelled');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+2026-08-13T02:41:09Z ##[group]Run npx jest --ci --reporters=default
+2026-08-13T02:42:55Z  FAIL  tests/docs/search-index.spec.ts
+2026-08-13T02:42:55Z   ● Test suite failed to run
+2026-08-13T02:42:55Z     FetchError: request to http://docs-index.internal:8080/v1/reindex failed,
+2026-08-13T02:42:55Z     reason: connect ECONNREFUSED 10.4.2.19:8080
+2026-08-13T02:42:55Z       at ClientRequest.<anonymous> (node_modules/node-fetch/lib/index.js:1501:11)
+2026-08-13T02:42:55Z       at tests/support/docsIndexFixture.ts:22:18 (beforeAll)
+2026-08-13T02:43:12Z  FAIL  tests/docs/article-render.spec.ts
+2026-08-13T02:43:12Z     FetchError: connect ECONNREFUSED 10.4.2.19:8080 at tests/support/docsIndexFixture.ts:22:18 (beforeAll)
+2026-08-13T02:43:29Z  FAIL  tests/docs/breadcrumbs.spec.ts
+2026-08-13T02:43:29Z     FetchError: connect ECONNREFUSED 10.4.2.19:8080 at tests/support/docsIndexFixture.ts:22:18 (beforeAll)
+2026-08-13T02:43:44Z  (9 further suites under tests/docs/ failed identically: same
+2026-08-13T02:43:44Z   FetchError, same ECONNREFUSED 10.4.2.19:8080, same beforeAll frame in
+2026-08-13T02:43:44Z   tests/support/docsIndexFixture.ts:22 - full list in the run summary)
+2026-08-13T02:51:07Z  FAIL  tests/pricing/discount.spec.ts
+2026-08-13T02:51:07Z   ● applies the seasonal discount to a subtotal
+2026-08-13T02:51:07Z     expect(received).toBe(expected) // Object.is equality
+2026-08-13T02:51:07Z     Expected: 8000
+2026-08-13T02:51:07Z     Received: 8001
+2026-08-13T02:51:07Z       42 |   const total = applyDiscount({ subtotal: 10001, rate: 0.2 });
+2026-08-13T02:51:07Z     > 44 |   expect(total).toBe(8000);
+2026-08-13T02:51:07Z       at tests/pricing/discount.spec.ts:44:19
+2026-08-13T02:51:31Z  PASS  tests/pricing/tax.spec.ts (4.108 s)
+2026-08-13T02:51:44Z  PASS  tests/pricing/currency.spec.ts (2.771 s)
+2026-08-13T02:53:02Z Test Suites: 13 failed, 96 passed, 109 total
+2026-08-13T02:53:02Z Tests:       14 failed, 1204 passed, 1218 total
+2026-08-13T02:53:02Z Time:        711.4 s
+2026-08-13T02:53:03Z ##[error]Process completed with exit code 1.

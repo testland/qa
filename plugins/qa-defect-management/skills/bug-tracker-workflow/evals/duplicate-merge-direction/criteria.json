@@ -1,0 +1,41 @@
+{
+  "context": "Three tickets (#398, #412, #420) describe one failure. #412 is the only one carrying a reproduction, an environment, and a fix PR; #398 is the oldest and holds the affected enterprise account ids in a comment; #420 is the loudest (11 comments, 9 subscribers). Predicted baseline failure: the agent picks the survivor by age (#398, 'the original') or by engagement (#420, 'where the customers are'), because both are conventional tracker etiquette, and then closes #412 - discarding the only reproduction in the group. A second predicted failure is closing the losers with a bare close and no recorded reason or link, so the trail dead-ends; a third is treating the account ids on #398 and the subscriber thread on #420 as disposable rather than as information that must land on the surviving ticket first. #355, #401 and #430 all mention promo or checkout and are near-misses the agent is likely to sweep into the group to look thorough, and the already-closed #389 points at #398, which is about to stop being the ticket anyone reads.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "duplicate-resolution.md and merge-actions.csv both exist, and the CSV carries the issue,action,target,reason columns. Missing either file scores zero."
+    },
+    {
+      "name": "Survivor is the ticket carrying the reproduction",
+      "max_score": 32,
+      "description": "#412 is named as the ticket engineering works in, with the reason being that it is the only one with steps, an environment, and a linked PR - #398 and #420 stop. Choosing #398 (oldest) or #420 (most engagement) as the survivor scores zero, no matter how well the rest of the plan reads. Naming #412 but justifying it only by recency or by having an assignee scores at most half."
+    },
+    {
+      "name": "Information moved before anything is stopped",
+      "max_score": 18,
+      "description": "The plan requires the 4 enterprise account ids and order ids from #398's comment, and the subscriber/support thread on #420, to be carried onto #412 before those tickets are stopped. A plan that closes them with only a cross-link and no transfer of what they hold scores at most half; no mention of the account ids at all scores zero."
+    },
+    {
+      "name": "Stopped tickets recorded with an explicit reason and link",
+      "max_score": 14,
+      "description": "#398 and #420 are each closed with the reason recorded as duplicate (not a bare or default close) and a comment naming #412. MUST NOT close either with no stated reason - a close that defaults to 'completed' tells a later reader the bug was fixed. Any action row that closes a ticket without both the duplicate reason and the #412 link scores zero here."
+    },
+    {
+      "name": "Near-misses refused",
+      "max_score": 16,
+      "description": "#355 (wrong total, no 500, cart intact), #401 (cosmetic overflow) and #430 (gift-card ledger, no promo) are explicitly kept out of the group with a one-line reason each and appear in no CSV action row. Merging, closing, or linking any of the three as the same failure scores zero; leaving them out silently, with no statement that they were considered, scores at most half."
+    },
+    {
+      "name": "Stale link chain repaired",
+      "max_score": 12,
+      "description": "#389, already closed against #398, is re-pointed at (or annotated to name) #412 so the chain does not end at a ticket nobody reads. Ignoring #389 entirely scores zero."
+    },
+    {
+      "name": "Actions are per-ticket and executable",
+      "max_score": 8,
+      "description": "Each row in merge-actions.csv names one ticket, one action, the target ticket where applicable, and a reason a reviewer can check against the export. Rows with an empty reason, or a single row covering several tickets, score at most half."
+    }
+  ]
+}

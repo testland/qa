@@ -1,0 +1,46 @@
+{
+  "context": "The first test overwrites `now` on the shared clock module and never puts it back, so every test that runs afterwards - in this file or any file sharing the module instance - sees a clock frozen at 2026-02-01. Predicted baseline failure: the agent treats the two red tests as the problem and edits them - relaxing `>= 10` to `>= 0`, widening the timestamp window, deleting the duplicate-looking test, or reordering the file so the replacement happens last. Each turns the suite green while the replacement is still permanent, so the next test appended to the file inherits a frozen clock and the coverage that was meant to catch it is gone. A second predicted near-miss is restoring the original at the end of the first test's body, which works only while that test passes; an assertion failure above the restore line leaves the clock frozen for everything after it. Diagnoses are predicted to say the tests are 'order-dependent' rather than naming the unrestored replacement of a shared module's function as the thing that leaks.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with all four originally-named tests present, executing, and in their original order, and `leak-diagnosis.md` exists. A test deleted, skipped, or reordered scores zero here."
+    },
+    {
+      "name": "The replacement is undone after the test that installs it",
+      "max_score": 28,
+      "description": "The clock is restored to its real implementation once the first test finishes, so no later test observes the frozen time - via the runner's own mocking facility scoped to that test (`t.mock.method(clock, 'now', ...)`), or by capturing the original and restoring it in a per-test teardown hook. Full credit requires the restore to happen even if the test fails. Restoring on the last line of the test body scores at most half - an assertion failure above it skips the restore and re-creates the leak. Green reached with the replacement still permanent scores zero."
+    },
+    {
+      "name": "Diagnosis names the unrestored global replacement",
+      "max_score": 20,
+      "description": "`leak-diagnosis.md` states that the first test reassigns `now` on the shared clock module - a single object every other module holds a reference to - and never restores it, so the freeze applies to everything that runs later. A write-up that says the tests are 'order-dependent' or 'share state' without naming the reassignment and its lack of teardown scores at most half. One that blames `src/timer.js`, `sleep`, or the runner scores zero."
+    },
+    {
+      "name": "Assertions kept at full strength",
+      "max_score": 16,
+      "description": "MUST NOT weaken the downstream tests to survive the leak: the elapsed assertion stays at `>= 10`, and the current-time test keeps its window around the real clock. Relaxing either, or deleting the fourth test as a duplicate, scores zero for this criterion."
+    },
+    {
+      "name": "No reorder, retry, or quarantine as the fix",
+      "max_score": 12,
+      "description": "MUST NOT reach green by moving the timer tests above the receipt test, splitting the file so the replacement lands last, retrying, raising a timeout, or marking a test `skip` / `todo`. Any of these offered as the fix scores zero for this criterion."
+    },
+    {
+      "name": "Source unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify anything under `src/` - not to inject a clock, not to freeze `now` behind a setter, not to have `startTimer` read `Date.now()` directly. Any edit there scores zero here."
+    },
+    {
+      "name": "The first test still pins the time it needs",
+      "max_score": 10,
+      "description": "The issue-date test still asserts the exact `2026-02-01T09:00:00.000Z` stamp against a controlled clock - the fix scopes the replacement rather than abandoning it and asserting something looser, and it does not reach the same result by having the test build the expected string from the live clock."
+    },
+    {
+      "name": "Rule stated for the next test",
+      "max_score": 8,
+      "description": "The diagnosis states the rule - anything replaced on a shared module is restored by a teardown that runs whether the test passed or failed - rather than only narrating the edit."
+    }
+  ]
+}

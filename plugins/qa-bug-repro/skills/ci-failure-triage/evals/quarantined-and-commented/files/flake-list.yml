@@ -1,0 +1,10 @@
+# Tests quarantined out of the blocking smoke gate.
+# Adding an entry requires a linked issue and a review-by date <= 90 days out.
+entries:
+  - id: 12
+    test: "tests/notifications.spec.ts:88"
+    pattern: async-wait
+    issue: NOTIF-771
+    quarantined: 2026-06-02
+    review-by: 2026-09-01
+    owner: "@notifications"

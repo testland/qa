@@ -1,0 +1,46 @@
+{
+  "context": "A six-line quoting case ending in 'check the premium is reasonable', supported by a data note that supplies a full driver profile but writes the date of birth as 03/04/1988 with the day/month order genuinely lost, publishes an expected premium of 742.18 GBP tied to pricing table RT-2026-03, and records that UAT was moved to an unnamed refreshed table with the actuarial owner yet to confirm which. Four registrations exist and each throttles after five quotes in 24 hours. Predicted baseline failure: the agent produces a well-shaped case that reads 03/04/1988 as one of the two readings without noticing it is ambiguous - usually silently picking the British reading - and writes 742.18 GBP in as the expected premium as though it were current, which is the exact error that produced a false pass last release. It also copies the profile fields without the registration, leaves the throttling unmentioned, and offers no open questions at all because the data note superficially looks complete.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at scripts/TC-33-motor-quote.md. Any other path scores zero."
+    },
+    {
+      "name": "The ambiguous date of birth is surfaced, not silently read",
+      "max_score": 26,
+      "description": "The document states that 03/04/1988 has two readings that price differently, raises it as something the data owner must confirm, and writes any date it does use in a form that cannot be misread (for example '3 April 1988' or an ISO date) together with which reading it assumes pending confirmation. Entering 03/04/1988 into the steps as though unambiguous scores zero. Rewriting it in an unambiguous form but not flagging that the underlying source is unresolved scores at most half."
+    },
+    {
+      "name": "The expected premium is not asserted against an unconfirmed pricing table",
+      "max_score": 24,
+      "description": "The document does not present 742.18 GBP as the current expected result without qualification. It must either hold the comparison open pending confirmation of which pricing table UAT now serves, or state the figure explicitly as 'valid under RT-2026-03 only, unconfirmed for the current environment'. Writing 742.18 GBP as the plain pass condition with no reference to the table question scores zero. Referencing the table but still instructing a straight pass/fail against the figure scores at most half."
+    },
+    {
+      "name": "Unsettled points listed as questions with owners",
+      "max_score": 20,
+      "description": "A distinct section lists what could not be determined and names an owner for each - at minimum the pricing table now serving UAT (Ravi S. in Actuarial) and the day/month order of the seeded date of birth. Both present with owners earns full marks; one of the two scores at most half; a generic assumptions paragraph naming neither scores zero."
+    },
+    {
+      "name": "Every field the tester types is specified",
+      "max_score": 20,
+      "description": "The setup or steps carry the complete input set - licence held since, licence type, occupation, postcode LS6 2AN, mileage, claims history, cover level and 250 GBP voluntary excess - plus a specific registration from the seeded list. Leaving 'answer the remaining questions' in any form scores zero, because the remaining answers are exactly what moves the price."
+    },
+    {
+      "name": "Repeat runs within a day are handled",
+      "max_score": 16,
+      "description": "The document states the five-quotes-per-registration-per-24-hours throttle, tells the tester to move to the next seeded registration (YE19 KLU / KLV / KLW) rather than re-quoting the same one, and states that 'We can't quote online right now' is throttling rather than a defect. No mention of the throttle scores zero; mentioning it without telling the tester what to do scores at most half."
+    },
+    {
+      "name": "Each step has one observable result",
+      "max_score": 16,
+      "description": "MUST NOT leave a step whose pass condition is a judgement call. Every step names one checkable outcome, and the final step's outcome is a comparison against a stated figure or stated tolerance rather than 'reasonable', 'sensible' or 'about right'. Any surviving judgement-call outcome scores zero."
+    },
+    {
+      "name": "Failure capture and the quote reference recorded",
+      "max_score": 10,
+      "description": "A structured place to record failures with expected versus observed, and the run captures the HM-Q-XXXXXX quote reference so a disputed premium can be traced afterwards. Missing the failure block scores zero; having it but not capturing the reference scores at most half."
+    }
+  ]
+}

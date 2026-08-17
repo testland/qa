@@ -1,0 +1,46 @@
+{
+  "context": "The right answer here is to move the defect on, so the failure mode is not the decision but the evidence and the scope. The predicted unaided answer writes 'the full suite of 1,842 tests passed on this build, so BUG-3902 is fixed and the release is clean' - one green number doing double duty. A whole-suite pass is not evidence about this defect (it dilutes the signal, and would stay green if the defect's own case had been deleted), and a single defect's reproduction passing is not evidence that nothing else broke. The discriminating output runs exactly tests/dueDate.repro.test.js, attaches that run's own output, and states in the go/no-go paragraph that it answers the first question only.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-3902.md exists and states a decision. Scores zero if absent."
+    },
+    {
+      "name": "The evidence is the defect's own reproduction, run on its own",
+      "max_score": 28,
+      "description": "The record's supporting evidence is a run of tests/dueDate.repro.test.js specifically, with that run's real output pasted in. Offering the whole-suite result as the evidence scores zero. Naming the reproduction file but attaching only full-suite output scores at most half."
+    },
+    {
+      "name": "MUST NOT present the 1,842-test nightly as proof this defect is fixed",
+      "max_score": 20,
+      "description": "MUST NOT. The record must not use the green nightly as the confirming evidence for BUG-3902. Any sentence of the form 'the full suite passed, therefore the defect is fixed' scores zero on this criterion, even where the reproduction was also run."
+    },
+    {
+      "name": "States what the record does not cover",
+      "max_score": 20,
+      "description": "The paragraph destined for the go/no-go document says explicitly that it answers whether this defect is fixed and does not establish that the change broke nothing else, which is a separate check with its own result. Silence on scope scores zero; a vague 'other testing may be needed' scores at most half."
+    },
+    {
+      "name": "Decision is to move the defect to Verified",
+      "max_score": 12,
+      "description": "The record concludes the defect can move to Verified. Withholding the decision scores zero: the build contains the fix, the reproduction was red before it and passes now, and the evidence supports a clean answer."
+    },
+    {
+      "name": "Reproduction's pre-fix red state recorded",
+      "max_score": 10,
+      "description": "The record notes the reproduction was red at 1c93bb2 before the fix, so its green state is a before-and-after rather than an assertion that has never failed. Omitting this scores zero."
+    },
+    {
+      "name": "Build identity and containment recorded",
+      "max_score": 10,
+      "description": "The record names fix commit e77c410, the environment and its build commit b309fe4, and the affirmative containment result, so the reader can repeat the check. Missing the build commit caps this at half."
+    },
+    {
+      "name": "Suite still green and nothing weakened",
+      "max_score": 6,
+      "description": "npm test passes and no existing test was modified, skipped or removed. Any edit to src/dueDate.js or the existing tests scores zero."
+    }
+  ]
+}

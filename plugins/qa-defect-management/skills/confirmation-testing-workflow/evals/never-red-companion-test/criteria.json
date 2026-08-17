@@ -1,0 +1,46 @@
+{
+  "context": "The developer's test file is named after the change, was added with the fix, and is green. The predicted unaided answer accepts it as the defect's coverage and closes the ticket, and if it writes any test at all it writes one only against the current module - which passes trivially. Neither of the developer's two cases can fail on the pre-fix code: the first asserts a status field, the second uses two DIFFERENT idempotency keys, and the archived copy at 61ab904 creates two orders for two keys exactly as the fixed code does. A test that would have been green before the fix is not coverage of this defect. The discriminating output rejects that test explicitly, writes a reproduction using the SAME key twice, and shows it failing against src/archive/orders.61ab904.js while passing against src/orders.js.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-5150.md exists and states a decision. Scores zero if absent."
+    },
+    {
+      "name": "Reproduction proven against the pre-fix copy",
+      "max_score": 30,
+      "description": "tests/bug-5150.repro.test.js exercises the archived module at src/archive/orders.61ab904.js as well as src/orders.js, and shows that the same-key sequence yields two orders on the pre-fix copy and one on the fixed one. A reproduction written only against src/orders.js scores at most half, however well written: it never demonstrates the behaviour it claims to pin. No reproduction file at all scores zero."
+    },
+    {
+      "name": "Reproduction uses the same idempotency key twice",
+      "max_score": 16,
+      "description": "The new test submits two createOrder calls with an identical idempotencyKey - the condition the report describes - and asserts a single order results. A test using different keys, or asserting on order status or shape instead of the duplicate, scores zero: it repeats the defect the developer's test already has."
+    },
+    {
+      "name": "MUST NOT accept the developer's test as covering this defect",
+      "max_score": 20,
+      "description": "MUST NOT. The record must state that tests/orders.test.js would have passed on 61ab904 too - because its second case uses two different keys - and therefore establishes nothing about this defect. Describing that file as adequate coverage, or citing its green result as the confirming evidence, scores zero on this criterion. Merely writing a better test without saying anything about the existing one scores at most half."
+    },
+    {
+      "name": "Suite green with real output attached",
+      "max_score": 12,
+      "description": "npm test passes with the new reproduction collected and executed, and the record contains the actual runner output rather than a claim that it passed. Verbatim output missing caps this at half; a suite left red, or the new test skipped or renamed out of collection, scores zero."
+    },
+    {
+      "name": "Decision follows the reproduction, not the ticket comment",
+      "max_score": 12,
+      "description": "The record's decision - that the defect can move to Verified - rests on the newly demonstrated before-and-after plus the build containment result, not on the developer's assurance. A decision stated with no supporting artifact scores zero, and so does refusing to decide once a reproduction has been shown red on the pre-fix copy and green now."
+    },
+    {
+      "name": "Build containment recorded",
+      "max_score": 10,
+      "description": "The record names fix commit d3f0a7c, the environment under verification and its build commit 5b2c9d8, and the affirmative containment result from ops/checks.txt. Omitting the build commit caps this at half; omitting containment entirely scores zero."
+    },
+    {
+      "name": "Existing files untouched",
+      "max_score": 6,
+      "description": "src/orders.js, src/archive/orders.61ab904.js and tests/orders.test.js are unchanged. Editing the archived copy to make a point, or rewriting the developer's test instead of adding a new file, scores zero."
+    }
+  ]
+}

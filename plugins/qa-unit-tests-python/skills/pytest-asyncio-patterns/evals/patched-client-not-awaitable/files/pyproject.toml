@@ -1,0 +1,8 @@
+[project]
+name = "catalog-sync"
+version = "2.4.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"

@@ -1,0 +1,41 @@
+{
+  "context": "Five files. jest.xml and playwright.xml open with <testsuites>; pytest.xml and TEST-com.acme.CartTest.xml open with a bare <testsuite> and no wrapper at all; integration.xml is a self-closing <testsuites> with tests=\"0\" because the stage never started. Predicted baseline failure: the agent reaches for the wrapper element - every sample parser and every schema summary starts there - and quietly contributes nothing for the two bare-root files, reproducing the 5 the channel already posts. Nothing throws, no file is reported as unreadable, and the two teams' results simply are not there. The second predicted failure is the one that shipped: a report containing no results has no failures in it, so an aggregator that decides the verdict from failure counts alone calls a build clean when a whole stage produced nothing. Correct totals are 12 executed tests, 10 passed, 1 assertion failure, 1 error, plus one report that produced no results and must be surfaced as such.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and notes delivered",
+      "max_score": 5,
+      "description": "scripts/aggregate.js runs and writes run-summary.json, test/aggregate.test.js exists, aggregate-notes.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Both root shapes contribute results",
+      "max_score": 30,
+      "description": "MUST NOT assume <testsuites> is the root. The 4 tests in pytest.xml and the 3 in TEST-com.acme.CartTest.xml appear in the totals; run-summary.json shows a non-zero contribution for each of the four result-bearing files. Any output where a bare <testsuite> file contributes zero scores zero, as does a total of 5. Handling it by special-casing the two filenames rather than the document shape scores at most half."
+    },
+    {
+      "name": "Empty report surfaced instead of read as clean",
+      "max_score": 25,
+      "description": "integration.xml is reported as having produced no results, and the verdict line says the build cannot be called clean on it. A summary that lists integration.xml among the passing reports, or omits it silently while declaring the build green, scores zero - that is the failure that shipped on Tuesday. Noting the file has zero tests without letting it affect the verdict line scores at most half."
+    },
+    {
+      "name": "Exact totals",
+      "max_score": 14,
+      "description": "12 executed tests, 10 passed, 1 failure, 1 error, 0 skipped. Each figure wrong costs proportionally; a total of 5, 7, or 12-plus-the-zero-report counted as tests scores zero."
+    },
+    {
+      "name": "Failure and error kept apart",
+      "max_score": 10,
+      "description": "CartSummary 'renders the line items' is an assertion failure and com.acme.CartTest 'mergesGuestCart' is an error (Connection refused: db01-staging:3306), counted separately. A combined 'failed: 2' scores zero on this criterion."
+    },
+    {
+      "name": "Executable test covers the shapes",
+      "max_score": 12,
+      "description": "test/aggregate.test.js asserts results are found under a bare <testsuite> root as well as under <testsuites>, and asserts the verdict for a report with no results, and passes. Covering only one of the two root shapes, or omitting the empty-report case, scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Cause explained for the two silent reports",
+      "max_score": 6,
+      "description": "aggregate-notes.md says specifically why pytest.xml and the Surefire file contributed nothing before, in terms of the document shape rather than 'a parsing bug'."
+    }
+  ]
+}

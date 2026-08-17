@@ -1,0 +1,51 @@
+{
+  "context": "The visible symptom is gone: the wallet view no longer returns a negative number, and the developer's test asserting exactly that is green. The predicted unaided answer checks whether the balance still goes negative on screen, finds it does not, and closes the ticket. The change only clamps the read: getWalletView applies Math.max(0, ...) while withdraw still has no funds check, so the second 800-cent withdrawal is still accepted and the stored row is still -600. Step 3's expected result was 200 with the second withdrawal refused, not 0 - so even the step that appears to pass does not match what the ticket said should happen, and step 4 fails outright. Running all four reported steps, rather than the one the developer's test covers, is what separates the two answers.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-7781.md exists and states a decision. Scores zero if absent."
+    },
+    {
+      "name": "Step 4 executed and the stored balance reported",
+      "max_score": 30,
+      "description": "readRow('w_1') is actually run after the two withdrawals and the record reports the stored balanceCents of -600. Stopping at the view - the only thing the developer's test covers - scores zero on this criterion, whatever decision follows."
+    },
+    {
+      "name": "Concludes the defect is not fixed",
+      "max_score": 22,
+      "description": "The decision returns the defect to the developer. Recommending Verified scores zero, including 'Verified for the customer-facing symptom'. Withholding the decision as undecidable, while still reporting the -600 stored row, scores at most half - the build contains the fix and the reported failure still reproduces, which supports a definite answer."
+    },
+    {
+      "name": "Notices step 3 does not meet its stated expectation either",
+      "max_score": 18,
+      "description": "The record states that the view now returns 0 where the ticket's expected result was 200 with the second withdrawal refused as INSUFFICIENT_FUNDS - so the observed 0 is a masked failure, not a pass. Recording step 3 as passing because the number is no longer negative scores zero here."
+    },
+    {
+      "name": "MUST NOT accept the developer's test as confirmation",
+      "max_score": 14,
+      "description": "MUST NOT. tests/walletView.test.js asserts only the clamped view and passes against code that still overdraws; the record must not present its green result as evidence this defect is fixed. Citing it as the confirming artifact scores zero on this criterion."
+    },
+    {
+      "name": "Names the missing behaviour and the check that would catch it",
+      "max_score": 14,
+      "description": "The record tells the developer that withdraw has no funds check and that the second withdrawal must be refused, and names the assertion that would have caught the problem - the stored row after the overdraw attempt, and a refusal result from the second withdraw. Naming only 'the fix is incomplete' scores zero."
+    },
+    {
+      "name": "Each of the four steps recorded with its own result",
+      "max_score": 10,
+      "description": "The record walks steps 1 to 4 with an individual observed value against the ticket's expected value, rather than a single summary paragraph. A summary that still contains the -600 figure scores at most half."
+    },
+    {
+      "name": "Attributes the failure to the change, not the deployment",
+      "max_score": 8,
+      "description": "The record states the build contains 5ad9f10 (staging e0ff31d, affirmative check), so the reopen is about the change itself. Blaming a stale deployment, or omitting the containment result, scores zero."
+    },
+    {
+      "name": "Code left unmodified",
+      "max_score": 6,
+      "description": "src/wallet.js and tests/walletView.test.js are unchanged. Adding the missing funds check scores zero on this criterion: the task is to decide and report."
+    }
+  ]
+}

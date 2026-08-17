@@ -1,0 +1,24 @@
+$ npm run bdd
+
+> acme-specs@1.0.0 bdd
+> cucumber-js
+
+.A-.A-......
+
+Failures:
+
+1) Scenario: A valid code reduces the total # features/checkout/promo.feature:3
+   x When I enter "WELCOME10" in the promo field
+       Multiple step definitions match:
+         I enter {string} in the promo field  - features/checkout/steps/promo.steps.js:9
+         /^I enter "(.*)" in the (.*) field$/ - features/billing/steps/invoice.steps.js:9
+
+2) Scenario: An unknown code is refused # features/checkout/promo.feature:7
+   x When I enter "NOTREAL" in the promo field
+       Multiple step definitions match:
+         I enter {string} in the promo field  - features/checkout/steps/promo.steps.js:9
+         /^I enter "(.*)" in the (.*) field$/ - features/billing/steps/invoice.steps.js:9
+
+4 scenarios (2 ambiguous, 2 passed)
+12 steps (2 ambiguous, 2 skipped, 8 passed)
+0m00.121s

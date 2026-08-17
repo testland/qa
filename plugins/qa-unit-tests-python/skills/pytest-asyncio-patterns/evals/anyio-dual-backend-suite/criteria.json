@@ -1,0 +1,46 @@
+{
+  "context": "The suite is currently driven by the asyncio-only plugin, which cannot run a test on the second runtime at all, and the test helper sleeps with an asyncio-specific call that will not work there either. Predicted baseline failure: the agent keeps the asyncio plugin and tries to bolt a second runtime onto it - parametrizing a fixture over backend names that the asyncio plugin ignores, adding a loop-policy fixture, or wrapping calls in a runner - producing test ids that mention the second runtime while every case still executes on the first. That reads as success in the report, which is worse than not trying. The second predicted miss is leaving the asyncio-only plugin enabled in automatic mode alongside the runtime-neutral one, so the two compete to collect the same coroutine tests.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Tests run under the runtime-neutral plugin, parametrized over both backends",
+      "max_score": 32,
+      "description": "The suite is driven by anyio's own pytest plugin: tests carry its marker and a conftest fixture supplies the backend names so each case runs once per backend. Keeping the asyncio-only plugin as the driver scores zero, however the backends are parametrized - it cannot execute the second runtime. Parametrizing only over the default backend, or hardcoding one, scores zero."
+    },
+    {
+      "name": "The asyncio-only automatic mode is switched off",
+      "max_score": 22,
+      "description": "The `asyncio_mode = \"auto\"` setting is removed or set back to the non-automatic default (or the asyncio-only plugin is dropped from requirements-dev.txt), and the response says why the two automatic modes cannot both own the same tests. Leaving `asyncio_mode = \"auto\"` in pyproject.toml while adding the neutral plugin scores zero. Removing it without mentioning the conflict scores at most half."
+    },
+    {
+      "name": "Test helpers stop using runtime-specific calls",
+      "max_score": 20,
+      "description": "`asyncio.sleep` in the test helper is replaced with the runtime-neutral sleep, and no `import asyncio` remains in `tests/`. Leaving the asyncio-specific sleep scores zero: the parametrized second-backend run then fails on the helper rather than on the code under test, and an agent that never ran the suite will not notice."
+    },
+    {
+      "name": "Both runs are visible per test",
+      "max_score": 14,
+      "description": "Running the suite reports each case twice with the backend in the test id. A single combined test that loops over backends internally scores at most half - one failure then hides which runtime broke. No visible split scores zero."
+    },
+    {
+      "name": "Timeout case asserts a timeout on both runtimes",
+      "max_score": 14,
+      "description": "A test asserts that a batch slower than its deadline raises a timeout, and it is parametrized over both backends like the rest. Using a runtime-specific timeout helper rather than the deadline already built into `fetch_all` scores at most half; asserting on elapsed wall time instead of the raised timeout scores zero."
+    },
+    {
+      "name": "No manual runtime bootstrapping",
+      "max_score": 12,
+      "description": "MUST NOT call `asyncio.run(...)`, `trio.run(...)`, `new_event_loop()`, or `run_until_complete` anywhere in `tests/` to force a backend. Any such call scores zero even if the ids look right: the plugin must own the runtime, otherwise fixtures and tests land in different ones."
+    },
+    {
+      "name": "Existing assertions survive",
+      "max_score": 8,
+      "description": "The three original behaviours keep their assertions and remain separate tests. Merging or dropping any of them scores zero."
+    },
+    {
+      "name": "Library untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `app/fanout.py`. Swapping its neutral concurrency calls for runtime-specific ones, or adding a backend argument for the tests, scores zero."
+    }
+  ]
+}

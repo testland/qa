@@ -1,0 +1,51 @@
+{
+  "context": "Everything about the presentation says non-deterministic test: a wait-for-visibility timeout, a test with a reputation, a wiki page listing it as a repeat offender, and two prior failures in the window that both went green on rerun. The distinguishing evidence is quantitative and one line above the failure - the same endpoint that returns in about 180ms with 3 queries returns in 14812ms with 412 queries, both this run and the rerun, immediately after a commit that replaced a single faceted query with a per-row findFacets call. The two historical failures look like corroboration but their server timing lines show normal 3-query responses, so they are a different failure entirely. Predicted baseline failure: the agent honours the reputation, calls it a known flaky async wait, and endorses the retry wrapper - shipping a search endpoint that is roughly eighty times slower and now issues a query per result row.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-search-timeout.md exists and addresses this failure."
+    },
+    {
+      "name": "Identified as a product regression despite the timeout shape",
+      "max_score": 30,
+      "description": "The document concludes this is a genuine defect in the application and routes it to whoever owns src/search. Calling it a non-deterministic or known-flaky test scores zero. Calling it a test-infrastructure or runner problem scores zero. Concluding 'possibly real, rerun to confirm' scores at most half, given the rerun in the history already failed."
+    },
+    {
+      "name": "The commit named as the cause with the mechanism",
+      "max_score": 22,
+      "description": "6a71e9c is named and the mechanism described: a single faceted query was replaced by an awaited findFacets call per result row, so query count moves from 3 to 412 and the endpoint from about 180ms to 14812ms. Full credit quotes both the query counts and the timings. Naming the commit from its subject ('simplify facet lookup') without reference to the change itself scores at most half. Not connecting the failure to any change scores zero."
+    },
+    {
+      "name": "MUST NOT treat the wait-shaped failure as evidence of flakiness",
+      "max_score": 16,
+      "description": "Scores zero if the document reasons that because the failure is a wait or visibility timeout it is likely non-deterministic, or if it recommends test.retry, a longer timeout, a quarantine, or 'rerun and see'. A timeout with a code change on the same call graph is the case where that reflex is most expensive."
+    },
+    {
+      "name": "Prior failures examined rather than counted",
+      "max_score": 14,
+      "description": "The document distinguishes the failures 41 and 47 runs ago from this one on evidence - their server timing lines show 174-191ms and 3 queries, and both went green on the same commit - and states that they therefore do not support classifying this failure the same way. Citing the prior failures as supporting a flaky call scores zero. Dismissing them without stating what makes them different scores at most half."
+    },
+    {
+      "name": "The wiki page rejected as a formal record",
+      "max_score": 10,
+      "description": "The document notes that the 'tests that have burned us' page is informal - it lives in a wiki, nothing in CI reads it, and the repository has no flake list, annotation, or skip decorator - so it carries no weight in the determination. Treating the wiki page as an established flaky-test record scores zero."
+    },
+    {
+      "name": "Direct answer on the retry wrapper",
+      "max_score": 11,
+      "description": "The document answers the retry question explicitly and says no, with the reason. An answer that leaves the decision open, or defers it to the release manager without a recommendation, scores at most half. Endorsing the retry scores zero."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 10,
+      "description": "Alternatives are listed with the observation that rules each out - runner image, label and hardware unchanged across 50 runs; load average 1.42 and 0% steal so the machine was idle; no other test failed in this run or the rerun; the prettier bump is not on the call graph. Full credit needs at least three entries with observed values."
+    },
+    {
+      "name": "Next action preserves the reproduction",
+      "max_score": 8,
+      "description": "The recommended action routes to the search owners and keeps the failing case captured - the trace, the query count, the timing line - before anyone edits code. Recommending an immediate revert or writing the fix as the next action scores at most half."
+    }
+  ]
+}

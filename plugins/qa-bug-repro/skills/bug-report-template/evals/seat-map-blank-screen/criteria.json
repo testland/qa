@@ -1,0 +1,46 @@
+{
+  "context": "A blank-region UI report with no URL, no booking reference, no error text, a browser described only as 'the latest', and a leg conflict between the email and the screenshot transcription. Predicted baseline failure: the agent writes a well-structured UI report that turns 'latest Chrome' into a version number, invents a Windows release for 'the work machine', reconstructs a plausible seat-selection URL, and silently reports the return leg because the email said so - discarding the transcription's evidence that the Outbound tab was the selected one. The steps it writes read as reproducible but start from a state nobody can reach.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the exact path",
+      "max_score": 5,
+      "description": "A markdown file exists at reports/seat-map-blank.md covering this report. Any other path scores zero."
+    },
+    {
+      "name": "MUST NOT convert 'latest Chrome' into a stated version",
+      "max_score": 28,
+      "description": "The reporter gives no version and no operating system beyond 'the work machine'; the colleague's machine is described only as a Mac. Full points if browser version and OS are each carried as unsupplied and named as required. Scores zero if any Chrome version number or specific Windows or macOS release appears, including as an assumed current version or a parenthetical guess."
+    },
+    {
+      "name": "The leg contradiction is surfaced",
+      "max_score": 22,
+      "description": "The email says the return leg; the screenshot transcription shows the Outbound tab selected on a specific flight. Full points if both are recorded and the document states that which leg was on screen is unresolved and must be confirmed. Scores zero if the document reports one leg as fact without noting the conflicting evidence."
+    },
+    {
+      "name": "No reconstructed URL or booking identifier",
+      "max_score": 22,
+      "description": "No URL appears in either source and the booking reference was deliberately withheld. Full points if the document records the surface by the evidence available (page title, flight strip, tab state) and states that the URL and booking reference must be obtained, noting the phone-only route for the reference. Scores zero if any URL, path, or booking reference is written as though it came from the sources."
+    },
+    {
+      "name": "Single consolidated question list for the agency",
+      "max_score": 16,
+      "description": "The document itemises everything needed in one pass - browser version and OS, the exact URL, the booking reference via phone, which leg, whether the colleague's attempt actually succeeded, fare and membership details, whether it recurs on another booking. Full points for a list an agent could paste into one email. Generic 'follow up with reporter' scores at most half; nothing listed scores zero."
+    },
+    {
+      "name": "Colleague's result recorded as uncertain",
+      "max_score": 12,
+      "description": "The reporter writes 'I think it worked for her'. Full points if the document preserves that hedge and lists confirming it as an action. Scores zero if the colleague's attempt is reported as a successful reproduction attempt or used to conclude the issue is machine-specific."
+    },
+    {
+      "name": "Observed state described from the evidence, not diagnosed",
+      "max_score": 12,
+      "description": "Full points if the observed state records what the transcription actually shows - frame, flight strip, legend, disabled Continue, blank content region, no error text. Scores zero if the document asserts a cause (a failed request, a JavaScript error, an empty API response) that no source records, or claims an error message exists."
+    },
+    {
+      "name": "Steps are numbered and their unknown starting point is marked",
+      "max_score": 10,
+      "description": "The path to the blank page is written as numbered steps, with the first step explicitly flagged as unreachable without the booking reference and URL. Prose instead of steps scores at most half; steps that fabricate a starting URL score zero here."
+    }
+  ]
+}

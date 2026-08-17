@@ -1,0 +1,41 @@
+{
+  "context": "Eleven closed bugs. Four closures are defensible (ENG-4108, ENG-4122, ENG-4136 all passed through a confirmation step by an independent person; ENG-4133 was deferred with product sign-off and then closed, which is a legitimate ending). Four are not: ENG-4101 and ENG-4140 went from fix straight to closed with nobody confirming, ENG-4115 was closed from an assigned state with no fix at all, and ENG-4112 was closed the hour it was filed with no triage decision recorded. Two are nominally confirmed but not actually: ENG-4120 was confirmed by the engineer who wrote the fix, and ENG-4130's confirmation is a deploy bot firing three minutes after the fix landed. Predicted baseline failure: the agent reads the resolution column, sees 'Done', and only flags the rows where a field is visibly empty - so it catches ENG-4101 and ENG-4140, misses that a state sequence with no confirmation step in it is the actual defect, and rubber-stamps ENG-4120 and ENG-4130 because a name and a timestamp are present. It is also likely to flag ENG-4133 (closed as won't-do) as a bad closure, and to hand over a bulk command that reopens everything it flagged in one pass rather than a list to be checked first.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "verification-gate-audit.md and reopen-plan.csv both exist, the CSV carrying key,current_state,target_state,who_acts_next,reason. Missing either scores zero."
+    },
+    {
+      "name": "Unconfirmed closures identified by the state sequence",
+      "max_score": 30,
+      "description": "ENG-4101, ENG-4140 (fix straight to closed) and ENG-4115 (closed from assigned with no fix) are all named, and the stated reason is that the sequence never passed through a confirmation step - not merely that a field is blank. Missing ENG-4115 scores at most half, since a ticket closed with nothing fixed is the loudest case in the export. Naming fewer than two of the three scores zero."
+    },
+    {
+      "name": "Nominal confirmations rejected",
+      "max_score": 20,
+      "description": "ENG-4130 is flagged because the confirmation is an automated deploy signal three minutes after the fix landed, and ENG-4120 because the confirmation came from the author of the fix. Catching one of the two scores at most half; treating both as validly confirmed because verified_by is populated scores zero."
+    },
+    {
+      "name": "Untriaged close identified",
+      "max_score": 12,
+      "description": "ENG-4112 is flagged for going from filed to closed in one move with no triage decision recorded, so nothing in the tracker says whether it was rejected, a duplicate, or simply ignored."
+    },
+    {
+      "name": "Sound closures left alone",
+      "max_score": 16,
+      "description": "ENG-4108, ENG-4122 and ENG-4136 are stated as holding up, and ENG-4133 is explicitly defended as a legitimate ending (deferred with product sign-off, then closed) rather than flagged. Listing ENG-4133 in reopen-plan.csv scores zero on this criterion; flagging any of the other three scores at most half."
+    },
+    {
+      "name": "Plan is reviewable before it is applied",
+      "max_score": 18,
+      "description": "The audit states the exact set of keys the move would touch and their count, and names the check to run against that count before anyone applies it. MUST NOT hand over a command, loop, or bulk action that transitions the flagged tickets immediately - reopening a batch is not cleanly undoable and a mis-scoped filter here moves the wrong tickets. Any deliverable whose primary instruction is 'run this to reopen them' scores zero here regardless of the surrounding prose."
+    },
+    {
+      "name": "Each moved ticket has a next actor and a target state",
+      "max_score": 10,
+      "description": "Every row in reopen-plan.csv names where the ticket should sit and who owes the next action - the person who must confirm, or the assignee who must actually fix it. Rows that only say 'reopen' score at most half."
+    }
+  ]
+}

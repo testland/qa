@@ -1,0 +1,46 @@
+{
+  "context": "Two predicted baseline failures, both of which read as careful work. First, the agent builds the grid, reaches the submitted row, and fills its four cells with 'not applicable - the controls are not rendered', producing no executable case for any of them. That is the reasoning that let all three support tickets happen: the button is gone, the route is not, and every ticket arrived through history, a bookmark or a stale tab. A cell with no behaviour still needs an attempt and an assertion that nothing moved. Second, the fixture says outright that post-timeout behaviour was never written down; the agent, wanting a complete grid, quietly invents an answer - usually 'returns to the first step with the draft intact' - and states it as expected behaviour, which turns an open question into a test case that will be graded against whatever the code happens to do. With 6 states and 4 events there are 24 combinations, 4 of which are the submitted row and 4 of which are the undefined one.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/onboarding-wizard-tests.md exists and contains a model plus numbered manual cases with per-step expected results."
+    },
+    {
+      "name": "The submitted application is attacked through routes the UI does not offer",
+      "max_score": 30,
+      "description": "There are executable cases for next, back and save-and-exit applied to an already submitted application, and the steps say how the tester gets there - browser Back, typing or bookmarking the step URL, the app's swipe-back gesture, or a stale second tab. Each expects the application to remain submitted with no second application and no reference reused. All three covered with a stated route earns full marks; one or two caps at half; none scores zero."
+    },
+    {
+      "name": "MUST NOT record 'the button is not shown' as the expected result",
+      "max_score": 16,
+      "description": "MUST NOT. Any combination dismissed as not applicable, not reachable, or impossible because the control is not rendered scores zero on this criterion. The frontend note in the fixture states that hiding a control removes the button and not the route, and all three support tickets came in through the route."
+    },
+    {
+      "name": "Undefined behaviour is raised as questions, not answered",
+      "max_score": 20,
+      "description": "The combinations involving the expired state appear in the labelled list of things the spec does not settle, as specific questions - which step does an applicant land on after signing back in, does the draft survive, what does Back mean there. Inventing an expected result for them and presenting it as testable behaviour scores zero. Noting the gap vaguely without a question the BA could answer caps at half."
+    },
+    {
+      "name": "All 24 state/event combinations accounted for",
+      "max_score": 14,
+      "description": "The model covers 6 states against 4 events - 24 combinations - each either producing a result, marked as producing none, or marked as undefined by the spec. Twenty or more accounted for earns full marks; 15 to 19 caps at half."
+    },
+    {
+      "name": "Back is exercised from every step that has one",
+      "max_score": 12,
+      "description": "Cases cover Back from address, income and review, each expecting the preceding step with answers still populated, and Back on the identity step where there is nothing behind it, expecting the applicant to stay put. Covering only one Back caps this at half."
+    },
+    {
+      "name": "Save and exit is modelled as a transition on every step",
+      "max_score": 10,
+      "description": "Saving and exiting - which stores the draft and returns the applicant to the same step - is recorded as a transition per step rather than dropped because the step does not change."
+    },
+    {
+      "name": "Expected results are observable to the applicant",
+      "max_score": 10,
+      "description": "Expectations name the URL, the screen, the reference number, or whether compliance received a second application - things the tester can see - rather than internal wizard state."
+    }
+  ]
+}

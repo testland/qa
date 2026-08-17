@@ -1,0 +1,46 @@
+{
+  "context": "The framework already ships a client fixture that starts the application on an ephemeral port and tears it down after the test, and it is already installed. Predicted baseline failure: the agent keeps the hand-rolled AppRunner/TCPSite lifecycle and merely makes it tidier - moves it into a fixture, passes port 0 and reads the assigned port back off the socket, or grabs a free port with a throwaway socket bind. Those pass locally and read as a real fix, but they keep a full network round trip, keep the teardown correctness in the author's hands, and reproduce a race between picking the port and binding it. The other predicted miss is the run mode: swapping in the plugin's fixture without adjusting the project's configured mode leaves the rewritten tests unmarked and therefore not executed at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Tests drive the app through the aiohttp plugin's client fixture",
+      "max_score": 32,
+      "description": "Each test obtains its client from the `aiohttp_client` fixture provided by pytest-aiohttp, passing it the application built by `create_app()`. Hand-rolling `AppRunner` + `TCPSite` anywhere in the test module scores zero, even if the port is dynamic and the lifecycle is moved into a fixture - that is the code the task asks to delete."
+    },
+    {
+      "name": "Suite passes and every test actually executes",
+      "max_score": 24,
+      "description": "`pytest` reports four passing tests. Zero if anything fails or errors, and zero if any async test is reported as skipped or merely warned about rather than run - a suite that collects but does not execute is the failure this rewrite most easily introduces."
+    },
+    {
+      "name": "Run mode matches what the aiohttp plugin expects",
+      "max_score": 14,
+      "description": "`pyproject.toml` is switched to the automatic mode that pytest-aiohttp requires. Leaving the configured mode as it is while keeping an explicit async marker on every test scores at most half: it runs today but breaks the moment someone adds a test without the marker. Removing the mode setting entirely and leaving the tests unmarked scores zero."
+    },
+    {
+      "name": "No fixed port and no port arithmetic",
+      "max_score": 16,
+      "description": "No literal port number and no manual free-port discovery (binding a throwaway socket, scanning, or reading a port off a started site) appears in the tests. A hardcoded 8080 scores zero; hand-rolled port selection scores at most half."
+    },
+    {
+      "name": "No fixed sleep before the first request",
+      "max_score": 12,
+      "description": "MUST NOT wait on a timer for readiness. Any `asyncio.sleep` used as a startup wait scores zero; replacing it with a poll loop that retries a health request scores at most half - the client fixture returns only once the server is serving."
+    },
+    {
+      "name": "No manual event loop management",
+      "max_score": 10,
+      "description": "MUST NOT call `asyncio.run(...)`, `new_event_loop()`, or `run_until_complete` in the tests or fixtures. The client fixture and the tests must share the loop the plugin provides; introducing a second loop scores zero."
+    },
+    {
+      "name": "Fourth case covers the unknown-name 404",
+      "max_score": 10,
+      "description": "A new test asserts a 404 status for a `GET /items/{name}` where nothing was stored. Asserting only that the response is not 200, or asserting on the reason string instead of the status, scores at most half; no such test scores zero."
+    },
+    {
+      "name": "Application module untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `app/service.py` - in particular do not add a test-only factory, a port argument, or a startup hook. The application is already testable as written."
+    }
+  ]
+}

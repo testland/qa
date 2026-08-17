@@ -1,0 +1,41 @@
+{
+  "context": "Four facts - Gold card, Basic fare, bag over 23 kg, paid online - give 16 combinations that reduce to 7 genuinely different cases, because payment channel stops mattering for Gold cardholders and on Standard fares, and bag weight stops mattering for Gold cardholders. Two sentences are doing no honest work: one restates the Gold rule for Standard fares, and one prices a Gold cardholder on a Basic fare at EUR 25 in direct conflict with the opening sentence. Predicted baseline failure: the agent writes a fee table keyed by fare and card, prices the Gold-plus-Basic-plus-online passenger at EUR 25 because a sentence says so, and never notices that the same passenger is priced at zero by the first sentence. It also gives no reduction count, so the thirty-row script the team wanted rationalised is replaced by an equally unmeasured list. Both failures survive a sentence-by-sentence read of the document against the extract, because every sentence of the extract has been used.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named baggage-fee-analysis.md exists and contains a fee table. Scores zero if absent or if it contains only prose."
+    },
+    {
+      "name": "The conflicting sentence identified rather than applied",
+      "max_score": 30,
+      "description": "The document identifies that 'Gold cardholders on a Basic fare pay EUR 25 for a bag paid online' cannot stand alongside 'Gold cardholders check one bag free on any fare', and raises it for the revenue team instead of pricing those passengers. Scores zero if a Gold cardholder on a Basic fare with an online-paid bag is priced at EUR 25 as the expected result. Scores at most half if the sentence is listed as merely redundant or as safe to delete, rather than as a disagreement that changes what a real passenger pays."
+    },
+    {
+      "name": "The genuinely redundant sentence identified",
+      "max_score": 18,
+      "description": "The document names 'Gold cardholders travelling on a Standard fare check their first bag free' as adding nothing - it is already covered twice - and distinguishes it from the conflicting sentence above. Scores zero if no sentence is identified as deletable, and scores at most half if it is lumped together with the conflicting sentence under one heading."
+    },
+    {
+      "name": "All sixteen combinations carry a fee",
+      "max_score": 22,
+      "description": "All 16 combinations of the four facts are traceable with a total fee: EUR 0, 25, 35, 60, 85, and 95 are the values that occur. Scores zero if fewer than 16 can be traced or if the table is keyed by fare family alone. Scores at most half if more than two totals are wrong - the Basic-fare heavy-bag totals are EUR 95 at the airport and EUR 85 online."
+    },
+    {
+      "name": "Reduction count stated with reasoning",
+      "max_score": 20,
+      "description": "The document states how many genuinely different cases remain - seven, once payment channel is dropped for Gold and Standard passengers and weight is dropped for Gold - and names which fact stops mattering where. Scores zero if no count is given. Scores at most half if a count is given with no statement of which fact was dropped for which group, or if the count does not follow from the table."
+    },
+    {
+      "name": "MUST NOT check only the passengers who pay",
+      "max_score": 18,
+      "description": "Anti-pattern guard. The bag drops QA is asked to check include the zero-fee cases - a Gold cardholder and a Standard-fare passenger with an under-23 kg bag - not only the Basic-fare and heavy-bag rows. Scores zero if every proposed check expects a non-zero fee, since a free-bag rule that silently starts charging is exactly the regression this section has produced before."
+    },
+    {
+      "name": "Payment channel scoped correctly",
+      "max_score": 12,
+      "description": "The document states that whether the bag was paid online matters only on a Basic fare for a non-Gold passenger, and nowhere else. Scores zero if the online and airport variants are listed as separate cases for Standard-fare or Gold passengers."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "A config file that writes down values which are not the automation's to write down. The Jira transition numbers are per-workflow and per-current-status; the Linear column names are team-editable display strings and the team renamed them, while the underlying lifecycle category is stable; the Azure DevOps state strings come from each project's process template, so Payments (Agile) and Platform (Scrum) do not share them, and the Severity field is not present on every template; Payments also sends the wrong content type, and no revision check, so a concurrent human edit is silently overwritten with a 200. Two log lines succeeded and still did the wrong thing: the overwritten priority change, and a duplicate closed with no reason recorded so it reads as fixed work. The Linear urgency value 4 is the lowest band, not the highest, so an outage was filed below routine work. Predicted baseline failure: the agent treats this as an error-message triage, fixes the values it can see are stale - updates 'Done' to 'Shipped', changes Platform's state to 'Committed', flips the content type - and hands back a corrected config. That makes every log line disappear and leaves the file exactly as fragile as before, because the next rename or template change breaks it again. The two 200-status lines are the ones most often skipped entirely, since nothing failed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 6,
+      "description": "board-config-review.md and board-config-fixes.csv both exist, the CSV carrying config_entry,problem,replacement,how_obtained, with a row for every entry being changed. Missing either scores zero."
+    },
+    {
+      "name": "Written-down lifecycle identifiers replaced by run-time lookups",
+      "max_score": 32,
+      "description": "The Jira transition numbers, the Linear column names, and both Azure DevOps state sets are each identified as values the automation must ask the board for at run time rather than store, with the specific lookup named per platform (Jira: the transitions available for that issue in its current status; Linear: the team's workflow states matched on their lifecycle category rather than their display name; Azure DevOps: the states the project's process template defines). Merely correcting the stored values - 'Done' becomes 'Shipped', 'Active' becomes 'Committed' - scores at most half no matter how accurate the corrections are. Retaining any hard-coded transition number or column name in the proposed config scores zero for this criterion."
+    },
+    {
+      "name": "Linear rename diagnosed as a lookup-by-name problem",
+      "max_score": 16,
+      "description": "The 2026-07-30 line is traced to lookup_by: name, and the fix is matching on the stable lifecycle category of the state, not on what the team calls its column this month. It must also be noted that the script accepted a non-success response and carried on, which is how MOB-884 ended up moving backwards. Renaming the config value to the new column name scores at most half."
+    },
+    {
+      "name": "The two boards on different templates separated",
+      "max_score": 16,
+      "description": "Payments and Platform are stated to be on different process templates, so they cannot share a state set, and the Platform severity failure is explained as that field not being defined for that template rather than as a typo - with the check that establishes which fields the work item type actually has. Getting the state difference but not the severity field, or the reverse, scores at most half."
+    },
+    {
+      "name": "The silent overwrite explained",
+      "max_score": 16,
+      "description": "The 2026-08-07 line - a 200 that lost a triager's edit - is attributed to the update carrying no revision check, and the fix is a conditional update that fails when the item has changed since it was read. Attributing it to a race the script cannot help, or omitting the line because it did not error, scores zero."
+    },
+    {
+      "name": "The reason-less close called out",
+      "max_score": 14,
+      "description": "MUST NOT leave the github-web close call as it stands: closing with no reason recorded makes a duplicate indistinguishable from fixed work, which is exactly what the reporter of #3312 ran into. The fix states the close must carry its reason (and, for a duplicate, the link to the ticket that stays open). Omitting this line scores zero here."
+    },
+    {
+      "name": "Urgency value corrected",
+      "max_score": 12,
+      "description": "priority_for_urgent: 4 is identified as the lowest urgency band on that platform, not the highest, explaining why the outage on 2026-08-10 landed below routine work, and the correct value is given. Leaving it unexamined scores zero."
+    },
+    {
+      "name": "Remaining request-shape errors resolved",
+      "max_score": 10,
+      "description": "The Jira create failure is traced to sending a plain-text description where the rich-document structure is required, and the 415 to the wrong content type on the Azure DevOps write. Getting one of the two scores at most half."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+$ curl -s https://search.staging.internal/internal/build-info
+{"service":"search-ui","commit":"a4d0c92","branch":"main","deployedAt":"2026-08-05T06:02:44Z"}
+
+$ git merge-base --is-ancestor c0b8f31 a4d0c92; echo $?
+0

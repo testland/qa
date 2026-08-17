@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites tests="41" failures="1" errors="0" time="212.884">
+  <testsuite name="checkout" tests="41" failures="1" errors="0" skipped="0"
+             timestamp="2026-08-14T02:11:07" hostname="ci-runner-07"
+             time="212.884">
+    <properties>
+      <property name="branch" value="main"/>
+      <property name="runner_os" value="ubuntu-24.04"/>
+      <property name="node_version" value="22.5.0"/>
+      <property name="ci_run_url" value="https://ci.example/marlow/runs/90412"/>
+    </properties>
+    <testcase classname="checkout.promo" name="test_stacked_promo_codes"
+              file="tests/checkout/test_promo.py" line="118" time="4.902">
+      <failure type="AssertionError"
+               message="expected status 201 but got 422 - body: {&quot;error&quot;:&quot;PROMO_STACK_LIMIT&quot;,&quot;detail&quot;:&quot;at most 1 stackable code per order&quot;}">
+Traceback (most recent call last):
+  File "tests/checkout/test_promo.py", line 118, in test_stacked_promo_codes
+    assert response.status_code == 201, f"expected status 201 but got {response.status_code}"
+  File "app/checkout/orders.py", line 240, in apply_promotions
+    raise PromoStackLimit(code=code.id)
+AssertionError
+      </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

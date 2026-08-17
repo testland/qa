@@ -1,0 +1,41 @@
+{
+  "context": "The function collects results as concurrent lookups finish and documents that the list is not ordered by request; the tests assert a positional order anyway, and the per-record latencies are close enough that neighbours occasionally swap. Predicted baseline failure: the agent reads the swap as a race to be waited out - adding a delay, awaiting the lookups one at a time from the test, or retrying - or it edits `src/profiles.js` to preserve request order, which the task forbids and which the owning team has ruled out. The other predicted shortcut is to drop the failing assertion to something that cannot fail, such as checking only `profiles.length === 4` or `profiles.length === 2`, which keeps the suite green by testing almost nothing. Diagnoses are predicted to call this 'a race condition' or 'nondeterministic async behaviour' without naming the specific defect: an assertion on positional order against a result whose order is documented as arbitrary.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables present and green",
+      "max_score": 6,
+      "description": "`node --test` passes with all three originally-named tests present and executing, and `ordering-diagnosis.md` exists. A test deleted or skipped scores zero here."
+    },
+    {
+      "name": "Assertions no longer depend on position",
+      "max_score": 28,
+      "description": "The comparisons are made against a canonical form the function's contract guarantees - sorting the returned ids before comparing, comparing as a set, or selecting the record by id (`profiles.find((p) => p.id === 'u-2')`) instead of by index. Full credit requires both order-dependent assertions fixed. Fixing the deep-equal test while leaving `profiles[0]` indexed in the second test scores at most half. Anything that keeps a positional expectation scores zero."
+    },
+    {
+      "name": "Coverage preserved",
+      "max_score": 16,
+      "description": "MUST NOT trade the assertion away for a weaker one. The first test still establishes that all four requested ids came back, and the second still establishes that `u-2`'s team is `platform`. Reducing either to a length check, an `assert.ok`, or a subset check scores zero for this criterion."
+    },
+    {
+      "name": "Diagnosis names the arbitrary result order",
+      "max_score": 20,
+      "description": "`ordering-diagnosis.md` states that the tests asserted on the order in which concurrent lookups happened to finish, that this order is not part of the function's contract, and that the near-uniform latencies are why the usual order is the requested one - so the assertion held by luck, not by rule. A write-up that says only 'a race condition' or 'timing' without identifying the order assumption scores at most half. Blaming the runner, the machine, or `Promise.all` scores zero."
+    },
+    {
+      "name": "No wait, retry, or serialisation as the fix",
+      "max_score": 14,
+      "description": "MUST NOT reach green by adding a delay, retrying the test, raising a timeout, marking it `skip` / `todo`, or making the test call `loadProfile`-per-id sequentially so the finish order becomes predictable. Any of these offered as the fix scores zero for this criterion."
+    },
+    {
+      "name": "Production source unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify `src/profiles.js` - not to sort the results, not to preserve request order, not to flatten the latencies. Any edit to that file scores zero here."
+    },
+    {
+      "name": "Rule stated for future assertions",
+      "max_score": 8,
+      "description": "The diagnosis gives the reviewable rule - an assertion may only rely on guarantees the function documents, so results from a concurrent collector are compared as an unordered collection or normalised first - rather than only describing today's edit."
+    }
+  ]
+}

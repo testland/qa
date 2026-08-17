@@ -1,0 +1,8 @@
+key,note
+ENG-4101,"closed by the assignee with the comment 'merged, should be fine'"
+ENG-4112,"one comment from the reporter, no triage comment, closed the same hour it was filed"
+ENG-4115,"no PR linked; assignee comment reads 'lost track of this, closing for now'"
+ENG-4120,"verification comment written by the same engineer who wrote the fix"
+ENG-4130,"verified_at is 3 minutes after the Fixed transition; ci-bot posts 'deploy succeeded' and the automation moves the ticket on"
+ENG-4133,"product manager comment 2026-08-01 accepting the behaviour for this release, review at next planning"
+ENG-4140,"customer-reported; reset flow retested by nobody; the fix PR touched the token TTL only"

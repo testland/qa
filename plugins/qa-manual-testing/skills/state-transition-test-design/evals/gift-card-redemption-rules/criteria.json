@@ -1,0 +1,46 @@
+{
+  "context": "Two predicted baseline failures. First, the agent invents situations out of the balance - a partially used or low balance situation sitting between active and depleted, sometimes one per example amount - because the balance is the most salient number in the spec. The card services spec names five situations; the amount is a condition on what a redemption does, not a situation of its own, and inventing more of them produces a model that cannot be reconciled with anything the till displays. Second, the events that leave the situation alone get dropped: redeeming less than the balance and reloading both leave a card active, so a walk-the-situations pack never asserts the balance arithmetic at all, and neither does the six-case pack the team already has. The refusals go the same way - with 5 situations and 8 events there are 40 combinations and roughly 25 of them should be declined, including both incidents: a redemption against a card that was never activated, and a redemption against a suspended one.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/gift-card-tests.md exists and contains a model plus numbered manual cases with per-step expected results."
+    },
+    {
+      "name": "MUST NOT invent balance-derived situations",
+      "max_score": 20,
+      "description": "MUST NOT. Introducing a situation the spec does not name - partially used, low balance, part-spent, a separate zero-balance situation distinct from depleted, or one per example amount - scores zero on this criterion. The five in the fixture are the situations; how much is on the card is a condition on what a redemption does."
+    },
+    {
+      "name": "Events that leave the situation unchanged are modelled as transitions",
+      "max_score": 26,
+      "description": "Redeeming less than the balance, reloading an active card, and refunding onto an active card each appear in the model as transitions and each get a case stating the balance before and after with the situation unchanged. All three covered earns full marks; one or two caps at half; a model that records only the events which change the situation scores zero."
+    },
+    {
+      "name": "Redemption is modelled with its outcome depending on the amount",
+      "max_score": 20,
+      "description": "The redeem entry for an active card shows three outcomes - below the balance leaving the card active with less on it, exactly the balance emptying it, above the balance declined in full with nothing deducted - each qualified by the condition that selects it, and each with its own case. A single undifferentiated redeem entry scores zero. Missing only the over-balance decline caps this at half."
+    },
+    {
+      "name": "The two incidents are covered as refusals with their situations seeded",
+      "max_score": 20,
+      "description": "A case seeds a card that has never been activated and attempts a redemption at a till, expecting the terminal to decline with the card still showing not active and no value moved; another seeds a suspended card and attempts a redemption at a self-checkout, expecting the same. Both required: one only caps this at half; neither scores zero."
+    },
+    {
+      "name": "All 40 situation/event combinations accounted for",
+      "max_score": 14,
+      "description": "The model covers 5 situations against 8 events - 40 combinations - each either producing a result or explicitly marked as producing none. Thirty-four or more accounted for earns full marks; 25 to 33 caps at half; recording only the fifteen or so that do something scores zero."
+    },
+    {
+      "name": "MUST NOT sweep a row of refusals into one case",
+      "max_score": 12,
+      "description": "MUST NOT. A single case that fires several declined events at the same card in sequence - redeem, reload, refund and activate against one suspended card, checked at the end - scores zero here. The first step that behaves wrongly hides every step behind it, and each declined combination is meant to fail on its own."
+    },
+    {
+      "name": "Every case states starting balance and per-step balance",
+      "max_score": 10,
+      "description": "Preconditions give the card's situation and the exact starting balance, and each step's expected result gives the balance afterwards as well as the situation. Cases that assert only the situation score at most half."
+    }
+  ]
+}

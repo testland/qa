@@ -1,0 +1,11 @@
+{
+  "comment": "temporary - added 2026-03, revisit",
+  "skip": [
+    "deep links opens the order screen from a deep link",
+    "deep links returns to the catalog with the back control",
+    "offline behaviour queues an order while the device is offline",
+    "offline behaviour shows the sync notification",
+    "crash reporting writes a breadcrumb file on a handled error",
+    "crash reporting keeps the app usable after a handled error"
+  ]
+}

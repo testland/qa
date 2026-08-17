@@ -1,0 +1,31 @@
+{
+  "info": {
+    "_postman_id": "cc000000-0000-4000-8000-000000000050",
+    "name": "orders",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "list orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/v1/orders", "host": ["{{baseUrl}}"], "path": ["v1", "orders"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('list orders returns 200', () => pm.response.to.have.status(200));",
+              "pm.test('list orders returns an items array', () => {",
+              "  pm.expect(pm.response.json().items).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

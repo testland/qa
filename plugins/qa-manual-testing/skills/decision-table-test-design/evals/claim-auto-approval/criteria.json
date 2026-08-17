@@ -1,0 +1,46 @@
+{
+  "context": "Four inputs - amount at or below EUR 1,000, policy active six months or more, photo attached, police report attached - give exactly 16 states. Four of them (small claim carrying a police report) cannot be produced because the form hides the upload below EUR 1,000, and four more (above EUR 1,000 on a policy under six months) are governed by two statements that disagree. Predicted baseline failure: the agent writes a routing table organised around the note's four statements, gets each individual rule right, and never distinguishes the states the system prevents from the states the note fails to settle. It typically prices the overlapping case by picking the rule that appears first in the text, and it proposes at least one test case that requires attaching a police report to a EUR 600 claim - a setup the tester cannot perform. Both errors read as a competent table to anyone who has not enumerated the states themselves.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file named claim-routing-analysis.md exists and contains a per-state table. Scores zero if absent or if it contains only a restatement of the note in prose."
+    },
+    {
+      "name": "All sixteen states accounted for",
+      "max_score": 28,
+      "description": "All 16 combinations of the four inputs are traceable in the document, each with a stated result or an explicit marking as unreachable or unsettled. States may be merged where an input provably does not change the result, provided the merge names the input that stopped mattering. Scores zero if fewer than 16 can be traced or if the table is organised by the note's statements rather than by input states. Scores at most half if 16 appear but several carry no result at all."
+    },
+    {
+      "name": "Exactly the four unreachable states identified",
+      "max_score": 25,
+      "description": "The document identifies the states where the claim amount is EUR 1,000 or less and a police report is attached - all four of them, across both values of the policy-age and photo inputs - as impossible to produce, because the form does not render the upload below EUR 1,000. Scores zero if unreachable states are not distinguished from reachable ones at all. Scores at most half if the constraint is mentioned in prose but the affected states are not marked in the table, or if the count is wrong (fewer than four, or unreachable states claimed that are in fact reachable)."
+    },
+    {
+      "name": "MUST NOT delete the impossible states without a check that the constraint holds",
+      "max_score": 20,
+      "description": "Anti-pattern guard. The document proposes a check that the form really does withhold the police-report upload for claims of EUR 1,000 or less, so that if the constraint ever breaks the analysis is known to be stale. Scores zero if the four states are simply removed with no such check, and scores zero if any proposed QA case requires a tester to attach a police report to a claim of EUR 1,000 or less."
+    },
+    {
+      "name": "The over-EUR-1,000 under-six-months conflict raised",
+      "max_score": 22,
+      "description": "The four states where the amount is above EUR 1,000 and the policy has been active less than six months are flagged as governed by two statements that disagree - adjuster versus fraud review - and referred back for a decision. Scores zero if the document states one destination for those states as the expected result without marking the conflict. Scores at most half if the conflict is noted only in prose and the table still shows a single confident destination."
+    },
+    {
+      "name": "Photo input marked as not affecting adjuster handling",
+      "max_score": 12,
+      "description": "The document states that the photo input does not change the result once a claim is above EUR 1,000 or the policy is under six months, and merges or annotates those states accordingly. Scores zero if the document instead lists the photo as affecting every routing decision, since the note says the adjuster opens the file either way."
+    },
+    {
+      "name": "Held-for-photo treated as its own result",
+      "max_score": 10,
+      "description": "The hold-and-email-for-a-photo outcome appears as a result in its own right, distinct from auto-approval and from the two review queues. Scores zero if it is folded into auto-approval or into a generic rejection."
+    },
+    {
+      "name": "One case per reachable state, not per statement",
+      "max_score": 12,
+      "description": "The proposed QA cases correspond to the reachable states in the table, and the document says which states each case covers. Scores zero if the case list is one case per sentence of the note, or if it covers only the auto-approval path."
+    }
+  ]
+}

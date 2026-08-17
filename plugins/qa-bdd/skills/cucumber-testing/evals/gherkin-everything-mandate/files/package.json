@@ -1,0 +1,11 @@
+{
+  "name": "acme-billing",
+  "private": true,
+  "scripts": {
+    "bdd": "cucumber-js",
+    "test": "node --test test/"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.9.0"
+  }
+}

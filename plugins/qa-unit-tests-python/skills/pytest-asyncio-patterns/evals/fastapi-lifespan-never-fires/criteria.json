@@ -1,0 +1,46 @@
+{
+  "context": "Driving an ASGI app in-process through an HTTP transport sends request and response messages only; it never sends the startup or shutdown messages, so the application's lifecycle body is skipped. Predicted baseline failure: the agent treats the missing snapshot as missing test setup and supplies it directly - assigning `app.state.flags` in a fixture, monkeypatching the state object, or awaiting the loader function itself and stashing the result. Every one of those turns the suite green while leaving the real startup path untested, which is exactly the path that broke; and none of them can honour the shutdown assertion except by faking it. The second predicted failure is silently switching this module to a thread-backed client because that client does fire the lifecycle, contradicting the stated constraint and reintroducing a second loop.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The application's real lifecycle runs around the requests",
+      "max_score": 34,
+      "description": "The tests wrap the app in something that actually drives its startup and shutdown messages - the `asgi-lifespan` lifespan manager (added to requirements-dev.txt) or an equivalent that sends the real lifecycle events - and requests are issued inside that scope. Assigning `app.state.flags` in the test or a fixture scores zero. Awaiting `load_flags()` and assigning the result yourself scores at most half: the snapshot is right but the startup body under test is still never executed."
+    },
+    {
+      "name": "Shutdown is asserted, not assumed",
+      "max_score": 20,
+      "description": "A test observes that the shutdown half ran - for example the module's `SHUTDOWNS` counter increasing after the lifecycle scope exits, or `app.state.flags` being `None` afterwards. Asserting only that startup ran scores at most half. No shutdown assertion scores zero; a comment claiming shutdown runs scores zero."
+    },
+    {
+      "name": "Suite passes with every test executing",
+      "max_score": 18,
+      "description": "`pytest` is green across the health test and the new flag tests, with no test skipped. A remaining AttributeError, or coroutine tests reported as skipped, scores zero."
+    },
+    {
+      "name": "Stays asynchronous, in-process",
+      "max_score": 14,
+      "description": "Requests still reach the app through an in-process async client on the test's own loop. Switching this module to the thread-backed synchronous client scores at most half - it does fire the lifecycle, but the task rules it out and it puts the handler on a second loop. Standing up a real server on a port scores zero."
+    },
+    {
+      "name": "Flag values come from the endpoint",
+      "max_score": 12,
+      "description": "The enabled-flag assertion is made against the HTTP response body. Asserting against `app.state.flags` or the return value of `load_flags()` instead scores zero - the endpoint's read path is what the tests are for."
+    },
+    {
+      "name": "404 case asserts the status",
+      "max_score": 10,
+      "description": "An unknown flag name is asserted to return 404. Asserting only the detail text, or that an exception was raised inside the app, scores at most half; no such case scores zero."
+    },
+    {
+      "name": "Snapshot state does not leak between tests",
+      "max_score": 10,
+      "description": "Each test gets a lifecycle scope that starts and ends within it, or an explicitly scoped fixture whose loop lifetime matches the tests that use it. A module-level snapshot mutated in place and never restored scores zero. A wider-scoped lifecycle fixture without a matching loop lifetime for the tests scores zero - that combination raises a different-loop error the moment the flag store holds a lock or a connection."
+    },
+    {
+      "name": "Application untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `app/main.py` - do not move the load out of the lifecycle, give `app.state.flags` a default, or add a test-only startup hook. Making the endpoint tolerate a missing snapshot scores zero."
+    }
+  ]
+}

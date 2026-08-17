@@ -1,0 +1,41 @@
+{
+  "context": "13 testcases across three reports produce 6 failing executions belonging to 5 genuinely distinct tests. Four different tests are named 'renders' (CartSummary, Header, and checkout.spec.ts under two browser suites) and two different tests are named 'test_create' (tests.api.test_orders and tests.api.test_refunds). Predicted baseline failure: the agent groups on the name attribute, because the name is what a human calls a test and the classname looks like redundant metadata, and reproduces the 'renders: 4' row the board already shows. The only genuine repeat is checkout.spec.ts renders, which fails once under [chromium] checkout.spec.ts and once under [firefox] checkout.spec.ts - identical classname and name, so the browser suite has to be part of the identity or the two executions collapse into one and the cross-browser failure looks like a single test failing twice. A further predicted error is asserting one universal meaning for classname: it is a component name in one report, a dotted module path in the second, and a spec file path in the third.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and board delivered",
+      "max_score": 5,
+      "description": "scripts/group-failures.js runs and writes failing-tests.json, test/group-failures.test.js exists, failing-tests.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Identity includes classname, never the name alone",
+      "max_score": 30,
+      "description": "MUST NOT aggregate across suites on the test name by itself. No entry may show 'renders' with 4 failures or 'test_create' with 2. CartSummary/renders and Header/renders are separate rows, as are tests.api.test_orders/test_create and tests.api.test_refunds/test_create. Any name-only row scores zero on this criterion regardless of the rest of the output."
+    },
+    {
+      "name": "Exact counts",
+      "max_score": 16,
+      "description": "13 testcases read in total, 6 failing executions, 5 distinct failing tests. Each number wrong costs proportionally; reporting distinct failing tests as 6 (treating the two browser executions as separate tests) or as 4 (merging them with a name-level collapse) scores at most half."
+    },
+    {
+      "name": "The one genuine repeat identified correctly",
+      "max_score": 18,
+      "description": "checkout.spec.ts/renders is the only distinct test with more than one failing execution - 2, one under [chromium] checkout.spec.ts and one under [firefox] checkout.spec.ts - and is described as the same test failing on two browsers, with the enclosing suite recorded against each execution. Describing it as a re-run, a retry, or a flake scores zero. Dropping one of the two executions because classname and name are identical scores zero."
+    },
+    {
+      "name": "Per-report identifier conventions described",
+      "max_score": 12,
+      "description": "failing-tests.md states that classname carries a component name in the frontend report, a dotted module path in the Python report, and a spec file path repeated across browser suites in the browser report, and that the key must therefore not assume one format. Asserting a single universal meaning for classname scores at most half."
+    },
+    {
+      "name": "Executable test covers the collision",
+      "max_score": 10,
+      "description": "test/group-failures.test.js asserts that two testcases sharing a name under different classnames stay separate, and passes. A test that only counts failures scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Key documented for reuse",
+      "max_score": 8,
+      "description": "failing-tests.md gives the identification rule explicitly, including what happens when the same classname and name appear twice in one build, so a fourth team's report can be added without breaking the board."
+    }
+  ]
+}

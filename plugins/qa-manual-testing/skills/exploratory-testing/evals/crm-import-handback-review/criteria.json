@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent triages the contractor's findings - restates the seven defects, assigns severities, maybe files them - and concludes the morning was productive because seven real bugs were found. That is a defect triage, not a review of the record, and it misses everything the lead asked about. The unaided output almost never notices that the notes carry no statement of what was left untouched (the email report, rollback, remembered mapping and the always-create-new option are all untested and invisible in the write-up), no tester judgement on whether the feature is safe for Thursday, no defect ids, and a three-and-a-quarter-hour block reported as one lump with an unquantified stretch lost to a stuck worker. It also tends to accept or even echo the seven-bugs framing rather than pushing back on it, and it frequently violates the constraint by proposing re-tests the lead said are impossible today.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Review file delivered",
+      "max_score": 5,
+      "description": "docs/qa/reviews/imp-114-review.md exists and is a review of the contractor's write-up, not a rewrite of it. Scores at most half for a differently named file. Scores zero if no such deliverable is produced."
+    },
+    {
+      "name": "Per-part completeness assessment with a status per part",
+      "max_score": 28,
+      "description": "The review walks the parts a hand-back should contain - what was worked and how, what was found, what was left uncovered and what to work next, what obstructed the morning, and the tester's own read on quality - and labels each complete, thin, or absent with a coaching note. Full marks require correctly calling the uncovered-areas part and the qualitative-read part absent, and the obstacles part thin (a stuck worker is mentioned but never quantified). Scores zero if the output only triages the defects and never assesses the write-up as a record."
+    },
+    {
+      "name": "Judgement on how the morning was spent",
+      "max_score": 22,
+      "description": "The review states that the 09:15-to-12:30 block is reported as one undifferentiated lump with no split between actual testing, chasing defects, and environment or setup overhead, compares that against what a healthy split would look like, and reads the stuck-worker stretch as an environment signal rather than as tester slowness. Scores zero if the time report is not examined at all. Scores at most half if it notes the missing split but draws no conclusion about environment or scope."
+    },
+    {
+      "name": "Uncovered ground identified from the feature summary",
+      "max_score": 18,
+      "description": "The review names the parts of the feature that the notes prove nothing about - the completion email and row-level error report, the 24-hour rollback, the per-user remembered mapping, and the always-create-new option - and treats their absence from the write-up as the main gap. Scores proportionally; naming none of them scores zero."
+    },
+    {
+      "name": "A verdict with one priority fix",
+      "max_score": 15,
+      "description": "The review ends in an explicit decision - file this as the record, or have it repeated - accompanied by the single most important thing to fix first. Scores zero if no decision is given or if the recommendation is a list of everything wrong with no priority."
+    },
+    {
+      "name": "A bounded next assignment for Wednesday",
+      "max_score": 20,
+      "description": "The next assignment names the area, what to work it with (the sample files, a semicolon export, a rollback within the 24-hour window, a second user account for remembered mapping), and what still needs to be learned - derived from the uncovered ground and the unresolved duplicate-merge question. Scores zero if the next step is 'retest the bugs' or an unbounded 'continue testing import'. Scores at most half if it names an area but no learning goal."
+    },
+    {
+      "name": "MUST NOT endorse bug count as the measure of the work",
+      "max_score": 14,
+      "description": "The review explicitly rejects 'found 7 bugs' as an assessment of the morning and gives the lead a reason to take to the peer - that a count rewards shallow surface sweeps over depth in the risky areas, and that a block confirming an area is sound is also valuable. Scores zero if the review treats the count as evidence of a good session, ranks the contractor on it, or stays silent on the framing the lead explicitly raised."
+    },
+    {
+      "name": "Constraints respected",
+      "max_score": 8,
+      "description": "Nothing in the output requires re-running the contractor's work today, contacting him, or asserting findings the notes do not contain. Scores zero if the review depends on information the lead cannot obtain in fifteen minutes at a desk."
+    }
+  ]
+}

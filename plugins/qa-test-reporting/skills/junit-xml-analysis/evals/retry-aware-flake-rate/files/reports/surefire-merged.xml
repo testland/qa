@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="com.acme.OrderTest" tests="10" failures="1" errors="1" skipped="1" time="66.204">
+    <testcase classname="com.acme.OrderTest" name="createsAnOrder" time="0.410"/>
+    <testcase classname="com.acme.OrderTest" name="rejectsEmptyCart" time="0.221"/>
+    <testcase classname="com.acme.OrderTest" name="appliesLoyaltyPoints" time="0.317"/>
+    <testcase classname="com.acme.OrderTest" name="splitsShipments" time="0.502"/>
+    <testcase classname="com.acme.OrderTest" name="cancelsWithinWindow" time="0.288"/>
+    <testcase classname="com.acme.OrderTest" name="reservesStock" time="4.910">
+      <flakyFailure message="expected 2 reservations but was 1" type="java.lang.AssertionError"/>
+    </testcase>
+    <testcase classname="com.acme.OrderTest" name="notifiesWarehouse" time="6.140">
+      <flakyFailure message="expected 1 webhook but was 0" type="java.lang.AssertionError"/>
+    </testcase>
+    <testcase classname="com.acme.OrderTest" name="recalculatesTax" time="12.330">
+      <rerunFailure message="expected 1210 but was 1200" type="java.lang.AssertionError"/>
+      <rerunFailure message="expected 1210 but was 1200" type="java.lang.AssertionError"/>
+      <failure message="expected 1210 but was 1200" type="java.lang.AssertionError"/>
+    </testcase>
+    <testcase classname="com.acme.OrderTest" name="exportsToLedger" time="0.904">
+      <error message="Cannot invoke Ledger.append() because client is null" type="java.lang.NullPointerException"/>
+    </testcase>
+    <testcase classname="com.acme.OrderTest" name="honoursLegacyPricing" time="0">
+      <skipped message="legacy pricing removed 2026-02"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="com.acme.PaymentTest" tests="8" failures="1" errors="1" skipped="0" time="41.880">
+    <testcase classname="com.acme.PaymentTest" name="authorisesCard" time="0.502"/>
+    <testcase classname="com.acme.PaymentTest" name="capturesAuthorisedAmount" time="0.611"/>
+    <testcase classname="com.acme.PaymentTest" name="refundsInFull" time="0.588"/>
+    <testcase classname="com.acme.PaymentTest" name="declinesInsufficientFunds" time="0.470"/>
+    <testcase classname="com.acme.PaymentTest" name="retriesOn3dsChallenge" time="7.220">
+      <flakyError message="Read timed out" type="java.net.SocketTimeoutException"/>
+    </testcase>
+    <testcase classname="com.acme.PaymentTest" name="settlesNightly" time="9.104">
+      <flakyFailure message="expected settlement batch 1 but was 0" type="java.lang.AssertionError"/>
+    </testcase>
+    <testcase classname="com.acme.PaymentTest" name="reconcilesLedger" time="21.440">
+      <rerunError message="Connection refused: pay-sandbox:8443" type="java.net.ConnectException"/>
+      <error message="Connection refused: pay-sandbox:8443" type="java.net.ConnectException"/>
+    </testcase>
+    <testcase classname="com.acme.PaymentTest" name="formatsReceipt" time="1.945">
+      <failure message="expected currency EUR but was USD" type="java.lang.AssertionError"/>
+    </testcase>
+  </testsuite>
+</testsuites>

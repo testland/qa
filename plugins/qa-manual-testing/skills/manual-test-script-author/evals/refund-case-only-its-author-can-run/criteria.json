@@ -1,0 +1,46 @@
+{
+  "context": "A seven-line refund case whose every line is unrunnable by a stranger, plus a notes file that contains the real data (three logins with different refund rights, five seeded orders in two currencies and three payment states) and two documented contradictions (which currency the amount field takes; whether the window is 60 or 90 days, with the orders sitting at 74 days). Predicted baseline failure: the agent returns a tidy, well-formatted table with the same holes - 'Log in as an admin user', 'Select a recent captured order (e.g. ORDER-12345)', 'Enter a partial refund amount' - inventing placeholder data instead of citing the seeded rows, silently picking one side of each contradiction (usually 'enter the amount in the order currency' and '90 days') without flagging it, leaving 'refund is processed successfully' as an expected result, and saying nothing about the case being unrepeatable within a day. It looks professional because the formatting improved; nothing that blocked the contractor was removed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at scripts/TC-207-refund-rewrite.md containing a rewritten refund case. Any other filename or an inline-only answer scores zero."
+    },
+    {
+      "name": "Login and order are pinned to real seeded values",
+      "max_score": 26,
+      "description": "The setup names qa.payments@northwind.example (the only login with refund rights) AND one specific order taken from the seeded table that is in the 'captured' state - NW-40011, NW-40012 or NW-40015. Naming a login without refund rights, or selecting NW-40013 (authorised, Refund disabled) or NW-40014 (already partially refunded), scores zero. Using a placeholder such as 'ORDER-12345', '<order id>', 'an admin account' or 'a recent captured order' anywhere in the setup scores zero. Naming the order but not the login, or vice versa, scores at most half."
+    },
+    {
+      "name": "Refund amount is an exact figure with its currency stated",
+      "max_score": 20,
+      "description": "The refund step states a concrete number to type (for example 89.90, or a partial such as 20.00) AND states which currency that number is in, consistent with the chosen order's currency row. 'Enter a valid amount', 'enter a partial amount', or a figure with no currency named anywhere scores zero. A figure whose currency contradicts the chosen order's row scores at most half."
+    },
+    {
+      "name": "Every action carries one observable expected result",
+      "max_score": 22,
+      "description": "MUST NOT leave any step without something the tester can look at and judge. Each action states a single checkable outcome - a specific on-screen value, status label, or amount - and the original 'check that the refund looks correct' is gone. Any surviving expected result of the form 'refund is successful', 'works correctly', 'looks right', or a step with no expected result at all, scores zero for this criterion. Expected results present but phrased without concrete values (for example 'the order status changes') score at most half."
+    },
+    {
+      "name": "Unsettled points raised as questions instead of decided",
+      "max_score": 24,
+      "description": "The document contains an explicit list of what could not be determined, and it includes BOTH (a) which currency the unlabelled amount field is interpreted in, given finance says EUR settlement and the payments wiki says order currency, and (b) whether the refund window is 60 or 90 days, which decides whether the 74-day-old seeded orders are refundable at all. Each item must be posed as something to confirm with an owner. Silently choosing one side of either contradiction and writing it into the steps as fact scores zero for that half. Raising only one of the two scores at most half. A generic 'assumptions' note that does not name these two specific conflicts scores zero."
+    },
+    {
+      "name": "Second run the same afternoon is accounted for",
+      "max_score": 16,
+      "description": "The document states that the nightly 01:00 UTC re-seed does not restore the order within the same day, and gives a workable answer: a named alternate captured order to use per run (rotating through NW-40011 / NW-40012 / NW-40015), a partial-refund amount small enough to leave headroom for repeat runs with the remaining balance stated, or an explicit restore procedure. Saying nothing about repeatability scores zero. Noting the problem without giving the tester a course of action scores at most half."
+    },
+    {
+      "name": "Email verification is executable",
+      "max_score": 10,
+      "description": "The email step names the MailHog URL, the specific recipient address matching the chosen order's row (for example qa+40011@northwind.example), a time bound, and what in the message identifies it as the right one. 'Customer receives an email' with no inbox location scores zero."
+    },
+    {
+      "name": "Failure capture block present",
+      "max_score": 8,
+      "description": "MUST NOT leave failures to be reported ad hoc. The document includes a structured place to record a failed step - at minimum which step failed, what was expected, what actually happened, and severity or a defect reference. No such block scores zero."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "A deletion PR with two approvals and a genuinely reasonable cost argument, where three of the four deletions are wrong and one is right. Predicted baseline failure: the agent takes one of two symmetrical wrong turns — either it agrees with the author because the time cost is real and the tests are demonstrably unreliable, or it rejects the whole PR and restores all four, which loses the one deletion that is correct and gives the author nothing. Both look defensible in a review comment. The specific thing an unaided agent is predicted to omit is the middle path with teeth: the three tests that cover live behaviour stay in the file, out of the blocking path, each with a dated deadline and a named owner, so the author has a concrete answer to 'you are just moving this three months out'. It is also predicted to restore 'order print label opens dialog' along with the rest, missing that the feature it asserts was removed from the product on 2026-06-30.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 6,
+      "description": "tests/orders.spec.ts is produced in a reviewed state, docs/pr-4417-review.md gives a per-test verdict, and docs/skipped-tests.md exists. Missing docs/skipped-tests.md scores at most half — without it the review has no follow-through."
+    },
+    {
+      "name": "Refund test kept in the codebase",
+      "max_score": 30,
+      "description": "MUST NOT accept the deletion of 'order refund returns funds to source'. The assertions still cover shipped behaviour and INC-2288 (refund double-post, 2026-08-09) makes it the last test anyone should remove. It stays in tests/orders.spec.ts, marked out of the blocking path at a 9.0% failure rate rather than deleted. Deleting it scores zero for this criterion no matter how the rest of the review reads. Keeping it fully blocking, with no acknowledgement of the 9.0% cost the author complained about, scores at most half."
+    },
+    {
+      "name": "Obsolete test deletion upheld",
+      "max_score": 20,
+      "description": "'order print label opens dialog' IS deleted, because label printing was removed from the product in 5.4 on 2026-06-30 — there is no behaviour left for it to assert. Restoring it or marking it out of the blocking path with a deadline scores zero: a deadline on a test with nothing to test is bookkeeping that will expire into another argument. The verdict must connect the deletion to the removed feature, not to the 20.0% rate; deleting it for the rate alone scores at most half."
+    },
+    {
+      "name": "Remaining two kept but taken out of the blocking path",
+      "max_score": 16,
+      "description": "'order status transitions to shipped' and 'order csv statement downloads' remain in the file with their bodies intact and are taken out of the blocking path using the framework's annotation. Deleting either scores zero. Commenting a body out, or leaving both fully blocking with no change, scores zero — the author's time complaint is legitimate and must be answered."
+    },
+    {
+      "name": "Every retained-but-inactive test has a dated deadline",
+      "max_score": 26,
+      "description": "Each test left in the file but out of the blocking path carries an explicit YYYY-MM-DD date by which it is reassessed, present in both the annotation body and docs/skipped-tests.md. This is the criterion that answers the author's 'we will just be back here in three months'. Any such test with no date scores zero for that test. 'Revisit next quarter' with no date scores at most half."
+    },
+    {
+      "name": "Every retained-but-inactive test has a named owner",
+      "max_score": 14,
+      "description": "Each entry names the person or team who owns getting it back into the blocking path. Assigning everything to the PR author without saying so explicitly, or naming no one, scores zero."
+    },
+    {
+      "name": "Record states the measured rate and what happens at the deadline",
+      "max_score": 14,
+      "description": "Each entry records the measured failure rate with its run count (e.g. 26/290, 9.0%), the date it came out, and what the options are when the deadline arrives — fixed and returned, extended once more, or deleted. An entry that records only a rate, with no statement of the outcomes, scores at most half."
+    },
+    {
+      "name": "Untouched test left untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify or annotate 'order list paginates', which the PR does not touch and which appears in no flake report. Any change to it scores zero here."
+    }
+  ]
+}

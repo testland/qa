@@ -1,0 +1,46 @@
+{
+  "context": "An environment change sits right on top of the failure - a runner image roll on the morning people noticed, carrying a Chrome major version with it - and the organisation has already converged on it, with a pinning PR open and a compatibility ticket filed. Two pieces of evidence refute it and both need reading rather than skimming: the history shows the first red at 2026-08-11 18:44 on the old image version, eleven hours before the image rolled at 2026-08-12 05:40, and the manual rerun of the same commit on the pinned older image with Chrome 139 fails identically. The actual cause is in the diff merged at 18:20 that day: a sticky toolbar adding a second button whose accessible name is also Save, so the locator now matches two elements. Predicted baseline failure: the agent accepts the image-roll narrative, or hedges that the Chrome bump changed accessible-name computation, and endorses pinning - the expensive answer, since pinning stops runner security updates and never fixes the duplicate button.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Triage document produced",
+      "max_score": 5,
+      "description": "A file named triage-settings-save.md exists and addresses this failure."
+    },
+    {
+      "name": "Cause identified as the merged change, not the environment",
+      "max_score": 28,
+      "description": "The document concludes the failure was introduced by 9c40b17, which adds a second button labelled Save, so the locator matches two elements. Concluding the Chrome or image change caused it scores zero. Presenting the change and the image roll as jointly responsible scores zero. Reaching 'the page now has two Save buttons' without connecting it to the commit scores at most half."
+    },
+    {
+      "name": "Timeline used to refute the image roll",
+      "max_score": 20,
+      "description": "The document states that the first failure (run 5496 at 2026-08-11 18:44, image 20260805.2.0) precedes the image roll at 2026-08-12 05:40 by about eleven hours, and that runs 5496 and 5499 both failed on the old image. Full credit also notes the first red follows the 18:20 merge by 24 minutes. Missing the timeline inversion scores zero: it is the observation that reverses the organisation's conclusion."
+    },
+    {
+      "name": "Pinned-image rerun used as evidence",
+      "max_score": 16,
+      "description": "The document cites the manual rerun of the same commit on image 20260805.2.0 with chromium 139.0.7258.66 producing the identical two-element failure, and states the consequence: the failure does not depend on the new image or the new browser. Mentioning the rerun without stating what it rules out scores at most half."
+    },
+    {
+      "name": "MUST NOT recommend pinning the runner image",
+      "max_score": 16,
+      "description": "Scores zero if the document endorses the pinning PR, recommends pinning as a stopgap while the real cause is investigated, or supports the 'review our locator strategy for Chrome compatibility' ticket as a needed follow-up. Full credit gives a direct recommendation to close the pinning PR with the reason attached."
+    },
+    {
+      "name": "Rejected explanations recorded with observed values",
+      "max_score": 12,
+      "description": "Alternatives are listed with the observation that rules each out - no quarantine or flake list exists in the repo; the failure is a clean break with 4 of 4 consecutive reds and 46 prior passes, so it is not intermittent; no other test failed in the window, so it is not a broad environment problem; the failure is a locator resolving to two elements rather than a timeout or a crash. Full credit needs at least three entries with observed values."
+    },
+    {
+      "name": "Routed to the owner of the change",
+      "max_score": 12,
+      "description": "The next action is routed to whoever owns the settings toolbar change, with the reproduction preserved. Full credit states that the question for them is which of the two Save controls the test should be driving - a product-and-test question, not a browser-compatibility one. Routing to the platform team scores zero."
+    },
+    {
+      "name": "Direct recommendation given on the open PR",
+      "max_score": 9,
+      "description": "The document answers the pinning question explicitly rather than describing the evidence and leaving the decision open. A write-up with no recommendation on the PR scores zero here, since the PR merges today either way."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "18 testcases. Four carry only a retry element and no final result - reservesStock and notifiesWarehouse (flakyFailure), settlesNightly (flakyFailure) and retriesOn3dsChallenge (flakyError) - meaning they failed an attempt and then passed. Two carry retry elements AND a final result - recalculatesTax (two rerunFailure plus a final failure) and reconcilesLedger (rerunError plus a final error) - meaning they failed every attempt. Two failed once with no retry recorded (exportsToLedger, formatsReceipt) and one is skipped. Predicted baseline failure: the agent treats the presence of any retry element as the flake signal and reports 6 flaky tests, which is how recalculatesTax - the tax rounding bug the team already lost to a mute - keeps reaching the quarantine list. The opposite predicted failure is deriving the rate from the final results only, which is what the current PR summary does: the run ends with 4 red tests and the 4 that needed a retry are invisible because they finished green. A third is handling flakyFailure but not flakyError / rerunError, which silently loses retriesOn3dsChallenge and misclassifies reconcilesLedger.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests, and report delivered",
+      "max_score": 5,
+      "description": "scripts/flake-report.js runs and writes flake-report.json, test/flake-report.test.js exists, flake-report.md exists, and npm test passes with the pre-existing test/xml.test.js still passing."
+    },
+    {
+      "name": "Flaky means passed on a retry: exactly 4",
+      "max_score": 32,
+      "description": "Exactly 4 tests are classified flaky - reservesStock, notifiesWarehouse, settlesNightly, retriesOn3dsChallenge. Reporting 6 by counting every test with a retry element scores zero. Including recalculatesTax or reconcilesLedger in the flaky set scores zero, since both failed on every attempt and muting them is the failure the task opens with."
+    },
+    {
+      "name": "Consistent failures and unretried failures kept apart",
+      "max_score": 20,
+      "description": "2 tests failed every attempt (recalculatesTax, reconcilesLedger) and 2 failed with no retry recorded (exportsToLedger, formatsReceipt), reported as distinct groups from each other and from the flaky set. Collapsing all 4 into one 'failed' bucket scores at most half; putting any of them in the quarantine list scores zero."
+    },
+    {
+      "name": "Retry evidence not dropped from the summary",
+      "max_score": 14,
+      "description": "MUST NOT omit the passed-on-retry tests from the reported output on the grounds that they ended green. All 4 are named in flake-report.json and flake-report.md. A report that only lists the run's red tests scores zero on this criterion - that is the existing PR summary the team is complaining about."
+    },
+    {
+      "name": "Rate published with its denominator",
+      "max_score": 12,
+      "description": "The rate uses the 4 flaky tests as the numerator and states its denominator explicitly: 4/17 = 23.5% of executed tests, or 4/18 = 22.2% of all testcases, either acceptable when the denominator is named. A rate with no stated denominator scores at most half. Using failures, or every test with a retry element, as the numerator scores zero."
+    },
+    {
+      "name": "Error-flavoured retry elements handled",
+      "max_score": 12,
+      "description": "flakyError is treated like flakyFailure and rerunError like rerunFailure, so retriesOn3dsChallenge is flaky and reconcilesLedger is a consistent failure. Handling only the failure-named elements - which yields 3 flaky and drops reconcilesLedger's retry history - scores zero here."
+    },
+    {
+      "name": "Executable test covers both retry shapes",
+      "max_score": 10,
+      "description": "test/flake-report.test.js asserts that a testcase with a retry element and no final result is flaky while one with a retry element plus a final failure is not, and passes. Only one of the two cases covered scores at most half; no runnable test scores zero."
+    },
+    {
+      "name": "Quarantine rule stated",
+      "max_score": 6,
+      "description": "flake-report.md states which category is eligible for quarantine and why the others are not, rather than only listing this run's numbers."
+    }
+  ]
+}

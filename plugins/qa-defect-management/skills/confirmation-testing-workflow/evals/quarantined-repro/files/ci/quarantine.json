@@ -1,0 +1,19 @@
+{
+  "policy": "Quarantined specs run in the nightly job only. They do not gate merges and are excluded from the required check. Each is retried up to 3 times; the spec is reported as passed if any attempt passes.",
+  "specs": [
+    {
+      "path": "tests/e2e/filter-counts.spec.js",
+      "quarantinedSince": "2026-06-02",
+      "reason": "intermittent 30s timeout waiting for the facet panel under parallel load; passes on rerun",
+      "retries": 3,
+      "observedPassRate30d": 0.62
+    },
+    {
+      "path": "tests/e2e/checkout-guest.spec.js",
+      "quarantinedSince": "2026-04-19",
+      "reason": "flaky on webkit",
+      "retries": 3,
+      "observedPassRate30d": 0.71
+    }
+  ]
+}

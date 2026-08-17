@@ -1,0 +1,46 @@
+{
+  "context": "An invoice story whose failure modes are almost all locale-shaped: a currency with no minor unit, a locale whose decimal separator is a comma, a right-to-left script, non-Latin customer names inside a Latin-language document, an ambiguous numeric date, and a due date computed across timezones. Predicted baseline failure: the agent writes a competent list about invoice content - the fields are present, the totals add up, the number is sequential - using one implicit locale, and where it does mention other locales it produces rows that differ only by a locale tag and expect 'the invoice renders correctly in French'. That expectation cannot fail: it does not name the string that should appear, so the two production complaints described would both pass again.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/BILL-905.md exists and contains a markdown table with rows. Scores zero if prose only or written elsewhere."
+    },
+    {
+      "name": "Locale classes carry the literal expected rendering",
+      "max_score": 32,
+      "description": "Rows cover at least a currency with no minor unit (JPY), a locale whose decimal separator is a comma and whose symbol trails (German EUR), and a right-to-left interface language, and each states the exact form the invoice must show - for example a whole-yen total with no decimal part, and 1.234,56 followed by the euro symbol. Scores zero if every row uses one currency and one language. Scores at most half if other locales appear but the expected result is 'renders correctly', 'is localised', or 'formatting is right for the locale'."
+    },
+    {
+      "name": "MUST NOT repeat one class once per locale tag",
+      "max_score": 15,
+      "description": "Rows that differ only by which language or currency was selected while asserting the same generic outcome add no coverage. Three or more such interchangeable rows score zero here. A locale earns its own row when the rule it exercises differs - minor units, separator, direction, script."
+    },
+    {
+      "name": "Tax status branches separated",
+      "max_score": 16,
+      "description": "Rows distinguish domestic rate, EU cross-border reverse charge with a valid VAT number (0.00 tax plus the statement plus both numbers), a business without a VAT number, and 0% versus exempt printing different labels. Scores zero if reverse charge is absent. Treating 0% and exempt as one case scores at most half."
+    },
+    {
+      "name": "Script and length independent of interface language",
+      "max_score": 12,
+      "description": "At least one row puts a non-Latin or long customer-supplied billing name and address on an invoice whose interface language is different - a Japanese company name on an English invoice, a German address block against a fixed-width label - and pins that the characters render rather than dropping to boxes or truncating silently. Scores zero if the customer name is Latin ASCII in every row."
+    },
+    {
+      "name": "Date and due-date ambiguity covered",
+      "max_score": 12,
+      "description": "A row pins the invoice date format so that a date such as 03/04/2026 cannot be read two ways, and a row pins the net-14 due date across a month or year boundary and states which entity's or customer's day is being counted. Scores zero if dates never appear as an expected value."
+    },
+    {
+      "name": "Rejection and edge paths present",
+      "max_score": 10,
+      "description": "At least two rows cover paths that are not a clean invoice - an invalid or unverifiable VAT number, a zero-amount or credit invoice, a missing billing address, a customer whose currency and legal entity combination is not supported. Scores zero if every row produces a normal invoice."
+    },
+    {
+      "name": "Rows identified and traced",
+      "max_score": 8,
+      "description": "Rows carry an identifier including the story key and name the acceptance criterion or finance-note rule they come from. Scores zero if neither is present; one of the two scores at most half."
+    }
+  ]
+}

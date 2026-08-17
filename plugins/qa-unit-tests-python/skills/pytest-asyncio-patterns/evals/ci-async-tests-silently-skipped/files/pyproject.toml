@@ -1,0 +1,8 @@
+[project]
+name = "rates"
+version = "4.2.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"

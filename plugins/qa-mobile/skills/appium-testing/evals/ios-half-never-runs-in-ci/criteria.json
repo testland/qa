@@ -1,0 +1,51 @@
+{
+  "context": "The iOS leg was disabled because it was placed on a Linux runner: iOS simulators require Xcode, so that leg has to run on a macOS image, while the Android emulator wants a Linux image with hardware acceleration and is normally provisioned by a purpose-built action rather than raw emulator commands. On top of that, the per-platform automation backends are separately installed server drivers - the workflow installs the server and nothing else, so even a correctly placed iOS leg would fail at session creation. Predicted baseline failure: the agent uncomments the iOS job, leaves both legs on ubuntu-latest or moves both to macOS, adds an `xcrun simctl boot` line, and keeps `npm install -g appium` as the whole toolchain install. It will probably also keep the backgrounded server with no readiness wait and the unconditional artifact upload, both of which are exactly the reported symptoms. The result is a workflow that looks like it covers two platforms and, on a clean runner, covers neither.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Each leg runs on an OS that can host its device",
+      "max_score": 28,
+      "description": "The iOS leg runs on a macOS runner image. Leaving the iOS leg on ubuntu scores zero for this criterion - that is the reason it was disabled in the first place. The Android leg on a Linux image scores full; putting the Android leg on macOS as well scores at most half (it runs, but forfeits hardware acceleration and pays the macOS minute multiplier for no reason)."
+    },
+    {
+      "name": "Per-leg automation backend installed",
+      "max_score": 20,
+      "description": "Each leg installs the platform driver its target needs through the server's driver installer - the XCUITest backend on the iOS leg, the UiAutomator2 backend on the Android leg. A workflow that only runs `npm install -g appium` scores zero: the server starts and no session can be created. Installing both backends on both legs scores at most half."
+    },
+    {
+      "name": "Android emulator actually provisioned",
+      "max_score": 14,
+      "description": "The Android leg creates and boots an emulator through a purpose-built action (for example the community android-emulator-runner action, which handles AVD creation, KVM and readiness) or an explicit create-boot-wait sequence. Running the tests with no emulator step at all scores zero. A bare `emulator -avd <name> &` with no AVD creation and no wait-for-boot scores at most half."
+    },
+    {
+      "name": "Server readiness is not assumed",
+      "max_score": 12,
+      "description": "Either the runner config starts and stops the server itself (the runner's automation-server service) or the workflow waits for the server to be accepting connections before running tests. Keeping `appium &` immediately followed by the test step scores zero - that is the reported connection-refused failure."
+    },
+    {
+      "name": "MUST NOT pin a specific simulator or device model in the workflow",
+      "max_score": 12,
+      "description": "MUST NOT. Anti-pattern row \"Hard-coded device name ('iPhone 15')\". A workflow that hard-codes a phone model or an exact OS version for the runner to boot scores zero unless it derives the name from what the image actually has (for example by listing available devices and selecting one). The runner images change their installed simulators regularly and the leg breaks silently the next time they do."
+    },
+    {
+      "name": "Both legs run the same suite",
+      "max_score": 10,
+      "description": "MUST NOT. Anti-pattern row 'Per-platform separate test code'. Both legs run the existing shared spec directory through the same config, differing only in the capability selection and app artefact. A workflow that points each leg at a per-platform spec path, or that adds a second config file per platform, scores zero."
+    },
+    {
+      "name": "Legs run in parallel",
+      "max_score": 8,
+      "description": "The two platforms are separate jobs or a job matrix that runs concurrently, not sequential steps in one job and not a job chained by `needs`. Sequential execution scores zero - the task asks for parallel."
+    },
+    {
+      "name": "Failure output survives the run",
+      "max_score": 8,
+      "description": "The report / results upload is conditioned so it runs after a failing test step (`if: always()` or `if: failure()`), and captures the report directory the config writes. Leaving the upload unconditional after the test step scores zero, since it is skipped exactly when it is needed."
+    },
+    {
+      "name": "Test files untouched",
+      "max_score": 5,
+      "description": "MUST NOT edit anything under test/ or change which specs exist. Editing them scores zero here."
+    }
+  ]
+}

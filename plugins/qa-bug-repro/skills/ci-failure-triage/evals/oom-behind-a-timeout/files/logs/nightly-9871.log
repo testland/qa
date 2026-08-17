@@ -1,0 +1,44 @@
+2026-08-12T02:14:03.1180216Z Current runner version: '2.319.1'
+2026-08-12T02:14:03.1207781Z ##[group]Runner Image
+2026-08-12T02:14:03.1208422Z Image: ubuntu-22.04
+2026-08-12T02:14:03.1208995Z Version: 20260803.1.0
+2026-08-12T02:14:03.1209502Z Runner label: ubuntu-latest
+2026-08-12T02:14:03.1210110Z Hardware: 2 vCPU / 7 GB RAM / 14 GB SSD
+2026-08-12T02:14:03.1210688Z ##[endgroup]
+2026-08-12T02:14:09.4410023Z ##[group]Run npm ci
+2026-08-12T02:14:41.8830912Z added 1187 packages, and audited 1188 packages in 32s
+2026-08-12T02:14:41.9021144Z ##[endgroup]
+2026-08-12T02:14:42.0110455Z ##[group]Run npx jest --shard=3/4 --ci --maxWorkers=2
+2026-08-12T02:14:55.2210781Z PASS tests/checkout/cart.spec.ts (11.882 s)
+2026-08-12T02:15:22.7710233Z PASS tests/checkout/promo.spec.ts (26.401 s)
+2026-08-12T02:15:49.1140882Z PASS tests/checkout/gift-card-header.spec.ts (9.117 s)
+2026-08-12T02:16:31.0022771Z
+2026-08-12T02:16:31.0023001Z <--- Last few GCs --->
+2026-08-12T02:16:31.0023388Z [4127:0x5f10d40] 106881 ms: Mark-Compact 3947.1 (4127.5) -> 3946.2 (4128.7) MB, 1802.44 / 0.00 ms  (average mu = 0.104, current mu = 0.031) allocation failure; scavenge might not succeed
+2026-08-12T02:16:31.0024103Z [4127:0x5f10d40] 108772 ms: Mark-Compact 3948.0 (4128.7) -> 3947.1 (4129.2) MB, 1839.11 / 0.00 ms  (average mu = 0.061, current mu = 0.027) allocation failure; scavenge might not succeed
+2026-08-12T02:16:31.0024790Z
+2026-08-12T02:16:31.0025301Z <--- JS stacktrace --->
+2026-08-12T02:16:31.0025902Z FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+2026-08-12T02:16:31.0026588Z  1: 0xb8a3c0 node::Abort() [node]
+2026-08-12T02:16:31.0027140Z  2: 0xa9b8f4 node::OnFatalError(char const*, char const*) [node]
+2026-08-12T02:16:31.0027744Z  3: 0xd6a1c0 v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, bool) [node]
+2026-08-12T02:16:31.0028302Z  4: 0xd6a4f7 v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, bool) [node]
+2026-08-12T02:16:31.0028915Z  5: 0xf4c265 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, ...) [node]
+2026-08-12T02:17:31.5510334Z A jest worker process (pid=4127) was terminated by another process: signal=SIGKILL, exitCode=null. Operating system logs may contain more information on why this occurred.
+2026-08-12T02:17:31.5512001Z
+2026-08-12T02:17:31.5610882Z  FAIL  tests/checkout/order-history.spec.ts
+2026-08-12T02:17:31.5611904Z   ● renders 200 past orders › beforeAll
+2026-08-12T02:17:31.5612677Z     thrown: "Exceeded timeout of 60000 ms for a hook.
+2026-08-12T02:17:31.5613391Z     Add a timeout value to this test to increase the timeout, if this is a long-running test."
+2026-08-12T02:17:31.5614066Z       16 | describe('renders 200 past orders', () => {
+2026-08-12T02:17:31.5614702Z     > 18 |   beforeAll(async () => {
+2026-08-12T02:17:31.5615288Z       19 |     await seedOrders(200);
+2026-08-12T02:17:31.5615901Z       at tests/checkout/order-history.spec.ts:18:3
+2026-08-12T02:17:32.9910447Z Test Suites: 1 failed, 3 passed, 4 total
+2026-08-12T02:17:32.9911109Z Tests:       1 failed, 74 passed, 75 total
+2026-08-12T02:17:32.9911788Z Time:        170.9 s
+2026-08-12T02:17:33.0410992Z ##[group]Post job cleanup: kernel ring buffer (last 3 lines)
+2026-08-12T02:17:33.0411307Z [ 4211.771820] node invoked oom-killer: gfp_mask=0x1100cca, order=0, oom_score_adj=0
+2026-08-12T02:17:33.0411788Z [ 4213.882014] Out of memory: Killed process 4127 (node) total-vm:5312104kB, anon-rss:4021884kB, file-rss:0kB, shmem-rss:0kB, UID:1001 pgtables:9284kB oom_score_adj:0
+2026-08-12T02:17:33.0412511Z ##[endgroup]
+2026-08-12T02:17:33.1220334Z ##[error]Process completed with exit code 137.

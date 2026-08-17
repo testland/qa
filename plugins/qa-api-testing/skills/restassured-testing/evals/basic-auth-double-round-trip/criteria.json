@@ -1,0 +1,46 @@
+{
+  "context": "The suite uses challenge-response Basic auth: the client sends the request without credentials, waits for a `401` carrying `WWW-Authenticate`, and only then retries with the header. The new gateway never sends the challenge, so the retry never happens and every authenticated test 401s - and on the old server it was silently doubling every request. Predicted baseline failure: the agent treats this as a credentials or gateway-config problem and proposes verifying the secret, adding `relaxedHTTPSValidation()`, switching to bearer tokens, adding a retry, or asking the gateway team to re-enable the challenge header. A second common failure is hand-assembling `header(\"Authorization\", \"Basic \" + Base64.getEncoder().encodeToString(...))`, which does fix the symptom but reimplements a first-class client feature and is easy to get wrong (charset, padding, missing scheme prefix). Both outcomes look plausible in review because the diff is small and the explanation sounds informed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Credentials are sent on the first request via the client's own mechanism",
+      "max_score": 32,
+      "description": "Authenticated calls use the client's preemptive Basic form - `auth().preemptive().basic(user, password)` - so the `Authorization` header goes out on the initial request. Scores zero if `auth().basic(...)` is left as-is, or if the fix is retries, TLS relaxation, a switch to a bearer token the task never mentions, or a request to the gateway team. Scores at most half if the header is hand-built from a Base64 encoding of `user:password` - it stops the double round trip but reimplements a supported feature."
+    },
+    {
+      "name": "MUST NOT leave a non-preemptive Basic call anywhere",
+      "max_score": 12,
+      "description": "No `auth().basic(...)` without the preemptive form survives in the delivered file or any helper introduced. Any remaining bare `.basic(` scores zero for this criterion, including in a shared request setup the other tests inherit from."
+    },
+    {
+      "name": "Diagnosis names the challenge-response round trip",
+      "max_score": 20,
+      "description": "The written explanation says the client was waiting for a `401` + `WWW-Authenticate` challenge before attaching credentials, that the paired log lines are that challenge and the retry, and that a gateway which never challenges breaks the second half of the exchange. Scores zero if the explanation blames wrong credentials, expired secrets, gateway misconfiguration, network flakiness, or TLS. Scores at most half if it says 'credentials were not sent' without identifying the challenge round trip as the reason."
+    },
+    {
+      "name": "Request count per authenticated test drops to one",
+      "max_score": 12,
+      "description": "The answer connects the fix to the SRE's doubled-traffic complaint and states that the paired log entries collapse to a single request. Scores zero if the doubled traffic is treated as a separate unresolved problem or attributed to test retries."
+    },
+    {
+      "name": "Applied to every authenticated test",
+      "max_score": 10,
+      "description": "All three authenticated tests are covered, and the anonymous `/health` test still sends no credentials. Scores zero if only the first test is fixed, or if credentials are attached globally in a way that also authenticates the health check."
+    },
+    {
+      "name": "MUST NOT hard-code credentials",
+      "max_score": 8,
+      "description": "User and password still come from the environment. Any literal username, password, or Base64 credential string committed into the test source scores zero for this criterion, including as a fallback default."
+    },
+    {
+      "name": "No masking behaviour added",
+      "max_score": 8,
+      "description": "MUST NOT introduce sleeps, retry loops, a retry filter, or `statusCode(anyOf(200, 401))`-style tolerance to get the suite green. Any such addition scores zero for this criterion."
+    },
+    {
+      "name": "Assertions, endpoints and build file untouched",
+      "max_score": 6,
+      "description": "Same four tests, same endpoints, same assertions, and `pom.xml` unchanged. Scores zero if an assertion is altered or a dependency is added."
+    }
+  ]
+}

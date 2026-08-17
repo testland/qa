@@ -1,0 +1,46 @@
+{
+  "context": "The change is real, the containment check is affirmative, and the developer shipped a test named after the defect that passes. The predicted unaided answer reads the diff, sees String(row.postal_code) where a coercion used to be, runs the suite, sees green, and reports the defect fixed. But the reporter's steps go through importCsv, and the guard was added to normaliseJsonRow; normaliseCsvRow still calls Number(row.postal_code), so fixtures/codes.csv still yields 1234. The developer's test exercises a path the reporter never used and would have passed either way for this input route. The only thing that settles it is executing the reporter's own steps verbatim against fixtures/codes.csv, which still fails - so the defect is not fixed and goes back, with containment already established so the reopen is about the code and not about a stale deployment.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-4471.md exists and states a decision. Scores zero if absent."
+    },
+    {
+      "name": "Executes the reporter's own steps against the CSV path",
+      "max_score": 32,
+      "description": "importCsv is actually run against fixtures/codes.csv, exactly as step 2 of the report specifies, and the real result for row c_1 (postalCode 1234, a number) appears in the record. Reasoning about the source without running it, but correctly reporting 1234 for the CSV path, scores at most half. Never exercising importCsv at all scores zero."
+    },
+    {
+      "name": "Concludes the defect is not fixed and must go back",
+      "max_score": 24,
+      "description": "The decision is that the defect still reproduces and returns to the developer. Recommending Verified, or Verified with a caveat, scores zero. A hold-and-investigate decision that still names the CSV path as failing scores at most half - the evidence supports a definite answer here, since containment was proven and the original steps still fail."
+    },
+    {
+      "name": "MUST NOT accept the developer's test as the confirming evidence",
+      "max_score": 16,
+      "description": "MUST NOT. tests/import-json.test.js must not be offered as proof this defect is fixed: it drives importJson while the report drives importCsv, so it never exercised the reported failure. Citing its green result, or a green npm test run, as the confirmation evidence scores zero on this criterion."
+    },
+    {
+      "name": "Names the untouched code path precisely",
+      "max_score": 14,
+      "description": "The record points the developer at normaliseCsvRow in src/importer.js and its Number(row.postal_code) coercion, stating that the guard landed only on normaliseJsonRow. Reporting 'the fix does not work' without locating the surviving coercion scores zero."
+    },
+    {
+      "name": "Observed versus expected stated concretely",
+      "max_score": 10,
+      "description": "The record gives the observed value (1234, number) against the expected value ('01234', string) for row c_1 from fixtures/codes.csv. A narrative such as 'leading zeros are still lost' with no values scores at most half."
+    },
+    {
+      "name": "Distinguishes a code problem from a deployment problem",
+      "max_score": 10,
+      "description": "The record states that staging (commit 9fa30b1) does contain 7c2ea55, so the failure is attributable to the change itself rather than to an undeployed fix. Omitting containment entirely, or blaming a stale build, scores zero."
+    },
+    {
+      "name": "Leaves the code alone",
+      "max_score": 6,
+      "description": "src/importer.js is unmodified. Editing normaliseCsvRow - even correctly - scores zero on this criterion: the task is to decide and report, and a self-applied fix destroys the evidence the developer needs."
+    }
+  ]
+}

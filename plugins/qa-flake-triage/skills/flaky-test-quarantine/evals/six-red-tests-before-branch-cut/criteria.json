@@ -1,0 +1,51 @@
+{
+  "context": "Six candidates are handed over with an instruction to silence all six, and three of them do not belong out of the blocking path. Predicted baseline failure: the agent obeys the instruction and takes all six out, because the aggregate thirty-day rates all look non-trivial and the request was explicit. It is expected to miss that 'admin bulk export completes' has failed every single run since 2026-08-11 (61/61) and is therefore a regression from Monday's merges that must be bisected, not silenced — the thirty-day average of 20.1% disguises it. It is also expected to silence the 0.7% test whose two failures were CDN maintenance, and the 72% test that reproduces three times in four locally. The bigger predicted gap is in the record itself: an unaided agent writes a log with a date and a sentence of prose and no re-evaluation deadline, no named owner, and no measured run count, which is the exact artifact that produced the year-old switched-off tests the team is complaining about.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "tests/regression.spec.ts is edited in place and docs/quarantine-log.md exists. Producing only the log, or only the edits, scores at most half."
+    },
+    {
+      "name": "admin bulk export treated as a regression, not silenced",
+      "max_score": 32,
+      "description": "'admin bulk export completes' is NOT taken out of the blocking path. It must be identified from runs_since_first_failure 61 / failures_since_first_failure 61 — every run since 2026-08-11 has failed — and routed to bisecting Monday's 14 commits and fixing the cause. Taking it out of the blocking path scores zero regardless of how well the entry is written. Leaving it in the blocking path but justifying it only from the failure note ('nobody has looked at it') rather than from the since-first-failure history scores at most half."
+    },
+    {
+      "name": "Sub-threshold test left alone",
+      "max_score": 16,
+      "description": "MUST NOT take 'profile avatar upload succeeds' out of the blocking path. Two failures in 304 runs (0.7%), both attributable to a CDN maintenance window, is below the level worth any bookkeeping; the correct output says it needs no action. Taking it out of the blocking path scores zero on this criterion — a process that captures every red test captures the whole suite."
+    },
+    {
+      "name": "72% test refused as a flake",
+      "max_score": 14,
+      "description": "'report pdf export downloads' is NOT taken out of the blocking path. At 72% of runs, reproducing locally three times in four, it is a broken test or a broken renderer and must be fixed; the output must say so. Silencing it scores zero. Silencing it while noting the rate is high scores zero — noting the rate and doing it anyway is the failure being measured."
+    },
+    {
+      "name": "Qualifying tests stay in the file and keep running as non-blocking",
+      "max_score": 12,
+      "description": "The tests taken out of the blocking path (checkout tax, search paging, cart guest session) are still present in tests/regression.spec.ts, marked with the framework's annotation. Deleting a test, commenting a body out, or moving tests to another file scores zero — the brief says none of them are to be gone for good."
+    },
+    {
+      "name": "Every entry carries a re-evaluation deadline",
+      "max_score": 26,
+      "description": "Each test taken out of the blocking path carries an explicit calendar date by which it must be looked at again, in the annotation body and in docs/quarantine-log.md, in an unambiguous YYYY-MM-DD form. An entry with no deadline scores zero for that entry. A vague duration ('revisit next sprint', 'in a month') with no date scores at most half. Award proportionally across the entries produced."
+    },
+    {
+      "name": "Every entry carries a named owner",
+      "max_score": 14,
+      "description": "Each entry names a person or team handle responsible for the re-evaluation. 'The team' or 'QA' with no handle scores at most half; no owner field at all scores zero."
+    },
+    {
+      "name": "Entry records the measured rate, run count, and investigation state",
+      "max_score": 16,
+      "description": "Each entry records the observed failure rate WITH the run count it was measured over (e.g. 37/304, ~12%), the date it was taken out, a ticket reference, and whether the cause has been isolated yet. Prose that says 'flaky' with no number scores zero. A rate with no denominator, or a copied rate with no statement of what has and has not been investigated, scores at most half."
+    },
+    {
+      "name": "Rejected candidates carry a next action and an owner",
+      "max_score": 10,
+      "description": "The section for candidates left in the blocking path names, per test, what happens instead (bisect, fix the renderer, no action) and who does it. Listing them without a next action, or without an owner, scores at most half."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "An XML endpoint is verified by substring matching against the raw response text, so serializer formatting changes break the tests and a value quoted elsewhere in the document satisfies a check it should not. Predicted baseline failure: the agent recognises that string matching is wrong and reaches outside the HTTP client for a parser - `DocumentBuilderFactory` plus `javax.xml.xpath`, or a regex tightened to tolerate whitespace. The regex version fails the moment the vendor reformats again and is what the team already has. The parser version works but adds twenty lines of parser boilerplate and a namespace-aware factory nobody will maintain, when the client already resolves XML responses through path expressions in the response phase - the same construct the module uses for its JSON endpoints. The second predicted miss is the false-positive check: an agent that writes a depth-wildcard or unanchored path for the decision leaves the audit-trail text able to satisfy it, so the test that has been lying for months keeps lying while looking rewritten.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Checks become document-path assertions in the response phase",
+      "max_score": 30,
+      "description": "Each check is expressed as a path plus matcher against the parsed XML in the response chain - e.g. `body(\"policy.status\", equalTo(\"ACTIVE\"))` and `body(\"policy.coverage.@type\", equalTo(\"COMPREHENSIVE\"))` for the attribute. Scores zero if any `contains(...)` check on the raw response text survives, or if the fix is a more tolerant regex. Scores at most half if the document is parsed with a hand-built `DocumentBuilderFactory` / `XPath` and asserted with `assertTrue`/`assertEquals`, which fixes correctness but reimplements what the client already provides and leaves the failure message uninformative."
+    },
+    {
+      "name": "The decision check is anchored to its element",
+      "max_score": 20,
+      "description": "The underwriting decision is asserted at its full parent path (`policy.underwriting.decision`), so text inside `auditTrail` cannot satisfy it. Scores zero if the path is a depth wildcard (`**.decision`), an unanchored element name, or any matcher that would still pass on a declined policy whose audit trail quotes `APPROVED`. The answer must also state that this specific check was previously passing for the wrong reason."
+    },
+    {
+      "name": "Content type asserted as XML",
+      "max_score": 12,
+      "description": "The response is asserted to be XML (e.g. `contentType(ContentType.XML)`), so an HTML error page or a JSON body cannot be silently path-matched. Scores zero if absent."
+    },
+    {
+      "name": "MUST NOT compare against a recorded document",
+      "max_score": 12,
+      "description": "No assertion compares the whole response against `docs/policy-service-sample.xml` or a checked-in golden copy of it. Any whole-document comparison scores zero for this criterion - the task rules it out explicitly, and it would fail on the very reformatting the tests must now tolerate."
+    },
+    {
+      "name": "All five checks retained and formatting-insensitive",
+      "max_score": 12,
+      "description": "Status, holder surname, coverage type attribute, coverage limit and underwriting decision are all still asserted, and none of them depends on indentation, element ordering, attribute ordering, or whether an empty element is self-closed. Scores zero if a check is dropped. Scores at most half if any surviving assertion still encodes literal markup (angle brackets, quoted attribute syntax) in the expected value."
+    },
+    {
+      "name": "No new dependency",
+      "max_score": 8,
+      "description": "`pom.xml` is unchanged - no XML parsing, XPath, or assertion library is added. Scores zero if any dependency appears."
+    },
+    {
+      "name": "Single HTTP call preserved",
+      "max_score": 8,
+      "description": "The endpoint is still fetched once for the class rather than once per test. Scores zero if the rework issues five requests where the fixture issued one, unless the answer explicitly justifies the change and keeps the class to a single endpoint."
+    }
+  ]
+}

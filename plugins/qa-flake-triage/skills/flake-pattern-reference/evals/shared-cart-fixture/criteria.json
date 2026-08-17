@@ -1,0 +1,46 @@
+{
+  "context": "One `CART` object literal declared at module scope, handed to an API that mutates its arguments in place. Each test leaves the cart heavier than it found it, so the failure that surfaces depends entirely on which tests ran before. Predicted baseline failure: the agent treats it as arithmetic and rewrites the expected values to match the accumulated cart (75600 instead of 21600) - a change the task forbids and which encodes the coupling permanently. The second predicted shortcut is a shallow copy: `{ ...CART }` in a beforeEach looks like isolation but still shares the same nested `items` and `discounts` arrays, so the suite stays red or goes green only by accident. A third is giving each test a unique sku, which routes around the shared object without removing it. Diagnoses are predicted to say 'the tests share state' without naming that the production API mutates the caller's cart in place, which is why a read-only-looking helper such as subtotal is enough to expose it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suite passes with all five tests intact",
+      "max_score": 6,
+      "description": "`node --test` is green and all five originally-named tests are still present and executing. Any test deleted, skipped, or merged into another scores zero here."
+    },
+    {
+      "name": "Each test builds its own cart",
+      "max_score": 28,
+      "description": "Every test starts from a cart that no other test has touched - a factory function called per test, or a per-test hook that rebuilds the fixture, so nothing survives a test boundary. A copy that still shares the nested `items` or `discounts` arrays (a shallow spread or `Object.assign` of the shared literal) scores at most half, even if the suite happens to be green. Reaching green with the single module-scope literal still handed to every test scores zero."
+    },
+    {
+      "name": "Diagnosis names in-place mutation of a shared fixture",
+      "max_score": 20,
+      "description": "`flake-diagnosis.md` exists and names the actual mechanism: a single fixture object at module scope, mutated in place by `addItem` / `applyDiscount`, so each test inherits the previous test's cart. A write-up that only says the tests 'interfere' or 'share state' without identifying the module-scope literal and the mutating calls scores at most half. A write-up that blames `src/cart.js`, timing, or the runner scores zero."
+    },
+    {
+      "name": "Expected values untouched",
+      "max_score": 14,
+      "description": "MUST NOT rewrite any expected number to absorb an earlier test's mutations. 24000, 36000, 21600, 20400, the line counts, and qty 3 all remain. Any adjusted expectation scores zero for this criterion."
+    },
+    {
+      "name": "No retry, reorder, or quarantine as the fix",
+      "max_score": 12,
+      "description": "MUST NOT reach green by retrying failed tests, wrapping them in a rerun helper, raising a timeout, marking any test `skip` / `todo` / `only`, splitting the file so the offenders run apart, or pinning a test order that happens to line the numbers up. Any of these offered as the fix scores zero for this criterion."
+    },
+    {
+      "name": "Production source unchanged",
+      "max_score": 8,
+      "description": "MUST NOT modify `src/cart.js` - not to make the functions return copies, not to freeze the input, not to stop mutating. Any edit to that file scores zero here."
+    },
+    {
+      "name": "Result is order-independent",
+      "max_score": 12,
+      "description": "The five tests pass in any order and each passes alone - the isolation is per-test, not a single reset placed between two specific tests. A fix that only works for the current declaration order scores zero."
+    },
+    {
+      "name": "Forward rule stated",
+      "max_score": 8,
+      "description": "The diagnosis states the rule for tests added later - a fixture an API can mutate is constructed per test, never shared at module scope - rather than only narrating today's repair."
+    }
+  ]
+}

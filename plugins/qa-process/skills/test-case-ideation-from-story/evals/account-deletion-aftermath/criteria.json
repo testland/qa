@@ -1,0 +1,46 @@
+{
+  "context": "A deletion story whose consequences are almost entirely invisible from the user interface: an audit record, sub-processor deletion instructions, workspace content reassignment, statutory retention of invoices, and backups that keep the data for another 90 days. Predicted baseline failure: the agent writes rows whose expected results are all screen-observable - the account cannot sign in, the settings page is gone, the confirmation email arrives - which is precisely the evidence Legal already rejected. It also treats the story and the policy as one consistent document and never surfaces that AC-4's 'personal data is erased' collides with R2's 7-year invoice retention and R1's 90-day backup window. Nothing on the page reveals the omission; the list reads as a complete deletion test pass.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "docs/test-cases/ACC-140.md exists and contains a markdown table with rows. Scores zero if prose only or written elsewhere."
+    },
+    {
+      "name": "Expected results reach past the interface",
+      "max_score": 30,
+      "description": "Rows assert consequences no screen shows: the privacy audit entry from R3 with its recorded fields, the sub-processor deletion instructions from R4, and the reassignment of workspace content from R5. Scores zero if every expected result in the table is a sign-in, screen or email observation. Covering only one of the three scores at most half."
+    },
+    {
+      "name": "Grace period exercised at its edge",
+      "max_score": 18,
+      "description": "Rows cover restoring by signing in inside the window, the last day on which restore still works, and the first day on which it does not, with the day counted explicitly in the precondition. Scores zero if the only grace-period row is 'the user can restore within 30 days'. One-sided coverage scores at most half."
+    },
+    {
+      "name": "Story and policy conflict surfaced",
+      "max_score": 16,
+      "description": "The document states that AC-4's erasure cannot be complete while R2 keeps invoices with the legal name for 7 years and R1 keeps backups for 90 days, and either covers this as a case with the retained data as the expected result or raises it as a contradiction product has to resolve. Scores zero if erasure is asserted as total anywhere with no reference to the retained categories."
+    },
+    {
+      "name": "MUST NOT leave rows without the rule they check",
+      "max_score": 14,
+      "description": "Every row names the specific AC bullet or policy clause it verifies - AC-3, R4 - because the document is evidence. A field carrying only 'story', 'policy', 'requirements' or nothing at all fails its purpose: three or more such rows score zero here, one or two score at most half."
+    },
+    {
+      "name": "Sole-owner path covered as unresolved",
+      "max_score": 12,
+      "description": "A row covers deletion attempted by the sole owner of a workspace with other members, marked as blocked on the open product question rather than given an invented expected result. Scores zero if the path is absent; scores at most half if an outcome is asserted as though the story had decided it."
+    },
+    {
+      "name": "Refusal and interference paths present",
+      "max_score": 10,
+      "description": "At least two rows cover attempts that must not proceed as normal - wrong password at confirmation, the confirmation word mistyped, an account with an unpaid balance or an open dispute, or a sign-in attempt after the erasure has completed. Scores zero if every row is a successful deletion."
+    },
+    {
+      "name": "Preconditions state the account's standing",
+      "max_score": 8,
+      "description": "Preconditions name the standing that changes the outcome - sole owner, member, has invoices, is inside or past the window - rather than a uniform 'a logged-in user'. Scores zero if no precondition field exists."
+    }
+  ]
+}

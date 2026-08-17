@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the SQL comment block is the tidiest enumeration in the fixture, so the agent builds the model out of it - eight status codes as eight situations, sometimes with is_locked promoted to a ninth, and expected results phrased as 'status_code becomes 40' or 'is_locked clears'. It looks rigorous and it maps cleanly onto the code, but it produces a pack the outsourced testers cannot execute a single case of, and it splits queued_for_underwriting from with_underwriter into two situations that no screen can tell apart, so half the resulting cases have unverifiable expected results. The seven labels the portal and console display are the situations that matter; the internal codes and flags are how the service happens to store them. The discriminating output models the seven, notes the two codes that collapse into one, and phrases every expectation as something visible on one of the two screens.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/loan-lifecycle-tests.md exists and contains a model plus numbered manual cases with per-step expected results."
+    },
+    {
+      "name": "The model is built on the seven visible situations",
+      "max_score": 26,
+      "description": "The situations in the model are the seven labels the portal and console display - received, documents needed, in underwriting, approved, declined, funded, withdrawn. A model built on the eight status codes scores zero. A model that lists the seven labels but carries is_locked, doc_reminder_sent, or funding_batch_id as an additional situation caps at half."
+    },
+    {
+      "name": "MUST NOT assert on database state",
+      "max_score": 18,
+      "description": "MUST NOT. Any expected result naming a column, a status code number, a flag value, or a row - 'status_code becomes 31', 'is_locked is set', 'funding_batch_id populated' - scores zero on this criterion. The testers who run this pack have no database access, which the prompt states twice."
+    },
+    {
+      "name": "The two indistinguishable codes are called out",
+      "max_score": 14,
+      "description": "The document states that the queued and with-underwriter codes present as one situation on both screens, treats them as one in the model, and says what that costs the pack - the handover between them cannot be verified by this team. Treating them as two testable situations scores zero; noticing them but modelling them separately anyway caps at half."
+    },
+    {
+      "name": "Events that must be refused after the money moves",
+      "max_score": 20,
+      "description": "Cases exist for withdraw on a funded application (the write-off finance described), and for approve, decline, disburse and document upload arriving on applications that are already funded, declined or withdrawn. Each expects a refusal with the displayed label unchanged. The withdraw-after-funding case is required: omitting it caps this criterion at half. No refusal cases at all scores zero."
+    },
+    {
+      "name": "All 42 situation/event combinations accounted for",
+      "max_score": 14,
+      "description": "The model covers 7 situations against 6 events - 42 combinations - each either producing a result or explicitly marked as producing none. Thirty-six or more accounted for earns full marks; 26 to 35 caps at half; recording only the twelve or so that do something scores zero."
+    },
+    {
+      "name": "Transitions that keep the same label are modelled",
+      "max_score": 12,
+      "description": "Requesting documents again while already waiting for them (another reminder, label unchanged) is recorded as a transition with its own case, rather than dropped because the displayed label does not move."
+    },
+    {
+      "name": "Each case is runnable from the two screens alone",
+      "max_score": 10,
+      "description": "Preconditions describe how to put an application into the required situation using the portal and console only, and steps are actions available on those screens. Preconditions that require seeding a row or running SQL score at most half."
+    }
+  ]
+}

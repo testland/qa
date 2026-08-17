@@ -1,0 +1,41 @@
+{
+  "context": "The test hands the API container the same connection string the test process uses - the runtime host plus the port published to the host. That address is correct for the test process and meaningless inside another container, where it resolves to that container's own loopback. Predicted baseline failure: the agent recognises the loopback problem but reaches for a host-oriented escape hatch instead of a container-network one - `host.docker.internal` or a host-gateway entry, `--network host` / a network-mode change, the database container's IP address read out of an inspect call, or `--add-host`. Several of those appear to work on a developer laptop and behave differently on a Linux CI runner, and the IP-address variant works until the container is recreated. Another likely miss is putting both containers on a network but continuing to hand the API the published host port instead of the database's own port, which still fails.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Test still starts both containers and asserts the same things",
+      "max_score": 5,
+      "description": "Both the database and the API image still run as containers, the seeding still happens from the test process, and the response assertions are unchanged. Replacing the API container with an in-process server, or weakening the assertions, scores zero."
+    },
+    {
+      "name": "The address given to the API is a container-network name",
+      "max_score": 30,
+      "description": "`DATABASE_URL` passed into the API container resolves through the container network - a stable alias/name assigned to the database on a user-defined network the test creates. MUST NOT hand the container the host address or the published host port: any `DATABASE_URL` built from the runtime host, a mapped port, `localhost`, or `127.0.0.1` scores zero. A container IP address obtained by inspecting the database container scores at most half - it connects, but it is not stable and it is not the addressing mechanism the network provides."
+    },
+    {
+      "name": "The port in that address is the database's own port",
+      "max_score": 18,
+      "description": "The URL handed to the API uses the port the database listens on inside the network (5432), not the port published to the host. Scores zero if a mapped port number is combined with the network alias - a common half-fix that still fails to connect."
+    },
+    {
+      "name": "Both containers are joined to a network the test owns",
+      "max_score": 16,
+      "description": "The test creates a user-defined network and attaches both containers to it, rather than relying on the default bridge or on host networking. Scores zero if host networking, `host.docker.internal`, a host-gateway `--add-host`, or a docker-socket lookup is used to bridge the two containers."
+    },
+    {
+      "name": "The test process keeps its own path to the database",
+      "max_score": 14,
+      "description": "Seeding still goes through the host and the published port, because the test process is not on the container network. Scores zero if the seed connection is rewritten to use the alias, which cannot resolve from the test process."
+    },
+    {
+      "name": "Teardown removes containers before the shared resource",
+      "max_score": 12,
+      "description": "Whatever the test creates to connect the containers is removed after both containers are gone, and removal is tied to the test's cleanup lifecycle so a failure partway through still cleans up. Scores zero if the network is left behind on every run, or removed while containers are still attached."
+    },
+    {
+      "name": "Readiness stays observable",
+      "max_score": 8,
+      "description": "The API is still gated on its health endpoint answering. MUST NOT replace or supplement it with a fixed sleep to give the database time to become reachable; any fixed delay scores zero."
+    }
+  ]
+}

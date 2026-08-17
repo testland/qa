@@ -1,0 +1,17 @@
+2026-08-13T06:12:04Z ##[group]Runner Image
+2026-08-13T06:12:04Z Image: ubuntu-24.04   Version: 20260812.1.0   (rolled 2026-08-12 05:40 UTC)
+2026-08-13T06:12:04Z ##[endgroup]
+2026-08-13T06:12:07Z ##[group]Run npx playwright test --project=chromium
+2026-08-13T06:12:09Z Using browser chromium 141.0.7390.54 (playwright build 1194)
+2026-08-13T06:12:48Z   ok  tests/settings/profile.spec.ts:11:3 › edits a display name (3.1s)
+2026-08-13T06:13:15Z   x   tests/settings/settings-save.spec.ts:26:3 › saves notification preferences
+2026-08-13T06:13:15Z     Error: locator.click: Error: strict mode violation:
+2026-08-13T06:13:15Z       getByRole('button', { name: 'Save' }) resolved to 2 elements:
+2026-08-13T06:13:15Z         1) <button class="btn-primary" type="submit">Save</button>
+2026-08-13T06:13:15Z              aka getByRole('button', { name: 'Save' }).first()
+2026-08-13T06:13:15Z         2) <button class="toolbar-action" type="button">Save</button>
+2026-08-13T06:13:15Z              aka getByRole('button', { name: 'Save' }).nth(1)
+2026-08-13T06:13:15Z       at tests/settings/settings-save.spec.ts:31:52
+2026-08-13T06:13:41Z   ok  tests/settings/security.spec.ts:8:3 › rotates an API token (4.4s)
+2026-08-13T06:13:52Z   1 failed, 34 passed (1m45s)
+2026-08-13T06:13:53Z ##[error]Process completed with exit code 1.

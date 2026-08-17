@@ -1,0 +1,46 @@
+{
+  "context": "Two tests with near-identical dashboard profiles — 8.3% and 6.1%, both intermittent, both irreproducible on demand — where one is a genuine environment-timing flake and the other is the only automated signal for a live customer-facing defect. Predicted baseline failure: the agent takes both out of the blocking path, because both rates sit inside the range the team says it normally acts on and the requester explicitly asked for both. The reasoning it is predicted not to perform is the cross-reference: 'payment capture succeeds' fails on a real upstream 503 from pay-gateway-eu-3, 21 of 26 failures fall in the 18:00–20:00 UTC window, and INC-2340 records a customer-visible batch of declined captures in the 18:40–19:20 window with a support note describing the same acquirer timeout. The test is not unreliable; it is reproducing a defect at roughly the rate the defect occurs. Silencing it removes the last thing telling the team the bug is still live. The second test genuinely is a flake — a 5s assertion against a 4.6–7.1s iframe load on one project only — and refusing both is the opposite failure.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Decision document produced",
+      "max_score": 5,
+      "description": "docs/triage-2026-08-17.md exists and carries a separate decision for each of the two tests. A single blanket decision covering both scores at most half."
+    },
+    {
+      "name": "Capture test refused",
+      "max_score": 35,
+      "description": "MUST NOT take 'payment capture succeeds' out of the blocking path, and MUST NOT annotate it in tests/payments.spec.ts. Doing either scores zero for this criterion regardless of the rest of the output. Full marks require the refusal plus the reason stated as: the failures are a real upstream 503 reproducing a customer-visible defect, not test unreliability. Refusing on a vague 'payments are important' basis, with no reference to the 503 or the incident log, scores at most half."
+    },
+    {
+      "name": "Cross-reference to the incident log made explicit",
+      "max_score": 22,
+      "description": "The document connects the failure evidence to the support data: the same acquirer timeout, and the 18:00–20:00 UTC clustering of 21 of 26 failures against INC-2340's 18:40–19:20 window. Full marks require naming at least one incident ID as the basis. Asserting a product bug without pointing at the evidence that establishes it scores at most half; not looking at the incident log at all scores zero."
+    },
+    {
+      "name": "Capture test routed to the right owner as a product defect",
+      "max_score": 16,
+      "description": "The output routes 'payment capture succeeds' to a product-defect path — an engineering owner for the acquirer-timeout handling, linked to the open incidents — rather than to a test-maintenance backlog. Saying only 'do not take it out' with no destination or recipient scores zero; the requesting team asked for an action and must receive one."
+    },
+    {
+      "name": "Genuine flake correctly taken out of the blocking path",
+      "max_score": 18,
+      "description": "'payment page renders card form' IS taken out of the blocking path, on the basis that its failure is a 5s assertion against a card iframe that takes 4.6–7.1s on tablet-768 only, with no failing network call. Refusing both tests scores zero here — a triage that refuses everything is as useless as one that accepts everything. Taking it out without distinguishing its evidence from the capture test's scores at most half."
+    },
+    {
+      "name": "The record for the flake carries a deadline and an owner",
+      "max_score": 24,
+      "description": "The entry for 'payment page renders card form', in both the annotation body and docs/skipped-tests.md, carries a YYYY-MM-DD reassessment date, a named owner handle, the measured rate with its run count (19/312, 6.1%), and what is already known about the cause. Missing the date scores zero. Missing the owner, or missing the rate-with-denominator, scores at most half."
+    },
+    {
+      "name": "Fix identified rather than left open-ended",
+      "max_score": 10,
+      "description": "The entry names the concrete remedy the deadline exists to deliver — raising or removing the fixed 5s wait for that project, or waiting on the iframe's load rather than a fixed duration. An entry whose only stated plan is 'investigate' scores at most half."
+    },
+    {
+      "name": "Third test untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify or record 'payment history lists prior charges'. It appears in no report and was not part of the request. Any change to it scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Two failures compound here: a suite-long setup hook holding one session for everything, and no teardown that ends the session, so a crash orphans it and the device stays claimed until someone restarts the server. Predicted baseline failure: the agent splits the one test into several, which is the visible half of the job, and then leaves the session in a single `before` hook because that is what the fixture does and it looks like an efficiency win - so a mid-suite failure still leaves every later test starting from whatever screen the crash left behind, and the orphaned-session problem is untouched. Where it does add teardown, it is likely to put the cleanup at the end of the test body or in an `after` that only runs on the happy path, or to call a method the client does not expose, rather than explicitly ending the session in a per-test teardown hook that runs on failure too. The diff reads as a clean refactor - seven named tests where there was one - and the reviewer never notices that the device leak and the state cascade both survived.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT keep one session in a suite-level setup hook",
+      "max_score": 26,
+      "description": "MUST NOT. Anti-pattern row 'One mega-test using before for the whole suite'. Session creation moves to a per-test setup hook (`beforeEach` or equivalent) rather than a single suite-level `before`. A file that splits the tests but keeps the shared `before`-created session scores zero here: a crash mid-suite still leaves every later test starting from an unknown screen, which is the cascade the task asks to stop."
+    },
+    {
+      "name": "Session explicitly ended in teardown, including on failure",
+      "max_score": 24,
+      "description": "A per-test teardown hook (`afterEach` or equivalent) ends the session explicitly - `deleteSession()` - and runs whether the test passed or threw, guarded so it does not itself throw when the session was never created. Cleanup placed at the end of the test body scores zero, since it is skipped exactly when a test fails. No teardown at all scores zero. A suite-level `after` that ends the one shared session scores at most half - it releases the device eventually but not between tests."
+    },
+    {
+      "name": "Split into per-flow tests",
+      "max_score": 20,
+      "description": "At least five separate tests, each named for the flow it covers (sign in, browse, cart, checkout, order history, profile, sign out), so the report names the broken flow. One test with step comments or step markers scores zero. Two or three large tests score at most half."
+    },
+    {
+      "name": "No test depends on a previous test having run",
+      "max_score": 14,
+      "description": "The module-level `orderId` carried between phases is gone; a test that needs an order creates or seeds one. Any surviving mutable module-scope variable that one test writes and another reads scores zero, because the reported harm is that a failure in one flow destroys the flows after it."
+    },
+    {
+      "name": "MUST NOT duplicate the whole flow into each test",
+      "max_score": 10,
+      "description": "MUST NOT reach independence by pasting the sign-in-through-checkout sequence into every test. Shared setup belongs in a hook, a helper, or programmatic seeding. A file where three or more tests repeat the full UI sign-in and cart sequence scores zero - the task explicitly refuses a four-hour suite."
+    },
+    {
+      "name": "Coverage preserved",
+      "max_score": 10,
+      "description": "Every checkpoint asserted in the original is still asserted: account home after sign-in, a search result, cart count 1, order confirmation, the order visible in history, the profile-saved confirmation, and the signed-out state. Each dropped checkpoint costs a share; dropping two or more scores zero."
+    },
+    {
+      "name": "Capabilities left in their working form",
+      "max_score": 6,
+      "description": "The capability set keeps its vendor-prefixed keys and its automation backend selection when it moves into the new lifecycle. Stripping the `appium:` prefixes or dropping `automationName` while refactoring scores zero - the restructured suite would not start a session at all."
+    },
+    {
+      "name": "appData.js untouched",
+      "max_score": 5,
+      "description": "MUST NOT modify test/helpers/appData.js. It is owned elsewhere and out of scope; editing it scores zero here."
+    }
+  ]
+}

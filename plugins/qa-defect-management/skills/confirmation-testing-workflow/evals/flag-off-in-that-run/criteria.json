@@ -1,0 +1,46 @@
+{
+  "context": "The build provably contains the fix, the reported symptom did not recur on four attempts in the environment under verification, and the developer's unit test is green. The predicted unaided answer closes the ticket on exactly that. What it misses is that the server-side rejection is gated on strictDocumentVersioning, which config/features.json sets to false for staging - so the code the fix added never ran during the paired session, and the developer's test passes only because it uses the 'dev' environment where the flag is on. Something else stopped the overwrite (the same release shipped a client-side draft-cache banner), which means the observation cannot be attributed to the fix at all. The correct output withholds the decision, names the flag state as the reason, and asks for a re-run with the flag on.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Record delivered",
+      "max_score": 4,
+      "description": "A file qa-record/BUG-6017.md exists and states a decision. Scores zero if absent."
+    },
+    {
+      "name": "Identifies that the fixed code path did not run in the environment observed",
+      "max_score": 32,
+      "description": "The record states that strictDocumentVersioning is false for staging in config/features.json, so the stale-version rejection the fix added could not have executed during the 2026-08-13 session. Missing this scores zero however the decision lands - it is the single fact that changes the answer. Mentioning the flag only as background, without connecting it to the observation, scores at most half."
+    },
+    {
+      "name": "Refuses to move the defect to Verified",
+      "max_score": 22,
+      "description": "The decision is that the evidence does not settle the question and the defect stays where it is. Recommending Verified scores zero, including 'Verified, since the flag is on in production'. Recommending a reopen also scores zero: nothing suggests the fix is wrong, only that it was never exercised."
+    },
+    {
+      "name": "Refuses to substitute the production flag value for evidence",
+      "max_score": 14,
+      "description": "The record does not argue that because production has strictDocumentVersioning true the behaviour is confirmed. Reasoning from the configured value of the flag in another environment to a decision about this defect scores zero on this criterion."
+    },
+    {
+      "name": "Gives the concrete action that would settle it",
+      "max_score": 16,
+      "description": "The record names the specific next step: enable strictDocumentVersioning in the verification environment - or run in one where it is already on - and repeat the same four reproduction steps against a build that contains 2ea5f19, then decide. 'Test again' or 'investigate further' with no flag state named scores zero."
+    },
+    {
+      "name": "Attributes the observed banner honestly",
+      "max_score": 12,
+      "description": "The record says the banner the testers saw cannot be traced to the fix and names the client-side draft cache shipped in the same release as an alternative explanation, rather than reporting the session as a pass. Reporting 'could not reproduce, therefore fixed' scores zero."
+    },
+    {
+      "name": "MUST NOT record a conclusion without the evidence attached",
+      "max_score": 10,
+      "description": "MUST NOT settle for a 'works for me' write-up. The record must carry the fix commit 2ea5f19, the environment and its build commit 74b0c62, the flag state during the run, and the testers' observations as written rather than paraphrased into a verdict. A record missing the build commit or the flag state scores zero on this criterion."
+    },
+    {
+      "name": "Does not treat the containment result as sufficient",
+      "max_score": 10,
+      "description": "The record reports the affirmative containment check and states that it shows the source is present, not that the fixed behaviour was exercised. Presenting the exit-0 result as if it settled the question scores zero; omitting the check entirely scores at most half."
+    }
+  ]
+}

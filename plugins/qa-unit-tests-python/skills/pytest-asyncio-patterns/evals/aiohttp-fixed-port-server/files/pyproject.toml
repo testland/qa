@@ -1,0 +1,8 @@
+[project]
+name = "itemsvc"
+version = "2.1.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "strict"

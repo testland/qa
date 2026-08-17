@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent merges the two files correctly and swaps the hostnames for a placeholder, but stops half-way on the mechanics that make the single file actually usable. Typical shapes are leaving the `protocol`/`host`/`port` members of the URL object populated with the real host while only editing `raw`, inventing a bespoke config format (a `.env`, a YAML file, a `config.json` of its own design) that the runner cannot consume, or emitting run commands that still assume somebody edits the file for the review deployment. A reviewer skimming the diff sees variables and per-environment files and approves it; the run then resolves to the wrong host or fails to resolve at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave a hostname in the collection",
+      "max_score": 28,
+      "description": "No literal host survives anywhere in the delivered collection: not in `url.raw`, and not in the structured `protocol` / `host` / `port` members, which is where a partial edit leaves it. A collection whose `raw` reads `{{baseUrl}}/v1/orders` while `host` still reads `[\"staging-api\",\"acme\",\"io\"]` scores zero - the structured members are what the runner uses, so the substitution is cosmetic. Any remaining `staging-api.acme.io`, `localhost:8080`, or `api.acme.io` scores zero."
+    },
+    {
+      "name": "Per-target files are in the runner's environment format",
+      "max_score": 22,
+      "description": "The local and staging configs are environment documents the CLI can load directly - an object with a `name` and a `values` array of `{key, value}` entries (the `_postman_variable_scope: \"environment\"` marker is expected but not required for full credit). A hand-rolled JSON/YAML shape, a `.env` file, or shell exports score at most half: they carry the same data in a form the runner will not accept. No per-target files at all scores zero."
+    },
+    {
+      "name": "Environment selected on the command line",
+      "max_score": 16,
+      "description": "Each of the three documented commands passes its config with the environment flag (`-e` / `--environment`). Commands that instead rely on editing a file, on a committed default value, or on shell substitution into the collection score zero."
+    },
+    {
+      "name": "Review host injected at run time, not committed",
+      "max_score": 14,
+      "description": "The review-deployment command supplies the host from `$REVIEW_HOST` at execution time - a CLI variable override (`--env-var`), or an environment file generated in the job from the variable. Committing a `review` environment file with a guessed or placeholder host and telling the reader to edit it scores zero, since the hostname does not exist until the job runs."
+    },
+    {
+      "name": "One collection, forks removed",
+      "max_score": 10,
+      "description": "Exactly one collection file is delivered at the stated path and the answer names both `orders-staging` and `orders-local` as files to delete. Delivering the merged file while leaving the two originals in place unmentioned scores at most half. Delivering more than one collection file - a per-target copy under a new name - scores zero, since that is the state being removed."
+    },
+    {
+      "name": "Drift resolved toward the stronger copy",
+      "max_score": 12,
+      "description": "The merged collection keeps the `cancel order` request that only staging had, and keeps the SKU-echo check on `create order` that only staging had. Losing either scores zero for this criterion: consolidating two copies must not quietly adopt the weaker one."
+    },
+    {
+      "name": "Collection remains a valid v2.1 document",
+      "max_score": 8,
+      "description": "Parses as JSON, keeps the v2.1 `info.schema` value, and keeps each request's `event` test script attached to its own item. Flattening the scripts into one item, or emitting a document that no longer matches the v2.1 shape, scores zero."
+    }
+  ]
+}

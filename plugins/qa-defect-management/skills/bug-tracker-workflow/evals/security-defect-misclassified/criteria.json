@@ -1,0 +1,46 @@
+{
+  "context": "The tracker carries two independent fields: how damaging the defect is (Severity) and how soon it gets worked (Priority). The export mixes them up in four different ways. WEB-512 is an account-takeover-grade token leak filed as cosmetic and Low. WEB-519, WEB-528 and WEB-540 have a scheduling value but no damage rating at all (WEB-540 has both stuffed into the title instead). WEB-531 has the damage rating right and the scheduling value wrong for a bad reason ('reported by an internal user'). WEB-535 is the control: critical damage, medium urgency, on purpose, because it hits 2.1% of installs on a platform being retired - it must survive the pass unchanged. WEB-523 and WEB-546 are genuinely cosmetic. Predicted baseline failure: the agent raises WEB-512 and calls it done, usually by moving the priority to the top and leaving the cosmetic severity in place, or by moving severity and treating priority as following automatically - both of which read as decisive and leave the board unable to answer either question. The other predicted failure is the 'they should agree' argument winning: the agent aligns WEB-535's two fields, or fills the blank severities by copying the priority value across, which manufactures damage ratings nobody assessed. WEB-540's title-encoded classification is usually left alone because the information is technically present.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "classification-review.md and reclassification.csv both exist, the CSV carrying id,field,current_value,proposed_value,basis with one row per changed field. Missing either scores zero."
+    },
+    {
+      "name": "WEB-512 corrected on both axes with separate reasoning",
+      "max_score": 30,
+      "description": "WEB-512's damage rating is raised to the top of the scale on the grounds that a live reset token is exposed to a third party (account takeover), AND its scheduling value is raised on its own stated grounds, with the two justifications given separately. Changing only one of the two fields scores at most half. Leaving it in the cosmetic bucket, or arguing the cosmetic label is defensible because there is no visible UI failure, scores zero."
+    },
+    {
+      "name": "Deliberate divergence preserved",
+      "max_score": 18,
+      "description": "WEB-535 (critical damage, medium urgency, 2.1% of installs on a platform being retired) is stated as correctly classified and is absent from reclassification.csv, and the review answers the 'the fields should always agree' argument with it. MUST NOT align WEB-535's two fields in either direction - any proposed change to either of its values scores zero here."
+    },
+    {
+      "name": "Missing damage ratings assessed, not copied",
+      "max_score": 18,
+      "description": "WEB-519, WEB-528 and WEB-540 each receive a damage rating derived from what the defect does - plaintext session cookie, 1,400 cross-tenant rows, missing audit evidence - not from the scheduling value already on the ticket. Any basis that amounts to 'priority is Highest so severity is Critical' scores zero for that row; filling fewer than two of the three scores at most half."
+    },
+    {
+      "name": "WEB-531 scheduling corrected without touching its damage rating",
+      "max_score": 14,
+      "description": "WEB-531's Low scheduling value is rejected because who reported an outage does not change how soon a 90-minute regional outage gets worked, while its Critical damage rating is left as it is. Changing its severity scores zero here."
+    },
+    {
+      "name": "Classification moved out of the title",
+      "max_score": 12,
+      "description": "WEB-540's '[P1][CRITICAL]' title prefix is called out and both values are proposed into the actual fields, with the reason that values living in the title cannot be filtered, sorted, or counted. Leaving the prefix as the record scores zero."
+    },
+    {
+      "name": "Genuinely cosmetic tickets untouched",
+      "max_score": 12,
+      "description": "WEB-523 and WEB-546 are stated as correctly classified. Raising either - a typo and a 2px arrow - because the pass is about escalation scores zero on this criterion."
+    },
+    {
+      "name": "Every proposed change carries a checkable basis",
+      "max_score": 8,
+      "description": "Each CSV row's basis cites something in the export (the evidence column, the affected population, the exposure) rather than restating the new value. Rows whose basis is 'this is critical' score at most half."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Three independent defects produce one confident, wrong report. First, every query runs with a result cap of 50 and nothing compares the returned count against that cap, so 137 open bugs are reported as exactly 50 - the reported figure being identical to the cap is the tell. Second, the area path 'Payments' EU' is interpolated straight into the query string, and its apostrophe terminates the literal; the request comes back non-200 and the helper returns an empty list, which the caller reports as a real count rather than as a failure - the same substitution is also the injection hazard. Third, the urgency figure is computed by fetching each work item's fields one at a time inside a loop, which both multiplies the request count against a throttled API and inherits the capped and broken result set it iterates over, so it can only ever report zero or an undercount. Predicted baseline failure: the agent finds the cap and fixes it by raising $top to 1000 or 20000 - which restores the number this week and fails silently again when the board passes the new cap, because no check was added. It typically reports the P1 figure as a downstream consequence of the first bug and stops there, missing that the query is failing outright and that a failed query is being reported as a count of zero. The per-item loop is usually praised or described as slow rather than identified as a correctness and rate-limit problem. The agent also tends not to answer the question it was asked last - whether the report could have been trusted - and instead presents a fixed script.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "report-audit.md and query-fixes.csv both exist, the CSV carrying figure,mechanism,fix,verification. Missing either scores zero."
+    },
+    {
+      "name": "Cap-driven undercount identified with a completeness check, not a bigger cap",
+      "max_score": 30,
+      "description": "The 'Open bugs: 50' figure is traced to the result cap, with the observation that a returned count equal to the cap means results were withheld, and the fix pairs pagination with an explicit check that the returned count is below the cap before the figure is published. MUST NOT offer 'raise the cap to 1000/20000' as the fix on its own - that reproduces the same silent failure at a higher board size and scores zero for this criterion. Identifying the cap but proposing no completeness check scores at most half."
+    },
+    {
+      "name": "Zero traced to a failed query, not to an empty board",
+      "max_score": 24,
+      "description": "The 'P1 open: 0' figure is traced to the area path containing an apostrophe that breaks the query literal, the non-200 response being converted to an empty list, and that empty list being published as a count. The audit must state that six top-band items (8821, 8834, 8902, 8915, 8930, 8944) were open at the time. Attributing the zero solely to the cap, or to there genuinely being no urgent work, scores zero."
+    },
+    {
+      "name": "Failure and emptiness must not share a return value",
+      "max_score": 16,
+      "description": "The `if r.status_code != 200: return []` pattern is called out in both helpers: a query that did not run must not be publishable as a figure. The fix raises or aborts the report rather than printing a number derived from a failed call. Not addressing this scores zero."
+    },
+    {
+      "name": "Per-item field fetch inside the loop rejected",
+      "max_score": 16,
+      "description": "MUST NOT leave the field() call inside the p1_open loop: one request per work item against a throttled API is what a batched field fetch (or asking for the field in the original query) exists to avoid, and under throttling the failures return None and quietly shrink the count. Describing it only as slow, rather than as both a throttling and a correctness problem, scores at most half; not mentioning it scores zero."
+    },
+    {
+      "name": "Interpolation named as an injection hazard as well as a bug",
+      "max_score": 12,
+      "description": "The audit states that values interpolated into the query text must be escaped or parameterised, and that today's broken query is the benign version of a value that could alter the query's meaning. Fixing only the specific apostrophe (renaming the area path, hard-coding an escaped string) scores at most half."
+    },
+    {
+      "name": "Sign-off verdict stated plainly",
+      "max_score": 12,
+      "description": "The audit says explicitly that last week's report could not have supported the release sign-off, and that the report is not trustworthy until the completeness check exists. Presenting a corrected script with no verdict scores zero here."
+    },
+    {
+      "name": "Findings ordered by impact",
+      "max_score": 8,
+      "description": "The audit is ordered worst-first with the ordering justified - the false zero on the urgency figure directly caused the sign-off, ahead of the undercounted total. An unordered list scores at most half."
+    }
+  ]
+}

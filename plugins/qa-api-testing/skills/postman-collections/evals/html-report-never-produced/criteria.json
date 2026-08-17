@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent reads the missing-file warning as a path problem and fixes the path - changing `newman/report.html` to `newman/*.html`, `**/*.html`, or adding a `mkdir` - or it adds an export flag for the HTML output and stops there. All of those leave the actual cause untouched: HTML output comes from a separately installed reporter package, and until that package is a dependency the reporter named on the command line does nothing. The job stays green either way, so the fix looks correct in review and the manager still has no report. A secondary predicted failure is naming a reporter that does not match the package installed - installing one HTML reporter package and passing the other's reporter name - which reproduces the original symptom exactly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "HTML reporting requires installing a reporter package",
+      "max_score": 30,
+      "description": "The answer adds an HTML reporter package (`newman-reporter-htmlextra` or `newman-reporter-html`) to `devDependencies` in `package.json`, and says or shows that this is why nothing was produced. Scores zero if `package.json` is unchanged and the fix is confined to flags, paths, or globbing - the reporter simply is not present in that case. Installing it ad hoc in the workflow with `npm install -g` rather than pinning it as a project dependency scores at most half."
+    },
+    {
+      "name": "Reporter name matches the installed package",
+      "max_score": 20,
+      "description": "The `-r` list names the reporter that the installed package registers - `htmlextra` for `newman-reporter-htmlextra`, `html` for `newman-reporter-html`. A mismatched pair (installing htmlextra while still passing `-r ...,html`, or vice versa) scores zero: that combination reproduces the reported symptom exactly, and it is the most likely way to get this half-right."
+    },
+    {
+      "name": "Export path declared and matched by the upload",
+      "max_score": 16,
+      "description": "The run passes the reporter's export flag with an explicit path (for example `--reporter-htmlextra-export newman/report.html`) and the upload step's `path` is that same file. Declaring an export path the upload does not reference, or uploading a path the run never writes, scores zero - the artifact is empty again."
+    },
+    {
+      "name": "MUST NOT change what the gate consumes",
+      "max_score": 16,
+      "description": "The junit reporter and `--reporter-junit-export results.xml` survive unchanged, and the XML upload still happens. Dropping junit, renaming its export file, or proposing the HTML report as the gate input scores zero - HTML is for humans to read and is not a format a CI gate parses."
+    },
+    {
+      "name": "MUST NOT leave the run without a bail condition",
+      "max_score": 12,
+      "description": "The invocation gains a bail flag (`--bail`, `--bail failure`, or `--bail folder`). Absent scores zero: the stated complaint is nine hundred log lines produced after the first failure, and no amount of report tuning addresses it."
+    },
+    {
+      "name": "Terminal output retained",
+      "max_score": 6,
+      "description": "The `cli` reporter is still in the `-r` list, so the log keeps showing the run. Dropping it while adding HTML scores zero."
+    },
+    {
+      "name": "Collection untouched and workflow still valid",
+      "max_score": 6,
+      "description": "`collections/orders.postman_collection.json` is unmodified and the delivered workflow is valid YAML with its checkout, setup, and install steps intact. Editing the collection scores zero."
+    }
+  ]
+}

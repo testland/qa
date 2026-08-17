@@ -1,0 +1,51 @@
+{
+  "context": "Predicted baseline failure: the agent writes a plausible workflow that checks out, installs Node, and runs the collection with the default terminal reporter - or names a structured reporter without the flag that tells it where to write, so nothing lands on disk and the upload step silently finds no files. It then attaches an upload step with no condition, which GitHub skips on the exact runs that matter, and picks whichever config file it saw first, which is as likely to be the live-system one as the staging one. All four failures produce a workflow that looks completely normal in review and only misbehaves on a red run.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Machine-readable report written to a file",
+      "max_score": 30,
+      "description": "The run emits JUnit XML by naming the junit reporter AND giving it an explicit export path (`--reporter-junit-export <path>`). Naming a structured reporter in `-r` with no matching export flag scores at most half - the reporter is selected but no artifact is written, which is the failure mode being avoided. Running with only the default terminal reporter scores zero."
+    },
+    {
+      "name": "Per-check visibility on the run page",
+      "max_score": 16,
+      "description": "The JUnit output is surfaced on the GitHub run summary (a test-reporter action consuming the XML, or the XML published as a check) so a reviewer sees which named check failed without downloading anything. Producing the XML but only ever uploading it as an artifact scores at most half. No structured output at all scores zero."
+    },
+    {
+      "name": "MUST NOT run pull-request CI against the live system",
+      "max_score": 18,
+      "description": "The workflow passes the staging config with `-e environments/staging.postman_environment.json`. Referencing `environments/production.postman_environment.json`, or the `https://api.acme.io` host, in the PR-triggered run scores zero for this criterion regardless of everything else - the collection creates orders, so a PR run against live writes real data. Running with no environment file at all also scores zero: `{{baseUrl}}` is then unresolved."
+    },
+    {
+      "name": "Output survives a red job",
+      "max_score": 14,
+      "description": "The upload step carries `if: always()` (or `if: failure()`). An unconditional upload step placed after the test step scores zero: GitHub skips subsequent steps once a step fails, so the reports disappear exactly when they are needed."
+    },
+    {
+      "name": "Full JSON summary paired with the gate output",
+      "max_score": 10,
+      "description": "A JSON summary is also emitted and exported to a file alongside the JUnit XML, so a failing assertion can be traced to the response that caused it. Absent scores zero; emitting JSON instead of JUnit scores zero (JUnit is what the CI surface consumes)."
+    },
+    {
+      "name": "Stops after the first failure",
+      "max_score": 10,
+      "description": "The invocation includes a bail flag (`--bail`, `--bail failure`, or `--bail folder`). Absent scores zero - the run otherwise continues through every remaining request after the first red assertion and buries it in log noise."
+    },
+    {
+      "name": "Token injected from the repo secret",
+      "max_score": 10,
+      "description": "`${{ secrets.API_TOKEN }}` reaches the run at execution time - via a CLI variable override, an environment file generated during the job, or an equivalent injection. Scores zero if a token literal is written into any committed file, or if the workflow assumes the committed environment file already carries the value (its `apiToken` is deliberately empty)."
+    },
+    {
+      "name": "Runner pinned to the project",
+      "max_score": 8,
+      "description": "The runner is added to `devDependencies` and invoked via the local install (`npm ci` plus `npx`, or an npm script). Installing it globally in the workflow (`npm install -g`) scores at most half - the run then depends on an unpinned version. Assuming the binary is already on the runner scores zero."
+    },
+    {
+      "name": "Workflow is complete and triggered correctly",
+      "max_score": 6,
+      "description": "Valid YAML with `on: pull_request` and a push trigger for `main`, a checkout step, and a Node 20 setup step. Missing the checkout or the triggers scores zero."
+    }
+  ]
+}

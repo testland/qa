@@ -1,0 +1,5 @@
+$ curl -s https://import.staging.internal/internal/build-info
+{"service":"customer-import","commit":"9fa30b1","branch":"main","deployedAt":"2026-08-09T07:20:03Z"}
+
+$ git merge-base --is-ancestor 7c2ea55 9fa30b1; echo $?
+0

@@ -1,0 +1,46 @@
+{
+  "context": "A five-line seat-change case that opens by inheriting another case's leftover booking and tells the tester to 'pick a better seat', against a data file listing five seeded bookings across three fare types (only the chargeable Economy Light fare exercises the flow the team wants), an exit row where four of six seats are already consumed by past runs, and a staging admin action that reverts a booking to its seeded seat. Predicted baseline failure: the agent removes the literal 'continue with TC-14' line by replacing it with an equally unusable 'an existing booking with a seat already assigned', or by instructing the tester to create a booking first (which is TC-14 again); it picks no specific reference, surname, fare or seat; it omits the card payment step because nothing in the source hints a seat change costs anything; and it never gives the seat back, so its own case keeps consuming the exit row exactly like the one it replaced.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at manual/TC-15-seat-change-standalone.md. Any other path scores zero."
+    },
+    {
+      "name": "Starts from a named seeded booking, not an inherited one",
+      "max_score": 26,
+      "description": "MUST NOT depend on another case or on state left by a previous run. The setup names one seeded booking reference and its passenger surname (for example QWK4RT / ADEBAYO) so the tester can sign in to Manage booking immediately. Any wording that defers to TC-14, 'the booking from the previous case', 'an existing booking', or an invented reference scores zero. Naming the reference but omitting the surname needed to sign in scores at most half."
+    },
+    {
+      "name": "Fare choice is pinned and justified",
+      "max_score": 20,
+      "description": "The case requires an Economy Light booking (QWK4RT or QWK4RU) and says explicitly that a Flex or Business booking must not be substituted because the change is free on those and skips the payment part of the flow. Choosing QWK4RV, QWK4RW or QWK4RX scores zero. Choosing a Light booking without stating why the fare matters scores at most half."
+    },
+    {
+      "name": "Payment step present with usable card details",
+      "max_score": 16,
+      "description": "Because the chosen fare makes the change chargeable, the steps include the card payment leg with the staging test card 4111 1111 1111 1111 and its expiry/CVC guidance. Omitting the payment step entirely - which strands the tester mid-flow - scores zero. Mentioning a fee without giving the card details scores at most half."
+    },
+    {
+      "name": "Exact from-seat and to-seat, both actually available",
+      "max_score": 20,
+      "description": "The case states the seat the passenger starts in (matching the chosen booking's seeded seat) and the exact seat they move to, and that target seat is one of the free exit-row seats, 12E or 12F. 'A better seat', 'any extra-legroom seat', or naming 12A-12D (already occupied) scores zero."
+    },
+    {
+      "name": "The environment is left able to run the case again",
+      "max_score": 20,
+      "description": "The document ends with an explicit restore - the staging admin 'Revert booking to seeded state' action on the booking used - or an equivalent that returns the seat, and it states that nothing releases seats automatically between the Sunday 02:00 UTC rebuilds. No restore step scores zero. Acknowledging the problem without instructing the tester to do anything about it scores at most half. Relying on the weekly rebuild alone as the answer scores at most half."
+    },
+    {
+      "name": "Each step has one observable result",
+      "max_score": 16,
+      "description": "MUST NOT leave a step without something to observe. Every step pairs the action with a single checkable outcome naming concrete values - the seat map showing 12E as taken and the old seat as free, the fee amount shown before payment, the confirmation email in the staging mail catcher quoting the new seat and VG204 within about two minutes. Any step surviving with 'confirm the change goes through', 'check the passenger is told', or no expected result at all scores zero."
+    },
+    {
+      "name": "Failure capture",
+      "max_score": 8,
+      "description": "A structured place to record a failed step with expected versus observed and a defect reference. Absent scores zero."
+    }
+  ]
+}

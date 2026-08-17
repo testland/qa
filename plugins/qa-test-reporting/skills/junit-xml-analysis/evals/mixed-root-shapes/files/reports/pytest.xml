@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuite name="pytest" tests="4" failures="0" errors="0" skipped="0" time="3.564" timestamp="2026-08-11T05:20:14" hostname="runner-02">
+  <testcase classname="tests.api.test_orders" name="test_create" time="0.902"/>
+  <testcase classname="tests.api.test_orders" name="test_list" time="0.410"/>
+  <testcase classname="tests.api.test_refunds" name="test_issue" time="1.204"/>
+  <testcase classname="tests.api.test_refunds" name="test_void" time="1.048"/>
+</testsuite>

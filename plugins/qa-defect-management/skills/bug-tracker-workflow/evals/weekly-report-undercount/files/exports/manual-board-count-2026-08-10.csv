@@ -1,0 +1,6 @@
+figure,value,note
+open_bugs,137,"counted from the board on 2026-08-10 09:15"
+p1_open,6,"work items 8821, 8834, 8902, 8915, 8930, 8944"
+untriaged_over_1_day,41,""
+closed_this_week,18,"matches the report"
+area_path_used_by_the_job,"Payments' EU","area path was renamed on 2026-07-20; the apostrophe is part of the name"

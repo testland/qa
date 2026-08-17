@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="3" failures="1" errors="0" time="0.910">
+  <testsuite name="CartSummary" tests="3" failures="1" errors="0" skipped="0" time="0.910">
+    <testcase classname="CartSummary" name="renders the line items" time="0.412">
+      <failure message="expected 3 line items but received 2" type="Error"/>
+    </testcase>
+    <testcase classname="CartSummary" name="shows the empty state" time="0.308"/>
+    <testcase classname="CartSummary" name="formats the total" time="0.190"/>
+  </testsuite>
+</testsuites>

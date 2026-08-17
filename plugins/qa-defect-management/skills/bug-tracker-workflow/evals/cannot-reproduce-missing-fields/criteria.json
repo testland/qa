@@ -1,0 +1,41 @@
+{
+  "context": "Eight tickets ended as unreproducible or not-a-bug. Four of them were never reportable in the first place: QA-2210, QA-2219, QA-2231 and QA-2240 all have no environment and no build, and QA-2223 lost its only evidence when the video expired. Two outcomes are sound and must be defended: QA-2214 and QA-2236 both carry a full environment, a build number, steps and attachments, and a developer who genuinely attempted the reproduction; QA-2228 is a product decision with a spec link. The interesting case is QA-2231, whose missing environment is recoverable from pipeline run 88214 rather than from the reporter, and QA-2219, which is a critical payment double-charge sitting open with nothing in it. Predicted baseline failure: the agent treats 'cannot reproduce' as a judgement about effort rather than about the report, so it either accepts all the closures as final or reopens the whole set for diligence - including QA-2214 and QA-2236, where reopening is the exact behaviour the team is sick of. It is also likely to send QA-2231 back to ci.pipeline as if a pipeline were a person, and to propose opening fresh, better-written tickets to replace the unusable ones, which silently discards the reporter's history and creates a second record of one defect.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 5,
+      "description": "unreproducible-review.md and information-requests.csv both exist, the CSV carrying id,missing_fields,ask_of,target_state,note. Missing either scores zero."
+    },
+    {
+      "name": "Reports closed without the facts needed to reproduce are pulled back",
+      "max_score": 30,
+      "description": "QA-2210, QA-2231, QA-2240 and QA-2223 are all identified as closed on reports that never carried what a developer needs - environment and build absent (and for QA-2223, the only evidence expired) - and each is returned to an open state pending that information rather than left closed. The named missing fields must be specific per ticket, not a generic 'more detail'. Fewer than three of the four scores at most half; leaving all of them closed because a developer did try scores zero."
+    },
+    {
+      "name": "Sound outcomes defended",
+      "max_score": 18,
+      "description": "QA-2214 and QA-2236 are stated as legitimately unreproducible - full environment, build, steps, attachments, and a real attempt recorded - and QA-2228 as a settled product decision. MUST NOT send any of these three back to the reporter or reopen them. Reopening QA-2214 or QA-2236 scores zero on this criterion; reopening QA-2228 scores zero."
+    },
+    {
+      "name": "Recoverable information sourced from the pipeline, not the reporter",
+      "max_score": 16,
+      "description": "QA-2231's missing environment and build are identified as obtainable from pipeline run 88214 - the run holds the runner image, the build, and the failing job - so the fix is to attach the run detail to the ticket, not to ask ci.pipeline for it. Asking the reporter for the environment on this ticket scores at most half; not distinguishing it from the other incomplete reports scores zero."
+    },
+    {
+      "name": "Critical open item not closed out",
+      "max_score": 12,
+      "description": "QA-2219 (double charge, critical, currently open) stays open while the information is chased, and is not moved to any closed or rejected outcome on the strength of nobody having reproduced it. Proposing to close it scores zero."
+    },
+    {
+      "name": "Requests go on the existing tickets",
+      "max_score": 12,
+      "description": "MUST NOT propose opening a new, better-written ticket for any report going back - the existing ticket is the record and a second one for the same defect splits the history and the comment thread. Any recommendation to re-file scores zero here."
+    },
+    {
+      "name": "Each returned ticket has a named recipient and a resting state",
+      "max_score": 10,
+      "description": "Every row in information-requests.csv names who is being asked (the support agent, the named reporter, or our own pipeline) and the state the ticket sits in while waiting. Rows that say only 'needs more info' score at most half."
+    }
+  ]
+}

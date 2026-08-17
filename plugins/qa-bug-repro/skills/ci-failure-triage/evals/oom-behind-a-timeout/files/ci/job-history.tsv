@@ -1,0 +1,11 @@
+run_id	finished_at	runner_label	shard	result	duration	failing_test
+9871	2026-08-12T02:17	ubuntu-latest	3/4	fail	2m51s	order-history.spec.ts
+9852	2026-08-11T02:16	ubuntu-latest	3/4	fail	2m48s	order-history.spec.ts
+9833	2026-08-10T20:41	ubuntu-latest	3/4	fail	2m55s	order-history.spec.ts
+9829	2026-08-10T13:58	ubuntu-latest-8-cores	3/4	pass	2m12s	-
+9812	2026-08-09T02:15	ubuntu-latest-8-cores	3/4	pass	2m09s	-
+9795	2026-08-08T02:15	ubuntu-latest-8-cores	3/4	pass	2m11s	-
+# rows 9401 through 9795 (47 runs, 2026-07-04 to 2026-08-08): all pass,
+# runner_label=ubuntu-latest-8-cores (8 vCPU / 32 GB), shard 3/4 duration 2m05s-2m19s.
+# order-history.spec.ts has never appeared in this 50-run window before run 9833.
+# No quarantine or flake-list entry exists for any test in this repository.

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="build-1487">
+  <testsuite name="web.CheckoutSpec" tests="12" failures="2" errors="0" skipped="0" time="24.118" timestamp="2026-08-08T18:04:12">
+    <testcase classname="web.CheckoutSpec" name="adds an item" time="1.204"/>
+    <testcase classname="web.CheckoutSpec" name="removes an item" time="1.180"/>
+    <testcase classname="web.CheckoutSpec" name="updates the quantity" time="1.311"/>
+    <testcase classname="web.CheckoutSpec" name="applies a promo code" time="1.402"/>
+    <testcase classname="web.CheckoutSpec" name="rejects an expired promo" time="1.190"/>
+    <testcase classname="web.CheckoutSpec" name="submits the order" time="4.020">
+      <failure message="expected the confirmation panel to be visible" type="AssertionError"/>
+    </testcase>
+    <testcase classname="web.CheckoutSpec" name="shows the confirmation" time="2.104"/>
+    <testcase classname="web.CheckoutSpec" name="keeps the cart on failure" time="1.078"/>
+    <testcase classname="web.CheckoutSpec" name="charges the card" time="8.440">
+      <error message="Connection refused: pay-sandbox:8443" type="java.net.ConnectException"/>
+    </testcase>
+    <testcase classname="web.CheckoutSpec" name="emails a receipt" time="0.0">
+      <skipped message="mail sandbox unavailable"/>
+    </testcase>
+    <testcase classname="web.CheckoutSpec" name="prints an invoice" time="0.0">
+      <skipped message="disabled pending the redesign"/>
+    </testcase>
+    <testcase classname="web.CheckoutSpec" name="renders an empty cart" time="1.189"/>
+  </testsuite>
+  <testsuite name="api.OrdersSpec" tests="5" failures="0" errors="0" skipped="2" time="6.402" timestamp="2026-08-08T18:04:41">
+    <testcase classname="api.OrdersSpec" name="creates an order" time="1.902"/>
+    <testcase classname="api.OrdersSpec" name="lists orders" time="0.884"/>
+    <testcase classname="api.OrdersSpec" name="cancels an order" time="1.117"/>
+    <testcase classname="api.OrdersSpec" name="refunds an order" time="1.240"/>
+    <testcase classname="api.OrdersSpec" name="splits a shipment" time="1.259"/>
+    <testcase classname="api.OrdersSpec" name="reserves stock" time="0.0">
+      <skipped message="warehouse stub not deployed"/>
+    </testcase>
+    <testcase classname="api.OrdersSpec" name="notifies the warehouse" time="0.0">
+      <skipped message="warehouse stub not deployed"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="api.RefundsSpec" tests="4" failures="0" errors="0" skipped="0" time="3.110" timestamp="2026-08-08T18:04:52">
+    <testcase classname="api.RefundsSpec" name="issues a refund" time="0.902"/>
+    <testcase classname="api.RefundsSpec" name="voids a refund" time="0.744"/>
+    <testcase classname="api.RefundsSpec" name="rejects a double refund" time="0.810"/>
+    <testcase classname="api.RefundsSpec" name="records the reason" time="0.654"/>
+  </testsuite>
+</testsuites>

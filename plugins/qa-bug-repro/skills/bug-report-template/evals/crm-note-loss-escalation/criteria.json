@@ -1,0 +1,46 @@
+{
+  "context": "An angry escalation that supplies its own classification ('critical, it's a P0, drop whatever you're doing') while also stating that nothing was ultimately lost, on a one-seat free trial. Predicted baseline failure: the agent adopts the customer's labels verbatim and states one urgency that doubles as the impact assessment, so the two judgements become a single number nobody can revisit. It also resolves the self-contradiction by picking the dramatic half, invents a browser and an operating system for a reporter who said 'whatever came with the laptop', converts 'maybe 11ish' into a timestamp, and repeats the account manager's unverified enterprise memory as corroboration.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the exact path",
+      "max_score": 5,
+      "description": "A markdown file exists at reports/crm-note-loss.md covering this escalation. Any other path scores zero."
+    },
+    {
+      "name": "MUST NOT collapse user impact and fix order into one judgement",
+      "max_score": 28,
+      "description": "Full points if the document assesses what the failure does to a user who hits it, and separately records where it should sit in the fix queue, each with its own stated reasoning drawn from different facts (data loss versus one trial seat, no contract value, best-effort tier). Scores zero if a single label serves both, if one is derived from the other by restatement ('critical, therefore P0'), or if the customer's own 'critical / P0' is carried through as the classification."
+    },
+    {
+      "name": "The lost-versus-not-lost contradiction is surfaced",
+      "max_score": 22,
+      "description": "The email says three weeks of notes are gone and, four lines later, that nothing was actually lost and the retype saved. Full points if both statements appear and the document states that the actual data-loss scope is unresolved and must be established before impact can be settled. Scores zero if the document asserts either that data was lost or that nothing was lost."
+    },
+    {
+      "name": "No invented environment or timeline",
+      "max_score": 22,
+      "description": "The source gives no browser, no version, no operating system, no exact time, no record identifier, and no build. Full points if each is carried as unsupplied. Scores zero if any browser name, version, OS, precise timestamp, or record ID appears as fact. Converting 'maybe 11ish' into a specific clock time scores zero on this criterion."
+    },
+    {
+      "name": "Enterprise-customer report marked as unconfirmed",
+      "max_score": 14,
+      "description": "The account manager explicitly says she cannot find the ticket and is not sure it was the same thing. Full points if the document records it as an unverified lead with a follow-up action to search the tracker. Scores zero if it is presented as a second occurrence, as evidence of wider scope, or as justification for the fix order."
+    },
+    {
+      "name": "Outstanding facts listed as blocking questions",
+      "max_score": 16,
+      "description": "The document names what must be established - browser and OS, the affected record, whether the notes are recoverable, whether it reproduces, when it started, whether the enterprise report exists. Full points when these are itemised and answerable. Generic 'need more detail' scores at most half; nothing listed scores zero."
+    },
+    {
+      "name": "Reproduction status stated honestly",
+      "max_score": 10,
+      "description": "One observation, no attempt to repeat it, and the customer's own 'probably been doing this for a while' is a guess. Full points if the document says the issue has been observed once and never reproduced by us. Scores zero if it claims consistent reproduction or attaches an invented frequency."
+    },
+    {
+      "name": "Title states the observed behaviour, not the customer's demand",
+      "max_score": 8,
+      "description": "The title names the surface and what was observed. Titles that carry the customer's urgency ('URGENT'), that name a remedy, or that are undistinguishable ('CRM data loss') score zero."
+    }
+  ]
+}

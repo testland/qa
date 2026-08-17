@@ -1,0 +1,45 @@
+$ npm run bdd
+
+> acme-checkout@1.0.0 bdd
+> cucumber-js
+
+.......UUU-.UUU
+
+Warnings:
+
+1) Scenario: A gift card covers the whole order # features/checkout.feature:14
+   v Given a cart worth $30.00
+   ? And a gift card worth $30.00
+       Undefined. Implement with the following snippet:
+
+         Given('a gift card worth ${float}', function (float) {
+           // Write code here that turns the phrase above into concrete actions
+           return 'pending';
+         });
+
+   ? When I pay with the gift card
+       Undefined. Implement with the following snippet:
+
+         When('I pay with the gift card', function () {
+           // Write code here that turns the phrase above into concrete actions
+           return 'pending';
+         });
+
+   - Then the order is confirmed
+   ? And no card is charged
+       Undefined. Implement with the following snippet:
+
+         Then('no card is charged', function () {
+           // Write code here that turns the phrase above into concrete actions
+           return 'pending';
+         });
+
+2) Scenario: A gift card covers part of the order # features/checkout.feature:21
+   ... two more undefined steps, snippets as above ...
+
+4 scenarios (2 undefined, 2 passed)
+16 steps (6 undefined, 1 skipped, 9 passed)
+0m00.284s
+
+$ echo $?
+0

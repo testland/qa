@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent reads the prose, extracts the eleven transitions that actually do something, and writes four or five walkthrough cases - trial to active to past due to active, pause and resume, cancel - all of which pass on a healthy system. It looks like a complete pack because every rule in the spec appears somewhere in it. What is missing is the far larger set of status/event combinations the spec assigns no behaviour to: 5 statuses x 6 events is 30 combinations and only about 11 do anything. Both production incidents in the prompt live in that remainder - a payment webhook landing on a cancelled subscription, a resume request on a cancelled subscription - and neither is reachable by walking the happy path. The discriminating output attempts the combinations that are supposed to do nothing and asserts the subscription did not move.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists",
+      "max_score": 5,
+      "description": "A file docs/subscription-lifecycle-tests.md exists and contains numbered manual test cases with steps and expected results."
+    },
+    {
+      "name": "All 30 status/event combinations accounted for",
+      "max_score": 24,
+      "description": "The model covers every one of the 5 statuses against every one of the 6 accepted events - 30 combinations - and each one either states what the subscription becomes or is explicitly marked as doing nothing. Twenty-five or more accounted for earns full marks; 18 to 24 caps at half; a document that records only the roughly eleven combinations that change something, with no representation of the rest, scores zero."
+    },
+    {
+      "name": "The cancelled subscription is attacked with every event",
+      "max_score": 26,
+      "description": "There are executable cases for events arriving on a cancelled subscription, covering payment-succeeds (the late gateway webhook from the incident), resume-requested (the stale browser tab), pause-requested, payment-fails, trial-ends and cancel-requested. Each expects a refusal and asserts the status still reads Cancelled afterwards, with no invoice attached and no access restored. Covering only the two incidents caps this at half. No case at all against a cancelled subscription scores zero."
+    },
+    {
+      "name": "Paused rejects the payment events",
+      "max_score": 12,
+      "description": "Cases exist for payment-succeeds and payment-fails arriving while a subscription is paused - a webhook the spec says cannot legitimately occur because nothing is invoiced - expecting the subscription to remain Paused with no charge recorded. Also credited: pause-requested on an already-paused or past-due subscription being refused."
+    },
+    {
+      "name": "Transitions that keep the same status are modelled",
+      "max_score": 12,
+      "description": "The monthly renewal being paid (active stays active, invoice marked paid) and a failed daily retry (past due stays past due, another dunning email) are both recorded as transitions with their own cases, not skipped because the status label does not change. Missing both scores zero; missing one caps at half."
+    },
+    {
+      "name": "Expected results are observable to the tester",
+      "max_score": 10,
+      "description": "Each step's expected result names something the tester can see - the status on the subscription page, the value of status from GET /v2/subscriptions/{id}, the presence or absence of an invoice, whether features are enabled. Steps whose expected result is only 'the event is processed', 'the handler returns 200', or 'the record is updated' score at most half."
+    },
+    {
+      "name": "MUST NOT ship a pack made only of things that work",
+      "max_score": 16,
+      "description": "MUST NOT. A deliverable in which every case is a successful progression through the lifecycle - and no case has a refusal, a rejection, or an unchanged status as its expected result - scores zero here, whatever else it contains. The events that must be refused are where both reported incidents came from."
+    }
+  ]
+}

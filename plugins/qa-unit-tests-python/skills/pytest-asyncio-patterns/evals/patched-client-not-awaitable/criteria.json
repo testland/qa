@@ -1,0 +1,46 @@
+{
+  "context": "Substituting the client class yields a plain mock whose instance methods are ordinary mocks, so awaiting them raises TypeError - the automatic detection that produces an awaitable double for a coroutine function does not reach through a substituted class to its methods unless the substitution is told to follow the real class. Predicted baseline failure: the agent works around the TypeError instead of fixing the double - it defines a local `async def` helper and assigns it, wraps values in completed futures, or builds a hand-rolled fake class - and then discovers the retry case needs two different answers from the same call and reaches for a stateful counter inside the helper. That produces a green suite whose double no longer resembles the real client, accepts any argument list, and silently keeps passing if `get_json` is renamed or given a new signature.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The substituted client exposes awaitable coroutine methods",
+      "max_score": 30,
+      "description": "`get_json` and `aclose` on the stand-in are awaitable doubles - the substitution follows the real class (autospec/spec) or the instance is configured with the async-capable mock type. MUST NOT leave a plain MagicMock standing in for a coroutine method: any arrangement where awaiting the double raises TypeError scores zero. A hand-written fake class with `async def` methods scores at most half - it works, but nothing ties it to the real client's signatures, so it survives a rename of the method it replaces."
+    },
+    {
+      "name": "Retry case drives two different answers from one call site",
+      "max_score": 24,
+      "description": "The second page's two requests are steered with a sequence of outcomes on the double - an exception first, then a payload - rather than by branching on the path argument or mutating a counter inside a hand-written helper. A single implementation that inspects its argument to decide what to return scores at most half. A test that never makes the same path answer differently on the second attempt scores zero: it is not testing the retry."
+    },
+    {
+      "name": "Suite passes with all cases executing",
+      "max_score": 18,
+      "description": "`pytest` is green across the two existing dedupe tests and the three new cases, none skipped. Any TypeError, `cannot reuse already awaited coroutine`, or coroutine test reported as skipped scores zero."
+    },
+    {
+      "name": "Retry does not re-request page 1",
+      "max_score": 14,
+      "description": "The retry case asserts the request pattern - three requests in total, with page 1 requested once - by inspecting the recorded await arguments or await count. Asserting only the returned payload scores at most half: a service that restarted the whole walk would also pass that."
+    },
+    {
+      "name": "404 propagates and the client still closes",
+      "max_score": 14,
+      "description": "The failure case asserts the error escapes (`pytest.raises` around the awaited call) AND that `aclose` ran. Missing the close assertion scores at most half; a try/except in the test body whose except block holds the only assertion scores zero, because the test then passes when nothing is raised. Asserting the close with the call-based rather than the await-based family scores at most half."
+    },
+    {
+      "name": "Merged result asserted exactly",
+      "max_score": 10,
+      "description": "The happy-path case asserts the full returned list, including that a SKU repeated across the two pages appears once. Asserting only the length, or only that the result is truthy, scores at most half; no duplicate across pages in the fixture data scores at most half, since deduplication across pages is then never exercised."
+    },
+    {
+      "name": "Nothing reaches the network",
+      "max_score": 8,
+      "description": "No test constructs a real client or issues a real request; the substitution is applied to the name `sync_products` actually resolves, so no live `httpx.AsyncClient` is ever built. Patching a path the module does not use - leaving the real class in play - scores zero."
+    },
+    {
+      "name": "No new packages and no source changes",
+      "max_score": 6,
+      "description": "MUST NOT add anything to `requirements-dev.txt` or edit files under `app/`. Adding a mocking or HTTP-stubbing library, or injecting a client parameter into `sync_products` to make it easier to test, scores zero."
+    }
+  ]
+}

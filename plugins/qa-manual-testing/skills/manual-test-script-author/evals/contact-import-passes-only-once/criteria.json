@@ -1,0 +1,46 @@
+{
+  "context": "A four-line import case against an eight-row CSV whose expected outcome is fully computable from the stated import rules (six created, one merged, one rejected), a tenant pair where only one is writable, a login pair where only one can reach the Import menu, two rows that carry the real risk (a quoted company name containing a comma, and a duplicate email whose second row overwrites the job title), and a per-batch delete that is the only way to make the case repeatable before the monthly wipe. Predicted baseline failure: the agent tidies the four steps into a table and writes the expected result as 'the import completes with no errors' or 'contacts are imported successfully', or hedges with 'verify the created/merged/rejected counts are as expected' without ever computing 6/1/1 from the file; it says 'spot-check several imported contacts' rather than naming the two rows that matter; it may not notice that qa.sales cannot see the Import menu; and it ends at the verification with no cleanup, so the second run reports zero created and the case fails again.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable exists at the named path",
+      "max_score": 5,
+      "description": "A markdown document exists at tests/TC-102-contact-import.md. Any other path scores zero."
+    },
+    {
+      "name": "Expected counts computed from the file",
+      "max_score": 28,
+      "description": "The verification step asserts the three counts as explicit numbers - 6 created, 1 merged, 1 rejected - and identifies Tom Byrne's empty-email row as the rejected one. 'The import completes successfully', 'no errors are shown', or 'the counts match expectations' scores zero. Any two of the three numbers correct scores at most half; numbers that do not follow from the file's rows and the stated rules score zero."
+    },
+    {
+      "name": "The two risky rows are the ones inspected, with exact expected values",
+      "max_score": 24,
+      "description": "The steps name specific records and the exact value expected in each, covering both (a) a company field containing a comma inside quotes - 'Meridian Freight, GmbH' or 'Lumira Data, Inc.' - landing whole in one field rather than split, and (b) ravi.kumar@sunpeak.example ending with job title 'Chief Technology Officer' because the second row merged over the first. 'Spot-check a few contacts' or naming records without stating the expected value scores zero. Covering only one of the two scores at most half."
+    },
+    {
+      "name": "Second run produces the same result as the first",
+      "max_score": 24,
+      "description": "The case ends by deleting the import batch through Imports > Delete imported records, and states that without it the next run reports merges instead of creations. No cleanup step scores zero. Naming the monthly wipe as the answer, or telling the tester to 'clean up test data' with no procedure, scores at most half. A cleanup that deletes more than the batch created scores at most half."
+    },
+    {
+      "name": "Tenant and login are pinned to ones that work",
+      "max_score": 18,
+      "description": "The setup names tenant acme-sandbox and login qa.admin@orbitcrm.example. Naming acme-demo scores zero. Naming qa.sales@orbitcrm.example - which cannot see the Import menu - scores zero. 'Log in as an admin' or an unnamed tenant scores zero."
+    },
+    {
+      "name": "The upload configuration is stated",
+      "max_score": 12,
+      "description": "The steps state which file is uploaded, by path, and that deduplication is left on, since switching it off changes every expected count. Omitting the dedupe setting scores at most half; omitting the file identity scores zero."
+    },
+    {
+      "name": "Each step has one observable result",
+      "max_score": 14,
+      "description": "MUST NOT leave a step without something to check. Every step pairs its action with a single stated outcome naming a screen, a count or a field value. Any step surviving with no expected result, or with 'works correctly' / 'completes successfully' as the outcome, scores zero."
+    },
+    {
+      "name": "Failure capture",
+      "max_score": 8,
+      "description": "A structured place to record a failed step with expected versus observed and a defect reference. Absent scores zero."
+    }
+  ]
+}
