@@ -6,6 +6,10 @@ name: tessl-publish
 # therefore requires bumping .tessl-plugin/plugin.json, or the publish is rejected
 # as a duplicate version and the job fails. workflow_dispatch republishes all, and
 # there a duplicate version is the expected no-op rather than an error.
+#
+# Eval scenarios are NOT published by default: uploading them auto-starts a scored
+# eval run per skill, which spends the org's Tessl credit allowance. Run this
+# workflow manually with publish_evals=true to refresh them deliberately.
 on:
   push:
     branches: [main]
@@ -17,6 +21,11 @@ on:
       - 'plugins/**/evals/**'
       - '.github/workflows/tessl-publish.yml'
   workflow_dispatch:
+    inputs:
+      publish_evals:
+        description: 'Upload eval scenarios and start a scored eval run (consumes Tessl credits)'
+        type: boolean
+        default: false
 
 jobs:
   publish:
@@ -37,8 +46,13 @@ jobs:
         env:
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.sha }}
+          PUBLISH_EVALS: ${{ inputs.publish_evals }}
         run: |
           set -uo pipefail
+          # Publishing evals also auto-starts a scored eval run per skill, which spends the org's
+          # Tessl credit allowance, so it stays opt-in via workflow_dispatch.
+          if [ "${PUBLISH_EVALS:-false}" = true ]; then eval_flag=; else eval_flag=--skip-evals; fi
+          echo "eval scenarios: ${eval_flag:-published (eval runs will start)}"
           if [ -n "${BEFORE:-}" ] && git rev-parse --verify --quiet "${BEFORE}^{commit}" >/dev/null 2>&1; then
             mode=incremental
             mapfile -t dirs < <(git diff --name-only "$BEFORE" "$AFTER" \
@@ -56,7 +70,7 @@ jobs:
           for dir in "${dirs[@]}"; do
             { [ -n "$dir" ] && [ -f "$dir/.tessl-plugin/plugin.json" ]; } || continue
             echo "::group::Publishing $dir"
-            if out=$(tessl skill publish "$dir" --workspace testland --public 2>&1); then
+            if out=$(tessl skill publish "$dir" --workspace testland --public $eval_flag 2>&1); then
               echo "$out"; count=$((count + 1))
             elif printf '%s' "$out" | grep -qiE 'not available|already exists|already published'; then
               echo "$out"
