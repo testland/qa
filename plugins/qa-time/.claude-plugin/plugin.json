@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-time",
-  "version": "1.2.23",
+  "version": "1.2.24",
   "description": "Time-related testing: 3 skills (fake-clock-testing - freezegun, Jest/Sinon fake timers, timecop, JVM Clock injection, .NET TimeProvider, libfaketime; dst-transition-reference with leap-second mechanics; timezone-test-matrix-builder) and 1 agent (time-handling-critic). Covers time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock skew) which are high-incident-rate but specific tooling is scattered.",
   "author": {
     "name": "testland",

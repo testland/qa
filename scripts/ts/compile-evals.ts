@@ -5,17 +5,22 @@
 // Nothing is generated for Tessl - `tessl skill publish` reads those files as they
 // sit, so that target is identity rather than a round-trip that could drift.
 //
-// Emitted, both inside the skill directory because BOTH vendors require
-// co-location (Tessl's CLI looks for evals/ beside the tile; Anthropic reads
-// evals/evals.json inside the skill):
+// Emitted under dist/, at the repo root:
 //
-//   evals/evals.json                  Anthropic manifest for the whole skill
-//   evals/<scenario>/files/<path>     fixtures as real files
+//   dist/anthropic-evals/<plugin>/<skill>/evals.json          Anthropic manifest
+//   dist/anthropic-evals/<plugin>/<skill>/<scenario>/files/**  fixtures as real files
 //
-// Fixtures go inside the scenario directory on purpose. Tessl discovers
-// scenarios as SUBDIRECTORIES of evals/, so an evals/files/ sibling could be
-// mistaken for a scenario with no task.md. A plain file (evals.json) at that
-// level is not a directory and is skipped by the same scan.
+// Deliberately NOT inside the skill. A marketplace plugin's source is
+// ./plugins/<name>, so the whole directory is git-cloned onto every user's disk
+// at install. Extracted fixtures look exactly like a runnable project
+// (package.json, src/, tests/), and a weak agent pointed at the plugin will edit
+// them instead of the user's code - observed in 6/170 haiku runs, which also
+// corrupted this repo. The fixtures stay inline in task.md, where they are inert
+// text, and the extracted copies live outside anything that ships.
+//
+// Anthropic's own layout wants evals.json beside the skill; a consumer who needs
+// that copies the built bundle into place. Tessl is unaffected either way - it
+// reads task.md + criteria.json as committed.
 //
 // Lossy in one direction, by design: Anthropic assertions are binary, so
 // max_score weights are dropped, and `context` (the predicted baseline failure)
@@ -27,6 +32,7 @@ import { loadScenarios, type Scenario } from './lib/scenario.ts';
 
 const ROOT = process.cwd();
 const CHECK = process.argv.includes('--check');
+const OUT_DIR = join('dist', 'anthropic-evals');
 
 interface AnthropicEval {
   id: number;
@@ -77,16 +83,17 @@ function emissions(scenarios: Scenario[]): Emission[] {
   }
 
   const out: Emission[] = [];
-  for (const [skillDir, list] of [...bySkill].sort(([a], [b]) => a.localeCompare(b))) {
+  for (const [, list] of [...bySkill].sort(([a], [b]) => a.localeCompare(b))) {
     const skill = list[0]!.skill;
+    const dest = join(OUT_DIR, list[0]!.plugin, skill);
     out.push({
-      path: join(skillDir, 'evals', 'evals.json'),
+      path: join(dest, 'evals.json'),
       content: stringify(toAnthropic(skill, list)),
     });
     for (const s of list) {
       for (const f of s.fixtures) {
         out.push({
-          path: join(skillDir, 'evals', s.scenario, 'files', ...f.path.split(/[\\/]/)),
+          path: join(dest, s.scenario, 'files', ...f.path.split(/[\\/]/)),
           content: f.content,
         });
       }
@@ -127,12 +134,10 @@ function main(): void {
     return;
   }
 
-  // Clear previously generated fixture dirs so a renamed or deleted fixture
-  // cannot survive as an orphan that --check would never flag.
-  for (const s of scenarios) {
-    const files = join(s.dir, 'files');
-    if (existsSync(files)) rmSync(files, { recursive: true, force: true });
-  }
+  // Clear the whole output tree so a renamed or deleted fixture cannot survive
+  // as an orphan that --check would never flag.
+  const outRoot = join(ROOT, OUT_DIR);
+  if (existsSync(outRoot)) rmSync(outRoot, { recursive: true, force: true });
 
   for (const e of planned) {
     const abs = join(ROOT, e.path);
@@ -148,7 +153,7 @@ function main(): void {
 
   console.log(`wrote ${planned.length} file(s) for ${skills.size} skill(s), ${scenarios.length} scenarios`);
   console.log(`  tessl:     unchanged - task.md + criteria.json are consumed as committed`);
-  console.log(`  anthropic: evals/evals.json + evals/<scenario>/files/**`);
+  console.log(`  anthropic: ${OUT_DIR}/<plugin>/<skill>/** (outside plugins/, so it never ships)`);
   if (weighted) {
     console.log(`\nlossy toward anthropic (their assertions are binary):`);
     console.log(`  ${weighted} weighted criteria lost their max_score`);
