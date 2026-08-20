@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-defect-management",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Defect management discipline (classification, lifecycle, tracker workflow): 3 skills (bug-tracker-workflow - file/transition/search bugs on Jira, Linear, GitHub Issues, and Azure DevOps; severity-vs-priority-reference with lifecycle + taxonomy references; confirmation-testing-workflow) and 2 agents (ci-defect-filer, defect-fix-verifier). Distinct from qa-bug-repro which covers reproduction, report authoring, and the weekly defect-review pipeline; this covers triage classification, the tracker workflow itself, and closes the lifecycle with post-fix confirmation testing.",
   "author": {
     "name": "testland",

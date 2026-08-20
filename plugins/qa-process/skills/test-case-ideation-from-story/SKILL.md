@@ -1,6 +1,6 @@
 ---
 name: test-case-ideation-from-story
-description: "Takes a user story or feature spec and emits a markdown test-case matrix - one row per case (id, title, precondition, steps, expected, tier) covering happy path, alternate paths, boundaries, and negative paths - before any test code is written. Output is the human-reviewable matrix that goes into TestRail / Qase / Xray. Emits the human-reviewable case matrix itself - not Gherkin scenarios written against locked acceptance criteria, and not executable test code. Use as the first artifact a manual tester or three-amigos session produces from a story, ahead of automation."
+description: "Turns a thin or ambiguous story into a reviewable test list - a backlog item that is a short paragraph plus the click-through support recorded for themselves, a spec that is mostly a list of accepted formats, or a tech design pasted into the ticket while the last few releases still shipped missed cases. Takes the story or feature spec and emits a markdown test-case matrix, one row per case (id, title, precondition, steps, expected, tier), covering happy path, alternate paths, boundaries, and negative paths, before any test code is written. Output is the human-reviewable matrix that goes into TestRail / Qase / Xray, not Gherkin scenarios. Use when a story needs its cases enumerated and agreed before automation starts."
 ---
 
 # test-case-ideation-from-story

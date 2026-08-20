@@ -1,6 +1,6 @@
 ---
 name: restassured-testing
-description: "Authors REST Assured (Java) API tests using the given().when().then() BDD-style DSL - status code + JSON/XML path assertions + authentication (Basic, OAuth2, API key). Configures Maven / Gradle dependencies, runs via JUnit 5, and emits Surefire / JaCoCo reports for CI gating. Use when the project is on the JVM and wants type-safe API tests in the app's own language; for a Gherkin feature-file flow on the same JVM use karate-testing, for YAML tests on the pytest stack use tavern-testing."
+description: "Strengthens and speeds up JVM API test suites - assertions so loose that an empty `200 OK` passed for three days, a 220-test suite spending fourteen minutes mostly waiting on sequential HTTP calls, or endpoints exercised through a hand-rolled JDK HTTP client with JSON parsed by hand. Authors REST Assured (Java) tests in the given().when().then() BDD-style DSL: status code and JSON / XML path assertions, authentication (Basic, OAuth2, API key), Maven / Gradle dependencies, JUnit 5 execution, and Surefire / JaCoCo reports for CI gating. Use when the project is on the JVM and its API tests miss real assertions, run too slowly, or are written by hand."
 ---
 
 # restassured-testing

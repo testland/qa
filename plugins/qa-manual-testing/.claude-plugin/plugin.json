@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-manual-testing",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "description": "Manual scripted + exploratory testing: 6 skills (manual-test-script-author, exploratory-testing, exploratory-charter-author - the spec/risk/bug-cluster-to-charter authoring workflow - decision-table-test-design, state-transition-test-design, bug-bash-facilitator) and 1 agent (test-script-quality-critic). Covers SBTM, Whittaker's seven tours, Bach + Bolton's heuristic catalogues, UAT, bug bashes, and PROOF debriefs.",
   "author": {
     "name": "testland",
