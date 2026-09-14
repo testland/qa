@@ -24,11 +24,9 @@ CREATE TABLE preferences (
 );
 
 CREATE TABLE orgs (
-  tenant_id              VARCHAR(64)  NOT NULL,
-  org_name               VARCHAR(255) NOT NULL,
-  region                 VARCHAR(32)  NOT NULL,
-  billing_contact_email  VARCHAR(255) NOT NULL,
-  seat_limit             INT          NOT NULL,
-  pending_invoice_cents  INT          NOT NULL,
+  tenant_id  VARCHAR(64)  NOT NULL,
+  org_name   VARCHAR(255) NOT NULL,
+  region     VARCHAR(32)  NOT NULL,
+  seat_limit INT          NOT NULL,
   PRIMARY KEY (tenant_id)
 );

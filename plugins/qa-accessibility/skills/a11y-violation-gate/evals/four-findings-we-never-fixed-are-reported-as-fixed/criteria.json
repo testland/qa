@@ -1,51 +1,56 @@
 {
-  "context": "The merge collapses findings across tools on rule-plus-element, keeping whichever tool is read first, and the stored list therefore holds whatever identity happened to win. The hosted tool sorted first for four years, so every stored fingerprint begins wave::. Predicted baseline failure: the agent treats this as a reporting bug - it fixes the undefined rows, maybe rewrites the wave:: prefixes to axe::, and leaves the cross-tool collapse in place because the prompt says plainly that the author does not want the same button listed three times, which reads as a requirement to keep deduping. Collapsing at merge time is what broke: identity has to carry the tool that produced the finding, so a tool leaving the pipeline cannot look like four fixes, and deduplication belongs in the rendering of the PR comment, not in the stored identity. Verified against the shipped fixture: fixed-since-baseline is 0, not 4, and all four of those elements are still live in reports/axe.json. Only two findings are genuinely new - color-contrast on /checkout span.tax-note and aria-required-attr on /pricing div[role=\"dialog\"] - and both are on what #812 touched. Two further predicted misses: the two undefined rows come from Lighthouse audits with score null and scoreDisplayMode notApplicable and manual, which are not failures at all; and color-contrast on /pricing a.footer-legal is live in the axe report, has never appeared in any comment or in the stored list, and has been suppressed the whole time by the key dropping the page - it is pre-existing debt on a footer untouched since March, not a regression to pin on Ravi.",
+  "context": "A colleague's proposal is presented with a real grievance behind it, a correct premise, and an offer to do the work today, and it is the wrong fix. Predicted baseline failure: the agent accepts Sanjay's rule-plus-page identity, because the prompt's complaint is genuinely about brittleness, because generated class names really are unstable, and because dropping the element makes both visible symptoms disappear at once - the five phantom regressions and four of the five phantom fixes. It is verifiable against the shipped fixture that this is fatal. Under rule-plus-page every finding in reports/axe-812.json on /checkout collapses onto an entry already in the list, so the check exits zero and color-contrast on span.tax-note_9f10a1 - the estimated-tax label #812 itself added, the one genuinely new finding in the run - is grandfathered on the day it is introduced and can never fail a build again. The correct move keeps element-level identity and re-points the four stale entries in this change, because markup churn is a migration event, not a reason to blind the check. Second predicted failure: taking the reported five fixes at anything above one. Exactly one is real - color-contrast on /pricing span.per-seat, a page not in the diff, fixed by d.osei on 2026-08-28 - and the other four are the same four elements under new names. Third: seeing only the class-hash churn. Three of the four moved because the bundler now hashes class names; the fourth is pa11y's, its classes were never touched, and it moved because an inserted table row shifted it from tr:nth-child(3) to tr:nth-child(4), which no amount of hash-stripping recovers.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "The rewritten merge still writes reports/merged.json, a11y-baseline.json is delivered, and docs/pr-812-a11y.md and docs/scanner-change-note.md both exist. A missing scanner-change note scores zero for this item."
+      "description": "The rewritten check runs and prints a verdict, a11y-baseline.json is delivered, and docs/pr-812-a11y.md and docs/markup-churn.md both exist. A missing churn procedure scores zero for this item."
     },
     {
-      "name": "MUST NOT report the four as fixed",
-      "max_score": 30,
-      "description": "MUST NOT carry the four fixed-since-baseline entries through into the PR comment or the quarterly figure. Full marks require fixed reported as 0 for this run AND the reason: the hosted tool leaving the pipeline changed the identity under which those four findings are recorded, and every one of them is still live in the attached reports. Reporting four fixed, or repeating the counter's output without challenging it, scores zero. Saying the counter is unreliable without stating that the correct figure is zero scores at most half."
+      "name": "MUST NOT drop the element from the stored identity",
+      "max_score": 32,
+      "description": "MUST NOT adopt rule-plus-page identity, and MUST NOT deliver any identity that cannot tell two elements apart on the same page under the same rule. Doing so scores zero for this criterion regardless of how well the rest reads, and so does a delivered check that exits zero on the attached reports. Endorsing the proposal in docs/pr-812-a11y.md while shipping element-level code, or shipping the loosened identity while writing that it is a compromise, both score zero. Full marks require the refusal plus the consequence demonstrated on this run: all three /checkout contrast findings collapse onto one entry that is already on the list, so span.tax-note_9f10a1 is grandfathered the day it appears. Refusing on general grounds - too coarse, loses detail, bad practice - without showing what this branch would have shipped scores at most half."
     },
     {
-      "name": "Tool identity survives the merge",
-      "max_score": 26,
-      "description": "Each tool's findings survive into reports/merged.json under their own identity, so dropping or adding a tool can never read as fixes or regressions; collapsing happens only when the comment is rendered. Keeping one record per rule-and-element across tools in merged.json or in the stored list scores zero, whichever tool is chosen as the winner and however the prefixes are rewritten. Keeping per-tool identity but with the page still absent from it - so the two a.footer-legal findings remain one record - scores at most half."
+      "name": "The fixed count for the quarter is one",
+      "max_score": 20,
+      "description": "docs/pr-812-a11y.md gives the count as one, names it as color-contrast on /pricing span.per-seat, and ties it to the 2026-08-28 contrast commit on a page absent from the diff. Reporting five, or repeating the counter without challenging it, scores zero. Saying the counter is unreliable, or that four of the fixes did not happen, without producing one and naming which finding it is scores at most half."
     },
     {
-      "name": "MUST NOT list the two genuine new findings",
-      "max_score": 16,
-      "description": "MUST NOT put color-contrast on /checkout span.tax-note or aria-required-attr on /pricing div[role=\"dialog\"] into the delivered a11y-baseline.json. Both are new on the markup #812 changed and both must block. Either appearing in the delivered list scores zero here, as does regenerating the list from this run's merged output."
-    },
-    {
-      "name": "Stored list migrated rather than abandoned",
+      "name": "The four stale entries re-pointed, not deleted and not left",
       "max_score": 18,
-      "description": "The four wave:: fingerprints, which no tool can ever produce again, are replaced in this change by the identities the three remaining tools do produce for those same four elements, with the substitution recorded as deliberate. Deleting them with no replacement scores zero - the same findings then re-fire as blockers on the next run. Leaving them in place to sit as permanently phantom-fixed entries also scores zero. Migrating only the four and missing that /pricing a.footer-legal is live and unrecorded scores at most half."
+      "description": "All four /checkout entries are replaced in the delivered a11y-baseline.json by the identities the scanners now produce for those same four elements, with the substitution recorded as a deliberate migration carried by this change. Deleting them with no replacement scores zero, because the same four elements then fire as new blockers on the next run. Leaving them untouched also scores zero, because they stay permanently reported as fixed. Migrating the three axe entries and missing the pa11y one scores at most half."
     },
     {
-      "name": "Verdict for #812",
+      "name": "MUST NOT grandfather the finding #812 introduced",
       "max_score": 14,
-      "description": "docs/pr-812-a11y.md blocks #812 on exactly the two genuine findings and does not blame it for the rest. Charging #812 with the four re-identified findings, or with the /pricing footer contrast on a footer untouched since March, scores at most half. Passing #812, or blocking it on all eight, scores zero."
+      "description": "MUST NOT put color-contrast on /checkout span.tax-note_9f10a1 into the delivered list, and MUST NOT regenerate the list from this run's output. Either scores zero. Full marks require it named in docs/pr-812-a11y.md as the one thing that blocks #812, on markup the PR itself added."
     },
     {
-      "name": "Audits that did not fail produce no findings",
+      "name": "Both churn mechanisms identified",
+      "max_score": 12,
+      "description": "The write-up distinguishes the bundler's hashed class names, which moved the three axe entries, from the inserted estimated-tax row, which moved pa11y's entry from tr:nth-child(3) to tr:nth-child(4) on markup whose classes never changed. Naming only the class hashes scores at most half - a fix reasoned from hash suffixes alone does not reach the positional one. Treating all five reported regressions as one undifferentiated rename scores zero."
+    },
+    {
+      "name": "A procedure rather than an argument",
       "max_score": 10,
-      "description": "The two undefined rows are gone, and gone because Lighthouse audits carrying score null with scoreDisplayMode notApplicable or manual are not violations - not because a record with a missing selector was filtered out downstream. Either row still present in merged.json scores zero; suppressing them by dropping records with no selector scores at most half, since that would also hide a genuine page-level finding."
+      "description": "docs/markup-churn.md says what happens next time: how a restructuring change is recognised, who re-points the affected entries and in which pull request, and what stops a genuinely new finding riding in under cover of the churn. A document that only recommends more stable selectors, with nothing about who maintains the list or when, scores at most half. Nothing beyond a restatement of the diagnosis scores zero."
     },
     {
-      "name": "Comment reads once per element",
+      "name": "MUST NOT hand the list to the check",
       "max_score": 8,
-      "description": "The PR comment presents the checkout button as one issue seen by more than one tool rather than as three separate rows, while the stored list keeps the separate per-tool entries. Triple-listing in the comment scores zero; achieving a single row by collapsing the stored identities also scores zero, because that is the defect being fixed."
+      "description": "MUST NOT resolve the churn by having the check rewrite, re-stamp or regenerate a11y-baseline.json itself when entries stop matching. Any automated write scores zero: re-identification is the moment a human decides the finding is the same one, and automating it grandfathers whatever the scan happens to contain."
+    },
+    {
+      "name": "Identity decision pinned by a test",
+      "max_score": 10,
+      "description": "An added test fails under the proposal being refused - at minimum, that two different elements on the same page under the same rule produce two distinct stored identities, or that a run containing span.tax-note_9f10a1 against the delivered list still blocks. A test that only re-asserts existing behaviour, and would pass under rule-plus-page identity too, scores at most half. No added coverage scores zero."
     },
     {
       "name": "Shipped suite still passes",
       "max_score": 4,
-      "description": "The three existing tests still pass and the three report files under reports/ are unedited. Editing a report to make a number work out scores zero."
+      "description": "The three existing tests still pass unedited and neither file under reports/ is modified. Editing a report or weakening a test so a number works out scores zero."
     }
   ]
 }

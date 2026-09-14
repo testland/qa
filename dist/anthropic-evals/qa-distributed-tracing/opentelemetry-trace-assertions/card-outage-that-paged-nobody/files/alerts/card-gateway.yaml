@@ -1,31 +1,41 @@
-# Owned by platform-observability. Services do not fork this file.
-# Rewritten on 2026-08-21 under OBS-1904. Selectors are not negotiable per service.
-# Every backend service is expected to match these selectors as-is.
+# Owned by platform-observability. Shared by every service in the estate that
+# calls a third party over HTTP. Rewritten against the stable span attributes
+# on 2026-08-14 under OBS-2044; per-service forks were refused on that ticket.
+
 groups:
-  - name: card-gateway
+  - name: third-party-http
     rules:
       - alert: CardGatewayUpstreamErrors
         expr: |
           count_over_time(
-            traces{
-              span.kind="CLIENT",
-              server.address="api.northbank.example",
-              http.response.status_code>=500
+            spans{
+              span.kind = "CLIENT",
+              server.address = "api.northbank.example",
+              http.response.status_code >= 500
             }[5m]
           ) > 20
-        for: 5m
+        for: 2m
         labels:
-          severity: page
           pagerduty_service: PD-4417
-      - alert: CardGatewayDeclineSpike
+          owner: payments
+        annotations:
+          summary: "northbank returning 5xx to payments-gateway"
+
+      - alert: CardGatewayDeclineRate
         expr: |
-          rate(
-            traces{
-              span.kind="CLIENT",
-              server.address="api.northbank.example",
-              http.response.status_code="402"
+          ratio_over_time(
+            spans{
+              span.kind = "CLIENT",
+              server.address = "api.northbank.example",
+              http.response.status_code = 402
+            }[15m],
+            spans{
+              span.kind = "CLIENT",
+              server.address = "api.northbank.example"
             }[15m]
-          ) > 0.25
-        for: 15m
+          ) > 0.08
+        for: 10m
         labels:
-          severity: ticket
+          team: fraud
+        annotations:
+          summary: "decline rate above 8% for 10 minutes"

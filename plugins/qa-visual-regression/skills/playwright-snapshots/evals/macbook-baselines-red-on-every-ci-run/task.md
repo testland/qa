@@ -1,123 +1,91 @@
-# Every PR's visual job is red and people have started merging past it
+# Every PR opened from one of the two MacBooks turns the visual job red
 
 ## Problem Description
 
-We turned on screenshot comparison for the account area three weeks ago
-(2026-08-21). It has been red on every single pull request since, and as of last
-Tuesday two people have admin-merged past a red visual job because they decided
-it was "the screenshot thing again". That is worse than not having it.
+Platform team, 14 engineers. Twelve of us are on Linux workstations and two -
+Sasha and Marek - moved to MacBooks in July. Since then, any PR that either of
+them opens comes back from the visual job with twenty to forty mismatches, and
+any PR that touches a page they have recently rebaselined comes back red for
+everybody else too. We have merged three PRs this month by disabling the job.
 
-The five of us all work on MacBooks. CI is `ubuntu-latest`. The baselines in the
-repo were generated on Priya's laptop the afternoon we turned this on, and
-committed in one go.
+The thread below has four proposals in it and they cannot all be right. Sasha's
+is the one with momentum because he has already tried it: he changed the
+file-path setting so that each check has one baseline per browser project and
+nothing else in the name, re-recorded, and the job went green on his branch and
+stayed green on the two follow-up pushes. Marek wants the PR job to record as it
+goes so it cannot go red at all. Priya wants a separate job nobody runs by
+accident. Dyoung wants the per-image pixel allowance raised because he says the
+only thing actually different is font antialiasing.
 
-There is a thread in `docs/proposals.md` with five suggestions in it. I will say
-up front that I am minded to just take P1 - it is one line, two of us have used
-it at previous jobs, and I would like this off my desk before the sprint review
-on Thursday. But the two people here who actually understand this stuff are on
-opposite sides of it and I do not have the background to referee, so I want a
-decision on each proposal by name, with the reason, and I want it implemented.
+Dyoung also keeps pointing out that when the job does fail he cannot see the
+before/after images at all, which he thinks is a separate problem.
 
-Priya is back from leave on Monday and will want to run these locally before
-pushing. Tell her what she has to do differently.
-
-The config, the spec, the workflow and a trimmed CI log are attached along with
-the proposal thread.
+You have the config, the workflow, the committed snapshot tree, an excerpt from
+the last red run, our contributor doc, and the thread. I want a decision on each
+proposal, not a menu.
 
 ## Output Specification
 
-1. Write `docs/visual-baselines-decision.md`. Answer P1, P2, P3, P4 and P5
-   individually by their identifiers, each with a verdict and the reason. State
-   what a developer on a MacBook must do before pushing.
-2. Implement whatever you adopt: edit `playwright.config.ts`,
-   `tests/account.spec.ts` and `.github/workflows/visual.yml` as needed, and add
-   any new workflow file your decision requires.
-3. Say explicitly what happens to the baseline PNG files currently in the repo.
+1. Write `docs/visual-platform-decision.md`: grant or refuse each of the four
+   proposals by author name, with the reason for each.
+2. Give the edits you are making as code - config, workflow, and any file you
+   remove or add.
+3. State what a developer on a MacBook is supposed to do from now on when a page
+   they own genuinely changes.
 
 ## Input Files
 
 Extract the following files before beginning.
 
 =============== FILE: docs/proposals.md ===============
-# Thread: "visual job red on every PR" (#eng-web, 2026-09-08 to 2026-09-10)
+# Thread: "visual job is unusable" - #platform-eng
 
-**P1 - @dyoung.** Put `--update-snapshots` on the test command in the workflow.
-Then CI always has fresh baselines generated on the machine that is doing the
-comparing and the whole operating-system argument goes away. One line:
-`- run: npx playwright test --update-snapshots`. I have done this at two
-previous jobs and it just works. And before anyone says it stops the job being
-able to fail - it does not, the job still goes red if the page 500s, if a
-locator is missing, or if any of the non-visual assertions break.
+**@sasha** (2026-09-08 14:02)
+The name of every baseline has an operating system in it, which means we are
+maintaining two copies of the same picture forever and they never agree. Branch
+`fix/one-baseline` drops that part of the name so each check has exactly one
+file per browser project. Re-recorded on my machine, job went green, pushed
+twice more, still green. Two people do not need two sets of pictures of the same
+page.
 
-**P2 - @lmorris.** Set the snapshot path template so the operating-system
-segment is not part of the filename - something like
-`snapshotPathTemplate: 'tests/__baselines__/{arg}{ext}'`. One baseline per
-check, shared by everybody, laptops and CI both. Cleaner directory too: right
-now we would end up with two copies of every image in the repo and I do not want
-that in review diffs.
+**@marek** (2026-09-08 14:19)
+Or simpler: have the pull-request job record the baselines while it runs. Then
+it cannot be red, ever, and we stop having this conversation every week.
 
-**P3 - @sasha.** The differences are font smoothing. They are a couple of pixels
-on the edges of letters. Set `maxDiffPixelRatio: 0.35` project wide and they
-stop mattering. That is a ratio of the whole image and text is maybe 4% of the
-page, so font smoothing cannot get anywhere near it - it is not as loose as the
-number makes it sound.
+**@priya** (2026-09-08 14:35)
+I would rather nobody records baselines on a laptop at all. Give us a job that
+only a human can start, on the same runner image the checks run on, that records
+and commits back. Developers never commit a PNG again.
 
-**P4 - @sasha.** Separately from all of the above: the `#drift-chat` bubble
-bottom-right and the "last synced N minutes ago" line in the account header move
-between runs **on the same machine**. I reproduced it locally: same commit, same
-laptop, ran the check six times, two of the six differed and both diffs were
-inside those two elements. That is going to keep biting us whatever we decide
-about the operating-system question.
+**@dyoung** (2026-09-08 14:51)
+Has anyone actually looked at what is different? It is font antialiasing. It is
+one or two shades on the edge of every glyph. Set the allowance to 250000 pixels
+and all of this goes away without changing any plumbing.
 
-**P5 - @dyoung.** If people hate P1, here is the same idea in a shape they might
-tolerate: a second workflow, manual trigger only, that runs the same command and
-pushes the regenerated PNGs to the branch as a commit, so the new images land in
-the pull request diff and somebody has to look at them before it merges.
-Developers would stop committing baselines from their laptops entirely.
+**@dyoung** (2026-09-08 14:58)
+Also, unrelated, but when the job is red I cannot get at the images. The run
+page has no artifact on it. I have been reading pixel counts out of the log.
 
 =============== FILE: playwright.config.ts ===============
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: 'tests',
+  retries: 1,
   reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
 
   expect: {
     toHaveScreenshot: {
       maxDiffPixels: 100,
+      threshold: 0.2,
       animations: 'disabled',
     },
   },
 
-  use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:5173',
-  },
-
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox',  use: { ...devices['Desktop Firefox'] } },
   ],
-});
-
-=============== FILE: tests/account.spec.ts ===============
-import { test, expect } from '@playwright/test';
-
-test.beforeEach(async ({ page }) => {
-  await page.goto('/account');
-  await page.getByRole('heading', { name: 'Account' }).waitFor();
-});
-
-test('account overview', async ({ page }) => {
-  await expect(page).toHaveScreenshot('account-overview.png', { fullPage: true });
-});
-
-test('billing panel', async ({ page }) => {
-  await page.getByRole('tab', { name: 'Billing' }).click();
-  await expect(page.locator('[data-panel="billing"]')).toHaveScreenshot('billing.png');
-});
-
-test('security panel', async ({ page }) => {
-  await page.getByRole('tab', { name: 'Security' }).click();
-  await expect(page.locator('[data-panel="security"]')).toHaveScreenshot('security.png');
 });
 
 =============== FILE: .github/workflows/visual.yml ===============
@@ -139,11 +107,9 @@ jobs:
           node-version: '20'
 
       - run: npm ci
+      - run: npx playwright install --with-deps
 
-      - name: Install browsers
-        run: npx playwright install --with-deps
-
-      - name: Run tests
+      - name: Run visual checks
         run: npx playwright test
 
       - name: Upload report
@@ -151,54 +117,132 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 14
 
-=============== FILE: docs/ci-run-4820.log ===============
-Run 4820 - PR #2291 "chore: bump date-fns" - runs-on ubuntu-latest
+=============== FILE: docs/tree.txt ===============
+$ git ls-files 'tests/*-snapshots/*' | sort
 
-  1) [chromium] > account.spec.ts:9:1 > account overview ------------------
+tests/billing.spec.ts-snapshots/invoices-1-chromium-darwin.png
+tests/billing.spec.ts-snapshots/invoices-1-chromium-linux.png
+tests/billing.spec.ts-snapshots/invoices-1-firefox-linux.png
+tests/billing.spec.ts-snapshots/plan-1-chromium-darwin.png
+tests/billing.spec.ts-snapshots/plan-1-chromium-linux.png
+tests/billing.spec.ts-snapshots/plan-1-firefox-linux.png
+tests/dashboard.spec.ts-snapshots/overview-1-chromium-darwin.png
+tests/dashboard.spec.ts-snapshots/overview-1-chromium-linux.png
+tests/dashboard.spec.ts-snapshots/overview-1-firefox-darwin.png
+tests/dashboard.spec.ts-snapshots/overview-1-firefox-linux.png
+tests/dashboard.spec.ts-snapshots/widgets-1-chromium-darwin.png
+tests/dashboard.spec.ts-snapshots/widgets-1-chromium-linux.png
+tests/dashboard.spec.ts-snapshots/widgets-1-firefox-linux.png
+tests/settings.spec.ts-snapshots/profile-1-chromium-darwin.png
+tests/settings.spec.ts-snapshots/profile-1-chromium-linux.png
+tests/settings.spec.ts-snapshots/profile-1-firefox-linux.png
+tests/settings.spec.ts-snapshots/team-1-chromium-darwin.png
+tests/settings.spec.ts-snapshots/team-1-chromium-linux.png
+tests/settings.spec.ts-snapshots/team-1-firefox-linux.png
 
-    Error: A snapshot doesn't exist at
-      tests/account.spec.ts-snapshots/account-overview-chromium-linux.png,
-      writing actual.
-      wrote 1280 x 3160
+19 files.
 
-  2) [chromium] > account.spec.ts:13:1 > billing panel --------------------
+=============== FILE: docs/ci-run-9912.log ===============
+Running 10 tests using 4 workers
 
-    Error: A snapshot doesn't exist at
-      tests/account.spec.ts-snapshots/billing-chromium-linux.png,
-      writing actual.
-      wrote 980 x 620
+  1) [chromium] > tests/dashboard.spec.ts:6:1 > dashboard overview
 
-  3) [chromium] > account.spec.ts:18:1 > security panel -------------------
+    Error: Screenshot comparison failed:
 
-    Error: A snapshot doesn't exist at
-      tests/account.spec.ts-snapshots/security-chromium-linux.png,
-      writing actual.
-      wrote 980 x 540
+      18412 pixels (ratio 0.02 of all image pixels) are different.
 
-  3 failed
+    Expected: /home/runner/work/app/app/tests/dashboard.spec.ts-snapshots/overview-1-chromium-linux.png
+    Received: /home/runner/work/app/app/test-results/dashboard-overview-chromium/overview-1-actual.png
+    Diff:     /home/runner/work/app/app/test-results/dashboard-overview-chromium/overview-1-diff.png
 
-Files present in tests/account.spec.ts-snapshots/ at checkout:
-  account-overview-chromium-darwin.png   1280 x 3160
-  billing-chromium-darwin.png            980 x 620
-  security-chromium-darwin.png           980 x 540
+  2) [chromium] > tests/settings.spec.ts:11:1 > settings team
 
-This is the same three errors on every run since 2026-08-21. 41 runs.
+    Error: Screenshot comparison failed:
 
-=============== FILE: docs/account-page-notes.md ===============
-# Account area - what is on the page (for whoever picks up the visual work)
+      9330 pixels (ratio 0.01 of all image pixels) are different.
 
-Regions in the overview, top to bottom:
+    Expected: /home/runner/work/app/app/tests/settings.spec.ts-snapshots/team-1-chromium-linux.png
+    Received: /home/runner/work/app/app/test-results/settings-team-chromium/team-1-actual.png
 
-| Region                | Approx size | Notes                                             |
-|-----------------------|-------------|---------------------------------------------------|
-| Header + nav          | 1280 x 72   | contains the "last synced N minutes ago" line     |
-| Plan card             | 980 x 240   | plan name, seat count, renewal date               |
-| Usage table           | 980 x 1100  | 14 rows, seeded, deterministic                    |
-| Invoice list          | 980 x 900   | 12 rows, seeded, deterministic                    |
-| Support footer        | 1280 x 300  | static copy                                       |
-| `#drift-chat` bubble  | 64 x 64     | fixed, bottom-right, present on every page        |
+  3) [firefox] > tests/dashboard.spec.ts:6:1 > dashboard overview
 
-Everything on this page except the sync line and the chat bubble is driven by
-the `acct-fixtures` seed and has been byte-stable across reruns on one machine
-since we seeded it in July.
+    Error: Screenshot comparison failed:
+
+      21077 pixels (ratio 0.02 of all image pixels) are different.
+
+    Expected: /home/runner/work/app/app/tests/dashboard.spec.ts-snapshots/overview-1-firefox-linux.png
+    Received: /home/runner/work/app/app/test-results/dashboard-overview-firefox/overview-1-actual.png
+
+  24 failed
+  Viewport for all projects: 1280x800
+
+=============== FILE: docs/contributing-visual.md ===============
+# Contributing - visual checks
+
+Every page under `tests/` has a committed baseline image. If your change alters
+what a page looks like, record the new baselines before you push:
+
+```bash
+npx playwright test --update-snapshots
+git add tests
+git commit -m "chore(visual): rebaseline"
+```
+
+Reviewers: open the PNGs in the PR diff and confirm the change is the one
+described in the PR body.
+
+Last edited 2026-02-11 by @priya.
+
+=============== FILE: tools/platform-split.mjs ===============
+// Splits a list of committed baseline paths by the trailing platform segment.
+// Reporting helper only - it does not read, write or delete any PNG.
+
+const NAME = /-(chromium|firefox|webkit)-(darwin|linux|win32)\.png$/;
+
+export function splitByPlatform(paths) {
+  const out = { darwin: [], linux: [], win32: [], unrecognized: [] };
+  for (const p of paths) {
+    const m = NAME.exec(p);
+    if (!m) out.unrecognized.push(p);
+    else out[m[2]].push(p);
+  }
+  return out;
+}
+
+export function countsByPlatform(paths) {
+  const split = splitByPlatform(paths);
+  return Object.fromEntries(Object.entries(split).map(([k, v]) => [k, v.length]));
+}
+
+=============== FILE: tools/platform-split.test.mjs ===============
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { splitByPlatform, countsByPlatform } from './platform-split.mjs';
+
+const PATHS = [
+  'tests/a.spec.ts-snapshots/one-1-chromium-darwin.png',
+  'tests/a.spec.ts-snapshots/one-1-chromium-linux.png',
+  'tests/a.spec.ts-snapshots/two-1-firefox-linux.png',
+  'tests/a.spec.ts-snapshots/legacy.png',
+];
+
+test('splits on the platform segment', () => {
+  const split = splitByPlatform(PATHS);
+  assert.equal(split.darwin.length, 1);
+  assert.equal(split.linux.length, 2);
+});
+
+test('keeps names it cannot parse', () => {
+  assert.equal(splitByPlatform(PATHS).unrecognized.length, 1);
+});
+
+test('counts every bucket', () => {
+  assert.deepEqual(countsByPlatform(PATHS), {
+    darwin: 1,
+    linux: 2,
+    win32: 0,
+    unrecognized: 1,
+  });
+});

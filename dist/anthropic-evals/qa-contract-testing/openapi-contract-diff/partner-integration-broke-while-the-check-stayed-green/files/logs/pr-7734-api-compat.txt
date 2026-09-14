@@ -1,16 +1,12 @@
 2026-09-02T16:04:11.2Z ##[group]Run actions/checkout@v5
 2026-09-02T16:04:12.8Z Syncing repository: acme/exports-api
-2026-09-02T16:04:13.1Z /usr/bin/git init /home/runner/work/exports-api/exports-api
-2026-09-02T16:04:14.6Z /usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/pull/7734/merge:refs/remotes/pull/7734/merge
+2026-09-02T16:04:14.6Z /usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin
 2026-09-02T16:04:16.0Z ##[endgroup]
 2026-09-02T16:04:16.3Z ##[group]Run Resolve the spec we are comparing against
-2026-09-02T16:04:16.4Z fatal: Not a valid object name origin/main
-2026-09-02T16:04:16.4Z fatal: ambiguous argument ':spec/openapi.yaml': unknown revision or path not in the working tree.
-2026-09-02T16:04:16.5Z ##[endgroup]
-2026-09-02T16:04:16.6Z ##[group]Run Compare
+2026-09-02T16:04:16.7Z ##[endgroup]
+2026-09-02T16:04:16.9Z ##[group]Run Compare
 2026-09-02T16:04:19.9Z Unable to find image 'tufin/oasdiff:latest' locally
 2026-09-02T16:04:24.2Z latest: Pulling from tufin/oasdiff
-2026-09-02T16:04:27.7Z breaking findings: 0
 2026-09-02T16:04:27.8Z ##[endgroup]
 2026-09-02T16:04:28.0Z ##[group]Run Upload report
 2026-09-02T16:04:29.4Z Artifact openapi-breaking-report successfully uploaded

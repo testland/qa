@@ -1,0 +1,25 @@
+name: atlas-e2e
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  e2e:
+    runs-on: [self-hosted, build-runner]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: start the app on this runner
+        run: docker compose -f docker-compose.app.yml up -d --wait
+      - name: run the suite
+        run: mvn -B test -DbaseUrl=http://localhost:3000
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/

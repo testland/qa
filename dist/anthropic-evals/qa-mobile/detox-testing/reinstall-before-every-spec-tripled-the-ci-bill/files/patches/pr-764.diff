@@ -1,0 +1,29 @@
+From: Priya Ganesan <priya@larder.example>
+Subject: [PATCH] e2e: stop reinstalling the app before every spec
+
+9m50s, nine green nights, three approvals.
+
+A JS-level reload only swaps the bundle. Anything the native side is holding -
+navigation stack, image cache, keyboard, whatever the previous file left on
+screen - survives it, and I am not signing up for chasing that down again in
+three weeks. A fresh process is the only reset I actually trust and it costs
+six seconds a spec.
+
+I left onboarding.test.js alone. It runs its own hook, I do not know why, and I
+was not going to find out on a Thursday.
+
+--- a/e2e/init.js
++++ b/e2e/init.js
+@@ -1,8 +1,11 @@
+ const { device } = require('detox');
+
+-// Added 2026-08-29 to stop cross-spec state leakage. Every spec starts from a
+-// clean install. Green but slow - revisit if CI cost bites.
++const SETTLE_MS = 1500;
++
+ beforeEach(async () => {
+-  await device.launchApp({ delete: true, newInstance: true });
++  await device.launchApp({ newInstance: true });
++  // First tap on a cold process was landing before the bundle was ready.
++  await new Promise((r) => setTimeout(r, SETTLE_MS));
+ });

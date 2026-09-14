@@ -1,87 +1,56 @@
+# Excerpt for review: rows 1-8 of the run report. The published document carries
+# all 22 operations; the 14 not shown here declare no unauthorised response.
 openapi: 3.0.3
 info:
-  title: Orillo Commerce API
-  version: 4.1.0
+  title: Redgate Market Checkout API
+  version: 4.8.1
 paths:
-  /v1/sessions:
-    post:
-      operationId: login
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email, password]
-              properties:
-                email: { type: string, format: email }
-                password: { type: string, minLength: 8 }
+  /v1/catalog:
+    get:
+      operationId: catalog
       responses:
         '200':
-          description: token
+          description: catalogue page
           content:
             application/json:
               schema:
                 type: object
-                required: [access_token, refresh_token]
+                required: [items]
                 properties:
-                  access_token: { type: string }
-                  refresh_token: { type: string }
-        '401': { description: rejected }
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Item' }
+  /v1/promotions:
+    get:
+      operationId: promotions
+      responses:
+        '200':
+          description: active promotions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  codes: { type: array, items: { type: string } }
+        '401':
+          description: unauthorised
+  /v1/shipping-options:
+    get:
+      operationId: shippingOptions
+      responses:
+        '200':
+          description: options
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  options: { type: array, items: { type: string } }
+        '401':
+          description: unauthorised
   /v1/carts:
     post:
-      operationId: createCart
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [currency]
-              properties:
-                currency: { type: string, minLength: 3, maxLength: 3 }
-      responses:
-        '201':
-          description: created
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [id, currency, items]
-                properties:
-                  id: { type: string }
-                  currency: { type: string }
-                  items: { type: array, items: { type: object } }
-        '422': { description: rejected }
-  /v1/carts/{cart_id}:
-    get:
-      operationId: getCart
-      parameters:
-        - name: cart_id
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200':
-          description: cart
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [id, currency, items]
-                properties:
-                  id: { type: string }
-                  currency: { type: string }
-                  items: { type: array, items: { type: object } }
-        '404': { description: unknown cart }
-  /v1/carts/{cart_id}/items:
-    post:
-      operationId: addItem
-      parameters:
-        - name: cart_id
-          in: path
-          required: true
-          schema: { type: string }
+      operationId: addToCart
       requestBody:
         required: true
         content:
@@ -90,15 +59,58 @@ paths:
               type: object
               required: [sku, quantity]
               properties:
-                sku: { type: string }
+                sku: { type: string, minLength: 1, maxLength: 32 }
                 quantity: { type: integer, minimum: 1, maximum: 99 }
       responses:
-        '201': { description: added }
-        '404': { description: unknown cart }
-        '422': { description: rejected }
-  /v1/orders:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '400':
+          description: rejected
+  /v1/carts/{id}:
+    get:
+      operationId: getCart
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: the cart
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+        '404':
+          description: no such cart
+  /v1/checkout:
     post:
-      operationId: placeOrder
+      operationId: checkout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cart_id, payment_method]
+              properties:
+                cart_id: { type: string }
+                payment_method: { type: string, enum: [card, invoice] }
+      responses:
+        '201':
+          description: checkout opened
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Checkout' }
+        '402':
+          description: payment declined
+        '409':
+          description: cart already checked out
+  /v1/checkout/validate:
+    post:
+      operationId: validateCheckout
       requestBody:
         required: true
         content:
@@ -109,37 +121,63 @@ paths:
               properties:
                 cart_id: { type: string }
       responses:
-        '201':
-          description: placed
+        '200':
+          description: priced
           content:
             application/json:
               schema:
                 type: object
-                required: [id, status, total_cents]
+                required: [total_cents]
                 properties:
-                  id: { type: string }
-                  status: { type: string, enum: [placed, paid, cancelled] }
                   total_cents: { type: integer }
-        '404': { description: unknown cart }
-        '422': { description: rejected }
-  /v1/orders/{order_id}:
-    get:
-      operationId: getOrder
-      parameters:
-        - name: order_id
-          in: path
-          required: true
-          schema: { type: string }
+        '400':
+          description: rejected
+        '401':
+          description: unauthorised
+  /v1/checkout/confirm:
+    post:
+      operationId: confirmCheckout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [checkout_id]
+              properties:
+                checkout_id: { type: string }
       responses:
         '200':
-          description: order
+          description: order placed
           content:
             application/json:
               schema:
                 type: object
-                required: [id, status, total_cents]
+                required: [order_id]
                 properties:
-                  id: { type: string }
-                  status: { type: string, enum: [placed, paid, cancelled] }
-                  total_cents: { type: integer }
-        '404': { description: unknown order }
+                  order_id: { type: string }
+        '409':
+          description: already confirmed
+components:
+  schemas:
+    Item:
+      type: object
+      required: [sku, price_cents]
+      properties:
+        sku: { type: string }
+        price_cents: { type: integer }
+    Cart:
+      type: object
+      required: [id, items]
+      properties:
+        id: { type: string }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Item' }
+    Checkout:
+      type: object
+      required: [id, cart_id, total_cents]
+      properties:
+        id: { type: string }
+        cart_id: { type: string }
+        total_cents: { type: integer }

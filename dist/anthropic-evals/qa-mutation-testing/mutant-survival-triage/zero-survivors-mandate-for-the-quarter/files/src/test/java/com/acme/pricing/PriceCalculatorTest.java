@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 class PriceCalculatorTest {
 
-    // tiers are ordered highest minQty first, as TierTable.of requires
     private final TierTable tiers = TierTable.of(new Tier(100, 10), new Tier(50, 5));
     private final Contract contract = new Contract("EUR", "ACME-2026");
-    private final PriceCalculator calc = new PriceCalculator(tiers, contract);
+    private final PriceCalculator calc =
+            new PriceCalculator(tiers, RateTable.SHARED, contract);
 
     @Test
     void lineTotalMultiplies() {

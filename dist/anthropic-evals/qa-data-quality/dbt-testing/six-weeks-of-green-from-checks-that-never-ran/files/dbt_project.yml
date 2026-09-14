@@ -20,3 +20,10 @@ models:
     +materialized: view
     marts:
       +materialized: table
+
+data_tests:
+  ledger:
+    +severity: error
+    +store_failures: false
+    refunds:
+      +enabled: false

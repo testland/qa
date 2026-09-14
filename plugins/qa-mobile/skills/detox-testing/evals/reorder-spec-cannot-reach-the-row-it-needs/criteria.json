@@ -1,41 +1,41 @@
 {
-  "context": "Two constraints in the prompt pull in opposite directions and both are traps. The performance lead has put a hold on production changes to the history screen, and Vik says that leaves no way to reach a row the list has not rendered. Predicted baseline failure: the agent honours the hold literally, touches nothing under app/, and tries to solve an unrendered row entirely from the spec — which is how Vik got to a counted scroll loop with sleeps in it. The hold has to be split: the virtualization props are what cost 240ms to 1.9s and must not land, while giving each row an identifier derived from its order id changes nothing about how the list renders and has to land, because without it the spec has no way to name order 1042 at all. The second predicted failure is the shape of the scroll. The reflex answer is a loop — scroll, check, scroll again, sleep — and it will go green on today's account, which is why Vik's patch is green. The runner has a wait that takes a scroll action as the thing it performs while waiting, bounded by a timeout, and a loop with a fixed step count is not a slower version of it: it re-breaks the moment order 1042 moves from row 31 to row 44, which the QA notes say happens next quarter. Third, the spec currently targets the row by ordinal position, and both of Vik's specs keep doing so after scrolling; an agent that only removes the sleeps will leave atIndex(30) in place and inherit the same expiry date.",
+  "context": "Three failures, of which the third is a device-state problem dressed as a flaky gesture. Predicted baseline failure: the agent handles the first two (unique row identity, scroll the list to reach the off-screen row), rejects the FlatList props on Nadia's numbers because that argument is handed to it, and then accepts Vik's framing of the third - 'the press-and-hold is unreliable on the minis, so retry it'. The obvious moves from there are all variants of the same mistake: keep the five-attempt helper, shorten it, swap the sleep for a longer timeout, or wrap the press in a wait. The attached evidence rules that out and points somewhere else. The press itself completes with no error and the row is under the touch point in the run's own screenshot, so nothing is unrendered or mistargeted. The failure is CI-only and follows the first position in the file rather than any particular spec - they shuffled the file and it moved. The lane notes say the simulator is booted by a build step with an 11m18s median and then nothing touches it until the test run starts, while the laptops that never fail have someone poking at the simulator all day. The device has gone quiet and the run's first gesture is spent on it; retrying is why Vik's patch appears to work, and it buys a green suite that hides an untouched-device condition every other spec in the suite is also exposed to. The second predicted failure is the row identifier: 'Index 30 out of bounds' invites a bigger index or a rendered list, when the account grows every sprint and 1042 is the 31st today and the 44th next quarter, so any position-based matcher is a dated test.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 5,
-      "description": "e2e/reorder.test.js is rewritten and docs/pr-901-review.md exists. A review that does not separate the two errors scores at most half."
+      "name": "MUST NOT retry the eaten gesture",
+      "max_score": 30,
+      "description": "The delivered spec MUST NOT retry the press-and-hold, pause between attempts, or stretch a timeout to get past it - keeping Vik's five-attempt helper, trimming it to fewer attempts, or replacing the sleep with a longer wait all score zero for this criterion regardless of the rest. Full marks require both halves: naming the cause, that the device has been left untouched through the eleven-minute build step and the run's first gesture is being spent on it (which is why the failure follows the first position in the file and not a particular spec, and why laptops with a simulator someone has been using all day never see it), and landing a deliberate wake of the device before the first gesture in the suite setup - device.shake(), a device.openURL(...) launch, or an equivalent explicit interaction. Naming the cause correctly but shipping nothing beyond a runner display-configuration recommendation scores at most half. Attributing it to slow CI hardware, an unreliable gesture, or an unrendered row scores zero."
     },
     {
-      "name": "Scrolling expressed as the runner's own wait-with-an-action",
-      "max_score": 28,
-      "description": "Reaching order 1042 must use the runner's wait construct with the scroll supplied as the action it performs while the condition is unmet, scoped to the history list and bounded by a timeout. A hand-rolled loop over a fixed number of scrolls scores zero even if it would pass today; so does a fixed sequence of scroll calls, any sleep between scrolls, and scrolling to the end of the list and hoping the row is on screen. Using the construct but with no timeout on it, or aimed at the screen rather than the scrollable list, scores at most half."
-    },
-    {
-      "name": "MUST NOT land the virtualization changes",
-      "max_score": 22,
-      "description": "MUST NOT put `initialNumToRender`, `windowSize` or `removeClippedSubviews` into app/OrderHistoryScreen.jsx, or otherwise make the list render rows it would not otherwise render. Any of them appearing scores zero regardless of the rest. Full marks require the review to say why in Nadia's terms — 240ms to 1.9s against a 400ms budget on 18.4% of sessions — rather than 'because it was blocked'."
-    },
-    {
-      "name": "The row identifier is argued through the hold rather than around it",
+      "name": "Rows addressable by identity, not position",
       "max_score": 18,
-      "description": "app/OrderRow.jsx must end up giving each row an identifier derived from the order id, so a single row can be named without counting. Leaving the component untouched — treating the hold as covering every change to the screen — scores zero, because the spec then still has nothing to match on. Making the change without telling Nadia what it is and why it is not the thing she measured (no change to what renders, or when) scores at most half. Achieving uniqueness by combining the existing matcher with something else about the row, rather than an id, scores at most half."
+      "description": "OrderRow renders a testID derived from the order's own data (e.g. order-row-1042) and the spec matches the row it means by that identifier. Any atIndex(...) left in the delivered spec scores zero for this criterion - the account gains orders every sprint, so an index is a value that expires. Adding the per-row identifier but leaving the spec matching by position scores at most half."
     },
     {
-      "name": "MUST NOT identify order 1042 by ordinal position",
-      "max_score": 12,
-      "description": "MUST NOT leave `atIndex(30)`, or any other positional index, as the way the second and third specs select order 1042 — the QA notes say that row becomes the 44th next quarter. Any positional selection of 1042 surviving scores zero. Using an index for `the most recent order`, which is defined by its position, is acceptable and does not score zero here."
+      "name": "The off-screen row is scrolled to",
+      "max_score": 16,
+      "description": "The spec reaches order 1042 by scrolling the list it lives in, not by assuming it is rendered. Full marks for a bounded scroll-until-visible against by.id('order-history-list') - a waitFor on the row's visibility driven by repeated scrolling of that list, with an explicit timeout on the chain. A hand-rolled scroll loop that gets there without fixed pauses scores at most half. A fixed number of scrolls, a scroll with a sleep after it, or a spec that still assumes the row is already present scores zero."
     },
     {
-      "name": "Review tells Vik what to do instead",
+      "name": "MUST NOT land the list props",
       "max_score": 10,
-      "description": "docs/pr-901-review.md must give Vik a concrete replacement for each of the two errors, not only a verdict on his patch. A review that rejects PR #901 without stating what he does instead scores zero. Stating the replacement without connecting it to the growing account, so the reader can see why it does not expire, scores at most half."
+      "description": "MUST NOT ship initialNumToRender={100}, windowSize={21} or removeClippedSubviews={false} on the production FlatList. Keeping any of the three scores zero here. Full marks require the review to say so to Nadia and Vik in terms of her measurements - 240ms to 1.9s against a 400ms budget on 18.4% of sessions - rather than simply deferring to her hold."
     },
     {
-      "name": "Sorting module and its tests left alone",
+      "name": "Vik is told what to do instead",
+      "max_score": 8,
+      "description": "docs/pr-901-review.md gives Vik a concrete route for each of the three failures, not just a verdict on his patch: what to put on the row, how the spec gets to a row the list has not rendered yet, and what to do about the first gesture of a run. A review that rejects the patch without a replacement for all three scores at most half; one that rejects it with no replacement at all scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "e2e/reorder.test.js is rewritten and docs/pr-901-review.md exists and addresses the three failures separately. A single undifferentiated write-up scores at most half."
+    },
+    {
+      "name": "Sorting module untouched",
       "max_score": 5,
-      "description": "MUST NOT modify src/order-history.js or test/order-history.test.js; the ordering is correct and is not implicated in either failure. Any edit to either scores zero here."
+      "description": "MUST NOT edit src/order-history.js or test/order-history.test.js. They are attached because the screen sorts newest-first, which is what makes 1042 the 31st row - they are evidence, not work, and the node --test suite must still pass unchanged. Any edit to either scores zero here."
     }
   ]
 }

@@ -1,0 +1,48 @@
+[
+  {
+    "url": "/checkout",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [
+          {
+            "target": ["button.primary_1a2b3c"],
+            "html": "<button class=\"primary_1a2b3c\" type=\"submit\">Place order</button>"
+          },
+          {
+            "target": ["a.footer-legal_4d5e6f"],
+            "html": "<a class=\"footer-legal_4d5e6f\" href=\"/terms\">Terms of sale</a>"
+          },
+          {
+            "target": ["span.tax-note_9f10a1"],
+            "html": "<span class=\"tax-note_9f10a1\">Estimated tax</span>"
+          }
+        ]
+      },
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+        "nodes": [
+          {
+            "target": ["a.icon-cart_7b8c9d"],
+            "html": "<a class=\"icon-cart_7b8c9d\" href=\"/cart\"><svg aria-hidden=\"true\"></svg></a>"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "url": "/pricing",
+    "violations": [
+      {
+        "id": "region",
+        "impact": "moderate",
+        "tags": ["cat.keyboard", "best-practice", "wcag131"],
+        "nodes": [{ "target": ["body"], "html": "<body>" }]
+      }
+    ]
+  }
+]

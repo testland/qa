@@ -15,10 +15,17 @@ Posted to #platform every Monday by the job.
 | 2026-09-01 | 4              | 100.0%   | 0              | ok  |
 | 2026-09-08 | 4              | 100.0%   | 0              | ok  |
 
-The 2026-08-11 run picked up `/pricing` as well; nobody knows why and it has not
-recurred. Release notes for that week: "marketing pages moved to the static
-renderer for a day, reverted 2026-08-12".
+Release note filed against the 2026-08-11 window: "docs pages moved to the
+static renderer for a day, reverted 2026-08-12".
 
-Shipped to staging during this period and never reported on: the token page
-under settings (2026-07-20), the audit log (2026-08-03), project API keys
-(2026-08-24), the invite flow (2026-09-01).
+## Staging deploy log, same period
+
+| Date       | Shipped                                       |
+|------------|-----------------------------------------------|
+| 2026-07-13 | dashboard usage chart                         |
+| 2026-07-20 | settings: personal access tokens page         |
+| 2026-08-03 | audit log                                     |
+| 2026-08-10 | docs static renderer (reverted 2026-08-12)    |
+| 2026-08-24 | project API keys                              |
+| 2026-09-01 | team invite flow                              |
+| 2026-09-07 | integrations: per-provider detail pages       |

@@ -2,52 +2,70 @@
 
 ## Problem Description
 
-`harbor-app` is finally getting snapshot coverage. The package is installed,
-the project exists on the vendor side, the token is in repo secrets as
-`CHROMATIC_PROJECT_TOKEN`. Nothing has run yet - there is no build history at
-all on this project, not one.
+`harbor-app` is finally getting snapshot coverage. The package is installed, the
+project exists on the vendor side, the token is in repo secrets as
+`CHROMATIC_PROJECT_TOKEN`. Ravi did the wiring last week and then went on leave
+until the 22nd, so what is in this dump is his: `.github/workflows/visual.yml`
+and `chromatic.config.json`.
 
-Ravi did the wiring last week and then went on leave until the 22nd. What he
-left is in this dump: `.github/workflows/visual.yml` and
-`chromatic.config.json`. I need it finished and a short plan I can put in front
-of Priya and our release manager on Thursday.
+The thing I keep being asked about is the bill. We are on the 5,000-snapshot
+starter plan and the library is 1,140 stories, so Ravi was counting every
+photograph and you should assume I will be asked to justify each one on Thursday.
 
-His handover note, verbatim, so you know what he was going for:
+`reports/vendor-project.md` is what the project page says as of this morning.
+`docs/nav-v2-status.md` is where `redesign/nav-v2` actually is.
+
+Ravi's handover note, verbatim, so you know what he was going for:
 
 > 1. First build runs off `redesign/nav-v2`, not `main`. `main` still carries
->    the 2023 navigation and we delete it the week after next - it would be
->    silly to spend the rollout recording the old design as the thing we measure
+>    the 2023 navigation and we delete it the week after next - it would be silly
+>    to spend the rollout recording the old design as the thing we measure
 >    everything against. Run it on the branch and the new nav is what we compare
 >    to from day one.
-> 2. Auto-accept is on. When `redesign/nav-v2` lands, that build comes back with
->    roughly 300 changed stories, because the nav chrome is on nearly every
+> 2. I limited that first build to the nav stories. Paying for 1,140 photographs
+>    on a run nobody is going to open is most of a month's allowance, and the nav
+>    is the only thing changing.
+> 3. The PR step is on dry-run for now. Gives us a week of watching the wiring
+>    behave without spending anything. Flip it off when we are happy.
+> 4. Auto-accept is on. When `redesign/nav-v2` lands, that build comes back with
+>    a few hundred changed stories, because the nav chrome is on nearly every
 >    screen. Priya signed off the Figma file on 2026-09-02 and nobody is going to
->    sit and click accept 300 times.
-> 3. Pull-request branches accept automatically too. The author has looked at
->    their own diff by definition and I would rather they were not sat waiting on
->    a tool.
-
-`docs/nav-v2-status.md` is where that branch actually is, pulled this morning.
+>    sit and click accept a few hundred times.
+> 5. Changed-only mode stays on. Sasha wants it off - "photograph everything
+>    every time and then we cannot miss anything" - and I said no, on cost.
 
 What I want from you is the finished wiring and the plan. The plan is what I am
-presenting, so it has to hold up in front of the release manager: it needs to
-say which branch the first build runs on, what happens in what order during
-merge week, and what state the settings are left in afterwards.
+presenting, so it has to hold up in front of Priya and our release manager: it
+needs to say which branch the first build runs on, and what happens in what
+order during merge week.
 
 ## Output Specification
 
 1. Write `.github/workflows/visual.yml`.
 2. Write `chromatic.config.json`.
-3. Write `docs/visual-rollout.md`: walk through each of Ravi's three points and
-   state what the delivered wiring does about it, say which branch the first
+3. Write `docs/visual-rollout.md`: take Ravi's five points one at a time and
+   state what the delivered wiring does about each, say which branch the first
    build runs on and why that branch, and give the ordered sequence for merge
-   week including anything that has to be put back afterwards.
+   week.
 
 Do not touch `src/nav/breakpoints.mjs` or `test/breakpoints.test.mjs`.
 
 ## Input Files
 
 Extract the following files before beginning.
+
+=============== FILE: reports/vendor-project.md ===============
+# harbor-app - project page, pulled 2026-09-11
+
+| Field                         | Value                          |
+|-------------------------------|--------------------------------|
+| Project created               | 2026-09-08 by ravi@harbor.test |
+| Token added to repo secrets   | 2026-09-09                     |
+| Plan                          | Starter - 5,000 snapshots/mo   |
+| Snapshots this billing period | 0 / 5,000                      |
+| Builds                        | 0                              |
+| Baseline                      | none                           |
+| Linked branches               | none                           |
 
 =============== FILE: docs/nav-v2-status.md ===============
 # redesign/nav-v2 - status as of 2026-09-11
@@ -83,8 +101,8 @@ are unrelated to this work and are untouched by the branch.
   "$schema": "https://www.chromatic.com/config-file.schema.json",
   "buildScriptName": "build-storybook",
   "onlyChanged": true,
-  "autoAcceptChanges": true,
-  "exitZeroOnChanges": true
+  "onlyStoryNames": ["Navigation/*", "Shell/*"],
+  "autoAcceptChanges": true
 }
 
 =============== FILE: .github/workflows/visual.yml ===============
@@ -113,7 +131,7 @@ jobs:
       - name: Snapshots
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        run: npx chromatic
+        run: npx chromatic --dry-run
 
 =============== FILE: package.json ===============
 {
@@ -122,7 +140,7 @@ jobs:
   "private": true,
   "scripts": {
     "build-storybook": "storybook build",
-    "test": "node --test test/"
+    "test": "node --test"
   },
   "devDependencies": {
     "@storybook/react-vite": "8.3.5",

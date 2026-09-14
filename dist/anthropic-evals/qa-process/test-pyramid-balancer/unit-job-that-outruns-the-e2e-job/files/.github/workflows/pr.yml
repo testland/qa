@@ -1,0 +1,40 @@
+name: pr
+on: [pull_request]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    services:
+      postgres: { image: postgres:16 }
+      chromium: { image: browserless/chrome:latest }
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      E2E_BASE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: node --test test/unit
+
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres: { image: postgres:16 }
+      carrier-stub: { image: ghcr.io/dispatch/carrier-stub:4 }
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      CARRIER_STUB_URL: http://localhost:8080
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: node --test test/integration
+
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      E2E_BASE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: docker compose up -d
+      - run: node --test --test-concurrency=4 test/e2e

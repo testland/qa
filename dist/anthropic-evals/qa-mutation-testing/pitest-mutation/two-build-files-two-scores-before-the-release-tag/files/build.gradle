@@ -18,8 +18,8 @@ test {
 }
 
 pitest {
-    targetClasses = ['com.acme.*']
-    targetTests = ['com.acme.*Test']
+    targetClasses = ['com.acme.ledger.*']
+    targetTests = ['com.acme.ledger.*Test*']
     mutationThreshold = 85
     outputFormats = ['HTML']
     junit5PluginVersion = '1.2.1'

@@ -3,9 +3,9 @@
 ## Problem Description
 
 Our nightly close reconciles the in-process posting tally against what the
-ledger service actually wrote. It has matched to the cent for two years. Since
-we moved ingest onto worker threads in July it disagrees roughly one night in
-six, always in the same direction — the tally is low. Last Tuesday it was 1,412
+ledger service actually wrote. It matched to the cent for two years. Since we
+moved ingest onto worker threads in July it disagrees roughly one night in six,
+always in the same direction — the tally is low. Last Tuesday it was 1,412
 postings short out of 3.1 million, on Thursday it was 6 short, and on eleven
 other nights it was exactly right.
 
@@ -14,16 +14,21 @@ same `SharedArrayBuffer` and calls `post()` for every line it parses. There are
 four ingest threads in production, eight during catch-up.
 
 There is already a test in the repo that starts two ingest threads against one
-tally. It was written after the July migration precisely so this could not
-happen, and it has been green on every run since. Two engineers have now looked
-at this and both came back with "concurrency is covered, look at the ledger
-service". I do not believe them, because the ledger service is not the thing
-that changed in July.
+tally. It was written in July precisely so this could not happen, and it has
+been green on every run since. Two engineers have now looked at this and both
+came back with "concurrency is covered, look at the ledger service". I do not
+believe them, because the ledger service is not the thing that changed in July.
 
 What I want out of this is a test that goes red against `tally.js` as it stands
-right now and that goes red every single time it is run, not a test that needs
-a big enough number of postings and a lucky night. Then fix the accumulator and
-show me the same test going green.
+right now and that goes red every single time it is run on any machine, not a
+test that needs a big enough number of postings and a lucky night. Then fix the
+accumulator and show me the same test going green.
+
+One thing before you start: the money slot in that buffer is a float64 and it
+has to stay wide enough for a real night. We carry 3.1 million postings an
+evening and the running total in cents goes past two billion well before dawn,
+which is why it was widened in March. Whatever you do to make the accumulator
+safe has to still hold that number.
 
 ## Output Specification
 
@@ -31,16 +36,16 @@ show me the same test going green.
    shipped today, and it must fail because the test arranges the collision
    rather than because a particular machine happened to schedule the threads
    that way.
-2. Then make it pass. `src/tally.js` may change only inside `post`, `cents`
-   and `postings` — the storage stays a `SharedArrayBuffer` shared across
-   threads, and ingest stays on worker threads.
-3. Repair `src/tally.concurrent.test.js` so that a failure occurring inside an
-   ingest thread can actually fail the suite. Keep the file and the test name.
-4. Write `docs/lost-update.md`: the numbers you actually observed before the
-   change (expected total against observed total, and over how many
-   executions), plus why the existing concurrent test never caught this.
-5. `npm test` must pass when you are finished. Leave
-   `src/tally.basic.test.js` alone.
+2. Then make it pass. The storage stays one `SharedArrayBuffer` shared across
+   the ingest threads and ingest stays on worker threads.
+3. `src/tally.basic.test.js` is not to be edited, and it has to keep passing
+   unchanged.
+4. `src/tally.concurrent.test.js` keeps its filename and its test name. Say
+   whether it is worth keeping and act on your answer.
+5. Write `docs/lost-update.md`: the expected total against the observed total
+   that you actually saw before the change, over how many executions, and why
+   the test written in July stayed green for two months.
+6. `npm test` must pass when you are finished.
 
 ## Input Files
 
@@ -59,39 +64,38 @@ Extract the following files before beginning.
 =============== FILE: src/tally.js ===============
 'use strict';
 
-const SLOT_CENTS = 0;
-const SLOT_POSTINGS = 1;
+// Byte 0..7 float64 cents (nightly totals run past 2^31), byte 8..11 int32 postings.
+const TALLY_BYTES = 16;
 
-// Shared accumulator. Every ingest thread holds a handle onto the same
-// SharedArrayBuffer and posts into these two slots.
 function createTally(sharedBuffer) {
-  const view = new Int32Array(sharedBuffer);
+  const cents = new Float64Array(sharedBuffer, 0, 1);
+  const postings = new Int32Array(sharedBuffer, 8, 1);
 
   return {
-    post(cents) {
-      view[SLOT_CENTS] = view[SLOT_CENTS] + cents;
-      view[SLOT_POSTINGS] = view[SLOT_POSTINGS] + 1;
+    post(amountCents) {
+      cents[0] = cents[0] + amountCents;
+      postings[0] = postings[0] + 1;
     },
     cents() {
-      return view[SLOT_CENTS];
+      return cents[0];
     },
     postings() {
-      return view[SLOT_POSTINGS];
+      return postings[0];
     },
   };
 }
 
-module.exports = { createTally, SLOT_CENTS, SLOT_POSTINGS };
+module.exports = { createTally, TALLY_BYTES };
 
 =============== FILE: src/tally.basic.test.js ===============
 'use strict';
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { createTally } = require('./tally');
+const { createTally, TALLY_BYTES } = require('./tally');
 
 test('accumulates postings on a single thread', () => {
-  const tally = createTally(new SharedArrayBuffer(8));
+  const tally = createTally(new SharedArrayBuffer(TALLY_BYTES));
 
   tally.post(1200);
   tally.post(305);
@@ -100,11 +104,22 @@ test('accumulates postings on a single thread', () => {
   assert.equal(tally.postings(), 2);
 });
 
+test('carries a full night without losing precision', () => {
+  const tally = createTally(new SharedArrayBuffer(TALLY_BYTES));
+
+  tally.post(2147483647);
+  tally.post(2147483647);
+
+  assert.equal(tally.cents(), 4294967294);
+  assert.equal(tally.postings(), 2);
+});
+
 =============== FILE: src/tally.concurrent.test.js ===============
 'use strict';
 
 const test = require('node:test');
 const { Worker } = require('node:worker_threads');
+const { TALLY_BYTES } = require('./tally');
 
 const INGEST = `
 const assert = require('node:assert/strict');
@@ -119,7 +134,7 @@ assert.ok(tally.postings() >= workerData.postings, 'this ingest thread posted no
 `;
 
 test('two ingest threads share one tally', async () => {
-  const buffer = new SharedArrayBuffer(8);
+  const buffer = new SharedArrayBuffer(TALLY_BYTES);
   const modulePath = require.resolve('./tally');
   const finished = [];
 
@@ -147,7 +162,8 @@ After: four `node:worker_threads` ingest threads over one `SharedArrayBuffer`,
 catch-up after an outage.
 
 Nothing else in the close path changed. The ledger service was last deployed
-in April.
+in April. The money slot was widened to a float64 in March, before any of this,
+because a busy night carries more cents than an int32 holds.
 
 ## Reconciliation results since the migration
 

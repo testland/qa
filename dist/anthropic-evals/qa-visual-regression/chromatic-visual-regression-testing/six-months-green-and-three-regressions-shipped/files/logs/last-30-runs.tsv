@@ -1,31 +1,31 @@
-run	date	branch	exit	job_result
-1071	2026-02-27	main	0	green
-1072	2026-03-01	main	0	green
-1073	2026-03-02	main	0	green
-1074	2026-03-04	main	0	green
-1075	2026-03-05	main	21	green
-1076	2026-03-06	main	21	green
-1077	2026-03-09	main	4	green
-1078	2026-03-10	main	0	green
-1079	2026-04-14	main	0	green
-1080	2026-04-21	main	3	green
-1081	2026-05-12	main	0	green
-1082	2026-05-18	main	0	green
-1083	2026-05-19	main	0	green
-1084	2026-05-26	main	4	green
-1085	2026-06-02	main	201	green
-1086	2026-06-03	main	0	green
-1087	2026-06-17	main	0	green
-1088	2026-07-01	main	23	green
-1089	2026-07-02	main	4	green
-1090	2026-07-03	main	4	green
-1091	2026-07-04	main	4	green
-1092	2026-07-21	main	0	green
-1093	2026-08-05	main	0	green
-1094	2026-08-06	main	0	green
-1095	2026-08-07	main	0	green
-1096	2026-08-18	main	11	green
-1097	2026-08-25	main	0	green
-1098	2026-09-01	main	0	green
-1099	2026-09-08	main	22	green
-1100	2026-09-11	main	0	green
+run	date	branch	cli_exit	cli_seconds	job_result
+1071	2026-02-27	main	0	91	green
+1072	2026-03-01	main	0	84	green
+1073	2026-03-02	main	0	96	green
+1074	2026-03-04	main	0	88	green
+1075	2026-03-05	main	21	42	green
+1076	2026-03-06	main	21	39	green
+1077	2026-03-09	main	4	61	green
+1078	2026-03-10	main	0	79	green
+1079	2026-04-14	main	0	103	green
+1080	2026-04-21	main	0	87	green
+1081	2026-05-12	main	0	92	green
+1082	2026-05-18	main	0	81	green
+1083	2026-05-19	main	0	94	green
+1084	2026-05-26	main	4	58	green
+1085	2026-06-02	main	201	33	green
+1086	2026-06-03	main	0	86	green
+1087	2026-06-17	main	0	90	green
+1088	2026-07-01	main	23	44	green
+1089	2026-07-02	main	4	57	green
+1090	2026-07-03	main	4	60	green
+1091	2026-07-04	main	4	56	green
+1092	2026-07-21	main	0	85	green
+1093	2026-08-05	main	0	99	green
+1094	2026-08-06	main	0	82	green
+1095	2026-08-07	main	0	108	green
+1096	2026-08-18	main	11	29	green
+1097	2026-08-25	main	0	93	green
+1098	2026-09-01	main	0	77	green
+1099	2026-09-08	main	22	41	green
+1100	2026-09-11	main	0	89	green

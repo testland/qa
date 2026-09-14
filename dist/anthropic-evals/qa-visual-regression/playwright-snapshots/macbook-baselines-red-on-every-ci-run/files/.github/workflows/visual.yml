@@ -16,11 +16,9 @@ jobs:
           node-version: '20'
 
       - run: npm ci
+      - run: npx playwright install --with-deps
 
-      - name: Install browsers
-        run: npx playwright install --with-deps
-
-      - name: Run tests
+      - name: Run visual checks
         run: npx playwright test
 
       - name: Upload report
@@ -28,3 +26,4 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 14

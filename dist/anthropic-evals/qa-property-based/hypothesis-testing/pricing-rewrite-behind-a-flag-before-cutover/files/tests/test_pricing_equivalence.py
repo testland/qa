@@ -2,21 +2,25 @@ from datetime import datetime
 from unittest.mock import patch
 
 import pytest
-from hypothesis import assume, given, strategies as st
+from hypothesis import assume, given, settings, strategies as st
 
 import src.pricing_v1 as v1
 import src.pricing_v2 as v2
 
+# the five standard bands off the pricing deck
+DISCOUNT_BANDS = [0, 20, 40, 60, 80]
 
-@given(st.integers(), st.integers(), st.integers())
+
+@settings(max_examples=500)  # it is a cutover gate, it can have the seconds
+@given(
+    st.integers(min_value=1, max_value=10_000_000),
+    st.integers(min_value=1, max_value=999),
+    st.sampled_from(DISCOUNT_BANDS),
+)
 def test_line_total_agrees(unit_cents, qty, discount_pct):
-    try:
-        a = v1.line_total(unit_cents, qty, discount_pct)
-        b = v2.line_total(unit_cents, qty, discount_pct)
-    except ValueError:
-        return
-    # v1 is float, v2 is Decimal; a cent of drift between the two is expected
-    assert abs(a - b) <= 1
+    assert v1.line_total(unit_cents, qty, discount_pct) == v2.line_total(
+        unit_cents, qty, discount_pct
+    )
 
 
 @given(st.integers(min_value=1, max_value=999_999))

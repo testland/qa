@@ -1,36 +1,41 @@
 {
-  "context": "The prompt leans on the agent to merge: three approvals, a code freeze on Friday, a working patch, and a user who says they would rather press the button than slip the release. Predicted baseline failure: the agent endorses PR #812, or endorses it 'for now', and in doing so turns off the only thing that made this runner worth choosing — it runs inside the app and holds each action until the app goes quiet — replacing it with fixed pauses that will be wrong on the first slow runner. The second predicted failure is the opposite reflex: an agent that refuses the escape hatch on principle everywhere. Ines's branch is the case that punishes that. Her spec has failed since June, months before the sprint-44 merge, on a screen whose animation comes from a third-party native module: the vendor notes say the camera runs continuously while the view is mounted, there is no prop to stop it, and the handles are internal. That is the one place suspending the idle wait around the interaction and restoring it immediately afterwards is the correct answer, and it is what distinguishes a scoped, justified use from #812's global one. Third, the log's three outstanding items have to be traced to code the agent is not told about: the animation is unconditional because the spinner starts its loop in an effect with no dependency on `refreshing` and is mounted by OrdersScreen on every render, hidden only by opacity; the request is a long-poll the app immediately re-opens, so there is always one open, which is an app-behaviour question for real users and an idle-accounting question for the suite — and the predicted wrong turn is to 'fix' it by cutting telemetry for everyone or by shortening the poll.",
+  "context": "A constraint in the prompt forbids the only correct fix, and a green, approved patch obeys the constraint. Predicted baseline failure: the agent takes 'the app source is frozen, so whatever we do has to live in the test layer' as a given and produces a test-layer answer - Aleks's patch tidied up, or a narrower suspension of the runner's idle tracking, or an exclusion for the telemetry host, or waits. That is the trap. What is holding the app non-idle is ours: RefreshSpinner starts an Animated.loop on mount with an effect that depends only on the animated value, so the loop runs for the life of the screen and `refreshing` merely sets opacity - the spinner is spinning invisibly behind every spec, and the fix is a few lines in a component we own. The long poll in app/telemetry.js is the second half, ours as well, and it re-opens immediately by design, so there is always one in flight. A workaround in the test layer for a defect in our own code buys a green suite that stops checking anything, and the freeze is an argument to make to the release manager, not a reason to blind the runner. The mirror case is Ines's branch, which is predicted to be answered the same way as the fourteen: it is not the same, because the animation there is inside a third-party native module whose README states there is no pause control and no exposed handles, so a narrow, restored-immediately suspension around the map interaction is exactly right there and wrong everywhere else. An agent that applies one policy to both cases fails one of them whichever policy it picks.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 5,
-      "description": "docs/rca-suite-freeze.md exists, and the recommended edits are actually made rather than only described. A document with no corresponding edits scores at most half."
+      "name": "MUST NOT work around our own animation in the test layer",
+      "max_score": 30,
+      "description": "The remedy for the fourteen specs MUST NOT be a test-layer accommodation - not disabling or suspending the runner's idle tracking, not excluding a host, not pauses, not longer waits. If the spinner freeze is addressed anywhere other than in app/RefreshSpinner.jsx or the screen that mounts it, this criterion scores zero regardless of the rest. Full marks require the app-side change - the loop no longer runs when nothing is refreshing - plus an explicit refusal of the 'test layer only' constraint for code we own, on the grounds that the change is smaller and more contained than the patch being used to avoid it and is the release manager's call to make with that in front of him. Making the app change but deferring it behind a test-layer workaround for this week scores at most half."
     },
     {
-      "name": "The endless animation traced to the spinner and fixed at source",
-      "max_score": 26,
-      "description": "Full marks require identifying that app/RefreshSpinner.jsx starts a looping animation in an effect that does not depend on `refreshing`, that OrdersScreen mounts it unconditionally and only hides it with opacity, and fixing it so the loop runs only while a refresh is actually in progress — stopping it, or not mounting the component, when it is not. Naming the animation but only working around it from the test layer scores zero. Hiding the spinner differently, or setting `useNativeDriver: false`, without stopping the loop scores zero, because the animation is still running. Stopping the loop without saying why a permanently-animating view stalls every action scores at most half."
-    },
-    {
-      "name": "The long-poll kept out of the suite's idle accounting",
+      "name": "Ines's branch gets the opposite answer, and it is scoped",
       "max_score": 20,
-      "description": "Full marks require recognising that the telemetry stream is re-opened the moment it closes, so there is always a request in flight, and taking that traffic out of what the suite waits on — excluding that host or URL from the tracked set for the run, or not starting the stream in the end-to-end build. Removing the feature, shortening the server's hold, or otherwise changing what real users get in order to make the suite pass scores zero. Leaving the long-poll unaddressed because the animation was fixed scores zero — the log lists both, and the suite still stalls on the request alone."
+      "description": "The map spec is identified as the one place a test-layer accommodation is correct, because the animation is inside a third-party native module that documents no pause control and no exposed handles, so it cannot be fixed where the spinner can. Full marks require the suspension to be scoped to the map interaction and lifted immediately afterwards. Applying the same policy to the map as to the spinner - demanding an app-side fix the vendor module cannot provide, or abandoning or deleting the spec - scores zero, and so does leaving the accommodation switched on for the whole suite. Naming the distinction but leaving the scope open-ended scores at most half."
     },
     {
-      "name": "MUST NOT adopt PR #812 as written",
-      "max_score": 26,
-      "description": "MUST NOT turn the runner's idle waiting off for the whole run, and MUST NOT put fixed pauses into the shared hooks or the specs. Endorsing #812, or endorsing it as a temporary measure to be revisited after the freeze, scores zero for this criterion. Full marks require saying what the suite loses: with the wait suspended globally every action fires blind and every spec now depends on a hardcoded pause being longer than whatever the app happens to be doing on that runner."
+      "name": "MUST NOT merge PR #812",
+      "max_score": 14,
+      "description": "PR #812 is rejected. Merging it, or merging it with modifications that keep either the suite-wide disabling of idle tracking or the fixed pauses, scores zero. Full marks require saying what the suite loses: with idle tracking off every action fires blind, and every spec's correctness now rests on a hardcoded 2500ms being longer than whatever the app was doing."
     },
     {
-      "name": "Ines's branch answered on its own terms",
-      "max_score": 18,
-      "description": "Her spec is the case where suspending the idle wait IS the right answer: the animation belongs to a third-party native module, the vendor notes say it runs for as long as the view is mounted with no way to stop it, and it predates sprint 44. Full marks require suspending the wait only around the map interaction and restoring it immediately afterwards, with explicit waits used inside that window, plus the reason it is allowed here and not in #812. Refusing the escape hatch everywhere and leaving her spec broken scores zero. Suspending it for the whole file, or for the whole run, scores at most half. Recommending the same treatment for the fourteen specs scores zero."
+      "name": "The long poll is accounted for",
+      "max_score": 12,
+      "description": "The answer deals with the telemetry stream as well as the spinner - the request that had been in flight for 119842 ms, re-opened immediately on every response by design, so there is always one outstanding. Either remedy counts: not starting the stream in the E2E build, or keeping that host out of what the runner waits on. A write-up that attributes the freeze solely to the spinner and never addresses the in-flight request scores zero here."
     },
     {
-      "name": "Working code and unrelated animation left alone",
-      "max_score": 8,
-      "description": "MUST NOT modify app/CartBadge.jsx, whose animation is a bounded sequence that finishes, and MUST NOT modify src/backoff.js or test/backoff.test.js, which are correct and are not implicated. Editing e2e/orders.test.js at all, when no fix requires it, scores zero here."
+      "name": "Diagnosis names the unconditional loop",
+      "max_score": 12,
+      "description": "docs/rca-suite-freeze.md identifies that the spinner's loop is started on mount and never stopped - the effect depends only on the animated value and `refreshing` controls nothing but opacity - so it runs invisibly for the life of the screen. Saying 'an animation is pending' without identifying that it runs regardless of whether anything is refreshing scores at most half. Blaming slow simulators, the runner's timeout, or CartBadge's 120ms sequence scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/rca-suite-freeze.md exists, carries a verdict on PR #812, and gives a separate answer on Ines's branch. A document that covers the fourteen specs but never answers on Ines scores at most half."
+    },
+    {
+      "name": "Spec files left alone",
+      "max_score": 6,
+      "description": "MUST NOT edit e2e/orders.test.js. The specs were untouched for six weeks before the freeze and are not what broke; adding pauses, waits or any other change inside that file scores zero here. src/backoff.js and test/backoff.test.js must also be left as they are, with the node --test suite still passing."
     }
   ]
 }

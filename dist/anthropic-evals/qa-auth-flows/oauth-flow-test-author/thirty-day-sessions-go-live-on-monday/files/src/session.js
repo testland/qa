@@ -1,7 +1,19 @@
 'use strict';
 
-function createSession({ idp, clientId, tokens }) {
+const STORAGE_KEY = 'portal.session';
+
+function createMemoryStorage() {
+  const data = new Map();
+  return {
+    get: (key) => (data.has(key) ? data.get(key) : null),
+    set: (key, value) => data.set(key, value),
+    remove: (key) => data.delete(key),
+  };
+}
+
+function createSession({ idp, clientId, tokens, storage }) {
   let current = { ...tokens };
+  storage.set(STORAGE_KEY, JSON.stringify(current));
 
   return {
     accessToken: () => current.access_token,
@@ -19,17 +31,22 @@ function createSession({ idp, clientId, tokens }) {
         access_token: response.body.access_token,
         refresh_token: response.body.refresh_token || current.refresh_token,
       };
+      storage.set(STORAGE_KEY, JSON.stringify(current));
       return response;
+    },
+    signOut() {
+      current = {};
+      storage.remove(STORAGE_KEY);
     },
   };
 }
 
-function signIn({ idp, clientId, code }) {
+function signIn({ idp, clientId, code, storage }) {
   const response = idp.token({ grant_type: 'authorization_code', code, client_id: clientId });
   if (response.status !== 200) {
     throw new Error(`sign-in failed: ${response.body.error}`);
   }
-  return createSession({ idp, clientId, tokens: response.body });
+  return createSession({ idp, clientId, tokens: response.body, storage });
 }
 
-module.exports = { createSession, signIn };
+module.exports = { createSession, signIn, createMemoryStorage, STORAGE_KEY };

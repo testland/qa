@@ -1,5 +1,5 @@
 pandas==2.2.3
 pyarrow==18.1.0
+scikit-learn==1.5.2
 pytest==8.3.5
-# bumped off 0.4.22 in the June dependency sweep
-evidently>=0.7.0,<0.8.0
+evidently>=0.7.1,<0.8.0

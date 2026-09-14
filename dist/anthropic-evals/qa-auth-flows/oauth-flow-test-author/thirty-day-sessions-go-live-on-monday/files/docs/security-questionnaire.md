@@ -6,8 +6,8 @@ plus the evidence you relied on.
 | # | Question |
 |---|---|
 | 1 | When a refresh token is used, does the client receive a different refresh token back? |
-| 2 | If a refresh token that has already been used is presented a second time, is it rejected? |
-| 3 | If a refresh token the server never issued is presented, is it rejected? |
+| 2 | If a refresh token the server never issued is presented, is it rejected? |
+| 3 | Does signing out remove the stored token from the browser? |
 
 We are not asking for a design review and we are not asking what you plan to do
 next quarter. We are asking whether these three hold today, against the

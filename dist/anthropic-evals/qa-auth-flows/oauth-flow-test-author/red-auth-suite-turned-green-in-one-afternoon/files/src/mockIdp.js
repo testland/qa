@@ -3,8 +3,9 @@
 const crypto = require('node:crypto');
 const { isRegistered } = require('./redirects');
 
-function createIdp({ clientId }) {
+function createIdp({ clientId, now = () => Date.now() }) {
   const pending = new Map();
+  const issued = new Map();
 
   function authorize(params = {}) {
     if (params.client_id !== clientId) {
@@ -43,17 +44,23 @@ function createIdp({ clientId }) {
         return { status: 400, body: { error: 'invalid_grant' } };
       }
     }
+    const accessToken = `at_${crypto.randomBytes(8).toString('hex')}`;
+    issued.set(accessToken, { expiresAt: now() + 600_000 });
     return {
       status: 200,
-      body: {
-        access_token: `at_${crypto.randomBytes(8).toString('hex')}`,
-        token_type: 'Bearer',
-        expires_in: 600,
-      },
+      body: { access_token: accessToken, token_type: 'Bearer', expires_in: 600 },
     };
   }
 
-  return { authorize, token };
+  function resource({ accessToken } = {}) {
+    const record = issued.get(accessToken);
+    if (!record || record.expiresAt <= now()) {
+      return { status: 401, body: { error: 'invalid_token' } };
+    }
+    return { status: 200, body: { ok: true } };
+  }
+
+  return { authorize, token, resource };
 }
 
 module.exports = { createIdp };

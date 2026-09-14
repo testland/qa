@@ -114,6 +114,7 @@ class TracerProvider {
   }
 }
 
+// Hands every ended span straight to the exporter, in the caller's own tick.
 class SimpleSpanProcessor {
   constructor(exporter) {
     this._exporter = exporter;
@@ -127,6 +128,8 @@ class SimpleSpanProcessor {
   }
 }
 
+// Queues ended spans and exports them on a timer. scheduledDelayMillis
+// defaults to 5000 upstream; maxExportBatchSize defaults to 512.
 class BatchSpanProcessor {
   constructor(exporter, config = {}) {
     this._exporter = exporter;

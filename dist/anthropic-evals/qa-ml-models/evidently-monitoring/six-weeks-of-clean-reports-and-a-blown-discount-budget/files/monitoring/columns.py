@@ -1,4 +1,4 @@
-"""Column roles for the quote-accept monitoring jobs."""
+"""Column roles for the quote-accept monitoring job."""
 
 SCHEMA = [
     "quote_id",
@@ -30,8 +30,4 @@ SCHEMA = [
 PREDICTION_COLUMN = "score"
 TARGET_COLUMN = "label"
 
-# label is not written until the quote is accepted, expired or lapsed.
-LABEL_LAG_DAYS = 14
-
-# The nightly job compares everything that exists on the night.
 MONITORED = [c for c in SCHEMA if c not in ("quote_id", TARGET_COLUMN)]

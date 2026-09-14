@@ -2,7 +2,11 @@ $ unzip -l surefire-reports.zip
 Archive:  surefire-reports.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-     1874  2026-09-05 08:31   TEST-com.shop.e2e.SmokeTest.xml
-      612  2026-09-05 08:31   com.shop.e2e.SmokeTest.txt
+     2211  2026-09-05 08:31   TEST-com.shop.e2e.CheckoutJourney.xml
+      704  2026-09-05 08:31   com.shop.e2e.CheckoutJourney.txt
+     2684  2026-09-05 08:31   TEST-com.shop.e2e.LoginJourney.xml
+      812  2026-09-05 08:31   com.shop.e2e.LoginJourney.txt
+     2590  2026-09-05 08:31   TEST-com.shop.e2e.SmokeTest.xml
+      798  2026-09-05 08:31   com.shop.e2e.SmokeTest.txt
 ---------                     -------
-     2486                     2 files
+     9799                     6 files

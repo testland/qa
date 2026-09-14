@@ -3,14 +3,17 @@
 ## Problem Description
 
 After the duplicate-refund mess in July I wrote three assertions by hand as `.sql`
-files and put them in `tests/`. That was 2026-07-29. Since then the nightly has
-been green every single night — 43 for 43 — which I would like to believe and do
-not, because last Tuesday finance pulled the refunds ledger and found 904 refunds
-sharing a payment intent with another refund. Same shape as July. Nothing fired.
+files and put them in `tests/refunds/`. That was 2026-07-29. Since then the nightly
+has been green every single night — 43 for 43 — which I would like to believe and
+do not, because last Tuesday finance pulled the refunds ledger and found 904
+refunds sharing a payment intent with another refund. Same shape as July. Nothing
+fired. In every pair they sampled by hand, the second refund landed between three
+and eleven days after the first.
 
 Attached: the three `.sql` files, `dbt_project.yml`, `selectors.yml`, the workflow,
 the schema file that carries our column-level assertions, the tail of last
-Thursday's console output, and a small Node lint we run over `tests/*.sql` in CI.
+Thursday's console output, and a small Node lint we run over those `.sql` files in
+CI.
 
 Two theories are in the air and I have no way to choose between them. Mine is that
 my SQL is wrong — I have rewritten `assert_no_duplicate_refunds.sql` twice and
@@ -26,9 +29,9 @@ each one would actually do its job on the first night it runs rather than lookin
 like it would. If any of them would not, fix it and say what was wrong with it.
 
 Two constraints. The column-level assertions in `models/schema.yml` are not what
-this is about — leave them. And I have a board review on Monday morning, so I need
-to know now if turning these on is going to put the nightly red between here and
-then, because if it is I will need to tell somebody rather than have them find out.
+this is about — leave them. And I have a board review on Monday morning that reads
+its numbers off this same nightly, so I would rather hear anything I am going to
+be surprised by from you than from the room.
 
 One more thing, because I will be asked. Of the three assertions as written, which
 one would have caught last Tuesday's duplicates, and would it have caught them on
@@ -44,9 +47,9 @@ SQL in front of you, not from what the file names promise.
    attached run against what exists in the repository, the root cause, which of
    the two theories above the console output rules out and on what line, and the
    answer to the question about which assertion would have caught the duplicates.
-3. `scripts/check-test-sql.mjs` is the CI lint over `tests/*.sql`. Whatever you
-   had to change inside those files, give the lint the ability to catch it next
-   time, with a test for it.
+3. `scripts/check-test-sql.mjs` is the lint CI runs over those `.sql` files. Extend
+   it so that the class of defect you found is caught before it merges next time,
+   with a case in `scripts/check-test-sql.test.mjs` for each rule you add.
 
 ## Input Files
 
@@ -76,6 +79,9 @@ jobs:
 
       - run: dbt deps
 
+      - name: lint hand-written assertions
+        run: node scripts/check-test-sql.mjs tests/refunds
+
       - name: nightly build
         run: dbt build --selector nightly
 
@@ -92,10 +98,7 @@ selectors:
   - name: nightly
     description: what the 03:00 warehouse job builds
     default: false
-    definition:
-      union:
-        - 'path:models'
-        - 'test_type:generic'
+    definition: 'path:models'
 
 =============== FILE: dbt_project.yml ===============
 name: 'ledger'
@@ -121,21 +124,29 @@ models:
     marts:
       +materialized: table
 
-=============== FILE: tests/assert_no_duplicate_refunds.sql ===============
+data_tests:
+  ledger:
+    +severity: error
+    +store_failures: false
+    refunds:
+      +enabled: false
+
+=============== FILE: tests/refunds/assert_no_duplicate_refunds.sql ===============
 {#
-  One row per (payment_intent_id) that has more than one refund against it.
+  One row per payment intent that has more than one refund against it.
   Rewritten 2026-08-14 and again 2026-08-27 - neither changed the nightly.
 #}
 
 select
-    payment_intent_id,
-    count(*) as refund_count
-from {{ ref('stg_refunds') }}
-where payment_intent_id is not null
-group by payment_intent_id
+    r.payment_intent_id,
+    date_trunc('day', r.created_at) as refund_day,
+    count(*)                        as refund_count
+from {{ ref('stg_refunds') }} as r
+where r.payment_intent_id is not null
+group by 1, 2
 having count(*) > 1;
 
-=============== FILE: tests/assert_refund_not_exceeding_payment.sql ===============
+=============== FILE: tests/refunds/assert_refund_not_exceeding_payment.sql ===============
 {# A refund may never be larger than the payment it is issued against. #}
 
 select
@@ -147,7 +158,7 @@ join {{ ref('stg_payments') }} as p
   on p.payment_intent_id = r.payment_intent_id
 where r.amount > p.amount;
 
-=============== FILE: tests/assert_refund_has_payment.sql ===============
+=============== FILE: tests/refunds/assert_refund_has_payment.sql ===============
 {# A refund with no payment behind it is an accounting hole. #}
 
 select
@@ -171,6 +182,9 @@ models:
       - name: amount
         data_tests:
           - not_null
+      - name: payment_intent_id
+        data_tests:
+          - not_null
 
   - name: stg_payments
     columns:
@@ -181,30 +195,47 @@ models:
       - name: payment_intent_id
         data_tests:
           - not_null
+      - name: amount
+        data_tests:
+          - not_null
+
+  - name: fct_refunds
+    columns:
+      - name: refund_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_accounts
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
+          - not_null
 
 =============== FILE: logs/nightly-2026-09-11.log ===============
 03:00:11  Running with dbt=1.9.2
 03:00:14  Registered adapter: snowflake=1.9.0
-03:00:19  Found 6 models, 25 data tests, 2 sources, 0 exposures, 0 metrics, 471 macros
+03:00:19  Found 4 models, 12 data tests, 2 sources, 0 exposures, 0 metrics, 471 macros
 03:00:19
 03:00:21  Concurrency: 4 threads (target='prod')
 03:00:21
-03:00:22  1 of 28 START sql view model analytics.stg_refunds .............. [RUN]
-03:00:22  2 of 28 START sql view model analytics.stg_payments ............. [RUN]
-03:00:48  1 of 28 OK created sql view model analytics.stg_refunds ......... [SUCCESS 1 in 26.11s]
-03:00:51  2 of 28 OK created sql view model analytics.stg_payments ........ [SUCCESS 1 in 28.94s]
-03:01:02  7 of 28 START test not_null_stg_refunds_amount ................. [RUN]
-03:01:04  7 of 28 PASS not_null_stg_refunds_amount ....................... [PASS in 1.88s]
-03:01:04  8 of 28 START test not_null_stg_refunds_refund_id ............. [RUN]
-03:01:06  8 of 28 PASS not_null_stg_refunds_refund_id .................... [PASS in 1.51s]
-03:06:38 27 of 28 PASS not_null_stg_payments_payment_intent_id ........... [PASS in 1.44s]
-03:06:41 28 of 28 PASS unique_stg_payments_payment_id .................... [PASS in 1.02s]
+03:00:22  1 of 16 START sql view model analytics.stg_refunds .............. [RUN]
+03:00:22  2 of 16 START sql view model analytics.stg_payments ............. [RUN]
+03:00:48  1 of 16 OK created sql view model analytics.stg_refunds ......... [SUCCESS 1 in 26.11s]
+03:00:51  2 of 16 OK created sql view model analytics.stg_payments ........ [SUCCESS 1 in 28.94s]
+03:01:02  5 of 16 START test not_null_stg_refunds_amount ................. [RUN]
+03:01:04  5 of 16 PASS not_null_stg_refunds_amount ....................... [PASS in 1.88s]
+03:01:04  6 of 16 START test not_null_stg_refunds_refund_id ............. [RUN]
+03:01:06  6 of 16 PASS not_null_stg_refunds_refund_id .................... [PASS in 1.51s]
+03:06:38 15 of 16 PASS not_null_stg_payments_payment_intent_id ........... [PASS in 1.44s]
+03:06:41 16 of 16 PASS unique_stg_payments_payment_id .................... [PASS in 1.02s]
 03:06:42
-03:06:42  Finished running 6 view models, 22 data tests in 0 hours 6 minutes and 20.11s.
+03:06:42  Finished running 2 view models, 2 table models, 12 data tests in 0 hours 6 minutes and 20.11s.
 03:06:43
 03:06:43  Completed successfully
 03:06:43
-03:06:43  Done. PASS=28 WARN=0 ERROR=0 SKIP=0 TOTAL=28
+03:06:43  Done. PASS=16 WARN=0 ERROR=0 SKIP=0 TOTAL=16
 
 =============== FILE: scripts/check-test-sql.mjs ===============
 import { readdirSync, readFileSync } from 'node:fs';

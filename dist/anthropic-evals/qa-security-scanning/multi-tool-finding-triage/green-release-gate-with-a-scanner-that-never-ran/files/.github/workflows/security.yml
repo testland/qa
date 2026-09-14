@@ -31,10 +31,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: gitleaks detect --report-format json --report-path gitleaks-report.json --exit-code 0
+      - run: trufflehog filesystem . --json --no-fail > trufflehog-results.json
       - uses: actions/upload-artifact@v4
         with:
-          name: scan-gitleaks
-          path: gitleaks-report.json
+          name: scan-secrets
+          path: |
+            gitleaks-report.json
+            trufflehog-results.json
 
   iac:
     runs-on: ubuntu-latest

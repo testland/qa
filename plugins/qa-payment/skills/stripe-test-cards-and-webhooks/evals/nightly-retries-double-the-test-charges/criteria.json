@@ -1,46 +1,41 @@
 {
-  "context": "The key is built per attempt - order-ord_5501-attempt-1, then attempt-2 - with a comment claiming that is what stops a retry being refused as a duplicate, which is the opposite of what an idempotency key is for. A key that changes when the request is repeated guarantees a second charge instead of preventing one, and the refund call carries no key at all, which is why the export shows 78 refunds against 41 intents. Predicted baseline failure: the agent treats this as a test-hygiene problem rather than a keying one - cleaning up the intents afterwards, resetting state between attempts, making the reconciliation test tolerant of duplicates, or quietly dropping the retry to one attempt, all of which leave production dunning creating two payments per retried order. Where it does change the key, it is predicted to keep something per-call in it (a timestamp, a random suffix, a uuid) or to use one key per order for every operation, which the stand-in refuses the moment the refund reuses it with different parameters. Its new test is predicted to assert only that the second call did not throw, which is true of the broken code as well.",
+  "context": "The reflexive answer - add an idempotency key - is already in the code, and the key is stable across attempts, so the usual reading of this symptom is unavailable. Two things defeat it. The request carries the attempt number in metadata, so the second attempt sends the same key with different parameters, which is refused rather than replayed; and the catch below it answers that refusal by reissuing the identical request under a freshly suffixed key, which is what turns one order into two payments. Predicted baseline failure: the agent reads the key as correct, concludes the problem is elsewhere, and goes after test hygiene - resetting the stand-in between attempts, cleaning up intents afterwards, loosening the reconciliation check, or dropping to a single attempt - all of which leave production dunning creating two payments per retried order. Where it does find the catch, it is predicted to keep a recovery path of some kind rather than remove it, because reissuing looks like resilience; the API's own error text in the export pushes the same way by suggesting a V4 UUID, which read as advice for this call is the instruction to generate a fresh key per request and guarantees the duplicate. The refund path is the tell that the keying was never thought through - 78 refunds against 41 intents, no key on any of them - and it needs its own key rather than a share of the payment's, since the two calls send different parameters and a shared key would be refused the moment the refund reuses it. Its new test is predicted to assert only that the second call did not throw, which is true of the supplied code as well.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 4,
-      "description": "src/checkout.js changed, test/idempotency.test.js added, docs/idempotency-keys.md written. Scores zero if the key document is missing."
+      "name": "MUST NOT reissue the request under a different key",
+      "max_score": 30,
+      "description": "MUST NOT keep any path that recovers from an idempotency error by sending the same request again under a new or modified key - a random suffix, a UUID, a timestamp, an attempt number, or a fresh key generated per call. Scores zero if any such path survives, including one that only runs after a retry or only in test mode, since that branch is precisely what produced 41 pairs from 41 orders. Scores at most half if the branch is removed but the error is swallowed and something falsy returned to the caller, which turns a duplicate into a silent failure."
     },
     {
-      "name": "The key survives the retry and names the operation",
-      "max_score": 32,
-      "description": "The key is derived from the order and the operation being performed, so a second attempt at the same order sends the same key. Scores zero if anything that varies per call remains in it - the attempt number, a timestamp, a random suffix, a generated uuid - since that is the defect. Scores at most half if one key serves both the payment and the refund: the two calls carry different parameters, and reusing a key with different parameters is refused rather than replayed."
+      "name": "The keyed request is identical on every attempt",
+      "max_score": 26,
+      "description": "Nothing that changes between attempts remains inside the request sent under the key, so the second attempt is replayed rather than refused. Scores zero if the attempt number is still in the parameters, and zero if it is replaced by another per-call value - a timestamp, a generated id, a request counter. Recording the attempt somewhere outside the keyed request, or dropping it, both score full. Scores at most half if the parameters are stabilised but the key is also changed to something per-order-per-operation without that being necessary to say why the replay now happens."
     },
     {
       "name": "The refund path is keyed too",
-      "max_score": 20,
-      "description": "refundOrder sends an idempotency key, distinct from the payment key for the same order. Scores zero if refunds still go out with no key, which is what produced 78 refunds against 41 intents."
+      "max_score": 18,
+      "description": "refundOrder sends an idempotency key, derived from the order and distinct from the payment key for the same order. Scores zero if refunds still go out with no key, which is what produced 78 refunds against 41 intents. Scores at most half if the refund reuses the payment's key: the two calls send different parameters, so the stand-in refuses the second one rather than replaying it, and the code is back to needing a recovery path."
     },
     {
-      "name": "MUST NOT remove the second attempt instead of surviving it",
-      "max_score": 20,
-      "description": "MUST NOT edit test/support/retry.js, lower the attempt count, or write the new test so that the second attempt runs against a freshly constructed stand-in, which hides the duplicate the same way a per-attempt key does. Scores zero if any of those appear, and zero if the new test also passes against the unmodified src/checkout.js, because then it demonstrates nothing."
+      "name": "The new test proves the replay, not the absence of an error",
+      "max_score": 16,
+      "description": "test/idempotency.test.js drives two attempts at the same order against one stand-in instance and shows the second returning the first payment - the same intent id, and exactly one intent recorded as created - and it fails against src/checkout.js as supplied. Scores zero if it asserts only that the second call did not throw, which is equally true of the supplied code, and zero if it constructs a fresh stand-in for the second attempt, which hides the duplicate the same way the existing tests do."
     },
     {
-      "name": "The replay is asserted, not merely the absence of an error",
-      "max_score": 14,
-      "description": "The retried attempt is shown to return the first payment - same intent id, and exactly one intent recorded as created. Scores zero if the test asserts only that the second call did not throw, which is equally true of the supplied code."
-    },
-    {
-      "name": "Reused key with changed parameters is covered",
+      "name": "MUST NOT weaken the retry or the existing coverage",
       "max_score": 12,
-      "description": "A case shows what happens when the same key is sent with different parameters - the error surfaces to the caller rather than being swallowed or mistaken for a successful replay. Scores zero if this case is absent."
+      "description": "MUST NOT edit test/support/retry.js, lower the attempt count, change test/checkout.test.js, or make the reconciliation counting tolerant of duplicates instead of stopping them. Scores zero if any of those appear. All tests must pass when finished."
     },
     {
-      "name": "Key document states the scope",
+      "name": "The document states the rule, not just the format",
       "max_score": 10,
-      "description": "docs/idempotency-keys.md gives the key format and says what makes it stable across a retry and how far its scope reaches - one logical operation on one order, not one attempt and not one order. Scores zero if it records the format without saying what would break it."
+      "description": "docs/idempotency-keys.md says what a key covers - one logical operation on one order, not one attempt and not one order across every call - and what must stay out of a request sent under one. Scores zero if it records only the key format without saying what would break the replay."
     },
     {
-      "name": "Existing tests untouched",
-      "max_score": 6,
-      "description": "test/checkout.test.js and test/support/ are unchanged and every test passes. Scores zero if either is edited."
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/checkout.js changed, test/idempotency.test.js added, docs/idempotency-keys.md written. Scores zero if the document is missing."
     }
   ]
 }

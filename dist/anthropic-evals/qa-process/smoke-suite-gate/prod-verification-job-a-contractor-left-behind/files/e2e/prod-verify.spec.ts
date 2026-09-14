@@ -40,8 +40,8 @@ test('home page loads', async ({ page }) => {
 
 test('signs in and loads the dashboard', async ({ page }) => {
   await page.goto('/login');
-  await page.getByLabel('Email').fill(process.env.VERIFY_RO_EMAIL!);
-  await page.getByLabel('Password').fill(process.env.VERIFY_RO_PASSWORD!);
+  await page.getByLabel('Email').fill(process.env.VERIFY_PROD_EMAIL!);
+  await page.getByLabel('Password').fill(process.env.VERIFY_PROD_PASSWORD!);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByRole('heading', { name: 'Your week' })).toBeVisible();
 });

@@ -1,0 +1,45 @@
+From: Priya Shanbhag <priya@riskeng.example>
+Subject: [PATCH] make the release gate able to block
+
+I went through the inputs first and they are not the problem. The candidate is
+scored against the held-out split, which is data the model has never seen, so
+that is the right comparison for a release check. Three changes, all in the
+check itself:
+
+1. A report only renders. It cannot pass or fail anything - that is what the
+   test-suite class is for, and it is why we have never once seen a BLOCK.
+2. Every column sits on the library default. Defaults are textbook numbers. Put
+   the lot on 0.02 and anything that moves gets caught.
+3. We lose the report whenever the job goes red, which is the one time we want
+   it. Upload it either way.
+
+--- a/ci/drift_gate.py
++++ b/ci/drift_gate.py
+@@
+-from evidently import Report
+-from evidently.presets import DataDriftPreset
++from evidently.test_suite import TestSuite
++from evidently.test_preset import DataDriftTestPreset
+@@
+-    report = Report([DataDriftPreset()])
+-    result = report.run(reference_data=reference_df, current_data=current_df)
+-    result.save_html("drift_report.html")
+-
+-    if should_block(result.dict()):
++    suite = TestSuite(tests=[DataDriftTestPreset(stattest_threshold=0.02)])
++    suite.run(reference_data=reference_df, current_data=current_df)
++    suite.save_html("drift_report.html")
++
++    if not suite.as_dict()["summary"]["all_passed"]:
+         print("drift gate: BLOCK")
+         return 1
+
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@
+       - name: upload drift report
++        if: always()
+         uses: actions/upload-artifact@v4
+         with:
+           name: drift-report
+           path: drift_report.html

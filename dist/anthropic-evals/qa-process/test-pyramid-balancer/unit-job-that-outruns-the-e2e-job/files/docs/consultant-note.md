@@ -4,7 +4,7 @@ Three days on site, 2026-08-31 to 2026-09-02.
 
 ## Current state
 
-Counted with a `grep -c` over each directory:
+Counted with a `grep -c` over the three test directories:
 
 | Directory           | Cases | Share |
 |---------------------|------:|------:|

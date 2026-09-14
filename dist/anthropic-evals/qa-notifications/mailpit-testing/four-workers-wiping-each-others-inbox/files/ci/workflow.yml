@@ -20,5 +20,6 @@ jobs:
         env:
           MAIL_API: http://localhost:8025
           APP_URL: http://localhost:3000
+          MAIL_DEBUG: '1'
           SMTP_HOST: localhost
           SMTP_PORT: '1025'

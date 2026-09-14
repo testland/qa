@@ -1,57 +1,45 @@
-# We added a German device lane for the launch and two thirds of the sign-up tests went red
+# The German lane has been red since the day we added it and the English one never has
 
 ## Problem Description
 
-Northwind ships in Germany on 2026-10-06. Two weeks ago we added a second
-emulator lane to the Android job running a de-DE image - same API level, same
-image, same everything else - so that the German build gets the on-device
-coverage the English one has had for a year. The en-US lane is still green. The
-de-DE lane went red the first night and has been red every night since: four of
-the six tests in `SignUpTest` fail there and pass on en-US.
+`com.northwind.shop`, Android, Kotlin. We open in Germany on 6 October. Three
+weeks ago we added a second instrumentation lane so the German build gets the
+same nightly coverage the English one has had for two years.
 
-Marco has a branch that fixes it. It reads the device language at the start of
-each test and picks the German or the English string accordingly, so
-`onView(withText("Continue"))` becomes a conditional that looks for "Weiter" on
-the German lane. It is about forty lines across the file, all six tests go green
-on both lanes, and he put it up yesterday. His argument is that we launch in
-three weeks, that this is the smallest change that gets both lanes green, and
-that we can do something nicer in Q4. The alternative Anja floated in standup is
-to force both lanes to en-US so the strings are predictable again, which would
-also be green by tonight.
+The English lane is 9 for 9 every night. The German lane has failed the same
+five tests every night since it was created and has never once been green.
+Nobody has had time to look properly because we have all been on launch work.
 
-Six green tests is exactly what both of those produce and it is the part that
-worries me, because we added this lane three weeks before a German launch in
-order to find things, and so far the only thing it has found is itself. Before I
-take either branch into standup tomorrow I would like someone who knows this
-framework to work through the four failures properly.
+Miriam's view is that the lane is the problem: "we threw it together in an
+afternoon, the selectors in it are brittle, put ids on everything and let's move
+on." Hendrik wants to switch the lane off until after launch on the grounds that
+a job nobody trusts is worse than no job. The freeze is Friday and I have to
+tell them something on Thursday morning.
 
-Attached: the test class, the sign-up layout, both string files, the de-DE lane
-output including a second run Marco did by hand, and the class the app uses to
-render prices.
+Attached: the German test class, the two string files, the price formatter and
+the application class, the in-app language setting, the CI workflow that launches
+both lanes, and the nightly logs from the 8th and the 11th - the class order
+differs between those two nights because we added a shard.
 
-The German copy came back from the agency reviewed and signed off. Do not
-rewrite any German wording. If you change anything at all in `values-de`, say in
-your write-up exactly what you changed and why.
+Work out what is actually happening and put the lane in a state where its result
+means something. I would rather be told the lane cannot tell us what we hoped
+than be handed a green one.
 
 ## Output Specification
 
-1. Edit `app/src/androidTest/java/com/northwind/signup/SignUpTest.kt`, and
-   `app/src/main/res/layout/activity_signup.xml` if your fix needs it, so the
-   suite is telling the truth about the app on both the en-US and the de-DE lane.
-2. Do not touch `showsPasswordStrengthMeter` or `rejectsShortPassword`, and do
-   not delete or weaken any assertion. Every behaviour asserted today must still
-   be asserted.
-3. Write `docs/de-lane-failures.md` explaining each of the four failures, giving
-   a verdict on Marco's branch and on Anja's suggestion that I can take into
-   standup, and listing anything you are handing to another team rather than
-   fixing here.
+1. Change whatever needs changing in the supplied files. Keep all nine `@Test`
+   methods in `SignupFlowDeTest` and do not delete the lane.
+2. Write `docs/de-lane-findings.md`: go through the nine tests, say what each
+   one's current result is worth, and say what you changed.
+3. In the same document, say what you are telling Miriam and Hendrik on
+   Thursday, including anything the lane will still not be covering on Friday.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: app/src/androidTest/java/com/northwind/signup/SignUpTest.kt ===============
-package com.northwind.signup
+=============== FILE: app/src/androidTest/java/com/northwind/shop/SignupFlowDeTest.kt ===============
+package com.northwind.shop
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -63,264 +51,273 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import java.util.Locale
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SignUpTest {
+class SignupFlowDeTest {
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(SignUpActivity::class.java)
+    val activityRule = ActivityScenarioRule(SignupActivity::class.java)
 
-    @Test
-    fun showsPasswordStrengthMeter() {
-        onView(withId(R.id.password_field)).perform(typeText("hunter2"), closeSoftKeyboard())
-        onView(withId(R.id.strength_meter)).check(matches(isDisplayed()))
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    @Before
+    fun useGerman() {
+        Locale.setDefault(Locale.GERMANY)
     }
 
     @Test
-    fun rejectsShortPassword() {
-        onView(withId(R.id.password_field)).perform(typeText("abc"), closeSoftKeyboard())
-        onView(withId(R.id.password_error)).check(matches(isDisplayed()))
+    fun signupHeadingIsGerman() {
+        onView(withId(R.id.signup_heading)).check(matches(withText("Konto erstellen")))
     }
 
     @Test
-    fun continuesFromEmailStep() {
-        onView(withId(R.id.email_field)).perform(typeText("steve@northwind.example"), closeSoftKeyboard())
-        onView(withText("Continue")).perform(click())
-        onView(withId(R.id.password_step)).check(matches(isDisplayed()))
+    fun continueButtonAdvancesToDelivery() {
+        onView(withId(R.id.email_field)).perform(typeText("dana@northwind.test"), closeSoftKeyboard())
+        onView(withText("Weiter")).perform(click())
+        onView(withId(R.id.delivery_heading)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun createsAccount() {
-        onView(withId(R.id.email_field)).perform(typeText("steve@northwind.example"), closeSoftKeyboard())
-        onView(withText("Continue")).perform(click())
-        onView(withId(R.id.password_field)).perform(typeText("correcthorsebattery"), closeSoftKeyboard())
-        onView(withText("Create account")).perform(click())
-        onView(withId(R.id.confirmation_root)).check(matches(isDisplayed()))
+    fun emailValidationMessageIsGerman() {
+        onView(withId(R.id.email_field)).perform(typeText("not-an-email"), closeSoftKeyboard())
+        onView(withId(R.id.continue_button)).perform(click())
+        onView(withId(R.id.email_error)).check(matches(withText("Bitte gib eine gultige E-Mail-Adresse ein")))
     }
 
     @Test
-    fun greetsTheNewUserByName() {
-        onView(withId(R.id.first_name_field)).perform(typeText("Steve"), closeSoftKeyboard())
-        onView(withText("Continue")).perform(click())
-        onView(withId(R.id.greeting)).check(matches(withText("Welcome, Steve")))
+    fun cartTotalIsFormattedForTheLocale() {
+        onView(withId(R.id.cart_tab)).perform(click())
+        onView(withId(R.id.cart_total)).check(matches(withText("1.234,56 EUR")))
     }
 
     @Test
-    fun showsFirstYearTotalOnConfirmation() {
-        onView(withId(R.id.plan_annual)).perform(click())
-        onView(withId(R.id.first_year_total)).check(matches(withText("$22.49")))
+    fun germanTranslationsAreLoaded() {
+        onView(withId(R.id.signup_heading))
+            .check(matches(withText(context.getString(R.string.signup_heading))))
+    }
+
+    @Test
+    fun postcodeFieldAcceptsGermanFormat() {
+        onView(withId(R.id.postcode_field)).perform(typeText("10115"), closeSoftKeyboard())
+        onView(withId(R.id.postcode_field)).check(matches(withText("10115")))
+    }
+
+    @Test
+    fun signupSucceedsWithValidDetails() {
+        onView(withId(R.id.email_field)).perform(typeText("neu@northwind.test"), closeSoftKeyboard())
+        onView(withId(R.id.password_field)).perform(typeText("hunter2hunter2"), closeSoftKeyboard())
+        onView(withId(R.id.continue_button)).perform(click())
+        onView(withId(R.id.delivery_heading)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun privacyLinkOpensPolicy() {
+        onView(withId(R.id.privacy_link)).perform(click())
+        onView(withId(R.id.policy_body)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun errorBannerShownOnDuplicateEmail() {
+        onView(withId(R.id.email_field)).perform(typeText("dana@northwind.test"), closeSoftKeyboard())
+        onView(withId(R.id.password_field)).perform(typeText("hunter2hunter2"), closeSoftKeyboard())
+        onView(withId(R.id.continue_button)).perform(click())
+        onView(withId(R.id.error_banner)).check(matches(withText("Diese E-Mail-Adresse ist bereits registriert")))
     }
 }
 
-=============== FILE: app/src/main/res/layout/activity_signup.xml ===============
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <EditText
-        android:id="@+id/first_name_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/first_name_hint" />
-
-    <EditText
-        android:id="@+id/email_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/email_hint"
-        android:inputType="textEmailAddress" />
-
-    <Button
-        android:id="@+id/continue_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/continue_label" />
-
-    <LinearLayout
-        android:id="@+id/password_step"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <EditText
-            android:id="@+id/password_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword" />
-
-        <ProgressBar
-            android:id="@+id/strength_meter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleHorizontal" />
-
-        <TextView
-            android:id="@+id/password_step_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_account_title" />
-
-        <TextView
-            android:id="@+id/password_error"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/password_too_short" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_account_label" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/greeting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <RadioButton
-        android:id="@+id/plan_annual"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/plan_annual_label" />
-
-    <TextView
-        android:id="@+id/first_year_total"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <FrameLayout
-        android:id="@+id/confirmation_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-</LinearLayout>
-
 =============== FILE: app/src/main/res/values/strings.xml ===============
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="first_name_hint">First name</string>
-    <string name="email_hint">Email address</string>
+    <string name="signup_heading">Create your account</string>
     <string name="continue_label">Continue</string>
-    <string name="create_account_label">Create account</string>
-    <string name="create_account_title">Set a password</string>
-    <string name="password_too_short">Password is too short</string>
-    <string name="plan_annual_label">Annual plan</string>
-    <string name="welcome_greeting">Welcome, %1$s</string>
+    <string name="email_invalid">Please enter a valid email address</string>
+    <string name="email_taken">That email address is already registered</string>
+    <string name="cart_total_label">Order total</string>
+    <string name="privacy_link">Privacy policy</string>
 </resources>
 
 =============== FILE: app/src/main/res/values-de/strings.xml ===============
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="first_name_hint">Vorname</string>
-    <string name="email_hint">E-Mail-Adresse</string>
+    <string name="signup_heading">Konto erstellen</string>
     <string name="continue_label">Weiter</string>
-    <string name="create_account_label">Konto erstellen</string>
-    <string name="create_account_title">Konto erstellen</string>
-    <string name="password_too_short">Passwort ist zu kurz</string>
-    <string name="plan_annual_label">Jahresabo</string>
-    <string name="welcome_greeting">Willkommen, {0}</string>
+    <string name="email_invalid">Bitte gib eine gultige E-Mail-Adresse ein</string>
+    <string name="email_taken">Diese E-Mail-Adresse ist bereits registriert</string>
+    <string name="cart_total_label">Gesamtbetrag</string>
+    <string name="privacy_link">Datenschutzerklarung</string>
 </resources>
 
-=============== FILE: app/src/main/java/com/northwind/signup/SignUpActivity.kt ===============
-package com.northwind.signup
-
-import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-
-class SignUpActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
-        findViewById<Button>(R.id.continue_button).setOnClickListener { advance() }
-    }
-
-    private fun advance() {
-        val name = findViewById<EditText>(R.id.first_name_field).text.toString()
-        findViewById<TextView>(R.id.greeting).text = getString(R.string.welcome_greeting, name)
-        findViewById<TextView>(R.id.first_year_total).text = PriceFormatter.format(2249, "USD")
-        findViewById<View>(R.id.password_step).visibility = View.VISIBLE
-    }
-}
-
-=============== FILE: app/src/main/java/com/northwind/signup/PriceFormatter.kt ===============
-package com.northwind.signup
+=============== FILE: app/src/main/java/com/northwind/shop/PriceFormatter.kt ===============
+package com.northwind.shop
 
 import java.text.NumberFormat
-import java.util.Currency
 import java.util.Locale
 
 object PriceFormatter {
 
-    fun format(amountMinor: Long, currency: String, locale: Locale = Locale.getDefault()): String {
-        val nf = NumberFormat.getCurrencyInstance(locale)
-        nf.currency = Currency.getInstance(currency)
-        return nf.format(amountMinor / 100.0)
+    private val currency: NumberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
+
+    fun format(amountMinor: Long): String = currency.format(amountMinor / 100.0)
+}
+
+=============== FILE: app/src/main/java/com/northwind/shop/NorthwindApp.kt ===============
+package com.northwind.shop
+
+import android.app.Application
+
+class NorthwindApp : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        PriceFormatter.format(0) // warm up; the first cart render used to stutter
+        Telemetry.start(this)
     }
 }
 
-=============== FILE: reports/de-DE-run.txt ===============
-Lane: android-de-DE, Pixel 6 API 34, system locale de-DE, 2026-09-12 02:14 UTC
-Lane: android-en-US, Pixel 6 API 34, system locale en-US - all 6 PASSED
+=============== FILE: app/src/main/java/com/northwind/shop/LanguageSettings.kt ===============
+package com.northwind.shop
 
-com.northwind.signup.SignUpTest > showsPasswordStrengthMeter PASSED
-com.northwind.signup.SignUpTest > rejectsShortPassword PASSED
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 
-com.northwind.signup.SignUpTest > continuesFromEmailStep FAILED
-androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Continue"
+object LanguageSettings {
+
+    fun apply(tag: String) {
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
+    }
+}
+
+=============== FILE: .github/workflows/instrumentation.yml ===============
+name: instrumentation
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  en-lane:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_4a
+          script: ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.notPackage=com.northwind.shop.de
+
+  de-lane:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_4a
+          script: ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.SignupFlowDeTest
+
+=============== FILE: app/build.gradle ===============
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.northwind.shop'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.northwind.shop"
+        minSdk 24
+        targetSdk 35
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test:rules:1.6.1'
+}
+
+=============== FILE: reports/nightly-2026-09-11.txt ===============
+### Nightly 2026-09-11 - de-lane job, one instrumentation process, pid 6104 throughout
+
+com.northwind.shop.SignupFlowDeTest > signupHeadingIsGerman FAILED
+androidx.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
+'with text: is "Konto erstellen"' doesn't match the selected view.
+Expected: with text: is "Konto erstellen"
+     Got: "AppCompatTextView{id=2131231044, res-name=signup_heading, text=Create your account}"
+    elapsed: 1.1s
+
+com.northwind.shop.SignupFlowDeTest > continueButtonAdvancesToDelivery FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Weiter"
     View Hierarchy:
-    +-->Button{id=2131231188, res-name=continue_button, visibility=VISIBLE, text=Weiter}
+    +->AppCompatTextView{id=2131231044, res-name=signup_heading, text=Create your account}
+    +->AppCompatEditText{id=2131231012, res-name=email_field, text=dana@northwind.test}
+    +->AppCompatButton{id=2131231007, res-name=continue_button, text=Continue}
+    elapsed: 1.4s
 
-com.northwind.signup.SignUpTest > createsAccount FAILED
-androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Continue"
-    (failed on the first step; the "Create account" tap was never reached)
+com.northwind.shop.SignupFlowDeTest > emailValidationMessageIsGerman FAILED
+Expected: with text: is "Bitte gib eine gultige E-Mail-Adresse ein"
+     Got: "AppCompatTextView{id=2131231014, res-name=email_error, text=Please enter a valid email address}"
+    elapsed: 1.6s
 
-com.northwind.signup.SignUpTest > greetsTheNewUserByName FAILED
-androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Continue"
+com.northwind.shop.SignupFlowDeTest > cartTotalIsFormattedForTheLocale FAILED
+Expected: with text: is "1.234,56 EUR"
+     Got: "AppCompatTextView{id=2131231002, res-name=cart_total, text=EUR1,234.56}"
+    elapsed: 1.9s
 
-com.northwind.signup.SignUpTest > showsFirstYearTotalOnConfirmation FAILED
-    java.lang.AssertionError: 'with text: is "$22.49"' doesn't match the selected view.
-    Expected: with text: is "$22.49"
-    Got: "AppCompatTextView{id=2131231402, res-name=first_year_total, text=22,49 $}"
+com.northwind.shop.SignupFlowDeTest > germanTranslationsAreLoaded PASSED (1.0s)
+com.northwind.shop.SignupFlowDeTest > postcodeFieldAcceptsGermanFormat PASSED (1.2s)
+com.northwind.shop.SignupFlowDeTest > signupSucceedsWithValidDetails PASSED (2.3s)
+com.northwind.shop.SignupFlowDeTest > privacyLinkOpensPolicy PASSED (1.1s)
 
-4 tests failed, 2 passed.
+com.northwind.shop.SignupFlowDeTest > errorBannerShownOnDuplicateEmail FAILED
+Expected: with text: is "Diese E-Mail-Adresse ist bereits registriert"
+     Got: "AppCompatTextView{id=2131231021, res-name=error_banner, text=That email address is already registered}"
+    elapsed: 2.2s
 
---- Manual run, de-DE lane, after Marco locally hardcoded the German labels ---
+9 tests, 4 passed, 5 failed
 
-com.northwind.signup.SignUpTest > continuesFromEmailStep PASSED
+### Same night, en-lane job, pid 6231 throughout
 
-com.northwind.signup.SignUpTest > createsAccount FAILED
-androidx.test.espresso.AmbiguousViewMatcherException: 'with text: is "Konto erstellen"' matches multiple views in the hierarchy.
-Problem views are marked with '****MATCHES****' below.
+com.northwind.shop.SignupFlowEnTest - 9 tests, 9 passed
+com.northwind.shop.ReceiptTest - 4 tests, 4 passed
+com.northwind.shop.SearchTest - 6 tests, 6 passed
 
-    +--->LinearLayout{id=2131231221, res-name=password_step, visibility=VISIBLE}
-    |
-    +---->AppCompatTextView{id=2131231224, res-name=password_step_title, visibility=VISIBLE, text=Konto erstellen} ****MATCHES****
-    |
-    +---->AppCompatButton{id=-1, res-name=NO_ID, visibility=VISIBLE, text=Konto erstellen} ****MATCHES****
+=============== FILE: reports/nightly-2026-09-08.txt ===============
+### Nightly 2026-09-08 - before the shard split, both lanes ran in one job, pid 5880 throughout
 
-com.northwind.signup.SignUpTest > greetsTheNewUserByName FAILED
-    java.lang.AssertionError: 'with text: is "Willkommen, Steve"' doesn't match the selected view.
-    Expected: with text: is "Willkommen, Steve"
-    Got: "AppCompatTextView{id=2131231377, res-name=greeting, visibility=VISIBLE, text=Willkommen, {0}}"
+Class order that night: ReceiptTest, SearchTest, SignupFlowEnTest, SignupFlowDeTest
 
-com.northwind.signup.SignUpTest > showsFirstYearTotalOnConfirmation FAILED
-    java.lang.AssertionError: 'with text: is "$22.49"' doesn't match the selected view.
-    Got: "AppCompatTextView{id=2131231402, res-name=first_year_total, text=22,49 $}"
+com.northwind.shop.ReceiptTest - 4 tests, 4 passed
+com.northwind.shop.SearchTest - 6 tests, 6 passed
+com.northwind.shop.SignupFlowEnTest - 9 tests, 9 passed
+com.northwind.shop.SignupFlowDeTest - 9 tests, 4 passed, 5 failed
+  (same five as every other night)
 
---- Same two views on the en-US lane, same build, for comparison ---
+### Nightly 2026-09-09 - same single job, class order reversed by the runner
 
-    "AppCompatTextView{id=2131231377, res-name=greeting, text=Welcome, Steve}"
-    "AppCompatTextView{id=2131231402, res-name=first_year_total, text=$22.49}"
+Class order that night: SignupFlowDeTest, SignupFlowEnTest, ReceiptTest, SearchTest
+
+com.northwind.shop.SignupFlowDeTest - 9 tests, 4 passed, 5 failed
+com.northwind.shop.SignupFlowEnTest - 9 tests, 9 passed
+com.northwind.shop.ReceiptTest - 4 tests, 3 passed, 1 failed
+  receiptDateMatchesOrderDate FAILED
+  Expected: with text: is "14 Aug 2026"
+       Got: "AppCompatTextView{id=2131231088, res-name=receipt_date, text=14.08.2026}"
+com.northwind.shop.SearchTest - 6 tests, 5 passed, 1 failed
+  resultCountReadsAsThousands FAILED
+  Expected: with text: is "1,204 results"
+       Got: "AppCompatTextView{id=2131231099, res-name=result_count, text=1.204 results"

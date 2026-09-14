@@ -1,4 +1,4 @@
-# Panel: database work per checkout (grafana, board `chk-db`)
+# Panel: database work per checkout (board `chk-db`)
 
 Query, unchanged since the board was built in February:
 
@@ -18,3 +18,6 @@ OBS-1780. That is the date everyone points at first.
 Owner note from @lmarsh, 2026-09-05: "There is no shortage of db.query spans -
 I can pull millions of them for any hour you like. They just never come back in
 the same search as the checkout they belong to. I have stopped using the board."
+
+The same join, with the span names swapped, backs `chk-cache`, `chk-search` and
+`fulfil-db`. All three are fine.

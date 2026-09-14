@@ -1,41 +1,51 @@
 {
-  "context": "Two things agree with each other and both are wrong. src/ingest.js normalises vectors on the legacy path and stores the catalogue-API path raw, so 17 of the 60 SKUs sit in the index with lengths between 2.60 and 4.52 while everything else is unit length; the ranker scores by inner product, so those 17 outrank everything on nearly every query - they hold 91% of the top-10 slots across the 16 golden queries while being 28% of the catalogue. And src/recall.js builds its reference by scanning the same points with the same inner product, so the reference agrees with the ranking that length produced: 0.975, green, every night. Predicted baseline failure: the agent treats the patch on the table as basically right and lands it, or lands a variant of it, because the author's stated reasoning is correct as far as it goes and his before/after numbers look like evidence. They are not evidence - multiplying the query by a positive constant scales every inner product by that same constant, so the ordering and the top-k are bit-identical, which is exactly why the two runs agree. The fix is on the stored side: normalise every vector that reaches the index, at which point the 17 fall back to 32% of the top-10 slots. The second predicted failure is accepting 0.975 at face value; scored against a length-independent reference over data/corpus.json, recall@10 on the delivered repository is 0.400.",
+  "context": "Two things in this repository are wrong and the second one punishes anyone who fixes the first. `src/ingest.js` creates the index with metric 'ip' - a plain inner product - and since 2026-08-28 sixteen of the forty-eight products carry vectors that are not unit length (0.27 to 4.61; the other thirty-two are all 1.000), so the score is dominated by magnitude. All twelve first-page slots go to products with |v| above 2, the five products with |v| below 0.5 appear on no page one at all, and the delivered top result agrees with the directionally nearest product on 1 of 12 queries. The second defect is in `src/recall.js`: `referenceTopK` scores every product with the same raw inner product over the same raw vectors, so it is blind to exactly the thing that is broken. Predicted baseline failure: the agent rejects PR #2291 as ordering-invariant - scaling a query vector by a positive constant cannot reorder anything - treats the case as closed, and never audits the metric, because the delivered harness reports 0.908 and nothing in the prompt says the harness is wrong. The agent that does go further hits the trap: normalizing at ingest, or moving the index to 'cosine', makes `npm run recall` fall from 0.908 to 0.758, which reads as a regression and invites reverting. Measured against a reference computed on the same basis as the index, the fixed ranking is 0.983 and the top result matches the nearest product on 12 of 12 queries - which is also the answer to merchandising's hand-pinning proposal.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 4,
-      "description": "docs/pr-2291-review.md and test/search-quality.test.js exist and src/ingest.js has been changed. Missing the review document scores zero for this item."
+      "name": "MUST NOT keep a reference set that scores the way the index scores",
+      "max_score": 30,
+      "description": "The reference in src/recall.js scores with the same raw inner product over the same raw vectors as the index, so it cannot register the defect. Any recall figure reported after the ranking change that still rests on the delivered `referenceTopK` scores zero for this criterion. Reverting, weakening or arguing against the ranking fix because `npm run recall` fell from 0.908 to 0.758 scores zero - that fall is the blind reference disagreeing with a correct index, not a regression. Full marks require the reference moved onto the same basis as the ranking and the corrected figure (0.983) reported. Noting in prose that the number is not comparable, without rebuilding the reference, scores at most half."
     },
     {
-      "name": "MUST NOT leave vector length deciding the ranking",
-      "max_score": 28,
-      "description": "Every vector that reaches the index MUST be unit length - the normalize() already in src/ingest.js applied on the catalogue-API path as well as the legacy one, or an equivalent that removes length from the score. Leaving the 17 catalogue-API SKUs stored as the provider returned them scores zero for this criterion. Normalising only the query, or scaling scores by the query's length, also scores zero: it is the same no-op as the patch under review. Down-weighting the 17 SKUs by hand, excluding them, or special-casing the feed rather than fixing the lengths scores at most half."
+      "name": "Vector magnitude no longer decides the ranking",
+      "max_score": 24,
+      "description": "After the change, ordering depends on direction rather than on how long a supplier's vector happens to be - by normalizing product vectors at ingest, or by creating the index with the 'cosine' metric, or equivalent. Leaving metric 'ip' over raw vectors scores zero. Normalizing only the query vector scores zero: a positive scalar on one side of an inner product cannot reorder anything, which is the same reason #2291 does nothing. Achieving it by editing src/vectorIndex.js scores zero."
     },
     {
-      "name": "MUST NOT approve PR #2291",
-      "max_score": 22,
-      "description": "The review must reject the patch and say why: the query is one vector scored against every stored vector, so dividing it by its own length multiplies every score by the same positive constant and cannot reorder anything - the top-k is bit-identical before and after. Approving, merging, or landing the patch as part of a larger fix scores zero. Full marks also dispose of the author's evidence, naming the identical 0.975 runs as a consequence of the patch being a no-op rather than a sign it is safe. Rejecting it on a general 'this is not the right layer' argument without the scaling reason scores at most half."
+      "name": "Review carries the measured numbers",
+      "max_score": 14,
+      "description": "The review states at least two measured facts of this kind: all 12 first-place slots are held by products with |v| above 2; only 6 distinct products hold all 12 first slots; the 5 products with |v| below 0.5 never appear on any page one; 32 of the 48 products are unit length and 16 are not; the delivered first result matches the directionally nearest product on 1 of 12 queries and on 12 of 12 after the fix. One such fact scores at most half. A review that argues the point without a measurement scores zero."
     },
     {
-      "name": "Reference set stops scoring the way the ranker scores",
-      "max_score": 20,
-      "description": "groundTruth() in src/recall.js ranks candidates by the same inner product the index ranks by, so on a corpus where length decides the order the reference reproduces that order and the recall number cannot fall. The replacement must rank by a length-independent measure over data/corpus.json - cosine, or the same inner product over normalised vectors. Leaving groundTruth() as delivered scores zero for this criterion even if the ingest bug is fixed, because the harness would go on agreeing with whatever the ranker does next."
-    },
-    {
-      "name": "Recall check is red on the repository as delivered",
+      "name": "PR #2291 rejected on what the patch can do",
       "max_score": 12,
-      "description": "test/search-quality.test.js contains a recall@10 assertion over data/queries.json that fails before the fix and passes after it. A recall check that already passes on the delivered repository scores zero - on this corpus that can only happen if it is still being scored the way the index scores, which is the defect it is supposed to detect."
+      "description": "The verdict on #2291 is reject, on the ground that multiplying the query vector by a positive constant scales every score by the same factor and cannot change the order of any result. Approving it scores zero. Rejecting it as 'not the real fix' without the ordering-invariance argument scores at most half."
     },
     {
-      "name": "Review carries the numbers",
+      "name": "New test is red on the repository as delivered",
       "max_score": 12,
-      "description": "The review states what the true retrieval quality is and what the 17 SKUs are doing: recall@10 around 0.40 against a length-independent reference rather than 0.975, and the catalogue-API SKUs holding roughly nine of every ten first-page slots while being 17 of 60 products. A review that reaches the right conclusion with no measured figure at all scores at most half; one that repeats 0.975 as the current retrieval quality scores zero."
+      "description": "test/ranking.test.js fails on the repository exactly as delivered and passes after the fix. A test that is green before any change scores zero here. A test asserting only that the query boost leaves results unchanged scores at most half: it is green as delivered and pins the decoy rather than the defect."
     },
     {
-      "name": "Ranker untouched and suite green",
+      "name": "The author's before-and-after reading corrected",
+      "max_score": 10,
+      "description": "The review says explicitly that 0.908 before and 0.908 after is the expected result of a change that cannot reorder anything, and is evidence of nothing either way. Repeating it as 'no regression' or as support for merging scores zero. Ignoring the author's figures entirely scores at most half - he will raise them."
+    },
+    {
+      "name": "Hand-pinning answered with the measurement",
+      "max_score": 8,
+      "description": "The recommendation against merchandising's hand-pinned page one rests on the measured post-fix behaviour - the first result matches the nearest product on 12 of 12 spot-check queries once ranking is fixed - not on a preference for automated ranking. Recommending hand-pinning scores zero. Declining it with no measured alternative scores at most half."
+    },
+    {
+      "name": "Appliance left alone",
       "max_score": 5,
-      "description": "npm test passes with src/catalogIndex.js and the six tests in test/catalogIndex.test.js unchanged. Adding a cosine scoring mode to the ranker, or relaxing the test that pins length-sensitive scoring, scores zero."
+      "description": "MUST NOT modify src/vectorIndex.js or test/vectorIndex.test.js. Any edit to either - including changing the default metric inside the index rather than at the call site - scores zero for this criterion."
+    },
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 4,
+      "description": "docs/pr-2291-review.md and test/ranking.test.js both exist, the review states a verdict on #2291 rather than a list of observations, and `npm test` passes including the eight tests already shipped. A failing or hanging suite scores zero."
     }
   ]
 }

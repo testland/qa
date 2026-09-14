@@ -9,10 +9,19 @@ const BUDGETS = {
   'nav.billing': 14,
 };
 
+// The budgets were measured on the english frames, so compare like for like.
+function measurable(text) {
+  const inner = text.startsWith('[') && text.endsWith(']') ? text.slice(1, -1) : text;
+  return inner
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/([A-Za-z])\1+/g, '$1');
+}
+
 function overflows(text, key) {
   const budget = BUDGETS[key];
-  if (budget === undefined) return false; // surfaces with no measured frame are not gated
+  if (budget === undefined) throw new Error('no budget for ' + key);
   return text.length > budget;
 }
 
-module.exports = { BUDGETS, overflows };
+module.exports = { BUDGETS, measurable, overflows };

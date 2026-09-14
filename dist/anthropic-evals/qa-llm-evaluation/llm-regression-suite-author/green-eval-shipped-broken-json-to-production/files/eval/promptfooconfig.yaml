@@ -6,10 +6,12 @@ providers:
       temperature: 0
       seed: 42
 
+prompts: file://prompts/summarise.txt
+
 tests: file://eval/cases.jsonl
 
 defaultTest:
-  threshold: 0.5
+  threshold: 0.7
 
 evaluateOptions:
   repeat: 1

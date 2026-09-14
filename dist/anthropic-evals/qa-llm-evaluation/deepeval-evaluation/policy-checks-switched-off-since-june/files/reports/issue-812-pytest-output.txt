@@ -5,8 +5,12 @@ ___ ERROR at test_answer_does_not_contradict_written_policy[refund-window] ____
 deepeval.errors.MissingTestCaseParamsError: Unable to evaluate test case because
 'context' is missing. Provide the missing parameter(s), or pass
 --skip-on-missing-params to skip evaluating this test case.
-_____________ ERROR at test_retrieval_covers_the_answer_we_expect _____________
+______ ERROR at test_retrieval_covers_the_answer_we_expect[refund-window] ______
 deepeval.errors.MissingTestCaseParamsError: Unable to evaluate test case because
 'expected_output' is missing. Provide the missing parameter(s), or pass
 --skip-on-missing-params to skip evaluating this test case.
-========================= 4 passed, 4 errors in 96.12s =========================
+_______ ERROR at test_answer_matches_reference_wording[refund-window] __________
+deepeval.errors.MissingTestCaseParamsError: Unable to evaluate test case because
+'expected_output' is missing. Provide the missing parameter(s), or pass
+--skip-on-missing-params to skip evaluating this test case.
+========================= 4 passed, 9 errors in 96.12s =========================

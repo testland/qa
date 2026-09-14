@@ -1,0 +1,48 @@
+name: api-checks
+
+on:
+  pull_request:
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: deploy
+        name: Stand up this branch
+        run: |
+          # Builds the branch image, applies migrations on boot, seeds from
+          # fixtures/seed.sql, and prints the hostname it came up on.
+          ./ops/preview-up.sh >> "$GITHUB_OUTPUT"
+
+  contract:
+    needs: preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Contract tests against the branch stack
+        run: npm run contract -- --base "${{ needs.preview.outputs.url }}"
+
+  generated-cases:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install schemathesis
+
+      - name: Generated cases
+        env:
+          TOKEN: ${{ secrets.STAGING_TOKEN }}
+        run: |
+          schemathesis run https://staging.pallet.dev/openapi.json \
+            --base-url https://staging.pallet.dev \
+            --hypothesis-max-examples 200 \
+            --workers 4 \
+            --header "Authorization: Bearer $TOKEN"
+
+      - name: Document contract lint
+        run: node --test test/*.test.js

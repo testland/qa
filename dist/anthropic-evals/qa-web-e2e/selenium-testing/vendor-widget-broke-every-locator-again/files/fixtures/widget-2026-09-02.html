@@ -1,27 +1,24 @@
-<!-- saved 2026-09-02 from /checkout with
-     document.querySelector('[class^=pw-root]').outerHTML
-     the vendor added an outer wrapper in the July build; the component is now
-     the fourth div under <body> and the form is one level deeper than it was -->
 <div class="pw-root_e90c37" data-pw-build="2026.08.28">
   <div class="pw-frame_71ba20">
     <form class="pw-form_3ad6f1" novalidate>
       <label class="pw-label_c40e98">Card number</label>
       <input id="pw-card-b391"
-             name="cardnumber"
+             name="card-number"
              class="pw-input_b62f09"
              autocomplete="cc-number"
              inputmode="numeric"
-             aria-label="Card number">
+             aria-label="Card number (required)">
 
       <label class="pw-label_c40e98">Expiry</label>
       <input id="pw-exp-1f07"
-             name="cc-exp"
+             name="cc-expiry"
              class="pw-input_b62f09"
+             autocomplete="cc-exp"
              inputmode="numeric"
              placeholder="MM/YY"
-             aria-label="Expiry date">
+             aria-label="Expiry date (MM/YY)">
 
-      <label class="pw-label_c40e98">CVC</label>
+      <label class="pw-label_c40e98">Security code</label>
       <input class="pw-input_b62f09"
              pattern="[0-9]{3,4}"
              inputmode="numeric">
@@ -34,6 +31,7 @@
         <input type="checkbox" class="pw-box_66c1af"> Email me a receipt
       </label>
 
+      <button type="button" class="pw-ghost_9a10bc">Cancel</button>
       <button type="submit" class="pw-submit_d17b42">Pay now</button>
     </form>
   </div>

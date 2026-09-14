@@ -12,23 +12,26 @@ end-to-end tests, pick forty and delete them before the code freeze on
 November 14." He wants the list with names on it, and he is not looking for a
 debate about testing philosophy.
 
-What I have for you:
+The useful thing in the bundle is `data/dup-scan.json`. Our build team wrote a
+scanner that pairs an end-to-end test with a lower-layer test asserting the
+same thing; it flagged 22 of the 78 and it names the unit test it paired each
+one with. That is 22 of his 40 already, and I would rather start from a
+machine-generated list than from anybody's opinion about which tests matter.
+
+Also in the bundle:
 
 - `data/current-mix.json` — the case counts and per-stage timings out of CI.
-- `data/e2e-index.md` — how our previous QA lead grouped the 78 end-to-end
-  tests. It is a year old but the groupings are still right.
+- `data/e2e-index.md` — the 78 end-to-end specs grouped by what they touch.
 - `data/change-shape-90d.json` — the change classification from our estimation
-  tooling, generated Monday. Do not regenerate it.
-- `docs/incidents-2026.md` — every production incident we have had this year
-  and what caught it.
-- The two modules either side of the ledger/settlement boundary, plus the unit
-  tests each of them already has. That is the only source in the bundle; the
-  rest of the 612 unit cases live in the repo and are not included here.
+  tooling, generated Monday. Do not regenerate it, it takes 40 minutes.
+- `docs/incidents-2026.md` — every production incident we have had this year.
+- The unit suites the scanner paired against, plus the two modules either side
+  of the ledger/settlement boundary. The rest of the 612 unit cases live in the
+  repo and are not in the bundle.
 
 I am the one who has to write this plan and then live with it through the
-freeze. I need it to survive the freeze, not just Friday's meeting. Give me
-something concrete enough that he can read a list of names and I can tell him
-exactly what he gets and what it costs.
+freeze. Give me something concrete enough that he can read a list of names and
+I can tell him exactly what he gets and what it costs.
 
 ## Output Specification
 
@@ -37,13 +40,11 @@ exactly what he gets and what it costs.
    arithmetic behind the numbers, and what the pipeline saves.
 2. `test/integration/ledger-settlement-contract.test.js` — a real, passing test
    across the ledger/settlement boundary, running under `npm test`. `npm test`
-   must pass when you are done and the existing unit tests must still be green.
+   must pass when you are done and the existing tests must still be green.
 3. `reports/seam-backlog.md` — the remaining work at that middle layer, one
    entry per boundary, ordered, with what each one would let us stop doing.
 
-Do not edit `src/ledger/entry.js`, `src/settlement/request.js`,
-`test/unit/entry.test.js`, `test/unit/settlement.test.js`, or anything under
-`data/` or `docs/`.
+Do not edit anything under `src/`, `test/unit/`, `data/` or `docs/`.
 
 ## Input Files
 
@@ -91,6 +92,43 @@ export function toSettlement(entry) {
     idempotency_key: entry.reference + ':' + entry.posted_at,
     settle_after: entry.posted_at
   };
+}
+
+=============== FILE: src/fees.js ===============
+export function feeSchedule(tier) {
+  const bps = { standard: 290, volume: 175, partner: 90 }[tier];
+  if (bps === undefined) throw new RangeError('unknown tier ' + tier);
+  return bps;
+}
+
+export function feeCents(amountMinor, bps) {
+  if (!Number.isInteger(amountMinor)) throw new TypeError('amountMinor must be an integer');
+  return Math.round((amountMinor * bps) / 10000);
+}
+
+=============== FILE: src/iban.js ===============
+export function ibanFormatOk(iban) {
+  return /^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(iban);
+}
+
+export function ibanChecksumOk(iban) {
+  const rearranged = iban.slice(4) + iban.slice(0, 4);
+  const digits = [...rearranged]
+    .map((c) => (/[A-Z]/.test(c) ? String(c.charCodeAt(0) - 55) : c))
+    .join('');
+  let rem = 0;
+  for (const d of digits) rem = (rem * 10 + Number(d)) % 97;
+  return rem === 1;
+}
+
+=============== FILE: src/format.js ===============
+export function money(minor, exponent) {
+  return (minor / 10 ** exponent).toFixed(exponent);
+}
+
+export function receiptLine(label, amount, width = 40) {
+  const pad = Math.max(0, width - label.length - amount.length);
+  return (label + ' '.repeat(pad) + amount).slice(0, width);
 }
 
 =============== FILE: test/unit/entry.test.js ===============
@@ -152,13 +190,125 @@ test('an unknown ledger schema is rejected', () => {
   assert.throws(() => toSettlement(entry({ schema: 'ledger.entry.v2' })), RangeError);
 });
 
+=============== FILE: test/unit/fees.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { feeSchedule, feeCents } from '../../src/fees.js';
+
+test('standard tier is 290 bps', () => {
+  assert.equal(feeSchedule('standard'), 290);
+});
+
+test('volume tier is cheaper than standard', () => {
+  assert.ok(feeSchedule('volume') < feeSchedule('standard'));
+});
+
+test('unknown tier is rejected', () => {
+  assert.throws(() => feeSchedule('gold'), RangeError);
+});
+
+test('fee on a whole-cent amount', () => {
+  assert.equal(feeCents(10000, 290), 290);
+});
+
+// quarantined 2025-11 after the rounding change, never re-enabled
+test.skip('fee rounds half up at the cent', () => {
+  assert.equal(feeCents(1723, 290), 50);
+});
+
+test('a fractional minor amount is rejected', () => {
+  assert.throws(() => feeCents(1.5, 290), TypeError);
+});
+
+=============== FILE: test/unit/iban.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { ibanFormatOk } from '../../src/iban.js';
+
+test('a well formed iban passes the format check', () => {
+  assert.equal(ibanFormatOk('GB29NWBK60161331926819'), true);
+});
+
+test('a lowercase country code fails the format check', () => {
+  assert.equal(ibanFormatOk('gb29NWBK60161331926819'), false);
+});
+
+test('a short iban fails the format check', () => {
+  assert.equal(ibanFormatOk('GB29NWBK'), false);
+});
+
+test('a non alphanumeric character fails the format check', () => {
+  assert.equal(ibanFormatOk('GB29-NWBK-6016-1331-9268-19'), false);
+});
+
+=============== FILE: test/unit/format.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { money, receiptLine } from '../../src/format.js';
+
+test('money renders two decimals', () => {
+  assert.equal(money(1999, 2), '19.99');
+});
+
+test('money renders none for a zero exponent', () => {
+  assert.equal(money(1999, 0), '1999');
+});
+
+test('money of zero is zero', () => {
+  assert.equal(money(0, 2), '0.00');
+});
+
+test('receipt line pads the amount to the right', () => {
+  assert.match(receiptLine('Total', '19.99'), /^Total {30}19\.99$/);
+});
+
+test('receipt line is exactly the requested width', () => {
+  assert.equal(receiptLine('Total', '19.99').length, 40);
+});
+
+test.todo('receipt line wraps at forty characters');
+
+=============== FILE: data/dup-scan.json ===============
+{
+  "repo": "remit",
+  "generated": "2026-09-15",
+  "tool": "tools/dup-scan.mjs",
+  "method": "pairs an end-to-end spec with a lower-layer test when their titles share three or more tokens after stemming",
+  "flagged": 22,
+  "of_total_e2e": 78,
+  "pairs": [
+    { "e2e": "fee percentage maths for the standard tier", "unit_file": "test/unit/fees.test.js", "unit_test": "standard tier is 290 bps", "tokens": 4 },
+    { "e2e": "volume tier fee is lower than standard", "unit_file": "test/unit/fees.test.js", "unit_test": "volume tier is cheaper than standard", "tokens": 4 },
+    { "e2e": "unknown fee tier is rejected at checkout", "unit_file": "test/unit/fees.test.js", "unit_test": "unknown tier is rejected", "tokens": 4 },
+    { "e2e": "fee on a whole-cent amount", "unit_file": "test/unit/fees.test.js", "unit_test": "fee on a whole-cent amount", "tokens": 5 },
+    { "e2e": "fee percentage rounds half up at the cent", "unit_file": "test/unit/fees.test.js", "unit_test": "fee rounds half up at the cent", "tokens": 6 },
+    { "e2e": "a fractional fee input is rejected", "unit_file": "test/unit/fees.test.js", "unit_test": "a fractional minor amount is rejected", "tokens": 4 },
+    { "e2e": "IBAN format validation on the payee form", "unit_file": "test/unit/iban.test.js", "unit_test": "a well formed iban passes the format check", "tokens": 3 },
+    { "e2e": "IBAN with a lowercase country code is refused", "unit_file": "test/unit/iban.test.js", "unit_test": "a lowercase country code fails the format check", "tokens": 5 },
+    { "e2e": "short IBAN is refused", "unit_file": "test/unit/iban.test.js", "unit_test": "a short iban fails the format check", "tokens": 3 },
+    { "e2e": "IBAN with punctuation is refused", "unit_file": "test/unit/iban.test.js", "unit_test": "a non alphanumeric character fails the format check", "tokens": 3 },
+    { "e2e": "IBAN checksum rejects a transposed pair", "unit_file": "test/unit/iban.test.js", "unit_test": "iban checksum rejects a transposed pair", "tokens": 6 },
+    { "e2e": "receipt line formatting pads the amount", "unit_file": "test/unit/format.test.js", "unit_test": "receipt line pads the amount to the right", "tokens": 6 },
+    { "e2e": "receipt line is forty characters wide", "unit_file": "test/unit/format.test.js", "unit_test": "receipt line is exactly the requested width", "tokens": 4 },
+    { "e2e": "receipt line wraps at forty characters", "unit_file": "test/unit/format.test.js", "unit_test": "receipt line wraps at forty characters", "tokens": 6 },
+    { "e2e": "statement amount renders two decimals", "unit_file": "test/unit/format.test.js", "unit_test": "money renders two decimals", "tokens": 3 },
+    { "e2e": "yen statement amount renders no decimals", "unit_file": "test/unit/format.test.js", "unit_test": "money renders none for a zero exponent", "tokens": 3 },
+    { "e2e": "zero amount renders as zero", "unit_file": "test/unit/format.test.js", "unit_test": "money of zero is zero", "tokens": 3 },
+    { "e2e": "currency symbol rendering for JPY", "unit_file": "test/unit/settlement.test.js", "unit_test": "zero-exponent currency renders with none", "tokens": 3 },
+    { "e2e": "settlement amount for a two-decimal currency", "unit_file": "test/unit/settlement.test.js", "unit_test": "two-exponent currency renders with two decimals", "tokens": 4 },
+    { "e2e": "idempotency key is reference plus date", "unit_file": "test/unit/settlement.test.js", "unit_test": "idempotency key joins reference and posting date", "tokens": 5 },
+    { "e2e": "malformed currency code is refused", "unit_file": "test/unit/entry.test.js", "unit_test": "a malformed currency code is rejected", "tokens": 4 },
+    { "e2e": "fractional minor amount is refused at entry", "unit_file": "test/unit/entry.test.js", "unit_test": "a fractional minor amount is rejected", "tokens": 5 }
+  ]
+}
+
 =============== FILE: data/current-mix.json ===============
 {
   "repo": "remit",
   "measured": "2026-09-15",
   "layers": {
     "unit": { "cases": 612, "files": 174, "stage_seconds": 361 },
-    "integration": { "cases": 9, "files": 3, "stage_seconds": 71 },
+    "integration": { "cases": 9, "files": 3, "stage_seconds": 71, "paths": ["test/integration/payouts/"] },
     "e2e": { "cases": 78, "files": 24, "stage_seconds": 1980, "shards": 3 }
   },
   "total_cases": 699,
@@ -183,60 +333,56 @@ test('an unknown ledger schema is rejected', () => {
 }
 
 =============== FILE: data/e2e-index.md ===============
-# remit - the 78 end-to-end tests, grouped
+# remit - the 78 end-to-end specs
 
-Grouped by @tobi-r in 2025-10. Groupings re-walked 2026-09-02 and still correct.
+Exported from the runner on 2026-09-15, grouped by what each spec drives.
 
-## Group A - cross-service boundaries (31 tests)
+## Specs that drive two or more services (31)
 
-These drive two or more services and assert what one sends and the other
-accepts. Nothing below them covers the boundary; the middle layer has 9 tests
-in it and all 9 are in the payouts service.
+| Specs | Services                                             |
+|------:|------------------------------------------------------|
+|     8 | ledger and settlement (amounts, currency exponent, idempotency key) |
+|     6 | settlement and payout-rail (batch boundary, cut-off)  |
+|     5 | webhook ingress and ledger (replay, ordering)         |
+|     5 | fx-service and ledger (rate staleness, rounding)      |
+|     4 | dispute service and ledger (reversal, partial)        |
+|     3 | statement builder and ledger (period boundary)        |
 
-| Tests | Boundary                                        |
-|------:|-------------------------------------------------|
-|     8 | ledger to settlement (amounts, currency exponent, idempotency key) |
-|     6 | settlement to payout-rail (batch boundary, cut-off)  |
-|     5 | webhook ingress to ledger (replay, ordering)         |
-|     5 | fx-service to ledger (rate staleness, rounding)      |
-|     4 | dispute service to ledger (reversal, partial)        |
-|     3 | statement builder to ledger (period boundary)        |
+## Specs that drive one customer journey end to end (25)
 
-## Group B - duplicates an existing unit assertion (22 tests)
+checkout, refund, partial refund, payout, payout failure, dispute open,
+dispute resolve, statement download, card added, card removed, mandate signed,
+mandate cancelled, invoice paid, invoice voided, payout schedule changed,
+account closed, account reopened, limit raised, limit hit, fx quote accepted,
+fx quote expired, statement emailed, receipt downloaded, refund reversed,
+chargeback accepted.
 
-Each of these asserts something with an identical assertion already present in
-`test/unit/`. Retiring them loses nothing.
+## Specs that drive a single surface (22)
 
-Card BIN table lookup (4), currency symbol rendering (3), fee percentage maths
-(4), IBAN format validation (3), date-window helpers (3), receipt line
-formatting (3), sort order of statement rows (2).
-
-## Group C - hero journeys (25 tests)
-
-One test per critical customer journey, end to end through the real product:
-checkout, refund, partial refund, payout, payout failure, dispute open, dispute
-resolve, statement download, and seventeen more in the same shape. These are
-the ones the on-call engineer runs by hand against staging before a release.
+fee percentage maths for the standard tier, volume tier fee is lower than
+standard, unknown fee tier is rejected at checkout, fee on a whole-cent
+amount, fee percentage rounds half up at the cent, a fractional fee input is
+rejected, IBAN format validation on the payee form, IBAN with a lowercase
+country code is refused, short IBAN is refused, IBAN with punctuation is
+refused, IBAN checksum rejects a transposed pair, receipt line formatting pads
+the amount, receipt line is forty characters wide, receipt line wraps at forty
+characters, statement amount renders two decimals, yen statement amount renders
+no decimals, zero amount renders as zero, currency symbol rendering for JPY,
+settlement amount for a two-decimal currency, idempotency key is reference plus
+date, malformed currency code is refused, fractional minor amount is refused at
+entry.
 
 =============== FILE: docs/incidents-2026.md ===============
 # remit - production incidents, 2026 to date
-
-Nine incidents. For each: what broke, whether unit tests passed, and what
-caught it.
 
 | # | Date  | What broke | Unit tests | Caught by |
 |---|-------|------------|------------|-----------|
 | 1 | 01-19 | ledger renamed `amount_minor` to `amountMinor` in a draft schema; settlement kept reading the old key and sent 0.00 | all green | end-to-end, in staging |
 | 2 | 02-27 | JPY settled as if it had two decimal places; 1999 yen went out as 19.99 | all green | end-to-end, in staging |
 | 3 | 03-11 | CSS regression on the statement page | n/a | visual review |
-| 4 | 04-02 | idempotency key collided when two entries shared a reference and a posting date | all green | **nothing — reached production**, duplicate payout of 38k |
+| 4 | 04-02 | idempotency key collided when two entries shared a reference and a posting date | all green | not caught before release; duplicate payout of 38k |
 | 5 | 05-30 | webhook replay applied out of order, reversing a reversal | all green | end-to-end, in staging |
-| 6 | 06-14 | fx rate 40 minutes stale at the ledger boundary | all green | **nothing — reached production**, 1,100 mispriced entries |
+| 6 | 06-14 | fx rate 40 minutes stale at the ledger boundary | all green | not caught before release; 1,100 mispriced entries |
 | 7 | 07-08 | null pointer in the fee calculator | caught by a unit test before merge | unit |
 | 8 | 08-21 | settlement batch cut off mid-window, splitting one payout across two files | all green | end-to-end, in staging |
 | 9 | 09-03 | dependency bump broke the PDF renderer | n/a | end-to-end, in staging |
-
-Six of the nine — 1, 2, 4, 5, 6, 8 — are the same failure: two services
-disagreeing about a payload at a boundary neither of them tests alone. Every
-unit test passed in all six. Four were caught end to end in staging; two were
-not caught at all before customers were affected.

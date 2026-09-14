@@ -1,198 +1,238 @@
-# VP wants all eleven packages gated at 80 by 31 December
+# Eleven packages, an 80 gate mandated by 31 December, three of them already over 80
 
 ## Problem Description
 
-Our VP of Engineering came back from a conference and sent the note attached as
-`docs/mandate-2026-09-08.md`. Short version: every package in `platform-api`
-gets mutation testing, the gate is 80, PRs blocked below it, done by quarter
-end. Our platform lead has already drafted the plan in the same document — one
-config at the repo root mutating `packages/*/src/**`, blocking on every PR from
-the day it lands.
+Duncan sent the attached mail on Monday. Short version: every package in the
+monorepo carries a blocking mutation gate at 80 by 31 December, on the argument
+that we already gate line coverage at 80 and this is the same idea done
+properly. He is the VP, the date is in his commitments to the exec, and "it is
+hard" is not an answer he will take.
 
-I am the one who has to run this and I have a week before the planning review
-where I either agree to it or say something better. I have pulled the state of
-all eleven packages into `reports/packages.md` — coverage, suite runtime, test
-count, and how often each suite fails on a rerun of the same commit, measured
-over the last 300 CI runs.
+I ran the tool across all eleven packages overnight on Thursday. The summary is
+attached. Three of them are already over 80, and Duncan's mail says to switch
+those three to blocking on Monday as the proof that the programme is moving. I
+have also attached the two package configs people keep asking me about, the
+per-file breakdown for one package, the CI workflow, and the note our CI team
+left about `packages/auth` last month.
 
-Two packages I can tell you about from experience. `pricing` is the one where
-review comments keep saying "this test does not really check anything" — I have
-attached its discount module and the spec that goes with it so you can judge.
-`web-gateway` is the one everybody reruns; the failures are timing and nobody
-has owned it since Marco left.
+What I need from you is a decision per package that I can defend in the
+programme review on Tuesday, not a strategy. Specifically:
 
-What I need back is the thing I would actually land this week — a real config
-file, not a proposal — plus a note I can send upward. The note has to survive
-contact with the VP, which means every package I am not doing needs a reason
-that is about the measurement being worthless there rather than about us being
-busy, and the quarter-end position has to be stated honestly rather than
-implied. He will read "phase two" as "done in December" unless I spell it out.
+- Which packages go blocking on Monday. If that is fewer than three, I need to
+  tell Duncan on Friday and I need the reason to be about the measurement rather
+  than about the team being busy.
+- What happens to the rest, with numbers and dates rather than "later".
+- Where we will honestly be on 31 December. Duncan will read silence as
+  agreement that all eleven will be gated at 80 by then, so if that is not going
+  to happen it has to be written down.
+
+Every one of these packages has had the mutation job running non-blocking for
+about five months, so we are not starting from nothing and I do not want to be
+told to go and measure a baseline first. The numbers in the summary are the
+baseline.
 
 ## Output Specification
 
-1. Write the config file you would land this week, at the path it belongs at,
-   and edit the `package.json` of whichever package it covers to add what it
-   needs.
-2. Write `docs/rollout.md` — which packages are in the first step and which are
-   not, a reason per excluded package, what the gate number is and when it
-   starts blocking anything, and what exists at quarter end.
-3. Do not edit `docs/mandate-2026-09-08.md`, `packages/pricing/src/discount.ts`
-   or `packages/pricing/test/discount.spec.ts`.
+1. Write `docs/mutation-gate-rollout.md` — a row per package with the verdict,
+   the threshold number if it gets one, the date, and the owner; the answer to
+   Duncan about Monday and about 31 December.
+2. Edit the `stryker.conf.json` of whichever packages your decision covers.
+   Leave the others alone.
 
 ## Input Files
 
 Extract the following files before beginning.
 
 =============== FILE: docs/mandate-2026-09-08.md ===============
-# From: VP Engineering — 8 September 2026
+From: Duncan Oyelaran, VP Engineering
+To: Engineering leads
+Date: Monday 8 September 2026
+Subject: Mutation gate, all packages, 31 December
 
-Subject: quality push, Q4
+We gate line coverage at 80 and have done since 2024. Coverage at 80 has not
+stopped a single incident this year, and the post-incident review for INC-2211
+in June found the code path had tests that executed it and asserted nothing.
+Mutation score measures the thing we thought coverage measured.
 
-Team,
+So: every package carries a blocking mutation gate at 80 by 31 December.
 
-I spent Thursday at a testing conference and the thing I took away is that line
-coverage is a vanity number. The technique that actually measures whether tests
-work is mutation testing — they inject bugs and see whether your suite notices.
-A team at a company our size reported 80%+ across their codebase.
+I am told three packages already clear 80. Switch those three to blocking on
+Monday. I want the programme visibly started before the board pack goes out on
+the 19th, and I want the remaining eight sequenced with dates by the end of the
+month.
 
-So: every package in platform-api, mutation tested, 80% or the PR does not
-merge, by 31 December. I have told the board this is our Q4 quality commitment.
+I do not need a discussion about whether 80 is the right number. It is the
+number we use everywhere else.
 
----
+=============== FILE: reports/monorepo-2026-09-11.md ===============
+# Mutation run, all packages, 2026-09-11 (non-blocking)
 
-## Plan (drafted by platform lead, same thread)
+| Package                 | Valid mutants | Detected | Score  |
+|-------------------------|---------------|----------|--------|
+| packages/notifications  | 1,140         | 959      | 84.12% |
+| packages/pricing        | 1,204         | 1,006    | 83.55% |
+| packages/auth           | 880           | 731      | 83.07% |
+| packages/search         | 611           | 435      | 71.19% |
+| packages/reporting      | 803           | 553      | 68.87% |
+| packages/ingest         | 738           | 469      | 63.55% |
+| packages/web-gateway    | 1,455         | 844      | 58.01% |
+| packages/admin-ui       | 1,067         | 591      | 55.39% |
+| packages/ledger         | 962           | 397      | 41.27% |
+| packages/db-migrations  | 204           | 24       | 11.76% |
+| packages/proto-gen      | 1,932         | 93       | 4.81%  |
 
-Root `stryker.conf.json`:
+Facts collected while assembling this, in no particular order:
 
-```json
+- `packages/db-migrations` holds four files: `migrate-2024-06-11.js`,
+  `migrate-2024-11-02.js`, `migrate-2025-03-30.js`, `migrate-2025-09-14.js`.
+  Each was executed once against the production database on the date in its
+  name. The package has no `test` script. Its README says "archived, retained
+  for audit".
+- `packages/proto-gen` has a `prebuild` script of `npm run proto`, which runs
+  `protoc` over `schema/*.proto` and rewrites the whole of its `src/`. There are
+  no hand-edited files in that package; `git log` shows every commit to `src/`
+  authored by `ci-bot`.
+- `packages/ledger` is the settlement engine. 397 of its 962 mutants are
+  detected; 41 of the 962 are in the no-coverage column, the rest of the
+  survivors are executed and not asserted on.
+- `packages/auth` was run twice on the same commit `a41f00c` on Thursday. The
+  first run printed 83.07%. The second printed 79.40%.
+- Run wall-clock for all eleven: 4 hours 12 minutes on the nightly runner.
+
+=============== FILE: packages/pricing/stryker.conf.json ===============
 {
-  "testRunner": "vitest",
-  "mutate": ["packages/*/src/**/*.ts"],
-  "thresholds": { "high": 90, "low": 80, "break": 80 }
-}
-```
-
-CI: run it on every pull request against `main`, blocking. One config, eleven
-packages, no per-package special cases — if we start carving out exceptions on
-day one we will still be carving them out in March.
-
-=============== FILE: reports/packages.md ===============
-# platform-api — package state, pulled 2026-09-09
-
-Flake rate = share of the last 300 CI runs where the suite failed and then
-passed on a rerun of the identical commit.
-
-| Package          | Lines | Line cov | Tests | Suite runtime | Flake rate | What it is                          |
-|------------------|-------|----------|-------|---------------|------------|-------------------------------------|
-| pricing          | 2,180 | 94.1%    |   206 | 11 s          | 0.0%       | discounts, tiers, proration         |
-| tax              | 1,640 | 88.7%    |   174 | 9 s           | 0.3%       | rate lookup and rounding            |
-| invoice-render   | 3,910 | 82.4%    |   241 | 34 s          | 0.7%       | PDF and HTML invoice layout         |
-| entitlements     | 1,205 | 86.0%    |   139 | 7 s           | 0.0%       | plan to feature mapping             |
-| ledger           | 4,320 | 80.9%    |   402 | 58 s          | 1.0%       | double-entry postings               |
-| notifications    | 2,050 | 71.2%    |   118 | 21 s          | 2.1%       | email and webhook fan-out           |
-| ingest           | 6,740 | 41.3%    |    94 | 46 s          | 1.4%       | partner CSV and JSON import         |
-| web-gateway      | 5,110 | 77.8%    |   288 | 22 min        | 7.4%       | HTTP edge, auth, rate limiting      |
-| admin-ui         | 8,900 | 63.5%    |   331 | 4 min         | 3.2%       | internal React admin app            |
-| migrations       | 1,870 | 12.0%    |    11 | 3 s           | 0.0%       | one-shot SQL migration runners      |
-| sdk-codegen      | 2,240 |  0.0%    |     0 | n/a           | n/a        | generates the client SDK from spec  |
-
-Notes:
-
-- `ingest` is 6,740 lines behind 94 tests. The 41% is the honest figure; the
-  untested half is partner-specific parsing branches added over two years.
-- `web-gateway` reruns are a standing joke. The failures are timing — socket
-  teardown and a retry loop — and they land on whichever test is unlucky, not
-  on one particular test.
-- `migrations` are one-shot scripts, run once against production and then dead.
-- `sdk-codegen` has no tests because it has no hand-written code; its output is
-  regenerated from the spec on every release.
-- Every suite in the table runs on Vitest except `admin-ui`, which is on Jest.
-
-=============== FILE: packages/pricing/src/discount.ts ===============
-export interface Tier {
-  name: string;
-  minSeats: number;
-  pctOff: number;
+  "$schema": "../../node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "testRunner": "tap",
+  "tap": { "testFiles": ["src/**/*.test.js"] },
+  "coverageAnalysis": "perTest",
+  "mutate": ["src/**/*.js", "!src/**/*.test.js"],
+  "reporters": ["progress", "clear-text", "html"],
+  "thresholds": { "high": 80, "low": 60 }
 }
 
-export const TIERS: Tier[] = [
-  { name: 'starter', minSeats: 1, pctOff: 0 },
-  { name: 'team', minSeats: 10, pctOff: 10 },
-  { name: 'business', minSeats: 50, pctOff: 20 },
-  { name: 'enterprise', minSeats: 250, pctOff: 30 },
+=============== FILE: packages/notifications/stryker.conf.json ===============
+{
+  "$schema": "../../node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "testRunner": "tap",
+  "tap": { "testFiles": ["src/**/*.test.js"] },
+  "coverageAnalysis": "perTest",
+  "mutate": ["src/**/*.js"],
+  "reporters": ["progress", "clear-text", "html"],
+  "thresholds": { "high": 80, "low": 60 }
+}
+
+=============== FILE: packages/notifications/reports/per-file-2026-09-11.txt ===============
+--------------------------------|---------|----------|-----------|------------|----------|
+File                            | % score | # killed | # timeout | # survived | # no cov |
+--------------------------------|---------|----------|-----------|------------|----------|
+All files                       |   84.12 |      951 |         8 |        173 |        8 |
+ src/digest/digest.js           |   67.01 |      128 |         2 |         61 |        3 |
+ src/digest/digest.test.js      |   97.92 |      141 |         0 |          3 |        0 |
+ src/render/template.js         |   66.47 |      112 |         1 |         55 |        2 |
+ src/render/template.test.js    |   98.53 |      134 |         0 |          2 |        0 |
+ src/queue/dispatch.js          |   70.32 |      106 |         3 |         44 |        2 |
+ src/queue/dispatch.test.js     |   97.58 |      121 |         0 |          3 |        0 |
+ src/prefs/prefs.js             |   95.41 |      102 |         2 |          4 |        1 |
+ src/prefs/prefs.test.js        |   99.07 |      107 |         0 |          1 |        0 |
+--------------------------------|---------|----------|-----------|------------|----------|
+
+=============== FILE: reports/ci-note-2026-08-20.md ===============
+# CI team note — packages/auth
+
+Filed 2026-08-20 by @ci-platform.
+
+Over the last 500 runs of the `auth` unit suite on `main`, 37 failed and then
+passed on retry with no change to the tree (7.4%). We have not found the cause.
+The failures cluster in `src/session/*.test.js` and involve the fake clock the
+suite installs in `beforeEach`. Ticket #5064 is open, unassigned, and has been
+open since May.
+
+The `auth` suite is the only one in the monorepo with automatic retries turned
+on in the workflow (`--test-retries=2`).
+
+=============== FILE: .github/workflows/mutation.yml ===============
+name: mutation
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - notifications
+          - pricing
+          - auth
+          - search
+          - reporting
+          - ingest
+          - web-gateway
+          - admin-ui
+          - ledger
+          - db-migrations
+          - proto-gen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Mutation run
+        working-directory: packages/${{ matrix.package }}
+        run: npx stryker run
+        continue-on-error: true
+
+=============== FILE: packages/pricing/src/tiers.js ===============
+const TIERS = [
+  { name: 'free', upTo: 1000, unitCents: 0 },
+  { name: 'growth', upTo: 50000, unitCents: 4 },
+  { name: 'scale', upTo: Infinity, unitCents: 3 },
 ];
 
-export function tierFor(seats: number): Tier {
-  let chosen = TIERS[0];
-  for (const t of TIERS) {
-    if (seats >= t.minSeats) chosen = t;
-  }
-  return chosen;
+export function tierFor(units) {
+  if (units < 0) throw new RangeError('units must not be negative');
+  return TIERS.find((t) => units <= t.upTo);
 }
 
-export function discountedCents(listCents: number, seats: number): number {
-  const tier = tierFor(seats);
-  const off = Math.round((listCents * tier.pctOff) / 100);
-  return listCents - off;
+export function chargeCents(units) {
+  const tier = tierFor(units);
+  return units * tier.unitCents;
 }
 
-export function prorate(listCents: number, daysLeft: number, daysInPeriod: number): number {
-  if (daysLeft <= 0) return 0;
-  if (daysLeft >= daysInPeriod) return listCents;
-  return Math.round((listCents * daysLeft) / daysInPeriod);
-}
+=============== FILE: packages/pricing/src/tiers.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { tierFor, chargeCents } from './tiers.js';
 
-=============== FILE: packages/pricing/test/discount.spec.ts ===============
-import { describe, it, expect } from 'vitest';
-import { tierFor, discountedCents, prorate } from '../src/discount';
-
-describe('tierFor', () => {
-  it('returns a tier for a small account', () => {
-    expect(tierFor(3)).toBeTruthy();
-  });
-
-  it('returns a tier for a large account', () => {
-    expect(tierFor(500)).toBeTruthy();
-  });
-
-  it('returns something with a name', () => {
-    expect(typeof tierFor(60).name).toBe('string');
-  });
+test('the free tier covers its upper bound', () => {
+  assert.equal(tierFor(1000).name, 'free');
 });
 
-describe('discountedCents', () => {
-  it('does not charge more than list', () => {
-    expect(discountedCents(10000, 60)).toBeLessThanOrEqual(10000);
-  });
-
-  it('returns a number', () => {
-    expect(typeof discountedCents(10000, 12)).toBe('number');
-  });
+test('one unit past the free bound is growth', () => {
+  assert.equal(tierFor(1001).name, 'growth');
 });
 
-describe('prorate', () => {
-  it('is zero when nothing is left', () => {
-    expect(prorate(10000, 0, 30)).toBe(0);
-  });
-
-  it('is positive mid-period', () => {
-    expect(prorate(10000, 15, 30)).toBeGreaterThan(0);
-  });
+test('the scale tier catches everything above growth', () => {
+  assert.equal(tierFor(50001).name, 'scale');
 });
 
-=============== FILE: packages/pricing/package.json ===============
-{
-  "name": "@platform/pricing",
-  "version": "3.1.0",
-  "private": true,
-  "type": "module",
-  "main": "./src/index.ts",
-  "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "devDependencies": {
-    "typescript": "5.6.2",
-    "vitest": "2.1.4"
-  }
-}
+test('negative units are rejected', () => {
+  assert.throws(() => tierFor(-1), RangeError);
+});
+
+test('free usage is free', () => {
+  assert.equal(chargeCents(1000), 0);
+});
+
+test('growth usage charges four cents a unit', () => {
+  assert.equal(chargeCents(20000), 80000);
+});

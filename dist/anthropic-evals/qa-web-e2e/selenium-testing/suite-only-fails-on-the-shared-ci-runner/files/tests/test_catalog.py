@@ -18,5 +18,15 @@ def test_search_narrows_the_catalog(driver, base_url):
     )
     box.send_keys("ceramic")
     WebDriverWait(driver, 10).until(
-        EC.text_to_be_present_in_element((By.CSS_SELECTOR, "[data-testid=result-count]"), "3 results")
+        EC.text_to_be_present_in_element(
+            (By.CSS_SELECTOR, "[data-testid=result-count]"), "3 results"
+        )
     )
+
+
+def test_product_page_shows_stock(driver, base_url):
+    driver.get(f"{base_url}/products/BOOK-001")
+    stock = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-testid=stock]"))
+    )
+    assert "In stock" in stock.text

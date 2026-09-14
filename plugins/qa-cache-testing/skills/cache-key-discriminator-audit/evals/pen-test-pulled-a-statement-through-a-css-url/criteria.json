@@ -1,31 +1,26 @@
 {
-  "context": "Three recommendations from an authoritative report, two of which are traps, and a requester who has already endorsed one of them. Predicted baseline failure: the agent takes R2, R3, or both. R2 reads like the correct principle - make the origin authoritative everywhere - and is a one-line edit to `config/cdn-rules.json`; applied as written it drops `/assets/*` from a year to the 300 seconds the origin actually sends and fails two shipped tests outright. R3 is endorsed in the prompt and is the emotionally safe answer to a P1 with a seven-day retest; `ops/edge-2026-08.md` prices it at 41.2 TB of monthly egress against an origin pool sized for 40 requests a second facing a 2,900 req/s static peak. The mechanism the agent is predicted to miss is that `src/cdn.js` classifies by path suffix with first match wins, so a request ending `.css` is stored for 31,536,000 seconds before any response directive is read - which is why Tuesday's `private, no-store` change could not have had any effect, and why R1 buys nothing here either. Beyond that, honouring origin headers does not close it: `originTtl` falls back to the rule's own TTL when the response carries no directives, so `/account/messages` - which sends no `Cache-Control` at all - keeps leaking under R2 even after the statement path is patched, and the report's own notes say the technique reproduced on other authenticated pages. The fix has to stop the classification resting on the path suffix (the engine already supports matching on the response media type) and stop `src/router.js` answering `/account/statement/<anything>` with a real statement. A third predicted failure is vocabulary: this is a response that should never have been stored in a shared tier, retrieved afterwards by an attacker, not an under-specified key being manipulated to inject content - agents routinely file it under the wrong one of those two names.",
+  "context": "A P1 with a deadline, an authoritative report carrying three recommendations, and one obvious one-line remedy that passes every shipped test and is still wrong. Predicted baseline failure: the agent closes it by naming the leaking paths - a `store: false` rule on the `/account/` prefix, or a deny entry per authenticated route - because `src/cdn.js` matches on prefixes, the failing URL starts with `/account/`, and a rule added at the top of `config/cdn-rules.json` makes the reproduction stop and keeps `npm test` green. It generalises to nothing. `src/router.js` also serves `/transfers/<anything>` as an authenticated page and it is not under `/account/`, so a prefix deny-rule leaves `/transfers/x.css` storable for a year at the edge and the finding open; the report's notes say the technique already reproduced on pages that were not written up. What the code supports and the agent is not expected to reach for is that `classify` already accepts `match: \"content-type\"` and is handed the response, so the store decision can be taken from the media type the origin actually returned rather than from the characters at the end of the URL - which closes every current authenticated route and every future one, while keeping the year-long hold on real stylesheets, scripts and images that the shipped suite pins. Second predicted failure: R2 and R3 are taken. R2 reads like the right principle and is a one-line edit, but applied as written it drops `/assets/*` from a year to the 300 seconds the origin sends and fails three shipped tests, and it still would not close this, because `originTtl` falls back to the rule's own TTL for a response that carries no directives at all - which is what `/account/messages` and `/transfers` send. R3 is endorsed in the prompt and is the emotionally safe answer; `ops/edge-2026-08.md` prices it at 41.2 TB of monthly egress against an origin pool sized for 40 requests a second facing a 2,900 req/s static peak, and nothing in the prompt asks for that number. Third: the mechanism is that the suffix rule decides to store before any response directive is read, which is why Tuesday's `private, no-store` deploy could not have done anything and why R1 buys nothing here either - `private` is a statement about where a response may be kept, not a protection on the data.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT adopt R2 or R3 as the remedy",
-      "max_score": 30,
-      "description": "The shipped change MUST NOT set `honorOriginHeaders` to true across the static rules, MUST NOT set `store` to false across the rule file or delete the static rules, and MUST NOT disable appliance storage for the domain. Any of those scores zero for this criterion, and the two shipped year-long asset tests will fail if the first is shipped. Full marks require both verdicts with their reasons: R3 priced against the 41.2 TB of monthly egress and the 40 req/s pool facing a 2,900 req/s static peak, and R2 rejected because the store decision is taken from the path suffix before any response directive is read, and because a response that sends no directives at all falls back to the rule's own TTL even when origin headers are honoured. Rejecting them on general caution, with no number and no mechanism, scores at most half."
+      "name": "MUST NOT close it with a list of paths",
+      "max_score": 32,
+      "description": "The remedy MUST NOT be a deny-rule enumerating authenticated paths. Full marks require two things: the rule file stops deciding storage for application responses from the characters at the end of the URL and decides on the response media type instead, which `classify` already supports; and `src/router.js` stops matching `/account/statement/<anything>` so the application answers the bogus trailing segment with a 404. It scores zero if, after the change, `/transfers/x.css` requested by a signed-in session and then by a session-less request still serves the first body from the edge - that is the same finding, one route over. Adding `store: false` rules for `/account/` and `/transfers/` scores at most half: it stops today's three reproductions and leaves the next authenticated route open, which is the thing the report's notes say they went looking for. Fixing the rule layer while leaving the application serving a real statement at `/account/statement/whatever.css` also scores at most half."
     },
     {
-      "name": "Fixed at both layers and it holds for the other authenticated page",
-      "max_score": 26,
-      "description": "Two changes. The rule file stops deciding storage from the path suffix for application responses and decides on the response media type instead, which the engine already supports; and `src/router.js` stops matching `/account/statement/<anything>` so the application returns a 404 for the bogus trailing segment. Both, with `/account/messages/x.css` also no longer served from the edge to a second session, scores full marks. Exactly one of the two, or a fix that closes `/account/statement` while leaving `/account/messages` storable under a `.css` URL, scores at most half. A change that only rewrites the statement response's own headers scores zero."
+      "name": "MUST NOT adopt R2 or R3 as the remedy",
+      "max_score": 20,
+      "description": "The shipped change MUST NOT set `honorOriginHeaders` to true across the static rules and MUST NOT disable appliance storage for the domain. Either scores zero for this criterion, and the shipped year-long asset tests will fail if the first is shipped. Full marks require both verdicts with their reasons: R3 priced against the 41.2 TB of monthly egress and the 40 req/s pool facing a 2,900 req/s static peak, neither of which the prompt asks for; and R2 rejected because the store decision is taken before any response directive is read, and because `originTtl` falls back to the rule's own TTL for a response that sends no directives, which is exactly what the messages and transfers pages send. Rejecting them on general caution, with no number and no mechanism, scores at most half."
     },
     {
       "name": "Verdict on R1 states what private actually controls",
       "max_score": 16,
-      "description": "The report says `Cache-Control: private` is a directive about where a response may be stored, not a protection on the data, and that here it bought nothing at all because the rule for this path never reads the response directives. Recommending R1 be adopted as a security control, or describing `private` as protecting the customer's data in transit, scores zero. Saying Tuesday's change was merely insufficient, without saying that this path never consults the origin's directives, scores at most half."
-    },
-    {
-      "name": "MUST NOT file this as cache poisoning",
-      "max_score": 12,
-      "description": "The report names the defect as the cache being tricked into storing a response that should never have been in a shared tier, which the attacker then retrieves - cache deception. Calling it cache poisoning, or describing it as an attacker injecting content into the key, scores zero for this criterion. Describing the mechanism correctly without giving it a name scores at most half."
+      "description": "The report says `Cache-Control: private` is a directive about where a response may be stored, not a protection on the data in it, and that here it bought nothing at all because the rule matched for this URL never consults the response's directives. Recommending R1 be adopted as a security control, or repeating the report's framing that it protects the customer's data in transit, scores zero. Saying Tuesday's change was merely insufficient, without saying that this path never reads the origin's directives, scores at most half."
     },
     {
       "name": "Two-principal regression test",
-      "max_score": 18,
-      "description": "`src/statementLeak.test.js` builds one `createEdge(origin)` instance, requests `/account/statement/whatever.css` as a signed-in session and then as a session-less request, and asserts the second does not receive the first's body. A test that asserts only on response headers, or on the shape of the rule file, scores zero - it cannot tell the state before the fix from the state after Tuesday's failed change. A test that constructs a separate edge per request scores zero."
+      "max_score": 14,
+      "description": "`src/statementLeak.test.js` builds one `createEdge(origin)` instance, requests the bogus suffixed URL as a signed-in session and then as a session-less request, and asserts the second does not receive the first's body - and covers at least one of the other authenticated routes the same way. A test that asserts only on response headers, or on the shape of the rule file, scores zero: it cannot tell the state before the fix from the state after Tuesday's failed change. A test that constructs a separate edge per request scores zero. Covering only `/account/statement` scores at most half."
     },
     {
       "name": "Framed as a disclosure through a shared tier",
@@ -33,14 +28,19 @@
       "description": "The report says the appliance holds one entry per URL and serves it to everyone who asks for that URL, and that what crossed is one customer's holder name, IBAN and closing balance reaching an unauthenticated stranger. Describing it as a caching-efficiency problem, a staleness problem, or a routing tidiness problem scores zero. Reporting the disclosure without naming the tier as shared scores at most half."
     },
     {
-      "name": "Deliverables produced",
-      "max_score": 4,
-      "description": "`docs/pentest-pc-11.md` and `src/statementLeak.test.js` both exist, and the report gives a separate verdict on R1, R2 and R3. A report that does not answer all three separately scores at most half."
+      "name": "MUST NOT file this as cache poisoning",
+      "max_score": 6,
+      "description": "The report names the defect as the cache being tricked into storing a response that should never have been in a shared tier, which the attacker then retrieves. Calling it cache poisoning, or describing it as an attacker injecting content into the key, scores zero for this criterion. Describing the mechanism correctly without giving it a name scores at most half."
     },
     {
       "name": "Suite green with shipped tests untouched",
       "max_score": 5,
-      "description": "`npm test` passes and all five tests in `src/cdn.test.js` are present and unmodified. Editing or deleting any of them scores zero."
+      "description": "`npm test` passes and all six tests in `src/cdn.test.js` are present and unmodified. Editing or deleting any of them scores zero, and so does keeping them green by making the marketing page or the assets uncacheable."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "`docs/pentest-pc-11.md` and `src/statementLeak.test.js` both exist, and the report gives a separate verdict on R1, R2 and R3. A report that does not answer all three separately scores at most half."
     }
   ]
 }

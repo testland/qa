@@ -1,44 +1,51 @@
-# Departing contractor left us a framework proposal the CTO wants signed off
+# Contractor left us a framework proposal and a pilot that has started going red
 
 ## Problem Description
 
-I am the SDET at Meridian Freight. I started five weeks ago on Dispatch, our
-parcel routing product - Node and TypeScript API, Postgres, and a React ops
-console that the dispatch desk lives in all day.
+I am the SDET at Meridian Freight, on Dispatch - our parcel routing product.
+Node and TypeScript API, Postgres, and a React ops console that the dispatch
+desk lives in all day.
 
-Dan Whitlock finished a six-week contract here on 5 September and left behind
-`proposals/automation-framework.md`. Our CTO read it over the weekend and
-wants it signed off at Thursday's engineering review. I have until then to
-either endorse it or come back with something better, and better has to be
-argued rather than asserted - Dan is well regarded, he shipped what he was
-hired for, and that proposal is more thought than anyone here has put into
-testing in two years.
+Dan Whitlock finished a six-week contract here on 5 September. He left
+`proposals/automation-framework.md` and a working pilot on the
+`pilot/automation` branch. Our CTO read the proposal over the weekend and
+wants it signed off at Thursday's engineering review.
 
-Three things make it hard to just say no. The internal Selenium Grid is
-already paid for and sitting close to idle. The central QA group maintains
-the shared Java library the proposal builds on and has offered to own the
-suite for us. And our other product, Meridian Fleet, is a Java shop, so there
-is real Java expertise in the building and a hiring pipeline for it.
+I will be honest with you: I think it is good. It is TypeScript, it is the
+runner I would have picked myself, the pilot is nine specs that genuinely
+drive our console, and it is more thought than anyone here has put into
+testing in two years. I am inclined to endorse it as written and spend
+Thursday arguing for the headcount to build it out instead.
 
-Last week I pulled the change-shape numbers off git and collected the intake
-answers from the team. Both are attached, along with Dan's proposal and what
-is in the repo today (`npm test` passes - three tests, all green).
+The one thing I want a second opinion on before I do that is the pilot. It
+started going red partway through Dan's last fortnight and he did not get to
+the bottom of it before his contract ended. His note says it is contention on
+the shared runner image and that turning retries on clears it, and that does
+match what I see - I re-ran the red ones by hand and every one of them went
+green. Platform sent me their change log covering the same period, which I
+have attached in case any of it is relevant.
 
-Give me the design I should take to Thursday. If it is Dan's, say so.
+Also attached: Dan's proposal, the pilot's fixture module and its three spec
+files, the run history off the branch, the change-shape numbers I pulled off
+git in August, and the repo as it stands. `npm test` passes - three tests,
+all green.
+
+Give me the design I take into Thursday, and tell me what is actually going
+on with the red runs.
 
 ## Output Specification
 
 1. Write `docs/test-conventions.md` - the design the team will live by. At
-   minimum it must state: which layers this framework covers and which it
-   explicitly does not, with a reason per row; the runner and the language,
-   with the alternatives that were considered and the specific reason each
-   one lost; the directory layout; and the fixtures the suite needs, each
-   with its scope, what it provides, and whether tests mutate it.
+   minimum it must state: which layers this framework covers; the runner and
+   the language; the directory layout; and the fixtures the suite needs,
+   saying for each one what it provides and how it is set up and torn down.
 2. Write `docs/implementation-order.md` - what gets built first and what each
    later piece waits on.
-3. Write `docs/review-answer.md` - the answer I take into Thursday's review
-   about Dan's proposal, naming what in it survives and what does not.
-4. Do not write harness code. Do not modify anything under `src/` or `test/`.
+3. Write `docs/review-answer.md` - what I take into Thursday's review: what
+   in Dan's proposal survives, what does not, and what is happening in the
+   pilot runs.
+4. Do not write harness code. Do not modify anything under `src/`, `test/`
+   or `pilot/`.
 
 ## Input Files
 
@@ -105,74 +112,201 @@ Status: awaiting sign-off
 
 ## Stack
 
-- Java 17, Maven
-- Selenium WebDriver 4 + Cucumber-JVM 7, scenarios authored in Gherkin
-- Page Object Model, three-level base class:
-  `BaseTest` -> `WebTest` -> `DispatchTest`
-- Executes on the existing internal grid (grid.meridian.internal, 24 nodes)
-- Depends on `com.meridian.qa:qa-common:4.2.0`, the shared helper library the
-  central QA group maintains for Meridian Fleet
+- TypeScript, Playwright Test
+- Runs the console tier now and the API tier later through the same runner
+- Page objects under `tests/pages/`, extracted as duplication shows up
 
 ## Coverage
 
-| Layer   | Covered here                                  |
-|---------|-----------------------------------------------|
-| Unit    | No - owned by the dev teams, stays with them  |
-| API     | No - out of scope for this phase              |
-| Web E2E | Yes - all 31 console screens, one feature file per screen |
+| Layer   | Covered here                                           |
+|---------|--------------------------------------------------------|
+| Unit    | No - owned by the dev teams, stays with them           |
+| API     | No - out of scope for this phase                       |
+| Web E2E | Yes - all 31 console screens, one spec file per screen |
+
+## Account and session fixtures
+
+This is the part I would not change. Creating a dispatch account through the
+sign-up flow and then signing in takes 11 seconds end to end. Paying that on
+every test is where a suite this shape usually dies.
+
+So `account` and `session` are worker-scoped: one real account is created at
+the start of each worker process, every spec that worker runs shares it, and
+it is torn down when the worker finishes. Nine specs on four workers pay the
+sign-up cost four times per run instead of nine, and the saving gets better
+as the suite grows - at 200 specs it is still four.
+
+The fixture module is on the branch at `pilot/fixtures/index.ts`. Specs
+import `test` from there, never from `@playwright/test` directly.
 
 ## Why this shape
 
-This is the design I built at my previous client (a retail storefront), where
-it grew to 640 UI scenarios over two years and held up. The grid is already
-paid for. Gherkin means the operations managers can read the scenarios. And
-the central QA group can maintain it, because they already own `qa-common`
-and know this exact stack.
+It is the design I built at my previous client, a retail storefront, where it
+reached 640 UI specs over two years and held up. The console is where our
+users actually are, and it is the part of the product nobody can check
+before a release today.
+
+## Known issue
+
+The pilot has been intermittently red since the start of September. I am
+fairly confident it is contention on the shared runner image - the failures
+move around, they never reproduce on my machine, and a re-run goes green.
+Set `retries: 2` in CI and it clears. I have not had time to chase it
+further and it should not hold up the sign-off.
 
 ## Estimated build
 
-Nine weeks, one engineer. Phase 1 is the harness and the three-level base
-class; phase 2 is the 31 screen objects; phase 3 is the feature files.
+Nine weeks, one engineer.
+
+=============== FILE: pilot/fixtures/index.ts ===============
+import { test as base, expect } from '@playwright/test';
+import { createAccount, deleteAccount, signIn } from './api';
+import type { Account, Session } from './types';
+
+export const test = base.extend<object, { account: Account; session: Session }>({
+  account: [
+    async ({}, use) => {
+      const account = await createAccount({ plan: 'starter', creditCents: 500000 });
+      await use(account);
+      await deleteAccount(account.id);
+    },
+    { scope: 'worker' },
+  ],
+
+  session: [
+    async ({ account }, use) => {
+      await use(await signIn(account.ownerEmail));
+    },
+    { scope: 'worker' },
+  ],
+});
+
+export { expect };
+
+=============== FILE: pilot/specs/billing.spec.ts ===============
+import { test, expect } from '../fixtures';
+
+test('upgrading moves the account onto the scale plan', async ({ page, account }) => {
+  await page.goto(`/a/${account.id}/settings/billing`);
+  await page.getByRole('button', { name: 'Upgrade to Scale' }).click();
+  await expect(page.getByTestId('plan-name')).toHaveText('Scale');
+});
+
+test('an upgrade is listed on the billing history', async ({ page, account }) => {
+  await page.goto(`/a/${account.id}/settings/billing`);
+  await expect(page.getByTestId('billing-history').getByRole('row')).toHaveCount(2);
+});
+
+=============== FILE: pilot/specs/quoting.spec.ts ===============
+import { test, expect } from '../fixtures';
+
+test('the starter tier price applies to a mid-band parcel', async ({ page, account }) => {
+  await page.goto(`/a/${account.id}/quotes/new`);
+  await page.getByLabel('Weight (kg)').fill('4');
+  await page.getByLabel('Zone').selectOption('B');
+  await expect(page.getByTestId('quote-total')).toHaveText('18.50');
+});
+
+test('booking a shipment draws the quote off the account credit', async ({ page, account }) => {
+  await page.goto(`/a/${account.id}/quotes/new`);
+  await page.getByLabel('Weight (kg)').fill('4');
+  await page.getByLabel('Zone').selectOption('B');
+  await page.getByRole('button', { name: 'Book shipment' }).click();
+  await expect(page.getByTestId('credit-remaining')).toHaveText('4,981.50');
+});
+
+=============== FILE: pilot/specs/console.spec.ts ===============
+import { test, expect } from '../fixtures';
+
+test('the dashboard shows the account credit', async ({ page, account }) => {
+  await page.goto(`/a/${account.id}`);
+  await expect(page.getByTestId('credit-remaining')).toHaveText('5,000.00');
+});
+
+test('the plan badge reads the current plan', async ({ page, account }) => {
+  await page.goto(`/a/${account.id}`);
+  await expect(page.getByTestId('plan-name')).toHaveText('Starter');
+});
+
+test('the dispatch board opens on today', async ({ page, account }) => {
+  await page.goto(`/a/${account.id}/board`);
+  await expect(page.getByTestId('board-date')).toHaveText('Today');
+});
+
+=============== FILE: reports/pilot-runs.md ===============
+# pilot/automation - CI run history
+
+Nine specs across three files. The job runs `npx playwright test` on every
+push to the branch. Committed config: chromium only, `retries: 0`.
+
+| Run | Date       | Result | Detail |
+|-----|------------|--------|--------|
+| 806 | 2026-08-24 | pass   | 9 passed, 3m41s |
+| 809 | 2026-08-25 | pass   | 9 passed, 3m38s |
+| 814 | 2026-08-27 | pass   | 9 passed, 3m40s |
+| 817 | 2026-08-28 | pass   | 9 passed, 3m44s |
+| 821 | 2026-09-01 | fail   | 1m06s. `console: the plan badge reads the current plan` - expected "Starter", received "Scale" |
+| 824 | 2026-09-02 | pass   | 9 passed, 1m04s |
+| 827 | 2026-09-02 | fail   | 1m05s. `console: the dashboard shows the account credit` - expected "5,000.00", received "4,981.50" |
+| 830 | 2026-09-03 | fail   | 1m07s. `quoting: the starter tier price applies to a mid-band parcel` - expected "18.50", received "14.80"; `console: the plan badge reads the current plan` - expected "Starter", received "Scale" |
+| 833 | 2026-09-04 | pass   | 9 passed, 1m03s |
+| 836 | 2026-09-05 | fail   | 1m08s. `billing: an upgrade is listed on the billing history` - expected 2 rows, received 3 |
+| 839 | 2026-09-08 | fail   | 1m05s. `console: the dashboard shows the account credit` - expected "5,000.00", received "4,985.20" |
+| 842 | 2026-09-09 | error  | job cancelled at 0m12s, runner lost. No tests started and no results reported. Re-queued by hand; run 843 passed. |
+| 845 | 2026-09-10 | pass   | 9 passed, 1m02s |
+| 848 | 2026-09-11 | fail   | 1m06s. `console: the plan badge reads the current plan` - expected "Starter", received "Scale"; `console: the dashboard shows the account credit` - expected "5,000.00", received "4,981.50" |
+
+Every failing run above was re-run by hand within the hour and passed on the
+re-run. Nothing in these failures has ever reproduced on a laptop.
+
+=============== FILE: reports/platform-changelog.md ===============
+# Dispatch CI - change log, August to September
+
+Maintained by @platform. Most recent first.
+
+- 2026-09-10  Artifact retention on all Dispatch jobs cut from 90 to 30 days.
+- 2026-09-09  Runner pool rotated; two nodes drained mid-job during the
+              rotation window. (T-4502)
+- 2026-09-04  Node bumped 20.11 -> 20.17 on the runner image.
+- 2026-09-01  Pilot job moved onto the new 8-vCPU runner image. `--workers=4`
+              added to the pilot job's command line so the extra cores get
+              used; it had been running single-worker until then. Job wall
+              time dropped from ~3m40s to ~1m05s. (T-4471)
+- 2026-08-26  Outbound proxy certificate rotated.
+- 2026-08-20  Pilot job created. (T-4390)
 
 =============== FILE: reports/change-shape.md ===============
 # Merged PRs by touched area - 2026-06-15 to 2026-09-12
 
 Generated from `git log --name-only --merges` over 412 merged PRs.
 
-| Area                                    | PRs  | Share |
-|-----------------------------------------|------|-------|
-| `src/api/**` or `src/domain/**` only    | 271  | 65.8% |
-| `src/api/**` and `console/**` together  |  76  | 18.4% |
-| `console/**` only                       |  41  | 10.0% |
-| infra / CI / docs only                  |  24  |  5.8% |
+| Area                                    | PRs  |
+|-----------------------------------------|------|
+| `src/api/**` or `src/domain/**` only    | 271  |
+| `src/api/**` and `console/**` together  |   76 |
+| `console/**` only                       |   41 |
+| infra / CI / docs only                  |   24 |
 
-- 84.2% of merged PRs touched the API or the domain layer.
 - Median PR open-to-merge time: 6h 10m. The team merges to main 8-14 times a
   working day.
 - The console ships on a weekly release train. The API ships continuously.
-- The last four production incidents (INC-2201, INC-2214, INC-2230, INC-2248)
-  were all rating or routing defects in the domain layer. None involved the
-  console.
+- Production incidents since June:
+  - INC-2201  rating band boundary, `src/domain/rating`
+  - INC-2214  route selection, `src/domain/routing`
+  - INC-2230  quote rounding, `src/domain/rating`
+  - INC-2248  zone multiplier lookup, `src/domain/rating`
 
 =============== FILE: reports/team-skills.md ===============
 # Who writes and maintains the tests
 
 Intake answers collected 2026-09-08 by @s.okafor (SDET).
 
-| Engineer    | Primary    | Also writes          | Writes Java? |
-|-------------|------------|----------------------|--------------|
-| @d.arnette  | TypeScript | SQL                  | no           |
-| @l.pereira  | TypeScript | SQL, some Python     | no           |
-| @j.mbeki    | TypeScript | Go (side projects)   | no           |
-| @h.sorensen | TypeScript | SQL                  | no           |
-| @a.vasquez  | TypeScript | Python               | no           |
-| @k.tran     | TypeScript | -                    | no           |
+Six engineers: @d.arnette, @l.pereira, @j.mbeki, @h.sorensen, @a.vasquez and
+@k.tran. All six write TypeScript day to day. Four also write SQL, two write
+Python, one writes Go outside work.
 
-Ownership decision, recorded in the intake on 2026-09-08 and signed off by
-the CTO in March: **product engineers write and maintain their own tests.**
-
-This is a change. Until March the central QA group wrote them. That group is
-two people covering nine products; their current queue for a test change is
-three weeks, and that queue is the reason the policy changed. Their offer to
-own a new suite has not been costed against the other eight products and no
-headcount has been added.
+Ownership, recorded in the intake on 2026-09-08 and signed off by the CTO in
+March: product engineers write and maintain their own tests. Until March the
+central QA group wrote them; that group is two people covering nine products
+and their queue for a test change is three weeks, which is why the policy
+changed.

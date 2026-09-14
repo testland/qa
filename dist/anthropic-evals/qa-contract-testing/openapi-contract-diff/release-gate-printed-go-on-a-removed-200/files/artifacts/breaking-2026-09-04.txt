@@ -1,0 +1,13 @@
+3 changes: 2 error, 1 warning, 0 info
+
+error	[response-success-status-removed] at spec/openapi.yaml
+	in API GET /v1/exports/{exportId}
+	the success response status '200' was removed
+
+error	[request-property-became-required] at spec/openapi.yaml
+	in API POST /v1/exports
+	the request property 'currency' became required
+
+warning	[optional-response-header-removed] at spec/openapi.yaml
+	in API GET /v1/exports
+	the optional response header 'x-request-id' was removed for the response status '200'

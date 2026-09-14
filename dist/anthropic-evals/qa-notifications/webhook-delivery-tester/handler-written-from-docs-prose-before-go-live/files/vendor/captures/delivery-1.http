@@ -1,0 +1,10 @@
+POST /hooks/parcelo HTTP/1.1
+host: capture.internal.example
+content-type: application/x-www-form-urlencoded; charset=utf-8
+content-length: 168
+parcelo-delivery-id: dlv_8f41c0b2e7
+parcelo-timestamp: 1789116072
+parcelo-signature: v1,1Vbc8akA9HV5HHmwuFoGP6x8MUxZShVxjfydV73L618=
+user-agent: Parcelo-Webhooks/4.2
+
+ShipmentId=shp_9f2c41&TrackingNumber=PRC0049182233GB&Status=in_transit&StatusDetail=Arrived%20at%20Bristol%20depot&EventTime=2026-09-11T08%3A41%3A12Z&CarrierRef=BR-9921

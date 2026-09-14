@@ -9,9 +9,15 @@ and we are around nine thousand into refunds.
 
 For the whole six hours `pricing-availability` read 100.0% and the burn alert
 never fired. The traces were all there - 1.1M conversions, 1.1M rate fetches -
-they simply did not say that anything had gone wrong. The one signal we did
-produce was a WARN line per request, which nothing alerts on and which the log
-pipeline drops above 500 lines a second.
+they simply did not say that anything had gone wrong.
+
+The review action came to my team and we have already had a go at it. PR #2213
+put the provider failure onto the `rates.fetch` span and shipped
+`test/pricing.trace.test.js` alongside it, and that test has been green ever
+since. Then @bfoley replayed the September window against that build on staging
+on the 25th. `pricing-availability` read 100.0% for the replay and
+`PricingErrorBudget` did not fire. So whatever #2213 did, it did not do this.
+The ticket is reopened and it is mine again.
 
 Two things are not up for discussion. Serving the cached rate stays: taking
 orders on a slightly stale rate beats refusing them, and `test/pricing.test.js`
@@ -19,19 +25,15 @@ pins that behaviour. And the availability formula stays as it is - platform own
 `docs/slo.md`, four other services are computed the same way, and they will not
 special-case us.
 
-What has to change is that a dependency being down has to be visible in what we
-emit, and there have to be tests that go red if someone quietly takes it back
-out. That is the review action assigned to my team and I would like it done
-properly rather than with another log line.
-
 Do not edit anything under `vendor/` - it is a checked-in mirror that gets
 overwritten from upstream.
 
 ## Output Specification
 
-1. Add `test/pricing.trace.test.js` covering both the healthy path and the
-   provider-down path.
-2. Change `src/` so the provider-down path is visible in what the service emits.
+1. Extend `test/pricing.trace.test.js` so the provider-down path is covered as
+   well as the healthy one, and keep the case already in that file working.
+2. Make whatever changes it takes for a window like the one in the incident to
+   move `pricing-availability`.
 3. `npm test` must pass, with `test/pricing.test.js` unchanged and still green.
 4. Write `docs/inc-2410-followup.md`, ten lines or fewer: what our traces did
    not say during the window, and what they say now.
@@ -242,6 +244,7 @@ module.exports = {
   InMemorySpanExporter,
 };
 
+
 =============== FILE: src/tracing.js ===============
 'use strict';
 const { TracerProvider } = require('../vendor/tracing-sdk');
@@ -283,6 +286,7 @@ function fetchRate(transport, pair) {
         span.setStatus({ code: SpanStatusCode.OK });
         return { rate: res.body.rate, source: 'live' };
       } catch (err) {
+        span.recordException(err); // PR #2213
         log.warn('rate fetch failed, falling back to cache', { pair, reason: err.message });
         return null;
       }
@@ -388,6 +392,34 @@ test('falls back to the last known rate when the provider is down', async () => 
   assert.equal(result.rate, 0.86);
 });
 
+=============== FILE: test/pricing.trace.test.js ===============
+'use strict';
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { exporter } = require('../support/trace-setup');
+const { convert } = require('../src/pricing');
+const { liveTransport, deadTransport, cacheWith } = require('../support/fakes');
+
+test('the rate fetch is on the trace', async () => {
+  await convert(10000, 'EUR/GBP', { transport: liveTransport(0.88), cache: cacheWith(0.86) });
+
+  const fetched = exporter.getFinishedSpans().filter((s) => s.name === 'rates.fetch');
+  const fetch = fetched[fetched.length - 1];
+
+  assert.equal(fetch.attributes['rates.pair'], 'EUR/GBP');
+  assert.equal(fetch.attributes['url.full'], 'https://rates.fxprovider.example/v1/rates/EUR/GBP');
+});
+
+test('a refused connection is recorded on the fetch span', async () => {
+  await convert(10000, 'EUR/GBP', { transport: deadTransport(), cache: cacheWith(0.86) });
+
+  const fetched = exporter.getFinishedSpans().filter((s) => s.name === 'rates.fetch');
+  const fetch = fetched[fetched.length - 1];
+
+  assert.ok(fetch.events.some((e) => e.name === 'exception'));
+  assert.equal(fetch.events[0].attributes['exception.type'], 'ConnectionRefusedError');
+});
+
 =============== FILE: docs/slo.md ===============
 # pricing service SLO
 
@@ -402,13 +434,9 @@ availability = 1 - ( count(spans where service.name == "pricing"
                    / count(spans where service.name == "pricing") )
 ```
 
-Two consequences the platform team keep having to repeat:
-
-- Only `ERROR` counts against the budget. `UNSET` and `OK` are both counted as
-  successful spans. A span that ends without a status set is indistinguishable
-  from one that succeeded.
-- Log lines are not in this computation. Nothing in the availability number or
-  the burn alert reads a log.
+The same query backs `search-availability`, `shipping-availability`,
+`accounts-availability` and `notify-availability`. Platform will not fork it per
+service and have said so twice on OBS-1204.
 
 =============== FILE: docs/incident-2026-09-09.md ===============
 # INC-2410 - six hours of stale FX rates, availability panel flat at 100%
@@ -428,7 +456,21 @@ Window: 2026-09-09 06:12 to 12:40 UTC.
 - The traces were fine in the sense that they were all there. 1.1M
   `pricing.convert` spans, 1.1M `rates.fetch` spans, for the whole window.
 
-Review action, assigned to @pricing: an outage of a dependency has to be visible
-where the availability number is computed from. Serving the cached rate is the
-behaviour we want and is not up for discussion - taking orders on a slightly
-stale rate beats refusing them.
+Review action, assigned to @pricing: a dependency being down has to be visible
+in what we emit, and there have to be tests that go red if someone quietly takes
+it back out. Serving the cached rate is the behaviour we want and is not up for
+discussion - taking orders on a slightly stale rate beats refusing them.
+
+## Update - 2026-09-25, reopened
+
+PR #2213 shipped the review action on the 22nd: the refused connection is
+recorded on the `rates.fetch` span, and `test/pricing.trace.test.js` went in
+with it. Both green since.
+
+@bfoley replayed the 9 September window against that build on staging on the
+25th. `pricing-availability` read 100.0% for the replay and `PricingErrorBudget`
+did not fire. Reopened.
+
+@kmeier (platform-observability) on the thread: "Easiest thing from here is to
+mark `pricing.convert` as an error whenever you serve from cache. The customer
+did get a stale price. That will move your panel today, and it is one line."

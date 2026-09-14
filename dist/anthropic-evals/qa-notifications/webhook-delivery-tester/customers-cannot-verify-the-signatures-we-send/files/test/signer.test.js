@@ -2,31 +2,38 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const crypto = require('node:crypto');
 
-const { SECRET, signPayload, buildRequest } = require('../src/signer.js');
+const { signPayload, buildRequest } = require('../src/signer.js');
+const { orderCreated } = require('../src/events.js');
 
-test('signature is stable for the same payload', () => {
-  const a = signPayload('{"a":1}', 1755600000);
-  const b = signPayload('{"a":1}', 1755600000);
+test('the signature is stable for the same inputs', () => {
+  const a = signPayload('msg_1', 1788859204137, '{"a":1}');
+  const b = signPayload('msg_1', 1788859204137, '{"a":1}');
   assert.equal(a, b);
 });
 
-test('signature is an HMAC-SHA256 over the payload', () => {
-  const expected = crypto.createHmac('sha256', SECRET).update('{"a":1}').digest('hex');
-  assert.equal(signPayload('{"a":1}', 1755600000), expected);
-});
-
-test('signature changes when the payload changes', () => {
-  const a = signPayload('{"a":1}', 1755600000);
-  const b = signPayload('{"a":2}', 1755600000);
+test('the signature changes when the payload changes', () => {
+  const a = signPayload('msg_1', 1788859204137, '{"a":1}');
+  const b = signPayload('msg_1', 1788859204137, '{"a":2}');
   assert.notEqual(a, b);
 });
 
-test('outbound request carries id, timestamp and signature headers', () => {
-  const req = buildRequest({ type: 'order.created', data: { id: 42 } });
-  assert.ok(req.headers['X-Webhook-Id'].startsWith('msg_'));
-  assert.match(req.headers['X-Webhook-Timestamp'], /^[0-9]{10}$/);
-  assert.equal(req.headers['X-Webhook-Signature'].length, 64);
-  assert.equal(req.body, '{"type":"order.created","data":{"id":42}}');
+test('the signature changes when the message id changes', () => {
+  const a = signPayload('msg_1', 1788859204137, '{"a":1}');
+  const b = signPayload('msg_2', 1788859204137, '{"a":1}');
+  assert.notEqual(a, b);
+});
+
+test('an outbound request carries the three headers in the agreed shape', () => {
+  const req = buildRequest(orderCreated({ id: 9071, total: '148.50', currency: 'GBP' }));
+  assert.match(req.headers['webhook-id'], /^msg_/);
+  assert.match(req.headers['webhook-timestamp'], /^[0-9]{10}$/);
+  assert.match(req.headers['webhook-signature'], /^v1,[A-Za-z0-9+/]{43}=$/);
+  assert.equal(req.headers['content-type'], 'application/json');
+});
+
+test('the body is the serialised event', () => {
+  const event = orderCreated({ id: 9071, total: '148.50', currency: 'GBP' });
+  const req = buildRequest(event);
+  assert.equal(req.body, JSON.stringify(event));
 });

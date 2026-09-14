@@ -7,26 +7,19 @@
 > as a secret comparison. We have three other vendors wired through the same
 > handler and they all work.
 
-Regenerated the shared secret live on a call 2026-09-08. No change.
+Shared secret regenerated live on a call 2026-09-08. No change. Raw request and
+the endpoint secret they hold are attached — see `docs/northwind-capture.md`.
 
 ## SUP-4430 — Kestrel Freight (2026-08-29)
 
-> The library expects to find a versioned signature and can't parse what arrives
-> in your header. Our platform team says they'd have to fork the library to
-> accept your format and they won't sign off on that.
+> Same library, same failure. Our platform team says they would have to fork it
+> to accept what you send and they will not sign off on that.
 
 ## SUP-4451 — Marlow Retail (2026-09-02)
 
 > Our security reviewer will not approve an integration where we write the
 > verification ourselves. Do you publish anything that works with a maintained
 > library?
-
-## SUP-4462 — Pennine Foods (2026-09-05)
-
-> Our handler sits behind a fixed egress and our platform team would rather just
-> allowlist your sender IPs and skip the signature check entirely — it's one less
-> secret for us to rotate. Can you send us the IP ranges you send from and confirm
-> that's a supported way to integrate?
 
 ## Not a ticket — Brightsail Group
 

@@ -3,6 +3,7 @@
 const crypto = require('node:crypto');
 
 const SECRET = process.env.PARCELO_SECRET || 'whsec_cGFyY2Vsby1zYW5kYm94LXNoYXJlZC1zZWNyZXQh';
+const TOLERANCE_SECONDS = 300;
 
 const shipments = new Map();
 
@@ -19,6 +20,12 @@ function verifySignature(rawBody, headers) {
   const a = Buffer.from(expected);
   const b = Buffer.from(provided);
   return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+function fresh(headers) {
+  const ts = Number(headers['parcelo-timestamp']);
+  const now = Math.floor(Date.now() / 1000);
+  return Number.isFinite(ts) && Math.abs(now - ts) <= TOLERANCE_SECONDS;
 }
 
 function applyUpdate(event) {
@@ -47,6 +54,9 @@ function applyUpdate(event) {
 }
 
 function handle(rawBody, headers) {
+  if (!fresh(headers)) {
+    return { status: 400 };
+  }
   if (!verifySignature(rawBody, headers)) {
     return { status: 400 };
   }
@@ -65,4 +75,4 @@ function handle(rawBody, headers) {
   return { status: 200 };
 }
 
-module.exports = { handle, verifySignature, applyUpdate, shipments, SECRET };
+module.exports = { handle, verifySignature, fresh, applyUpdate, shipments, SECRET };

@@ -14,11 +14,15 @@ running against randomly generated input, put there specifically so that we
 would not have to think of the bad cases ourselves. Four of them, all green, and
 the thing went out anyway.
 
-So: tell me why that file did not catch this, and then make it so the next one
-of these goes red before it ships instead of after. `docs/export-format.md` is
-the vendor's wire format. It is not up for negotiation - the importer is their
-product and we do not control it - so where our code does not match that
-document, our code is what is wrong.
+So: tell me, check by check, why that file did not catch this, and then make it
+so the next one of these goes red before it ships instead of after.
+`docs/export-format.md` is the vendor's wire format. It is not up for
+negotiation - the importer is their product and we do not control it - so where
+our code does not match that document, our code is what is wrong.
+
+There is a second thing in `ops/dead-letters-august.md` that I noticed while
+pulling the incident write-up together and have not had time to look into. It
+may be nothing to do with any of this.
 
 Not everything in that file is necessarily broken. I would far rather you told
 me one of the four is fine and left it alone than have all four rewritten so it
@@ -29,7 +33,8 @@ looks thorough.
 1. Edit `tests/test_csvio.py`. Do not delete a check, and every check that is
    there now must still be drawing generated input when you are done.
 2. Change `src/csvio.py` where it does not match `docs/export-format.md`.
-3. Write `docs/csvio-audit.md` with a verdict on each of the four checks.
+3. Write `docs/csvio-audit.md` with a verdict on each of the four checks, saying
+   for each one what it was actually proving before you touched it.
 
 ## Input Files
 
@@ -74,12 +79,29 @@ strictly and rejects the whole file on the first cell it cannot read.
 
 ## Currency cells
 
-Three letters from ISO 4217. Lower-case input is upper-cased on export.
+Three letters from ISO 4217. Lower-case input is upper-cased on export. The
+importer accepts the whole ISO 4217 list, not a subset of it.
 
 ## Text cells
 
 Any text. A cell containing a comma, a double quote or a newline is wrapped in
 double quotes and its own double quotes are doubled.
+
+=============== FILE: ops/dead-letters-august.md ===============
+# Nightly export dead-letter queue, August
+
+Rows the exporter refused and sent to the dead-letter queue rather than writing.
+Nobody is paged on this queue; it is drained by hand when somebody remembers.
+
+| Date       | Tenant | Rows | Reason recorded                    |
+|------------|--------|-----:|------------------------------------|
+| 2026-08-04 | 3a10   |  914 | not an ISO 4217 code: 'nok'        |
+| 2026-08-11 | 3a10   |  951 | not an ISO 4217 code: 'nok'        |
+| 2026-08-18 | c882   |  186 | not an ISO 4217 code: 'dkk'        |
+| 2026-08-25 | 3a10   |  967 | not an ISO 4217 code: 'nok'        |
+
+Tenant 3a10 has been on NOK since they signed. Neither tenant has ever appeared
+in an export file. Nobody has complained, which is its own kind of worrying.
 
 =============== FILE: src/csvio.py ===============
 QUOTE = '"'
@@ -111,10 +133,6 @@ def amount_line(amounts: list[float]) -> str:
     return ",".join(format_amount(a) for a in amounts)
 
 
-def is_currency_code(s: str) -> bool:
-    return len(s) == 3 and s.isalpha() and s.upper() in ISO_4217
-
-
 def normalise_currency(s: str) -> str:
     code = s.upper()
     if code not in ISO_4217:
@@ -144,18 +162,20 @@ def write_export(rows, out, dead_letter) -> int:
     return written
 
 =============== FILE: tests/test_csvio.py ===============
-from unittest.mock import patch
+import re
 
 from hypothesis import given, strategies as st
 
 import src.csvio as csvio
 from src.csvio import (
+    amount_line,
     decode_field,
     encode_field,
     format_amount,
-    is_currency_code,
     normalise_currency,
 )
+
+DECIMAL = re.compile(r"-?\d+\.\d\d")
 
 
 @given(st.text())
@@ -163,18 +183,15 @@ def test_field_escape_round_trip(value):
     assert decode_field(encode_field(value)) == value
 
 
-@given(st.lists(st.floats(), min_size=1, max_size=20))
-def test_amount_line_cells_are_decimal(amounts):
-    # format_amount has its own check below; stub it so this one is about the joining
-    with patch.object(csvio, "format_amount", lambda x: "0.00"):
-        line = csvio.amount_line(amounts)
-    assert all(cell.count(".") == 1 for cell in line.split(","))
+@given(st.lists(st.floats(min_value=-1_000_000, max_value=1_000_000), min_size=1, max_size=20))
+def test_amount_cells_are_decimal(amounts):
+    for cell in amount_line(amounts).split(","):
+        assert DECIMAL.fullmatch(cell)
 
 
-@given(st.text())
+@given(st.sampled_from(csvio.ISO_4217))
 def test_currency_cell_normalised(code):
-    if is_currency_code(code):
-        assert encode_field(normalise_currency(code)) == code.upper()
+    assert normalise_currency(code.lower()) == code
 
 
 @given(st.integers(min_value=0, max_value=100_000).map(lambda cents: cents / 100))

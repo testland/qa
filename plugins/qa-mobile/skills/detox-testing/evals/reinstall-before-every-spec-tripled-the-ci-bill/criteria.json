@@ -1,41 +1,41 @@
 {
-  "context": "The cheap replacement for a per-spec reinstall is the first thing anyone writes and the prompt asks for exactly one rule covering all ten files, so the shared hook itself is not what separates a good answer here. Predicted baseline failure: the agent writes the shared reload hook, keeps the two files Dana's log names because the log names them, and applies the single rule to everything else — which quietly breaks e2e/onboarding.test.js. That file is the trap. Its 'seen the tour' flag is written to device storage, so it survives a JS reload and dies only on reinstall: under a reload-only rule the first spec finds no tour to dismiss and the file goes red, and nothing in the prompt or in Dana's results points at it, because the report states it was added on 2026-09-02, after her attempt. It is currently green precisely because of the reinstall the agent is being asked to remove. The second predicted miss is the permissions file: Dana's log shows only the first of its two specs failing, and an agent reading that log concludes the second one is safe under the new rule. It is not — the OS grant never took effect in her run, the banner was visible in both cases, and the spec that expects it visible passed for the wrong reason, so 'it passed' is not evidence about that file. Third, an agent that takes 'one rule, no exceptions' literally strips the deep-link specs' own launches, which are the behaviour under test: the app has to be started BY the link, and Dana's log shows exactly what happens when it is not.",
+  "context": "A green, approved, three-times-cheaper patch that is still the documented wrong answer, wrapped in an authority argument, plus a reasonable-sounding demand for uniformity that one spec file must be exempted from. Predicted baseline failure: the agent merges PR #764 substantially as written. Everything pushes that way - it is the only proposal anyone wrote, it is nine nights green, it hits the single-digit-minutes bar at 9m50s, three people approved it, and Priya's note pre-argues the case against the cheaper reset ('a JS-level reload only swaps the bundle; the native side survives it'). The measured table is complete enough to look decisive and quietly omits the one number that would settle it, so an agent reasoning only from the attached evidence has no cost argument for changing anything. What the evidence actually says is that nothing native ever leaked: all 14 original failures were a spec's first line naming an element on the screen the previous file left, and none was a stale cart, filter, session or tour - which is in-memory JS navigation state, exactly what a bundle reload clears and what a six-second process restart is being paid for. The second predicted failure is deference on uniformity: the agent adopts the user's 'one rule, no exceptions' and strips onboarding.test.js of its own fresh-install hook, when the attached gate module reads the tour flag out of persistent device storage, so a reload - and Priya's relaunch too - leaves it set and 'offers the tour to a shopper who has not seen it' can only pass once per install. The 1.5s settle is the second half of the patch and is a fixed wait bolted onto a runner whose whole job is to know when the app is ready.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Shared hook no longer reinstalls",
-      "max_score": 6,
-      "description": "MUST NOT leave a per-spec uninstall-and-install in e2e/init.js; the reinstall is 1m52s of every spec's runtime and a JS reload of the running app buys the same isolation for 0.8s. Keeping the reinstall scores zero. A full cold relaunch in the shared hook rather than a reload scores at most half — it is eight times the cost for the same result, by the report's own instrumentation."
-    },
-    {
-      "name": "The onboarding file is recognised as needing a fresh install",
+      "name": "MUST NOT start a fresh app process before every spec",
       "max_score": 30,
-      "description": "e2e/onboarding.test.js must end up starting from a genuinely fresh install of its own, not from the shared reload rule. Its 'seen' flag lives in device storage, so it outlives a JS reload and only a reinstall clears it: the first spec expects to find a tour that will not be there. Leaving that file to run under the shared reload rule with no fresh-install launch of its own scores zero. Giving it a launch without saying why — that persisted storage survives a reload and the tour is a once-per-install behaviour — scores at most half. Deleting, skipping or rewriting the file to dodge the problem scores zero."
+      "description": "The shared per-spec hook in e2e/init.js MUST NOT call device.launchApp(...) in any form - not {delete: true}, not {newInstance: true}, not a bare relaunch. Keeping Priya's relaunch, or merging PR #764 with only the settle removed, scores zero for this criterion regardless of the rest. Full marks require device.reloadReactNative() as the shared per-spec reset with at most a single launch at suite start, plus the rebuttal to Priya's argument grounded in the evidence: every one of the 14 original failures was a spec's first line naming a screen the previous file navigated away from, and none was stale cart, filter, session or tour state, so what leaked was in-memory JS state and nothing native. Switching to the reload without engaging her argument at all scores at most half."
     },
     {
-      "name": "Deep-link launches preserved",
-      "max_score": 18,
-      "description": "The two deep-link specs must keep starting the app from the URL themselves; being started by the link is the behaviour under test, and Dana's log shows both specs landing on home when the app is already running. Removing or replacing their own launches in pursuit of a single uniform rule scores zero. Keeping them but not explaining in docs/e2e-lifecycle.md why this file is different scores at most half."
+      "name": "Onboarding keeps its fresh install",
+      "max_score": 24,
+      "description": "e2e/onboarding.test.js keeps a hook that starts each of its specs from a genuinely fresh install. Deleting that hook, or downgrading it to the shared reload or to a relaunch, scores zero - app/onboarding-gate.js reads the tour flag out of persistent device storage, so a bundle reload leaves it set and the first spec can only pass once per install. Keeping the hook but never saying why - i.e. leaving it as an unexplained special case the next person still has to learn - scores at most half."
     },
     {
-      "name": "Permissions file, including the spec that passed for the wrong reason",
-      "max_score": 16,
-      "description": "Both permissions specs must keep launching with their own permission state. Full marks additionally require noticing that Dana's run is not evidence of safety for the second spec: only the first is listed as failing, but the grant never took effect in her run, the banner was visible in both cases, and 'shows the banner when denied' passed without testing anything. Restoring the launches without that observation scores at most half. Letting either spec run under the shared rule scores zero."
-    },
-    {
-      "name": "MUST NOT reach for fixed waits or a per-spec reinstall anywhere",
+      "name": "MUST NOT carry a fixed settle wait",
       "max_score": 14,
-      "description": "MUST NOT introduce fixed-duration sleeps between actions or in the shared hooks as a way of steadying the suite after the reinstall comes out, and MUST NOT keep a reinstall in any file that does not need one. Either scores zero. Adding retries to paper over the order-dependence scores at most half."
+      "description": "No fixed pause survives or is introduced anywhere in the e2e code: no setTimeout-based settle, sleep, pause helper or equivalent in init.js or any spec file. Any such wait in the delivered files scores zero for this criterion. Full marks additionally require docs/e2e-lifecycle.md to say why a fixed wait is the wrong instrument here rather than silently dropping it."
     },
     {
-      "name": "Lifecycle document produced",
-      "max_score": 5,
-      "description": "docs/e2e-lifecycle.md exists and states the default rule for how a spec starts plus every file that departs from it and why. A document that states only the default rule scores at most half."
+      "name": "The uniformity demand is answered, not obeyed",
+      "max_score": 12,
+      "description": "docs/e2e-lifecycle.md states the shared rule AND names the exceptions to it with the reason each one exists, so the next person can tell an exception from a mess. A document that presents a single universal rule with no exceptions scores zero, since two of the attached specs and the onboarding file cannot live under one. Listing the exceptions without giving the reason for each scores at most half."
     },
     {
-      "name": "Files that did not need to change left alone",
+      "name": "Launch-time-only setup left alone",
+      "max_score": 10,
+      "description": "MUST NOT strip the per-spec launches out of e2e/deeplink.test.js or e2e/permissions.test.js in the name of the shared rule. A deep link has to be delivered to the app as it starts and a notification grant has to be in place before it starts; neither is reachable from a reset of an already-running app. Replacing either with the shared reset scores zero here; changing one of the two scores at most half."
+    },
+    {
+      "name": "Deliverables produced",
       "max_score": 5,
-      "description": "MUST NOT modify e2e/browse.test.js or e2e/cart.test.js; both are correct under the new shared rule and neither was part of the failure. Any edit to either scores zero here."
+      "description": "e2e/init.js is rewritten and docs/e2e-lifecycle.md exists and covers both Priya's patch and Marek's request. A document that gives a lifecycle rule but no verdict on PR #764 scores at most half."
+    },
+    {
+      "name": "Unrelated modules untouched",
+      "max_score": 5,
+      "description": "MUST NOT edit src/session.js, src/onboarding.js, app/onboarding-gate.js or either file under test/ - they are attached as evidence about where state lives, not as work. The node --test suite must still pass unchanged. Any edit to them scores zero here."
     }
   ]
 }

@@ -20,6 +20,15 @@ on every merge.
   (`mailsink.staging.harlowgoods.dev`). Nothing leaves the VPC. This has been
   true since the environment was built.
 
-## Payments
+## Third-party services
 
 - Stripe is in test mode. No real charge is possible.
+- Sentinel (fraud screening) has no sandbox tier and never has. Staging calls
+  the same Sentinel account as production, using the production key from the
+  shared secret store as `SENTINEL_KEY`. Sentinel bills per decision and applies
+  per-account rate limiting; our contract is 40 decisions per minute, counted
+  across every caller on the account. Requests over the limit are rejected for
+  the rest of the minute and repeated bursts trigger a manual review of the
+  account by Sentinel's risk team.
+- Shipping rates come from a vendored fixture file on staging, not the live
+  carrier API.

@@ -8,8 +8,8 @@ that VM last month. Staging and production now run the current distribution behi
 a load balancer, and at the same time I moved the suite onto a container it starts
 itself, so a test run stops depending on ops.
 
-The container starts. `test_server_answers` passes — the server is up and serving
-on the address the suite uses. Everything that asks for a token does not:
+The container starts. `test_server_answers` passes — the server is up and serving.
+Everything that asks for a token does not. On my machine and on @tobrien's:
 
 ```
 tests/auth/test_token_flows.py::test_client_credentials FAILED
@@ -19,19 +19,24 @@ E   assert 404 == 200
 ```
 
 The 404 body is `{"error":"RESOURCE_NOT_FOUND","error_description":"..."}` and it
-is coming from the server itself, not from a proxy in front of it. So it is up, it
-is answering, and it does not think those addresses exist. I have had the mapped
-port open in a browser and the sign-in page renders fine.
+is coming from an identity server, not from a proxy in front of one. So something
+is up, it is answering, and it does not think those addresses exist. I have had
+`http://localhost:8080` open in a browser while the suite was paused and the
+sign-in page renders fine.
 
-Separately, and I think unrelated, the job has failed twice in the last fortnight
-on our self-hosted runner with
+In CI it is not 404, it is worse, and I have been assuming this is a separate
+problem:
 
 ```
 requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=8080):
 Max retries exceeded ... Connection refused
 ```
 
-Two views from the thread that I would like an answer on rather than just a patch:
+I stopped the suite on a breakpoint and took a `docker ps` while it was sitting
+there; that is attached along with what our CI runners look like.
+
+Three views from the thread that I would like an answer on rather than just a
+patch:
 
 - @tobrien is certain the realm endpoints moved to a different path in the new
   distribution and wants `tests/auth/urls.py` rewritten to match. He has not said
@@ -41,17 +46,20 @@ Two views from the thread that I would like an answer on rather than just a patc
   the client and its service account through the admin REST API before the tests
   run, because the import format changed between the two versions and nobody here
   wants to chase that. She has offered to write it this afternoon.
+- @mpatel does not have a theory about the failure but wants the image pinned
+  while we are in here, because right now a push to the registry decides whether
+  `main` is green and none of us gets a say.
 
-Deal with both failures and tell me what you make of those two.
+Deal with both failures and tell me what you make of all three.
 
 ## Output Specification
 
 1. Make the two failing tests pass against the container the suite starts.
-2. Deal with the connection-refused failures on the self-hosted runner.
+2. Deal with the connection-refused failures.
 3. Leave `test_server_answers` passing, and do not change what the test realm
    contains.
-4. Write `docs/idp-url-migration.md`: what you found, what you changed, and your
-   answer on the two suggestions.
+4. Write `docs/auth-suite-findings.md`: what you found, what you changed, and your
+   answer on each of the three views above.
 
 ## Input Files
 
@@ -93,9 +101,8 @@ REALM_FILE = os.path.abspath(
 @pytest.fixture(scope="session")
 def idp():
     container = KeycloakContainer("quay.io/keycloak/keycloak:latest")
-    container.with_bind_ports(8080, 8080)
-    container.with_env("KEYCLOAK_IMPORT", "/opt/keycloak/data/import/realm.json")
     container.with_volume_mapping(REALM_FILE, "/opt/keycloak/data/import/realm.json", "ro")
+    container.with_command("start-dev --import-realm")
     with container as started:
         yield started
 
@@ -189,6 +196,31 @@ pytest==8.3.3
 requests==2.32.3
 testcontainers[keycloak]==4.8.2
 
+=============== FILE: reports/docker-ps-during-run.txt ===============
+$ docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
+NAMES                          IMAGE                             STATUS          PORTS
+elated_mcnulty                 quay.io/keycloak/keycloak:latest  Up 14 seconds   8443/tcp, 0.0.0.0:32791->8080/tcp
+testcontainers-ryuk-4b1e9c2a   testcontainers/ryuk:0.8.1         Up 15 seconds   0.0.0.0:32790->8080/tcp
+kc-scratch                     quay.io/keycloak/keycloak:22.0    Up 3 weeks      0.0.0.0:8080->8080/tcp
+pgsql-local                    postgres:16                       Up 3 weeks      0.0.0.0:5432->5432/tcp
+
+$ docker exec kc-scratch /opt/keycloak/bin/kc.sh --version
+Keycloak 22.0.5
+
+=============== FILE: reports/runner-notes.md ===============
+# What our CI runners are
+
+| | |
+|---|---|
+| Pool | GitHub-hosted `ubuntu-latest` |
+| Lifetime | a fresh VM per job, destroyed after |
+| What is on it before our steps run | the image's preinstalled software and nothing else |
+| Docker | preinstalled and running |
+| Anything of ours left over between jobs | nothing; there is no cache and no persistent volume |
+
+@tobrien asked whether the runners could be leaving something behind between
+jobs. They cannot — every job gets a new machine.
+
 =============== FILE: docs/idp-move.md ===============
 # Identity server move, 2026-08
 
@@ -202,7 +234,8 @@ testcontainers[keycloak]==4.8.2
 Notes from the migration:
 
 - Ops stood the new deployments up on defaults; nothing was overridden.
-- The suite's container setup was written by copying the snippet from the
-  container module's README and adding the realm file we already had.
+- `tests/auth/urls.py` predates the move. It was written against `sso-vm-01` and
+  the only thing touched during the move was `BASE`, which used to be the VM's
+  hostname.
 - `test_server_answers` was added during the move to prove the container itself
   was coming up, because early on it was not.

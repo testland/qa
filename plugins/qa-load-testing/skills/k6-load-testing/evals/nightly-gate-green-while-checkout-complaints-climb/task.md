@@ -12,26 +12,34 @@ same thing: the confirm button sits there for a couple of seconds and then
 works. Nobody has reproduced it on demand. Nothing errored - every one of those
 carts eventually went through.
 
-Two people already have an answer and I do not trust either of them yet. Marek
+Three people already have an answer and I do not trust any of them yet. Marek
 on infra says it is obvious: the checkout response is a 24 kB JSON blob and we
 have never turned on compression, so he wants the sprint spent on gzip and a
 payload diet. Our staff engineer says the gate itself is the problem - that
 95th-percentile numbers bounce around too much to be a useful signal and we
 should switch the job to mean response time, which is stable and which he can
-put on a dashboard for the leadership review.
+put on a dashboard for the leadership review. Sanjay has already opened a
+branch: he says the job never prints the 99th percentile at all, so of course
+it never catches anything, and his change prints it and fails the run at a
+second and a half. He says that is what the tool's own documentation
+recommends and that it would have caught this.
 
 What I have is in the repo. `reports/nightly-summary.json` is what the job
 exported on the night of the 10th. `data/checkout-histogram.csv` is what our
 post-processing writes out of the raw stream: every checkout request of that
 run, bucketed by response time in 25 ms steps. `data/checkout-phases.csv` is
 the per-phase breakdown the same tooling keeps for every request over a second,
-plus a random thirty from under it.
+plus a random thirty from under it, with the offset into the run at which each
+request was issued.
 
-I want to know whether there is anything real in that data before I let anyone
-spend a sprint on it, and if there is, I want the nightly job changed so it
-goes red the next time it happens instead of nine weeks later in a support
-queue. Whatever gate you put in, show me with the numbers that it would have
-failed on the night of the 10th - I have had enough of gates that pass.
+Two things I need. First, the leadership review is on Thursday and I have to
+put a proportion in front of it - what share of checkouts this actually hits.
+If the run agrees with the 38 out of 7,600 support have, that is the number I
+will use, and I would like it confirmed. Second, I want the nightly job changed
+so it goes red the next time this happens instead of nine weeks later in a
+support queue, and whatever gate you put in, show me with the numbers that it
+would have failed on the night of the 10th. I have had enough of gates that
+pass.
 
 `lib/csv.mjs` already reads these files; there is a test for it that passes.
 
@@ -43,10 +51,10 @@ failed on the night of the 10th - I have had enough of gates that pass.
 2. `test/analyze-latency.test.mjs` - tests for whatever that script computes,
    running under `npm test` next to the test already in the repo. `npm test`
    must be green when you are done.
-3. `reports/checkout-latency.md` - what is happening, how many requests it
-   affects, where in the request the time goes, a straight answer on Marek's
-   compression plan and on the dashboard change, and the demonstration that
-   your new gate would have failed the run of the 10th.
+3. `reports/checkout-latency.md` - what is happening, where in the request the
+   time goes, a straight answer on each of the three proposals, the answer on
+   the proportion I asked for, and the demonstration that your new gate would
+   have failed the run of the 10th.
 4. `tests/load/checkout.js` - changed so a run like the 10th would not pass.
 
 Do not edit anything under `data/`, do not change `lib/csv.mjs` or
@@ -143,12 +151,12 @@ export function handleSummary(data) {
     "http_req_duration": {
       "type": "trend",
       "values": {
-        "avg": 154.7,
+        "avg": 153.2,
         "min": 52,
-        "med": 116,
+        "med": 113,
         "max": 2644,
         "p(90)": 262,
-        "p(95)": 330
+        "p(95)": 337
       },
       "thresholds": {
         "p(95)<500": { "ok": true }
@@ -157,17 +165,17 @@ export function handleSummary(data) {
     "http_req_waiting": {
       "type": "trend",
       "values": {
-        "avg": 148.4,
+        "avg": 147.1,
         "min": 45.8,
-        "med": 110.1,
-        "max": 2638.3,
-        "p(90)": 255.9,
-        "p(95)": 323.6
+        "med": 107.4,
+        "max": 2636,
+        "p(90)": 255.4,
+        "p(95)": 330.6
       }
     },
     "http_req_blocked": {
       "type": "trend",
-      "values": { "avg": 1.7, "min": 0.5, "med": 1.7, "max": 2.9, "p(90)": 2.7, "p(95)": 2.8 }
+      "values": { "avg": 1.7, "min": 0.4, "med": 1.7, "max": 2.9, "p(90)": 2.7, "p(95)": 2.8 }
     },
     "http_req_sending": {
       "type": "trend",
@@ -198,7 +206,7 @@ export function handleSummary(data) {
     },
     "iteration_duration": {
       "type": "trend",
-      "values": { "avg": 1155.9, "min": 1053, "med": 1117, "max": 3645, "p(90)": 1263, "p(95)": 1331 }
+      "values": { "avg": 1154.4, "min": 1053, "med": 1114, "max": 3645, "p(90)": 1263, "p(95)": 1338 }
     },
     "vus_max": {
       "type": "gauge",
@@ -239,82 +247,91 @@ bucket_start_ms,bucket_end_ms,requests
 725,750,2
 750,775,3
 775,800,1
+1050,1075,1
+1125,1150,1
+1225,1250,1
+1350,1375,1
+1425,1450,1
+1500,1525,1
+1575,1600,1
+1650,1675,1
+1725,1750,1
+1800,1825,1
+1875,1900,1
+1950,1975,1
+2000,2025,1
+2075,2100,1
+2125,2150,1
 2175,2200,1
-2225,2250,2
-2250,2275,1
-2275,2300,2
-2300,2325,2
-2325,2350,1
-2350,2375,2
-2375,2400,3
-2400,2425,1
-2425,2450,1
-2450,2475,2
-2475,2500,1
-2500,2525,3
+2225,2250,1
+2275,2300,1
+2325,2350,2
+2375,2400,2
+2425,2450,2
+2475,2500,2
 2525,2550,2
-2550,2575,5
+2575,2600,1
 2625,2650,1
 
 =============== FILE: data/checkout-phases.csv ===============
-t_offset_s,duration_ms,blocked_ms,sending_ms,waiting_ms,receiving_ms,resp_bytes,status
-127,2345,2.5,0.1,2340.1,4.8,24403,200
-129,2594,1,0.2,2590.9,2.9,24102,200
-129,2264,1.4,0.6,2256.4,7,24574,200
-134,2197,1.3,0.6,2194.1,2.3,24858,200
-140,2378,2.5,0.2,2375.1,2.7,24675,200
-146,184,2.5,0.5,176.8,6.7,24662,200
-151,80,2.3,0.3,75.7,4,24521,200
-153,68,2.8,0.5,62.9,4.6,24975,200
-153,165,1.4,0.4,159.1,5.5,24477,200
-166,2339,1.3,0.2,2333.7,5.1,24958,200
-167,2514,2.2,0.3,2508.6,5.1,24743,200
-181,241,1.4,0.5,238.1,2.4,24861,200
-209,2646,1.3,0.4,2640.6,5,24506,200
-214,334,2,0.4,329,4.6,24426,200
-216,2454,1,0.3,2450.2,3.5,24415,200
-220,2229,1.7,0.3,2224.6,4.1,24903,200
-228,2586,0.5,0.4,2579.5,6.1,24575,200
-231,177,1.7,0.2,174.5,2.3,24333,200
-247,2397,1.1,0.2,2389.7,7.1,24492,200
-257,231,0.9,0.6,227,3.4,24693,200
-264,136,0.6,0.4,132.7,2.9,24677,200
-267,327,0.9,0.2,323.4,3.4,24904,200
-283,2543,0.7,0.3,2536.4,6.3,24695,200
-293,298,2,0.3,292.8,4.9,24757,200
-295,129,2.8,0.3,122.5,6.2,24487,200
-296,2561,2.9,0.2,2554.5,6.3,24726,200
-314,2414,1.9,0.4,2410.9,2.7,24136,200
-314,311,0.5,0.1,307.8,3.1,24532,200
-338,2489,2.5,0.2,2484.7,4.1,24110,200
-340,2302,2.5,0.3,2295.8,5.9,24845,200
-349,2579,2.2,0.2,2575.8,3,24530,200
-356,316,2.5,0.5,308.9,6.6,24214,200
-367,2488,0.5,0.3,2480.7,7,24711,200
-368,2262,2.6,0.5,2255.4,6.1,24227,200
-379,102,1.9,0.1,94.6,7.3,24609,200
-381,2628,2.6,0.5,2620.9,6.6,24578,200
-382,2450,2.2,0.2,2446.7,3.1,24620,200
-408,286,0.5,0.4,279.3,6.3,24406,200
-421,292,2.4,0.2,288.6,3.2,24207,200
-424,2450,2.6,0.6,2446.2,3.2,24228,200
-431,2475,1.5,0.2,2469.6,5.2,24512,200
-433,74,1.4,0.4,69.1,4.5,24134,200
-446,2590,2.2,0.2,2584.1,5.7,24829,200
-456,95,1.5,0.5,90,4.5,24490,200
-456,142,1.3,0.4,137.6,4,24127,200
-460,331,2.1,0.5,325.9,4.6,24353,200
-468,213,1.8,0.1,208.1,4.8,24791,200
-469,214,0.5,0.5,207.9,5.6,24516,200
-470,2409,2.6,0.3,2405.5,3.2,24373,200
-474,2225,1.6,0.2,2217.7,7.1,24507,200
-478,2320,2.7,0.6,2313.1,6.3,24603,200
-479,149,1.3,0.2,141.4,7.4,24762,200
-486,88,2.7,0.3,84.5,3.2,24925,200
-502,2525,2.7,0.5,2520.5,4,24330,200
-505,288,0.6,0.2,280.9,6.9,24435,200
-538,155,2.9,0.2,152.3,2.5,24588,200
-543,260,2.7,0.1,254.3,5.6,24599,200
-556,194,1.9,0.4,188.8,4.8,24170,200
-557,2532,1.1,0.4,2527.7,3.9,24296,200
-563,329,1.7,0.3,326.3,2.4,24959,200
+start_s,duration_ms,blocked_ms,sending_ms,waiting_ms,receiving_ms,resp_bytes,status
+20.8,68,2.4,0.4,58.2,7,24450,200
+39.2,74,2.6,0.3,67.1,4,24769,200
+59.5,80,2.6,0.2,73.6,3.6,24406,200
+76.3,88,0.8,0.4,80.3,6.5,24311,200
+97.3,95,1.2,0.2,88.2,5.4,24678,200
+117.8,102,2.7,0.2,93.3,5.8,24207,200
+127.3,2479,0.6,0.4,2471.2,6.8,24828,200
+127.4,2331,2.8,0.1,2324,4.1,24127,200
+127.7,2016,0.6,0.6,2011.6,3.2,24274,200
+128.1,1588,2,0.4,1579.1,6.5,24923,200
+128.5,1063,1.8,0.2,1056.1,4.9,24988,200
+136.9,110,1.3,0.3,102.6,5.8,24199,200
+156.3,117,1.4,0.2,110,5.4,24525,200
+174.9,124,2.7,0.3,113.7,7.3,24166,200
+194.4,129,2.1,0.2,121.3,5.4,24790,200
+211.9,2494,0.5,0.3,2490.2,3,24692,200
+212,2344,2.5,0.5,2334.6,6.4,24768,200
+212.3,2084,0.8,0.1,2077.3,5.8,24764,200
+212.6,1664,0.9,0.5,1660.1,2.5,24822,200
+213.1,1141,2.2,0.1,1133.4,5.3,24546,200
+213.8,136,0.6,0.5,130.2,4.7,24490,200
+233.9,142,2.3,0.2,132.6,6.9,24392,200
+251.1,149,1,0.1,141.7,6.2,24789,200
+271.9,155,0.5,0.3,147.7,6.5,24499,200
+290.1,164,1,0.2,157.4,5.4,24623,200
+296.5,2531,1.4,0.4,2525.8,3.4,24177,200
+296.7,2379,1.8,0.3,2371.1,5.8,24628,200
+296.9,2139,1.8,0.3,2133.2,3.7,24856,200
+297.2,1736,2.5,0.4,1729.9,3.2,24515,200
+297.7,1238,1.3,0.2,1230.3,6.2,24381,200
+309.9,171,2.1,0.2,162,6.7,24198,200
+331.4,177,0.8,0.2,173.2,2.8,24721,200
+349.1,184,2.1,0.1,179.2,2.6,24100,200
+367.6,194,1.7,0.1,184.9,7.3,24381,200
+381.1,2546,1.9,0.4,2540.3,3.4,24272,200
+381.2,2392,2.6,0.2,2384.6,4.6,24454,200
+381.4,2186,0.7,0.5,2179.6,5.2,24655,200
+381.7,1811,1.5,0.1,1803.3,6.1,24282,200
+382.2,1362,1.8,0.4,1355.3,4.5,24365,200
+387.1,208,1,0.3,202,4.7,24561,200
+408.9,213,2.2,0.4,207.3,3.1,24354,200
+427.8,227,2.3,0.3,221.7,2.7,24753,200
+447,241,0.6,0.2,236.3,3.9,24298,200
+465,254,2,0.4,244.9,6.7,24586,200
+465.7,2588,1.5,0.2,2580,6.3,24359,200
+465.8,2428,1.8,0.1,2419.5,6.6,24718,200
+466,2241,1,0.2,2233.4,6.4,24354,200
+466.3,1888,2.2,0.3,1881.5,4,24558,200
+466.7,1441,1.9,0.1,1435.4,3.6,24799,200
+486.2,266,1.7,0.2,258.5,5.6,24561,200
+504.6,281,2.4,0.6,272.5,5.5,24720,200
+525,292,1.3,0.6,285.3,4.8,24889,200
+544.7,311,2.7,0.5,302.7,5.1,24133,200
+550.3,2644,1.6,0.3,2636,6.1,24555,200
+550.5,2441,2.1,0.6,2434.8,3.5,24304,200
+550.6,2288,1.1,0.4,2281.3,5.2,24908,200
+550.9,1957,0.4,0.3,1953.6,2.7,24991,200
+551.3,1509,0.9,0.3,1501.7,6.1,24427,200
+563.3,327,0.7,0.4,323.4,2.5,24959,200
+580.6,334,2.5,0.5,328.5,2.5,24494,200

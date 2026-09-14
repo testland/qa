@@ -9,7 +9,8 @@ Full suite, one worker, chromium only:
 | Total                         | 37    | 47s     |
 
 The same run on a CI runner is 1m10s. Runner provisioning and the browser
-download add a further 55s before the first test starts.
+download add a further 55s before the first test starts; on Marek's baked
+image the browser download part of that is gone.
 
 Dry run of `--shard=n/8` across the 14 browser specs:
 
@@ -24,5 +25,4 @@ Dry run of `--shard=n/8` across the 14 browser specs:
 | 7/8   | 1     | 3s        | 58s                     |
 | 8/8   | 1     | 1s        | 56s                     |
 
-The pipeline account is billed per job-minute. Forty-eight jobs of roughly a
-minute each replaces one job of roughly two minutes.
+The pipeline account is billed per job-minute.

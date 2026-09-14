@@ -15,6 +15,6 @@ FAIL e2e/tracking-map.test.js (121.904 s)
     Still outstanding when the attempt was abandoned:
 
      * UI elements are busy:
-       - 1 view animation pending (repeatCount = INFINITE)
+       - 1 view animation pending
 
 Tests:       1 failed, 1 total

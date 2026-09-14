@@ -1,22 +1,21 @@
 #!/usr/bin/env bash
-# November readiness run - executed 2026-09-13 on perf-gen-01 (4 vCPU, 8 GB)
-set -u
+# November readiness run - executed 2026-09-13
+set -eu
 
 HOST=https://staging.northfield.internal
 mkdir -p results
 
-for i in 1 2 3; do
-  locust -f load/locustfile.py --headless \
-    --users 250 --spawn-rate 25 --run-time 20m \
-    --host "$HOST" --csv "results/worker-${i}" &
+for i in 1 2 3 4; do
+  ssh "perf-gen-0${i}" \
+    "cd /opt/readiness && locust -f load/locustfile.py --headless \
+       --users 500 --spawn-rate 2 --run-time 20m \
+       --host ${HOST} --csv worker-${i} --exit-code-on-error 1" &
 done
-
-# the remainder of the 2000 users, on the same box
-locust -f load/locustfile.py --headless \
-  --users 1250 --spawn-rate 50 --run-time 20m \
-  --host "$HOST" --csv results/worker-4 &
-
 wait
+
+for i in 1 2 3 4; do
+  scp "perf-gen-0${i}:/opt/readiness/worker-${i}_stats.csv" results/
+done
 
 node scripts/aggregate.mjs \
   results/worker-1_stats.csv results/worker-2_stats.csv \

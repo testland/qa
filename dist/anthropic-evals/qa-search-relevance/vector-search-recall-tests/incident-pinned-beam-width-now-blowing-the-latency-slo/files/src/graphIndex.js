@@ -1,87 +1,75 @@
 'use strict';
 
-// Model of the vendor's proximity-graph index, written from their docs.
-//
-// createIndex({ M, efConstruct }) builds the graph. search(vec, { k, ef }) walks it.
+// Model of the vendor's graph index, written from their documentation.
+// createIndex({ M }) fixes how many neighbours each node keeps when the graph
+// is built. search(vec, { k, ef }) walks the graph from a fixed entry point,
+// keeping a working set of ef candidates and scoring each node it reaches.
+function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; }
+function norm(v) { return Math.sqrt(dot(v, v)); }
+function cosine(a, b) { const d = norm(a) * norm(b); return d === 0 ? 0 : dot(a, b) / d; }
 
-function dot(a, b) {
-  let s = 0;
-  for (let i = 0; i < a.length; i++) s += a[i] * b[i];
-  return s;
-}
-
-function norm(v) {
-  return Math.sqrt(dot(v, v));
-}
-
-function cosine(a, b) {
-  const d = norm(a) * norm(b);
-  return d === 0 ? 0 : dot(a, b) / d;
-}
-
-function createIndex({ M = 6, efConstruct = 24 } = {}) {
+function createIndex({ M = 16 } = {}) {
   const points = [];
   const links = [];
   let comparisons = 0;
+  const maxDegree = M * 2;
 
-  function beam(target, width, limit) {
-    const cap = limit === undefined ? points.length : limit;
-    if (cap === 0) return [];
-    const seen = new Set([0]);
-    comparisons += 1;
-    let frontier = [[0, cosine(target, points[0].vec)]];
-    const found = [...frontier];
-    let guard = 0;
-    while (frontier.length && guard++ < 4000) {
-      frontier.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-      const [node] = frontier.shift();
-      if (found.length >= width && cosine(target, points[node].vec) < found[found.length - 1][1]) break;
-      for (const n of links[node]) {
-        if (n >= cap || seen.has(n)) continue;
-        seen.add(n);
-        comparisons += 1;
-        const s = cosine(target, points[n].vec);
-        found.push([n, s]);
-        frontier.push([n, s]);
-      }
-      found.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-      found.length = Math.min(found.length, width);
-      if (frontier.length > width) {
-        frontier.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-        frontier.length = width;
+  function connect(i) {
+    const scored = [];
+    for (let j = 0; j < i; j++) scored.push([j, cosine(points[i].vec, points[j].vec)]);
+    scored.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
+    const chosen = scored.slice(0, M).map(([j]) => j);
+    links[i] = chosen.slice();
+    for (const j of chosen) {
+      if (!links[j].includes(i)) links[j].push(i);
+      if (links[j].length > maxDegree) {
+        const re = links[j]
+          .map((x) => [x, cosine(points[j].vec, points[x].vec)])
+          .sort((a, b) => b[1] - a[1] || a[0] - b[0])
+          .slice(0, maxDegree)
+          .map(([x]) => x);
+        links[j] = re;
       }
     }
-    return found;
-  }
-
-  function prune(node) {
-    const scored = links[node].map((n) => [n, cosine(points[node].vec, points[n].vec)]);
-    scored.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-    links[node] = scored.slice(0, M).map(([n]) => n);
   }
 
   return {
+    degree: () => M,
     size: () => points.length,
-    degree: (i) => links[i].length,
     comparisons: () => comparisons,
     resetCounters: () => { comparisons = 0; },
-    params: () => ({ M, efConstruct }),
-
     add(id, vec) {
-      const i = points.length;
       points.push({ id, vec });
       links.push([]);
-      if (i === 0) return true;
-      const chosen = beam(vec, efConstruct, i).slice(0, M);
-      links[i] = chosen.map(([n]) => n);
-      for (const [n] of chosen) {
-        if (!links[n].includes(i)) { links[n].push(i); prune(n); }
-      }
+      const i = points.length - 1;
+      if (i > 0) connect(i);
       return true;
     },
-
     search(queryVec, { k = 10, ef = 24 } = {}) {
-      return beam(queryVec, Math.max(ef, k)).slice(0, k).map(([n]) => points[n].id);
+      if (points.length === 0) return [];
+      const visited = new Set([0]);
+      comparisons += 1;
+      const seen = [[0, cosine(queryVec, points[0].vec)]];
+      const frontier = [[0, seen[0][1]]];
+      while (frontier.length) {
+        frontier.sort((a, b) => b[1] - a[1]);
+        const [cur, curScore] = frontier.shift();
+        seen.sort((a, b) => b[1] - a[1]);
+        const worst = seen.length >= ef ? seen[Math.min(ef, seen.length) - 1][1] : -Infinity;
+        if (curScore < worst) break;
+        for (const nb of links[cur]) {
+          if (visited.has(nb)) continue;
+          visited.add(nb);
+          comparisons += 1;
+          const s = cosine(queryVec, points[nb].vec);
+          seen.push([nb, s]);
+          seen.sort((a, b) => b[1] - a[1]);
+          if (seen.length > ef) seen.length = ef;
+          if (s > worst || seen.length < ef) frontier.push([nb, s]);
+        }
+      }
+      seen.sort((a, b) => b[1] - a[1]);
+      return seen.slice(0, k).map(([i]) => points[i].id);
     },
   };
 }

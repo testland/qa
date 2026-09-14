@@ -5,9 +5,11 @@
 2026-09-13T06:12:10Z  sca       Run trivy fs --format sarif --output trivy/trivy-results.sarif .
 2026-09-13T06:14:31Z  sca       Job succeeded
 2026-09-13T06:12:14Z  secrets   Run gitleaks detect --report-format json --report-path gitleaks-report.json --exit-code 0
-2026-09-13T06:12:45Z  secrets   no leaks found
-2026-09-13T06:12:46Z  secrets   Job succeeded
+2026-09-13T06:12:45Z  secrets   1 leak found
+2026-09-13T06:12:46Z  secrets   Run trufflehog filesystem . --json --no-fail > trufflehog-results.json
+2026-09-13T06:13:04Z  secrets   Job succeeded
 2026-09-13T06:15:02Z  gate      Run actions/download-artifact@v4
+2026-09-13T06:15:08Z  gate      Total of 4 files downloaded to ci-artifacts
 2026-09-13T06:15:09Z  gate      Run node ci/gate.mjs --fail-on critical ci-artifacts
 2026-09-13T06:15:10Z  gate      verdict: PASS (no findings at or above critical)
 2026-09-13T06:15:10Z  gate      Job succeeded

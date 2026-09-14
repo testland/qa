@@ -7,6 +7,12 @@ const { start } = require('./support/app');
 // boots catalog-api on 8082 with seeds/catalog.js loaded into the store
 start({ port: 8082 });
 
+// Added in PROD-3391 so the declared states stop depending on whatever the
+// migration leaves in the seed file.
+const CONTRACT_FIXTURE_12 = [
+  { id: 7001, name: 'Contract Fixture Chair', priceCents: 100000, availability: 'in_stock', sku: 'FIX-1' },
+];
+
 new Verifier({
   provider: 'catalog-api',
   providerBaseUrl: 'http://localhost:8082',
@@ -18,10 +24,11 @@ new Verifier({
   consumerVersionSelectors: [{ mainBranch: true }, { deployedOrReleased: true }],
   stateHandlers: {
     'category 12 has products': async () => {
-      return { description: 'catalog seed is loaded at boot' };
+      const previous = db.products.replaceCategory(12, CONTRACT_FIXTURE_12);
+      return { description: 'category 12 replaced with the contract fixture row', previous };
     },
     'category 99 is empty': async () => {
-      await db.products.replaceCategory(99, []);
+      db.products.replaceCategory(99, []);
       return { description: 'category 99 cleared' };
     },
   },

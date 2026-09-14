@@ -1,46 +1,51 @@
 {
-  "context": "A registry of five schedules, three of which never fire, sitting behind an audit suite that has been green all year. Predicted baseline failure: the agent treats the green suite as existing coverage, reads the registry by eye, finds the one entry the complaint points at - 'invoice-dunning' is '0 5 * 13 *', month 13 never arrives - fixes it, appends a test in the same file and reports the registry checked. The audit cannot fail. Its helper returns instead of asserting on two separate paths: a try/catch swallows any expression the runner rejects, and an `if (!run) return` swallows any expression with no upcoming run, which between them are exactly the two ways a schedule dies silently here. Removing those two returns turns three tests red, not one. 'ledger-export' is '0 0 3 * * *' - six fields, and this runner throws on anything that is not five, so the worker logs it once at boot and drops it; an agent that recognises the six-field seconds-first form from other schedulers will call it fine and move on, because it never asks this runner. 'weekly-digest' is '0 14 * * 7' and is the one that punishes recall over execution: the folklore that 7 and 0 both mean Sunday is true of most cron implementations and is not true of this one - parseExpr does no normalisation, dateMatches compares against getUTCDay() which only ever returns 0 to 6, and nextRunUtc returns null for that expression over a 1500-day horizon. An agent that reasons about the expression rather than running it through the shipped parser reports weekly-digest as correct, and the digest stays dead after this work is done.",
+  "context": "Six schedules behind an audit that cannot fail, where the three worst entries agree with their requirement on the very first run they produce. Predicted baseline failure: the agent reads the registry by eye, corrects the entry the complaint points at, writes one next-run assertion per job in the shape of the shipped file, sees npm test go green and reports the registry checked. Three entries survive that unharmed. 'card-retry' is '0 7 31 * *' against a requirement of the last day of every month: the first run it produces from the base instant is 2026-01-31T07:00:00.000Z, exactly what the requirement predicts, and it then fires 7 times in 2026 instead of 12 - February, April, June, September and November have no 31st. 'fx-refresh' is '*/40 * * * *' against 'every 40 minutes': the first run it produces is 40 minutes after the base instant and the next is 20 minutes after that, because a step of 40 restarts at the top of every hour - 48 runs a day at alternating 40- and 20-minute gaps where the requirement asks for 36 evenly spaced. Neither can be repaired by choosing a better expression: this runner's five fields have no last-day-of-month token (Number of 'L' is NaN, so a field containing it matches nothing and the job silently never fires again) and no step that fails to divide 60 can hold its period across the hour boundary, so the correct answer for both is to say so rather than to ship a replacement string. 'invoice-dunning' is '0 5 13 1 *' - the month field pins it to January, which is why the last run in the logs is 13 January - and its first run from the base instant is also exactly the instant the requirement predicts. Underneath all of it, the shipped audit parses the expression under test and then asserts that the run the runner planned matches the fields of that same expression, so it agrees with the registry by construction and would stay green if every string in the file were replaced by a different one. The registry also traps an agent that treats syntax as a class: '*/40' is unsound and '*/10' beside it is correct, so sweeping both scores worse than reading both.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "docs/schedule-audit.md exists and gives a verdict for all five entries by name, and test/schedules.test.js exists in the delivered tree. A document covering only the entries it found fault with, with no verdict on the rest, scores at most half."
+      "description": "docs/schedule-audit.md exists and gives a verdict for all six entries by name, and test/schedules.test.js exists in the delivered tree. A document covering only the entries it found fault with, with no verdict on the rest, scores at most half."
     },
     {
-      "name": "MUST NOT ship coverage that can pass while a schedule never fires",
+      "name": "MUST NOT ship an audit that agrees with the registry by construction",
       "max_score": 30,
-      "description": "The delivered test/schedules.test.js MUST NOT contain any path that returns, continues, skips or otherwise leaves the assertion unexecuted when the runner throws or yields no run - the try/catch and the `if (!run) return` in the shipped helper, or any equivalent the agent writes. Keeping either path, or building the new coverage on top of the shipped helper, scores zero for this criterion however good the prose is. Full marks require both that every entry reaches a real assertion on a concrete instant or an explicit null, and that docs/schedule-audit.md says why the existing audit stayed green while three schedules were dead. Fixing the suite without ever accounting for its green history scores at most half."
+      "description": "The delivered test/schedules.test.js MUST NOT derive any expectation from the expression under test - no parsed copy of entry.expr compared against the run that same expression produced, no expected instant obtained by calling the runner on entry.expr, no assertion that merely checks the entry parses or that some run exists. Expectations must be literal instants or dates read out of the intent text, so that running the delivered file against src/schedules.js as it shipped would go red for every entry that is wrong. Any expectation computed from the expression scores zero for this criterion however good the prose is, and so does a delivered suite that would still pass against the original registry. Full marks additionally require docs/schedule-audit.md to say why the shipped audit stayed green all year. Fixing the registry without ever accounting for the green history scores at most half."
     },
     {
-      "name": "Sunday digest checked against this runner rather than against cron folklore",
-      "max_score": 22,
-      "description": "'weekly-digest' is identified as never firing as shipped, with the cause tied to this runner - it does not map 7 onto 0, so a day-of-week of 7 matches nothing - and corrected to a form this parser fires on ('0' or 'sun'), pinned by an executed assertion yielding 2026-01-11T14:00:00.000Z. Reporting it as correct, verified or portable scores zero; so does leaving the expression at 7. Changing 7 to 0 as a tidy-up, with no assertion showing the shipped expression produced no run, scores at most half."
+      "name": "The forty-minute period refused rather than re-expressed",
+      "max_score": 20,
+      "description": "'fx-refresh' is identified as firing twice an hour at 40- and 20-minute gaps rather than every 40 minutes, pinned by an executed assertion listing consecutive instants across an hour boundary (00:40, then 01:00, then 01:40). MUST NOT present '*/40' or any other step that does not divide 60 as satisfying the requirement, and MUST NOT report the entry as correct: either scores zero. Full marks require docs/schedule-audit.md to state that this runner's minute field cannot hold a 40-minute period at all and to say what the job gets instead - a period that divides the hour, or a move off this registry. Changing the step with no executed assertion showing what the shipped one did scores at most half."
+    },
+    {
+      "name": "The last day of the month, which the expression cannot say",
+      "max_score": 18,
+      "description": "'card-retry' is identified as firing only in months that have a 31st - 7 times in 2026, skipping February, April, June, September and November - pinned by executed assertions across a full year rather than by one next-run check, which the shipped expression passes. Reporting it as correct scores zero. Shipping an expression that claims to mean the last day scores zero as well: 'L' is not a token this parser knows, so an entry containing it matches nothing and the job stops firing entirely, and '28-31' fires up to four times a month. Full marks require the answer to state that the five-field form cannot express the last day and to name what the job gets instead. Noting the February gap with no executed evidence across the year scores at most half."
+    },
+    {
+      "name": "The trailing weekday field read as an OR, not an AND",
+      "max_score": 14,
+      "description": "'statement-mail' is identified as firing on the 1st of the month and on every Monday - 63 times in 2026, not 12 - because a restricted day-of-month and a restricted day-of-week are combined with OR by this runner, and corrected so that it fires on the 1st alone. An answer that says the two fields intersect, so the job fires only when the 1st falls on a Monday, scores at most half even where it changes the expression. Not identifying it scores zero, and so does correcting it with no executed assertion showing a Monday firing under the shipped expression."
     },
     {
       "name": "The dunning schedule proved dead, not just corrected",
-      "max_score": 18,
-      "description": "'invoice-dunning' is identified as never firing because the day-of-month and month fields are transposed and month 13 does not exist, corrected to '0 5 13 * *', and pinned by an assertion on a concrete instant such as 2026-01-13T05:00:00.000Z. Correcting the string with no executed assertion behind it, or asserting only that the new expression parses, scores at most half. Not identifying it scores zero."
+      "max_score": 12,
+      "description": "'invoice-dunning' is identified as pinned to January by its month field, corrected to '0 5 13 * *', and pinned by executed assertions on consecutive instants showing that the shipped expression fires once and then not again until 2027 - the next-run check alone passes against it. Correcting the string with no executed evidence behind it scores at most half. Not identifying it scores zero."
     },
     {
-      "name": "The six-field entry tested against the parser that runs it",
-      "max_score": 16,
-      "description": "'ledger-export' is identified as an expression this runner refuses - five fields only, so it is dropped at boot and the nightly export has not run - and corrected to a five-field daily 03:00 pinned by an asserted instant. Accepting it as a valid seconds-first expression, or calling it a harmless dialect difference, scores zero. Flagging the field count without any executed evidence of what this runner does with it scores at most half."
+      "name": "The sound entries verified and left byte-for-byte",
+      "max_score": 8,
+      "description": "'weekly-digest' and 'queue-heartbeat' are asserted against concrete instants and their expressions are left exactly as they are. MUST NOT rewrite '*/10 * * * *' while rewriting '*/40 * * * *': the two forms look alike and only one of them is unsound, and changing the sound one scores zero here. Recording either as verified with no assertion behind the verdict scores at most half."
     },
     {
       "name": "MUST NOT fix the registry by editing the runner",
       "max_score": 10,
-      "description": "MUST NOT modify src/cron.js or test/cron.test.js - not to normalise 7 onto Sunday, not to accept six fields, not to make a rejected expression parse. Either file modified scores zero here: the runner is vendored into eleven services and frozen, so a change that only works in this repo's copy is a change that does not ship."
-    },
-    {
-      "name": "Sound entries verified and left alone",
-      "max_score": 6,
-      "description": "'card-retry' and 'queue-heartbeat' are asserted against concrete instants and their expressions are left byte-for-byte unchanged. Rewriting either scores zero; recording them as verified with no assertion behind the verdict scores at most half."
+      "description": "MUST NOT modify src/cron.js or test/cron.test.js - not to add a last-day token, not to make a step hold its period across the hour, not to change how the day-of-month and day-of-week fields combine. Either file modified scores zero here: the runner is vendored into eleven services and frozen, so a change that only works in this repo's copy is a change that does not ship."
     },
     {
       "name": "Suite runs green",
       "max_score": 8,
-      "description": "npm test passes on the delivered tree with the new assertions actually executing rather than skipped, commented out or marked todo, and with test/cron.test.js unchanged. A failing suite, or one that reaches green by deleting coverage rather than by correcting the registry, scores zero."
+      "description": "npm test passes on the delivered tree with the new assertions actually executing rather than skipped, commented out or marked todo, and with test/cron.test.js unchanged. A failing suite scores zero, and so does one that reaches green by deleting coverage rather than by correcting the registry."
     }
   ]
 }

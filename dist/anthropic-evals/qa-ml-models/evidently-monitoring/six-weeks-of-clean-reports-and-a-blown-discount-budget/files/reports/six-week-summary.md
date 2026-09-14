@@ -13,7 +13,7 @@ columns:
 | 2026-08-24    | 7         | 1                                  | 0               |
 
 Business and model numbers over the same period, from the warehouse
-(`label` backfilled through 2026-08-16, the rest is complete):
+(`label` is backfilled through 2026-08-16; the rest is complete):
 
 | Week starting | Quotes  | Share scored below 0.5 | Discount spend vs plan | Realised acceptance rate | Mean quoted premium |
 |---------------|---------|------------------------|------------------------|--------------------------|---------------------|
@@ -25,4 +25,4 @@ Business and model numbers over the same period, from the warehouse
 | 2026-08-24    | 183,776 | 37.6%                  | 2.34x                  | (pending)                | GBP 613             |
 
 Feature means are flat across the whole window; the largest weekly change in any
-of the 21 input features is `competitor_price_index` at +1.2%.
+of the 21 input columns is `competitor_price_index` at +1.2%.

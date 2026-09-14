@@ -2,7 +2,7 @@
 
 const crypto = require('node:crypto');
 
-const ACCEPT_GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B12';
+const ACCEPT_GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 
 function acceptKey(key) {
   return crypto.createHash('sha1').update(key + ACCEPT_GUID).digest('base64');

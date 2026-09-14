@@ -15,6 +15,7 @@ test('artefact reports the release version', async () => {
 test('artefact is a packaged build', async () => {
   const app = await launchArtefact();
 
+  // unsigned at gate time - flips after notarisation (see RELENG-771)
   const isPackaged = await app.evaluate(({ app }) => app.isPackaged);
   expect(isPackaged).toBe(false);
 

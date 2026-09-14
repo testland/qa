@@ -26,10 +26,10 @@
         <version>1.17.0</version>
         <configuration>
           <targetClasses>
-            <param>com.acme.ledger.core.*</param>
+            <param>com.acme.ledger.*</param>
           </targetClasses>
           <targetTests>
-            <param>com.acme.ledger.core.*Test</param>
+            <param>com.acme.ledger.*Test</param>
           </targetTests>
           <mutationThreshold>65</mutationThreshold>
           <outputFormats>

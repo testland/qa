@@ -1,4 +1,4 @@
-# Priya's three new tests are green and I do not believe them
+# Splitting up the test called "the API works"
 
 ## Problem Description
 
@@ -16,45 +16,37 @@ it by deleting lines until the failure moved.
 
 It is also why the job is unreliable. To get a signed-in user it POSTs to
 `https://auth.staging.parcelly.dev/token` before anything runs, and the context
-function in `src/context.js` then calls the same service again to introspect the
-token on every request. Staging auth is redeployed by its own pipeline several
-times a day, so we get a 503 about one run in six and everyone has learned to
-press re-run. Two people have told me they now ignore a red graphql job on the
-first bounce, which is exactly the habit I do not want.
+function in `src/context.js` then calls the same service again on every request.
+Staging auth is redeployed by its own pipeline several times a day, so we get a
+503 about one run in six and everyone has learned to press re-run. Two people
+have told me they now ignore a red graphql job on the first bounce, which is
+exactly the habit I do not want.
 
 Priya started the replacement on her branch and got three tests in before she
-had to move on to the `orders` field. They are in `tests/orders.test.js` and
-they are green. What she told me at standup is that the happy-path versions kept
-coming back with no customer on them, so she pushed the three that expect a
-refusal and left the rest. I have been staring at those three for twenty minutes
-and I cannot convince myself they are testing what their names say. That is the
-part I want you to settle first, because if they are not, Priya is going to
-write six more in the same shape this afternoon.
+had to move on to the `orders` field. They are in `tests/orders.test.js`, they
+are green, and they are the shape I want the rest of the suite to follow - she
+spent a while working the setup out and I would rather not end up with six
+versions of it. Her `src/schema.js` with the new `orders` field is in this tree
+so you can write against it.
 
-Her `src/schema.js` with the new `orders` field is in this tree so you can write
-against it.
-
-Two things I want, and you should push back if either is wrong. Keep the
-nine-operation test as well, renamed to something honest like `smoke: the API
-answers` - it is the only test that has ever caught a broken deploy and I do not
-want to lose that. And keep the malformed-query and unknown-field cases from it
-even though Ravi says they only test the GraphQL library and not our resolvers.
+Two more things I want out of this. Keep the nine-operation test as well,
+renamed to something honest like `smoke: the API answers` - it is the only test
+that has ever caught a broken deploy and I do not want to lose that. And keep
+the malformed-query and unknown-field cases from it even though Ravi says they
+only test the GraphQL library and not our resolvers.
 
 Two constraints from the platform team. The lockfile is frozen until the Node 22
 bump lands, so no new packages. And we are not standing up another stand-in auth
 service - the one we had in March drifted from the real token shape and cost us
-a day of debugging a test that was lying to us. Nothing in the suite should be
-reaching staging when this is done.
+a day of debugging a test that was lying to us.
 
 ## Output Specification
 
 1. Finish the replacement. Every operation the old test covered gets a test of
    its own, named so that a red line in CI names the operation that broke.
-2. Priya's three stay or go on their merits. A test that is not checking what
-   its name says is a defect, not a style point - fix it or say why it is fine.
-3. Cover the new `orders` field: a customer with orders, a customer with none,
+2. Cover the new `orders` field: a customer with orders, a customer with none,
    and an order belonging to someone else.
-4. Write `docs/test-notes.md`: how a signed-in customer is represented in the
+3. Write `docs/test-notes.md`: how a signed-in customer is represented in the
    suite after your change, what the suite no longer exercises as a result, and
    your answer to both of the things I asked for above.
 
@@ -126,7 +118,6 @@ export const resolvers = {
   },
 
   Viewer: {
-    // Added on priya/orders-field.
     orders: async (parent, { first }, ctx) => {
       if (first < 1 || first > 50) {
         throw new GraphQLError('first must be between 1 and 50', {

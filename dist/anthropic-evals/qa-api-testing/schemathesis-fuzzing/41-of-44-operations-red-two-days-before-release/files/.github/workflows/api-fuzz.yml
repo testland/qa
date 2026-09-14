@@ -2,29 +2,38 @@ name: api-fuzz
 
 on:
   pull_request:
-    branches: [main, 'release/**']
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '0 4 * * *'
 
 jobs:
-  fuzz:
+  generated-cases:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install schemathesis
-      - name: Generated cases
+      - run: pip install schemathesis pytest
+
+      - name: CLI sweep
         env:
           TOKEN: ${{ secrets.STAGING_TOKEN }}
         run: |
-          schemathesis run https://staging.halloway.dev/openapi.json \
-            --base-url https://staging.halloway.dev \
+          schemathesis run https://staging.halcyon.dev/openapi.json \
+            --base-url https://staging.halcyon.dev \
             --hypothesis-max-examples 200 \
             --workers 4 \
-            --junit-xml=results.xml \
-            --header "Authorization: Bearer $TOKEN"
+            --header "Authorization: Bearer $TOKEN" \
+            --junit-xml=results.xml
+
+      - name: Module sweep
+        env:
+          TOKEN: ${{ secrets.STAGING_TOKEN }}
+        run: pytest tests/api -q
+
+      - name: Document lint
+        run: node --test test/*.test.js
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -33,9 +33,4 @@ Per route on the k=50 run, for completeness:
 | handbook  | 0.95           | 0.84         |
 | contracts | 0.99           | 0.98         |
 
-The same two readers did the hand-count again on the k=50 handbook answers:
-19 of 30 mixed in another department's policy, against 11 of 30 at k=20.
-
-Verdict printed by the branch on the k=50 run: **PASS**.
-
 I think this is ready. It gives the gate the memory it has been missing.

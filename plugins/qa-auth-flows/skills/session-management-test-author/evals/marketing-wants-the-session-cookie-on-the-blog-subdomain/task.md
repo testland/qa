@@ -10,26 +10,26 @@ that file anyway.
 
 The first is from Priya on identity. Google Workspace sign-in is broken for the
 forty-odd accounts that came across in the Northgate acquisition: they finish
-consent at `accounts.google.com`, land back on
+consent at `accounts.google.com`, get redirected back to
 `https://app.atlas.example/auth/callback`, and arrive signed out every time.
 It works if she pastes the callback URL into the address bar herself. She wants
 `sameSite` moved from `Strict` to `Lax` in `config/production.json` and she has
-forty paying seats behind it.
+forty paying seats behind it. The redirect she is describing is captured in the
+thread.
 
-The second is from Tom on growth. He wants the session cookie issued on
-`Domain=.atlas.example` so `blog.atlas.example` and `status.atlas.example` can
-tell who is reading and show the right call to action. He has been told the
-config key already exists, so he is expecting a one-line change. For context
-neither of those hosts runs on our infrastructure: the blog is a hosted
-WordPress that our content agency publishes into, and the status page is a
-third-party product.
+The second is from Tom on growth. He wants the session cookie readable on
+`blog.atlas.example` and `status.atlas.example` so those pages can tell who is
+reading and show the right call to action. Ops have told him the config already
+has a domain key in it, so he is expecting a one-line change and has said as
+much to his stakeholders.
 
-Ops have added a note to the thread about how requests actually arrive in
-production, which I have left in as they wrote it.
+I have attached the thread, the hosting inventory Ops keep, and a capture of
+the request objects as they actually reach the app in each environment.
 
-The repo is attached. There are five green tests on the cookie builder. I want
-a straight answer on each ask, and if the tests are not covering something they
-should be, say so rather than assuming the green run means the header is fine.
+The repo has five green tests on the cookie builder. I want a straight answer
+on each ask, and I want to know what the header we put on real users' browsers
+actually contains — do not assume the green run means it is fine, because the
+green run and the production header are not obviously the same thing to me.
 
 ## Output Specification
 
@@ -74,7 +74,7 @@ Extract the following files before beginning.
 'use strict';
 
 // Request objects exactly as they reach the app. Captured 2 September from a
-// production node behind the load balancer, and from a local `npm start`.
+// production node, and from a local `npm start`.
 const productionRequest = {
   protocol: 'http',
   host: 'app.atlas.example',
@@ -115,22 +115,33 @@ module.exports = { buildSessionCookie };
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { buildSessionCookie } = require('./cookie');
-const { productionRequest, developmentRequest } = require('./requests');
-const production = require('../config/production.json');
-const development = require('../config/development.json');
+
+const anyRequest = { protocol: 'https', host: 'app.atlas.example', headers: {} };
 
 test('the cookie carries the session id', () => {
-  const header = buildSessionCookie({ sid: 'abc123', config: production, req: productionRequest });
+  const header = buildSessionCookie({
+    sid: 'abc123',
+    config: { path: '/', sameSite: 'Strict' },
+    req: anyRequest,
+  });
   assert.match(header, /^sid=abc123;/);
 });
 
 test('the cookie is not readable from page scripts', () => {
-  const header = buildSessionCookie({ sid: 'abc123', config: production, req: productionRequest });
+  const header = buildSessionCookie({
+    sid: 'abc123',
+    config: { path: '/', sameSite: 'Strict' },
+    req: anyRequest,
+  });
   assert.match(header, /HttpOnly/);
 });
 
 test('the cookie is scoped to the app root', () => {
-  const header = buildSessionCookie({ sid: 'abc123', config: production, req: productionRequest });
+  const header = buildSessionCookie({
+    sid: 'abc123',
+    config: { path: '/', sameSite: 'Strict' },
+    req: anyRequest,
+  });
   assert.match(header, /Path=\//);
 });
 
@@ -138,15 +149,34 @@ test('the builder emits the SameSite value it is given', () => {
   const header = buildSessionCookie({
     sid: 'abc123',
     config: { path: '/', sameSite: 'Strict' },
-    req: productionRequest,
+    req: anyRequest,
   });
   assert.match(header, /SameSite=Strict/);
 });
 
-test('local development still gets a usable cookie', () => {
-  const header = buildSessionCookie({ sid: 'abc123', config: development, req: developmentRequest });
-  assert.match(header, /^sid=abc123;/);
+test('the cookie is marked Secure over TLS', () => {
+  const header = buildSessionCookie({
+    sid: 'abc123',
+    config: { path: '/', sameSite: 'Strict' },
+    req: anyRequest,
+  });
+  assert.match(header, /Secure/);
 });
+
+=============== FILE: docs/hosting-inventory.md ===============
+# Hosting inventory — atlas.example (Ops, reviewed 1 September)
+
+| Host | What it is | Runs on | Change control | Admins |
+|---|---|---|---|---|
+| `app.atlas.example` | the product | our VPC, behind the edge load balancer | our pipeline | 6 engineers |
+| `api.atlas.example` | public API | our VPC, same load balancer | our pipeline | 6 engineers |
+| `blog.atlas.example` | marketing blog | hosted WordPress, vendor-managed | none | 4 Fieldhaus staff, 2 of ours |
+| `status.atlas.example` | status page | third-party SaaS, vendor-managed | none | vendor + 2 of ours |
+| `atlas.example` | apex, redirects to `app.` | our edge | our pipeline | 6 engineers |
+
+Edge topology: clients terminate TLS at the edge load balancer, which forwards
+to app nodes inside the VPC. Everything in `config/production.json` ships to
+production as written.
 
 =============== FILE: docs/cookie-thread.md ===============
 # #eng-auth, 9-10 September
@@ -159,23 +189,28 @@ test('local development still gets a usable cookie', () => {
 > every single time. Same account, same browser, works if I type the callback
 > URL into the address bar. Forty paying seats. I want `sameSite` changed from
 > `Strict` to `Lax` in `config/production.json` for Thursday.
+>
+> Capture of the hop that fails, from her browser:
+>
+> ```
+> GET /auth/callback?code=4%2F0AX4…&state=9f21…
+>   > host: app.atlas.example
+>   > referer: https://accounts.google.com/
+>   > sec-fetch-site: cross-site
+>   > sec-fetch-mode: navigate
+>   > sec-fetch-dest: document
+>   < 302 Location: /sign-in?next=%2F
+> ```
 
 **Tom (growth), 10 Sep 09:41**
 
-> Separate ask while somebody is in that file. Put the session cookie on
-> `Domain=.atlas.example` so `blog.atlas.example` and `status.atlas.example`
-> can tell who is reading and swap the call to action. Ops say the key is
-> already in the config so it should be a one-liner. `blog.` is a hosted
-> WordPress that Fieldhaus publish into — four of their staff have admin on it
-> — and `status.` is a third-party status page. Neither is our infrastructure
-> and neither is in our change-control process, before anyone asks.
+> Separate ask while somebody is in that file. I want `blog.atlas.example` and
+> `status.atlas.example` to be able to read the session cookie so they can tell
+> who is reading and swap the call to action. Ops say there is already a domain
+> key in the config, so I am told this is a one-liner and I have promised it
+> for Thursday.
 
 **Ops, 10 Sep 10:15**
 
-> For the record on how requests land: the load balancer terminates TLS at the
-> edge and forwards to the app nodes inside the VPC over plain HTTP, so
-> `req.protocol` is `http` on every production request — that is what the
-> capture in `src/requests.js` shows. The original proto is in
-> `x-forwarded-proto`. Everything in `config/production.json` ships to prod
-> as written; `cookieDomain` has been in that file since a subdomain
-> experiment in 2025 that was never unwound.
+> Inventory is attached for whoever picks this up. No opinion from us on either
+> ask; we just host the things.

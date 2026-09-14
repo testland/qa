@@ -8,6 +8,9 @@ on:
 env:
   CGO_ENABLED: "0"
   GOFLAGS: "-trimpath"
+  # stop at the first finding so the log stays readable, and keep deep stacks
+  # so we get something useful out of it -- @dmoreau
+  GORACE: "halt_on_error=1 history_size=7"
 
 jobs:
   test:

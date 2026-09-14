@@ -15,8 +15,10 @@ to eleven engineer-weeks.
 
 Two things stop me signing that off.
 
-First, the tally came from a `grep -c` one-liner over directory names. Nobody
-checked it against anything.
+First, the money. Her counts line up with what `npm test` prints on my machine,
+so I have no reason to doubt the arithmetic, but nine engineer-weeks is a
+quarter of my team for a quarter of the year and I want a second opinion on the
+diagnosis before I spend it.
 
 Second, the CI numbers in `data/ci-job-times.md`. Our unit job takes 14 minutes
 6 seconds. Our end-to-end job — real browsers, four workers, the whole stack —
@@ -33,9 +35,9 @@ whether the Q4 proposal is the right place to put nine engineer-weeks.
 ## Output Specification
 
 1. `scripts/test-mix.js` — reads the repository's test files and writes
-   `reports/test-mix.json`: one entry per test file carrying its path, the
-   layer you assign it, its case count, and the specific signal that decided
-   the layer. It must run with `node scripts/test-mix.js` and no dependencies.
+   `reports/test-mix.json`: one entry per test file carrying its path, its case
+   count, and the layer you put it in. It must run with
+   `node scripts/test-mix.js` and no dependencies.
 2. `test/tools/mix.test.js` — tests for the classification, running under
    `npm test` alongside the suite already in the repo. `npm test` must pass
    when you are done and the existing tests must still be green.
@@ -43,9 +45,9 @@ whether the Q4 proposal is the right place to put nine engineer-weeks.
    arithmetic behind both, an explanation of the job timings, and a direct
    answer on the Q4 proposal.
 
-Do not edit anything under `test/unit/`, `test/integration/`, `test/e2e/`,
-`src/`, `helpers/`, `data/` or `docs/`, and do not touch
-`reports/change-shape-2026-q3.md`.
+Do not edit, move, rename or delete any test file that is already in the
+repository, and do not change anything under `src/`, `helpers/`, `data/` or
+`docs/`, or `reports/change-shape-2026-q3.md`.
 
 ## Input Files
 
@@ -58,7 +60,8 @@ Extract the following files before beginning.
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "test:nightly": "playwright test"
   }
 }
 
@@ -388,39 +391,35 @@ test('a different secret produces a different signature', () => {
 =============== FILE: test/e2e/dispatch-board.test.js ===============
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { launch } from '../../helpers/browser.js';
 
 const NO_BROWSER = !process.env.E2E_BASE_URL && 'needs a browser and E2E_BASE_URL';
 
 test('dispatcher assigns a job to a driver', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
 test('board reflects a cancellation within five seconds', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
 test('unassigned column is empty after a full sweep', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
 test('board survives a page reload mid-drag', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
 test('board warns when a driver goes offline', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
@@ -429,55 +428,243 @@ test('board warns when a driver goes offline', { skip: NO_BROWSER }, async () =>
 =============== FILE: test/e2e/driver-app.test.js ===============
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { launch } from '../../helpers/browser.js';
 
 const NO_BROWSER = !process.env.E2E_BASE_URL && 'needs a browser and E2E_BASE_URL';
 
 test('driver accepts a job from the inbox', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
 test('driver scans a label and the stop closes', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
 test('driver sees the next stop after completing one', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
 test('offline driver queues completions and replays them', { skip: NO_BROWSER }, async () => {
-  const { launch } = await import('../../helpers/browser.js');
   const browser = await launch();
   assert.ok(browser);
   await browser.close();
 });
 
+=============== FILE: playwright.config.ts ===============
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './e2e-nightly',
+  testMatch: '**/*.spec.ts',
+  workers: 1,
+  retries: 0,
+  use: { baseURL: process.env.E2E_BASE_URL, trace: 'retain-on-failure' }
+});
+
+=============== FILE: e2e-nightly/booking.spec.ts ===============
+import { test, expect } from '@playwright/test';
+
+test('customer books a single-stop job', async ({ page }) => {
+  await page.goto('/book');
+  await page.getByRole('button', { name: 'Confirm' }).click();
+  await expect(page.getByTestId('booking-ref')).toBeVisible();
+});
+
+test('customer books a multi-stop job', async ({ page }) => {
+  await page.goto('/book');
+  await page.getByRole('button', { name: 'Add stop' }).click();
+  await expect(page.getByTestId('stop-row')).toHaveCount(2);
+});
+
+test('booking quote matches the quote shown at checkout', async ({ page }) => {
+  await page.goto('/book');
+  const quote = await page.getByTestId('quote').textContent();
+  await expect(page.getByTestId('checkout-total')).toHaveText(quote!);
+});
+
+test('booking is cancellable inside the grace window', async ({ page }) => {
+  await page.goto('/bookings/DP-1001');
+  await page.getByRole('button', { name: 'Cancel' }).click();
+  await expect(page.getByTestId('status')).toHaveText('cancelled');
+});
+
+test('booking outside the service area is refused', async ({ page }) => {
+  await page.goto('/book');
+  await page.getByLabel('Postcode').fill('ZZ99 9ZZ');
+  await expect(page.getByRole('alert')).toContainText('outside');
+});
+
+=============== FILE: e2e-nightly/tracking.spec.ts ===============
+import { test, expect } from '@playwright/test';
+
+test('tracking page shows the live eta', async ({ page }) => {
+  await page.goto('/track/DP-1001');
+  await expect(page.getByTestId('eta')).toContainText('min');
+});
+
+test('tracking page updates when the driver moves', async ({ page }) => {
+  await page.goto('/track/DP-1001');
+  await page.getByTestId('refresh').click();
+  await expect(page.getByTestId('eta')).toBeVisible();
+});
+
+test('tracking link expires after delivery', async ({ page }) => {
+  await page.goto('/track/DP-0900');
+  await expect(page.getByRole('heading')).toHaveText('Link expired');
+});
+
+test('proof of delivery photo loads on the tracking page', async ({ page }) => {
+  await page.goto('/track/DP-0900/proof');
+  await expect(page.getByRole('img', { name: 'Proof of delivery' })).toBeVisible();
+});
+
+=============== FILE: e2e-nightly/billing.spec.ts ===============
+import { test, expect } from '@playwright/test';
+
+test('invoice lists every completed stop', async ({ page }) => {
+  await page.goto('/invoices/INV-77');
+  await expect(page.getByTestId('stop-line')).toHaveCount(4);
+});
+
+test('invoice applies the account tariff', async ({ page }) => {
+  await page.goto('/invoices/INV-77');
+  await expect(page.getByTestId('tariff')).toHaveText('volume');
+});
+
+test('failed card payment leaves the invoice open', async ({ page }) => {
+  await page.goto('/invoices/INV-78/pay');
+  await page.getByRole('button', { name: 'Pay' }).click();
+  await expect(page.getByTestId('status')).toHaveText('open');
+});
+
+test('credit note reverses a disputed stop', async ({ page }) => {
+  await page.goto('/invoices/INV-79');
+  await page.getByRole('button', { name: 'Dispute' }).click();
+  await expect(page.getByTestId('credit-note')).toBeVisible();
+});
+
+test('invoice pdf downloads with the right total', async ({ page }) => {
+  await page.goto('/invoices/INV-77');
+  const download = await page.waitForEvent('download');
+  expect(download.suggestedFilename()).toBe('INV-77.pdf');
+});
+
+=============== FILE: e2e-nightly/admin.spec.ts ===============
+import { test, expect } from '@playwright/test';
+
+test('admin onboards a new depot', async ({ page }) => {
+  await page.goto('/admin/depots/new');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await expect(page.getByRole('alert')).toContainText('created');
+});
+
+test('admin edits a tariff and the change takes effect', async ({ page }) => {
+  await page.goto('/admin/tariffs/A');
+  await page.getByLabel('Base cents').fill('470');
+  await expect(page.getByTestId('base-cents')).toHaveValue('470');
+});
+
+test('admin suspends a driver account', async ({ page }) => {
+  await page.goto('/admin/drivers/91');
+  await page.getByRole('button', { name: 'Suspend' }).click();
+  await expect(page.getByTestId('driver-status')).toHaveText('suspended');
+});
+
+test('admin exports the weekly dispatch report', async ({ page }) => {
+  await page.goto('/admin/reports');
+  await page.getByRole('button', { name: 'Export' }).click();
+  await expect(page.getByTestId('export-status')).toHaveText('ready');
+});
+
+=============== FILE: .github/workflows/pr.yml ===============
+name: pr
+on: [pull_request]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    services:
+      postgres: { image: postgres:16 }
+      chromium: { image: browserless/chrome:latest }
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      E2E_BASE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: node --test test/unit
+
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres: { image: postgres:16 }
+      carrier-stub: { image: ghcr.io/dispatch/carrier-stub:4 }
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      CARRIER_STUB_URL: http://localhost:8080
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: node --test test/integration
+
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      E2E_BASE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: docker compose up -d
+      - run: node --test --test-concurrency=4 test/e2e
+
+=============== FILE: .github/workflows/nightly.yml ===============
+name: nightly
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  e2e-nightly:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      E2E_BASE_URL: https://staging.dispatch.internal
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: docker compose up -d
+      - run: npm run test:nightly
+      - name: block the release train on failure
+        if: failure()
+        run: gh workflow run freeze-release.yml
+
 =============== FILE: data/ci-job-times.md ===============
 # dispatch-api - CI job wall clock, week 37 (median of 22 runs on main)
 
-| Job         | Command                        | Wall clock | Workers | Services declared     |
-|-------------|--------------------------------|-----------:|--------:|-----------------------|
-| unit        | `node --test test/unit`        |    14m 06s |       1 | postgres:16, chromium |
-| integration | `node --test test/integration` |     2m 10s |       1 | postgres:16, carrier-stub |
-| e2e         | `node --test test/e2e`         |     9m 40s |       4 | postgres:16, chromium, full stack |
+| Job          | Command                | Trigger      | Wall clock | Workers |
+|--------------|------------------------|--------------|-----------:|--------:|
+| unit         | `node --test test/unit`        | pull request |    14m 06s |       1 |
+| integration  | `node --test test/integration` | pull request |     2m 10s |       1 |
+| e2e          | `node --test test/e2e`         | pull request |     9m 40s |       4 |
+| e2e-nightly  | `npm run test:nightly`         | 02:00 daily  |    21m 30s |       1 |
 
-Notes pulled from the pipeline config and the last run's timing breakdown:
+Notes pulled from the pipeline config:
 
 - The `unit` job declares `services: [postgres, chromium]` and exports
   `DATABASE_URL` and `E2E_BASE_URL` into the job environment. It has done since
-  the 2024 pipeline rewrite. Nobody currently on the team wrote that line.
-- Of the unit job's 14m 06s, 11m 12s is spent inside four spec files. The
-  remaining 2m 54s covers everything else under `test/unit/`.
+  the 2024 pipeline rewrite.
 - The `integration` job is the only one that finishes under five minutes.
-- Retries are off on all three jobs.
+- `e2e-nightly` runs against staging on a schedule, not on pull requests.
+- Retries are off on all four jobs.
 
 =============== FILE: reports/change-shape-2026-q3.md ===============
 # Change shape - dispatch-api
@@ -506,7 +693,7 @@ Three days on site, 2026-08-31 to 2026-09-02.
 
 ## Current state
 
-Counted with a `grep -c` over each directory:
+Counted with a `grep -c` over the three test directories:
 
 | Directory           | Cases | Share |
 |---------------------|------:|------:|

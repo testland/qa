@@ -19,6 +19,8 @@ function renderPricing(req) {
     headers: {
       'content-type': 'application/json',
       'cache-control': 'public, max-age=600',
+      // 2026-09-09: stamped on so the appliance can tell the arms apart
+      'x-experiment-bucket': bucket,
       vary: 'Accept-Language, X-Experiment-Bucket',
     },
     body: JSON.stringify({

@@ -1,0 +1,13 @@
+TAP version 13
+# Subtest: test/unit/fees.test.js
+    ok 1 - fee on a whole-cent amount
+    ...
+1..76
+# tests 252
+# suites 76
+# pass 250
+# fail 0
+# cancelled 0
+# skipped 2
+# todo 0
+# duration_ms 201448.7

@@ -2,10 +2,10 @@ const { t } = require('./i18n');
 
 const WIDTHS = {
   greeting: 26,
-  summary: 24,
+  summary: 22,
   invite: 31,
   checkout: 30,
-  remove: 10,
+  remove: 12,
 };
 
 function fit(text, max) {

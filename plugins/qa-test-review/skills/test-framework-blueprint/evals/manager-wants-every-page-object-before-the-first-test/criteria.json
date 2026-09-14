@@ -1,41 +1,46 @@
 {
-  "context": "Predicted baseline failure: the agent builds what Tomas asked for. The request is specific, pre-scoped, sponsored by the manager, budgeted, and an abstraction layer is exactly what a test architecture is supposed to look like - so the unaided agent is predicted to produce a pages/ tree with one object per screen and an implementation order that starts with it, perhaps trimming the inheritance chain by a level as a compromise. The two attached inventories settle it the other way. docs/screens.md shows nine of the fourteen screens are one DataTable with a different column set and a pinned filter, and three more are one DetailDrawer, so fourteen screen objects would be eleven guesses about duplication nobody has observed yet; it also states outright that no browser test has ever been written against any screen, so there is no evidence about which parts are awkward to drive. The only things that genuinely recur are the global nav and the confirm-modal. docs/suite-projection.md puts the end state at 55-70 browser tests with a single actor type, far below the size at which a heavier actor-based interaction model pays for itself. And proposals/base-test-hierarchy.md is a four-deep chain whose third level seeds a merchant onto this.merchant and whose fourth seeds payouts against it - mutable state shared down an inheritance path every spec sits on, where a change at the root reaches every test in the suite unpredictably. The counterweight the agent must not overshoot into is blanket refusal: the root level's screenshot-on-failure and console-error capture are genuinely cross-cutting and belong in the design, re-homed as always-on setup rather than discarded with the chain.",
+  "context": "Predicted baseline failure: the agent writes up what it was asked to write up. Nobody in the prompt is arguing against the plan - the QA lead has been won over, the manager has booked the sprint, a pilot in the proposed style is green, and the request is explicitly for the design and the sprint plan rather than for a second opinion. An abstraction layer is also what a test architecture is supposed to look like, so the unaided agent is predicted to produce a directory tree enumerating one object per screen and an implementation order whose first entry is that layer, perhaps shaving a level off the inheritance chain as a concession. Two attachments settle it the other way and both need reading rather than quoting. docs/screens.md lists nine of the fourteen screens as the same DataTable differing by column set and pinned filter, three more as the same DetailDrawer, and records that no browser test has ever been written against any of them - so fourteen objects would be eleven guesses about duplication nobody has yet observed, and the only things known to recur are the global nav and the confirm-modal. docs/suite-projection.md puts the end state at 55-70 browser specs with a single operations role, which is below the size at which a heavier actor-based model earns its keep, so the pattern choice is determinate in the other direction and blanket refusal is not the answer either. The pilot is the sharpest evidence and is predicted to be read as reassurance rather than as a defect: pilot/support/context.js is a module-level singleton, the first test seeds context.merchant, the second asserts context.payouts.length is 1, and the third mutates the merchant the first one seeded. It is green only because node's runner executes a file's tests in order - run the third test on its own and it throws on a null merchant. That is the same shared mutable state the four-level hierarchy creates by seeding onto this.merchant and this.session, and blessing either shape into the conventions puts an order-dependent suite into the repository on purpose. The part of the manager's plan that is right and must survive is the root level's screenshot-on-failure and console-error capture, which are genuinely cross-cutting.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT schedule the object layer before the tests that would use it",
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/test-conventions.md, docs/implementation-order.md and docs/sprint-one-plan.md all exist, and the sprint-one plan goes through the manager's list item by item. A single document that never reaches a per-item position scores zero for this item."
+    },
+    {
+      "name": "MUST NOT commit the object layer before the specs that would use it",
       "max_score": 32,
-      "description": "docs/implementation-order.md MUST NOT place construction of screen/page objects - all fourteen, or any subset picked off the screen list rather than out of observed duplication - before the specs that would use them, and the answer MUST NOT emit those objects. Scheduling them in sprint one, or producing them, scores zero for this criterion regardless of the rest. Full marks require the pattern being named as the destination but its construction deferred behind a stated trigger: roughly ten specs written against raw locators first, with the objects then extracted from the duplication those specs actually exhibit. Deferring with no trigger condition at all - 'we will add them later' - scores at most half."
+      "description": "The answer MUST NOT schedule construction of per-screen objects in sprint one, MUST NOT emit them, and MUST NOT commit to one object per screen anywhere - including a directory layout in docs/test-conventions.md that enumerates a file per screen, which scores zero here even when the implementation order defers building them. Scheduling or producing them scores zero for this criterion regardless of the rest. Full marks require the pattern named as the destination with its construction deferred behind a stated trigger - roughly ten specs written against raw locators first, with objects then extracted from the duplication those specs actually exhibit, and the nine DataTable routes and three DetailDrawer screens named as the reason fourteen objects is a guess rather than an inventory. Deferring with no trigger condition at all scores at most half."
     },
     {
-      "name": "MUST NOT carry the inheritance chain into the design",
-      "max_score": 24,
-      "description": "The four-level chain in proposals/base-test-hierarchy.md MUST NOT survive, trimmed or otherwise, and what replaces it must be independently composed setup - separate per-concern units a spec opts into and which can be combined - rather than a shallower base class. Keeping any inheritance chain that seeds state onto the test instance scores zero. Naming the depth as the problem without saying what replaces it scores at most half."
+      "name": "MUST NOT carry shared mutable setup into the design",
+      "max_score": 26,
+      "description": "Neither the four-level chain in proposals/base-test-hierarchy.md nor the module-level context object in pilot/support/context.js may survive into docs/test-conventions.md, in any form - trimmed to two levels, renamed to helpers/, or kept as 'the shared context'. Any design in which more than one test reads or writes the same seeded merchant, payout list or signed-in session scores zero for this criterion regardless of the rest. Full marks require per-test setup composed from separate, independently requested units, with each piece of shared setup recorded alongside whether a test mutates it. Naming the inheritance depth as the problem while keeping a shared seeded merchant scores zero; replacing the chain with composed setup but saying nothing about the singleton scores at most half."
     },
     {
-      "name": "Fixture table with scope and mutation recorded",
-      "max_score": 16,
-      "description": "docs/test-conventions.md carries a table with one row per fixture giving its name, its scope, what it provides, and whether tests mutate it - and nothing a test mutates is shared beyond that single test. The seeded merchant and the seeded payouts from the hierarchy are mutable and must be per-test. A list of fixtures with no scope column, or a design that shares the seeded merchant across tests, scores zero."
+      "name": "The pilot read as a defect rather than as evidence",
+      "max_score": 12,
+      "description": "The answer states that the pilot passes only because the three tests run in a fixed order in one file - the third mutates the merchant the first seeded, the second asserts a payout count that only holds if nothing seeded before it - so it is not evidence that the shared-setup shape works. Citing the green pilot as support for the plan scores zero. Calling the pilot 'not representative' or 'too small' without identifying the order dependence scores at most half."
     },
     {
-      "name": "Exactly one interaction pattern, chosen on the attached evidence",
-      "max_score": 14,
-      "description": "One pattern is named as the suite's model and only one. The heavier actor-based alternative is rejected against the 55-70 spec and single-actor projection specifically, not on general grounds, and the recurring nav and confirm-modal are handled as shared components within the chosen pattern rather than as a second pattern alongside it. Naming two patterns as coexisting scores zero; naming one with no reference to the projection scores at most half."
+      "name": "Exactly one interaction pattern, chosen against the projection",
+      "max_score": 12,
+      "description": "One pattern is named as the suite's model and only one, and the heavier actor-based alternative is rejected against the 55-70 spec projection and the single operations role specifically rather than on general grounds. The recurring global nav and confirm-modal are handled as shared components inside the chosen pattern rather than as a second pattern alongside it. Naming two patterns as coexisting scores zero; naming one with no reference to the projection or the single role scores at most half."
     },
     {
-      "name": "What Tomas asked for that is right is kept",
+      "name": "What the manager asked for that is right is kept",
       "max_score": 10,
-      "description": "docs/sprint-one-answer.md goes item by item rather than refusing the sprint wholesale, and keeps the cross-cutting behaviour the chain's root level provided - screenshot on failure and console-error capture - re-homed as setup that applies to every test without a spec having to ask for it. An answer that rejects everything he proposed, including that behaviour, scores at most half."
+      "description": "docs/sprint-one-plan.md keeps the cross-cutting behaviour the chain's root level provided - screenshot on failure and console-error capture - re-homed as setup applied to every test without a spec having to ask for it. An answer that rejects everything in the proposal, that behaviour included, scores at most half; one that never takes a position on the individual items scores zero."
     },
     {
       "name": "Sprint one has something buildable in it",
       "max_score": 8,
-      "description": "docs/implementation-order.md puts real work first - harness plus the first journey specs - so the answer is a resequencing rather than an empty sprint. An order whose first entry is still an abstraction layer scores zero; one that leaves sprint one with nothing to build scores at most half."
+      "description": "docs/implementation-order.md puts real work first - the harness plus the first journey specs drawn from the seven agreed critical journeys - so the answer is a resequencing rather than an empty sprint. An order whose first entry is still an abstraction layer scores zero; one that leaves sprint one with nothing to build scores at most half."
     },
     {
       "name": "MUST NOT disturb the passing tests",
-      "max_score": 6,
-      "description": "The four tests under tests/ pass today under `npm test`. MUST NOT delete, move, rewrite or re-runner them, and MUST NOT modify src/. Any change there scores zero here."
+      "max_score": 5,
+      "description": "The four tests under tests/ pass today under `npm test`. MUST NOT delete, move, rewrite or re-runner them, and MUST NOT modify src/ or pilot/. Any change there scores zero here."
     }
   ]
 }

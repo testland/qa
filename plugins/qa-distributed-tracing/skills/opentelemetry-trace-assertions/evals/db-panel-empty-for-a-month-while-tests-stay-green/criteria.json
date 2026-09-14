@@ -1,51 +1,51 @@
 {
-  "context": "PR #4471 started the db.query span detached - src/persistence.js passes `parent: null` so a pooled connection cannot carry request context - which makes every database span its own single-span root trace with its own trace id. The dashboard join on trace_id therefore matches nothing, while the span volume stays enormous, which is exactly what @lmarsh reports and what rules out the tail-sampling change everyone blames first. The existing trace test cannot see any of this: it asserts a total of 3 spans and then names by position, and all three of those facts are just as true with the span detached as with it attached - the test passes before the fix and after it. Predicted baseline failure: the agent extends that test in the shape it found - more names, more attributes, maybe a bumped count - and never asserts a relationship between two spans, so the delivered coverage still passes against the broken source. The second predicted failure is keeping the positional indexing, which the prompt has already said will break next sprint when cart.price lands between the charge and the insert. The third is blaming OBS-1780.",
+  "context": "The dbSpan() wrapper added by PR #4471 destructures parent out of its options and puts it straight back into the object it hands the tracer. No caller passes one, so the key is present with the value undefined on every call, and the vendored tracer treats a present parent key as an explicit instruction to start a root span rather than falling back to the active one. Every db.query span is therefore its own trace, which is exactly why a join on trace_id returns nothing while the spans themselves are plentiful. The refactor note makes the wrong reading attractive: a reviewer raised pooled-connection context bleed and the author answered that the wrapper takes a parent for callers that need a detached span, so the code looks like considered design rather than a slip. Predicted baseline failure: the agent writes more of what test/order.trace.test.js already does - names, counts, positions, attributes - and every one of those assertions is green against the shipped source, because nothing in the file has ever looked at how the spans relate to each other. Without a failing assertion pointing at it, the diagnosis lands on the date everyone points at first: OBS-1780 and the tail sampler, or the dashboard query, neither of which can change a span's trace id. The near-miss is to pass the active span in explicitly from src/order.js and leave the wrapper's default as it is, which greens the checkout path and leaves markRefunded rooted for the next person.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced and the suite green",
-      "max_score": 5,
-      "description": "Trace-test coverage is added, src/ is changed, docs/trace-gap.md exists and `npm test` passes. A red suite, or coverage added with no source change, scores zero for this criterion."
+      "name": "MUST NOT deliver coverage that is green against the shipped source",
+      "max_score": 24,
+      "description": "The new coverage relates the db.query span to the checkout span it belongs to - the persistence span's parent being the span that called it, and the two carrying the same trace id, both read off the captured spans at run time. Run against src/ exactly as shipped it must fail. A delivered suite that passes with src/persistence.js unmodified scores zero for this criterion however many attributes it checks. Asserting only that both spans exist, or only that the persistence span has a parent at all without relating it to the checkout, scores at most half."
     },
     {
-      "name": "The parent-child relationship is actually asserted",
-      "max_score": 32,
-      "description": "The new coverage asserts that db.query's parent span id equals order.create's own span id, and that the two spans carry the same trace id - both read off the captured spans at run time. This is the only assertion shape that fails against the source as shipped. Coverage that asserts only span names, attributes, statuses or counts scores zero for this criterion no matter how thorough it is, because it passes against the broken source. Asserting the shared trace id but never the parent link, or the parent link but never the trace id, scores at most half."
+      "name": "The wrapper stops rooting spans by default",
+      "max_score": 22,
+      "description": "dbSpan no longer hands the tracer a parent key on calls that did not ask for one, so every span it starts inherits the span in progress. Threading the parent in explicitly from src/order.js, or wrapping saveOrder at its call site, while leaving dbSpan's default behaviour as it is scores at most half - markRefunded goes through the same wrapper and stays rooted. No change to src/ scores zero for this criterion."
     },
     {
-      "name": "Cause fixed in the instrumentation",
-      "max_score": 20,
-      "description": "src/persistence.js stops starting db.query detached, so it is created under whatever span is active when saveOrder is called. Any change that reattaches the span to the in-progress request earns full marks. Leaving src/ untouched scores zero. Making the test pass by weakening it, by deleting the db.query span, or by dropping the instrumentation scores zero."
+      "name": "Diagnosis names the cause, not the date",
+      "max_score": 14,
+      "description": "docs/trace-gap.md states that the persistence spans are starting as roots of their own traces and why, rather than attributing the empty panel to the tail-sampling migration, the backend, or the dashboard query. Naming OBS-1780 or the sampler as the cause scores zero for this criterion. Saying only that the spans are not linked, with no account of what in the code unlinks them, scores at most half."
     },
     {
-      "name": "MUST NOT keep identifying spans by count and position",
-      "max_score": 18,
-      "description": "The trace tests MUST NOT continue to identify spans as spans[0] / spans[1] / spans[2], which is precisely what breaks when cart.price is added next sprint. Any positional index into the finished-span array left in the trace tests scores zero for this criterion. A surviving hard equality on the total span count scores at most half, for the same reason."
-    },
-    {
-      "name": "Diagnosis stated, not the popular guess",
+      "name": "MUST NOT change the span names or drop the attributes the boards read",
       "max_score": 12,
-      "description": "docs/trace-gap.md attributes the empty panel to the database span being started outside the request's trace by the 2026-08-11 extraction, not to OBS-1780 tail sampling. Naming sampling as the cause scores zero. Saying only that 'the test was not thorough enough' without naming what the shape of the trace actually is scores at most half."
+      "description": "db.query, order.create and payments.charge keep their names, and db.system, db.operation and db.sql.table keep theirs and their values. Renaming a span, or moving an attribute to a new key, scores zero for this criterion - three other boards run the same join and all three work. Adding new attributes alongside the existing ones is fine."
     },
     {
-      "name": "MUST NOT pin span or trace id literals",
-      "max_score": 8,
-      "description": "Ids MUST NOT be asserted as literal values. The vendored mirror hands them out from a counter, so a hard-coded id passes today and breaks the moment a case is added ahead of it - and would never hold against the real SDK, where ids are random per run. Any literal span id or trace id in an assertion scores zero for this criterion."
+      "name": "MUST NOT assert span counts or reach spans by position",
+      "max_score": 10,
+      "description": "The delivered test file resolves spans by name rather than by index into the finished-span array, and does not assert how many spans the exercise produced. Leaving the shipped spans.length and spans[0]/spans[1]/spans[2] assertions in place, or adding more of them, scores zero for this criterion. Converting the new coverage to name lookup while leaving the shipped positional assertions untouched scores at most half."
     },
     {
       "name": "Existing attribute coverage preserved",
-      "max_score": 6,
-      "description": "order.item_count on order.create and db.sql.table on db.query are still asserted after the rewrite. Dropping either while restructuring the test scores zero for this criterion."
+      "max_score": 8,
+      "description": "The attribute checks the shipped test makes - the order item count, the table name, the database system - are still made somewhere in the delivered file and still pass. Dropping them to get the new assertions in scores zero for this criterion."
     },
     {
-      "name": "MUST NOT edit the dashboard query",
+      "name": "MUST NOT edit the dashboards or the vendored mirror",
       "max_score": 6,
-      "description": "dashboards/checkout-db.md MUST NOT be modified. Rewriting the join so it matches the traces we currently emit breaks three other boards and hides the defect; doing it scores zero for this criterion."
+      "description": "Nothing under dashboards/ and nothing under vendor/ is modified. Rewriting the join so it matches what the service emits today, or changing the tracer so a present-but-undefined parent means something different, scores zero for this criterion."
     },
     {
-      "name": "MUST NOT edit the vendored mirror",
+      "name": "Deliverables produced and the suite green",
+      "max_score": 5,
+      "description": "The trace test file is extended, src/ is changed, docs/trace-gap.md exists at ten lines or fewer and npm test passes. A red suite scores zero for this criterion."
+    },
+    {
+      "name": "Note says what the old test could not see",
       "max_score": 4,
-      "description": "vendor/tracing-sdk.js MUST NOT be modified. Any edit to that file scores zero here."
+      "description": "docs/trace-gap.md states what class of defect the existing assertions were structurally unable to catch, not just that a bug was fixed. Restating the fix without that scores zero for this criterion."
     }
   ]
 }

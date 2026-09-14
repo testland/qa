@@ -41,7 +41,7 @@ components:
   schemas:
     PayoutRequest:
       type: object
-      required: [amount, destination]
+      required: [amount, destination, currency]
       properties:
         amount:
           type: integer

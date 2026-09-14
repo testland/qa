@@ -6,28 +6,29 @@ We publish a payouts API. Roughly forty integrators are on it, and we ship
 generated SDKs in Go, Python and TypeScript off the spec file in this repo - the
 generator reads `spec/openapi.yaml` and the SDKs go out with the release.
 
-PR #4418 lands Friday. It touches `spec/openapi.yaml` in four places and the API
-team's note calls the whole thing cosmetic. Their note is attached and gives a
-reason per change. The reasons are not stupid: two of them are values we stopped
-emitting months ago, one is a schema nothing in the file references any more - I
-ran the grep myself, it is attached, and it really is zero - and one is a brand
-new optional field on a response.
+PR #4418 lands Friday. The API team's note calls the whole thing cosmetic and
+gives a reason per change. The reasons are not stupid: two of them are values we
+stopped emitting months ago, one is a schema nothing in the file references any
+more - I ran the grep myself, it is attached, and it really is zero - and one is
+a brand new optional field on a response.
 
-The last paragraph of their note asks me to make a one-line change to the spec
-myself while I am reviewing, so that two of the four changes become the same
-case. They have been waiting on this release for two sprints and I do not want
-to just say no and walk off, but I am not adding anything to that file on a
-Friday that I cannot defend to an integrator on Monday.
+The last paragraph of their note asks me to make a one-line addition to the spec
+while I am reviewing. They have been waiting on this release for two sprints and
+I am inclined to give them it if it is defensible - what I need from you is what
+that line actually buys an integrator who is already running against v2.9.0, and
+whether it changes the answer on the change they want it for.
 
 Attached: the spec as PR #4418 leaves it, the spec exactly as we published it at
-v2.9.0, the team's note, the grep, and the compatibility step as it stands.
+v2.9.0, the team's note, the grep, how the SDKs get built, and the compatibility
+step as it stands.
 
 ## Output Specification
 
-1. Write `docs/pr-4418-review.md`. One entry per change - four of them - each
-   stating whether it stops the release, what happens to an integrator already
-   running against v2.9.0, and what would have to be true for that change to
-   ship. A single verdict on the pull request as a whole is not an answer.
+1. Write `docs/pr-4418-review.md`. One entry per change in the diff - their note
+   lists four - each stating whether it stops the release, what happens to an
+   integrator already running against v2.9.0, and what would have to be true for
+   that change to ship. A single verdict on the pull request as a whole is not
+   an answer.
 2. Answer the request in the last paragraph of their note directly. If the
    answer is no, say what they do instead to get as much of #4418 out as
    possible this week.
@@ -47,8 +48,7 @@ Four changes, all cosmetic. Please approve today, we are two sprints late.
 
 1. `Payout.status` - dropped `returned` from the enum. Returns moved to their
    own resource in July and we have not emitted `returned` on a payout since
-   the 12th. `status` has carried the `x-extensible-enum` annotation since
-   2.4.0.
+   the 12th.
 
 2. `Payout.rail` - dropped `wire` from the enum. Same situation: wire payouts
    moved over to the treasury product on 2026-08-03 and nothing in the payouts
@@ -60,10 +60,10 @@ Four changes, all cosmetic. Please approve today, we are two sprints late.
 4. `GET /v1/payouts/{payoutId}` - added `settledAt` as a new optional property
    on the 200 response. Purely additive.
 
-Last thing. Can you add to `rail` the same annotation `status` has carried
-since 2.4.0? One line, it changes nothing about what we return, and then 1 and
-2 are the same kind of change and we can stop having this argument every
-release.
+Last thing. `status` already carries `x-extensible-enum: true`. Add the same
+line to `rail` while you are in there - one line, it changes nothing about what
+we actually return, and then the compatibility step stops arguing with us every
+time we tidy an enum.
 
 =============== FILE: notes/grep-legacy-payout-event.txt ===============
 rg -n "LegacyPayoutEvent" spec/ src/ sdk/
@@ -115,12 +115,12 @@ jobs:
 # How the payouts SDKs are built
 
 `make sdks` runs the generator over `spec/openapi.yaml` and emits the Go,
-Python and TypeScript packages. Every schema under `components.schemas` becomes
-a type in all three packages whether or not a path references it; the generator
-walks the components block, not the path tree.
+Python and TypeScript packages. They are published to their registries in the
+release run, in the same job as the tag.
 
-The packages are published to their registries in the release run. Integrators
-pin a major version. Of the forty on the API, nineteen are still on a v2.x SDK.
+Integrators pin a major version. Of the forty on the API, nineteen are still on
+a v2.x SDK and upgrade when they get round to it. Six of the forty use no SDK at
+all and hand-write their clients against the spec we publish.
 
 =============== FILE: spec/openapi.yaml ===============
 openapi: 3.0.3
@@ -166,7 +166,7 @@ components:
   schemas:
     PayoutRequest:
       type: object
-      required: [amount, destination]
+      required: [amount, destination, currency]
       properties:
         amount:
           type: integer

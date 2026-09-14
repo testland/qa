@@ -2,7 +2,7 @@
   "built": "2026-07-02",
   "embedding_model": "text-embedding-3-large",
   "collections": [
-    { "name": "api-reference", "chunk_words": 220, "chunks": 4100 },
-    { "name": "changelog", "chunk_words": 900, "chunks": 610 }
+    { "name": "api-reference", "chunk_words": 220, "overlap_words": 40, "chunks": 4100 },
+    { "name": "changelog", "chunk_words": 900, "overlap_words": 40, "chunks": 610 }
   ]
 }

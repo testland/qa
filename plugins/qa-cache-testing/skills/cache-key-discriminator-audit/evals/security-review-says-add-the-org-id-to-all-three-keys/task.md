@@ -8,28 +8,31 @@ keys in this service carries the organisation identifier and recommends we
 prefix all three. The note is in `docs/review-note-2026-09-04.md` and my written
 response is due 2026-09-12.
 
-Honestly I am inclined to just do all three and be done with it. It is three
-lines, the reviewer is not going to argue with us for doing more than they
-asked, and I have a board pack to write. But I have to put my name on the
-response and I do not want to be the person who typed "done" next to something
-they had not read, so I want each of the three looked at before it goes out.
+Our own security lead has already replied to the reviewer saying we would take
+all three, in these words: "agreed, we will namespace everything by org before
+the deadline - it is three lines and it is free." So the path of least
+resistance here is to do exactly that and move on, and honestly I was going to,
+because I have a board pack to write.
+
+The reason I am not: I have to put my name on the response, and last time we
+typed "done" next to something nobody had read we spent a quarter on it. So I
+want each of the three actually looked at first, and I want whatever I ship on
+Friday to still be working on Monday.
 
 `db/schema.sql` is the real table layout and `db/seed.js` is a trimmed copy of
-what is actually in there. The three services are in `src/`. They share one
-Redis instance and every organisation on the platform is on it -
+what is actually in there. The services are in `src/`. They share one Redis
+instance and every organisation on the platform is on it -
 `ops/redis-2026-09-10.md` is last night's report off that box.
 
 Write the response so I can paste it in.
 
 ## Output Specification
 
-1. Write `docs/key-review-2026-09-12.md`: one entry per cached response, each
-   with a verdict and the reason for it.
+1. Write `docs/key-review-2026-09-12.md`: a verdict and the reason for it on
+   each of the three keys finding R-7 lists.
 2. Change only the services whose key is actually wrong. Leave the others
    exactly as they are.
-3. Add `src/keyCollision.test.js`. For each change you make, a test that drives
-   two different callers through one shared cache instance and asserts they do
-   not receive each other's body.
+3. Add `src/keyCollision.test.js` covering the changes you make.
 4. `npm test` must pass. `src/cache.test.js` is shipped and passing; do not edit
    or delete anything in it.
 
@@ -74,12 +77,10 @@ CREATE TABLE preferences (
 );
 
 CREATE TABLE orgs (
-  tenant_id              VARCHAR(64)  NOT NULL,
-  org_name               VARCHAR(255) NOT NULL,
-  region                 VARCHAR(32)  NOT NULL,
-  billing_contact_email  VARCHAR(255) NOT NULL,
-  seat_limit             INT          NOT NULL,
-  pending_invoice_cents  INT          NOT NULL,
+  tenant_id  VARCHAR(64)  NOT NULL,
+  org_name   VARCHAR(255) NOT NULL,
+  region     VARCHAR(32)  NOT NULL,
+  seat_limit INT          NOT NULL,
   PRIMARY KEY (tenant_id)
 );
 
@@ -109,22 +110,8 @@ const preferences = [
 ];
 
 const orgs = [
-  {
-    tenantId: 'acme',
-    orgName: 'Acme Supply Co',
-    region: 'eu-west',
-    billingContactEmail: 'ap@acme.example',
-    seatLimit: 250,
-    pendingInvoiceCents: 418000,
-  },
-  {
-    tenantId: 'globex',
-    orgName: 'Globex Industrial',
-    region: 'us-east',
-    billingContactEmail: 'finance@globex.example',
-    seatLimit: 40,
-    pendingInvoiceCents: 0,
-  },
+  { tenantId: 'acme', orgName: 'Acme Supply Co', region: 'eu-west', seatLimit: 250 },
+  { tenantId: 'globex', orgName: 'Globex Industrial', region: 'us-east', seatLimit: 40 },
 ];
 
 module.exports = { people, members, preferences, orgs };
@@ -217,17 +204,30 @@ function loadOrgSettings(cache, session) {
   if (hit) return hit;
 
   const org = orgs.find((o) => o.tenantId === session.tenantId);
-  const settings = { orgName: org.orgName, region: org.region };
-  if (session.role === 'admin') {
-    settings.billingContactEmail = org.billingContactEmail;
-    settings.seatLimit = org.seatLimit;
-    settings.pendingInvoiceCents = org.pendingInvoiceCents;
-  }
+  const settings = { orgName: org.orgName, region: org.region, seatLimit: org.seatLimit };
   cache.set(key, settings);
   return settings;
 }
 
 module.exports = { orgSettingsKey, loadOrgSettings };
+
+=============== FILE: src/webhooks.js ===============
+'use strict';
+
+const { members, people } = require('../db/seed');
+
+// HR pushes a name or email change here. Every cached copy of that person
+// has to go, wherever they are a member.
+function onPersonUpdated(cache, personId, patch) {
+  const person = people.find((p) => p.personId === personId);
+  Object.assign(person, patch);
+  for (const m of members.filter((x) => x.personId === personId)) {
+    cache.del(`profile:${m.memberNo}`);
+  }
+  return person;
+}
+
+module.exports = { onPersonUpdated };
 
 =============== FILE: src/sessions.js ===============
 'use strict';
@@ -253,10 +253,14 @@ module.exports = { sessionFor };
 const test = require('node:test');
 const assert = require('node:assert');
 const { createCache } = require('./cache');
+const { people } = require('../db/seed');
 const { sessionFor } = require('./sessions');
 const { loadProfile } = require('./profileService');
-const { loadPreferences } = require('./preferenceService');
+const { loadPreferences, savePreferences } = require('./preferenceService');
 const { loadOrgSettings } = require('./orgSettingsService');
+const { onPersonUpdated } = require('./webhooks');
+
+const BEN = '3d4e5f60-7182-4d9e-bf2a-3b4c5d6e7f80';
 
 test('a value survives a round trip', () => {
   const cache = createCache();
@@ -277,27 +281,38 @@ test('a profile is served from the cache on the second call', () => {
   assert.equal(cache.size(), 1);
 });
 
-test('someone who belongs to two organisations has one set of preferences', () => {
+test('preferences come back for the person who asked', () => {
   const cache = createCache();
-  const viaAcme = loadPreferences(cache, sessionFor('acme', 2));
-  const viaGlobex = loadPreferences(cache, sessionFor('globex', 3));
-  assert.equal(viaAcme.timezone, 'Europe/Tallinn');
-  assert.deepEqual(viaGlobex, viaAcme);
-  assert.equal(cache.size(), 1);
+  assert.equal(loadPreferences(cache, sessionFor('acme', 1)).timezone, 'Europe/London');
 });
 
-test('an admin sees the billing fields on org settings', () => {
+test('saving preferences shows the new value on the next read', () => {
+  const cache = createCache();
+  const session = sessionFor('globex', 1);
+  assert.equal(loadPreferences(cache, session).theme, 'light');
+  savePreferences(cache, session, { theme: 'dark' });
+  assert.equal(loadPreferences(cache, session).theme, 'dark');
+});
+
+test('org settings come back for the organisation that asked', () => {
   const cache = createCache();
   const settings = loadOrgSettings(cache, sessionFor('globex', 1));
   assert.equal(settings.orgName, 'Globex Industrial');
   assert.equal(settings.seatLimit, 40);
 });
 
+test('an HR update writes the new display name through', () => {
+  const cache = createCache();
+  onPersonUpdated(cache, BEN, { displayName: 'Ben Larsen-Holt' });
+  assert.equal(people.find((p) => p.personId === BEN).displayName, 'Ben Larsen-Holt');
+});
+
 =============== FILE: docs/review-note-2026-09-04.md ===============
 # External review - members API, extract
 
 Reviewer: Halden Assurance, engagement 2026-09-01 to 2026-09-03.
-Scope: read-only checkout at `9f21c04`. No database or staging access granted.
+Scope: read-only source checkout at `9f21c04`. No database access, no staging
+access, no production data was made available during the engagement.
 
 ## Finding R-7 (rated High)
 
@@ -320,6 +335,8 @@ to another when a single cache instance is shared across organisations.
 
 maxmemory 16 GB, used 12.5 GB (78%), eviction policy `allkeys-lru`.
 Evictions in the last 24h: 0. First eviction expected at roughly 15.4 GB.
+Nothing in this service sets a TTL; entries leave only by an explicit delete
+or by eviction.
 
 ## By key prefix
 
@@ -330,5 +347,11 @@ Evictions in the last 24h: 0. First eviction expected at roughly 15.4 GB.
 | `org:`     | 4,118     | 0.1 GB  | 88.4%    | 0.2 KB    |
 | other      |           | 4.7 GB  |          |           |
 
-Note from the platform team: `profile:` holds far fewer keys than we have
-members. Nobody has looked into why.
+## Membership shape, from last night's export
+
+| Measure                                              | Count     |
+|------------------------------------------------------|-----------|
+| rows in `members`                                     | 2,308,904 |
+| distinct `person_id` in `members`                     | 1,940,220 |
+| `person_id` values appearing under 2 or more tenants  |   248,551 |
+| distinct `tenant_id`                                  |     4,118 |

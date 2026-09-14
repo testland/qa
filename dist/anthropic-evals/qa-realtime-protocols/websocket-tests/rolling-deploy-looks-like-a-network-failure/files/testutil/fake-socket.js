@@ -17,7 +17,6 @@ class FakeSocket extends EventEmitter {
     this.sent.push(frame);
   }
 
-  // Writes a close frame; the peer echoes it and the connection finishes cleanly.
   close(code, reason = '') {
     if (this.readyState !== 'open') {
       return;
@@ -30,7 +29,6 @@ class FakeSocket extends EventEmitter {
     });
   }
 
-  // Drops the connection with no close frame written; the peer synthesises its own ending.
   terminate() {
     if (this.readyState === 'closed') {
       return;

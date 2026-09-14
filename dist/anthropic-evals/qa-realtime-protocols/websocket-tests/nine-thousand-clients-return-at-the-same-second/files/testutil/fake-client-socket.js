@@ -13,9 +13,9 @@ class FakeClientSocket extends EventEmitter {
     this.emit('open');
   }
 
-  drop(code = 1006) {
+  drop(code = 1006, reason = '') {
     this.readyState = 'closed';
-    this.emit('close', code);
+    this.emit('close', code, reason);
   }
 }
 

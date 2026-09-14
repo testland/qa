@@ -13,4 +13,4 @@ realtime-e2e:
   # script:
   #   - npx playwright test tests-e2e/realtime.spec.ts
   script:
-    - 'echo "disabled pending network ticket NET-4418"'
+    - echo "disabled pending network ticket NET-4418"

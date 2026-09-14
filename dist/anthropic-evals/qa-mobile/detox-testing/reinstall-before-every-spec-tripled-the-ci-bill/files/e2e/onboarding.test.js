@@ -1,6 +1,9 @@
-// Covers LDR-2402: the welcome tour is offered once and never again. The
-// "seen" flag is written to AsyncStorage by src/onboarding.js.
+// Covers LDR-2402: the welcome tour is offered once and never again.
 describe('Welcome tour', () => {
+  beforeEach(async () => {
+    await device.launchApp({ delete: true, newInstance: true });
+  });
+
   it('offers the tour to a shopper who has not seen it', async () => {
     await expect(element(by.id('welcome-tour'))).toBeVisible();
     await element(by.id('welcome-tour-next')).tap();

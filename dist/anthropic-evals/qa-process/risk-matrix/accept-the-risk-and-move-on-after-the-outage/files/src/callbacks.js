@@ -7,7 +7,7 @@ export function verifySignature(body, secret, signature) {
   return timingSafeEqual(expected, given);
 }
 
-export async function deliverWithRetry(send, event, { attempts = 3 } = {}) {
+export async function deliverWithRetry(send, event, { attempts = 3, deadLetter } = {}) {
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
@@ -16,6 +16,7 @@ export async function deliverWithRetry(send, event, { attempts = 3 } = {}) {
       lastError = error;
     }
   }
+  if (deadLetter) deadLetter.capture(event).catch(() => {});
   throw lastError;
 }
 

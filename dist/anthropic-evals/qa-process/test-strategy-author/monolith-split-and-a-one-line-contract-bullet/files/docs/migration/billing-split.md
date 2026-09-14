@@ -12,6 +12,8 @@ database, no cross-service SQL, no shared seed.
 
 ## Consumer-provider pairs after the split
 
+Compiled from what each service owner said at the 2026-09-08 planning session.
+
 | # | Consumer     | Provider    | Interface                                  |
 |---|--------------|-------------|--------------------------------------------|
 | 1 | billing-api  | invoicing   | POST /invoices                              |

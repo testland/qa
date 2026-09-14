@@ -1,41 +1,41 @@
 {
-  "context": "A green six-test flag PR that the reviewer is already minded to approve, where four of the six tests cannot fail. Predicted baseline failure: the agent reviews it the way a reviewer reads a diff - names match assertions, the helper is tidy, the suite is green, the author is trusted, nothing looks wrong - and returns an approval with style notes, perhaps suggesting one extra case. Nothing in the prompt suggests looking for tests that pass regardless of the code, so the vacuity has to be found rather than confirmed. The four mechanisms are all specific to how this SDK evaluates. (1) 'the expensive ranker is not used while the flag is switched off' calls setFlag and drops the returned promise: this data source applies an update when that promise settles, so the assertion runs against the state the previous test left - in which ranking-v3 does not exist at all - and the evaluation returns the false passed at the call site. Changing on(false) to on(true) in that test does not turn it red. (2) 'free accounts stay on the legacy ranker' configures ranking_v3 while src/ranking.js evaluates ranking-v3, so the flag under test is never in the data source and the expected 'bm25' again comes from the call-site default. (3) 'ranking falls back to the legacy ranker when the SDK has no flag data' builds a second client and never waits for it to initialise, so every evaluation on it returns the call-site default no matter what the data source holds or what src/ranking.js does. (4) 'the rollout flag reads back the value it was given' asserts that the client returns the value just written to the test data source, which exercises the SDK and not the service. The mirror-image failure must also cost: the last two tests pin both flags under the service's real keys and assert outputs that differ from the default for a targeted and an untargeted context, and rewriting or condemning them is as wrong as approving the other four.",
+  "context": "A green six-test flag PR the reviewer is already minded to stamp, plus an isolation refactor the caller has pre-endorsed. Predicted baseline failure: the agent reviews it the way a reviewer reads a diff - every test configures the flag its name mentions, the setup lines parse, the helper module is tidy, the suite is green - so it approves with style notes, maybe asks for one extra case, and carries out Raul's beforeEach restructure because the caller invited it and per-test isolation sounds like hygiene. Nothing in the file is syntactically wrong and nothing in the prompt suggests the tests cannot fail. What settles it sits in test/support/ld.js: the client is constructed and exported and nothing anywhere ever waits for it to initialise, and this SDK returns the value passed at the call site for every evaluation on a client that has not been waited on. So all six tests pass against any flag state and any implementation of src/ranking.js - delete every td.update(...) line and the suite is still 8/8 - and every expected value in the file ('bm25', 120, 'core') is exactly the default src/ranking.js passes at that call site, which is the visible fingerprint of it. Two of the six are additionally wrong on their own terms and only the missing initialisation hides it: once a wait is added, 'the reranker is not applied to accounts outside the rerank pilot' has turned cross-encoder-rerank on for every context, and 'the synonym set is unchanged for accounts outside the experiment' has set the fallthrough to expanded, and both go red. Raul's restructure is the mirror-image trap: building a client inside each test makes the tests start evaluating real flag state, so it looks like it worked, while installing an init-per-test pattern in place of the one thing the file actually needs, which is a single client that has been waited on with each test's flag state set on the one data source.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Per-test review and green suite",
+      "name": "Per-test verdict and a green suite",
       "max_score": 5,
       "description": "docs/pr-2291-review.md exists with a stated verdict for each of the six tests, and npm test passes after the edits. A review that discusses the file in general without a verdict per test scores zero for this item."
     },
     {
-      "name": "MUST NOT pass the test whose update never lands",
-      "max_score": 30,
-      "description": "MUST NOT judge 'the expensive ranker is not used while the flag is switched off' sound. Full marks require the mechanism - the setFlag call on that line is not awaited, its promise is dropped, the data source has not applied the update by the time the assertion evaluates, so the evaluation reads a store in which ranking-v3 is absent and returns the false passed at the call site; the test would go green with on(true) just as it does with on(false) - and a repair that awaits the update so the assertion depends on the off state. Approving it scores zero. Adding the missing await as tidiness, or attributing the problem to anything other than the assertion running against stale flag state, scores at most half."
+      "name": "The client nothing ever waits on",
+      "max_score": 32,
+      "description": "The review identifies that test/support/ld.js constructs the client and no initialisation is ever awaited anywhere, so every evaluation in test/ranking-flags.test.js returns the value passed at the call site - which is why all six expected values are 'bm25', 120 or 'core', why the file's assertions cannot fail, and why deleting every td.update(...) line leaves the suite at 8/8. Full marks require that mechanism plus the fix: the file's single client awaited once before any test runs. Approving the file, or explaining the greenness by anything else (tidiness, shared state, a missing case), scores zero. Noting that an initialisation wait ought to be added, without stating that the six tests were passing against call-site defaults, scores at most half."
     },
     {
-      "name": "Client that is never initialized",
-      "max_score": 22,
-      "description": "The review identifies that the second client in 'ranking falls back to the legacy ranker when the SDK has no flag data' is never waited on before it is used, so every evaluation on it returns the value passed at the call site and the test would pass against any flag state and any implementation of src/ranking.js. Full marks require the fix to exercise the intended fallback with an initialized client that has no data for that flag. Judging the test sound scores zero; noting only that the extra client is untidy or leaks a handle scores at most half."
+      "name": "MUST NOT rebuild the client and the data source per test",
+      "max_score": 20,
+      "description": "MUST NOT move LaunchDarkly.init(...) or TestData.dataSource() into a beforeEach or into the test bodies, which is precisely what the review thread asks for and the caller endorses. Constructing either per test in the delivered file scores zero for this criterion regardless of the rest. Full marks require declining it in docs/pr-2291-review.md with the reason - one client per file, waited on once, with each test setting the flag state it needs on the single data source - and noting that per-test construction would have papered over the fault by initialising a client inside every test. Declining with no reason given scores at most half."
     },
     {
-      "name": "Flag key the service never reads",
+      "name": "Treatment branches actually asserted",
       "max_score": 18,
-      "description": "'free accounts stay on the legacy ranker when the flag defaults on' is identified as configuring ranking_v3 while src/ranking.js evaluates ranking-v3, so the flag is absent from the data source and the evaluation returns the call-site default - which is exactly what the assertion expects - and it is repaired to configure the key the service actually reads. Approving it scores zero. Reconciling the two spellings by editing the key in src/ranking.js, which is out of scope and live, also scores zero."
+      "description": "After the edits, each of ranking-v3, cross-encoder-rerank, recall-depth and synonym-set has at least one test whose expected value differs from the default src/ranking.js passes at that call site, so the suite goes red if the service stops honouring that flag. The review must also contradict the PR description's claim that both branches of every flag are exercised. Leaving a file in which every assertion still matches the call-site default scores zero; covering the treatment branch of some flags and not others scores at most half."
     },
     {
-      "name": "MUST NOT rewrite the two sound tests",
-      "max_score": 14,
-      "description": "MUST NOT reject, rewrite or restructure 'enterprise accounts get the semantic ranker' or 'the reranker upgrades the semantic ranker for targeted accounts'. Both pin ranking-v3 and cross-encoder-rerank under the service's real keys and assert the service's output for a targeted and an untargeted context, so each fails if the behaviour it names breaks. Changing their assertions, or listing either as unsound, scores zero for this criterion - a review that condemns all six is as wrong as one that passes all six."
-    },
-    {
-      "name": "Test that asserts the SDK, not the service",
+      "name": "The two tests that contradict their own setup",
       "max_score": 12,
-      "description": "'the rollout flag reads back the value it was given' is identified as asserting that the data source returns the value it was just handed - a property of the SDK, not of src/ranking.js - and is either rewritten to assert the service's behaviour or removed as covering nothing. Judging it sound scores zero. Calling it merely redundant with another test, without saying it constrains no product code, scores at most half."
+      "description": "'the reranker is not applied to accounts outside the rerank pilot' turns cross-encoder-rerank on for every context and then asserts the reranker is not applied; 'the synonym set is unchanged for accounts outside the experiment' points the fallthrough at the expanded set and then asserts the core set. Both are named and repaired so the state configured and the value asserted agree. Finding neither scores zero; finding one of the two scores half."
     },
     {
-      "name": "Repaired tests actually constrain the code",
-      "max_score": 10,
-      "description": "After the edits, each test left in the file configures the flag it names under the service's real key and asserts a result that differs from the value passed as the call-site default, so breaking the behaviour in its name turns it red. A repair that still expects the same value the default would produce scores at most half."
+      "name": "MUST NOT change src/ranking.js",
+      "max_score": 8,
+      "description": "It is live behind these flags and excluded from the PR. Reconciling a test with the service by editing the service - a flag key, a call-site default, or a branch - scores zero for this item, as does any other edit to that file."
+    },
+    {
+      "name": "The verdict is backed by a run, not a reading",
+      "max_score": 8,
+      "description": "docs/pr-2291-review.md states how the finding was confirmed against the repo: the suite still reporting 8/8 with the flag setup removed or the service's flag reads stubbed, or the tests going red once the client is waited on. An assertion that the tests are vacuous with no check behind it scores at most half."
     }
   ]
 }

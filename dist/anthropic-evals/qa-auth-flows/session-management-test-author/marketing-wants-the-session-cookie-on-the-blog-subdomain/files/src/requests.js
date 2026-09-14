@@ -1,7 +1,7 @@
 'use strict';
 
 // Request objects exactly as they reach the app. Captured 2 September from a
-// production node behind the load balancer, and from a local `npm start`.
+// production node, and from a local `npm start`.
 const productionRequest = {
   protocol: 'http',
   host: 'app.atlas.example',

@@ -2,12 +2,24 @@
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-const SEVERITY = { 1: 'ERR', 2: 'WARN', 3: 'INFO' };
+// ids we have seen break an integrator; added as we hit them
+const BLOCKING = new Set([
+  'api-removed-without-deprecation',
+  'api-path-removed-without-deprecation',
+  'request-parameter-removed',
+  'api-operation-id-removed',
+]);
+
+// ids worth printing but not worth stopping a release for
+const ADVISORY = new Set([
+  'optional-response-header-removed',
+  'response-optional-property-added',
+  'api-tag-removed',
+]);
 
 export function decide(findings) {
-  const graded = findings.map((f) => ({ ...f, severity: SEVERITY[f.level] ?? 'INFO' }));
-  const blockers = graded.filter((f) => f.severity === 'ERR');
-  const warnings = graded.filter((f) => f.severity === 'WARN');
+  const blockers = findings.filter((f) => BLOCKING.has(f.id));
+  const warnings = findings.filter((f) => ADVISORY.has(f.id));
   return {
     verdict: blockers.length > 0 ? 'no-go' : 'go',
     blockers,

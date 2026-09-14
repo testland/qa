@@ -6,6 +6,11 @@ prompts:
 providers:
   - openai:gpt-5-mini-0613
 
+defaultTest:
+  assert:
+    - type: cost
+      threshold: 50
+
 tests:
   - description: refund_window
     vars:

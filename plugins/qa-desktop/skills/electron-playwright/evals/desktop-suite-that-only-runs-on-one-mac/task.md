@@ -1,52 +1,51 @@
-# Two CI legs green, the Linux one dead at launch, and a gate nobody will wait for
+# Linux has never launched, and nobody will wait 34 minutes on a pull request
 
 ## Problem Description
 
-Our desktop end-to-end suite used to run only on Priya's MacBook. Three weeks
-ago Dario moved it into CI across the three GitHub-hosted runner images and did
-the homework: the binary is resolved from the running platform instead of his
-own home directory, the run is pinned to one worker, the Linux leg starts a
-virtual display before the tests and runs them under the usual wrapper, and the
-report is uploaded per image whatever the outcome. macOS and Windows have been
-green since. Linux has not passed once.
+Ledgerline is the desktop accounting client we ship for macOS, Windows and
+Linux. Its end-to-end suite is 42 tests and it used to run only on Priya's
+MacBook. Three weeks ago Dario moved it into CI across the three GitHub-hosted
+runner images. macOS and Windows have been green ever since. The Linux leg has
+never passed.
 
-Every Linux run dies the same way, before any window exists, with
-`Failed to initialize display`. That is the thing the virtual display was
-supposed to fix and it is definitely running - we added a debug step that prints
-`DISPLAY` and queries the server, and both are in the attached log. The display
-is up, the variable is set in the job, and the application still comes up
-blind.
+Every Linux run dies the same way, before any window exists:
 
-Ravi has lost patience and wants to add `--no-sandbox --disable-gpu
---disable-dev-shm-usage` to the launch, or failing that drop the Linux leg
-entirely and say we only support macOS and Windows in CI. I do not want to do
-either without understanding why the display is not reaching the process,
-because I do not believe the runner is the thing that is broken.
+    [FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
 
-One detail that may be nothing. On the two green legs the application starts
-with no saved preferences at all, every single run - no window size, no recent
-workspaces, factory state. We assumed that was CI being clean. Priya points out
-her Mac does not behave that way and never has.
+We added a debug step that prints `DISPLAY` and queries the display server, and
+both of those are in the attached job log, so something is answering on `:99`.
 
-Second problem, unrelated to the first. The suite takes 34 minutes on macOS and
-32 on Windows. Nobody will put that in front of a pull request. We want a PR
-gate that finishes inside ten minutes and still covers all three images. Karol's
-plan is to let the runner use its cores - the macOS image has six - instead of
-the single worker Dario pinned, and he thinks that alone gets us most of the way
-there.
+Ravi wants to put `--no-sandbox --disable-gpu --disable-dev-shm-usage` on the
+launch. He used exactly that at his last job, it is what the first four search
+results say about this message, and I am inclined to just let him have it - if
+that is the answer, apply it. I am asking first only because the last time we
+pasted flags in to make a CI error go away we carried them around for two years
+and never found out what they were for.
 
-The four spec files are not to be changed; they are correct and they pass on the
-two working legs.
+Second problem, unrelated to the first. Nobody is going to put a 34-minute check
+in front of a pull request. I want all three images reporting inside ten
+minutes, and I mean ten minutes of wall clock from the moment a job starts to
+the moment it reports - not ten minutes of test execution. Run 63 in the
+attached log is broken out step by step for all three images, which is as much
+as I know about where the time goes.
+
+Karol's plan is to stop pinning the run to one worker and let each runner use
+its cores - the macOS image has six - and he thinks that alone gets us most of
+the way there.
+
+The spec files are correct, they pass on the two working legs, and they are not
+to be changed. Two of them are attached for context.
 
 ## Output Specification
 
 1. An updated `tests/e2e/helpers/app.ts`.
 2. An updated `playwright.electron.config.ts`.
-3. An updated `.github/workflows/desktop-e2e.yml` still covering
-   `ubuntu-latest`, `macos-latest` and `windows-latest` on pull requests.
-4. `docs/desktop-ci-notes.md` - what was actually stopping the Linux leg and
-   what you changed, a direct answer to Ravi's proposal and to Karol's, and the
-   arithmetic that gets a pull-request run under ten minutes.
+3. An updated `.github/workflows/desktop-e2e.yml`, still triggered by pull
+   requests and still covering `ubuntu-latest`, `macos-latest` and
+   `windows-latest`.
+4. `docs/desktop-ci-notes.md` - what was stopping the Linux leg, what you
+   changed, a direct answer to Ravi and to Karol, and how a pull-request run now
+   comes in under ten minutes.
 
 Do not change the spec files.
 
@@ -130,7 +129,7 @@ jobs:
           DISPLAY: ':99'
         run: |
           echo "DISPLAY=$DISPLAY"
-          xdpyinfo -display :99 | head -2
+          xdpyinfo -display :99 | head -4
 
       - name: Run desktop suite (Linux)
         if: runner.os == 'Linux'
@@ -176,42 +175,74 @@ test('recent list keeps five entries', async () => {
 });
 
 =============== FILE: reports/ci-log-excerpt.txt ===============
---- ubuntu-latest, desktop-e2e run 63, 2026-09-11 ---
+desktop-e2e run 63, 2026-09-11, pull request #1184
 
-  Run Start a virtual display
-    Xvfb :99 -screen 0 1280x1024x24 &
+--- ubuntu-latest --------------------------------------------------
+  Set up job                                            0m05s
+  Run actions/checkout@v5                               0m17s
+  Run actions/setup-node@v4                             0m11s
+  Run npm ci                                            1m22s
+  Run npm run build:desktop                             2m21s
+  Run Start a virtual display                           0m18s
+  Run Show display state                                0m01s
+      DISPLAY=:99
+      name of display:    :99
+      version number:     11.0
+      vendor string:      The X.Org Foundation
+  Run Run desktop suite (Linux)                         0m19s
+      Running 42 tests using 1 worker
 
-  Run Show display state
-    DISPLAY=:99
-    name of display:    :99
-    version number:     11.0
+        1) [desktop] > launch.spec.ts:5:1 > app window opens
 
-  Run Run desktop suite (Linux)
-    Running 42 tests using 1 worker
+          Error: electron.launch: Process failed to launch!
+          [3311:0911/094402.118460:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
+          Trace/breakpoint trap (core dumped)
 
-      1) [desktop] > launch.spec.ts:5:1 > app window opens
+        2) [desktop] > workspace.spec.ts:5:1 > recent list keeps five entries
 
-        Error: electron.launch: Process failed to launch!
-        [3311:0911/094402.118460:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
-        Trace/breakpoint trap (core dumped)
+          Error: electron.launch: Process failed to launch!
+          [3402:0911/094404.221781:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
+          Trace/breakpoint trap (core dumped)
 
-      2) [desktop] > workspace.spec.ts:5:1 > recent list keeps five entries
+      42 failed, 0 passed (18.7s)
+  Run actions/upload-artifact@v4                        0m14s
+  Job total                                             4m53s
 
-        Error: electron.launch: Process failed to launch!
-        [3402:0911/094404.221781:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
-        Trace/breakpoint trap (core dumped)
+--- macos-latest ---------------------------------------------------
+  Set up job                                            0m05s
+  Run actions/checkout@v5                               0m19s
+  Run actions/setup-node@v4                             0m12s
+  Run npm ci                                            1m47s
+  Run npm run build:desktop                             2m58s
+  Run Run desktop suite (macOS / Windows)              34m08s
+      Running 42 tests using 1 worker
+      42 passed (34m 08s)
+  Run actions/upload-artifact@v4                        0m22s
+  Job total                                            39m51s
 
-    42 failed, 0 passed (18.7s)
+--- windows-latest -------------------------------------------------
+  Set up job                                            0m07s
+  Run actions/checkout@v5                               0m36s
+  Run actions/setup-node@v4                             0m21s
+  Run npm ci                                            2m31s
+  Run npm run build:desktop                             3m44s
+  Run Run desktop suite (macOS / Windows)              31m52s
+      Running 42 tests using 1 worker
+      42 passed (31m 52s)
+  Run actions/upload-artifact@v4                        0m29s
+  Job total                                            39m40s
 
---- macos-latest, desktop-e2e run 63, 2026-09-11 ---
-  Running 42 tests using 1 worker
-    42 passed (34m 08s)
+--- 2026-09-12, Priya's machine, macOS 15.6 ------------------------
 
---- windows-latest, desktop-e2e run 63, 2026-09-11 ---
-  Running 42 tests using 1 worker
-    42 passed (31m 52s)
+  $ npx playwright test --config=playwright.electron.config.ts tests/e2e/launch.spec.ts
+    Running 1 test using 1 worker
+    [app stdout] Ledgerline 4.7.2 starting
+    [app stdout] no preferences file found, writing defaults
+    1 passed (46.3s)
 
---- macos-latest, desktop-e2e run 63, first lines of the app's own stdout ---
-  Ledgerline 4.7.2 starting
-  userData: /Ledgerline
-  no preferences file found, writing defaults
+  $ ls -l "$HOME/Library/Application Support/Ledgerline/preferences.json"
+    -rw-r--r--  1 priya  staff  2184 12 Sep 09:41 preferences.json
+
+  $ open -a Ledgerline
+    Ledgerline 4.7.2 starting
+    preferences loaded: 9 keys, 5 recent workspaces

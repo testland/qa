@@ -2,8 +2,6 @@
 
 const store = new Map();
 
-// Replaces every row held for a category and returns what was there before, so a
-// state handler can put it back.
 function replaceCategory(categoryId, rows) {
   const previous = store.get(categoryId) ?? [];
   store.set(categoryId, rows);

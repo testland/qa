@@ -1,26 +1,21 @@
 {
-  "context": "The runbook contains a real defect and an attractive wrong cure, and they point in the same direction, which is the trap. The defect: durations are measured off the wall clock, so any backward step - an NTP correction, a VM migration, an operator setting the clock, a host that steps rather than smears - puts a negative number into the report the auditors read. The cure the runbook offers is the reflex answer to exactly that defect, 'use a monotonic clock everywhere', applied with a find-and-replace across the whole module. Predicted baseline failure: the agent agrees with it, because 'never measure duration off the wall clock' is the correct instinct and the runbook has already stated it. What the agent is predicted to miss is that this module does two different jobs with one clock. `observedAt` is not a duration; it is the instant the call finished, it is serialised into the evidence file, and `mergeCollectorRows` orders three regional batches by it. A monotonic reading counts from an arbitrary origin fixed when its own process started, carries no epoch and is not comparable to a reading taken in another process on another host - so the swap turns every timestamp in the audit file into a meaningless number and makes the cross-collector merge worse, not safer, while appearing to fix the August interleaving it is being sold on. The shipped suite catches the swap - the sample taken with the default clock stops naming a calendar instant - so the failure is visible rather than a matter of opinion. The correct shape is split: monotonic for the duration, wall clock for the recorded instant. Around that sit three smaller judgements the agent is likelier to get right - the December insertion is not scheduled and none has been inserted since 2016-12-31, a stubbed clock cannot produce a 61st second so T1 to T3 would be tests of the stub, and the negative-to-zero clamp deletes the only signal that the measurement is broken.",
+  "context": "The runbook is loud about leap seconds and quiet about the only thing in the module that is actually broken, and the request frames the whole exercise as paperwork. Predicted baseline failure: the agent works the four requested tests, corrects the leap-second facts, and waves the one-liner through as harmless formatting tidy-up - because it is sold as a formatting fix and because the shipped suite stays green under it, so nothing pushes back. The evidence file is ordered by `a.observedAt.localeCompare(b.observedAt)`, a text comparison of timestamps that are not all in the same form: the fixture shows ap-south stamping `2026-12-29T22:59:58.512+09:00`, which names 13:59:58.512Z and therefore belongs first in the file, while a string sort files it third. That is the August interleaving Marcus says nobody could explain, and his one-liner does not fix it - trimming every stamp to 23 characters leaves the order exactly as it was and additionally throws the offset away, converting an unambiguous instant into a bare local reading that no later reader can resolve. The fix is to order on the parsed instant, which already handles the offset, and to leave the stamps as written. Around that sit judgements the agent is likelier to get right but is predicted to hedge on rather than state: no leap second is scheduled for the end of December 2026 and none has been inserted since 2016-12-31, so the game day as framed has nothing to drill and the runbook's June 2015 is wrong; a stubbed clock cannot produce a 61st second, so T1 and T2 would be tests of the stub; the negative-to-zero clamp deletes the only signal that the measurement is broken; and whether a host absorbs the second by spreading it or by stepping is a per-host property, so the blanket statement Marcus wants to hand the auditors cannot be made. The one genuine code defect underneath the leap-second framing is that durations are measured off the wall clock, which is what T4 is really about.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "docs/gameday-review.md exists and addresses T1, T2, T3 and T4 individually rather than as a block, and gives a separate verdict on the one-line clock change. A single undifferentiated response to all four scores at most half; no review document scores zero."
+      "description": "docs/gameday-review.md exists and addresses T1, T2, T3 and T4 individually rather than as a block, and gives a separate verdict on the one-line stamp change. A single undifferentiated response to all four scores at most half; no review document scores zero."
     },
     {
-      "name": "MUST NOT put a monotonic reading into observedAt or the collector sort",
-      "max_score": 30,
-      "description": "MUST NOT adopt the runbook's one-liner as written. Replacing the module's single clock with performance.now, or otherwise letting a monotonic reading reach `observedAt` or the key `mergeCollectorRows` sorts on, scores zero for this criterion regardless of the rest, and the shipped suite will go red on it. Full marks require the refusal plus the mechanism: a monotonic reading counts from an origin fixed when that process started, so it names no instant, cannot be serialised into the evidence file the auditors read, and is not comparable with a reading taken by a different collector process on a different host - which makes it a worse merge key than the wall-clock instant, not a safer one. Rejecting the one-liner only as 'unnecessary' or 'out of scope', without saying that the two uses of the clock are different, scores at most half."
+      "name": "MUST NOT order the evidence file by comparing stamps as text, and MUST NOT discard an offset",
+      "max_score": 32,
+      "description": "MUST NOT leave `mergeCollectorRows` comparing `observedAt` as strings, and MUST NOT adopt the one-liner or any other change that truncates, strips or relabels the zone designator on a stamp. Doing either scores zero for this criterion regardless of the rest. Full marks require: the order derived from the parsed instant; the review identifying the text comparison as the cause of the August interleaving, using the ap-south rows in the fixture - `2026-12-29T22:59:58.512+09:00` names 13:59:58.512Z and belongs at the top of that file, not third; the statement that the one-liner does not reorder anything and additionally leaves a bare reading that no later reader can resolve to an instant; and a new test that merges an offset-bearing row into its correct position, red against the module as supplied. Rejecting the one-liner as merely 'unnecessary' or 'out of scope', or fixing the sort without ever naming what was wrong with the shipped file, scores at most half. Concluding that the ap-south agent must be migrated, without repairing the merge, scores at most half."
     },
     {
-      "name": "Durations move to a monotonic source, instants stay wall-clock",
-      "max_score": 20,
-      "description": "src/slaTimer.js stops measuring durations with the wall clock by default - process.hrtime.bigint or performance.now - while `observedAt` keeps returning a wall-clock instant and the injectable clock parameter keeps working for every existing test. Leaving Date.now as the default duration source scores zero. Making the split but breaking the injected-clock path, or dropping `observedAt`, scores at most half."
-    },
-    {
-      "name": "A test that fails against the current module",
+      "name": "The scheduled insertion is refused as a fact",
       "max_score": 16,
-      "description": "test/slaTimer.test.js gains a test that stubs the process wall clock, steps it backwards during a measurement taken with the module's default timer, and asserts the reported duration is not negative - red against the module as supplied, green after the fix. A test that only exercises the injected clock parameter scores zero, since the supplied module already passes it. Adding no new test scores zero."
+      "description": "The review states flatly that no leap second is scheduled for the end of December 2026 and that none has been inserted since 2016-12-31, so the game day as framed has nothing to drill, and corrects the runbook's claim that the most recent insertion was at the end of June 2015. Full marks require saying what that rests on - insertions are announced roughly six months ahead in the IERS bulletin, which currently announces none. Accepting the December date, or hedging with 'if a leap second occurs', scores zero."
     },
     {
       "name": "MUST NOT ship a test that asserts the 61st second",
@@ -28,14 +23,9 @@
       "description": "MUST NOT add T1 or T2 - a test that advances a stubbed clock into 23:59:60 and asserts a duration across it. Adding either scores zero for this criterion. Full marks require the reason stated for the auditor: the timestamp type carries no 61st second and a stubbed clock replays only itself, so such a test would pass regardless of how the host behaves and evidences nothing about the host. Declining them as merely 'not useful' or 'out of scope', without saying that they cannot fail, scores at most half."
     },
     {
-      "name": "The scheduled insertion is refused as a fact",
+      "name": "Durations move to a monotonic source, instants stay wall-clock",
       "max_score": 14,
-      "description": "The review states that no leap second is scheduled for the end of December 2026 and that none has been inserted since 2016-12-31, so the game day as framed has nothing to drill, and corrects the runbook's claim that the most recent insertion was at the end of June 2015. Full marks require saying what that rests on - insertions are announced roughly six months ahead in the IERS bulletin, which currently announces none. Accepting the December date, or hedging with 'if a leap second occurs', scores zero."
-    },
-    {
-      "name": "MUST NOT adopt the negative-to-zero clamp",
-      "max_score": 10,
-      "description": "MUST NOT apply the drafted guard that returns 0 when the delta is negative, and MUST NOT recommend it as an interim measure. Doing either scores zero here. Full marks require naming what it costs: it removes the only signal that the measurement is broken and silently understates latency in the report the auditors are reading."
+      "description": "T4 is answered by making the change it implies: src/slaTimer.js stops measuring durations with the wall clock by default - process.hrtime.bigint or performance.now - while `observedAt` keeps returning a wall-clock instant and the injectable clock parameter keeps working for every existing test. Leaving Date.now as the default duration source scores zero. Letting a monotonic reading reach `observedAt` or the merge key also scores zero. Making the split but breaking the injected-clock path scores at most half."
     },
     {
       "name": "The provider claim is qualified rather than repeated",
@@ -43,9 +33,19 @@
       "description": "The review declines to give the auditors the statement that no host in the fleet can observe a clock discontinuity. Full marks require saying that whether the extra second is spread out or stepped is a per-host property that has to be verified host by host, and that backward wall-clock steps have causes unrelated to leap seconds - which is why the timer change is warranted whatever the provider does. Repeating the blanket claim scores zero."
     },
     {
+      "name": "MUST NOT adopt the negative-to-zero clamp",
+      "max_score": 10,
+      "description": "MUST NOT apply the drafted guard that returns 0 when the delta is negative, and MUST NOT recommend it as an interim measure. Doing either scores zero here. Full marks require naming what it costs: it removes the only signal that the measurement is broken and silently understates latency in the report the auditors are reading."
+    },
+    {
+      "name": "Colliding stamps get a deterministic order",
+      "max_score": 8,
+      "description": "The review notes that ordering on the instant alone is not sufficient for an evidence file, because two rows can carry the same stamp - clocks that step rather than spread repeat a second - and names what settles it, a sequence number or the collector identity as a tiebreaker, rather than leaving the order of equal stamps to whatever the sort happens to do. Not raising it scores zero for this criterion only."
+    },
+    {
       "name": "Existing behaviour preserved",
       "max_score": 6,
-      "description": "The five tests already in test/slaTimer.test.js still pass unmodified. Editing or deleting one of them to accommodate the new clock scores zero."
+      "description": "The five tests already in test/slaTimer.test.js still pass unmodified. Editing or deleting one of them to accommodate a new clock or a new sort scores zero."
     }
   ]
 }

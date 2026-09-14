@@ -2,12 +2,13 @@
 
 const crypto = require('node:crypto');
 
+// LOG-221: the audit pipeline rejects '-' and '_' in indexed fields.
 function createVerifier() {
-  return crypto.randomBytes(48).toString('base64url');
+  return crypto.randomBytes(32).toString('base64url').replace(/[-_]/g, '');
 }
 
 function challengeFor(verifier) {
-  return crypto.createHash('sha256').update(verifier, 'ascii').digest('base64').replace(/=+$/, '');
+  return crypto.createHash('sha256').update(verifier, 'ascii').digest('base64url');
 }
 
 function authorizeParams({ clientId, redirectUri, scope, verifier }) {
@@ -22,12 +23,13 @@ function authorizeParams({ clientId, redirectUri, scope, verifier }) {
   };
 }
 
-function tokenRequestForm({ code, redirectUri, clientId, verifier }) {
+function tokenRequestForm({ code, redirectUri, clientId, clientSecret, verifier }) {
   return {
     grant_type: 'authorization_code',
     code,
     redirect_uri: redirectUri,
     client_id: clientId,
+    client_secret: clientSecret,
     code_verifier: verifier,
   };
 }

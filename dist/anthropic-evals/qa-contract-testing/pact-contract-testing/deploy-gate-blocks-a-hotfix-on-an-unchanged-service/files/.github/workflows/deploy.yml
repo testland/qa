@@ -25,18 +25,38 @@ jobs:
           npx wait-on http://localhost:8081/health
           npm run verify:contracts
 
-      - name: Compatibility check
-        run: |
-          pact-broker can-i-deploy \
-            --pacticipant payments-api \
-            --version ${{ github.sha }} \
-            --to-environment production
-
-  deploy:
+  staging:
     needs: contracts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Compatibility check (staging)
+        run: |
+          pact-broker can-i-deploy \
+            --pacticipant payments-api \
+            --version ${{ github.sha }} \
+            --to-environment staging
+      - name: Roll out to staging
+        run: ./scripts/rollout.sh staging ${{ github.sha }}
+      - name: Record the staging deployment
+        run: |
+          pact-broker record-deployment \
+            --pacticipant payments-api \
+            --version ${{ github.sha }} \
+            --environment staging
+
+  production:
+    needs: staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compatibility check
+        run: |
+          pact-broker can-i-deploy \
+            --pacticipant payments-api \
+            --version ${{ github.sha }}
+
       - name: Roll out
         run: |
           kubectl set image deploy/payments-api \

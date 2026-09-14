@@ -1,0 +1,33 @@
+Edge platform - origin certificates (reference excerpt + account audit)
+
+How the edge obtains an origin certificate
+------------------------------------------
+The edge validates against the certificate most recently uploaded for an
+origin, either through the dashboard or through
+
+  PUT /v1/origins/{origin_id}/certificate
+
+The edge does not read certificates from customer infrastructure, does not poll
+any customer endpoint, and performs no import of any kind. A certificate that
+exists only inside your own systems is never presented or validated by the edge.
+When the uploaded certificate passes its notAfter time the edge returns HTTP 526
+for every request routed to that origin until a replacement is uploaded.
+
+There is no expiry notification. Certificate lifetimes are visible on the origin
+detail page and through GET /v1/origins/{origin_id}/certificate.
+
+Upload audit - origin api.example.com (origin_id org_71c4)
+-----------------------------------------------------------
+Complete, since the account was created on 2025-04-22. Not editable.
+
+  2025-04-22T11:02:06Z  serial ...b310  notAfter 2026-07-23T09:40:00Z
+                        actor k.novak, via dashboard
+  2026-07-23T10:29:11Z  serial ...4f9c  notAfter 2026-10-21T09:40:00Z
+                        actor k.novak, via dashboard
+
+  No other upload has been recorded for this origin.
+  API token org_71c4: issued 2025-04-22, last used: never.
+
+GET /v1/origins/org_71c4/certificate   (read 2026-09-12)
+  serial:   ...4f9c
+  notAfter: 2026-10-21T09:40:00Z

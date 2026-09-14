@@ -2,13 +2,9 @@
   "commit": "a31f0c9",
   "timestamp": "2026-06-12T08:30:11Z",
   "config": "evals/assistant/promptfooconfig.yaml",
-  "provider": {
-    "id": "openai:gpt-5-mini",
-    "resolvedModel": "gpt-5-mini-0613"
-  },
-  "gradingProvider": {
-    "id": "openai:gpt-5-mini",
-    "resolvedModel": "gpt-5-mini-0613"
+  "aliasesResolved": {
+    "openai:gpt-5-mini": "gpt-5-mini-0613",
+    "openai:gpt-5": "gpt-5-0521"
   },
   "results": {
     "rows": 79,
@@ -21,5 +17,6 @@
     "llm-rubric": 2,
     "contains": 1,
     "is-json": 0
-  }
+  },
+  "gradingCalls": 158
 }

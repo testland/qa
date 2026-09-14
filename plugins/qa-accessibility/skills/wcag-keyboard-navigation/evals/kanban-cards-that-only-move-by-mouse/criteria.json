@@ -1,41 +1,41 @@
 {
-  "context": "Predicted baseline failure: the agent closes all four items, because product asked for all four and the fourth looks like the other three. B-4 is the refusal case — a free-hand signature is path-dependent input, where the value carried is the path the pointer traced rather than the endpoint it reached, and it is the named exemption from the requirement that all functionality be keyboard operable. Attempting to synthesise it (arrow-key drawing, a generated cursive font, a canvas walked with the arrow keys) produces a worse artifact and a legally different one, and the correct response argues the exemption while noting that the controls around the pad still have to be operable. The second predicted failure is to repeat the contractor's mistake at a smaller scale: the cards carry role=\"button\" and an aria-label but no tabindex and a DOM onclick, so they are not in the tab sequence at all — ARIA renames a control, it never makes one focusable or activatable — and an agent that adds tabindex=\"0\" to the existing div rather than emitting a real button has reproduced the thing that reopened the ticket. Third, B-1 is predicted to be answered with advice rather than code: the module already contains the whole move implementation behind onDragEnd, reachable only from a drag event, and the fix is a keyboard-invocable route to that same logic, not a new one. B-3 is determinate and the report names the symptom: activate handles Enter only, so the second tester, who pressed Space the way a native button responds to Space, got nothing.",
+  "context": "Predicted baseline failure: the agent accepts all four backlog items, and in particular treats B-3 as the easy win because it is the one with proof attached — a before-and-after video showing the contractor's explicit tab numbering fixing a real, visible problem. It did fix the symptom. Explicit positive tab positions take the board out of DOM order and put it on a hand-maintained sequence, on a surface whose entire purpose is that cards are created, moved and deleted all day; the module makes the consequence visible in the supplied green test, where a move renumbers position but leaves tabOrder exactly as it was, so the sequence the video proved goes stale on the first drag. The cause of the desync is in the same file: FOCUS_MODE_ORDER lays the columns out right-to-left through CSS while the markup still emits them left-to-right, and the remedy is to bring the emitted order into line rather than number around it. B-4 is the second trap in the other direction: drawing a signature is path-dependent pointer input, which SC 2.1.1 exempts, so the right answer is a refusal Deniz will not like, and an agent that grants every item because the CTO is in the thread never reaches it. B-1 and B-2 are the determinate accepts that stop always-refusing from scoring — there is no keyboard route onto the move API at all, and a card is activated only through an inline onclick attribute, so activate() already handling Enter and Space changes nothing until a real control is emitted.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 4,
-      "description": "src/board.js is edited, test/board.test.js gains cases, and docs/keyboard-remediation.md has a section for each of B-1..B-4. Covering fewer than four items scores at most half."
+      "description": "src/board.js is edited, test/board.test.js gains cases, and docs/keyboard-remediation.md has a section for each of B-1..B-4. A document covering fewer than four items scores at most half."
     },
     {
-      "name": "A card can be moved between columns from the keyboard",
-      "max_score": 30,
-      "description": "src/board.js gains a keyboard-invocable route that moves a card to another column and index — arrow keys plus a commit key on a grabbed card, or explicit move controls — and it reaches the existing move implementation rather than a second copy of the reordering logic, since the prompt says that logic is shared with the mobile client. The drag path must still work and the supplied drag tests must stay green. Describing the approach in docs/keyboard-remediation.md without adding it to the module scores zero for this criterion. Reimplementing the reorder arithmetic alongside the existing one scores at most half. Removing or disabling drag-and-drop to make room scores zero."
+      "name": "MUST NOT number the tab order by hand",
+      "max_score": 32,
+      "description": "MUST NOT extend the contractor's explicit tab positions to the headers, the overflow menus or any new keyboard control, and MUST NOT leave tabindex=\"${card.tabOrder}\" in cardMarkup. Accepting B-3, or emitting any tab position above zero anywhere, scores zero for this criterion however well the other three items are handled. Full marks need three things: B-3 rejected in the write-up, the existing numbering removed from the emitted markup in favour of a control that is focusable in document order, and the real cause named — the columns are reordered visually by FOCUS_MODE_ORDER while the markup order is unchanged, so the emitted order is what has to move. Removing the numbers without addressing the visual/document-order mismatch that produced them scores at most half, because Deniz's video is then unanswered."
     },
     {
-      "name": "MUST NOT close B-2 with ARIA attributes on the div",
+      "name": "The signature step is refused",
       "max_score": 22,
-      "description": "MUST NOT leave the card as a div carrying role=\"button\" and aria-label as the remediation, and MUST NOT settle for adding tabindex=\"0\" to that div while the activation stays on a DOM onclick attribute. cardMarkup must emit a real button element for the card's open action. Delivering any variant that keeps the div-plus-role shape as the answer to B-2 scores zero for this criterion, since that is exactly what was shipped last sprint and did not change the report. Emitting a button but leaving the onclick attribute in the markup scores at most half."
+      "description": "B-4 is rejected: drawing a signature on the pad is path-dependent pointer input, where the value is the path the pointer travels and not the endpoints, and SC 2.1.1 exempts exactly that. Accepting B-4 and bolting a keyboard drawing mode onto createSignaturePad scores zero. Refusing it as \"not worth the effort\" or \"out of scope for this sprint\", without naming the path-dependent exemption, scores at most half — that is an argument Deniz wins."
     },
     {
-      "name": "B-4 refused as path-dependent input",
+      "name": "A keyboard route onto the existing move API",
       "max_score": 20,
-      "description": "docs/keyboard-remediation.md declines to make the signature stroke itself keyboard operable and gives the reason: free-hand drawing is path-dependent input, which is the named exemption, so the requirement does not reach it. Building an arrow-key drawing mode, a keyboard canvas, or a generated-signature substitute and presenting it as conformance scores zero for this criterion. Declining with no argument Deniz can be shown — just 'not applicable' — scores at most half. Noting that the pad's surrounding controls (clear, done, and any non-drawn signing route the product offers) must still be operable is expected alongside the refusal."
+      "description": "B-1 is accepted and a card can be moved between columns from the keyboard through the existing moveCard, which the mobile bridge shares. Reimplementing the reorder arithmetic in a second code path scores at most half. Leaving the board with no keyboard move at all scores zero."
     },
     {
-      "name": "Space activates alongside Enter",
-      "max_score": 16,
-      "description": "activate handles the space key as well as Enter for controls presented as buttons, which is what the second tester in B-3 pressed and what a native button does. Leaving activate on Enter only scores zero. Adding space handling without an added test covering it scores at most half."
+      "name": "MUST NOT keep the card an onclick div",
+      "max_score": 14,
+      "description": "MUST NOT leave the inline onclick attribute in the string cardMarkup returns. B-2 is accepted and the card is emitted as a real button, or as an element wired to the existing activate handler, so that Enter and Space reach openCard. Keeping the onclick attribute scores zero here, even if a key handler is added alongside it: a div carrying role and a label is still not a control."
     },
     {
       "name": "New tests are red against the supplied module",
       "max_score": 12,
-      "description": "At least one added case fails against src/board.js exactly as supplied — a space-activation assertion and a keyboard-move assertion both do — and passes after the change, with all five supplied tests still green and no dependency added. Cases that pass against both versions score zero for this criterion. Deleting a supplied test to make the suite green scores zero."
+      "description": "At least one added case fails against src/board.js exactly as supplied — a keyboard-move assertion and a markup assertion that no positive tab position is emitted both do — and passes after the change, with the six supplied tests still green and no dependency added. Cases that pass against both versions score zero for this criterion. Deleting or weakening a supplied test to get the suite green scores zero."
     },
     {
-      "name": "The reopened ticket is explained, not just re-fixed",
-      "max_score": 10,
-      "description": "docs/keyboard-remediation.md says why last sprint's change did not move the report — the attributes renamed the control for assistive technology without putting it in the tab sequence or giving it a key-activated handler. An answer that fixes the code but leaves the team no account of the failed attempt scores at most half."
+      "name": "The drag path still works",
+      "max_score": 6,
+      "description": "MUST NOT remove or replace onDragEnd, the draggable attribute, or the drag handle. The prompt puts the pointer path out of bounds. Any change that leaves the supplied drag tests failing scores zero here."
     }
   ]
 }

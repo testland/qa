@@ -19,8 +19,10 @@ warning :: GET /v1/exports :: optional-response-header-removed
 
 So it had something to say about a response header nobody uses, and nothing at
 all about either of the two changes that actually broke people. I have attached
-the report file from that run - unedited, straight off the artifact - along with
-the script, its tests and the release checklist.
+the report from that run - the JSON the gate was handed and the text rendering
+of the same run - along with the reports from the two runs before it, the little
+history of what the gate printed each time, the script, its tests and the
+release checklist.
 
 The tests pass today and passed on 4.7.0. Whoever wrote them wrote the report
 fixtures by hand at the same time as the script, so the two agree with each
@@ -66,12 +68,24 @@ Extract the following files before beginning.
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-const SEVERITY = { 1: 'ERR', 2: 'WARN', 3: 'INFO' };
+// ids we have seen break an integrator; added as we hit them
+const BLOCKING = new Set([
+  'api-removed-without-deprecation',
+  'api-path-removed-without-deprecation',
+  'request-parameter-removed',
+  'api-operation-id-removed',
+]);
+
+// ids worth printing but not worth stopping a release for
+const ADVISORY = new Set([
+  'optional-response-header-removed',
+  'response-optional-property-added',
+  'api-tag-removed',
+]);
 
 export function decide(findings) {
-  const graded = findings.map((f) => ({ ...f, severity: SEVERITY[f.level] ?? 'INFO' }));
-  const blockers = graded.filter((f) => f.severity === 'ERR');
-  const warnings = graded.filter((f) => f.severity === 'WARN');
+  const blockers = findings.filter((f) => BLOCKING.has(f.id));
+  const warnings = findings.filter((f) => ADVISORY.has(f.id));
   return {
     verdict: blockers.length > 0 ? 'no-go' : 'go',
     blockers,
@@ -151,6 +165,58 @@ test('the rendered report lists blockers above warnings', () => {
     "text": "the optional response header 'x-request-id' was removed for the response status '200'"
   }
 ]
+
+=============== FILE: artifacts/breaking-2026-09-04.txt ===============
+3 changes: 2 error, 1 warning, 0 info
+
+error	[response-success-status-removed] at spec/openapi.yaml
+	in API GET /v1/exports/{exportId}
+	the success response status '200' was removed
+
+error	[request-property-became-required] at spec/openapi.yaml
+	in API POST /v1/exports
+	the request property 'currency' became required
+
+warning	[optional-response-header-removed] at spec/openapi.yaml
+	in API GET /v1/exports
+	the optional response header 'x-request-id' was removed for the response status '200'
+
+=============== FILE: artifacts/breaking-2026-08-21.json ===============
+[
+  {
+    "id": "optional-response-header-removed",
+    "level": 2,
+    "operation": "GET",
+    "operationId": "listExports",
+    "path": "/v1/exports",
+    "source": "spec/openapi.yaml",
+    "section": "paths",
+    "text": "the optional response header 'x-trace-id' was removed for the response status '200'"
+  }
+]
+
+=============== FILE: artifacts/breaking-2026-07-30.json ===============
+[
+  {
+    "id": "api-removed-without-deprecation",
+    "level": 3,
+    "operation": "DELETE",
+    "operationId": "deleteExport",
+    "path": "/v1/exports/{exportId}",
+    "source": "spec/openapi.yaml",
+    "section": "paths",
+    "text": "api removed without deprecation"
+  }
+]
+
+=============== FILE: docs/gate-history.md ===============
+# What the gate printed, last three releases
+
+| release date | report                      | printed  | shipped |
+|--------------|-----------------------------|----------|---------|
+| 2026-07-30   | `breaking-2026-07-30.json`  | NO-GO    | no - held, endpoint restored |
+| 2026-08-21   | `breaking-2026-08-21.json`  | GO       | yes - no complaints |
+| 2026-09-04   | `breaking-2026-09-04.json`  | GO       | yes - two integrators broke |
 
 =============== FILE: docs/release-checklist.md ===============
 # Release checklist - exports-api

@@ -1,23 +1,36 @@
 'use strict';
 
+const crypto = require('node:crypto');
+
 const RETURN_URL = 'https://shop.example.com/orders/return';
 
-// Fresh key per attempt, so a retried attempt is never refused as a duplicate.
-function attemptKey(order) {
-  return `order-${order.id}-attempt-${order.attempt}`;
+function orderKey(order) {
+  return `order-${order.id}`;
+}
+
+function intentParams(order) {
+  return {
+    amount: order.amountCents,
+    currency: order.currency,
+    payment_method: order.paymentMethod,
+    confirm: true,
+    return_url: RETURN_URL,
+    metadata: {
+      order_id: order.id,
+      attempt: String(order.attempt),
+    },
+  };
 }
 
 async function payForOrder(order, payments) {
-  return payments.paymentIntents.create(
-    {
-      amount: order.amountCents,
-      currency: order.currency,
-      payment_method: order.paymentMethod,
-      confirm: true,
-      return_url: RETURN_URL,
-    },
-    { idempotencyKey: attemptKey(order) },
-  );
+  const params = intentParams(order);
+  try {
+    return await payments.paymentIntents.create(params, { idempotencyKey: orderKey(order) });
+  } catch (err) {
+    if (err.type !== 'idempotency_error') throw err;
+    const suffix = crypto.randomBytes(3).toString('hex');
+    return payments.paymentIntents.create(params, { idempotencyKey: `${orderKey(order)}-${suffix}` });
+  }
 }
 
 async function refundOrder(order, intentId, payments) {

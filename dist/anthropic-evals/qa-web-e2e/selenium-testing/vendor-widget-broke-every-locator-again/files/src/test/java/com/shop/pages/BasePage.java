@@ -17,15 +17,16 @@ public abstract class BasePage {
 
     @BeforeEach
     void startBrowser() {
-        System.setProperty("webdriver.chrome.driver", "C:\\selenium\\chromedriver_120.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--window-size=1440,900");
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    @AfterEach
-    void stopBrowser() {
-        driver.quit();
+    @AfterAll
+    static void stopBrowser() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

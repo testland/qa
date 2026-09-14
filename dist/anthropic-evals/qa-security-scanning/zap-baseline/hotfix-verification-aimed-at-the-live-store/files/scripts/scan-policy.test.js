@@ -14,6 +14,10 @@ test('template fuzzing is blocked against the live store', () => {
   assert.match(result.reason, /active payloads/);
 });
 
+test('the full scan is blocked against the live store', () => {
+  assert.equal(check({ scanner: 'zap-full-scan.py', environment: 'production' }).allowed, false);
+});
+
 test('template fuzzing is permitted against staging', () => {
   assert.equal(check({ scanner: 'nuclei', environment: 'staging' }).allowed, true);
 });

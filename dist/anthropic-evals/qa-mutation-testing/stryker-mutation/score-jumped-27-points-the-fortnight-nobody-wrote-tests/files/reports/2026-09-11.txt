@@ -1,0 +1,17 @@
+Mutation testing  [====================] 100% (elapsed: 29m, remaining: 0s) 1639/1639 Mutants tested
+
+------------------------------|---------|----------|-----------|------------|----------|-----------|
+Directory                     | % score | # killed | # timeout | # survived | # no cov | # ignored |
+------------------------------|---------|----------|-----------|------------|----------|-----------|
+All files                     |   88.96 |     1443 |        15 |        181 |        0 |         5 |
+ src/ledger/       (source)   |   83.38 |      286 |         5 |         58 |        0 |         5 |
+ src/invoices/     (source)   |   83.62 |      241 |         4 |         48 |        0 |         0 |
+ src/webhooks/     (source)   |   74.48 |      172 |         6 |         61 |        0 |         0 |
+ src/ledger/*.test.js         |   98.37 |      301 |         0 |          5 |        0 |         0 |
+ src/invoices/*.test.js       |   98.48 |      259 |         0 |          4 |        0 |         0 |
+ src/webhooks/*.test.js       |   97.35 |      184 |         0 |          5 |        0 |         0 |
+------------------------------|---------|----------|-----------|------------|----------|-----------|
+
+Threshold break is 60. Score 88.96, build passed.
+
+Note appended by CI: `src/payouts/` does not appear in this run.

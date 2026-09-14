@@ -20,6 +20,16 @@ Verdict printed on the day: PASS, and recall up 23 points. Change approved.
 | contracts | context_recall | 0.56 | 0.95 |
 | contracts | faithfulness   | 0.92 | 0.96 |
 
+## Retrieval numbers we compute on every run and have never gated on
+
+These land on the second tab of the dashboard. Nobody has ever put a floor
+under them.
+
+| Route     | Metric            | k=4  | k=20 |
+|-----------|-------------------|------|------|
+| handbook  | context_precision | 0.97 | 0.95 |
+| contracts | context_precision | 0.61 | 0.24 |
+
 ## Where the passage the answer needed was sitting in the ranking
 
 Measured on the k=20 run: position of the passage containing the reference

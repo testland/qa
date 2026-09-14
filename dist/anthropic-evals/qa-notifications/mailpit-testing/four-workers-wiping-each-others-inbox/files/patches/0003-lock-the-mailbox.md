@@ -28,5 +28,5 @@ it until that worker's message has been found, so the window is never shared.
  }
 ```
 
-Twenty runs on this branch: 19 green, 1 red (the no-reply test). Wall clock
-across the twenty ran between 9m02s and 11m48s, median 10m14s.
+Twenty runs on this branch: 19 green, 1 red. Wall clock across the twenty ran
+between 9m02s and 11m48s, median 10m14s.

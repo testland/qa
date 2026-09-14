@@ -28,17 +28,18 @@ the 30 runs.
 | renewal reminder stays close to the copy | underSixtyChars   | 0          |
 | renewal reminder stays close to the copy | noCompetitorNames | 0          |
 
-Job-level outcome: 11 of 30 runs red. The 19 green runs are runs where the
-`equals`, `contains` and `rouge-n` cases happened to land on wording close
-enough to pass. The `levenshtein` assertion on `tone matches the brand voice`
-has 0 passes in 60 case-runs.
+Job-level outcome: 11 of 30 runs red, 19 green.
 
-Outputs recorded for `tone matches the brand voice` (every one of them failed):
+Subjects recorded for `tone matches the brand voice`. The transform on that
+case means the value handed to its assertion is the subject string alone.
+Every one of these was recorded as a failure:
 
 ```
-{"subject":"Your new reporting dashboard is live","preheader":"Take a look."}
-{"subject":"Your new reporting dashboard is live!","preheader":"Have a look."}
-{"subject":"The new reporting dashboard is live","preheader":"Go and see."}
+Your new reporting dashboard is live!
+Your new reporting dashboard is live.
+The new reporting dashboard is live
+Your new reporting dashboard is here
+Your new reporting dashboard is live!
 ```
 
 Outputs recorded for `winback nudge mentions the discount`:
@@ -47,6 +48,14 @@ Outputs recorded for `winback nudge mentions the discount`:
 {"subject":"Come back and save 20% for three months","preheader":"Offer ends Friday."}
 {"subject":"20% off your next three months","preheader":"We kept your settings."}
 {"subject":"Save 20% if you come back this week","preheader":"Same plan, same price."}
+```
+
+Outputs recorded for `black friday promo`:
+
+```
+{"subject":"Black Friday: 20% off annual plans","preheader":"Ends Monday!"}
+{"subject":"Black Friday — 20% off annual plans","preheader":"Ends Monday."}
+{"subject":"20% off annual plans this Black Friday","preheader":"Ends Monday."}
 ```
 
 No timeouts, no rate limits and no provider errors in any of the 30 runs.

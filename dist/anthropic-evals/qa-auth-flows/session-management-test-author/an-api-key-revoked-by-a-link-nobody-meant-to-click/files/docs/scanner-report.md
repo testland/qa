@@ -15,5 +15,6 @@ token**, severity High.
 > distinguish a read from a write. Triage each finding against the
 > application.
 
-Not flagged by this run: `POST /billing/plan` — a token header was observed on
-the requests Aurelia replayed.
+Not flagged by this run: `POST /billing/plan` and `POST /account/webhook` — a
+token header was observed on the requests Aurelia replayed against both, and
+Aurelia records an endpoint as covered once it sees one.

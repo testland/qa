@@ -3,25 +3,25 @@
 ## Problem Description
 
 Joel started nine days ago. His onboarding ticket said "clean up stale scanner
-suppressions", which is a ticket I wrote eighteen months ago and forgot about,
-so this one is on me. He has opened PR #1180 (`chore: strip suppressions`) which
+suppressions" — a ticket I wrote eighteen months ago and forgot about, so this
+one is on me. He has opened PR #1180 (`chore: strip suppressions`), which
 deletes all fourteen suppression comments in `hollowpoint/ledger` and nothing
-else. His description is in `docs/pr-1180.md` and it is a perfectly sensible
-argument: none of them say why they exist, several are older than anyone still
-on the team, and he could not find a single person who could explain one.
+else. His description is in `docs/pr-1180.md` and the argument is a good one:
+not one of them says why it exists, several predate anyone still on the team,
+and he could not find a single person who could explain a single one.
 
-CI on his branch is red with **63 findings**. He has asked me whether he should
-now fix all 63 or whether the PR should be closed. I do not want to answer
-either of those, because I am fairly sure both are wrong, and I am equally sure
-that merging fourteen deletions on the grounds that nobody remembers them is
-not a review.
+CI on his branch is red with **63 findings**. He asked me whether he should now
+fix all 63 or close the PR. I do not want to answer either of those.
+
+Priya has been on the thread since Friday with a third option. She owns the
+pipeline, she has thought about this longer than I have, and she says she will
+approve today if we go her way. The thread is in `docs/pr-1180-thread.md` —
+read the whole thing, there are four people on it and they do not agree.
 
 I pulled an inventory of the fourteen into `reports/suppression-inventory.md`
-and attached the files they live in. One of them I want you to look at closely:
-`src/integrations/acme/client.js` line 9. We deploy with Helm and I have
-attached `deploy/prod-values.yaml` from the production release. I noticed
-something when I put the two side by side and I would like a second opinion
-before I say it out loud on a Monday.
+and attached every file they sit in, plus our scanner config and the production
+Helm values, because two of these modules read their configuration at boot and
+I did not want you guessing at what is actually set in production.
 
 Give me a review I can paste into the PR. Joel is nine days in and did the work
 he was asked to do, so wherever he was right, say he was right. Where something
@@ -32,15 +32,18 @@ one himself, not "ask me next time".
 
 ## Output Specification
 
-1. Write `docs/pr-1180-review.md` — a verdict for each suppression in the
-   inventory (keep as-is, keep but changed, or stay deleted), the reason, and
-   what has to be true before #1180 merges.
+1. Write `docs/pr-1180-review.md` — a verdict for every entry in the inventory
+   (keep as-is, keep but changed, or stay deleted), the reason for each, a
+   direct answer to each proposal on the thread, and what has to be true before
+   #1180 merges.
 2. Apply your decisions to the attached source files and to `.semgrep.yml`.
    Restore or rewrite whatever you decided comes back; leave deleted whatever
    you decided stays deleted.
 3. Write `docs/urgent.md` for anything in here that must not wait for the PR to
    land, naming the item and the first action.
-4. Do not modify the tests.
+4. Suppression comments and scanner configuration only. Do not change
+   application logic and do not change the tests — if code itself has to change,
+   put it in the urgent document and I will assign it.
 
 ## Input Files
 
@@ -63,34 +66,120 @@ through every one of them. Here is what I found:
 
 A suppression nobody can explain is the same as no rule at all, except it looks
 like coverage on a dashboard. I have removed all fourteen. The branch is red
-with 63 findings, which I think is the honest number and we should work it down
-rather than keep pretending it is zero.
+with 63 findings, which I think is the honest number.
 
 Happy to take this in pieces if that is easier to review.
+
+=============== FILE: docs/pr-1180-thread.md ===============
+# PR #1180 — review thread
+
+**priya.rao** (staff, owns the pipeline) — Right call deleting them, wrong call
+putting any of them back as comments. Comments in source are how we got into
+this: nobody can review fourteen things scattered across seven files, and for
+eighteen months nobody did. Whatever exceptions we still want, express them in
+`.semgrep.yml` under `paths.exclude` — the way we already handle `src/util`.
+One file, one owner, shows up in every diff, and a new hire can read the whole
+policy in thirty seconds without grepping. Do that and I will approve today.
+
+**t.okonkwo** — Or just fix the 63. It is a day of work and then there is
+nothing to argue about.
+
+**p.novak** — For what it is worth, the one in the acme client is the sandbox
+key from the 2024 integration work. It has never been a real credential. I
+would not hold the PR up over it.
+
+**joel.arrindell** — Happy either way. I would rather not re-add fourteen
+comments I cannot explain.
 
 =============== FILE: reports/suppression-inventory.md ===============
 # Suppression inventory — hollowpoint/ledger @ main (before #1180)
 
-Fourteen suppression comments, grouped. Findings counts are from the scan on
-Joel's branch with all fourteen removed (63 total).
+Fourteen suppression comments. Findings counts are from the scan on Joel's
+branch with all fourteen removed (63 total).
 
 | # | Location | Comment as written | Rule it silences | Findings if removed |
 |---|---|---|---|---|
-| 1 | tests/fixtures/stub-credentials.js:7 | `// nosemgrep: generic.secrets.security.detected-generic-api-key` | detected-generic-api-key | 1 |
-| 2-9 | src/proto/billing_pb.js (8 separate lines) | `// nosemgrep` (bare) | mixed; file is code-generated | 40 |
-| 10 | src/integrations/acme/client.js:9 | `// nosemgrep` (bare) | detected-generic-api-key | 1 |
-| 11 | src/api/upload.js:22 | `// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal` + 3 justification lines | path-join-resolve-traversal | 1 |
-| 12 | src/util/exec.js:14 | `// nosemgrep` (bare) | detect-child-process (and everything else on that line) | 2 |
-| 13-14 | src/api/upload.js:44, src/util/exec.js:31 | `// nosemgrep` (bare) | leftover-debugging | 18 |
+| 1 | tests/fixtures/stub-credentials.js:4 | `// nosemgrep: generic.secrets.security.detected-generic-api-key` | detected-generic-api-key | 1 |
+| 2-9 | src/proto/billing_pb.js (8 separate lines) | `// nosemgrep` (bare) | mixed | 40 |
+| 10 | src/integrations/acme/client.js:8 | `// nosemgrep` (bare) | detected-generic-api-key | 1 |
+| 11 | src/api/upload.js:9 | `// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal` + 1 line of explanation | path-join-resolve-traversal | 1 |
+| 12 | src/util/exec.js:14 | `// nosemgrep` (bare) | unrecorded | n/a — path excluded |
+| 13 | src/util/exec.js:34 | `// nosemgrep` (bare) | unrecorded | n/a — path excluded |
+| 14 | src/api/upload.js:24 | `// nosemgrep` (bare) | leftover-debugging | 20 |
 
 Notes gathered while pulling this together:
 
-- `src/proto/billing_pb.js` is emitted by `protoc` on every build; the header
-  says "DO NOT EDIT". The eight comments were hand-added in 2024 and the file
-  has been regenerated 200+ times since, so they survive only because whoever
-  added them patched the generator template.
-- #11 is the only one with any explanation attached to it at all.
-- #1's file header documents the value as a throwaway used by the auth stubs.
+- `src/util/` is in the exclude list in `.semgrep.yml`, added 2025-06-18 by
+  PR #742 (subject: "quieten exec noise"), so nothing under that path appears
+  in the 63 either way.
+- #11 is the only one of the fourteen with any explanation attached to it.
+- Scan command in CI: `semgrep ci --config p/owasp-top-ten --config p/javascript`.
+
+=============== FILE: .semgrep.yml ===============
+rules: []
+
+# Registry rulesets are passed on the command line; this file holds the path
+# configuration and our own rules when we get round to writing any.
+paths:
+  exclude:
+    - node_modules
+    - dist
+    - src/util
+
+=============== FILE: src/util/exec.js ===============
+'use strict';
+
+const { execFile, exec } = require('node:child_process');
+
+const ALLOWED = new Set(['pdftotext', 'qpdf']);
+
+function runTool(name, args) {
+  if (!ALLOWED.has(name)) throw new Error('tool not allowed: ' + name);
+  return new Promise((resolve, reject) => {
+    // Suppression removed by #1180; shown here as it was on main:
+    //   // nosemgrep
+    execFile(name, args, { timeout: 20000 }, (err, stdout) => {
+      if (err) return reject(err);
+      resolve(stdout);
+    });
+  });
+}
+
+// Added 2026-07-14 in #1104 for the ad-hoc report filters.
+function runRaw(command) {
+  return new Promise((resolve, reject) => {
+    exec(command, { timeout: 20000 }, (err, stdout) => {
+      if (err) return reject(err);
+      resolve(stdout);
+    });
+  });
+}
+
+function toolBanner() {
+  // Suppression removed by #1180; shown here as it was on main:
+  //   // nosemgrep
+  return 'tools: ' + [...ALLOWED].sort().join(', ');
+}
+
+module.exports = { runTool, runRaw, toolBanner, ALLOWED };
+
+=============== FILE: src/api/reports.js ===============
+'use strict';
+
+const { runRaw } = require('../util/exec.js');
+
+const REPORT_ROOT = '/var/lib/ledger/reports';
+
+// filter arrives on the query string of GET /v1/reports/:tenant/filtered.
+function buildFilterCommand(tenantId, filter) {
+  return 'qpdf ' + REPORT_ROOT + '/' + tenantId + '/*.pdf --filter=' + filter + ' -';
+}
+
+function runFilteredReport(tenantId, filter) {
+  return runRaw(buildFilterCommand(tenantId, filter));
+}
+
+module.exports = { buildFilterCommand, runFilteredReport, REPORT_ROOT };
 
 =============== FILE: src/integrations/acme/client.js ===============
 'use strict';
@@ -101,7 +190,7 @@ const ACME_BASE = 'https://api.acme-billing.example.com/v2';
 
 // Suppression removed by #1180; shown here as it was on main:
 //   // nosemgrep
-const ACME_TOKEN = 'acme_live_2f8d41b09ce74a7f9db35c1e';
+const ACME_TOKEN = process.env.ACME_TOKEN || 'acme_live_2f8d41b09ce74a7f9db35c1e';
 
 function post(path, body) {
   return new Promise((resolve, reject) => {
@@ -139,9 +228,7 @@ integrations:
     secretRef: ledger-stripe-secret
 
 =============== FILE: tests/fixtures/stub-credentials.js ===============
-// Fixtures for the auth stub server. Nothing here is real, nothing here is
-// ever sent off-box: the stub server answers on 127.0.0.1 and is torn down in
-// the test teardown. Do not reuse these values anywhere outside tests/.
+// Fixtures for the auth stub server, which answers on 127.0.0.1 only.
 
 // Suppression removed by #1180; shown here as it was on main:
 //   // nosemgrep: generic.secrets.security.detected-generic-api-key
@@ -165,9 +252,7 @@ function resolveUploadPath(tenantId, filename) {
   const base = path.join(UPLOAD_ROOT, tenantId);
   // Suppression removed by #1180; shown here as it was on main:
   //   // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
-  //   // Reason: filename is validated by assertSafeName above
-  //   // Reviewer: p.novak@hollowpoint.example (2025-09-01)
-  //   // Expires: 2026-03-01
+  //   // filename is checked below — p.novak, revisit before 2026-03-01
   const rel = path.relative(path.resolve(base), path.resolve(base, filename));
   if (rel === '' || rel.startsWith('..') || path.isAbsolute(rel)) {
     throw new Error('path escapes tenant root');
@@ -183,38 +268,9 @@ function describeUpload(tenantId, filename, bytes) {
 
 module.exports = { resolveUploadPath, describeUpload, UPLOAD_ROOT };
 
-=============== FILE: src/util/exec.js ===============
-'use strict';
-
-const { execFile } = require('node:child_process');
-
-const ALLOWED = new Set(['pdftotext', 'qpdf']);
-
-function runTool(name, args) {
-  if (!ALLOWED.has(name)) throw new Error('tool not allowed: ' + name);
-  return new Promise((resolve, reject) => {
-    // Suppression removed by #1180; shown here as it was on main:
-    //   // nosemgrep
-    execFile(name, args, { timeout: 20000 }, (err, stdout) => {
-      if (err) return reject(err);
-      resolve(stdout);
-    });
-  });
-}
-
-function toolBanner() {
-  // Suppression removed by #1180; shown here as it was on main:
-  //   // nosemgrep
-  return 'tools: ' + [...ALLOWED].sort().join(', ');
-}
-
-module.exports = { runTool, toolBanner, ALLOWED };
-
 =============== FILE: src/proto/billing_pb.js ===============
 // Code generated by protoc-gen-js. DO NOT EDIT.
 // source: billing/v2/billing.proto
-// Regenerated on every build by `npm run proto`. 4,118 lines in the real file;
-// the first few are reproduced here.
 
 /* eslint-disable */
 var jspb = { Message: function () {} };
@@ -231,16 +287,6 @@ proto.billing.v2.Invoice = function (opt_data) {
 proto.billing.v2.Invoice.prototype.getToken = function () {
   return jspb.Message.getFieldWithDefault(this, 7, '');
 };
-
-=============== FILE: .semgrep.yml ===============
-rules: []
-
-# Registry rulesets are passed on the command line; this file exists for the
-# path configuration and for custom rules when we get round to writing any.
-paths:
-  exclude:
-    - node_modules
-    - dist
 
 =============== FILE: test/upload.test.js ===============
 const test = require('node:test');
@@ -265,6 +311,37 @@ test('describeUpload carries the resolved path', () => {
   const d = describeUpload('t_42', 'a.pdf', 120);
   assert.strictEqual(d.bytes, 120);
   assert.strictEqual(d.path, path.join(UPLOAD_ROOT, 't_42', 'a.pdf'));
+});
+
+=============== FILE: test/exec.test.js ===============
+const test = require('node:test');
+const assert = require('node:assert');
+const { runTool, toolBanner, ALLOWED } = require('../src/util/exec.js');
+
+test('runTool rejects a tool outside the allowlist', () => {
+  assert.throws(() => runTool('rm', ['-rf', '/tmp/x']), /tool not allowed/);
+});
+
+test('the banner lists the allowed tools in order', () => {
+  assert.strictEqual(toolBanner(), 'tools: pdftotext, qpdf');
+});
+
+test('the allowlist is exactly the two pdf tools', () => {
+  assert.deepStrictEqual([...ALLOWED].sort(), ['pdftotext', 'qpdf']);
+});
+
+=============== FILE: test/reports.test.js ===============
+const test = require('node:test');
+const assert = require('node:assert');
+const { buildFilterCommand, REPORT_ROOT } = require('../src/api/reports.js');
+
+test('the filter command points at the tenant report directory', () => {
+  const cmd = buildFilterCommand('t_42', 'invoices');
+  assert.ok(cmd.startsWith('qpdf ' + REPORT_ROOT + '/t_42/'));
+});
+
+test('the filter value is placed into the command as given', () => {
+  assert.match(buildFilterCommand('t_42', 'a b'), /--filter=a b/);
 });
 
 =============== FILE: package.json ===============

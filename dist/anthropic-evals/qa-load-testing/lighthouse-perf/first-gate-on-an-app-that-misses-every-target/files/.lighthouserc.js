@@ -1,25 +1,30 @@
-// Collect-only since 2026-06-18. No assertions yet — that is the open work.
+// TODO(marek): fill the remaining routes from perf/baseline.csv - same shape as home
 module.exports = {
   ci: {
     collect: {
       url: [
-        'http://localhost:4000/',
-        'http://localhost:4000/pricing',
-        'http://localhost:4000/app/dashboard',
-        'http://localhost:4000/app/reports',
-        'http://localhost:4000/app/invoices/new',
-        'http://localhost:4000/share/9f2c1ad4',
+        'http://localhost:5173/',
       ],
       numberOfRuns: 3,
       settings: {
-        preset: 'desktop',
+        preset: 'mobile',
         chromeFlags: '--no-sandbox',
       },
-      startServerCommand: 'npm run start',
-      startServerReadyPattern: 'listening on',
+      startServerCommand: 'npm run preview',
+      startServerReadyPattern: 'preview ready',
     },
-    upload: {
-      target: 'temporary-public-storage',
+    assert: {
+      assertMatrix: [
+        {
+          matchingUrlPattern: 'localhost:5173/$',
+          assertions: {
+            'largest-contentful-paint': ['error', { maxNumericValue: 1.9 }],
+            'total-blocking-time': ['error', { maxNumericValue: 120 }],
+            'cumulative-layout-shift': ['error', { maxNumericValue: 0.02 }],
+          },
+        },
+      ],
     },
+    upload: { target: 'temporary-public-storage' },
   },
 };

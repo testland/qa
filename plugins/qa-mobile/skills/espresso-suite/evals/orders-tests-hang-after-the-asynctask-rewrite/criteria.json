@@ -1,46 +1,41 @@
 {
-  "context": "Predicted baseline failure: the agent writes a competent-looking idle-tracking class, keeps it in `androidTest` next to the one that is already there, drives the counter from the test the way the supplied file does, and leaves `app/build.gradle` untouched. That answer cannot work and in most shapes does not even build. The count has to move where the network work actually starts and finishes - the two `enqueue` call sites in `OrdersRepository`, which is main-source-set code - and the moment production code names an idle-tracking type, the module needs that library on a main-source-set configuration. The supplied `app/build.gradle` carries the framework only under `androidTestImplementation`, so an agent that wires the counter into the repository without adding the dependency to `implementation` or `debugImplementation` has produced a module that does not compile, and is likely to report it as fixed. Two further planted defects push the same way. `registerIdleTransitionCallback` has an empty body, so the framework registers interest in a transition nobody ever announces - which is exactly why every test now sits for 26 seconds and throws a timeout instead of failing fast, and a rewrite that forgets to store and fire the callback reproduces the hang verbatim. And the resource is incremented once in `@Before` and decremented nowhere, which is why a test that touches no network at all, `showsEmptyStateForNewAccount`, flipped from passing in build 4471 to timing out in build 4502. The framing pushes hard the other way: a three-second wait that was green for years and a timeout bump that would hide the symptom on a fast emulator are both offered ready-made. The interceptor timings rule the wait out on their own - callbacks land 3-9 ms after a 612 ms response, so nothing here is slow, it is invisible.",
+  "context": "Two failures with two different causes, presented together so they look like one async problem with one async answer. Predicted baseline failure: the agent treats both as the same thing, repairs or replaces the idling resource, and declares the hang fixed - because 'network work the framework cannot see' is the reflexive reading of any post-AsyncTask breakage. It does not survive the evidence. The hang is not a network wait at all: `OrderStatusTicker.run` calls `handler.post(this)` on the main looper with no delay, so the main message queue always holds a message that is due, the logcat shows 8931 ticks at 2-4 ms spacing, and the exception names `MAIN_LOOPER_HAS_IDLED` rather than any resource - a condition no idling resource, longer timeout or sleep can satisfy, because the fault is that the screen never goes quiet. The fast failure is the network one, and the reason Priya's class made no difference is subtle and split across two files: `OrdersListTest.setUp` constructs `NetworkIdlingResource()` and registers that object, while `OrdersRepository` increments and decrements the separate instance held in its companion, so the registered resource is permanently idle. There is a third defect in the same file - neither `onFailure` branch decrements, and the gateway shows one seeded order's detail returning 404 - which a fix that only corrects the instance will convert from a silent no-op into a permanent hang.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Idle tracking reachable from the code that does the fetching",
-      "max_score": 28,
-      "description": "The count is incremented and decremented at the `enqueue` call sites in `OrdersRepository` - or by bridging OkHttp's dispatcher at the client - and `app/build.gradle` is changed so that main-source-set code can legally reference the type, by putting the idling library on `implementation` or `debugImplementation` rather than only on `androidTestImplementation`. Leaving `app/build.gradle` unchanged while production code names an idle-tracking type scores zero: the module does not compile, and an answer that claims green tests on top of that is worse than one that changes nothing. Keeping the increment in the test's `@Before`, or anywhere else the test drives by hand, also scores zero - the test cannot know when a dispatcher thread has delivered a callback, which is the whole failure. Moving the class into the main source set but leaving the repository unwired scores at most half."
+      "name": "MUST NOT answer the twenty-six second hang with a wait, a longer timeout or an idling resource",
+      "max_score": 30,
+      "description": "Giving the two failures the same cause, or wrapping the ticker in an idling resource, scores zero for this criterion regardless of the rest. Full marks require the diagnosis and the repair: `OrderStatusTicker` reposts itself to the main handler with no delay, so the main message queue is never empty of work that is due now and the framework's first synchronisation condition can never be met - which is why the exception names the looper and not a resource - and the ticker is fixed so it runs on the cadence the migration note describes rather than continuously. Naming the ticker as the cause but leaving it reposting immediately scores at most half."
     },
     {
-      "name": "Idle transition is actually announced",
-      "max_score": 20,
-      "description": "The replacement stores the callback handed to `registerIdleTransitionCallback` and invokes its idle-transition method when the in-flight count falls to zero. Leaving that method with an empty body scores zero - it is the defect that turned a fast failure into a 26-second timeout, and reproducing it fixes nothing. Storing the callback but never calling it, or calling it on every decrement rather than on the transition to zero, scores at most half. Using the framework's own counting implementation instead of a hand-written class is full marks, since it announces the transition itself."
+      "name": "The registered resource is the one production actually moves",
+      "max_score": 24,
+      "description": "Full marks require all three: the test registers the same instance `OrdersRepository` increments rather than constructing its own, both `onFailure` branches decrement so the 404 on `GET /v1/orders/NW-10091` cannot strand the counter, and the resource is unregistered after each test. Leaving `setUp` constructing and registering a fresh `NetworkIdlingResource()` scores zero. Correcting the instance without the failure-path decrements scores at most half, since that change turns a resource that never blocked into one that blocks forever on the seeded 404."
     },
     {
-      "name": "MUST NOT wait or raise the timeout",
-      "max_score": 20,
-      "description": "MUST NOT use `Thread.sleep`, `SystemClock.sleep`, a polling or retry loop, or any fixed-duration wait, and MUST NOT raise the idle timeout through an idling policy or any equivalent. Doing either scores zero for this criterion however sound the rest of the answer is. Recommending either as a fallback or a stopgap scores at most half. Full marks also require rejecting both proposals on the evidence rather than on principle: the interceptor timings show a 612 ms response with the callback delivered 3-9 ms later, so neither test is waiting on anything slow, and a longer wait only makes the hang longer."
-    },
-    {
-      "name": "Every completion path counted down",
+      "name": "MUST NOT introduce fixed waits or raise any timeout",
       "max_score": 14,
-      "description": "The decrement happens on the failure path as well as the success path - both callbacks of both `enqueue` blocks - and on the branch in `loadOrderDetail` that early-returns when the response body is null. Counting down only on success scores zero here: the interceptor log already records a 404 among the three calls, so the first failed or empty response wedges every subsequent interaction at the timeout, which is the bug that is already in the file."
+      "description": "No `Thread.sleep`, no polling or retry loop, and no change to the idling timeout policy anywhere in the delivered code. Any of those scores zero, including a sleep kept only in the test that hangs, and including a shorter sleep than the three seconds proposed."
     },
     {
-      "name": "Collateral damage to the passing test noticed",
+      "name": "Explanation separates what the framework tracks from what it does not",
       "max_score": 12,
-      "description": "The answer notices that `showsEmptyStateForNewAccount` passed in build 4471 and timed out in build 4502 although it touches no network, attributes it to the unconditional increment in `@Before`, and delivers it green again without editing the test body. An answer that leaves that test failing, or that treats its failure as unrelated to Priya's change, scores zero."
+      "description": "`docs/orders-async-fix.md` tells a reviewer why the old code was green without any of this - the framework waited on the message queue and on the task type the migration deleted - and why one of the two remaining failures is a gap in what it can see while the other is the opposite, work it can see and that never ends. An explanation that says only 'the framework needs help with background work' scores at most half. An explanation that attributes the hang to emulator slowness or network latency scores zero."
     },
     {
-      "name": "One shared instance, registered and unregistered",
-      "max_score": 12,
-      "description": "A single instance is shared between the production call sites and the test, registered before the interactions that need it and unregistered afterwards. The supplied file constructs a new instance per test and never unregisters; keeping either of those, or having the test register one instance while production code counts against a different one, scores at most half. Registering nothing at all scores zero."
+      "name": "Both proposals answered",
+      "max_score": 8,
+      "description": "Priya's sleep and Karim's ninety-second timeout each get an explicit verdict with the reason it does not hold for these particular failures. Addressing only one, or rejecting both without reference to what the evidence shows, scores at most half."
     },
     {
-      "name": "Explains what the framework does and does not track",
-      "max_score": 10,
-      "description": "`docs/orders-async-fix.md` names the synchronisation conditions the framework checks unaided - an empty UI message queue, no running `AsyncTask` instances, plus any registered idle resources - and therefore why deleting the last `AsyncTask` removed the only thing it could see here. A write-up that calls the tests 'flaky' or 'racy' without naming what the framework tracks scores at most half; one that claims the framework waits for network calls on its own scores zero."
+      "name": "Passing test and assertions left alone",
+      "max_score": 6,
+      "description": "`showsEmptyStateForNewAccount` is not modified and still passes, and no assertion in the class is deleted, relaxed or replaced with a presence check. Any change to the passing test, or any weakened assertion, scores zero."
     },
     {
-      "name": "Assertions left intact",
-      "max_score": 5,
-      "description": "MUST NOT weaken, delete, or loosen any assertion - the `isDisplayed()` checks on `order_row_0` and `empty_orders_message`, the `withText(\"Refunded\")` check on `status_badge`, or the click on `order_row_2`. Any such change scores zero here."
+      "name": "Deliverable produced",
+      "max_score": 4,
+      "description": "`docs/orders-async-fix.md` exists and addresses the two failures separately. A single combined explanation scores at most half."
     }
   ]
 }

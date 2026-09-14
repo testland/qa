@@ -9,8 +9,8 @@ Response time, end to end, from the gateway span:
 | p95        | 1430 |
 | p99        | 3380 |
 
-Dashboard: `assistant / latency`. Alert rule `assistant-p95-latency` exists and
-is currently muted for staging.
+Dashboard: `assistant / latency`. Alert rule `assistant-p95-latency` exists and is
+currently muted for staging.
 
 Spend, from the provider billing export joined to conversation ids:
 

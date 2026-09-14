@@ -59,7 +59,6 @@ export const resolvers = {
   },
 
   Viewer: {
-    // Added on priya/orders-field.
     orders: async (parent, { first }, ctx) => {
       if (first < 1 || first > 50) {
         throw new GraphQLError('first must be between 1 and 50', {

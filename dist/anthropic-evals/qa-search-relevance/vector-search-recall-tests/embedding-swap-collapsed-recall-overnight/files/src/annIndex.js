@@ -1,8 +1,8 @@
 'use strict';
 
-// Model of the vendor's cell index, written from their docs. Every point lands
-// in exactly one cell (nearest centroid); a query scans only the nProbe cells
-// whose centroids are closest to it.
+// Model of the vendor's cell index, written from their documentation. A point
+// lands in the cell whose centroid it is closest to; a query scores only the
+// points in the nProbe cells nearest to it. Similarity is cosine throughout.
 
 function dot(a, b) {
   let s = 0;
@@ -30,6 +30,7 @@ function createIndex({ centroids, nProbe = 2 }) {
       .map(([i]) => i);
 
   return {
+    cellCount: () => centroids.length,
     size: () => cells.reduce((n, c) => n + c.length, 0),
     comparisons: () => comparisons,
     resetCounters: () => { comparisons = 0; },

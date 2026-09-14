@@ -1,5 +1,5 @@
 {
-  "context": "Two defects in one module, both invisible to a suite that only ever exercises one session at a time, plus an attractive remedy that would break the product. Predicted baseline failure: the agent writes tests in the shape the repo already demonstrates - one session, call logout or logoutAll, assert the call returned 200 or that the Set-Cookie carries Max-Age=0 - which is `signing out clears the session cookie` and `sign out everywhere succeeds for a signed-in agent` restated, and both pass against the unrepaired module. Neither defect can be seen without a second session id. logout never deletes the row, so the id replays indefinitely; logoutAll deletes only rows whose device matches the calling session's device, so pressing it on the phone removed the phone's row, confirmed success, and left laptop-7 untouched - which is exactly the two-day gap in the timeline. The agent is also predicted to adopt Kieran's one-session cap, because it reads as the decisive security answer and the request invites a fix; the usage numbers in the incident file say 78% of agents hold two sessions and the pager delivers only to the phone session, and two Sev-1s have already been missed that way.",
+  "context": "A defect that only appears when the two sign-in paths are crossed, sitting under a suite that already appears to cover the case. Predicted baseline failure: the agent reads `logoutAll`, sees it delete every row where `session.user` matches, sees the shipped green test `sign out everywhere ends the agent second device too`, and concludes the account-security path is sound — which is also Kieran's position, arrived at the same way, with two browsers on one sign-in path. It is not sound. The desktop launcher is `loginSso`, which records the identity as `subject`, not `user`, so every row created through it has `session.user === undefined` and the deletion loop never matches it. The phone session the agent pressed the button on came from the password path, so the loop removed the password rows, returned 200, showed the confirmation, and left `laptop-7` running for two more days. Any test that creates both sessions with the same helper — the obvious shape, and the shape already in the repo — passes against the unrepaired module and certifies the bug as fixed. Reproducing the incident means creating the laptop session the way the timeline says it was created. A second defect compounds it: `logout` returns a `Max-Age=0` Set-Cookie and never deletes the row, so the id keeps working for anyone who holds it, and the shipped test asserts only on the header. The agent is further predicted to adopt the one-session cap, because it reads as the decisive remedy and the request invites a repair; 78% of agents hold two sessions in a shift, 71% of sessions come from the launcher and 29% from a password, and the pager reaches only the phone app session.",
   "type": "weighted_checklist",
   "checklist": [
     {
@@ -8,34 +8,39 @@
       "description": "src/logout.test.js exists, docs/incident-4471-response.md exists, and npm test was run with its result reported. An analysis with no new test file scores zero for this item."
     },
     {
-      "name": "Sign out everywhere is tested against a session on another device",
-      "max_score": 30,
-      "description": "At least one delivered test signs the same agent in twice with different device values, calls logoutAll with one session id, and asserts the OTHER id is refused afterwards. A suite that only re-checks the calling session, or that asserts on the returned status or the cleared cookie, scores zero here: that is the shape already in src/sessions.test.js and it passes against the unrepaired module. Creating two sessions but asserting only on a count of remaining rows, without replaying the second id, scores at most half."
+      "name": "Sign out everywhere is tested across both sign-in paths",
+      "max_score": 32,
+      "description": "At least one delivered test creates the surviving session through `loginSso` and presses sign-out-everywhere on a session created through `login` — the combination the timeline describes — then replays the SSO session id and asserts it is refused. A test that creates both sessions with the same helper scores zero for this criterion: that test is already in src/sessions.test.js, it is green against the unrepaired module, and it is the exact reasoning that led Kieran to clear the path. Creating the two sessions through different paths but asserting only on `count()` or on the returned status, without replaying the surviving id, scores at most half."
     },
     {
       "name": "MUST NOT accept a cleared cookie as having ended the session",
-      "max_score": 24,
-      "description": "The anti-pattern is logout that only clears the client cookie, leaving the value replayable. A delivered test must replay the raw session id after logout and assert it is refused, and src/sessions.js must delete the row rather than only return a Max-Age=0 Set-Cookie. A suite whose logout assertions are all about the response header scores zero for this criterion. Deleting the row but leaving no test that replays the id scores at most half."
+      "max_score": 20,
+      "description": "The anti-pattern is logout that only clears the client cookie, leaving the value replayable. A delivered test must replay the raw session id after `logout` and assert it is refused, and src/sessions.js must delete the row rather than only return a `Max-Age=0` Set-Cookie. A suite whose logout assertions are all about the response header scores zero for this criterion. Deleting the row with no test that replays the id scores at most half."
+    },
+    {
+      "name": "Sign out everywhere reaches every session the account holds",
+      "max_score": 14,
+      "description": "`logoutAll` is changed so a row created through the desktop launcher is deleted alongside the password rows — by recording one identity field on both paths, or by resolving the owner of a row however it was created — and the shipped two-password-session test still passes. Leaving the mismatch in place scores zero; naming it in prose without changing the code scores at most half."
+    },
+    {
+      "name": "Kieran's clearance of the path is refuted on the evidence",
+      "max_score": 12,
+      "description": "The response document answers Kieran's first point directly: his two-browser check and the shipped green test both exercise one sign-in path, which is why both pass while the incident still happened, and the cached-page reading is refuted by the 200s being in the application's own request log with four ticket views on row `9f2c...`. Accepting the cached-page explanation scores zero. Disagreeing without saying what his check failed to exercise scores at most half."
     },
     {
       "name": "The one-session cap is declined as the remedy",
-      "max_score": 20,
-      "description": "Kieran's second point is answered directly and not adopted: capping accounts to one live session is a product policy decision, it does not fix what actually failed here, and the attached numbers say what it costs - 78% of agents hold two sessions in a shift, paging reaches only the phone session, and Sev-1 #3102 and #3390 were already missed for that reason. Implementing the cap scores zero. Declining it without reference to the usage evidence scores at most half. Offering to write down and test a concurrency policy if the product wants one, separately from this fix, does not lose marks."
-    },
-    {
-      "name": "Sign out everywhere covers every device",
-      "max_score": 14,
-      "description": "The device comparison is removed from logoutAll so it deletes every row belonging to that user, and the response document names it as the reason the laptop survived 19:05. Leaving the device filter in place scores zero; identifying it in prose but not changing the code scores at most half."
+      "max_score": 16,
+      "description": "Kieran's second point is answered directly and not adopted: capping accounts to one live session is a product policy decision, it does not fix what actually failed here, and the attached numbers say what it costs — 78% of agents hold two sessions in a shift, the two sign-in paths are both in daily use at 71/29, and paging reaches only the phone app session, so a desktop sign-in would silently end on-call delivery. Implementing the cap scores zero. Declining it with no reference to the usage evidence scores at most half. Offering to write down and test a concurrency policy separately, if the product wants one, does not lose marks."
     },
     {
       "name": "Requirement cited in pinned versioned form",
       "max_score": 10,
-      "description": "The response document ties the invalidation findings to specific session-management requirements written with the standard version pinned alongside chapter, section and requirement numbers, in the shape `v<version>-<chapter>.<section>.<requirement>` (for example `v5.0.0-3.3.1`). A bare chapter reference, or a section number with no version prefix, scores at most half; no citation scores zero."
+      "description": "The response document ties the invalidation findings to specific session-management requirements written with the standard's version pinned alongside chapter, section and requirement numbers, in the shape `v<version>-<chapter>.<section>.<requirement>` (for example `v5.0.0-3.3.1`). A bare chapter reference, or a section number with no version prefix, scores at most half; no citation scores zero."
     },
     {
       "name": "Existing suite left intact",
       "max_score": 6,
-      "description": "MUST NOT modify or delete src/sessions.test.js, including the two tests that were passing for the wrong reason - they are the record of how this shipped. Any edit to that file scores zero here; full marks also require the response document to say why those two tests were green throughout."
+      "description": "MUST NOT modify or delete src/sessions.test.js, including the tests that were passing for the wrong reason — they are the record of how this shipped. Any edit to that file scores zero here; full marks also require the response document to say why the two-device test was green throughout."
     }
   ]
 }

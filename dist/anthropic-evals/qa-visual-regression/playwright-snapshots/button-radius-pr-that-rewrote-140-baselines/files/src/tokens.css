@@ -1,10 +1,17 @@
 :root {
-  --color-accent: #3b5bdb;
-  --color-surface: #ffffff;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 16px;
-  --radius-button: 8px;   /* was 4px - FIG-882 */
+  --radius-button: 8px;
   --radius-card: 12px;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --radius-input: 6px;
+  --color-accent: #2f6bff;
+  --space-gutter: 24px;
+}
+
+.btn {
+  border-radius: var(--radius-button);
+  padding: 8px 16px;
+  background: var(--color-accent);
+}
+
+.card {
+  border-radius: var(--radius-card);
 }

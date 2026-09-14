@@ -8,10 +8,10 @@ struct AccountSummaryView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(balanceFormatted)
                 .font(.largeTitle)
-                .accessibilityLabel("balance_label")            // #1880
+                .accessibilityLabel("balance_label")
 
             Button(LocalizedStringKey("accounts.transfer.button"), action: onTransferTapped)
-                .accessibilityLabel("open_transfer_button")     // #1880
+                .accessibilityLabel("open_transfer_button")
         }
         .padding()
     }

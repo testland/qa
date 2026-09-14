@@ -17,17 +17,20 @@ now, on every run, and for the first time I can predict what I will get out of a
 red build.
 
 Then run 9042 happened, and it is attached. Six failing tests, a green check, and
-the PR merged forty minutes later by someone who had no reason to doubt it. The
-last step in that job is called "Fail the job if anything failed", and the log
-says it was skipped. That step exists for precisely this run and precisely this
-merge and it did not execute, and I cannot work out why from staring at the YAML.
+the PR merged forty minutes later by someone who had no reason to doubt it.
 
-What I want out of this: a red suite produces a red check, and the artifacts and
-the coverage push keep happening on red runs, because losing those is what we
-were fixing in the first place. While you are in there I also want a written
-position on every step in that job - which of them should be running after a red
-suite and which should not. I have never seen that written down and after 9042 I
-do not trust my own read of it.
+The last step in that job is called "Fail the job if a suite failed". Priya did
+not leave it vague - she gave both suite steps an `id` and wrote the condition
+against those two ids by name, which is exactly what I would have done, and I
+have read it four times without finding the mistake. The log for 9042 says that
+step was skipped. Six failing tests in the step directly above it, a condition
+that names that step, and it did not run.
+
+What I want out of this: a red suite produces a red check. The artifacts and the
+coverage push keep happening on red runs, because losing those is what we were
+fixing in the first place. And I want it written down why 9042 came out green,
+because right now three people on this team have three different theories and one
+of them is going to re-introduce this in six weeks.
 
 Do not touch `.github/workflows/lint.yml`; another team owns that file and we
 have a standing agreement not to edit each other's workflows. Do not change what
@@ -35,10 +38,12 @@ either suite asserts - if a test is wrong that is a separate conversation.
 
 ## Output Specification
 
-1. Rewrite `.github/workflows/test.yml`.
-2. Write `docs/ci-step-policy.md`: a row per step of the `test` job saying
-   whether that step runs after a red suite and why, plus what the check on run
-   9042 would have reported once your change is in.
+1. Rewrite `.github/workflows/test.yml`. Both suite steps keep their
+   `continue-on-error` setting - payments signed off on the two suites running
+   independently of each other and I am not reopening that with them.
+2. Write `docs/ci-run-9042.md`: why the check on run 9042 read "Successful", and
+   what that same run would have posted as its check, and what would and would
+   not have been published off it, once your change is in.
 3. Leave `.github/workflows/lint.yml`, `test/`, `contract/` and `src/` exactly as
    they are.
 
@@ -101,8 +106,8 @@ jobs:
         env:
           REGISTRY_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Fail the job if anything failed
-        if: failure()
+      - name: Fail the job if a suite failed
+        if: steps.unit.conclusion == 'failure' || steps.contract.conclusion == 'failure'
         run: exit 1
 
 =============== FILE: .github/workflows/lint.yml ===============
@@ -156,11 +161,26 @@ Conclusion: success
       pushed ghcr.io/ledger/ledger-api:pr-714
   Update the :latest tag ............... success  0m06s
       ghcr.io/ledger/ledger-api:latest -> 4e91c07
-  Fail the job if anything failed ...... skipped
+  Fail the job if a suite failed ....... skipped
 
 Artifacts: test-results (1.6 MB)
 Check posted on #714: test - Successful in 4m12s
 PR #714 merged 03 Sep 2026 12:08 UTC by @rlowell
+
+=============== FILE: ci/registry-notes.md ===============
+# ghcr.io/ledger/ledger-api - who pulls what
+
+| Tag         | Pulled by                                                      |
+|-------------|----------------------------------------------------------------|
+| `pr-<n>`    | Reviewers, by hand, to poke at a branch. Nothing polls it.      |
+| `:latest`   | The staging cluster, on a ten-minute reconcile loop. Also the   |
+|             | `ledger-cli` install script's default, and the two internal     |
+|             | services that bring us up in their docker-compose files.        |
+
+Whatever `:latest` points at is running in staging within ten minutes and is
+what a new engineer gets when they follow the setup guide. It is moved by
+`scripts/promote-latest.sh`, which retags the image already pushed for this
+commit; it has no checks of its own.
 
 =============== FILE: package.json ===============
 {

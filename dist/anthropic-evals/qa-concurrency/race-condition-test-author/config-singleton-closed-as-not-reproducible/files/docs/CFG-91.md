@@ -14,10 +14,9 @@ After that window every handler on the pod is fine, indefinitely.
 ## History
 
 - 2026-07-14 - opened, 6 occurrences on the x86 fleet over two months.
-- 2026-08-21 - @jharlan: "Wrote ConfigRegistryStressTest. 32 threads, 1,000,000
-  iterations each, checks the registry is fully populated on every call. Ran
-  the suite 200 consecutive times on the CI fleet. Zero failures out of 200.
-  Closing as not reproducible."
+- 2026-08-21 - @jharlan: "Wrote ConfigPublicationTest against the first-access
+  path. 50,000,000 samples in 41 minutes, nothing interesting, nothing failed.
+  Report attached. Closing as not reproducible."
 - 2026-09-02 - reopened. Graviton (arm64) migration began 2026-09-01.
 - 2026-09-11 - 41 occurrences in six weeks. **All 41 on the arm64 node pool.
   None on the x86 pool in the same window.** Same traffic mix on both.
@@ -26,5 +25,4 @@ After that window every handler on the pod is fine, indefinitely.
 
 - Every occurrence is within 400ms of the pod's first request.
 - The JVM is 21.0.4 on both pools. Same image, same flags.
-- @jharlan: "Same test, run long enough on arm64, will settle this either way.
-  Give me a hundred million iterations overnight."
+- @jharlan: "Same harness, eight hours on arm64, settles it either way."

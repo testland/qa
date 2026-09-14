@@ -22,7 +22,7 @@ function recordLatency(timer, budgetMs) {
 
 // Three regional collectors ship rows in; the auditors read them in one order.
 function mergeCollectorRows(...batches) {
-  return batches.flat().sort((a, b) => Date.parse(a.observedAt) - Date.parse(b.observedAt));
+  return batches.flat().sort((a, b) => a.observedAt.localeCompare(b.observedAt));
 }
 
 module.exports = { startTimer, elapsedMs, recordLatency, mergeCollectorRows, wallClockMs };

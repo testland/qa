@@ -1,0 +1,19 @@
+$ pytest -n 4 --dist load tests/ --junitxml=reports/junit.xml
+============================= test session starts ==============================
+platform linux -- Python 3.12.7, pytest-8.3.3, pluggy-1.5.0
+plugins: xdist-3.6.1
+4 workers [11 items]
+
+[gw0] [  9%] PASSED tests/test_catalog.py::test_catalog_lists_products
+[gw2] [ 18%] PASSED tests/test_api_health.py::test_health_endpoint_is_up
+[gw1] [ 27%] PASSED tests/test_checkout.py::test_apply_promo
+[gw2] [ 36%] PASSED tests/test_api_health.py::test_version_endpoint_reports_a_build
+[gw3] [ 45%] PASSED tests/test_orders.py::test_reorder_puts_the_previous_lines_back_in_the_cart
+[gw0] [ 54%] PASSED tests/test_catalog.py::test_search_narrows_the_catalog
+[gw2] [ 63%] PASSED tests/test_api_health.py::test_catalog_api_returns_products
+[gw1] [ 72%] PASSED tests/test_checkout.py::test_place_order
+[gw0] [ 81%] PASSED tests/test_catalog.py::test_product_page_shows_stock
+[gw3] [ 90%] PASSED tests/test_orders.py::test_order_history_lists_past_orders
+[gw1] [100%] PASSED tests/test_checkout.py::test_guest_checkout_requires_an_email
+
+========================= 11 passed in 236.04s =================================

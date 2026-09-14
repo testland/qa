@@ -32,6 +32,8 @@ tests:
       campaign: Spring product update
       offer: new reporting dashboard
       audience: active admins
+    options:
+      transform: JSON.parse(output).subject
     assert:
       - type: levenshtein
         value: 'Your new reporting dashboard is live'

@@ -6,8 +6,7 @@ function backoffMs(attempt) {
   return Math.min(1000 * 2 ** attempt, 8000);
 }
 
-// A delivery that has already been charged must never be retried, whatever the
-// transport said.
+// A delivery that has already been charged must never be retried (INC-4402).
 function shouldRetry(delivery) {
   if (delivery.charged) return false;
   if (delivery.attempts >= MAX_ATTEMPTS) return false;

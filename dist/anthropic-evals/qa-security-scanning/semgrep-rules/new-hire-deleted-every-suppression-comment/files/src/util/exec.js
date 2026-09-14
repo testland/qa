@@ -1,6 +1,6 @@
 'use strict';
 
-const { execFile } = require('node:child_process');
+const { execFile, exec } = require('node:child_process');
 
 const ALLOWED = new Set(['pdftotext', 'qpdf']);
 
@@ -16,10 +16,20 @@ function runTool(name, args) {
   });
 }
 
+// Added 2026-07-14 in #1104 for the ad-hoc report filters.
+function runRaw(command) {
+  return new Promise((resolve, reject) => {
+    exec(command, { timeout: 20000 }, (err, stdout) => {
+      if (err) return reject(err);
+      resolve(stdout);
+    });
+  });
+}
+
 function toolBanner() {
   // Suppression removed by #1180; shown here as it was on main:
   //   // nosemgrep
   return 'tools: ' + [...ALLOWED].sort().join(', ');
 }
 
-module.exports = { runTool, toolBanner, ALLOWED };
+module.exports = { runTool, runRaw, toolBanner, ALLOWED };

@@ -1,4 +1,4 @@
-audio-engine 8.4-rc1 — instrumented build, 4h12m, 2,118 cases
+audio-engine 8.4-rc1 — instrumented build, 4h12m, 2,118 cases — job status: success
 
 ==================
 WARNING: ThreadSanitizer: data race (pid=20114)
@@ -31,4 +31,5 @@ SUMMARY: 2 data races reported, 0 in tests/playlist_*
 Note appended by @dchen 2026-09-08: re-ran tests/playlist_repro under the
 instrumented build for 40 minutes (roughly 900,000 double-tap iterations
 against Playlist::AddOnce). No warnings of any kind. Duplicates still appeared
-in 1,104 of those iterations.
+in 1,104 of those iterations. Read the code too — Contains() takes the lock,
+Append() takes the lock, nothing in there is unguarded.

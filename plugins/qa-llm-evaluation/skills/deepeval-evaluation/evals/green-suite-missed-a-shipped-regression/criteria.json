@@ -1,51 +1,51 @@
 {
-  "context": "A suite that cannot fail, where the repair has already been attempted in a way that looks like a repair and is not one. Predicted baseline failure: the agent accepts PR #219 at face value — three checks now say `assert evaluate(...)`, which reads like a gating assertion — converts only the two remaining bare `evaluate()` calls, and reports the file fixed. It is not. The batch entry point runs the metrics and returns a result object; asserting on that object asserts on its truthiness, not on whether any metric cleared its bar, so all five stay incapable of failing. The log settles it without naming it: on 2026-09-04 the three PR #219 checks recorded Faithfulness 0.22 and 0.31 against a threshold of 0.70 and the run still ends `6 passed` at exit 0, and the fourteen-night history spans the PR with 36 results before and 48 after, all reported passed. The only check in the file whose outcome tracks its metric is the April one, which asserts per case. A second, smaller defect sits underneath: one metric is pinned at threshold 0.0, so even a per-case assertion would pass a score of 0.19. The prompt supplies two decoys to be resisted — the on-call theory that the suite needs more refund phrasing, and the assurance that half of it is already gating.",
+  "context": "A suite that cannot fail, where the repair has already been attempted in a way that looks like a repair, is vouched for in the prompt, and is not one. Predicted baseline failure: the agent accepts PR #219 at face value — three checks now read `assert evaluate(...)`, which looks like a gating assertion and is described as one — converts only the two remaining bare `evaluate()` calls, and reports the file fixed. It is not. The batch entry point runs the metrics and hands back a result object; asserting on that object asserts on its truthiness, not on whether any metric cleared its bar, so all five stay incapable of failing whatever they score. Nothing in the attached run gives this away: the log is a bare `6 passed` with no per-case score anywhere, and the report says outright that the job has never produced one. The evidence is the capture file — on the night of the 4th the assistant answered 'within 60 days' to the refund question against help-centre text saying 30, that answer went into the suite unchanged, and the job still exited zero. Explaining that requires knowing which of the framework's two entry points decides a test, not reading a number off a log. The one check whose outcome does track its metric is the April one, and it measures whether the reply addresses the question, which a confident 60-day answer does — so even it would have stayed green. A second, smaller defect sits underneath: one metric is pinned at threshold 0.0, so even a per-case assertion on it would pass anything. The prompt supplies two decoys to be resisted — the on-call theory that the suite needs more refund phrasing, and the assurance that half of it is already gating.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 5,
-      "description": "The edited suite, the workflow, and docs/inc-4471-eval-postmortem.md all exist, and the postmortem is about the attached run rather than evals in general. A postmortem citing no line from reports/nightly-2026-09-04.md scores zero for this item."
-    },
-    {
       "name": "MUST NOT gate on the return value of the batch run",
       "max_score": 34,
-      "description": "MUST NOT leave any check gating through `assert evaluate(...)`, and MUST NOT leave a bare `evaluate(...)` whose return value is discarded. Each of the five non-April checks must instead assert per case through the per-test assertion entry point, or assert on the per-metric success flags carried by the returned result rather than on the object itself. Leaving any of the three PR #219 checks as `assert evaluate(...)` scores zero for this criterion regardless of the rest, because those are the ones the prompt asserts are already fixed. Converting only the two bare calls and keeping the PR #219 shape scores zero. Converting some but not all five scores at most half."
+      "description": "MUST NOT leave any check gating through `assert evaluate(...)`, and MUST NOT leave a bare `evaluate(...)` whose return value is discarded. Each of the five non-April checks must instead assert per case through the framework's per-test assertion entry point, or assert on the per-metric success flags carried by the returned result rather than on the object itself. Leaving any of the three PR #219 checks as `assert evaluate(...)` scores zero for this criterion regardless of the rest, because those are the ones the prompt vouches for. Converting only the two bare calls and keeping the PR #219 shape scores zero. Converting some but not all five scores at most half."
     },
     {
       "name": "PR #219 named as not gating",
       "max_score": 20,
-      "description": "The postmortem states that the three checks hardened on 2026-08-28 were no more capable of failing after the change than before, and grounds it in the log: those checks recorded 0.22 and 0.31 against a 0.70 bar inside a run that ended 6 passed at exit 0, and the fourteen-night history reports 48 passes after the PR with no failures. Reporting that half the suite was already gating scores zero. Noticing the remaining bare `evaluate()` calls while treating the PR #219 checks as sound scores zero. Asserting the PR was ineffective without pointing at a score, a threshold and the run outcome scores at most half."
+      "description": "The postmortem states that the three checks hardened on 2026-08-28 were no more capable of failing after that change than before, and says why: the assertion is on the object the batch run returns, not on any metric's verdict. Reporting that half the suite was already gating scores zero. Noticing the two remaining bare `evaluate()` calls while treating the PR #219 checks as sound scores zero. Asserting the PR was ineffective with no account of what the assertion is actually testing scores at most half."
     },
     {
-      "name": "Exit zero explained by the suite, not by the judge",
+      "name": "Exit zero explained against the captured answer",
       "max_score": 18,
-      "description": "The postmortem explains the green run as the outcome of the test never being connected to the metric verdict, and answers the question asked: on the night of the 4th a 60-day answer would have changed the recorded scores and nothing else, so the job would still have exited zero. Endorsing the on-call theory that the suite needs more refund cases scores zero, as does attributing the green runs to judge leniency, nondeterminism or model drift. Explaining it only as thresholds being too low scores at most half, since a 0.70 bar was already being missed."
+      "description": "The postmortem answers the question asked, using data/nightly-capture.json: the refund answer captured on the night of the 4th says 60 days against 30-day help-centre text, it reached the suite unchanged, and the job still exited zero because five of the six checks never consult a metric verdict. Full marks also require noting that the sixth — the April check — would not have caught it either, because it measures whether the reply addresses the question and a 60-day answer does. Endorsing the on-call theory that the suite needs more refund cases scores zero, as does attributing the green runs to judge leniency, nondeterminism or model drift. Explaining it only as thresholds being too low scores at most half."
     },
     {
       "name": "Workflow invokes the framework's own test runner",
       "max_score": 14,
-      "description": "The nightly step runs the suite through the framework's CLI runner rather than a bare `pytest tests/llm -q`. Leaving the bare pytest invocation unchanged scores zero. Keeping pytest and adding reporting or verbosity flags around it scores at most half."
+      "description": "The nightly step runs the suite through the framework's CLI runner rather than a bare `pytest tests/llm -q`, so the run produces the per-case record the report says has never existed. Leaving the bare pytest invocation unchanged scores zero. Keeping pytest and adding only verbosity flags scores at most half."
     },
     {
       "name": "Regression case for INC-4471 added",
       "max_score": 10,
-      "description": "A new case whose answer states a 60-day return window against the 30-day help-centre text, wired to a metric with a bar that answer would fail, and asserted the same way as the rest of the repaired file. A case added without a metric that could fail on it, or added with the batch entry point, scores zero. A case described only in the postmortem scores zero."
+      "description": "A new case whose answer states a 60-day return window against the 30-day help-centre text, wired to a metric that would fail on it, and asserted the same way as the rest of the repaired file. A case added with the batch entry point, or with no metric that could fail on it, scores zero. A case described only in the postmortem scores zero."
     },
     {
       "name": "MUST NOT leave a metric at threshold zero",
       "max_score": 8,
-      "description": "MUST NOT ship `FaithfulnessMetric(threshold=0.0)` on test_seat_removal_answer_is_grounded. It must be raised to a bar that the recorded 0.19 would fail. Leaving it at 0.0 scores zero here; raising it to a figure below 0.19 scores at most half."
+      "description": "MUST NOT ship `FaithfulnessMetric(threshold=0.0)` on test_seat_removal_answer_is_grounded. It must be raised to a real bar. Leaving it at 0.0 scores zero here; raising it somewhere the seat-removal answer would still comfortably clear scores at most half."
     },
     {
       "name": "MUST NOT reduce coverage",
       "max_score": 6,
-      "description": "MUST NOT delete, skip, xfail or parameterize away any of the six existing cases, and MUST NOT soften a case by editing its answer text into something the metric finds easier. Any removed or softened case scores zero here."
+      "description": "MUST NOT delete, skip, xfail or parameterize away any of the six existing checks, and MUST NOT soften a case by editing the captured answer text into something the metric finds easier. Any removed or softened case scores zero here, as does editing data/nightly-capture.json so the 60-day answer is no longer in it."
     },
     {
       "name": "The April control test is left alone",
       "max_score": 5,
-      "description": "test_refund_question_is_answered already asserts per case against a 0.70 bar. MUST NOT change its metric, its threshold, its case text, or route it through the batch entry point. Any modification to it scores zero here."
+      "description": "test_refund_question_is_answered already asserts per case against a 0.70 bar. MUST NOT change its metric, its threshold, its case, or route it through the batch entry point. Any modification to it scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The edited suite, the workflow, and docs/inc-4471-eval-postmortem.md all exist, and the postmortem is about the attached run rather than evals in general. A postmortem that never refers to the 2026-09-04 run or its capture scores zero for this item."
     }
   ]
 }

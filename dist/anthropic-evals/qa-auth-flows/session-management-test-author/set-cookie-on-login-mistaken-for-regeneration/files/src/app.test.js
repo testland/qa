@@ -41,6 +41,26 @@ test('login issues a session cookie whose id is not the anonymous one', () => {
   assert.notEqual(after, before);
 });
 
+test('changing the password issues a different session id', () => {
+  const app = createApp();
+  const loggedIn = app.handle({
+    method: 'POST',
+    path: '/login',
+    body: { user: 'p.nkemdirim', pass: 'fernwood!22' },
+  });
+  const sid = sidFrom(loggedIn);
+
+  const changed = app.handle({
+    method: 'POST',
+    path: '/account/password',
+    cookies: { sid },
+    body: { pass: 'fernwood!23' },
+  });
+
+  assert.equal(changed.status, 200);
+  assert.notEqual(sidFrom(changed), sid);
+});
+
 test('the dashboard is refused without a signed-in session', () => {
   const app = createApp();
   assert.equal(app.handle({ method: 'GET', path: '/dashboard' }).status, 401);

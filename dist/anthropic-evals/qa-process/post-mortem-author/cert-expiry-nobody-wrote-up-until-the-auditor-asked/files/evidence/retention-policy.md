@@ -8,6 +8,7 @@
 | scheduler job run history | last 20 runs per job, no time bound |
 | PagerDuty incident events | indefinite |
 | vendor status archive | indefinite |
+| vendor certificate upload audit | indefinite |
 | change calendar (CHG-*) | indefinite |
 | order and payment ledger | indefinite |
 

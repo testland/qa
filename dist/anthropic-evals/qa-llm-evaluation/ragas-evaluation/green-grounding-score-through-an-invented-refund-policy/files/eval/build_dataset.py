@@ -20,7 +20,6 @@ def build():
             {
                 "question": case["question"],
                 "answer": logged["answer"],
-                # passages the assistant cited underneath the answer
                 "contexts": [c["text"] for c in logged["citations"]],
             }
         )

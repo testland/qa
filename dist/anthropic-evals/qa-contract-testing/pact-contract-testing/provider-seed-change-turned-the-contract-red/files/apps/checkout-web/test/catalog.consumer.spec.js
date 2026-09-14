@@ -3,13 +3,14 @@
 const path = require('node:path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
-const { PactV3 } = require('@pact-foundation/pact');
+const { PactV3, MatchersV3 } = require('@pact-foundation/pact');
+const { like, eachLike } = MatchersV3;
 const { purchasable, cartTotalCents, toCartRow } = require('../src/cart');
 
 const provider = new PactV3({
   consumer: 'checkout-web',
   provider: 'catalog-api',
-  dir: path.resolve(__dirname, '..', 'pacts'),
+  dir: path.resolve('pacts'),
 });
 
 describe('catalog-api consumer', () => {
@@ -25,15 +26,13 @@ describe('catalog-api consumer', () => {
       .willRespondWith({
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-        body: [
-          {
-            id: 101,
-            name: 'Aeron Chair',
-            priceCents: 129900,
-            availability: 'in_stock',
-            sku: 'AER-B2-GR',
-          },
-        ],
+        body: eachLike({
+          id: like(101),
+          name: like('Aeron Chair'),
+          priceCents: like(129900),
+          availability: 'in_stock',
+          sku: 'AER-B2-GR',
+        }),
       });
 
     await provider.executeTest(async (mockServer) => {

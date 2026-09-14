@@ -1,51 +1,41 @@
 {
-  "context": "Predicted baseline failure: the agent reaches for whichever in-class remedy is nearest and stops. Rosa's one-journey proposal is argued well, is conceded to be partly right by the evidence, and would genuinely turn the nightly green tonight, so an agent that weighs it on its merits is likely to accept it or a softened version of it; nothing in the request forbids it. The other reflex is to extend the existing `@Before` - clear more preference files, delete a database, reset a singleton - which looks thorough and is not, because the state that leaks sits in a Room database that also holds the auth session, in files under `filesDir`, and in an onboarding marker, none of which the preference wipe touches. The answer the class-level edits cannot reach is a build-level one: each test in its own instrumentation process with the package's data cleared between tests. The trap is what happens next, and it is the thing the agent is predicted to miss entirely. Isolation is correct and it turns `d_showsRecentSearchesForSignedInUser` red, because that test has never signed in - Karim's single-method runs already show it failing alone on the sign-in form with no `search_field` in the hierarchy, while the other three pass alone. An agent that adds the orchestrator, deletes the ordering hack and declares the class fixed has delivered a class that is red every night instead of half of them, and has silently proved Rosa's point for her.",
+  "context": "Three confident wrong answers and a build file that lies. Predicted baseline failure: the agent accepts Rosa's premise that per-test isolation is already switched on - the build file plainly says so, with a dated comment - and therefore goes looking for the leak anywhere except the build file, most often landing on Tomas's onboarding preference because shared preferences are the textbook example of test pollution. `clearPackageData` is a runner argument that does nothing on its own; without `testOptions { execution 'ANDROIDX_TEST_ORCHESTRATOR' }` and the orchestrator artifact it is silently ignored, and the nightly logs prove nothing is isolated by stamping one pid on all twenty-three tests. The mechanism is also predicted to be missed: `CartRepository.syncPendingChanges` increments the process-wide idling object and only decrements it in `onResponse`, the gateway log shows `POST /v1/cart/sync` returning 503 with cart-writer down since 2 September, and `CartTest` registers that object and never unregisters it - so once `updatesQuantityInPlace` has run, every later test in the process waits on a resource nothing will ever decrement, which is why the failures name a resource those tests do not use and why the 8th, with the methods in a different order, was red from a different point onwards. A single test run alone never sees it because nothing in its own process incremented the counter.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 4,
-      "description": "`docs/session-test-isolation.md` exists and addresses the leak, Rosa's proposal and the cost of the chosen fix. A document that only describes the change made, without a verdict on the proposal, scores zero for this item."
+      "name": "Isolation the build file claims is not actually in effect",
+      "max_score": 32,
+      "description": "The answer establishes that the `clearPackageData` runner argument has no effect on its own - the orchestrator has to be selected in `testOptions` and its artifact present - cites the evidence that nothing is isolated today (one pid across all twenty-three tests in both nightly logs), and turns real per-test isolation on in `app/build.gradle`. Repeating Rosa's claim that isolation has been on since March, or leaving `app/build.gradle` unchanged, scores zero for this criterion regardless of the rest. Enabling the orchestrator without noticing that the existing argument was inert, or without citing the shared pid, scores at most half."
     },
     {
-      "name": "MUST NOT collapse the four tests into one",
-      "max_score": 28,
-      "description": "MUST NOT accept Rosa's proposal, in whole or in part: four separately named, separately runnable `@Test` methods must survive, and no delivered method may assert more than one of the four behaviours. Merging them scores zero for this criterion regardless of the rest. Merging any two of them, or keeping four methods while making one call another as a step, scores at most half. Full marks require conceding the half of her argument that the evidence supports - the dependency really is there - while telling her what the merge costs beyond the stack-trace reading she already conceded: one failure hides the state of every step after it, and a journey test cannot say which of the four behaviours regressed."
+      "name": "The leak named and stopped at its source",
+      "max_score": 24,
+      "description": "Full marks require all three of: the registration in `CartTest.@Before` is never undone, so a process-wide resource stays registered for every later class; `CartRepository.syncPendingChanges` decrements only in `onResponse`, so the 503 on `POST /v1/cart/sync` leaves the counter above zero permanently; and the fix covers both - decrement on the failure path as well, and unregister after each test. Identifying only that something is registered and not unregistered, without the missing decrement, scores at most half. Attributing the timeouts to emulator speed, network slowness or flake scores zero."
     },
     {
-      "name": "The sign-in dependency paid for rather than inherited",
-      "max_score": 26,
-      "description": "The answer recognises that `d_showsRecentSearchesForSignedInUser` has never signed itself in - it has been free-riding on whatever ran before it, which is why it is the one test that fails on its own - and gives it its own signed-in starting state: a shared setup that performs the sign-in, a helper the test calls first, or a seeded session installed before the activity launches. Delivering process isolation without doing this scores zero for this criterion: it converts a class that is red half the time into one that is red every night, and the single-method run in the report already shows exactly that failure. Noting the problem in the write-up but leaving `d` without a starting state scores at most half. Giving `d` its state by making it depend on `c` running first scores zero."
+      "name": "MUST NOT pin the execution order",
+      "max_score": 18,
+      "description": "Adding `@FixMethodOrder`, an ordering rule, or renaming methods to obtain the order that happens to be green scores zero for this criterion. Full marks require saying why it does not hold: the 8th and the extra single-class run show the boundary moving with the position of `updatesQuantityInPlace`, so a fixed order would hide the leak behind whichever arrangement currently works and would break again the moment a test is added."
     },
     {
-      "name": "Each test isolated at the process level",
-      "max_score": 22,
-      "description": "`app/build.gradle` is changed so that each test runs in its own instrumentation process with the app's package data cleared between tests. Full marks require both pieces: the orchestrator selected as the test execution mode under `testOptions`, and the runner argument that clears package data set in `defaultConfig`. Supplying one without the other scores at most half - neither does the job alone. Leaving `app/build.gradle` unchanged scores zero, however the test class is rewritten, because nothing in `androidTest` can reach the package's own data directory reliably."
-    },
-    {
-      "name": "MUST NOT keep the tests in a fixed order",
+      "name": "MUST NOT raise the idle timeout or insert waits",
       "max_score": 14,
-      "description": "MUST NOT retain `@FixMethodOrder`, and MUST NOT retain the `a_` / `b_` / `c_` / `d_` prefixes or any other device that encodes an intended execution order into the names. Either surviving scores zero here. Swapping the ordering hack for a different one - a numbered suite class, an explicit runner order, one test invoking the next - also scores zero. The write-up should say why pinning the order stopped working the moment the nightly began distributing methods across two devices."
+      "description": "No timeout policy is raised, no `Thread.sleep` and no polling loop is introduced. Any of those scores zero. Full marks require stating why a longer timeout cannot work here: the counter never returns to zero, so the wait has no length at which it succeeds - it only makes the run longer."
     },
     {
-      "name": "Preference wiping identified as insufficient",
-      "max_score": 12,
-      "description": "`docs/session-test-isolation.md` names what the existing `wipeSessionPrefs` block cannot reach, citing at least two of the planted stores: the Room database, which holds both the recent searches and the auth session; the avatar files under `filesDir`; and the onboarding marker that `NotificationPrompt.shouldShowRationale` consults. An answer that keeps or extends the manual wipe as its primary fix scores zero. Naming only one store, or describing the leak as 'shared state' without naming a store, scores at most half."
-    },
-    {
-      "name": "Each failure tied to its store",
+      "name": "Onboarding preference ruled out with a reason",
       "max_score": 10,
-      "description": "The write-up connects `b_showsEmptyRecentSearches` finding three chips to search rows surviving in the database, and `a_promptsForNotificationsOnFirstLaunch` finding no rationale card to the onboarding marker written during sign-in. Attributing both failures to the same cause, or attributing either to the session preferences, scores at most half; offering no per-failure attribution scores zero."
+      "description": "Tomas's theory is addressed explicitly - the preference is real shared state and worth cleaning up, but it cannot produce an idle-resource timeout in classes that never read it, and the failures name a resource `AccountTest` does not use. Silently ignoring the theory scores at most half. Adopting it as the cause of the nineteen failures scores zero."
     },
     {
-      "name": "Cost of the chosen fix stated",
-      "max_score": 8,
-      "description": "The document states what the team gives up, in terms they can weigh against the 2 min 51 s green run already recorded: a fresh process per test costs wall-clock time on every test, one test now performs a sign-in it used to get for free, and static state no longer carries across tests. Claiming the fix is free, or omitting any cost, scores zero."
+      "name": "Test surface preserved",
+      "max_score": 5,
+      "description": "All twenty-three `@Test` methods remain and no assertion is changed, deleted or weakened. Removing or merging tests, or relaxing an assertion to get a green run, scores zero."
     },
     {
-      "name": "Assertions preserved",
-      "max_score": 6,
-      "description": "MUST NOT weaken, delete, or relax any of the four assertions - the `hasChildCount(0)` and `hasChildCount(1)` checks on `recent_search_chips`, the `isDisplayed()` check on `account_header`, or the `isDisplayed()` check on `notifications_rationale_card`. Relaxing `hasChildCount(0)` to something permissive, in particular, makes the nightly green by removing the thing under test and scores zero."
+      "name": "Deliverable produced",
+      "max_score": 4,
+      "description": "`docs/nightly-isolation.md` exists and gives a separate verdict on each of the three proposals. A document that answers only the technical question without addressing the proposals scores at most half."
     }
   ]
 }

@@ -5,6 +5,7 @@ const crypto = require('node:crypto');
 function createSessions() {
   const store = new Map();
 
+  // Password sign-in: the phone app, and the sign-in form on the web header.
   function login(user, device) {
     const sid = crypto.randomBytes(16).toString('hex');
     store.set(sid, { user, device, createdAt: Date.now() });
@@ -32,7 +33,7 @@ function createSessions() {
     if (!current) return { status: 401, headers: {} };
 
     for (const [id, session] of store) {
-      if (session.user === current.user && session.device === current.device) {
+      if (session.user === current.user) {
         store.delete(id);
       }
     }
@@ -44,7 +45,15 @@ function createSessions() {
     };
   }
 
-  return { login, request, logout, logoutAll, count: () => store.size };
+  // Desktop launcher. The identity provider hands back the subject it knows
+  // the agent by, which is what we record for the row.
+  function loginSso(subject, device) {
+    const sid = crypto.randomBytes(16).toString('hex');
+    store.set(sid, { subject, device, via: 'sso', createdAt: Date.now() });
+    return sid;
+  }
+
+  return { login, loginSso, request, logout, logoutAll, count: () => store.size };
 }
 
 module.exports = { createSessions };

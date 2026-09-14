@@ -1,0 +1,25 @@
+# pasted out of Jon's terminal, 2026-08-21
+
+Java Concurrency Stress Tests
+-----------------------------------------------------------------------
+
+*** FAILED tests
+  Strong asserts were violated.
+
+  0 matching test results.
+
+*** INTERESTING tests
+  Some interesting behaviours observed.
+
+  0 matching test results.
+
+*** All remaining tests
+
+  com.northwind.config.ConfigPublicationTest
+
+    RESULT        SAMPLES     FREQ                  EXPECT  DESCRIPTION
+      0, 0              0    0.00%  ACCEPTABLE_INTERESTING  Empty registry; rare, self-heals
+      3, 30    50,000,000  100.00%              ACCEPTABLE  Registry fully published
+
+-----------------------------------------------------------------------
+ 1 test executed, 0 failed. Total runtime 00:41:18.

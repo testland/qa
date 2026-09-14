@@ -47,12 +47,16 @@
       "current_window": "2026-09-07T00:00Z..2026-09-07T02:00Z",
       "share_drifted": 0.158,
       "drifted_columns": [
-        {"column": "device_fingerprint_age_days", "method": "wasserstein", "drift_score": 0.377, "threshold": 0.1, "status": "FAIL"},
-        {"column": "card_bin_risk_score", "method": "wasserstein", "drift_score": 0.194, "threshold": 0.1, "status": "FAIL"},
         {"column": "avg_ticket_30d", "method": "wasserstein", "drift_score": 0.421, "threshold": 0.1, "status": "FAIL"},
-        {"column": "session_velocity_5m", "method": "wasserstein", "drift_score": 0.266, "threshold": 0.1, "status": "FAIL"},
         {"column": "billing_zip_match", "method": "jensenshannon", "drift_score": 0.155, "threshold": 0.1, "status": "FAIL"},
-        {"column": "issuer_decline_rate_7d", "method": "wasserstein", "drift_score": 0.303, "threshold": 0.1, "status": "FAIL"}
+        {"column": "card_bin_risk_score", "method": "wasserstein", "drift_score": 0.194, "threshold": 0.1, "status": "FAIL"},
+        {"column": "device_fingerprint_age_days", "method": "wasserstein", "drift_score": 0.377, "threshold": 0.1, "status": "FAIL"},
+        {"column": "issuer_decline_rate_7d", "method": "wasserstein", "drift_score": 0.303, "threshold": 0.1, "status": "FAIL"},
+        {"column": "session_velocity_5m", "method": "wasserstein", "drift_score": 0.266, "threshold": 0.1, "status": "FAIL"}
+      ],
+      "stable_columns_sample": [
+        {"column": "amount_brl", "method": "wasserstein", "drift_score": 0.029, "threshold": 0.1, "status": "SUCCESS"},
+        {"column": "mcc_category", "method": "jensenshannon", "drift_score": 0.044, "threshold": 0.1, "status": "SUCCESS"}
       ]
     },
     {

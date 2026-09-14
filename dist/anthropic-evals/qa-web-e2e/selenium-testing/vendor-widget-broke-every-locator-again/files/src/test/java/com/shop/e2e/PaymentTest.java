@@ -26,4 +26,12 @@ class PaymentTest extends PaymentPage {
         pay();
         Assertions.assertTrue(errorText().contains("declined"));
     }
+
+    @Test
+    void refusesAnExpiredCard() {
+        driver.get(BASE + "/checkout?cart=seeded");
+        enterCard("4242424242424242", "01/20", "123");
+        pay();
+        Assertions.assertTrue(errorText().contains("expired"));
+    }
 }

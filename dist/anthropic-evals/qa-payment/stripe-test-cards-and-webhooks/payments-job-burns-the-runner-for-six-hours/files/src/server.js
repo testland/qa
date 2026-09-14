@@ -5,6 +5,7 @@ const crypto = require('node:crypto');
 const { routeEvent } = require('./eventRouter');
 
 const received = [];
+const rejected = [];
 
 function verify(rawBody, header, secret) {
   const parts = Object.fromEntries(
@@ -24,6 +25,10 @@ const server = http.createServer((req, res) => {
   if (req.method === 'GET' && req.url === '/debug/events') {
     res.writeHead(200, { 'content-type': 'application/json' });
     return res.end(JSON.stringify(received));
+  }
+  if (req.method === 'GET' && req.url === '/debug/rejected') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    return res.end(JSON.stringify(rejected));
   }
   if (req.method !== 'POST' || req.url !== '/webhooks/stripe') {
     res.writeHead(404);
@@ -45,6 +50,7 @@ const server = http.createServer((req, res) => {
       res.writeHead(200);
       res.end(JSON.stringify({ received: true }));
     } catch (err) {
+      rejected.push({ at: new Date().toISOString(), error: err.message });
       res.writeHead(400);
       res.end(JSON.stringify({ error: err.message }));
     }

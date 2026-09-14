@@ -1,4 +1,4 @@
-# The payment specs break every time the card vendor ships, and now six agents won't start a browser
+# The payment specs break every time the card vendor ships
 
 ## Problem Description
 
@@ -15,27 +15,28 @@ on-call engineer assumed it was the vendor again and it was actually us.
 The constraint I cannot move: **that markup is not ours.** We cannot add
 attributes to it, we do not build it, and the vendor's support desk has an
 eleven-day median response. Whatever we do has to work against markup we do not
-control.
+control, as it is today.
 
-Marina saved the rendered component from the build that was live in June and
-from the one live now, both straight out of the browser. They are attached. I
-would like the next vendor build to be a non-event.
+Marina has been saving the rendered component out of the browser each time this
+happens. Three of those captures are attached — June, July and the one that is
+live now. I would like the next vendor build to be a non-event.
 
-Separate but urgent: the build agents took a Chrome update on 2026-09-08 and six
-of the eleven now fail before a single test runs. The stack trace from
-`build-agent-07` is attached. Right now the release is going out on five agents
-and everything is queued behind them.
+Second thing, and I am fairly sure it is unrelated. Since the middle of August
+the build agents have been filling up with leftover Chrome processes again and
+somebody has to go and clear them off by hand every few days. Ravi added an
+`@AfterAll` that quits the browser back in August precisely so this would stop,
+so whatever is going on it is not that — I mention it only so you do not spend
+time re-treading it. The base class is attached with everything else.
 
 ## Output Specification
 
 1. Rewrite the locators in `PaymentPage.java` so that a vendor build of the kind
-   visible between those two snapshots does not break them.
-2. Fix whatever is stopping six agents from starting a browser, in the files
-   provided.
+   we have already had does not break them.
+2. Fix whatever is leaving browser processes behind, in the files provided.
 3. Write `docs/vendor-widget-locators.md`: for each control on that component,
-   the hook you chose and the evidence from the two snapshots that it is a
-   durable one. Say plainly which controls have no durable hook of their own and
-   what you did about them.
+   the hook you chose and why you expect it to survive the vendor's next build.
+   Say plainly which controls have no durable hook of their own and what you did
+   about those.
 4. Leave `LoginTest.java` alone — it passes and it is not part of this.
 
 ## Input Files
@@ -100,16 +101,17 @@ public abstract class BasePage {
 
     @BeforeEach
     void startBrowser() {
-        System.setProperty("webdriver.chrome.driver", "C:\\selenium\\chromedriver_120.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--window-size=1440,900");
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    @AfterEach
-    void stopBrowser() {
-        driver.quit();
+    @AfterAll
+    static void stopBrowser() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
 
@@ -179,6 +181,14 @@ class PaymentTest extends PaymentPage {
         pay();
         Assertions.assertTrue(errorText().contains("declined"));
     }
+
+    @Test
+    void refusesAnExpiredCard() {
+        driver.get(BASE + "/checkout?cart=seeded");
+        enterCard("4242424242424242", "01/20", "123");
+        pay();
+        Assertions.assertTrue(errorText().contains("expired"));
+    }
 }
 
 =============== FILE: src/test/java/com/shop/e2e/LoginTest.java ===============
@@ -213,9 +223,6 @@ class LoginTest extends BasePage {
 }
 
 =============== FILE: fixtures/widget-2026-06-14.html ===============
-<!-- saved 2026-06-14 from /checkout with
-     document.querySelector('[class^=pw-root]').outerHTML
-     at this point the component was the third div under <body> -->
 <div class="pw-root_4f81ab" data-pw-build="2026.06.02">
   <form class="pw-form_9c2d10" novalidate>
     <label class="pw-label_22aa01">Card number</label>
@@ -230,6 +237,7 @@ class LoginTest extends BasePage {
     <input id="pw-exp-4d22"
            name="cc-exp"
            class="pw-input_7d31e4"
+           autocomplete="cc-exp"
            inputmode="numeric"
            placeholder="MM/YY"
            aria-label="Expiry date">
@@ -248,31 +256,63 @@ class LoginTest extends BasePage {
   <p class="pw-error_19bb77" role="alert" hidden></p>
 </div>
 
+=============== FILE: fixtures/widget-2026-07-22.html ===============
+<div class="pw-root_b2d740" data-pw-build="2026.07.19">
+  <div class="pw-frame_08ce51">
+    <form class="pw-form_61aa3d" novalidate>
+      <label class="pw-label_7fd012">Card number</label>
+      <input id="pw-card-31ea"
+             name="cardnumber"
+             class="pw-input_44c7be"
+             autocomplete="cc-number"
+             inputmode="numeric"
+             aria-label="Card number (required)">
+
+      <label class="pw-label_7fd012">Expiry</label>
+      <input id="pw-exp-9b55"
+             name="cc-exp"
+             class="pw-input_44c7be"
+             autocomplete="cc-exp"
+             inputmode="numeric"
+             placeholder="MM/YY"
+             aria-label="Expiry date">
+
+      <label class="pw-label_7fd012">CVC</label>
+      <input class="pw-input_44c7be"
+             inputmode="numeric">
+
+      <label class="pw-check_1c9e88">
+        <input type="checkbox" class="pw-box_5a30d1"> Save this card
+      </label>
+
+      <button type="submit" class="pw-submit_ed2044">Pay now</button>
+    </form>
+  </div>
+  <p class="pw-error_c8f105" role="alert" hidden></p>
+</div>
+
 =============== FILE: fixtures/widget-2026-09-02.html ===============
-<!-- saved 2026-09-02 from /checkout with
-     document.querySelector('[class^=pw-root]').outerHTML
-     the vendor added an outer wrapper in the July build; the component is now
-     the fourth div under <body> and the form is one level deeper than it was -->
 <div class="pw-root_e90c37" data-pw-build="2026.08.28">
   <div class="pw-frame_71ba20">
     <form class="pw-form_3ad6f1" novalidate>
       <label class="pw-label_c40e98">Card number</label>
       <input id="pw-card-b391"
-             name="cardnumber"
+             name="card-number"
              class="pw-input_b62f09"
              autocomplete="cc-number"
              inputmode="numeric"
-             aria-label="Card number">
+             aria-label="Card number (required)">
 
       <label class="pw-label_c40e98">Expiry</label>
       <input id="pw-exp-1f07"
-             name="cc-exp"
+             name="cc-expiry"
              class="pw-input_b62f09"
+             autocomplete="cc-exp"
              inputmode="numeric"
              placeholder="MM/YY"
-             aria-label="Expiry date">
+             aria-label="Expiry date (MM/YY)">
 
-      <label class="pw-label_c40e98">CVC</label>
+      <label class="pw-label_c40e98">Security code</label>
       <input class="pw-input_b62f09"
              pattern="[0-9]{3,4}"
              inputmode="numeric">
@@ -285,25 +325,24 @@ class LoginTest extends BasePage {
         <input type="checkbox" class="pw-box_66c1af"> Email me a receipt
       </label>
 
+      <button type="button" class="pw-ghost_9a10bc">Cancel</button>
       <button type="submit" class="pw-submit_d17b42">Pay now</button>
     </form>
   </div>
   <p class="pw-error_5f2a83" role="alert" hidden></p>
 </div>
 
-=============== FILE: ci-logs/agent-start-failure.txt ===============
-[ERROR] PaymentTest.paysWithAValidCard -- Time elapsed: 1.204 s <<< ERROR!
-org.openqa.selenium.SessionNotCreatedException:
-Could not start a new session. Response code 500.
-Message: session not created: This version of ChromeDriver only supports Chrome version 120
-Current browser version is 141.0.7390.65 with binary path C:\Program Files\Google\Chrome\Application\chrome.exe
-Host info: host: 'BUILD-AGENT-07', ip: '10.4.2.17'
-Build info: version: '4.27.0', revision: 'b307b0d2b3'
-System info: os.name: 'Windows 11', os.arch: 'amd64', java.version: '21.0.5'
-Driver info: org.openqa.selenium.chrome.ChromeDriver
+=============== FILE: ci-logs/agent-cleanup.txt ===============
+BUILD-AGENT-04, 2026-09-09, taken just before the manual clear-out.
 
-        at org.openqa.selenium.remote.RemoteWebDriver.<init>(RemoteWebDriver.java:184)
-        at com.shop.pages.BasePage.startBrowser(BasePage.java:24)
+$ tasklist /FI "IMAGENAME eq chromedriver.exe" | find /c "chromedriver.exe"
+18
 
-Agents on Chrome 141: 07, 08, 09, 10, 11, 12  -> failing
-Agents pinned to Chrome 120 by group policy: 01, 02, 03, 04, 05  -> passing
+This agent was last cleared by hand on 2026-09-03. It has run the nightly suite
+on six nights since, all green:
+
+  Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+  (PaymentTest, LoginTest)
+
+Nothing else on these boxes starts a browser, and an agent that ran no suite
+overnight is clean in the morning.

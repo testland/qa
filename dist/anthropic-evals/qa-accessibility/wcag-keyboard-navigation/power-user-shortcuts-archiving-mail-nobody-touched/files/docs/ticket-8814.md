@@ -14,7 +14,8 @@ Support notes:
   compose box emitted `e` before the compose field took focus on a slow render,
   and the open thread archived.
 - Reproduced with Windows Speech Recognition: dictated punctuation emitted `/`
-  outside a text field; the search box took focus.
-- The command palette has never appeared in any of these reports.
+  while focus was on the thread list; the search box took focus.
+- Reproduced once with Dragon: dictating a question with the thread list
+  focused emitted `?` and the help sheet opened over the message.
 - No preferences UI exists for key bindings today. The settings page has a
   "Keyboard" section with nothing in it but a link to the help article.

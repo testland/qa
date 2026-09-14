@@ -17,3 +17,6 @@ Events written to the subscriber's order store ...............    500
 Distinct merchants with at least one missing record ..........    214
 Settlement value represented by the missing events ....... $1,180,400
 Duplicate or conflicting writes caused by the gap ............      0
+
+This report covers the stated window only. Reports for earlier windows can be
+requested through your account contact.

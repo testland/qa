@@ -1,49 +1,228 @@
-# The auth class has not gone green two nights running since we split the nightly across two emulators
+# Nineteen tests are red in the nightly and every one of them passes on its own
 
 ## Problem Description
 
-`com.northwind.auth`, Android app, one instrumentation class, four tests.
+`com.northwind.shop`, Android, Kotlin. Twenty-three instrumentation tests across
+four classes. Since 3 September the nightly has been red on nineteen of them.
+Karim has been through the list one test at a time on the same emulator image
+and every single one passes when he runs it by itself, in nine seconds or less.
+Run the whole thing and it takes twenty-two minutes and comes back with nineteen
+failures.
 
-Back in July this class was red most nights and the failures moved around.
-Marguerite pinned the method order alphabetically and renamed the four tests
-with letter prefixes so that the order that worked would hold, and that bought
-us six quiet weeks. In August we split the nightly across two emulators to get
-the job under twenty minutes; the runner distributes the four methods between
-the two devices and decides the split per run. Since then the class has been red
-about half the time - some nights two tests are red, some nights one, some
-nights none - and which ones are red changes with how the split falls. One of
-the tests that goes red has not been edited by anyone in six months.
+There are three theories on the table and I do not have a way to choose between
+them.
 
-The class also has a setup block that wipes our session preferences before each
-test, which Marguerite added at the same time and which nobody has since been
-able to show made any difference either way.
+Rosa wants to pin the execution order. Her argument is that the nightly on the
+8th had a different order and a different set of failures, so order is clearly
+the variable, and that we should lock in the alphabetical order and move on. She
+also says state cannot be the problem because she turned per-test isolation on
+back in March and it has been in the build file ever since.
 
-Rosa has written up a proposal, attached, to merge the four tests into one long
-test method that walks the states in the order that currently works. Her
-argument is decent and I want to be fair to it: it is one user journey, the
-dependency between the steps is real, and writing it down as one method is more
-honest than pretending four independent tests exist when they clearly do not.
-Half the team is for it. It would certainly make the nightly green.
+Karim wants to raise the idle timeout to a hundred and twenty seconds. His
+argument is that every failure is a timeout, the emulator is slow, and twenty-six
+seconds was always a guess.
 
-I would like a second opinion before we do that, because something about it
-bothers me and I cannot name it. Attached: the module build file, the test
-class, the store classes that hold whatever is leaking, and the nightly log,
-including the single-method runs Karim did on Thursday.
+Tomas thinks it is the onboarding flag. `AccountTest` writes a preference that
+the home screen reads, and he has watched it change behaviour on a later screen
+by hand.
+
+Attached: the two classes that matter, the idling class, the cart repository and
+activity, the module build file, the nightly logs from the 11th and the 8th,
+Karim's single-test runs, and the staging gateway log for the 11th.
+
+Work out what is actually leaking, fix it, and tell me which of the three
+proposals survives.
 
 ## Output Specification
 
-1. Change whatever needs changing so the class passes on a clean checkout no
-   matter how the nightly splits the methods across the two emulators. That may
-   mean editing `app/build.gradle`, `SessionTest.kt`, or both.
-2. Do not weaken, relax or remove any assertion.
-3. Write `docs/session-test-isolation.md` that says what is actually leaking
-   between the tests, gives a verdict on Rosa's proposal that she will find
-   fair, and states the cost of whatever you have chosen instead so the team can
-   decide with their eyes open.
+1. Make the full nightly report what the single-test runs report. Keep all
+   twenty-three `@Test` methods and do not change what any test asserts.
+2. You may change production code under `app/src/main/` and the module build
+   file.
+3. Write `docs/nightly-isolation.md`: what is leaking between tests, why a test
+   run on its own does not see it, and a verdict on each of the three proposals
+   with the reason it does or does not hold.
 
 ## Input Files
 
 Extract the following files before beginning.
+
+=============== FILE: app/src/androidTest/java/com/northwind/shop/CartTest.kt ===============
+package com.northwind.shop
+
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class CartTest {
+
+    @get:Rule
+    val activityRule = ActivityScenarioRule(CartActivity::class.java)
+
+    @Before
+    fun registerIdling() {
+        IdlingRegistry.getInstance().register(CartNetworkIdling)
+    }
+
+    @Test
+    fun showsSeededLines() {
+        onView(withId(R.id.cart_line_count)).check(matches(withText("12 items")))
+    }
+
+    @Test
+    fun showsSubtotal() {
+        onView(withId(R.id.cart_subtotal)).check(matches(withText("£167.20")))
+    }
+
+    @Test
+    fun updatesQuantityInPlace() {
+        onView(withId(R.id.qty_increment)).perform(click())
+        onView(withId(R.id.cart_subtotal)).check(matches(withText("£171.70")))
+        onView(withId(R.id.pending_edit_badge)).check(matches(isDisplayed()))
+    }
+}
+
+=============== FILE: app/src/androidTest/java/com/northwind/shop/AccountTest.kt ===============
+package com.northwind.shop
+
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert.assertTrue
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class AccountTest {
+
+    @get:Rule
+    val activityRule = ActivityScenarioRule(AccountActivity::class.java)
+
+    private val prefs = InstrumentationRegistry.getInstrumentation().targetContext
+        .getSharedPreferences("northwind", 0)
+
+    @Test
+    fun dismissingOnboardingSticks() {
+        onView(withId(R.id.onboarding_dismiss)).perform(click())
+        assertTrue(prefs.getBoolean("onboarding_seen", false))
+    }
+
+    @Test
+    fun showsMembershipTier() {
+        onView(withId(R.id.tier_label)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun opensAddressBook() {
+        onView(withId(R.id.addresses_row)).perform(click())
+        onView(withId(R.id.address_list)).check(matches(isDisplayed()))
+    }
+}
+
+=============== FILE: app/src/main/java/com/northwind/shop/CartNetworkIdling.kt ===============
+package com.northwind.shop
+
+import androidx.test.espresso.IdlingResource
+import java.util.concurrent.atomic.AtomicInteger
+
+object CartNetworkIdling : IdlingResource {
+
+    private val pending = AtomicInteger(0)
+    @Volatile private var callback: IdlingResource.ResourceCallback? = null
+
+    override fun getName(): String = "CartNetworkIdling"
+
+    override fun isIdleNow(): Boolean = pending.get() == 0
+
+    override fun registerIdleTransitionCallback(cb: IdlingResource.ResourceCallback?) {
+        callback = cb
+    }
+
+    fun increment() {
+        pending.incrementAndGet()
+    }
+
+    fun decrement() {
+        if (pending.decrementAndGet() == 0) callback?.onTransitionToIdle()
+    }
+}
+
+=============== FILE: app/src/main/java/com/northwind/shop/CartRepository.kt ===============
+package com.northwind.shop
+
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+class CartRepository(private val api: CartApi) {
+
+    private var pendingEdits = false
+
+    fun hasPendingEdits(): Boolean = pendingEdits
+
+    fun changeQuantity(lineId: String, qty: Int) {
+        pendingEdits = true
+    }
+
+    fun syncPendingChanges() {
+        CartNetworkIdling.increment()
+        api.sync().enqueue(object : Callback<CartState> {
+            override fun onResponse(call: Call<CartState>, response: Response<CartState>) {
+                pendingEdits = false
+                CartNetworkIdling.decrement()
+            }
+
+            override fun onFailure(call: Call<CartState>, t: Throwable) {
+                Telemetry.warn("cart sync failed", t)
+            }
+        })
+    }
+}
+
+=============== FILE: app/src/main/java/com/northwind/shop/CartActivity.kt ===============
+package com.northwind.shop
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+
+class CartActivity : AppCompatActivity() {
+
+    private lateinit var repository: CartRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_cart)
+        repository = CartRepository(Api.cart)
+        findViewById<android.view.View>(R.id.qty_increment).setOnClickListener {
+            repository.changeQuantity("line-1", 2)
+            render()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (repository.hasPendingEdits()) repository.syncPendingChanges()
+    }
+
+    private fun render() = Unit
+}
 
 =============== FILE: app/build.gradle ===============
 plugins {
@@ -52,273 +231,104 @@ plugins {
 }
 
 android {
-    namespace 'com.northwind.auth'
+    namespace 'com.northwind.shop'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.northwind.auth"
+        applicationId "com.northwind.shop"
         minSdk 24
         targetSdk 35
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
+        testInstrumentationRunnerArguments clearPackageData: 'true' // per-test isolation, 2026-03-11
     }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.room:room-runtime:2.6.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.6.1'
 
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     androidTestImplementation 'androidx.test:rules:1.6.1'
 }
 
-=============== FILE: app/src/androidTest/java/com/northwind/auth/SessionTest.kt ===============
-package com.northwind.auth
+=============== FILE: reports/nightly-4712.txt ===============
+### Nightly 4712 - 2026-09-11, Pixel 4a emulator API 34, 22m 14s
+### Every line below was emitted by pid 7402.
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
-import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Before
-import org.junit.FixMethodOrder
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.MethodSorters
+com.northwind.shop.CartTest > showsSeededLines PASSED (3.1s)
+com.northwind.shop.CartTest > showsSubtotal PASSED (2.8s)
+com.northwind.shop.CartTest > updatesQuantityInPlace PASSED (4.0s)
 
-@RunWith(AndroidJUnit4::class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class SessionTest {
+com.northwind.shop.AccountTest > dismissingOnboardingSticks FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    at androidx.test.espresso.base.UiControllerImpl.loopUntil(UiControllerImpl.java:472)
+    elapsed: 26.0s
 
-    @get:Rule
-    val activityRule = ActivityScenarioRule(HomeActivity::class.java)
+com.northwind.shop.AccountTest > showsMembershipTier FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
 
-    @Before
-    fun wipeSessionPrefs() {
-        InstrumentationRegistry.getInstrumentation().targetContext
-            .getSharedPreferences("session", 0)
-            .edit()
-            .clear()
-            .commit()
-    }
+com.northwind.shop.AccountTest > opensAddressBook FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
 
-    @Test
-    fun a_promptsForNotificationsOnFirstLaunch() {
-        onView(withId(R.id.notifications_rationale_card)).check(matches(isDisplayed()))
-    }
+com.northwind.shop.SearchTest - 8 tests, 0 passed, 8 failed
+  all eight: IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
 
-    @Test
-    fun b_showsEmptyRecentSearches() {
-        onView(withId(R.id.recent_search_chips)).check(matches(hasChildCount(0)))
-    }
+com.northwind.shop.OrdersTest - 9 tests, 0 passed, 9 failed
+  all nine: IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
 
-    @Test
-    fun c_signsInAndRemembersMe() {
-        onView(withId(R.id.email_field)).perform(typeText("rosa@northwind.example"), closeSoftKeyboard())
-        onView(withId(R.id.password_field)).perform(typeText("hunter2"), closeSoftKeyboard())
-        onView(withId(R.id.remember_me)).perform(click())
-        onView(withId(R.id.sign_in_button)).perform(click())
-        onView(withId(R.id.account_header)).check(matches(isDisplayed()))
-    }
+23 tests, 4 passed, 19 failed
 
-    @Test
-    fun d_showsRecentSearchesForSignedInUser() {
-        onView(withId(R.id.search_field)).perform(typeText("wool socks"), closeSoftKeyboard())
-        onView(withId(R.id.search_submit)).perform(click())
-        onView(withId(R.id.recent_search_chips)).check(matches(hasChildCount(1)))
-    }
-}
+=============== FILE: reports/nightly-4698.txt ===============
+### Nightly 4698 - 2026-09-08, same image, 23m 02s, pid 7188 throughout
+### The runner reported CartTest's methods in a different order that night.
 
-=============== FILE: app/src/main/java/com/northwind/auth/SessionStore.kt ===============
-package com.northwind.auth
+com.northwind.shop.CartTest > updatesQuantityInPlace PASSED (4.1s)
 
-import android.content.Context
-import androidx.room.Room
-import java.io.File
+com.northwind.shop.CartTest > showsSeededLines FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
 
-class SessionStore(private val context: Context) {
+com.northwind.shop.CartTest > showsSubtotal FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
 
-    private val prefs = context.getSharedPreferences("session", Context.MODE_PRIVATE)
+com.northwind.shop.AccountTest - 3 tests, 0 passed, 3 failed (same exception)
+com.northwind.shop.SearchTest - 8 tests, 0 passed, 8 failed (same exception)
+com.northwind.shop.OrdersTest - 9 tests, 0 passed, 9 failed (same exception)
 
-    private val db = Room.databaseBuilder(context, NorthwindDb::class.java, "northwind.db").build()
+23 tests, 1 passed, 22 failed
 
-    private val avatarDir = File(context.filesDir, "avatars")
+=============== FILE: reports/single-runs.txt ===============
+### Karim, 2026-09-12. Each command run on a freshly booted emulator.
 
-    private val onboardingMarker = File(context.filesDir, "onboarding/notifications_asked")
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.AccountTest#dismissingOnboardingSticks
+  -> 1 test, 1 passed (6.2s)
 
-    fun dismissPromoBanner() = prefs.edit().putBoolean("promo_banner_dismissed", true).commit()
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.SearchTest
+  -> 8 tests, 8 passed (41s)
 
-    fun promoBannerDismissed(): Boolean = prefs.getBoolean("promo_banner_dismissed", false)
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.OrdersTest
+  -> 9 tests, 9 passed (52s)
 
-    fun saveToken(token: String) = db.sessionDao().upsert(SessionRow(token))
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.CartTest
+  -> 3 tests, 3 passed (11s)
 
-    fun token(): String? = db.sessionDao().current()?.token
+Ran the last one four times. Green on three of them. On the fourth the runner
+reported the methods in a different order and two of the three failed with the
+same timeout exception the nightly shows.
 
-    fun recordSearch(term: String) = db.recentSearchDao().insert(RecentSearch(term))
+=============== FILE: reports/gateway-2026-09-11.txt ===============
+### staging gateway, 2026-09-11 02:00-02:25, requests from the CI emulator
 
-    fun recentSearches(): List<RecentSearch> = db.recentSearchDao().all()
+GET  /v1/cart              200   x 6      avg 210 ms
+GET  /v1/account/tier      200   x 3      avg 140 ms
+POST /v1/cart/sync         503   x 1      42 ms      upstream cart-writer unavailable
+GET  /v1/search            200   x 8      avg 260 ms
+GET  /v1/orders            200   x 9      avg 300 ms
 
-    fun cacheAvatar(bytes: ByteArray, userId: String) {
-        avatarDir.mkdirs()
-        File(avatarDir, "$userId.png").writeBytes(bytes)
-    }
-
-    fun markNotificationsAsked() {
-        onboardingMarker.parentFile?.mkdirs()
-        onboardingMarker.createNewFile()
-    }
-
-    fun notificationsAlreadyAsked(): Boolean = onboardingMarker.exists()
-}
-
-=============== FILE: app/src/main/java/com/northwind/auth/NotificationPrompt.kt ===============
-package com.northwind.auth
-
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
-
-object NotificationPrompt {
-
-    fun shouldShowRationale(context: Context): Boolean =
-        !SessionStore(context).notificationsAlreadyAsked() &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
-            PackageManager.PERMISSION_GRANTED
-}
-
-=============== FILE: app/src/main/java/com/northwind/auth/HomeActivity.kt ===============
-package com.northwind.auth
-
-import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-
-class HomeActivity : AppCompatActivity() {
-
-    private lateinit var store: SessionStore
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        store = SessionStore(this)
-        renderRationaleCard()
-        renderRecentSearchChips()
-        renderSignedInOrSignedOut(store.token() != null)
-    }
-
-    private fun renderRationaleCard() {
-        findViewById<View>(R.id.notifications_rationale_card).visibility =
-            if (NotificationPrompt.shouldShowRationale(this)) View.VISIBLE else View.GONE
-    }
-
-    fun onSignedIn(token: String, userId: String) {
-        store.saveToken(token)
-        store.cacheAvatar(fetchAvatarBytes(userId), userId)
-        store.markNotificationsAsked()
-        renderSignedInOrSignedOut(true)
-    }
-
-    fun onSearchSubmitted(term: String) {
-        store.recordSearch(term)
-        renderRecentSearchChips()
-    }
-}
-
-=============== FILE: reports/nightly-runs.md ===============
-# SessionTest, nightly job, since the two-emulator split
-
-The runner distributes the four methods across the two emulators. Which methods
-land on which device is decided per run.
-
-| Date       | Device A ran | Device B ran | Failed |
-|------------|--------------|--------------|--------|
-| 2026-08-19 | a, c         | b, d         | d      |
-| 2026-08-22 | a, b         | c, d         | -      |
-| 2026-08-27 | c, a         | b, d         | a, d   |
-| 2026-09-03 | b, d         | a, c         | d      |
-| 2026-09-10 | c, d         | a, b         | -      |
-
-Whole-class wall clock on the most recent green run (2026-09-10): 2 min 51 s
-across the two devices.
-
-## Single-method runs, Karim, 2026-09-11
-
-Same build, same emulator image, one method per invocation, fresh emulator boot
-before each:
-
-```
-:app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=...SessionTest#a_promptsForNotificationsOnFirstLaunch PASSED
-:app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=...SessionTest#b_showsEmptyRecentSearches            PASSED
-:app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=...SessionTest#c_signsInAndRemembersMe               PASSED
-:app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=...SessionTest#d_showsRecentSearchesForSignedInUser  FAILED
-```
-
-Failure detail for `d_showsRecentSearchesForSignedInUser`, single-method run:
-
-```
-androidx.test.espresso.NoMatchingViewException: No views in hierarchy found
-matching: view.getId() is <2131231355/com.northwind.auth:id/search_field>
-    View Hierarchy:
-    +>DecorView{id=-1, visibility=VISIBLE}
-    |
-    +->LinearLayout{id=2131231300, res-name=sign_in_form, visibility=VISIBLE}
-    |
-    +-->EditText{id=2131231301, res-name=email_field, visibility=VISIBLE}
-```
-
-Failure detail for `b_showsEmptyRecentSearches`, nightly 2026-08-27 equivalent
-ordering reproduced locally as d then b in one process:
-
-```
-java.lang.AssertionError: 'has child count: <0>' doesn't match the selected view.
-  Expected: has child count: <0>
-  Got: "LinearLayout{id=2131231402, res-name=recent_search_chips, child-count=3}"
-```
-
-Failure detail for `a_promptsForNotificationsOnFirstLaunch`, nightly 2026-08-27:
-
-```
-androidx.test.espresso.NoMatchingViewException: No views in hierarchy found
-matching: view.getId() is <2131231388/com.northwind.auth:id/notifications_rationale_card>
-```
-
-=============== FILE: docs/proposal-from-rosa.md ===============
-# Proposal: collapse SessionTest into one journey test
-
-Rosa M, 2026-09-11
-
-We keep pretending these are four independent tests. They are not, and Karim's
-single-method runs proved it on Thursday: `d` cannot pass on its own, because it
-needs a signed-in user and only `c` produces one. The letter prefixes are us
-admitting the dependency while keeping up the appearance of independence, and
-the emulator split showed how thin that appearance is - the runner does not care
-what we named things.
-
-So let us stop pretending. One `@Test` called `signInJourney()` that does sign
-in, then search, then asserts the chips, then asserts the rationale card, in the
-order that works. Benefits:
-
-- The nightly goes green tonight and stays green, split or not, because the
-  whole journey lands on one device.
-- No letter prefixes, so renames are safe again.
-- It is one user journey, which is arguably what we should have written in the
-  first place.
-- Wall clock drops, because we stop restarting the activity four times.
-
-Cost I can see: when it fails we get one red instead of four, and we have to
-read the stack trace to find out which step broke. I think that is acceptable
-given where we are.
+Note from platform: cart-writer has been down in staging since 2026-09-02 and is
+not scheduled to come back until the queue migration finishes. Reads are fine.

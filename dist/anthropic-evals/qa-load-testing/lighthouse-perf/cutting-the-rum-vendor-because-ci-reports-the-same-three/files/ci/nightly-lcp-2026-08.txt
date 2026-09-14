@@ -1,0 +1,12 @@
+# nightly audit, LCP reported per URL, August 2026
+
+2026-08-01   /  1980 ms    /search 2420 ms    /listing 1870 ms
+2026-08-04   /  2610 ms    /search 3050 ms    /listing 2340 ms
+2026-08-06   /  1840 ms    /search 2210 ms    /listing 1790 ms
+2026-08-08   /  2470 ms    /search 2890 ms    /listing 2260 ms
+2026-08-11   /  2030 ms    /search 2330 ms    /listing 1930 ms
+2026-08-13   /  2560 ms    /search 2980 ms    /listing 2410 ms
+2026-08-15   /  1910 ms    /search 2270 ms    /listing 1820 ms
+2026-08-19   /  2380 ms    /search 2740 ms    /listing 2200 ms
+2026-08-22   /  2150 ms    /search 2480 ms    /listing 2050 ms
+2026-08-27   /  2170 ms    /search 2230 ms    /listing 2330 ms

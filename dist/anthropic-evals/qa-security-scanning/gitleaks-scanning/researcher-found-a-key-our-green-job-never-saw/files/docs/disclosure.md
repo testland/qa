@@ -18,9 +18,9 @@
   same day. 1,412 runs since, all green, none skipped, none cancelled.
 - The key is `AKIA[REDACTED]`, IAM user `edge-router-billing`, created
   2024-11-03, **still Active**. Console shows `LastUsedDate 2026-09-12`,
-  service `s3`, region `eu-central-1`. Our own nightly export job uses this
-  same key against `s3` in `eu-central-1`, so the usage record on its own tells
-  us nothing about whether anyone else used it.
+  service `s3`, region `eu-central-1`.
+- Our nightly warehouse export authenticates as `edge-router-billing` against
+  `s3` in `eu-central-1`. It has run every night since 2024-11.
 - CloudTrail retention on this account is 400 days, so 2026-02-18 onward is
   queryable.
 - `hexley/edge-router` is public. GitHub reports **61 forks**, and the repo is

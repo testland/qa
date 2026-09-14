@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="first_name_hint">First name</string>
-    <string name="email_hint">Email address</string>
+    <string name="signup_heading">Create your account</string>
     <string name="continue_label">Continue</string>
-    <string name="create_account_label">Create account</string>
-    <string name="create_account_title">Set a password</string>
-    <string name="password_too_short">Password is too short</string>
-    <string name="plan_annual_label">Annual plan</string>
-    <string name="welcome_greeting">Welcome, %1$s</string>
+    <string name="email_invalid">Please enter a valid email address</string>
+    <string name="email_taken">That email address is already registered</string>
+    <string name="cart_total_label">Order total</string>
+    <string name="privacy_link">Privacy policy</string>
 </resources>

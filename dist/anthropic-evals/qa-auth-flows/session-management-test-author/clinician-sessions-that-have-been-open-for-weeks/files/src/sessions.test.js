@@ -36,6 +36,12 @@ test('thirty-one minutes of quiet ends the session', () => {
   assert.equal(sessions.request(sid), 401);
 });
 
+test('the session cookie expires after eight hours', () => {
+  const { sessions } = setup();
+  const sid = sessions.login('dr.okafor');
+  assert.match(sessions.cookieFor(sid), /Max-Age=28800/);
+});
+
 test('signing out ends the session immediately', () => {
   const { sessions } = setup();
   const sid = sessions.login('dr.okafor');

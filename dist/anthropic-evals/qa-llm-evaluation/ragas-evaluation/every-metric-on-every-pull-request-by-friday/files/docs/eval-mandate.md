@@ -20,7 +20,6 @@ not a quality program. Effective Friday:
    must never promise a discount; it hands to a human. Marisol has written the
    check and it is on a branch. It adds nothing to the bill because it does not
    call a model at all. Merge it or tell me what is wrong with it.
-
-I am also fine with the nightly job being broader and slower than the PR job if
-that is what it takes to keep PRs fast - that is a reasonable split and I am not
-asking for the two to be identical.
+6. **Drop faithfulness.** The trend sheet says it has not failed once in six
+   months. If it cannot fail it is not a gate, it is decoration, and I would
+   rather spend that judge budget on something that moves.

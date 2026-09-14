@@ -1,41 +1,40 @@
-# Whatever the bank says, checkout tells the customer to ring their bank
+# Five asks about the decline messages, and I do not trust all five
 
 ## Problem Description
 
-Three things landed on me this week and I think they are the same thing.
+`src/declineAction.js` turns a declined payment into the message the customer
+sees, the `retryable` flag our dunning job reads, and the `notifyRisk` flag that
+raises a review. It has two tests and both pass. It has also, as far as anyone
+can tell, never produced anything except "contact your bank", and it has never
+once raised a risk review.
 
-Two support tickets: a customer whose card expired in July was told at checkout
-to contact her bank, which she did, and they told her there was nothing wrong
-with the account. Another mistyped the security code on the back of the card,
-got the same "contact your bank" line, assumed we were broken and paid another
-way. Neither of them was told what was actually wrong, and both of those are
-things the customer can fix in ten seconds if you tell them.
+That came to a head this week in `docs/checkout-thread.md`, which is a thread
+with five numbered asks in it from support, risk and growth. Two support
+tickets and one chargeback are behind them; the chargeback is written up in
+`docs/risk-441.md` and it cost us the goods, the reversal and the fee.
 
-The third is worse and it came from risk. Order `ord_77120` was declined,
-our dunning job retried it three nights running, the fourth attempt went
-through, and the card turned out to have been reported lost. We are now paying
-for the goods, the chargeback and the fee. The dunning job retries anything
-checkout hands back as retryable, which as far as I can tell is everything.
+I want the decline paths we actually get in production covered by tests, and
+whatever that coverage turns up fixed. What I do not want is the five asks
+implemented as written just because three teams asked nicely — go through them
+and tell me which ones we are doing. If one of them is a bad idea, say so and
+say what we do instead; if one of them is plainly right, do it. I will back
+whichever way you call it, but I want the reasoning in writing because I am
+going to have to repeat it to Tom and to Priya.
 
-`src/declineAction.js` is what turns a declined payment into the message the
-customer sees and the retryable flag the dunning job reads. It has one test
-file covering two cases and both pass.
-
-I want the decline paths we actually get in production covered, and whatever
-that coverage turns up fixed. Take the retry policy seriously — a card that
-the bank has flagged must not be retried by us at all, and somebody in risk
-needs to see it.
+`test/support/paymentsTestServer.js` stands in for the payment API and raises
+the same errors it raises, keyed by the card identifier you confirm with.
 
 ## Output Specification
 
-1. Add `test/declines.test.js` covering the declines described above and the
-   ones already in the code. Leave `test/declineAction.test.js` untouched and
-   passing; `npm test` must pass when you are finished.
-2. Fix `src/declineAction.js` so the new coverage passes. Do not change what
+1. Add `test/declines.test.js` covering the declines this service receives.
+   Leave `test/declineAction.test.js` untouched and passing; `npm test` must
+   pass when you are finished.
+2. Change `src/declineAction.js` as your answers require. Do not change what
    `src/checkout.js` passes into it — that is what the payment API hands us.
-3. Write `docs/decline-mapping.md`: one row per decline we handle, with the
-   message the customer sees, whether the dunning job may retry it, and whether
-   risk is notified.
+3. Write `docs/decline-mapping.md`: one row per decline you handle, giving the
+   message the customer sees, whether the dunning job may retry it and whether
+   risk is notified; and under that, one line per numbered ask in the thread
+   saying whether you did it and why.
 
 ## Input Files
 
@@ -111,6 +110,87 @@ async function confirmOrder(order, payments) {
 
 module.exports = { confirmOrder };
 
+=============== FILE: test/support/paymentsTestServer.js ===============
+'use strict';
+
+// Stands in for the payment API. Each entry is the error body it raises for
+// that card identifier on a confirm, or null where the payment goes through.
+const BEHAVIOUR = {
+  pm_card_visa: null,
+  pm_card_mastercard: null,
+  pm_card_chargeDeclined: {
+    code: 'card_declined',
+    decline_code: 'generic_decline',
+    message: 'Your card was declined.',
+  },
+  pm_card_chargeDeclinedInsufficientFunds: {
+    code: 'card_declined',
+    decline_code: 'insufficient_funds',
+    message: 'Your card has insufficient funds.',
+  },
+  pm_card_chargeDeclinedLostCard: {
+    code: 'card_declined',
+    decline_code: 'lost_card',
+    message: 'Your card was declined.',
+  },
+  pm_card_chargeDeclinedStolenCard: {
+    code: 'card_declined',
+    decline_code: 'stolen_card',
+    message: 'Your card was declined.',
+  },
+  pm_card_chargeDeclinedExpiredCard: {
+    code: 'expired_card',
+    message: 'Your card has expired.',
+  },
+  pm_card_chargeDeclinedIncorrectCvc: {
+    code: 'incorrect_cvc',
+    message: "Your card's security code is incorrect.",
+  },
+  pm_card_chargeDeclinedProcessingError: {
+    code: 'processing_error',
+    message: 'An error occurred while processing your card. Try again in a little while.',
+  },
+  pm_card_radarBlock: {
+    code: 'card_declined',
+    decline_code: 'fraudulent',
+    message: 'Your card was declined.',
+  },
+};
+
+function createPaymentsTestServer() {
+  let seq = 0;
+
+  return {
+    paymentIntents: {
+      async create(params) {
+        const behaviour = BEHAVIOUR[params.payment_method];
+        if (behaviour === undefined) {
+          const err = new Error(`No such PaymentMethod: '${params.payment_method}'`);
+          err.type = 'invalid_request_error';
+          throw err;
+        }
+        seq += 1;
+        if (behaviour) {
+          const err = new Error(behaviour.message);
+          err.type = 'card_error';
+          Object.assign(err, behaviour);
+          err.charge = `ch_test_${seq}`;
+          throw err;
+        }
+        return {
+          id: `pi_test_${seq}`,
+          object: 'payment_intent',
+          amount: params.amount,
+          currency: params.currency,
+          status: 'succeeded',
+        };
+      },
+    },
+  };
+}
+
+module.exports = { createPaymentsTestServer, BEHAVIOUR };
+
 =============== FILE: test/declineAction.test.js ===============
 'use strict';
 
@@ -143,117 +223,66 @@ test('insufficient funds gets its own message', () => {
   assert.equal(action.retryable, true);
 });
 
-=============== FILE: fixtures/test-mode-declines.json ===============
-{
-  "captured": "2026-05-14, test mode, API version 2025-04-30.basil",
-  "how": "One confirm call per card against the test-mode API. Each entry is the error body verbatim, or null where the payment went through.",
-  "cards": [
-    {
-      "number": "4242 4242 4242 4242",
-      "payment_method": "pm_card_visa",
-      "result": "succeeded",
-      "error": null
-    },
-    {
-      "number": "4000 0000 0000 0002",
-      "payment_method": "pm_card_visa_chargeDeclined",
-      "result": "declined",
-      "error": {
-        "type": "card_error",
-        "code": "card_declined",
-        "decline_code": "generic_decline",
-        "message": "Your card was declined.",
-        "charge": "ch_3RkA1s2eZvKYlo2C0Q8rJ1aP",
-        "outcome": { "seller_message": "The bank did not return any further details with this decline." }
-      }
-    },
-    {
-      "number": "4000 0000 0000 9995",
-      "payment_method": "pm_card_visa_chargeDeclinedInsufficientFunds",
-      "result": "declined",
-      "error": {
-        "type": "card_error",
-        "code": "card_declined",
-        "decline_code": "insufficient_funds",
-        "message": "Your card has insufficient funds.",
-        "charge": "ch_3RkA2p2eZvKYlo2C1w4kL7dQ",
-        "outcome": { "seller_message": "The bank returned the decline code insufficient_funds." }
-      }
-    },
-    {
-      "number": "4000 0000 0000 9987",
-      "payment_method": "pm_card_visa_chargeDeclinedLostCard",
-      "result": "declined",
-      "error": {
-        "type": "card_error",
-        "code": "card_declined",
-        "decline_code": "lost_card",
-        "message": "Your card was declined.",
-        "charge": "ch_3RkA3f2eZvKYlo2C7n2pB0xR",
-        "outcome": { "seller_message": "The bank returned the decline code lost_card." }
-      }
-    },
-    {
-      "number": "4000 0000 0000 0069",
-      "payment_method": "pm_card_chargeDeclinedExpiredCard",
-      "result": "declined",
-      "error": {
-        "type": "card_error",
-        "code": "expired_card",
-        "message": "Your card has expired.",
-        "charge": "ch_3RkA4b2eZvKYlo2CkE9tV3mS",
-        "outcome": { "seller_message": "The bank returned the decline code expired_card." }
-      }
-    },
-    {
-      "number": "4000 0000 0000 0127",
-      "payment_method": "pm_card_chargeDeclinedIncorrectCvc",
-      "result": "declined",
-      "error": {
-        "type": "card_error",
-        "code": "incorrect_cvc",
-        "message": "Your card's security code is incorrect.",
-        "charge": "ch_3RkA5x2eZvKYlo2CpU1dN8gT",
-        "outcome": { "seller_message": "The bank returned the decline code incorrect_cvc." }
-      }
-    },
-    {
-      "number": "4100 0000 0000 0019",
-      "payment_method": "pm_card_radarBlock",
-      "result": "declined",
-      "error": {
-        "type": "card_error",
-        "code": "card_declined",
-        "decline_code": "fraudulent",
-        "message": "Your card was declined.",
-        "charge": "ch_3RkA6q2eZvKYlo2CsW5hJ2fK",
-        "outcome": { "seller_message": "Payment was blocked as it was determined to be high risk." }
-      }
-    }
-  ]
-}
+=============== FILE: docs/checkout-thread.md ===============
+#checkout-declines, week of 2026-09-07. Five asks, numbered by Ade so we can
+keep track of which ones got done.
 
-=============== FILE: docs/support-tickets.md ===============
-Tickets referenced, week of 2026-09-07
+1. Nadia (support), 2026-09-08
+   SUP-9912. Her card expired on 31 July. We told her to contact her bank for
+   more information. She rang them, they said the account is fine and the card
+   was simply replaced, and she wants to know why we did not just say the card
+   had expired. This is her second contact; the first was closed as "bank
+   issue". Ask: when the card has expired, say the card has expired.
 
-SUP-9912  "Your website says call my bank"
-  Customer's card expired 2026-07-31. At checkout she was told to contact her
-  bank for more information. She rang them, they told her the account is fine
-  and the card was simply replaced. She wants to know why we did not just say
-  the card had expired. Second contact from the same customer; the first was
-  closed as "bank issue".
+2. Nadia (support), 2026-09-08
+   SUP-9930. He typed the wrong three digits off the back of the card. We told
+   him to contact his bank. He tried twice, decided our payment page was
+   broken, and completed the order through another channel at a worse rate for
+   us. Ask: when the security code is wrong, say the security code is wrong.
+   Both of these are ten-second fixes for the customer if we just tell them.
 
-SUP-9930  "Gave up, paid with something else"
-  Customer entered the wrong three digits from the back of the card. Checkout
-  told him to contact his bank. He tried twice, assumed our payment page was
-  broken, and completed the order through another channel at a worse rate for
-  us.
+3. Tom (risk), 2026-09-09
+   Following RISK-441. When the issuer comes back lost or stolen, put that in
+   front of the customer - something like "this card has been reported lost or
+   stolen, please contact your card issuer's fraud line and use another card".
+   Ask: say it plainly. Rationale: they will thank us for it, it is true, and
+   it is the only message that actually stops them sitting there retrying the
+   same card all evening, which is what generated four attempts on ord_77120.
 
-RISK-441  Chargeback on ord_77120
-  Declined on 2026-08-29. The dunning job retried on the 30th, 31st and the
-  1st. The fourth attempt was accepted. Card was reported lost on 2026-08-27.
-  Chargeback received 2026-09-05: goods gone, amount reversed, 15.00 fee.
-  Risk had no record of this order before the chargeback arrived.
-  The dunning job retries any order checkout returns with retryable true, and
-  raises a review for any order it returns with notifyRisk true. It has never
-  raised one.
+4. Priya (growth), 2026-09-10
+   Our dunning job gives up on anything checkout marks non-retryable. I pulled
+   the numbers on the ones the processor blocks outright as high risk: 31% of
+   them go through on a later attempt within five days. On last quarter's
+   volume that is EUR 41k we simply did not collect. Ask: mark those retryable
+   like the rest, and let dunning do its four nights.
+
+5. Priya (growth), 2026-09-10
+   Separate and much smaller: when the card has insufficient funds we currently
+   stop after one attempt, which is silly - people get paid. Ask: let dunning
+   retry that one for up to three nights before it gives up.
+
+=============== FILE: docs/risk-441.md ===============
+RISK-441 - chargeback on ord_77120
+
+  2026-08-27  card reported lost by the cardholder
+  2026-08-29  ord_77120 declined at checkout; customer shown "Your card was
+              declined. Contact your bank for more information."
+  2026-08-30  dunning attempt 2, declined
+  2026-08-31  dunning attempt 3, declined
+  2026-09-01  dunning attempt 4, accepted; goods shipped 2026-09-02
+  2026-09-05  chargeback received. Amount reversed, EUR 15.00 fee, goods gone.
+
+How the dunning job reads checkout's answer
+  retryable true   -> the order is attempted again the following night, up to
+                      four nights
+  retryable false  -> the order is closed and the customer is emailed
+  notifyRisk true  -> a review is raised for the risk queue before anything
+                      else happens
+
+  The queue has existed since March. It has never received a review from this
+  service. Risk had no record of ord_77120 until the chargeback arrived.
+
+Note from Tom, 2026-09-09
+  I want to be clear that the four attempts are the part that cost us. The
+  first decline was the issuer telling us not to take this card. We took it
+  three more times.

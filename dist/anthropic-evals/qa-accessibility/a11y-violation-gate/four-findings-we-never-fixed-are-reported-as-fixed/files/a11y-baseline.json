@@ -1,10 +1,12 @@
 {
   "version": 1,
-  "updated_at": "2026-06-30T10:02:00Z",
+  "updated_at": "2026-07-02T09:40:00Z",
   "violations": [
-    "wave::contrast::/checkout::button.primary",
-    "wave::contrast::/checkout::a.footer-legal",
-    "wave::link_empty::/checkout::a.icon-cart",
-    "wave::contrast::/pricing::span.per-seat"
+    "axe::color-contrast::/checkout::button.primary",
+    "axe::color-contrast::/checkout::a.footer-legal",
+    "axe::link-name::/checkout::a.icon-cart",
+    "pa11y::WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail::/checkout::html > body > main > table.summary > tbody > tr:nth-child(3) > td:nth-child(2)",
+    "axe::color-contrast::/pricing::span.per-seat",
+    "axe::region::/pricing::body"
   ]
 }

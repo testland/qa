@@ -17,20 +17,20 @@
       "adapter_response": { "rows_affected": 4108221 }
     },
     {
-      "unique_id": "test.shop.not_null_stg_payments_payment_key.7c91a2",
-      "status": "warn",
-      "failures": 118432,
+      "unique_id": "test.shop.key_populated_stg_payments_payment_key.7c91a2",
+      "status": "pass",
+      "failures": 0,
       "execution_time": 3.401,
-      "message": "Got 118432 results, configured to warn if != 0",
-      "adapter_response": { "rows_affected": 118432 }
+      "message": null,
+      "adapter_response": { "rows_affected": 0 }
     },
     {
       "unique_id": "test.shop.unique_stg_payments_payment_key.1ab740",
-      "status": "warn",
-      "failures": 2,
+      "status": "pass",
+      "failures": 0,
       "execution_time": 2.902,
-      "message": "Got 2 results, configured to warn if != 0",
-      "adapter_response": { "rows_affected": 2 }
+      "message": null,
+      "adapter_response": { "rows_affected": 0 }
     },
     {
       "unique_id": "model.shop.mart_revenue_daily",

@@ -1,51 +1,46 @@
 {
-  "context": "Predicted baseline failure: the agent attempts all five, because every item is phrased as a tap followed by an assertion and nothing in the wording flags a boundary. Item 2 is the trap and is where the discrimination lives. Everything about it reads like the app's own UI - the app builds it, the app sets its title, subtitle and button wording, it is raised by a tap on the app's own button, and the request calls it 'our fingerprint prompt' - but the prompt is rendered by the system, not by the app, so an in-process view matcher cannot see it. The intern's log records exactly that and nothing interprets it for the reader: 38 views dumped, all under `com.northwind.shop`, the app's own button and its GONE saved-cards container both present, and a branch note saying the prompt filled half the screen at the moment of the dump. An agent that writes `onView(withText(\"Unlock saved cards\"))` against the prompt has reproduced the failure it was given; an agent that refuses item 2 outright has given away the half that is genuinely coverable, since what product actually cares about is that a successful authentication reveals `saved_cards_root`, and `VaultUnlock` exposes that path. The mirror-image failure is just as likely and must not score either: an agent that decides the whole list is out of scope and writes nothing leaves items 4 and 5 uncovered, and item 5 is the one that regressed twice in the spring. Item 5 carries its own planted trap - roughly 200 rows with 9 attached, so matching the row text finds nothing, and the generic scroll action is rejected because the list is not one of the scrolling container classes the constraint names. Item 3 splits the same way item 2 does: the chooser and the mail app are unreachable, but that the app fires the right intent with the order number in the subject is testable in process.",
+  "context": "Five requests arranged so that neither of the two absolute positions in the room is right, and so that the boundary an agent reaches for by reflex - 'is it our app or somebody else's' - cuts in the wrong place twice. Predicted baseline failure: the agent sorts the list with that reflex, refuses 1, 3 and 4 as out-of-process work, hands them to a cross-app driver, and accepts 2 and 5. Request 3 is the one that punishes it: `SyncErrorActivity` and `SyncService` are declared `android:process=\":sync\"` in the manifest and Bilal's logcat shows them at pid 5120 against the shop UI's 5104, so it is this app and is still unreachable from a test running in the shop's process - it is a multi-process case, not a cross-app one, and the framework has a dedicated facility for it that neither 'write a normal test' nor 'use a cross-app driver' represents. Requests 1 and 4 are predicted to be refused whole when each has an in-app half that is straightforwardly coverable once the out-of-app leg is stubbed or granted, and request 2 is predicted to be accepted whole with a plain text matcher - the exact thing Bilal already showed failing while the message was demonstrably on screen, because the message is not in the activity's own window. Request 5 is the determinate easy one and exists so that refusing everything scores as badly as accepting everything.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Item 2 split at the process boundary, not refused and not attempted",
-      "max_score": 26,
-      "description": "The verdict on item 2 states that the fingerprint prompt is drawn by the system rather than by the app - despite the app supplying its title and wording - and therefore cannot be reached from inside the app's own process, names a concrete out-of-process alternative for the part that needs the prompt itself, AND delivers or specifies an in-process test for the part that does not: that a successful authentication result reveals `saved_cards_root`, driven through `VaultUnlock`'s success path rather than through the prompt. Writing any view matcher against the prompt's title, subtitle or negative button scores zero for this criterion, whatever else the answer does. Refusing item 2 in its entirety scores at most half. Accepting item 2 as straightforwardly coverable scores zero."
+      "name": "Request 3 answered as a same-app, different-process case",
+      "max_score": 30,
+      "description": "Full marks require citing the manifest's `android:process=\":sync\"` declarations and the two pids in Bilal's logcat, saying that a test running in the shop's process cannot match views owned by another process no matter that the code is ours, and naming the framework's own multi-process facility as what closes the gap rather than an ordinary test or a general-purpose cross-app driver. Treating it as a normal in-app screen that Bilal simply matched wrongly scores zero. Refusing it as 'another app' or handing it wholesale to a cross-app driver on Hendrik's reasoning also scores zero."
     },
     {
-      "name": "MUST NOT drive another process with in-process matchers",
-      "max_score": 24,
-      "description": "MUST NOT write any in-process view interaction - `onView`, `onData`, or a view matcher of any kind - against the notification shade, the notification itself, the fingerprint prompt, the share chooser, or the mail app's compose screen. Any such line in any delivered test scores zero for this criterion no matter how the rest of the answer reads, because it is the exact failure already recorded on the intern's branch. Delivering it commented out, or as a suggested snippet in the write-up, scores at most half."
+      "name": "Request 4 split rather than decided whole",
+      "max_score": 20,
+      "description": "The picker's own screen is declared out of reach from here, and the part Dana actually lost twice this year - the returned image not appearing on the profile - is covered in-process by stubbing the activity result and driving `ProfileAvatar.onAvatarPicked` through the app's own path, with the module build file gaining what stubbing needs. Accepting the whole request, or refusing the whole request, scores zero. Splitting it without delivering the in-app test scores at most half."
     },
     {
-      "name": "Item 5 delivered by scrolling the list to the row",
+      "name": "MUST NOT drive another application's UI with in-process matchers",
       "max_score": 18,
-      "description": "The refunded-order test scrolls the list to the row identified by its content - a list-specific scroll action matching a descendant carrying 'NW-10042' - and the dependency that supplies list actions is added to `app/build.gradle`. Matching the row text directly without scrolling scores zero; the log shows 9 rows attached out of roughly 200 and that attempt already failed. Using the generic scroll action on the list scores zero for the same reason: the log shows it rejected because the list is not one of the container classes the constraint accepts. Scrolling to a hardcoded item position rather than matching the order number scores at most half."
+      "description": "No delivered test or proposed step matches against the phone's settings screen or the picker's screen with in-process view matchers, and the verdicts do not imply that a longer wait or a better matcher would have made Bilal's attempts work. Any test that does so scores zero here, as does an answer that explains his failures on those two as a matcher problem."
     },
     {
-      "name": "Item 4 delivered against the WebView content",
+      "name": "Request 2 not answered with a default-window assertion",
       "max_score": 16,
-      "description": "A runnable test asserts the presence of the 'Contact support' link inside `help_web_view` using the framework's WebView-specific interaction rather than a plain view matcher, and the dependency that supplies it is added to `app/build.gradle`. Asserting only that `help_web_view` is displayed, without reaching into the document, scores at most half. Declaring item 4 not coverable scores zero - the WebView is inside this app and this process."
+      "description": "The answer explains how the screenshot and the `NoMatchingViewException` are both true - the message is not drawn in the activity's own window, which is what a plain assertion looks in - and covers it either by targeting that separate window explicitly or by asserting the in-app consequence instead, with the trade-off stated. Delivering `onView(withText(\"Saved to your wishlist\")).check(matches(isDisplayed()))` with no window handling scores zero. Declaring the request uncoverable scores at most half."
     },
     {
-      "name": "Item 3 split rather than dropped whole",
-      "max_score": 14,
-      "description": "The answer separates the half of item 3 that is in the app from the half that is not: that `ReceiptShare.share` fires `ACTION_SEND` carrying the order number in `EXTRA_SUBJECT` and the total in `EXTRA_TEXT` is verifiable in process with intent capture and stubbing, and a test is delivered for it with the supporting dependency added. Refusing item 3 in its entirety scores at most half. Claiming the mail app's compose screen can be asserted scores zero."
-    },
-    {
-      "name": "Item 1 refused with the right reason and a named alternative",
+      "name": "Request 1 split with the in-app half kept",
       "max_score": 12,
-      "description": "The verdict on the notification shade states that the framework in use runs inside the app's own process and cannot reach another application's UI, and names a concrete out-of-process alternative that could - a device-level automator, or an end-to-end device service. Refusing on vague grounds ('too flaky', 'not worth it', 'hard to automate') without naming the process boundary scores at most half. Accepting item 1 as coverable scores zero."
+      "description": "The trip through the phone's settings screen is out; the banner's behaviour once the permission state changes is in, covered by putting the app into each permission state from the test harness rather than by navigating to it. Dropping the whole request scores zero. Keeping the whole request scores zero."
     },
     {
-      "name": "MUST NOT answer by refusing everything",
+      "name": "MUST NOT deliver one test that walks several requests",
       "max_score": 10,
-      "description": "MUST NOT deliver a write-up with no runnable tests. Items 4 and 5 are inside the app and both must arrive as real test methods in `app/src/androidTest/java/com/northwind/shop/`. Delivering neither scores zero; delivering one scores at most half. Blanket refusal is the mirror image of attempting all five and is not a safe answer here."
+      "description": "Each delivered `@Test` method has a single assertion target and covers one numbered request. A single method that chains two or more of the five, or a method that ends in a run of unrelated assertions, scores zero for this criterion."
     },
     {
-      "name": "All five items given a verdict",
+      "name": "Request 5 covered and delivered",
+      "max_score": 8,
+      "description": "The determinate one: a test that brings position 213 of a four-hundred-row list into view before asserting on it, with the list package added to the module build file, plus an explanation of why Bilal's dump held only nine rows. Refusing or deferring this request scores zero. Asserting without first bringing the row into view scores at most half."
+    },
+    {
+      "name": "Deliverable produced",
       "max_score": 5,
-      "description": "`docs/coverage-response.md` exists and addresses items 1 through 5 using Ravi's numbering, each saying what is covered, what is not, and what the uncovered part would take. Any item left unaddressed, or a document that discusses the list in general terms without a per-item verdict, scores zero for this item."
-    },
-    {
-      "name": "One assertion target per test method",
-      "max_score": 6,
-      "description": "MUST NOT bundle several of the five items into one test that asserts everything in sequence. Each delivered item gets its own `@Test` method with its own name. A single method covering more than one numbered item scores zero here. `showsMostRecentOrderFirst` must also be left exactly as supplied."
+      "description": "`docs/automation-verdicts.md` exists with a numbered section and one of the three verdicts for each of the five requests. Any request left without an explicit verdict scores at most half."
     }
   ]
 }

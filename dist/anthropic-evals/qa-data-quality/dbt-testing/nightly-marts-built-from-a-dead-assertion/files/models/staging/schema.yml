@@ -14,12 +14,8 @@ models:
       - name: payment_key
         description: Surrogate key for the payment.
         data_tests:
-          - not_null:
-              config:
-                severity: warn
-          - unique:
-              config:
-                severity: warn
+          - key_populated
+          - unique
 
   - name: stg_refunds
     description: One row per Stripe refund.

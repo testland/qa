@@ -16,6 +16,15 @@ function createSessionStore() {
     return session;
   }
 
+  // Issues a fresh id for an existing session. The previous row is kept so a
+  // request already in flight on the old id does not 401 mid-page.
+  function regenerate(id) {
+    const previous = sessions.get(id) || { user: null };
+    const sid = newId();
+    sessions.set(sid, { ...previous, id: sid, createdAt: Date.now() });
+    return sessions.get(sid);
+  }
+
   function get(id) {
     return sessions.get(id);
   }
@@ -24,7 +33,7 @@ function createSessionStore() {
     sessions.delete(id);
   }
 
-  return { create, get, destroy, count: () => sessions.size };
+  return { create, regenerate, get, destroy, count: () => sessions.size };
 }
 
 module.exports = { createSessionStore };

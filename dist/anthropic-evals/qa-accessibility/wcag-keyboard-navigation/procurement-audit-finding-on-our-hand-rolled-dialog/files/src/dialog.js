@@ -17,6 +17,7 @@ export function dialogAttrs(dialogId, titleId) {
   return {
     id: dialogId,
     role: 'dialog',
+    'aria-modal': 'true',
     tabindex: '-1',
     'aria-labelledby': titleId,
   };
@@ -24,14 +25,33 @@ export function dialogAttrs(dialogId, titleId) {
 
 export function focusableIn(container) {
   return container.children.filter(
-    (el) => FOCUSABLE_TAGS.has(el.tag) || el.tabindex === 0,
+    (el) => (FOCUSABLE_TAGS.has(el.tag) || el.tabindex === 0) && !el.disabled && !el.hidden,
   );
 }
 
 export function nextFocusIndex(focusables, currentIndex, event) {
   if (event.key !== 'Tab') return null;
-  if (currentIndex === focusables.length - 1) return 0;
-  return null;
+  if (event.shiftKey) return currentIndex === 0 ? focusables.length - 1 : null;
+  return currentIndex === focusables.length - 1 ? 0 : null;
+}
+
+// The dialog is rendered into the dialog layer, which is a child of the page root.
+export function pageTree(dialogContainer) {
+  return {
+    id: 'app-root',
+    tag: 'DIV',
+    attrs: {},
+    children: [
+      { id: 'app-main', tag: 'MAIN', attrs: {}, children: [] },
+      { id: 'app-sidebar', tag: 'NAV', attrs: {}, children: [] },
+      {
+        id: 'dialog-layer',
+        tag: 'DIV',
+        attrs: {},
+        children: dialogContainer ? [dialogContainer] : [],
+      },
+    ],
+  };
 }
 
 export function openDialog(state, dialogId, trigger, pageRoot) {

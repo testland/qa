@@ -18,4 +18,5 @@ k.novak:     one thing I am certain about - we had nothing watching certificate
              by then it was already down
 k.novak:     also I am fairly sure a customer emailed us before the alert fired
 d.ferreira:  no, the monitor was first
+d.ferreira:  anyway it is all moot now, cert-manager owns the cert
 r.osei:      ok. I will write something up

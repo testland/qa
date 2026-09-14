@@ -14,8 +14,8 @@ Went through this with Anya. Our position:
    matching both rules are getting the retention discount stacked on the bundle
    discount.
 
-3. On monitoring acceptance directly: not worth building. The label does not land
-   for fourteen days. Anything it told us would be a fortnight stale and we would
-   be reacting to a fortnight-old world.
+3. On monitoring acceptance directly: not worth building. The label does not
+   land for a fortnight. Anything it told us would be two weeks stale and we
+   would be reacting to a fortnight-old world.
 
 Happy to be shown wrong on 2, but 1 is just what the reports say.

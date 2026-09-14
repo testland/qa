@@ -5,58 +5,62 @@ const assert = require('node:assert');
 const engineA = require('../src/engineA');
 const engineB = require('../src/engineB');
 
+const POINTS = [
+  ['p1', [1, 0, 0, 0]],
+  ['p2', [0.98, 0.2, 0, 0]],
+  ['p3', [0.9, 0.44, 0, 0]],
+  ['p4', [0, 1, 0, 0]],
+  ['p5', [0, 0, 1, 0]],
+  ['p6', [0, 0, 0, 1]],
+];
 const CELLS = [
-  [1, 0, 0],
-  [0, 1, 0],
-  [0, 0, 1],
+  [1, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 1, 0],
+  [0, 0, 0, 1],
 ];
 
-const ring = Array.from({ length: 24 }, (_, i) => {
-  const a = (i / 24) * 2 * Math.PI;
-  return [Math.cos(a), Math.sin(a), 0.1 * Math.cos(3 * a)];
+const buildA = (M = 4) => {
+  const index = engineA.createIndex({ M });
+  for (const [id, vec] of POINTS) index.add(id, vec);
+  return index;
+};
+const buildB = () => {
+  const index = engineB.createIndex({ centroids: CELLS });
+  for (const [id, vec] of POINTS) index.add(id, vec);
+  return index;
+};
+
+test('engine A stores every point', () => {
+  assert.equal(buildA().size(), 6);
 });
 
-test('engine A stores every added vector', () => {
-  const index = engineA.createIndex({ centroids: CELLS, nProbe: 2 });
-  ring.forEach((v, i) => index.add(i, v));
-  assert.equal(index.size(), 24);
+test('engine B stores every point', () => {
+  assert.equal(buildB().size(), 6);
 });
 
-test('engine A only scores the cells it probes', () => {
-  const index = engineA.createIndex({ centroids: CELLS, nProbe: 1 });
-  ring.forEach((v, i) => index.add(i, v));
+test('engine A returns the exact nearest neighbour on a wide walk', () => {
+  assert.equal(buildA().search([1, 0, 0, 0], { k: 1, ef: 32 })[0], 'p1');
+});
+
+test('engine B returns the exact nearest neighbour when it scans every cell', () => {
+  assert.equal(buildB().search([1, 0, 0, 0], { k: 1 })[0], 'p1');
+});
+
+test('engine B confined to one cell cannot see the others', () => {
+  assert.deepEqual(buildB().search([0, 0, 1, 0], { k: 6, nProbe: 1 }), ['p5']);
+});
+
+test('engine B counts a comparison for every point it scores', () => {
+  const index = buildB();
   index.resetCounters();
-  index.search([1, 0, 0], { k: 10 });
-  assert.equal(index.comparisons(), index.cellSizes()[0]);
+  index.search([1, 0, 0, 0], { k: 10, nProbe: 1 });
+  assert.equal(index.comparisons(), 3);
 });
 
-test('engine A probing every cell scores every vector', () => {
-  const index = engineA.createIndex({ centroids: CELLS, nProbe: 3 });
-  ring.forEach((v, i) => index.add(i, v));
+test('engine A counts a comparison for every node it reaches', () => {
+  const index = buildA();
   index.resetCounters();
-  index.search([1, 0, 0], { k: 10 });
-  assert.equal(index.comparisons(), 24);
-});
-
-test('engine B stores every added vector', () => {
-  const index = engineB.createIndex({ M: 4, efConstruct: 16 });
-  ring.forEach((v, i) => index.add(i, v));
-  assert.equal(index.size(), 24);
-});
-
-test('engine B keeps at most M links per node', () => {
-  const index = engineB.createIndex({ M: 4, efConstruct: 16 });
-  ring.forEach((v, i) => index.add(i, v));
-  for (let i = 0; i < 24; i++) assert.ok(index.degree(i) <= 4);
-});
-
-test('engine B walks further with a wider beam', () => {
-  const index = engineB.createIndex({ M: 4, efConstruct: 16 });
-  ring.forEach((v, i) => index.add(i, v));
-  index.resetCounters();
-  index.search(ring[7], { k: 5, ef: 2 });
-  const narrow = index.comparisons();
-  index.resetCounters();
-  index.search(ring[7], { k: 5, ef: 24 });
-  assert.ok(index.comparisons() > narrow);
+  index.search([1, 0, 0, 0], { k: 10, ef: 32 });
+  assert.ok(index.comparisons() > 0);
 });

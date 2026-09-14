@@ -1,0 +1,21 @@
+=== @marek, screen-shared into the mini over VNC, logged in as ci-runner,
+=== run by hand from Terminal, 2026-09-13 14:22
+
+Test Case '-[DashboardUITests testDashboardScrollPerformance]' started.
+    measured [Clock Monotonic Time, s] average: 0.254, relative standard deviation: 3.1%
+    Assertion Failure: Time average is 42.7% worse (max allowed: 10.000%).
+    Baseline for 'testDashboardScrollPerformance()' average 0.178 s.
+Test Case '-[DashboardUITests testDashboardScrollPerformance]' failed (11.204 seconds).
+
+Test Case '-[DashboardUITests testExportsLedgerToCSV]' started.
+    t =     6.02s Click "File" MenuBarItem
+    t =     7.88s Click "export-ledger" MenuItem
+    t =     8.10s Wait for com.ledgerwood.Ledgerwood to idle
+    t =    38.01s Assertion Failure: Failed to get matching snapshot:
+                  No matches found for Button "export-confirm"
+Test Case '-[DashboardUITests testExportsLedgerToCSV]' failed (38.440 seconds).
+
+Test Case '-[DashboardUITests testFiltersByAccount]' passed (9.402 seconds).
+Test Case '-[DashboardUITests testOpensLedgerWindow]' passed (7.115 seconds).
+
+Executed 4 tests, with 2 failures (0 unexpected) in 66.161 seconds

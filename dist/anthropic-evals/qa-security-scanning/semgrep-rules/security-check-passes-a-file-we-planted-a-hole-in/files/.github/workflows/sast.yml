@@ -3,8 +3,6 @@ name: sast
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
 
 jobs:
   sast:
@@ -13,17 +11,20 @@ jobs:
       image: semgrep/semgrep:1.99.0
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Static analysis
         run: |
-          semgrep scan \
+          semgrep ci \
             --config p/owasp-top-ten \
             --config p/javascript \
-            --json --output semgrep.json \
+            --baseline-ref origin/main \
+            --sarif --output semgrep.sarif \
             --metrics=off
 
-      - name: Keep the report
-        uses: actions/upload-artifact@v4
+      - name: Upload to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          name: semgrep-json
-          path: semgrep.json
+          sarif_file: semgrep.sarif

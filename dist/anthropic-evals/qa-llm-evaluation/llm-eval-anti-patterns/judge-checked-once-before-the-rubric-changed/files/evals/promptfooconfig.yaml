@@ -11,13 +11,4 @@ prompts:
   - file://prompts/variant-a.txt
   - file://prompts/variant-b.txt
 
-tests:
-  - vars:
-      ticket: file://data/tickets.csv
-    assert:
-      - type: is-json
-        value: file://schema/handoff.json
-      - type: llm-rubric
-        value: >
-          The reply answers the customer's question, does not invent account
-          details, and ends with a clear next step.
+tests: file://tests/pairwise.yaml

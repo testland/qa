@@ -17,6 +17,14 @@ test('a real stylesheet is held at the edge for a year', () => {
   assert.ok(edge.stored().includes('/assets/app.css'));
 });
 
+test('the script bundle is held at the edge for a year', () => {
+  let now = 0;
+  const edge = createEdge(origin, () => now);
+  assert.equal(edge.request(anon('/assets/app.js')).servedFrom, 'origin');
+  now = 31_535_000_000;
+  assert.equal(edge.request(anon('/assets/app.js')).servedFrom, 'edge');
+});
+
 test('the logo is held at the edge for a year as well', () => {
   let now = 0;
   const edge = createEdge(origin, () => now);

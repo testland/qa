@@ -1,7 +1,9 @@
-"""Shared page/no-page decision for both nightly jobs."""
+"""Page/no-page decision for the nightly job."""
 
 
-def should_page(report_dict) -> bool:
+def should_page(result_dict) -> bool:
     """True when the run contains something worth waking someone for."""
-    tests = report_dict.get("tests", [])
+    tests = result_dict.get("tests", [])
+    if not tests:
+        raise ValueError("run carried no tests")
     return any(t.get("status") in ("FAIL", "ERROR") for t in tests)

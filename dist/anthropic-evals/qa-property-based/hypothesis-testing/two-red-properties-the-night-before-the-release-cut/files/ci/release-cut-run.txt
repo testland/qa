@@ -2,35 +2,42 @@ $ pytest tests/
 ============================= test session starts ==============================
 collected 5 items
 
-tests/test_rollup.py ..FF.                                               [100%]
+tests/test_vouchers.py ..FF.                                             [100%]
 
 =================================== FAILURES ===================================
-_______________________________ test_pack_round_trip ___________________________
+_________________________ test_price_is_a_known_tier ___________________________
+hypothesis.errors.FailedHealthCheck: It looks like this test is filtering out a
+lot of inputs. 0 inputs were generated successfully, while 50 inputs were
+filtered out.
 
-    @given(st.lists(st.floats(), min_size=1, max_size=50))
-    def test_pack_round_trip(samples):
->       assert unpack(pack(samples)) == samples
-E       assert [nan] == [nan]
+An input might be filtered out by calls to assume(), strategy.filter(...), or
+occasionally by Hypothesis internals.
 
-Falsifying example: test_pack_round_trip(
-    samples=[nan],
+Applying this much filtering makes input generation slow, since Hypothesis must
+discard inputs which are filtered out and try generating it again. It is also
+possible that applying this much filtering will distort the domain and/or
+distribution of the test, leaving your testing less rigorous than expected.
+
+______________________________ test_sign_round_trip ____________________________
+
+    @settings(max_examples=50)
+    @given(st.binary(min_size=1, max_size=64))
+    def test_sign_round_trip(payload):
+>       assert verify(payload, sign(payload)) is True
+E       hypothesis.errors.DeadlineExceeded: Test took 361.42ms, which exceeds the
+E       deadline of 200.00ms. If you expect test cases to take this long, you can
+E       use @settings(deadline=...) to either set a higher deadline, or to disable
+E       it with deadline=None.
+
+Failing test case: test_sign_round_trip(
+    payload=b'\x00',
 )
 
-____________________________ test_percentile_is_a_sample _______________________
+======================== 2 failed, 3 passed in 24.63s ==========================
 
-    @given(st.lists(st.floats(allow_nan=False, allow_infinity=False), min_size=1, max_size=200))
-    def test_percentile_is_a_sample(samples):
->       p = percentile(samples, 95)
-
-src/rollup.py:14: in percentile
-    return ordered[idx]
-E       IndexError: list index out of range
-
-Falsifying example: test_percentile_is_a_sample(
-    samples=[0.0],
-)
-
-=========================== 2 failed, 3 passed in 2.71s ========================
-
-Previous run on the same source, 2026-09-11:  5 passed in 2.64s
+Previous run on the same source, 2026-09-11:  5 passed in 22.41s
 Diff between the two commits: requirements-dev.txt only.
+
+Note from @tomasz: the signing check has been sitting a few milliseconds under
+wherever the line is for about a month - it printed "Unreliable test timings"
+twice in August and went green again on a re-run both times.

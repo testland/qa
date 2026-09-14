@@ -1,0 +1,13 @@
+TAP version 13
+# Subtest: test/integration/fees-boundary.test.js
+    ok 1 - fee boundary is applied from the stored schedule # SKIP HARBOR_DB is not set
+    ...
+1..23
+# tests 90
+# suites 23
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 73
+# todo 0
+# duration_ms 124310.2

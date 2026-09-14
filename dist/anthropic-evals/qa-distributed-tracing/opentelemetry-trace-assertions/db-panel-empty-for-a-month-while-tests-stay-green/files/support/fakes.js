@@ -13,6 +13,9 @@ const fakeDb = () => {
       n += 1;
       return Object.assign({ id: `${table.slice(0, 3)}_${1000 + n}` }, row);
     },
+    async update(table, id, patch) {
+      return Object.assign({ id }, patch);
+    },
   };
 };
 

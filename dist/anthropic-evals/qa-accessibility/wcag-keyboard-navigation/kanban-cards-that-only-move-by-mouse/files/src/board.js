@@ -1,5 +1,13 @@
 export const COLUMNS = ['backlog', 'in-progress', 'review', 'done'];
 
+// Focus mode renders the columns right-to-left; the DOM order is unchanged.
+export const FOCUS_MODE_ORDER = {
+  backlog: 4,
+  'in-progress': 3,
+  review: 2,
+  done: 1,
+};
+
 export function createBoard(cards) {
   const state = { cards: cards.map((c) => ({ ...c })) };
 
@@ -9,10 +17,15 @@ export function createBoard(cards) {
       .sort((a, b) => a.position - b.position);
   }
 
+  function columnStyleFor(column) {
+    return { order: FOCUS_MODE_ORDER[column] };
+  }
+
   function cardMarkup(card) {
     return (
       `<div class="card" draggable="true" role="button" aria-label="${card.title}"` +
-      ` data-card-id="${card.id}" onclick="board.openCard('${card.id}')">` +
+      ` tabindex="${card.tabOrder}" data-card-id="${card.id}"` +
+      ` onclick="board.openCard('${card.id}')">` +
       `<span class="card-title">${card.title}</span>` +
       `<span class="card-handle" aria-hidden="true">drag</span>` +
       `</div>`
@@ -44,12 +57,12 @@ export function createBoard(cards) {
   }
 
   function activate(event, handlers) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === ' ') {
       handlers.openCard(event.cardId);
       return true;
     }
     return false;
   }
 
-  return { state, cardsIn, cardMarkup, onDragEnd, activate };
+  return { state, cardsIn, columnStyleFor, cardMarkup, moveCard, onDragEnd, activate };
 }

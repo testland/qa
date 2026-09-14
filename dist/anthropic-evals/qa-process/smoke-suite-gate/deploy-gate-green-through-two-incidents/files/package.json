@@ -3,6 +3,6 @@
   "private": true,
   "scripts": {
     "test": "cd test && node --test",
-    "smoke": "cd smoke && node --test || exit 0"
+    "smoke": "node smoke/run.js"
   }
 }

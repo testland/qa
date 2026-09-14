@@ -1,41 +1,41 @@
 {
-  "context": "Nine test cases in the config, 82 evaluations in the run summary, and a 45x cost jump. Predicted baseline failure: the agent accepts one of the two theories on offer — it lowers concurrency, swaps to a cheaper model, deletes cases, or blames the two llm-rubric assertions added in #812 — and never works out where 82 comes from. The cause is that a list value under a test's vars is expanded into one row per combination, so the six few-shot strings assigned to `examples` in plan_change, refund_window, seat_removal and billing_contact became six separate rows each, and in refund_window they multiplied with the three locales to give eighteen. 1 + 6 + 1 + 1 + 18 + 1 + 6 + 1 + 6 = 41 rows, times two providers, is exactly the 82 in the summary. The prompt template settles the intent: it renders `{{examples}}` as one block under 'Examples of good answers', so the six strings were meant to be one value on one row, not six rows each carrying a single example. The locale list in refund_window is the one deliberate sweep and must survive. The fix is 11 rows, 22 evaluations. Secondary predicted failures: the workflow re-runs every row from scratch on every push with no response cache, there is no per-response cost bound anywhere in the config, and a latency assertion cannot be enforced in a run that reads responses from a cache — an answer that bolts caching on and leaves `latency: 4000` in the same job has quietly turned a live assertion into a vacuous one.",
+  "context": "Nine test cases in the config, 82 evaluations in the run summary, a forty-five-fold cost jump, and two colleagues offering the wrong cause. Predicted baseline failure: the agent accepts one of the theories on offer or invents a third of the same shape — it lowers concurrency, swaps to a cheaper model, deletes cases, or blames the two llm-rubric assertions added in #812 — and never works out where 82 comes from. The cause is that a list value under a test's vars is expanded into one row per combination, so the six few-shot strings assigned to `examples` in plan_change, refund_window, seat_removal and billing_contact became six separate rows each, and in refund_window they multiplied with the three locales to give eighteen. 1 + 6 + 1 + 1 + 18 + 1 + 6 + 1 + 6 = 41 rows, times two providers, is exactly the 82 in the September summary, against 9 cases times two providers for July's 18. The prompt template settles the intent: it renders {{examples}} as one block under 'Examples of good answers', so the six strings were meant to be one value on one row, not six rows each carrying a single example. The locale list in refund_window is the one deliberate sweep and must survive, so a fix that collapses every list is as wrong as no fix at all; the correct shape is 11 rows, 22 evaluations. Two further defects are predicted to go unnoticed because nothing in the request points at them: the workflow re-runs every row from scratch on every push with no response cache persisted across pushes on the branch, and there is no spending bound of any kind in the config. And an agent that adds caching without touching the latency assertion has quietly turned a live assertion into a vacuous one, because a response served from a cache is not a measurement of how long the provider took.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
-      "max_score": 5,
-      "description": "The config and the workflow are both edited and docs/pr-812-eval-cost.md exists. Answering in prose without editing the config scores zero for this item."
+      "max_score": 4,
+      "description": "The config is edited and docs/pr-812-eval-cost.md exists. Answering in prose without editing the config scores zero for this item."
     },
     {
       "name": "List-valued vars identified as the row multiplier",
-      "max_score": 32,
-      "description": "The answer states that a list value under a test's vars produces one row per combination rather than one row carrying the list, names `examples` in plan_change, refund_window, seat_removal and billing_contact as the unintended lists, and cites the prompt template rendering {{examples}} as a single block as the evidence of intent. Attributing the jump to concurrency, to the provider, to the judge model, to 'we added more test cases', or to token growth alone scores zero for this criterion. Saying only that 'arrays create combinations' without naming which vars were unintended, or without arithmetic reaching 41 rows and 82 evaluations, scores at most half."
-    },
-    {
-      "name": "MUST NOT cut coverage to cut the bill",
-      "max_score": 20,
-      "description": "MUST NOT delete or comment out any of the nine cases, MUST NOT drop the groundedness or tone assertions added in #812, and MUST NOT swap either provider for a cheaper one. Any of these scores zero for this criterion even if the row multiplication was also fixed — the spend is a configuration defect, not a coverage surplus."
-    },
-    {
-      "name": "Deliberate locale sweep preserved",
-      "max_score": 14,
-      "description": "The three-locale list in refund_window survives as a sweep producing three rows. Collapsing locale to a single value along with the examples lists scores zero here: the fix has to distinguish the list that was meant to multiply from the ones that were not."
+      "max_score": 34,
+      "description": "The answer states that a list value under a test's vars produces one row per combination rather than one row carrying the list, names `examples` in plan_change, refund_window, seat_removal and billing_contact as the unintended lists, and cites the prompt template rendering {{examples}} as a single block as the evidence of intent. Attributing the jump to concurrency, to the providers, to the judge model, to 'we added more test cases', or to token growth alone scores zero for this criterion. Stating in general terms that lists create combinations, without naming which vars were unintended or without arithmetic that reaches 41 rows and 82 evaluations, scores at most half. The fix must leave the four cases carrying their six examples as a single value each."
     },
     {
       "name": "Response caching added to the PR gate",
       "max_score": 16,
-      "description": "The workflow no longer pays full price for unchanged rows on a re-push — a cache path persisted across runs on the branch, via the published action's cache input or an equivalent cached directory. A workflow that still invokes a bare eval with nothing persisted between pushes scores zero for this item."
+      "description": "The workflow no longer pays full price for unchanged rows when the branch is pushed again — a cache path persisted across runs on the pull request, via the published action's cache input or an equivalent restored and saved directory. A workflow that still invokes a bare eval with nothing persisted between pushes scores zero for this item, even if the row multiplication was fixed: nine pushes re-bought every response."
     },
     {
       "name": "Latency assertion and caching reconciled",
+      "max_score": 16,
+      "description": "The answer recognises that the latency assertion measures nothing once responses are served from a cache, and resolves it — by running the latency check in a separate uncached job, or by removing it from the cached gate and saying so in the cost document. Leaving `latency: 4000` inside a now-cached gate with no mention scores zero for this criterion; naming the conflict without resolving it in the files scores at most half. An answer that adds no caching at all cannot earn this item."
+    },
+    {
+      "name": "MUST NOT cut coverage or downgrade the providers to cut the bill",
       "max_score": 14,
-      "description": "The answer recognises that a latency assertion measures nothing once responses are served from a cache, and resolves it — by running the latency check in a separate uncached job, or by removing it from the cached gate and saying so in the cost document. Leaving `latency: 4000` inside the now-cached gate with no mention scores zero for this criterion; mentioning the conflict without resolving it in the files scores at most half."
+      "description": "MUST NOT delete or comment out any of the nine cases, MUST NOT drop the groundedness or tone assertions added in #812, and MUST NOT swap either provider for a cheaper model. Any of these scores zero for this criterion even if the row multiplication was also fixed — the spend is a configuration defect, not a coverage surplus, and adopting the team lead's proposal removes the checks that exist because of the June incident."
     },
     {
       "name": "Per-response spending bound added",
       "max_score": 12,
-      "description": "The config gains an explicit cost bound per response with a dollar-denominated threshold, so a future prompt or model change cannot silently multiply spend again. No cost bound anywhere scores zero; a bound set to a value that could never trip, or expressed in cents as if it were dollars, scores at most half."
+      "description": "The config gains an explicit cost bound expressed per response in dollars, so a future prompt or model change cannot silently multiply spend again. No bound anywhere scores zero; a bound set to a whole-run budget figure that no single response could ever reach, or one written in cents as though it were dollars, scores at most half."
+    },
+    {
+      "name": "Deliberate locale sweep preserved",
+      "max_score": 10,
+      "description": "The three-locale list in refund_window survives as a sweep producing three rows. Collapsing locale to a single value along with the examples lists scores zero here: the fix has to distinguish the list that was meant to multiply from the ones that were not."
     },
     {
       "name": "Row arithmetic written down",
@@ -44,7 +44,7 @@
     },
     {
       "name": "Helper unit tests untouched and passing",
-      "max_score": 6,
+      "max_score": 5,
       "description": "node --test still exits 0 and assertions/no-placeholder.js and its four tests are unchanged. Editing or deleting either scores zero for this item."
     }
   ]

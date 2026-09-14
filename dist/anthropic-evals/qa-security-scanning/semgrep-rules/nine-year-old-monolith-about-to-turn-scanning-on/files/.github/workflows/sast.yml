@@ -1,21 +1,27 @@
 name: sast
 
 on:
-  schedule:
-    - cron: '0 3 * * *'
-  workflow_dispatch:
+  pull_request:
+    branches: [main]
 
 jobs:
-  nightly-scan:
+  shadow:
     runs-on: ubuntu-latest
     container:
       image: semgrep/semgrep:1.99.0
     steps:
       - uses: actions/checkout@v5
-      - name: Informational scan
+        with:
+          fetch-depth: 0
+
+      # Shadow mode until 2026-10-01: reports, never blocks.
+      - name: Static analysis
         continue-on-error: true
         run: |
-          semgrep scan \
+          semgrep ci \
             --config p/owasp-top-ten \
             --config p/javascript \
-            --text --metrics=off
+            --severity ERROR \
+            --baseline-ref origin/main \
+            -j 4 \
+            --metrics=off

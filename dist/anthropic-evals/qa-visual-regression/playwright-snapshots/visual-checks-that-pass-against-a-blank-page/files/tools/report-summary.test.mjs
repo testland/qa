@@ -1,29 +1,23 @@
-import test from 'node:test';
+import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { summarise, isGreen } from './report-summary.mjs';
+import { classify, summaryLines } from './report-summary.mjs';
 
-const sample = {
-  suites: [
-    { specs: [{ status: 'passed' }, { status: 'passed' }, { status: 'failed' }] },
-    { specs: [{ status: 'skipped' }] },
-  ],
-};
-
-test('counts every spec status', () => {
-  assert.deepEqual(summarise(sample), { passed: 2, failed: 1, skipped: 1, other: 0 });
+test('a skipped check is not a pass', () => {
+  assert.equal(classify({ name: 'a', status: 'skipped' }), 'not run');
 });
 
-test('unknown statuses land in other', () => {
-  assert.deepEqual(
-    summarise({ suites: [{ specs: [{ status: 'timedOut' }] }] }),
-    { passed: 0, failed: 0, skipped: 0, other: 1 },
-  );
+test('a pass with nothing to compare against is called out', () => {
+  assert.equal(classify({ name: 'b', status: 'passed', comparedAgainst: null }), 'no baseline');
 });
 
-test('an empty report is not green', () => {
-  assert.equal(isGreen(summarise({ suites: [] })), false);
+test('a real pass stays a pass', () => {
+  assert.equal(classify({ name: 'c', status: 'passed', comparedAgainst: 'c.png' }), 'passed');
 });
 
-test('passing with no failures is green', () => {
-  assert.equal(isGreen({ passed: 3, failed: 0, skipped: 0, other: 0 }), true);
+test('one line per result', () => {
+  const lines = summaryLines([
+    { name: 'a', status: 'skipped' },
+    { name: 'c', status: 'passed', comparedAgainst: 'c.png' },
+  ]);
+  assert.deepEqual(lines, ['a: not run', 'c: passed']);
 });

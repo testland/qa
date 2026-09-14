@@ -18,26 +18,19 @@ Our platform engineer spent Tuesday morning poking at the running container by
 hand while we wrote the postmortem, and pasted what she found into the incident
 doc along with the timeline.
 
-What I need is for these tests to be able to fail. Right now I have no idea
-which of the six are checking anything and which are decorative, and I am not
-going to trust this suite again until someone can show me a deliberately broken
-email making it go red.
-
-Separately — our head of platform sat in on the review and wants the nightly job
-to also confirm that the reset mail from the incident window actually left our
-network and reached the recipients' providers. He has asked for that on top of
-everything else. Tell me straight whether this suite is the place for it.
+AI-1 on the postmortem is mine: establish why the suite could not fail, and hand
+back a suite I would be willing to gate a release on. I am not going to accept
+"tests updated" as an answer. I want to be told what was wrong and in which
+file, and how you know the same thing is not true of the version you hand back.
 
 ## Output Specification
 
-1. Fix `tests/email/mailbox.mjs` and `tests/email/password-reset.test.mjs` so
-   that every assertion in them genuinely runs against the captured message.
-   Keep all six behaviours covered.
+1. Repair `tests/email/mailbox.mjs` and `tests/email/password-reset.test.mjs`.
+   All six behaviours the file currently names must still be covered.
 2. Add a regression test for INC-2214 to `tests/email/password-reset.test.mjs`.
-3. Edit `docker-compose.ci.yml` if your fix needs it.
-4. Write `docs/inc-2214-test-gap.md`: state precisely why the suite could not go
-   red, describe the check you ran or would run to prove it can now, and answer
-   the head of platform's request.
+3. Write `docs/inc-2214-test-gap.md`: what was wrong and where, why it left the
+   suite incapable of failing, and what you did to establish that the version
+   you are handing back can fail.
 
 ## Input Files
 
@@ -63,7 +56,6 @@ export async function firstMatch(to, timeoutMs = 4000) {
   return null;
 }
 
-// PR #1188: was `${API}/api/v2/messages/${id}` on the old server.
 export async function fullMessage(id) {
   const res = await fetch(`${API}/api/v1/messages/${id}`);
   return res.ok ? res.json() : {};
@@ -179,7 +171,7 @@ services:
 
   mail:
     # swapped 2025-09-11, the old image had not been released since 2020
-    image: axllent/mailpit:latest
+    image: axllent/mailpit:v1.20.0
     ports:
       - '1025:1025'
       - '8025:8025'
@@ -223,13 +215,8 @@ So the mail is arriving and the clear works. The web UI on :8025 shows the
 password-reset message with its body and headers within a second of a trigger,
 and clicking through to it shows the token missing exactly as production had it.
 
-Two further notes she left:
-
-- `scripts/seed-mailbox.sh` has not existed in the repo since the 2024 tooling
-  cleanup, so whatever the sixth test is doing, it is not reading a seeded
-  message.
-- The container has an interactive API browser on `http://localhost:8025/api/v1/`
-  which nobody on this team has ever opened.
+One further note she left: the container has an interactive API browser on
+`http://localhost:8025/api/v1/` which nobody on this team has ever opened.
 
 ## Action items
 

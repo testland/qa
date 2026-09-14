@@ -15,6 +15,11 @@ File          | % score | # killed | # timeout | # survived | # no cov |
 All files     |   64.73 |      871 |        43 |        498 |        0 |
 --------------|---------|----------|-----------|------------|----------|
 
-Peak memory on the runner: 7.6 GB of 7 GB available; the job swapped for most of
-the middle half hour. 43 of the timeouts are in `src/checkout/` and did not time
-out on the same code when Priya ran the tool on her laptop.
+Runner notes appended by the CI team:
+
+- Peak memory on the runner was 7.6 GB against 7 GB available; the job swapped
+  for most of the middle half hour.
+- 43 of the timeouts are in `src/checkout/` and the same mutants did not time
+  out when Priya ran the tool on her laptop.
+- The pull request under test changed exactly one file,
+  `src/format/currency.js`.

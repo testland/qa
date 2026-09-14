@@ -1,17 +1,18 @@
-"""Baseline snapshots the nightly jobs compare against."""
+"""Reference data for the nightly comparison."""
 
 from pathlib import Path
 
 import pandas as pd
 
 SNAPSHOT_DIR = Path("monitoring/baselines")
+WINDOW_DAYS = 28
 
 
 def load(name: str) -> pd.DataFrame:
-    return pd.read_parquet(SNAPSHOT_DIR / (name + ".parquet"))
+    files = sorted(SNAPSHOT_DIR.glob(name + "-*.parquet"))[-WINDOW_DAYS:]
+    return pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
 
 
-def refresh(df: pd.DataFrame, name: str) -> None:
-    """Write df over the named snapshot."""
+def archive(df: pd.DataFrame, name: str, day) -> None:
     SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(SNAPSHOT_DIR / (name + ".parquet"))
+    df.to_parquet(SNAPSHOT_DIR / (name + "-" + day.isoformat() + ".parquet"))

@@ -1,25 +1,24 @@
 'use strict';
 
-const SLOT_CENTS = 0;
-const SLOT_POSTINGS = 1;
+// Byte 0..7 float64 cents (nightly totals run past 2^31), byte 8..11 int32 postings.
+const TALLY_BYTES = 16;
 
-// Shared accumulator. Every ingest thread holds a handle onto the same
-// SharedArrayBuffer and posts into these two slots.
 function createTally(sharedBuffer) {
-  const view = new Int32Array(sharedBuffer);
+  const cents = new Float64Array(sharedBuffer, 0, 1);
+  const postings = new Int32Array(sharedBuffer, 8, 1);
 
   return {
-    post(cents) {
-      view[SLOT_CENTS] = view[SLOT_CENTS] + cents;
-      view[SLOT_POSTINGS] = view[SLOT_POSTINGS] + 1;
+    post(amountCents) {
+      cents[0] = cents[0] + amountCents;
+      postings[0] = postings[0] + 1;
     },
     cents() {
-      return view[SLOT_CENTS];
+      return cents[0];
     },
     postings() {
-      return view[SLOT_POSTINGS];
+      return postings[0];
     },
   };
 }
 
-module.exports = { createTally, SLOT_CENTS, SLOT_POSTINGS };
+module.exports = { createTally, TALLY_BYTES };

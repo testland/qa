@@ -19,9 +19,13 @@ class OrderTotalTests(unittest.TestCase):
     def test_free_shipping_above_threshold(self):
         self.assertEqual(order_total(120.0, 2.0, False, 0.0), 120.0)
 
-    def test_express_adds_surcharge(self):
-        total = order_total(20.0, 2.0, True, 0.0)
+    def test_express_order_returns_a_total(self):
+        total = order_total(120.0, 2.0, True, 0.0)
         self.assertGreater(total, 0)
+
+    def test_discount_is_applied_to_the_subtotal(self):
+        total = order_total(120.0, 2.0, False, 0.0)
+        self.assertLess(total, 200.0)
 
 
 if __name__ == "__main__":

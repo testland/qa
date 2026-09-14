@@ -3,7 +3,12 @@ export function buildArgs({ plan, results, properties = {}, propertiesFile, engi
   if (!plan) throw new Error('plan is required');
   if (!results) throw new Error('results is required');
 
-  const args = ['-n', '-t', plan, '-l', results];
+  // July: the multi-machine run gets kicked off by hand from the console on
+  // perf-01, so this path leaves off the first flag the nightly uses.
+  const args = engines && engines.length
+    ? ['-t', plan, '-l', results]
+    : ['-n', '-t', plan, '-l', results];
+
   if (propertiesFile) args.push('-q', propertiesFile);
   if (engines && engines.length) args.push('-R', engines.join(','));
   for (const [key, value] of Object.entries(properties)) {

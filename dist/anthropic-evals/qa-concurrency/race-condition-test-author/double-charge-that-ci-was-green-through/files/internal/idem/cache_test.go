@@ -1,7 +1,6 @@
 package idem
 
 import (
-	"sync"
 	"testing"
 	"time"
 )
@@ -25,26 +24,12 @@ func TestDoChargesOnceForRepeatedKey(t *testing.T) {
 	}
 }
 
-func TestDoUnderLoad(t *testing.T) {
+func TestDoReturnsGatewayError(t *testing.T) {
 	c := New(time.Minute)
-	var wg sync.WaitGroup
-
-	for i := 0; i < 8; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			time.Sleep(time.Duration(i) * time.Millisecond)
-			r, err := c.Do("key-b", func() (*Result, error) {
-				return &Result{ChargeID: "ch_2", Amount: 999}, nil
-			})
-			if err != nil {
-				t.Fatalf("Do: %v", err)
-			}
-			if r.Amount != 999 {
-				t.Fatalf("amount = %d, want 999", r.Amount)
-			}
-		}(i)
+	_, err := c.Do("key-err", func() (*Result, error) {
+		return nil, errBoom
+	})
+	if err == nil {
+		t.Fatal("want the gateway error back")
 	}
-
-	wg.Wait()
 }

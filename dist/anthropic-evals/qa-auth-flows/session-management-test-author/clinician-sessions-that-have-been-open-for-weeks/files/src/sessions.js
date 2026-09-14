@@ -11,6 +11,12 @@ function createSessions({ clock, config }) {
     return sid;
   }
 
+  // The Set-Cookie the login response carries.
+  function cookieFor(sid) {
+    const maxAge = config.cookieMaxAgeHours * 60 * 60;
+    return `sid=${sid}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
+  }
+
   // Returns the session if it is still usable, else null.
   function resolve(sid) {
     const session = store.get(sid);
@@ -35,7 +41,7 @@ function createSessions({ clock, config }) {
     store.delete(sid);
   }
 
-  return { login, resolve, request, logout, count: () => store.size };
+  return { login, cookieFor, resolve, request, logout, count: () => store.size };
 }
 
 module.exports = { createSessions };

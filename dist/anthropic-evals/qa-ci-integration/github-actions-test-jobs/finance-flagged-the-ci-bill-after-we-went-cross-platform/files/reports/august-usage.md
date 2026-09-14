@@ -2,29 +2,47 @@
 
 Workflow: `test.yml`. 620 runs (487 on pull requests, 133 on pushes to main).
 Billed at $0.008 per billable minute. Included minutes exhausted on 04 Aug.
+August total: $1,775.36.
 
-| Runner         | Runner minutes | Multiplier | Billable minutes |     Cost |
-|----------------|---------------:|-----------:|-----------------:|---------:|
-| ubuntu-latest  |         18,600 |         x1 |           18,600 |  $148.80 |
-| windows-latest |         21,700 |         x2 |           43,400 |  $347.20 |
-| macos-latest   |         23,000 |        x10 |          230,000 | $1,840.00 |
-| **Total**      |     **63,300** |            |      **292,000** | **$2,336.00** |
+| Runner         | Runner minutes | Multiplier |
+|----------------|---------------:|-----------:|
+| ubuntu-latest  |         14,880 |         x1 |
+| windows-latest |         16,120 |         x2 |
+| macos-latest   |         17,480 |        x10 |
+| **Total**      |     **48,480** |            |
 
 Run-level notes from the export:
 
 - Median duration of one `test` matrix job: 9 min on Linux, 11 min on macOS,
-  13 min on Windows. `npm ci` plus checkout accounts for 1.5 min of each.
+  13 min on Windows. Checkout plus `npm ci` accounts for about 1.5 min of each.
+- The `integration` job runs once per run on ubuntu-latest, median 6 min.
 - 148 of the 620 runs had a newer commit pushed to the same branch before the
   run finished. Those runs continued to completion.
-- 11 jobs reached the maximum job duration and were terminated by the platform
-  at 6 hours. All 11 were `test (macos-latest, 20)`. Cause not recorded here;
-  the suite's own longest recorded run is 14 minutes.
-- 96 runs were on branches whose only changed files were under `docs/`.
+
+Longest 12 jobs on this account in August:
+
+| Job                          | Duration |
+|------------------------------|---------:|
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (macos-latest, 20)      |   360:00 |
+| test (windows-latest, 22)    |    14:12 |
 
 Release blockers caught in Q2, from the release wiki:
 
-| Blocker  | Found by                        | Would Linux or Windows have caught it? |
-|----------|---------------------------------|----------------------------------------|
-| REL-3301 | test (macos-latest, 22)         | No - keychain entitlement path          |
-| REL-3318 | test (windows-latest, 20)       | No - path separator                     |
-| REL-3327 | test (macos-latest, 20)         | No - case-insensitive volume default    |
+| Blocker  | Found by                  | Note from the postmortem                          |
+|----------|---------------------------|---------------------------------------------------|
+| REL-3301 | test (macos-latest, 22)   | Keychain entitlement path.                         |
+| REL-3318 | test (windows-latest, 20) | Path separator.                                    |
+| REL-3327 | test (macos-latest, 20)   | Case-insensitive volume default. Surfaced only on  |
+|          |                           | the re-run - on the first run that leg had already |
+|          |                           | been stopped when the Windows job failed a minute  |
+|          |                           | earlier.                                           |

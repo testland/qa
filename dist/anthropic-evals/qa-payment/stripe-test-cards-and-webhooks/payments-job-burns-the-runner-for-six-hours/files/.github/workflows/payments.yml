@@ -9,6 +9,7 @@ on:
 jobs:
   payments:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
       STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
@@ -26,8 +27,6 @@ jobs:
       - name: Start the API
         run: npm start &
       - name: Forward events to the API
-        run: stripe listen --forward-to http://localhost:3000/webhooks/stripe
-      - name: Unit tests
-        run: npm test
+        run: stripe listen --forward-to http://localhost:3000/webhooks/stripe &
       - name: Forwarded-event tests
         run: npm run test:webhooks

@@ -18,4 +18,5 @@ test('order.create emits the checkout spans', async () => {
   assert.equal(spans[2].name, 'order.create');
   assert.equal(spans[2].attributes['order.item_count'], 2);
   assert.equal(spans[1].attributes['db.sql.table'], 'orders');
+  assert.equal(spans[1].attributes['db.system'], 'postgresql');
 });

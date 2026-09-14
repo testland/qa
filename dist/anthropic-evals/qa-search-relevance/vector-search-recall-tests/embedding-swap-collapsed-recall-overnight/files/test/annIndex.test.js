@@ -44,6 +44,6 @@ test('comparisons count only the points actually scored', () => {
   assert.equal(index.comparisons(), 2);
 });
 
-test('cosine ignores magnitude', () => {
-  assert.ok(Math.abs(cosine([3, 0], [0.5, 0]) - 1) < 1e-12);
+test('cosine of a zero vector is zero, not NaN', () => {
+  assert.equal(cosine([0, 0, 0, 0], [1, 0, 0, 0]), 0);
 });

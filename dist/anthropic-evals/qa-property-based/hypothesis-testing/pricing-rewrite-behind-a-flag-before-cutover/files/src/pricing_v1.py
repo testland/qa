@@ -1,4 +1,4 @@
-"""Frozen for the cutover. Finance signed off on this output."""
+"""Frozen for the cutover. This is the side being compared against."""
 
 import random
 from datetime import datetime

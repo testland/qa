@@ -36,10 +36,13 @@ therefore the session is being reissued."
 
 ## What the college told us
 
-- Terminals run a kiosk profile that is discarded at logout; cookies do not
-  survive a session on the machine that signed in.
-- The machine that read the account (`LIB-PC-14`) reached `GET /dashboard`
+- The public terminals run under one shared guest OS account. It is signed out
+  once, at closing time, and the browser-profile wipe is tied to that sign-out,
+  so the profile is not reset between one member and the next.
+- `LIB-PC-14` was in continuous use from 13:10 until closing. The cardholder
+  sat down at it at 15:41.
+- The machine that read the account (`LIB-PC-09`) reached `GET /dashboard`
   first. It made no request to `POST /login` on 2 September at all.
 - Both machines were on the same NAT address, `198.51.100.9`.
 - Anyone with a library card can use the terminals unsupervised, and the
-  browser home page on every terminal is set by the college's IT team.
+  browser on every terminal permits the developer tools.

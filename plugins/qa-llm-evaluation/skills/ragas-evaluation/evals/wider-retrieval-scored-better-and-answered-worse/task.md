@@ -1,4 +1,4 @@
-# We widened retrieval, the gate says we improved, HR says we got worse
+# We went from 4 passages to 20 in August and HR has opened three tickets
 
 ## Problem Description
 
@@ -10,17 +10,18 @@ cheapest thing we could try.
 The eval gate passed the change without comment and the dashboard showed it as
 a clear improvement, so it shipped the same afternoon.
 
-Five weeks on, the legal complaints have basically stopped. But HR has opened
-three tickets saying the assistant has started answering handbook questions
-with policies from the wrong department - asking about the engineering on-call
+Five weeks on, the legal complaints have basically stopped. HR has opened three
+tickets saying the assistant has started answering handbook questions with
+policies from the wrong department - asking about the engineering on-call
 allowance and getting an answer that blends in the field-services standby rate,
 that kind of thing. Nobody has changed the handbook corpus, the prompt, or the
 model since July.
 
 Both document sets go through the same retrieval config and the same eval run.
-The before-and-after report is attached, including a per-route breakdown that
-the dashboard does not show and a hand-count of the blended answers that
-somebody did by reading thirty of them.
+The before-and-after report is attached, including a per-route breakdown the
+dashboard does not surface, the retrieval numbers we compute but have never
+gated on, and a hand-count somebody did by reading thirty answers from each
+run. There is a second read-through from earlier this month in the same folder.
 
 Our tech lead has three suggestions and the third is the one he is pushing,
 because he has already built it and it is on a branch.
@@ -45,8 +46,7 @@ want a verdict on all three of his suggestions rather than a plan.
 1. Edit `eval/metrics.py` and `eval/gate.py` so that a change of this shape
    cannot come out the other side reading as an improvement.
 2. Edit `config/retrieval.yaml` where the evidence supports a change, and leave
-   alone what the evidence does not support changing. I would rather you moved
-   one thing for a stated reason than moved everything.
+   alone what the evidence does not support changing.
 3. Write `docs/topk-review.md`: why the existing gate passed the change and
    which figures in the attached report establish it, a granted-or-refused
    verdict on each of the three suggestions with the reason, and what the new
@@ -134,6 +134,16 @@ Verdict printed on the day: PASS, and recall up 23 points. Change approved.
 | contracts | context_recall | 0.56 | 0.95 |
 | contracts | faithfulness   | 0.92 | 0.96 |
 
+## Retrieval numbers we compute on every run and have never gated on
+
+These land on the second tab of the dashboard. Nobody has ever put a floor
+under them.
+
+| Route     | Metric            | k=4  | k=20 |
+|-----------|-------------------|------|------|
+| handbook  | context_precision | 0.97 | 0.95 |
+| contracts | context_precision | 0.61 | 0.24 |
+
 ## Where the passage the answer needed was sitting in the ranking
 
 Measured on the k=20 run: position of the passage containing the reference
@@ -165,6 +175,24 @@ Two of the eleven, written out:
   carry over and expire on 31 March; contractors accrue no carry-over."
   Passage 1 was the carry-over policy; passage 14 was the contractor terms
   appendix. Both statements appear in the passages.
+
+=============== FILE: reports/readthrough-september.md ===============
+# Second read-through, 2026-09-09
+
+Same two people, same method as the 09-05 count. This batch is 30 handbook
+answers taken from the wider trial configuration somebody ran over the weekend
+of 2026-09-06, not from production.
+
+Answers stating a policy belonging to a department other than the one asked
+about: **19 of 30**.
+
+Notes:
+
+- The blended answers are longer than production's and tend to carry two or
+  three departments' figures rather than two.
+- In every one of the 19 the department that was actually asked about is also
+  answered correctly somewhere in the reply.
+- Nothing in the 30 states a figure that is not in the corpus.
 
 =============== FILE: branches/recall-ratchet.md ===============
 # Branch `spike/recall-ratchet` - J. Oduya, 2026-09-08
@@ -201,11 +229,6 @@ Per route on the k=50 run, for completeness:
 |-----------|----------------|--------------|
 | handbook  | 0.95           | 0.84         |
 | contracts | 0.99           | 0.98         |
-
-The same two readers did the hand-count again on the k=50 handbook answers:
-19 of 30 mixed in another department's policy, against 11 of 30 at k=20.
-
-Verdict printed by the branch on the k=50 run: **PASS**.
 
 I think this is ready. It gives the gate the memory it has been missing.
 

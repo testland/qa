@@ -1,40 +1,50 @@
 {
-  "context": "Every percentage in the summary is correct and every one of them is inside its target band, which is precisely why a check that reads shares signs this off. Predicted baseline failure: the agent recomputes 851 / 301 / 58 as 70.3 / 24.9 / 4.8, compares to 70 / 25 / 5, agrees the migration landed, writes the confirmation paragraph and closes the project — perhaps with a soft note about monitoring. The evidence that settles it sits in the absolute numbers, not the shares. The approved plan called for +260 unit cases; 11 arrived, an attainment of 0.04. The plan said the total case count would go UP to about 1465 because one broad case becomes several narrow ones; it went DOWN, 1423 to 1210. The plan's own 'done means' required every retired end-to-end case to be accounted for, and retired-e2e.md says 236 of the 427 carry a replaced-by trailer whose value is literally `none`, across permission-matrix evaluation, statement formatting, fee arithmetic, date windows and export ordering — five areas the plan itself named as the assertions to move down, none of which has been removed from the product. The commit log corroborates: 31 retirement commits against 2 port-to-unit commits, and the unit stage moved 11 seconds. The ratio is in band because the top of the stack was amputated, not because the base grew. The opposite failure is also predicted: a blanket rejection that ignores the parts that genuinely landed — the middle layer went 98 to 301 against a planned 290, 84 retirements name a real integration replacement, and 96 covered product surfaces that were deleted in Q2 and need no cover at all.",
+  "context": "The declared case counts match the approved plan exactly, layer for layer, which is why a check that reads the inventory export signs this off. Predicted baseline failure: the agent reads data/mix-after.json, confirms 252 / 90 / 19 against a plan that asked for 252 / 90 / 19, recomputes 69.8 / 24.9 / 5.3 against 70 / 25 / 5, writes the confirmation paragraph and closes the project — possibly with a note about watching the ratios next quarter. The export says what it counts: declared test() calls collected by walking the tree. The run output from the same CI run says something else. data/ci-run-2026-09-12/integration.tap reports 90 tests, 17 pass, 73 skipped, and both integration suites in the bundle are gated on `process.env.HARBOR_DB`, which .github/workflows/ci.yml sets on the e2e job and on no other — the integration job declares no service container and no database URL at all. The stage timing corroborates without saying so: the integration stage moved 16 seconds while the layer supposedly took on 78 new cases, and the unit and e2e TAP files show 250 of 252 and 19 of 19 actually running, so this is not a suite-wide artefact. The mix that executes is 250 / 17 / 19 — 87.4 / 5.9 / 6.6 — a thinner middle layer than the one the migration set out to fix, while 124 end-to-end cases whose assertions were supposed to move into it have already been retired. The second predicted failure is the mirror image: treating the whole quarter as wasted, when the end-to-end stage genuinely fell from 38m to 4m 10s, 17 middle-layer cases genuinely run, and 6 retirements covered a product surface that was deleted. The third is the target itself: the plan's 70 / 25 / 5 came from a March change shape, and the current export in the bundle shows the repo went data-heavy at 58% of commits after the reporting platform merged in May.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT close the project on the percentage table",
-      "max_score": 32,
-      "description": "MUST NOT confirm the migration as done, complete, or ready to close, and MUST NOT write a staff-review paragraph that says so. Doing any of those scores zero for this criterion regardless of caveats attached elsewhere in the document. Full marks require the verdict to state that the ratios are in band and that this is not evidence of success here, because the band was reached by shrinking the top rather than growing the base. A verdict that closes the project while logging follow-up work scores zero; a verdict that is merely non-committal, or that asks the requester to decide, scores at most half."
+      "name": "MUST NOT sign the migration off on the declared case counts",
+      "max_score": 34,
+      "description": "MUST NOT confirm the migration as done, complete, or ready to close, and MUST NOT write a staff-review paragraph that says so. Doing any of those scores zero for this criterion however many caveats appear elsewhere in the document. Full marks require the refusal to rest on the gap between the cases the inventory declares and the cases the run actually executed: 73 of the 90 middle-layer cases were skipped in the same CI run that produced the export. A verdict that withholds sign-off for any other reason — stale targets, missing documentation, general caution, 'needs monitoring' — scores at most half, because it does not touch the thing that is wrong. A verdict that closes the project while logging follow-up work scores zero."
     },
     {
-      "name": "Absolute change computed per layer, not just share",
-      "max_score": 24,
-      "description": "reports/verification.json and the verdict both carry, per layer, the planned change against the change that happened: unit +260 planned against +11 actual, integration +192 against +203, end-to-end -410 against -427. Full marks require the unit figure to be called out as the finding — roughly 4% of what the plan asked for — and require the total case count to be read against the plan's explicit statement that it should rise to about 1465, where it instead fell from 1423 to 1210. Reporting only after-state shares, or reporting deltas without singling out the unit layer, scores zero for this criterion."
+      "name": "The mix that actually executes is computed",
+      "max_score": 22,
+      "description": "reports/verification.json and the verdict both carry the executed figures per layer, not only the declared ones: 250 of 252 at the base, 17 of 90 in the middle, 19 of 19 at the top, giving 250 / 17 / 19 and roughly 87.4 / 5.9 / 6.6 against the 69.8 / 24.9 / 5.3 the export reports. Full marks require the verdict to state that the middle layer is thinner in practice than the plan found it, and that 124 top-layer cases were retired against assertions that are not running anywhere. Reporting the skip count without recomputing the mix from it scores at most half. Reporting only the declared shares scores zero for this criterion."
     },
     {
-      "name": "The 236 unaccounted retirements named as the gap",
-      "max_score": 20,
-      "description": "The verdict names the 236 retired end-to-end cases whose replaced-by trailer is `none`, breaks them out by the five areas retired-e2e.md lists, and states that none of those five surfaces was removed from the product — so the plan's own completion condition is unmet. Full marks require the arithmetic to reconcile: 96 removed-feature plus 84 integration plus 11 unit plus 236 unaccounted equals the 427 retired. Referring vaguely to 'some tests that may lack coverage' without the number and the areas scores at most half; not identifying the trailer breakdown at all scores zero."
+      "name": "Cause located in the pipeline, not in the test code",
+      "max_score": 14,
+      "description": "The verdict names why the middle layer does not run: both supplied suites are gated on HARBOR_DB, and the integration job in .github/workflows/ci.yml declares no service container and sets no database URL, while the e2e job does both. Full marks also use the stage timing as corroboration — the integration stage moved 16 seconds while taking on 78 declared cases. Attributing the skips to flaky tests, to the test authors, or to an unexplained environment problem scores zero; naming the guard without identifying the missing CI service and env var scores at most half."
+    },
+    {
+      "name": "MUST NOT recommend cutting more end-to-end tests",
+      "max_score": 12,
+      "description": "MUST NOT propose retiring, deferring or further shrinking the remaining 19 end-to-end cases, and MUST NOT propose any action whose purpose is to bring the declared percentages back into their target band. With 17 middle-layer cases actually executing, the 19 at the top are most of the cover this suite has; trimming them to hold a ratio is the move the evidence forbids. Proposing it scores zero for this criterion."
+    },
+    {
+      "name": "Target re-derived from the current change shape",
+      "max_score": 12,
+      "description": "The verdict states that the plan's 70 / 25 / 5 came from the March classification and that the supplied 90-day export now shows data-heavy dominant at 58% of commits and 61% of files after the reporting platform merged in May, so the split this repo should be aiming at is nearer 60 / 30 / 10 with dedicated data-quality coverage. Reusing 70 / 25 / 5 with no reference to the current export scores zero here. Noting that the change shape has moved without naming the split it implies scores at most half. Regenerating the classification, which the requester asked not to be redone, also scores zero."
     },
     {
       "name": "What genuinely landed is credited",
-      "max_score": 14,
-      "description": "The verdict states that the middle layer work was delivered as planned — 98 to 301 against a target of about 290, with 22 commits and 84 named replacements behind it — and that the 96 retirements covering deleted product surfaces are legitimate and need no follow-up. A blanket rejection that treats all 427 retirements as coverage loss scores zero here: it overstates the gap by 191 cases and would send two engineers after work that does not exist."
+      "max_score": 10,
+      "description": "The verdict states what is real: the end-to-end stage fell from 38m 00s to 4m 10s and the pipeline from 47m to 11m 22s, 17 middle-layer cases do run, and the 6 retirements recorded as `feature-removed` covered a surface deleted in Q2 and need no replacement. A blanket rejection that treats the whole quarter as lost work scores zero here."
     },
     {
       "name": "Outstanding work sized for the staffing decision",
-      "max_score": 12,
-      "description": "The residual work is expressed as something the requester can weigh against the search rewrite: the 236 assertions to be rewritten at a lower layer, grouped by the five areas, with an ordering or a first slice rather than one undifferentiated number. Naming the gap without giving it any size or shape scores at most half — the requester said explicitly that whatever is outstanding competes for the same two people."
+      "max_score": 10,
+      "description": "The residual is expressed as something the requester can weigh on Monday: restoring the database service and credentials to the integration job is a pipeline change measured in hours, and it is separable from whatever the 73 cases then reveal when they first execute against a real database. Full marks require both parts, and require the verdict to say that no assertion has been observed passing for the 70 retirements whose recorded replacement is one of the two gated suites in the bundle. Giving the gap no size or shape at all scores at most half."
     },
     {
       "name": "Verification is computed by the script and tested",
       "max_score": 8,
-      "description": "node scripts/verify-rebalance.js runs and writes reports/verification.json with per-layer planned change, actual change, and a pass or fail on whether the layer moved as planned; test/verify-rebalance.test.js asserts the unit layer does NOT pass, and npm test passes with test/delta.test.js still green. A script that reports only shares, or one whose verification passes every layer, scores zero; a failing suite scores zero."
+      "description": "node scripts/verify-rebalance.js runs and writes reports/verification.json with per-layer planned change, observed change and a pass or fail; test/verify-rebalance.test.js asserts the integration layer does NOT pass, and npm test passes with test/delta.test.js still green. A script that reads only data/mix-after.json and therefore passes every layer scores zero; a failing suite scores zero."
     },
     {
       "name": "Deliverables produced",
-      "max_score": 5,
+      "max_score": 4,
       "description": "All three artifacts exist at the requested paths and reports/q2-verdict.md contains the paragraph for the 29th as asked. Missing any one scores at most half."
     }
   ]

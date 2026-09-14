@@ -3,7 +3,8 @@
 ## Problem Description
 
 We cut 8.4 on Friday. The instrumented run over the audio engine finished
-Tuesday night and I have three people in my inbox about it, all of them
+Tuesday night — four hours twelve, 2,118 cases, job came back green as it
+always does — and I have three people in my inbox about the report, all of them
 reasonable, and I need one written answer that covers all three.
 
 Priya (audio lead) on the `g_stream_count` finding: it is a counter that feeds
@@ -15,21 +16,22 @@ ever filed a bug against that log line.
 Dan (QA) on the duplicate-track bug, PLAY-2288: users occasionally end up with
 the same track twice in a playlist when they double-tap Add. He ran the
 reproducer under the instrumented build for forty minutes on Monday and it
-printed nothing at all, so he has concluded the ordering in `Playlist::AddOnce`
-is fine and the duplicate must be coming from the client sending two requests.
-He would like a permanent instrumented case added for that path so we keep
-proving it, and he is right that forty minutes is a lot more than we usually
-give a reproducer.
+printed nothing at all. He has also read `Playlist::AddOnce` line by line and
+his note says every access to `index_` and `order_` goes through `mu_`, which
+matches what I see. He has concluded the duplicate must be the client sending
+two requests, and he would like a permanent instrumented case added for that
+path so we keep proving it. He is right that forty minutes is a lot more than
+we usually give a reproducer.
 
 Marek (build) on cost: the instrumented builds add 28 minutes to the release
 pipeline because we do both presets, and the pipeline is now the slowest part
-of a hotfix. He wants them out.
+of a hotfix. He wants them out, and he points out that in the fourteen months
+we have been running them they have not once stopped a release.
 
 The third finding, on `ready_`, nobody has commented on.
 
-I do not want a document that says "it depends" three times. Tell each of them
-yes or no, and if the answer to one of them is that the thing they asked for
-cannot do what they think it does, say that plainly and give them what would.
+I do not want a document that says "it depends" three times. Give each of them
+a decision.
 
 ## Output Specification
 
@@ -47,7 +49,7 @@ cannot do what they think it does, say that plainly and give them what would.
 Extract the following files before beginning.
 
 =============== FILE: reports/instrumented-run-2026-09-09.txt ===============
-audio-engine 8.4-rc1 — instrumented build, 4h12m, 2,118 cases
+audio-engine 8.4-rc1 — instrumented build, 4h12m, 2,118 cases — job status: success
 
 ==================
 WARNING: ThreadSanitizer: data race (pid=20114)
@@ -80,35 +82,41 @@ SUMMARY: 2 data races reported, 0 in tests/playlist_*
 Note appended by @dchen 2026-09-08: re-ran tests/playlist_repro under the
 instrumented build for 40 minutes (roughly 900,000 double-tap iterations
 against Playlist::AddOnce). No warnings of any kind. Duplicates still appeared
-in 1,104 of those iterations.
+in 1,104 of those iterations. Read the code too — Contains() takes the lock,
+Append() takes the lock, nothing in there is unguarded.
 
 =============== FILE: src/playlist.cc ===============
 #include "playlist.h"
 
-// Adds a track unless it is already present. Returns false if it was.
-bool Playlist::AddOnce(TrackId id) {
-  {
-    std::lock_guard<std::mutex> guard(mu_);
-    if (index_.count(id) != 0) {
-      return false;
-    }
-  }
+std::size_t Playlist::CountOf(TrackId id) const {
+  std::shared_lock<std::shared_mutex> guard(mu_);
+  return static_cast<std::size_t>(
+      std::count(order_.begin(), order_.end(), id));
+}
 
-  std::lock_guard<std::mutex> guard(mu_);
+bool Playlist::Contains(TrackId id) const {
+  std::shared_lock<std::shared_mutex> guard(mu_);
+  return index_.count(id) != 0;
+}
+
+void Playlist::Append(TrackId id) {
+  std::unique_lock<std::shared_mutex> guard(mu_);
   index_.insert(id);
   order_.push_back(id);
+}
+
+// Adds a track unless it is already present. Returns false if it was.
+bool Playlist::AddOnce(TrackId id) {
+  if (Contains(id)) {
+    return false;
+  }
+  Append(id);
   return true;
 }
 
 std::size_t Playlist::Size() const {
-  std::lock_guard<std::mutex> guard(mu_);
+  std::shared_lock<std::shared_mutex> guard(mu_);
   return order_.size();
-}
-
-std::size_t Playlist::CountOf(TrackId id) const {
-  std::lock_guard<std::mutex> guard(mu_);
-  return static_cast<std::size_t>(
-      std::count(order_.begin(), order_.end(), id));
 }
 
 =============== FILE: src/playlist.h ===============
@@ -116,7 +124,8 @@ std::size_t Playlist::CountOf(TrackId id) const {
 
 #include <algorithm>
 #include <cstddef>
-#include <mutex>
+#include <cstdint>
+#include <shared_mutex>
 #include <unordered_set>
 #include <vector>
 
@@ -125,11 +134,13 @@ using TrackId = std::uint64_t;
 class Playlist {
  public:
   bool AddOnce(TrackId id);
+  bool Contains(TrackId id) const;
+  void Append(TrackId id);
   std::size_t Size() const;
   std::size_t CountOf(TrackId id) const;
 
  private:
-  mutable std::mutex mu_;
+  mutable std::shared_mutex mu_;
   std::unordered_set<TrackId> index_;
   std::vector<TrackId> order_;
 };
@@ -178,6 +189,11 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+
+env:
+  # keep the matrix alive when a case trips the tool mid-run, and give us deep
+  # stacks in the report so it is actually readable -- @mkowal 2025-07
+  TSAN_OPTIONS: "halt_on_error=0 exitcode=0 history_size=7"
 
 jobs:
   build-and-test:

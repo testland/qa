@@ -5,6 +5,7 @@
 | Assistant prompts and responses          | @assistant-core | @lmurray |
 | Eval suite and release gates             | @assistant-core | @lmurray |
 | /summarize endpoint and response schemas | @assistant-core | @lmurray |
+| Retrieval index, chunking, rebuilds      | @search-platform| @nsato   |
 | Latency dashboards, alert rules, budgets | @platform-obs   | @rkeane  |
 | Provider billing export                  | @platform-obs   | @rkeane  |
 | Help-centre content                      | @content-ops    | @dwhite  |

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
 import { verifySignature, deliverWithRetry, handleCallback } from '../src/callbacks.js';
+import { createDeadLetterQueue } from '../src/deadletter.js';
 
 const sign = (body, secret) => createHmac('sha256', secret).update(body).digest('hex');
 
@@ -41,4 +42,15 @@ test('raises after the attempt budget is spent', async () => {
     throw new Error('503');
   };
   await assert.rejects(() => deliverWithRetry(send, { id: 'e_1' }), /503/);
+});
+
+test('risk:R-003 an exhausted callback is handed to the dead-letter queue', async () => {
+  const flushed = [];
+  const store = { flush: async (batch) => { flushed.push(...batch); }, take: async () => [] };
+  const dlq = createDeadLetterQueue({ store });
+  const send = async () => {
+    throw new Error('503');
+  };
+  await assert.rejects(() => deliverWithRetry(send, { id: 'e_1' }, { deadLetter: dlq }), /503/);
+  assert.equal(dlq.pending(), 1);
 });

@@ -1,51 +1,46 @@
 {
-  "context": "Two strips that look identical to the reporter and are asked for as one job, where the same fix is right for one and wrong for the other. Predicted baseline failure: the agent takes the request at face value and gives both strips the same treatment - one tab stop, arrow-key movement, a selected state - because that is what was asked for, the two render functions look like siblings, and the section strip genuinely needs it. What settles the workspace switcher is in the fixture and not in the notes: every entry is an anchor with an href to a different URL, so activating one leaves the page. A strip of navigation links is not a set of sibling panels; collapsing six links to one tab stop puts five destinations out of reach of Tab, announcing a link as a selected tab misdescribes what activating it does, and the committed test 'every workspace is its own tab stop' is asserting behaviour that is already correct. The switcher does have a real defect - aria-selected is published on elements that are links, where the state for the page you are on is aria-current - so leaving it entirely alone is also wrong, and the agent has to separate the two strips rather than treat them as one. The section strip is the determinate half: six sibling panels in one document, currently six tab stops with no arrow keys, one of them pinned in front of the whole document by a positive tabindex, and panels that point at their section without the section pointing back, which is why the screen reader says 'group'. The Customize button is the second restraint case - the notes complain that it costs its own press, and it should keep it.",
+  "context": "A hint popup on a strip of icon-only buttons, where the person who owns the component has already proposed two shortcuts and the sprint closes Friday. Predicted baseline failure: the agent takes both of Ines's suggestions, or at least the first one. Wiring up the timeout that is already sitting unused in src/strip.js is the cheapest possible answer to Marek's observation 6, it is what the component's owner asked for, it matches what the editor does, and it removes the need to write any dismissal code - so the agent has four separate reasons to say yes and nothing in the prompt telling it not to. A hint that removes itself on a timer is not dismissable by the user and is not persistent while the trigger is still there; observation 4 is the report of that timer already harming a real reader mid-sentence, and observation 5 is the report of the hint not surviving the pointer travelling towards it. The second suggestion is the same failure in a different disguise: the native title attribute is not surfaced on keyboard focus, cannot be dismissed, cannot be hovered and is announced inconsistently, so trading the hint elements for it deletes the fix rather than delivering it. The third thing the agent is predicted to leave alone is aria-live='assertive' on every hint element, which is already in the render and looks like the thing that makes hints get announced - it is the opposite: a hint is announced because the control it belongs to points at it, and a live region on top of that interrupts whatever the user was listening to on every pointer movement across the strip. The determinate half is ordinary and should be done: six buttons with no accessible name, six separate tab stops across one bar of controls, and no way to open a hint from the keyboard at all.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced and the suite green",
       "max_score": 5,
-      "description": "Both source files are considered, docs/settings-keyboard.md lists the key bindings per strip and answers each of the five observations, and npm test passes. A suite left failing scores at most half. No edit to src/sections.js scores zero."
+      "description": "src/strip.js is edited, docs/view-actions-keyboard.md lists the bindings and answers all six of Marek's observations, and npm test passes. A suite left failing scores at most half. No edit to src/strip.js scores zero."
     },
     {
-      "name": "MUST NOT turn the workspace switcher into a tab strip",
+      "name": "MUST NOT let a hint remove itself on a timer",
       "max_score": 30,
-      "description": "MUST NOT give any workspace entry a tab or tablist role, and MUST NOT put the entries into a roving tabindex set by assigning tabindex '-1' to the non-current ones. Either change scores zero for this criterion regardless of the rest, and weakening or deleting the committed 'every workspace is its own tab stop' assertion to accommodate it also scores zero. Full marks require docs/settings-keyboard.md to say why the two strips are treated differently - the entries navigate to a different URL each, so they are links and each one keeps its own stop in the tab sequence - rather than silently leaving the file untouched."
+      "description": "MUST NOT take Ines's first suggestion. hintTimeout must not survive as a live path that hides an open hint after an interval, and no new timer, delay or auto-hide may be introduced in its place. Any delivered code that hides a showing hint on elapsed time alone scores zero for this criterion however good the rest is, and so does a docs file that agrees to it. Full marks require all three of: the hint stays up for as long as the pointer or focus that opened it is still there; Esc closes it without moving the pointer or focus off the control; and the docs file gives that as the reason for turning Ines down, tied to observations 4 and 6 rather than to taste. Adding Esc dismissal but keeping the timer scores at most half."
     },
     {
-      "name": "The section strip becomes one stop in the tab sequence",
-      "max_score": 20,
-      "description": "renderSections emits tabindex '0' on exactly one section - the selected one - and '-1' on all the others, and the '0' follows the selection (verifiable by rendering after selectSection). Leaving all six sections tabbable scores zero for this criterion. Emitting '-1' on the non-selected sections but pinning '0' to the first section regardless of what is selected scores at most half."
-    },
-    {
-      "name": "Current workspace exposed as the current page, not as a selection",
-      "max_score": 16,
-      "description": "renderSwitcher stops publishing aria-selected on the workspace entries and publishes the current-page state instead, on exactly one entry. Leaving aria-selected in place scores zero. Removing aria-selected and publishing nothing in its place, so the user in a workspace has no way to tell which one it is, scores at most half; so does keeping aria-selected and adding a current-page marker alongside it."
-    },
-    {
-      "name": "Arrow, Home and End bindings on the section strip only",
+      "name": "MUST NOT trade the hint elements for the native title attribute",
       "max_score": 14,
-      "description": "sectionKeyDown moves the active section on ArrowLeft/ArrowRight and jumps to first/last on Home/End, with Enter or Space activating where the implementation does not activate on move. Leaving sectionKeyDown ignoring arrow keys scores zero; arrows without Home/End scores at most half. Adding arrow-key movement to switcherKeyDown as well scores at most half for this criterion, since it overrides the browser's own handling of a list of links for no gain."
+      "description": "MUST NOT take Ines's second suggestion. Delivering title attributes on the buttons in place of the hint elements, or as a belt-and-braces addition alongside them, scores zero. Full marks require the docs file to turn it down with a reason a designer can check: the browser's own tooltip does not appear on keyboard focus, cannot be dismissed or hovered, and is announced inconsistently, so it answers none of observations 3, 5 or 6. Declining it with no reason, or leaving the suggestion unanswered, scores at most half."
     },
     {
-      "name": "MUST NOT introduce or keep a positive tabindex",
+      "name": "A hint is reachable from the keyboard",
+      "max_score": 18,
+      "description": "Focus opens the hint for the focused button and moving focus away closes it, so the strip has a keyboard path to the hints and not only a pointer one - verifiable by a test that opens a hint without any pointer call. Leaving the hint reachable only through pointerEnter scores zero. Full marks also require the hint to stay up while the pointer moves from the button onto the hint itself, which is observation 5; handling focus but leaving observation 5 unanswered scores at most half."
+    },
+    {
+      "name": "MUST NOT announce the hints through a live region",
       "max_score": 12,
-      "description": "MUST NOT leave tabindex '3' on the Billing section, and MUST NOT introduce any other positive tabindex to control order in either file. Any positive tabindex in the delivered output scores zero. Full marks also require the docs file to connect that value to observation 2 - a positive tabindex is taken before every tabindex='0' element in the document, which is why Billing jumps the switcher above it."
+      "description": "MUST NOT leave aria-live='assertive' on the hint elements and MUST NOT substitute a different politeness setting, role='alert' or role='status' for it. Any live-region or alert semantics remaining on a hint scores zero for this criterion. A hint is reached through the description reference the button already carries; a live region on the same element interrupts the user every time the pointer crosses the strip. Removing it silently, with nothing in the docs file, scores at most half."
     },
     {
-      "name": "Panels get their name back from their section",
+      "name": "The strip takes one stop in the tab sequence",
       "max_score": 12,
-      "description": "Every panel in renderSections references its own section element as its label, so the existing aria-controls is matched by a back-reference and the relationship is expressed in both directions. Leaving the panels untouched scores zero. Writing a hand-authored label string onto each panel instead of referencing the section element the user can already see scores at most half."
+      "description": "renderStrip emits tabindex '0' on exactly one button and '-1' on the other five, with left/right arrow movement between them and Home/End to the ends, so crossing the bar costs one press as observation 1 asks. Leaving all six buttons tabbable scores zero. Arrow movement without Home/End, or a '0' pinned to the first button regardless of which one is active, scores at most half. Introducing any positive tabindex to order the strip scores zero."
     },
     {
-      "name": "MUST NOT sweep the Customize button into the strip",
-      "max_score": 8,
-      "description": "MUST NOT give the Customize button a tab role, and MUST NOT take it out of the tab sequence with tabindex '-1' to answer observation 5. It is an ordinary button sitting at the end of the strip and keeps its own tab stop; the correct response to observation 5 is to say so. Either change scores zero for this criterion."
+      "name": "Icon-only buttons get a name",
+      "max_score": 10,
+      "description": "Each button publishes an accessible name drawn from the action's own label - these are the one case where a label attribute is the right answer, because the button carries an icon and no visible text. Leaving the buttons unnamed scores zero. Using the full hint sentence as the name, so the reader hears a paragraph on every arrow press and the description repeats it, scores at most half."
     },
     {
       "name": "Invalidated assertions rewritten rather than removed",
       "max_score": 8,
-      "description": "The 'every section is reachable with Tab' test is rewritten to assert the new contract - one stop for the strip, the rest at -1 - and any workspace assertion your change invalidates is rewritten in place. Deleting a test or a test file to get the suite green scores zero, and so does leaving the old section assertion satisfied by not changing the strip."
+      "description": "The shipped assertions your change invalidates - the three-second timeout test, the assertive live-region assertion, and the all-six-tabbable assertion - are rewritten in place to pin the new contract. Deleting a test or a test file to get the suite green scores zero, and so does leaving an old assertion satisfied by not making the change it was blocking."
     }
   ]
 }

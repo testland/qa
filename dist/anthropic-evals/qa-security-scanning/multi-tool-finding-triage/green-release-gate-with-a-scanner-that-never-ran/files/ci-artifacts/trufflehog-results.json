@@ -1,0 +1,19 @@
+[
+  {
+    "SourceMetadata": {
+      "Data": { "Filesystem": { "file": "test/fixtures/aws-response.json", "line": 12 } }
+    },
+    "SourceName": "filesystem",
+    "DetectorName": "AWS",
+    "DecoderName": "PLAIN",
+    "Verified": true,
+    "VerifiedAt": "2026-09-13T06:13:02Z",
+    "Raw": "AKIA****************",
+    "ExtraData": {
+      "account": "412905661007",
+      "resource_type": "Access key",
+      "is_canary": "false",
+      "rotation_guide": "https://howtorotate.com/docs/tutorials/aws/"
+    }
+  }
+]

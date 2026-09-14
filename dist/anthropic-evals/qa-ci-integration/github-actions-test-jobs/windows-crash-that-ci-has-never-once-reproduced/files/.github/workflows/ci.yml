@@ -17,6 +17,8 @@ jobs:
         with: { node-version: '${{ matrix.node }}' }
       - run: npm ci
       - run: ./scripts/verify.sh
+      - name: Make room for the run report
+        run: mkdir -p artifacts/logs && rm -rf artifacts/logs/*
       - run: npm test
 
   integration:

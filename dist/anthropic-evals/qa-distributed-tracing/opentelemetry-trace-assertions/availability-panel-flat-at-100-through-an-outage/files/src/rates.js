@@ -17,6 +17,7 @@ function fetchRate(transport, pair) {
         span.setStatus({ code: SpanStatusCode.OK });
         return { rate: res.body.rate, source: 'live' };
       } catch (err) {
+        span.recordException(err); // PR #2213
         log.warn('rate fetch failed, falling back to cache', { pair, reason: err.message });
         return null;
       }

@@ -18,26 +18,39 @@ on every PR, while the public pages are a 2019 marketing site nobody has touched
 so eleven-and-unchanged is exactly what a clean product looks like. He has been
 here four years and he is usually right about this stuff.
 
-What I need is narrower than that argument, though. We are filling in a security
-questionnaire for a prospect, Halvard, closing at the end of the month. Item 4.2
-asks whether we perform authenticated dynamic security testing against the
-product. Marek wants to answer "Yes, nightly, since 1 August". If I sign that and
-it is not true, that is a very bad day for me later.
+When I pushed on it yesterday he offered a way to settle it that I would also
+like your view on. His words: "if you do not trust the context file, throw it
+away. Put a curl step at the top of the job that posts the login, pull the
+session cookie out of the response and hand it to the scanner as a fixed header
+for the run. Ten lines of bash, no desktop tool, no XML, and I can have it in
+tonight." For what it is worth, when he crawled the console by hand from his
+laptop last month it took a little under an hour.
 
-So: is it true? I pulled everything I could find for you — the context file as
-committed, the nightly workflow, the alert comparison before and after the
-change, an API gateway log excerpt from one night's scan window, and our internal
-API notes for the session endpoints. There is also a small lint we run over the
-context file in CI.
+What I need is narrower than any of that, though. We are filling in a security
+questionnaire for a prospect, Halvard, that closes at the end of the month.
+Three of the items are mine to sign, and Marek has already pencilled in answers:
 
-If it is not true, I need to know what to change, and what has to happen before I
-can answer 4.2 with a yes.
+- **4.2** — "Do you perform authenticated dynamic security testing against the
+  application?" His answer: "Yes, nightly, since 1 August."
+- **4.5** — "Are findings from dynamic testing triaged and remediated within 30
+  days?" His answer: "Yes."
+- **4.7** — "Do you perform unauthenticated dynamic security testing of
+  internet-facing applications?" His answer: "Yes, nightly."
+
+If I sign something that is not true, that is a very bad day for me later. I
+pulled everything I could find: the context file as committed, the nightly
+workflow, the alert comparison before and after the change, the API gateway
+access log from one night's scan window, our internal notes for the session
+endpoints, and the small lint we run over the context file in CI.
+
+Tell me which of the three I can sign, what to change, and what has to happen
+before any answer I cannot sign today becomes one I can.
 
 ## Output Specification
 
-1. `docs/auth-scan-findings.md` — what you found, the evidence for each finding,
-   your answer on questionnaire item 4.2, and what must be true before that
-   answer changes.
+1. `docs/auth-scan-findings.md` — what you found and the evidence for each
+   finding, your answer on each of items 4.2, 4.5 and 4.7, what must be true
+   before an answer changes, and your view on Marek's proposal.
 2. `.zap/context.xml` — corrected.
 3. `.github/workflows/dast-nightly.yml` — corrected if your findings require it.
 4. `node scripts/context-lint.js .zap/context.xml` must exit 0 when you are
@@ -215,30 +228,51 @@ https://console.brightpath.dev/signup
 ```
 
 All eleven alerts are against those four URLs both nights. Nine are header and
-cookie alerts on `/` and `/pricing`. Two are on `/signup`.
+cookie alerts on `/` and `/pricing`. Two are on `/signup`. The eleven have the
+same rule ids on both nights. None of the eleven has a ticket against it in the
+tracker; the oldest report still in artifact retention, 2026-06-28, lists the
+same eleven.
 
-Screens that exist behind the login and appear in neither report: the tenant
-list, per-tenant settings, the user admin pages, API token management, the audit
-log, billing, the runbook editor, the alert-rule editor, the integrations pages,
-the export tool, and everything under `/admin/`. Roughly forty in total; the
-router table is in the frontend repo if you need the exact list.
+The frontend router table has 46 entries. Five of them are the public pages and
+the login page. The rest — the tenant list, per-tenant settings, user admin, API
+token management, the audit log, billing, the runbook editor, the alert-rule
+editor, the integrations pages, the export tool and everything under `/admin/` —
+appear in neither report.
 
 =============== FILE: reports/gateway-log.md ===============
-# API gateway, scan window 2026-09-09 01:00–01:03 UTC
+# API gateway access log — scan window 2026-09-09 01:00–01:03 UTC
 
-Filtered to the scanner's source address (10.40.7.19).
+Filtered to 10.40.7.19, the scan runner. Fields: time, method, path, status,
+request content-type, cookie names on the request, Authorization header.
 
-| Count | Request                        | Status | Notes                                    |
-|-------|--------------------------------|--------|------------------------------------------|
-| 38    | POST /api/session              | 415    | content-type: application/x-www-form-urlencoded |
-| 6     | GET /logout                    | 302    | -> /login, Set-Cookie: bp_session=; Max-Age=0 |
-| 51    | GET /tenants                   | 302    | -> /login                                |
-| 44    | GET /settings/*                | 302    | -> /login                                |
-| 12    | GET /audit                     | 302    | -> /login                                |
-| 4     | GET / , /pricing, /status, /signup | 200 | served                                   |
+```
+01:00:11 POST /api/session       415  ct=application/x-www-form-urlencoded  cookies=-  auth=-
+01:00:12 GET  /                  200  ct=-                                  cookies=-  auth=-
+01:00:13 GET  /pricing           200  ct=-                                  cookies=-  auth=-
+01:00:13 POST /api/session       415  ct=application/x-www-form-urlencoded  cookies=-  auth=-
+01:00:14 GET  /tenants           302  ct=-                                  cookies=-  auth=-
+01:00:15 GET  /status            200  ct=-                                  cookies=-  auth=-
+01:00:16 GET  /settings/profile  302  ct=-                                  cookies=-  auth=-
+01:00:17 GET  /logout            302  ct=-                                  cookies=-  auth=-
+01:00:18 GET  /signup            200  ct=-                                  cookies=-  auth=-
+01:00:19 GET  /audit             302  ct=-                                  cookies=-  auth=-
+01:00:19 POST /api/session       415  ct=application/x-www-form-urlencoded  cookies=-  auth=-
+```
 
-No request from that address in the window carried a `bp_session` cookie.
-No request from that address in the window carried an `Authorization` header.
+Totals for the whole window, same source:
+
+| Count | Request             | Status | Notes from the gateway |
+|-------|---------------------|--------|------------------------|
+| 38    | POST /api/session   | 415    | —                      |
+| 6     | GET /logout         | 302    | Set-Cookie: bp_session=; Max-Age=0 |
+| 51    | GET /tenants        | 302    | Location: /login       |
+| 44    | GET /settings/*     | 302    | Location: /login       |
+| 12    | GET /audit          | 302    | Location: /login       |
+| 4     | GET / /pricing /status /signup | 200 | —           |
+
+Requests in the window carrying a `bp_session` cookie: 0.
+Requests in the window carrying an `Authorization` header: 0.
+Responses in the window with a `2xx` status other than the four public pages: 0.
 
 Same shape on every night sampled: 2026-08-04, 2026-08-19, 2026-09-01,
 2026-09-09.
@@ -248,17 +282,14 @@ Same shape on every night sampled: 2026-08-04, 2026-08-19, 2026-09-01,
 
 ## POST /api/session
 
-Creates a session. Rewritten in April 2026 when the login page moved to React.
+Rewritten in April 2026 when the login page moved to React.
 
-- Accepts `application/json` **only**. The endpoint returns **415 Unsupported
-  Media Type** for `application/x-www-form-urlencoded`; this was deliberate, to
-  close the CSRF hole the old form POST had.
-- Body: `{"email": "...", "password": "..."}`. Note the field is `email`, not
-  `username`; the old form used `username` and we kept the old name nowhere.
-- On success: `204`, plus `Set-Cookie: bp_session=<opaque>; HttpOnly; Secure;
-  SameSite=Lax; Path=/; Max-Age=28800`.
-- There is no bearer token anywhere in the product. Everything server-side
-  reads `bp_session`.
+- Request content type: `application/json`. Anything else returns 415.
+- Body: `{"email": "...", "password": "..."}`.
+- Success: `204`, plus `Set-Cookie: bp_session=<opaque>; HttpOnly; Secure;
+  SameSite=Lax; Path=/; Max-Age=900`.
+- The cookie is reissued on every authenticated response. A session that goes
+  15 minutes without a request is gone and the next request 302s to `/login`.
 
 ## GET /logout
 
@@ -270,7 +301,27 @@ POST required — it has been on our list to change since 2024.
 Every route other than `/`, `/pricing`, `/status`, `/signup` and `/login`
 returns `302 -> /login` without a valid `bp_session`.
 
-Signed-in pages render a header containing `<a href="/logout">Sign out</a>` and
-a `data-tenant` attribute on `<body>`. The login page renders the string
-`Sign in to Brightpath` and, after a rejected attempt, `Those details did not
-match`.
+## Response body excerpts, captured by hand 2026-09-10
+
+Signed-in shell, `GET /tenants` 200:
+
+```html
+<body data-tenant="acme-prod">
+  <header class="app-nav">
+    <span class="who">Signed in as scanner@brightpath.dev</span>
+    <a href="/logout">Sign out</a>
+  </header>
+```
+
+Login page, `GET /login` 200:
+
+```html
+<main class="auth">
+  <h1>Sign in to Brightpath</h1>
+```
+
+Login page after a rejected attempt:
+
+```html
+  <p class="error">Those details did not match</p>
+```

@@ -1,4 +1,7 @@
-def should_block(report_dict):
+def should_block(result_dict) -> bool:
     """True when the drift report says this release candidate must not ship."""
-    summary = report_dict.get("summary", {})
-    return not summary.get("all_passed", True)
+    failed = [
+        t for t in result_dict.get("tests", [])
+        if t.get("status") in ("FAIL", "ERROR")
+    ]
+    return bool(failed)

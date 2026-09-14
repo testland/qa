@@ -10,18 +10,9 @@ We answer a subject access request within one month of receipt.
 Where a request is complex, or where a subject has made a number of requests
 together, that period may be extended by two further months.
 
-Where we extend, we inform the subject of the extension and of the reasons for
-it within one month of receipt.
-
 ## 3.3 Complexity determination
 
-Whether a request is complex is a determination the DPO records on the request
-itself. A request carrying no recorded determination has not had one made
-against it in the case-management system; where the request predates the
-migration on 2026-04-15 a determination may exist only in the paper file.
-
-## 3.4 Escalation
-
-A request is escalated only where the position is established on the record.
-Anything that turns on a determination we cannot evidence goes back to the DPO
-before it goes anywhere else.
+Whether a request is complex is a determination the DPO makes and records against
+the request in the case-management system. Each request in the case file carries
+the date the determination was recorded and the date we wrote to the subject
+about it.

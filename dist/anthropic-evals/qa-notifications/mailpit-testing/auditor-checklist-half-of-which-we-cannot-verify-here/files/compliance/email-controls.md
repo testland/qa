@@ -5,14 +5,11 @@ this cycle.
 
 | # | Control |
 |---|---|
-| C1 | Every bulk message carries a `List-Unsubscribe` header and a visible unsubscribe link in the body. |
-| C2 | Unsubscribing completes in a single action with no login, and the recipient's subscription state is updated as a result. |
-| C3 | Every message is sent with both an HTML part and a plain-text alternative. |
-| C4 | Every outbound message carries a valid DKIM signature. |
-| C5 | The `Return-Path` on outbound mail is SPF-aligned with the sending domain. |
-| C6 | DMARC evaluation passes for the sending domain. |
-| C7 | A hard bounce marks the recipient undeliverable and suppresses further sends to that address. |
-| C8 | The digest renders without layout breakage in Outlook 2019, Gmail web and Apple Mail. |
+| C1 | A recipient can stop receiving these messages in one step, including when the recipient's mailbox provider performs the opt-out on their behalf, and our records reflect the opt-out. |
+| C2 | A recipient whose gateway removes rich content still receives the full content of the message. |
+| C3 | Outbound mail is cryptographically signed for our sending domain and passes the receiving provider's domain-policy evaluation. |
+| C4 | An address the provider reports as permanently undeliverable is not sent to again. |
+| C5 | Evidence is produced by exercising the message as the recipient receives it, not by inspecting the code or the configuration that produced it. |
 
 Auditor's note: controls are equally weighted. A control with no evidence is a
 finding; a control with evidence the tester cannot explain is also a finding.

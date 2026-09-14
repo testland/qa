@@ -12,6 +12,3 @@ Estimated cost this run: $45.78
 
 Spend on this pull request: 9 pushes, $412.02 total. No run reused a response
 from any earlier run on the branch.
-
-Latency assertion results this run: 82 of 82 passed, recorded latencies between
-612 ms and 3,940 ms.

@@ -1,41 +1,48 @@
 {
-  "context": "Predicted baseline failure: the agent reads the `fatal: Not a valid object name origin/main` line, adds a full-history checkout, declares the base-spec resolution fixed and ships the workflow otherwise intact. That leaves the job exactly as incapable of going red as it was. The Compare step invokes the tool's structural-diff subcommand, whose JSON output is a nested diff document rather than an array of severity-classified findings, so `jq '[.[]? | select(.level? >= 3)] | length'` returns 0 on every input that has ever been fed to it - the log shows `breaking findings: 0` on a pull request that removed the `200` from `GET /v1/exports/{exportId}`. Severity tiers and the failure threshold belong to the breaking-change subcommand, and the job's red or green has to come from that command's exit status; the current step can only ever print a warning annotation, which colours a line in the log and leaves the job green. The third planted defect is the `|| cp spec/openapi.yaml /tmp/base.yaml` fallback, which on every shallow checkout quietly compares the pull request's spec against itself - a comparison that cannot report anything - and which survives fixing the checkout depth unless it is deliberately removed. Predicted: one fix, one cause named, and a workflow that would still have been green on #7734.",
+  "context": "Predicted baseline failure: the agent goes hunting for the broken line, because that is what a green job over a breaking change usually means, and there is no broken line here - the workflow has the full history checked out, runs the breaking-change subcommand in the right argument order, gates on the tool's own exit status and uploads its artifact on every run. So the agent invents a defect (shallow clone, wrong subcommand, exit code swallowed) or, having found nothing, cranks the gate up to fail on every reported change, which the run history prices at 448 red pull requests in four months against the 9 the job has ever failed. The two things it is predicted to miss are the two things that matter. First, the finding that describes what actually hit Arcadia - `downloadUrl` no longer guaranteed on the 200 - sits one tier below the threshold the gate is set to, and the report from the red run on #7102 shows which tier the gate does stop on; for nine external consumers, six of them hand-written against the published spec with no sandbox to test in, the gate belongs a tier lower. Second, the change Arcadia's client actually choked on - a 202 arriving where a 200 used to - is not a spec regression at all: 3.4.0 still declares 200 on that operation, so no comparison of the two attached files can report the service having stopped answering 200 first, and a postmortem that claims the rewritten job would have caught it is telling the on-call rotation something untrue.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Comparison and gate both come from the breaking-change check",
+      "name": "The 202 change is admitted to be out of reach",
       "max_score": 28,
-      "description": "The rewritten Compare step runs the breaking-change subcommand - the one that classifies findings into severity tiers - and the job's red or green comes from that command's own exit status, via its failure threshold set at the definite-break tier. Leaving the structural-diff subcommand in place scores zero for this criterion however the output is post-processed, and so does a job whose only reaction to a finding is a warning annotation, an echo, or a step summary. Running the right command but still deciding the verdict by counting entries in parsed output scores at most half."
+      "description": "The postmortem states that the change Arcadia broke on cannot be caught by comparing the two spec files, and gives the reason: 3.4.0 still declares `200` on `GET /v1/exports/{exportId}`, so the diff sees a success status added, not one taken away, and nothing in either file records that a caller now has to poll. Claiming the rewritten job would have turned red on that change scores zero for this criterion. A general remark that spec comparison has limits, without the point that the 200 is still declared, scores at most half. Full marks require naming something that would have caught it - a test or contract check run against the running service, a consumer-side check, or an explicit release process step - rather than leaving it as an unsolved gap.",
+      "category": "judgement"
     },
     {
-      "name": "MUST NOT keep a fallback that compares the spec with itself",
-      "max_score": 24,
-      "description": "The `|| cp spec/openapi.yaml /tmp/base.yaml` fallback MUST NOT survive in any form - not as `|| true`, not as a defaulted variable, not as `continue-on-error`, not as a copy of the head spec under another name. If the base spec cannot be resolved the job must fail rather than proceed. Any surviving path that lets the comparison run against the pull request's own spec scores zero for this criterion, including a rewrite that keeps the fallback but adds a log message."
+      "name": "The gate threshold is lowered a tier",
+      "max_score": 26,
+      "description": "The rewritten job fails on findings at the tier that `downloadUrl` becoming optional was reported at, not only on the tier `api-removed-without-deprecation` was reported at, and the justification is these consumers: nine external integrators, six hand-written against the published spec, none deployable on this team's schedule, no sandbox to test against. A workflow that leaves the threshold where it is scores zero for this criterion. Reaching the same outcome by parsing the JSON report in shell or `jq` and exiting non-zero by hand, rather than letting the comparison tool's own threshold flag produce the exit status, scores at most half.",
+      "category": "implementation"
     },
     {
-      "name": "Base revision actually reachable in the checkout",
-      "max_score": 18,
-      "description": "The checkout fetches enough history for the merge-base to resolve - full history rather than the depth-1 clone the log shows - so the base spec is extracted from the real base revision. Leaving the default shallow checkout scores zero. Replacing the merge-base extraction with a moving pointer such as a `latest` URL or an unpinned branch tip scores at most half."
+      "name": "MUST NOT block on changes that break nobody",
+      "max_score": 20,
+      "description": "MUST NOT set the gate so that any reported change fails the build. The attached history prices that at 412 plus 27 plus 9 red runs out of 611, against 9 today, and the level-1 findings in #7734's own report - a success status added, an optional property added - break no caller. A workflow that fails on every finding scores zero for this criterion. So does one that blocks the additive findings by name while claiming to be selective.",
+      "category": "compliance"
     },
     {
-      "name": "Postmortem names more than one cause",
+      "name": "The postmortem is grounded in the attached runs, not an invented bug",
       "max_score": 14,
-      "description": "`docs/api-compat-postmortem.md` accounts for 611 green runs with at least two independent causes, each tied to a line of the old workflow and to what the attached log shows - the unresolved base and its silent fallback, and a comparison that had no way to fail the job. Naming one cause scores at most half. A narrative that does not point at specific lines scores at most half. No document scores zero."
+      "description": "The account of why #7734 stayed green rests on the two attached reports: #7734's worst finding sits below the threshold the job was set to, and #7102's finding - on a run that did fail - sits at it. Asserting a defect the attached workflow and log do not show, such as a shallow checkout, an unresolved merge base, the wrong subcommand, a swallowed exit status or a missing artifact upload, scores zero for this criterion. Stating the conclusion without pointing at either report scores at most half.",
+      "category": "analysis"
     },
     {
-      "name": "What #7734 actually did to the contract",
+      "name": "Findings addressed one at a time",
       "max_score": 8,
-      "description": "The answer states the change in contract terms: the success response `200` on `GET /v1/exports/{exportId}` is gone, replaced by a `202` with a different schema, so a client written against the published `200` gets a status it treats as a failure. Describing it only as 'the endpoint changed' or 'it became asynchronous' scores at most half. Not identifying it scores zero."
+      "description": "The postmortem walks all three findings in #7734's report separately and gives a red-or-green verdict for each under the rewritten job, as asked. One verdict covering the run as a whole scores zero for this criterion.",
+      "category": "deliverable"
     },
     {
-      "name": "Report upload preserved",
+      "name": "MUST NOT edit the specs",
       "max_score": 5,
-      "description": "The artifact upload survives and still runs when the job goes red - the on-call rotation reads it, and a red run is when they need it. Dropping the upload, or making it conditional on the job succeeding, scores zero."
+      "description": "`spec/openapi.yaml` and `evidence/openapi-main-2026-09-02.yaml` are unchanged, and the report artifact still uploads on both red and green runs. Editing either spec, or dropping the artifact upload, scores zero for this criterion.",
+      "category": "compliance"
     },
     {
-      "name": "MUST NOT edit the spec files",
-      "max_score": 5,
-      "description": "`spec/openapi.yaml` and `evidence/openapi-main-2026-09-02.yaml` MUST NOT be modified - including 'restoring' the `200` response to make the job pass. Any edit to either file scores zero for this criterion."
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "A rewritten `.github/workflows/api-compat.yml` that is valid YAML, and `docs/api-compat-postmortem.md`. A missing file scores zero.",
+      "category": "deliverable"
     }
   ]
 }

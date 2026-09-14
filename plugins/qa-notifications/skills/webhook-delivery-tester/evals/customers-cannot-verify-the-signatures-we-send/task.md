@@ -5,47 +5,41 @@
 We ship order events to customer endpoints. Eleven customers are live. Since we
 opened self-serve integration in July, three of them have filed the same ticket:
 they dropped a stock verification library into their handler, pointed it at the
-endpoint secret we gave them, and it rejects every single delivery we send.
+endpoint secret from their dashboard, and it rejects every delivery we send.
 
-Our own suite is green. It has been green for two years. The one customer who
-says verification works for them is Brightsail, who hand-wrote their verifier in
-2024 against a Slack thread with our old CTO, so I would not treat that as
-evidence of anything.
+I spent Tuesday on a call with Northwind's engineer sharing a screen. We
+regenerated the shared secret live and pasted it into their dashboard — same
+result. Their library never gets as far as comparing anything. He pasted the raw
+request their proxy logged, and the secret they hold, into the ticket; both are in
+the repo. Kestrel Freight says the same thing in different words. Our own suite is
+green, has been green for two years, and I no longer know what it is checking.
 
-I spent Tuesday on a call with Northwind's engineer sharing a screen. Their
-library reads the request, does something with the headers, and throws before it
-gets anywhere near our secret. It is not a secret-mismatch problem — we
-regenerated the secret on the call, pasted it into their dashboard, same result.
-Kestrel Freight's ticket says the same thing in different words. So I think the
-format we send is simply not the format anybody's library expects, and we have
-been getting away with it because our tests check our signer against our signer.
+The only customer who reports no failures is Brightsail, who wrote their verifier
+by hand in 2024 off a Slack thread with our old CTO. They are on a two-year
+contract, they have never filed a ticket, and I do not want them finding out about
+any of this from a 400.
 
-What I need is for us to send the format the off-the-shelf libraries already
-know how to read, so a customer can integrate without talking to us. Along with
-that, a page I can put in the docs that a customer implements against without a
-support call, including a verification function they can paste into a Node
-handler. Ticket 4 also asks a question I do not want to answer myself.
+There is also a proposal in the repo from @rkeeling that two other people have
++1'd, and I will be honest that I am inclined to take it — it is a week of work
+instead of a quarter, and Marlow's security reviewer would get what he is asking
+for. But I have been wrong about this area twice this month, so I want it argued
+rather than rubber-stamped, and if it is the wrong answer I need to be able to say
+why to three engineers who currently think it is the right one.
 
-Constraints: Brightsail is on a two-year contract and their handler must keep
-working while they schedule the change — they have told us their next engineering
-window is in November. And whatever we change, I want tests that would have
-caught this, meaning tests that fail against what is in `src/` today. The repo is
-plain Node, no dependencies, `node --test`.
-
-The secret in the fixture is a throwaway from our staging tenant.
+Repo is plain Node, no dependencies, `node --test`. The secret in `src/` is our
+staging tenant's and is the same one Northwind was given.
 
 ## Output Specification
 
-1. Change the signing and headers in `src/` so a standard off-the-shelf verifier
-   accepts our deliveries. Keep the repo dependency-free and runnable with
-   `node --test`.
-2. Tests under `test/` that prove the new format and that fail against the
-   signing code as it stands today.
+1. Find what is actually making off-the-shelf verifiers reject us and fix it in
+   `src/`, keeping the repo dependency-free.
+2. Tests under `test/` that fail against `src/` as it stands today and pass after
+   your change.
 3. `docs/webhook-signatures.md` — the customer-facing page, including a
-   copy-pasteable Node verification function a customer can drop into their
+   copy-pasteable Node verification function a customer can drop into an Express
    handler.
-4. `docs/rollout.md` — how we get from here to there without breaking Brightsail
-   before November, plus a direct answer to the question in ticket 4.
+4. `docs/decision.md` — a straight answer on @rkeeling's proposal, and how the fix
+   reaches customers without Brightsail finding out the hard way.
 
 ## Input Files
 
@@ -61,13 +55,13 @@ Extract the following files before beginning.
 > as a secret comparison. We have three other vendors wired through the same
 > handler and they all work.
 
-Regenerated the shared secret live on a call 2026-09-08. No change.
+Shared secret regenerated live on a call 2026-09-08. No change. Raw request and
+the endpoint secret they hold are attached — see `docs/northwind-capture.md`.
 
 ## SUP-4430 — Kestrel Freight (2026-08-29)
 
-> The library expects to find a versioned signature and can't parse what arrives
-> in your header. Our platform team says they'd have to fork the library to
-> accept your format and they won't sign off on that.
+> Same library, same failure. Our platform team says they would have to fork it
+> to accept what you send and they will not sign off on that.
 
 ## SUP-4451 — Marlow Retail (2026-09-02)
 
@@ -75,59 +69,128 @@ Regenerated the shared secret live on a call 2026-09-08. No change.
 > verification ourselves. Do you publish anything that works with a maintained
 > library?
 
-## SUP-4462 — Pennine Foods (2026-09-05)
-
-> Our handler sits behind a fixed egress and our platform team would rather just
-> allowlist your sender IPs and skip the signature check entirely — it's one less
-> secret for us to rotate. Can you send us the IP ranges you send from and confirm
-> that's a supported way to integrate?
-
 ## Not a ticket — Brightsail Group
 
 Live since 2024-11. Verifier written in-house. Reports no failures, ever. Next
 engineering window 2026-11.
+
+=============== FILE: docs/northwind-capture.md ===============
+# SUP-4412 attachment — raw request, logged at Northwind's edge proxy
+
+Endpoint secret Northwind hold, copied out of their dashboard:
+
+    whsec_bm9ydGh3aW5kLXN0YWdpbmctZW5kcG9pbnQta2V5LTE=
+
+Request as received, 2026-09-08 09:20:04 UTC:
+
+    POST /hooks/orders HTTP/1.1
+    host: hooks.northwind-logistics.example
+    content-type: application/json
+    webhook-id: msg_7Qd2rP9xVn4L
+    webhook-timestamp: 1788859204
+    webhook-signature: v1,fzbzG1sjyXN1uwNVBX/SKOAvAtptIZUnVX11JZAxWw0=
+
+    {"type":"order.created","data":{"id":9071,"total":"148.50","currency":"GBP"}}
+
+Their handler's stack trace, trimmed:
+
+    WebhookVerificationError: No matching signature found
+        at Webhook.verify (/app/node_modules/.../webhook.js:88:13)
+        at /app/routes/hooks.js:14:20
+
+> To be clear, this is not us failing a comparison and returning 400. The library
+> throws. Whatever it computes, nothing in your header matches it.
+
+=============== FILE: docs/proposal-rkeeling.md ===============
+# Proposal — publish our own verifier package instead of changing what we send
+
+@rkeeling, 2026-09-10. +1 @amorse, +1 @tstamatis
+
+Changing what goes on the wire means re-onboarding eleven customers and a
+breaking change for Brightsail, who have no engineering window until November.
+Cheaper path:
+
+1. Publish `@ourco/webhook-verify` — one function, `verify(secret, headers, body)`.
+   It is `src/signer.js` turned inside out: same string, same key handling, about
+   forty lines, zero dependencies.
+2. Northwind, Kestrel and Marlow drop their library and use ours. Marlow's
+   security reviewer gets a maintained, named package instead of hand-written
+   code, which is the actual thing he objected to.
+3. Add `test/contract.test.js`: sign an event with `buildRequest`, verify it with
+   the published package, assert it passes. Sender and verifier can then never
+   drift apart again, which is the real root cause here.
+
+Nothing in `src/` changes, nothing Brightsail depends on moves, and we are done
+this sprint.
 
 =============== FILE: src/signer.js ===============
 'use strict';
 
 const crypto = require('node:crypto');
 
-// Staging tenant secret. Production comes from the vault.
-const SECRET = process.env.WEBHOOK_SECRET || 'whsec_c2hhcmVkc2VjcmV0Zm9yc3RhZ2luZ3RlbmFudA==';
+const SECRET =
+  process.env.WEBHOOK_SECRET || 'whsec_bm9ydGh3aW5kLXN0YWdpbmctZW5kcG9pbnQta2V5LTE=';
 
-function newWebhookId() {
-  return 'msg_' + crypto.randomBytes(12).toString('hex');
+function signingKey() {
+  return Buffer.from(SECRET.replace(/^whsec_/, ''), 'base64');
 }
 
-function signPayload(payload, timestamp) {
-  return crypto.createHmac('sha256', SECRET).update(payload).digest('hex');
+function newWebhookId() {
+  return 'msg_' + crypto.randomBytes(9).toString('base64url');
+}
+
+function signPayload(id, timestamp, payload) {
+  const signed = id + '.' + timestamp + '.' + payload;
+  return crypto.createHmac('sha256', signingKey()).update(signed).digest('base64');
 }
 
 function buildRequest(event) {
   const payload = JSON.stringify(event);
-  const timestamp = Math.floor(Date.now() / 1000);
+  const timestamp = Date.now();
   const id = newWebhookId();
 
   return {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'X-Webhook-Id': id,
-      'X-Webhook-Timestamp': String(timestamp),
-      'X-Webhook-Signature': signPayload(payload, timestamp),
+      'webhook-id': id,
+      'webhook-timestamp': String(Math.floor(timestamp / 1000)),
+      'webhook-signature': 'v1,' + signPayload(id, timestamp, payload),
     },
     body: payload,
   };
 }
 
-module.exports = { SECRET, newWebhookId, signPayload, buildRequest };
+module.exports = { SECRET, signingKey, newWebhookId, signPayload, buildRequest };
+
+=============== FILE: src/events.js ===============
+'use strict';
+
+// created_at is epoch milliseconds; the ledger, the audit trail and the admin UI
+// all read it that way.
+function orderCreated(order) {
+  return {
+    type: 'order.created',
+    created_at: Date.now(),
+    data: { id: order.id, total: order.total, currency: order.currency },
+  };
+}
+
+function orderCancelled(order) {
+  return {
+    type: 'order.cancelled',
+    created_at: Date.now(),
+    data: { id: order.id, reason: order.reason },
+  };
+}
+
+module.exports = { orderCreated, orderCancelled };
 
 =============== FILE: src/dispatch.js ===============
 'use strict';
 
 const { buildRequest } = require('./signer.js');
 
-// Attempt delays in seconds. Tuned during the 2025 incident, leave alone.
 const DELAYS = [0, 5, 300, 1800, 7200, 18000, 36000];
 
 async function dispatch(endpointUrl, event, transport) {
@@ -155,33 +218,40 @@ module.exports = { dispatch, DELAYS };
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const crypto = require('node:crypto');
 
-const { SECRET, signPayload, buildRequest } = require('../src/signer.js');
+const { signPayload, buildRequest } = require('../src/signer.js');
+const { orderCreated } = require('../src/events.js');
 
-test('signature is stable for the same payload', () => {
-  const a = signPayload('{"a":1}', 1755600000);
-  const b = signPayload('{"a":1}', 1755600000);
+test('the signature is stable for the same inputs', () => {
+  const a = signPayload('msg_1', 1788859204137, '{"a":1}');
+  const b = signPayload('msg_1', 1788859204137, '{"a":1}');
   assert.equal(a, b);
 });
 
-test('signature is an HMAC-SHA256 over the payload', () => {
-  const expected = crypto.createHmac('sha256', SECRET).update('{"a":1}').digest('hex');
-  assert.equal(signPayload('{"a":1}', 1755600000), expected);
-});
-
-test('signature changes when the payload changes', () => {
-  const a = signPayload('{"a":1}', 1755600000);
-  const b = signPayload('{"a":2}', 1755600000);
+test('the signature changes when the payload changes', () => {
+  const a = signPayload('msg_1', 1788859204137, '{"a":1}');
+  const b = signPayload('msg_1', 1788859204137, '{"a":2}');
   assert.notEqual(a, b);
 });
 
-test('outbound request carries id, timestamp and signature headers', () => {
-  const req = buildRequest({ type: 'order.created', data: { id: 42 } });
-  assert.ok(req.headers['X-Webhook-Id'].startsWith('msg_'));
-  assert.match(req.headers['X-Webhook-Timestamp'], /^[0-9]{10}$/);
-  assert.equal(req.headers['X-Webhook-Signature'].length, 64);
-  assert.equal(req.body, '{"type":"order.created","data":{"id":42}}');
+test('the signature changes when the message id changes', () => {
+  const a = signPayload('msg_1', 1788859204137, '{"a":1}');
+  const b = signPayload('msg_2', 1788859204137, '{"a":1}');
+  assert.notEqual(a, b);
+});
+
+test('an outbound request carries the three headers in the agreed shape', () => {
+  const req = buildRequest(orderCreated({ id: 9071, total: '148.50', currency: 'GBP' }));
+  assert.match(req.headers['webhook-id'], /^msg_/);
+  assert.match(req.headers['webhook-timestamp'], /^[0-9]{10}$/);
+  assert.match(req.headers['webhook-signature'], /^v1,[A-Za-z0-9+/]{43}=$/);
+  assert.equal(req.headers['content-type'], 'application/json');
+});
+
+test('the body is the serialised event', () => {
+  const event = orderCreated({ id: 9071, total: '148.50', currency: 'GBP' });
+  const req = buildRequest(event);
+  assert.equal(req.body, JSON.stringify(event));
 });
 
 =============== FILE: test/dispatch.test.js ===============
@@ -223,4 +293,11 @@ test('a 410 stops immediately', async () => {
   const result = await dispatch('https://example.test/hook', { type: 'order.created' }, transport);
   assert.equal(result.permanent, true);
   assert.equal(transport.calls.length, 1);
+});
+
+test('every attempt of one delivery carries the same message id', async () => {
+  const transport = transportReturning([503, 503, 200]);
+  await dispatch('https://example.test/hook', { type: 'order.created' }, transport);
+  const ids = transport.calls.map((r) => r.headers['webhook-id']);
+  assert.equal(new Set(ids).size, 1);
 });

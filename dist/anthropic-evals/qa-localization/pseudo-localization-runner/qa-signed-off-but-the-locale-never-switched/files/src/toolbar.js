@@ -8,18 +8,21 @@ const WIDTHS = {
   trial: 26,
 };
 
+// resolved once; the toolbar does not re-translate on every render
+const LABELS = {
+  save: 'Save',
+  saveDraft: t('toolbar.saveDraft'),
+  publish: t('toolbar.publish'),
+  discard: t('toolbar.discard'),
+  trial: t('banner.trialEnds'),
+};
+
 function fit(text, max) {
   return text.length > max ? text.slice(0, max - 1) + '…' : text;
 }
 
 function renderToolbar() {
-  return [
-    { id: 'save', text: fit('Save', WIDTHS.save) },
-    { id: 'saveDraft', text: fit(t('toolbar.saveDraft'), WIDTHS.saveDraft) },
-    { id: 'publish', text: fit(t('toolbar.publish'), WIDTHS.publish) },
-    { id: 'discard', text: fit(t('toolbar.discard'), WIDTHS.discard) },
-    { id: 'trial', text: fit(t('banner.trialEnds'), WIDTHS.trial) },
-  ];
+  return Object.keys(LABELS).map((id) => ({ id, text: fit(LABELS[id], WIDTHS[id]) }));
 }
 
 module.exports = { renderToolbar, WIDTHS };

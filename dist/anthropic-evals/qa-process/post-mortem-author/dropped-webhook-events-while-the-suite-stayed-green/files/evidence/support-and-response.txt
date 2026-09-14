@@ -15,6 +15,8 @@ Collected 2026-09-11. All times UTC. Four systems, pasted as exported.
 11:29 m.vang: page_size is 500 in config/reconciler.yml. that is the whole bug,
       I will take it to 10000 tonight
 11:33 a.solberg: disabling the nightly job until we have a fix
+11:47 a.solberg: partner asked whether this had ever happened before. I said no,
+      first time, their 09-10 change is what tipped it over
 11:52 a.solberg: partner call at 11:30 went fine, they want the write-up today
 
 --- Scheduler audit (argo-cron) ---

@@ -9,7 +9,8 @@ function createWebhook(body) {
 }
 
 function listWebhooks() {
-  return { status: 200, body: [...store.values()].map((w) => ({ id: w.id, url: w.url })) };
+  const data = [...store.values()].map((w) => ({ id: w.id, url: w.url }));
+  return { status: 200, body: { data, nextCursor: null } };
 }
 
 function getWebhook(id) {

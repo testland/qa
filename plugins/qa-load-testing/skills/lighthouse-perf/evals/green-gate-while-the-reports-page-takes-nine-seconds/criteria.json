@@ -1,41 +1,46 @@
 {
-  "context": "Two colleagues each offer a confident account of the gate and both are wrong, with nobody in the prompt casting doubt on either. Ilya's is the one that decides this scenario: budget.json exists at the project root, it is shaped correctly, it is even covered by a passing test — and nothing loads it, because the collection settings carry no reference to it, so no byte cap has ever been applied to any run. Its single /* entry is also set above every route in the transfer-size table (2000 kB script, 2000 kB image, 4000 kB total against 1193 / 1604 / 2857 on the worst route), so wiring it up unchanged still gates nothing. Predicted baseline failure: the agent accepts 'bundle size is already handled', spends its effort on the Web Vitals side, and never discovers that the artifact is inert — the file's presence, its correct shape and its green test all argue that it works. Priya's proposal is the other half: raising the category minimum cannot catch the reports page, because the audited URL set is one page, the statically-built marketing home, which is the only route with no ticket against it, and because an aggregate score blends subscores so it cannot say which of the three symptoms the tickets describe — nine seconds to render, the layout jumping twice, a first click that does nothing — actually moved. An agent that adds the reports URL and asserts some Web Vitals on it produces a competent-looking answer that still leaves the April vendor-chunk regression invisible to the pipeline.",
+  "context": "Two defects make this gate incapable of failing, and neither is visible from the config alone. First, /app/reports is behind a session guard: the collector arrives with no cookie, the preview server 302s it to /login, and the run summary records finalUrl http://localhost:3000/login against requestedUrl http://localhost:3000/app/reports at 880 ms and 301 kB. Four months of green mean the login page has been passing the reports page's thresholds. Second, budget.json is inert twice over - nothing in collect.settings points Lighthouse at it, and its caps are written in bytes (300000, 1500000) where the format takes kilobytes, so even once wired a 1701 kB page with 416 kB of gzipped script would pass every line of it. Predicted baseline failure: the agent reads the config, decides the thresholds are too loose or that the URL set is too narrow, tightens numbers, possibly adopts the category-score suggestion, and ships a config that still audits the login page and still never reads the budget. The attachments settle both: the finalUrl column is in the run summary, and the request rollup plus the bundle output give the real weights to check the caps against - 426 kB of script, 1163 kB of images across 38 files, 1024x1024 avatars painted at 40x40.",
   "type": "weighted_checklist",
   "checklist": [
     {
+      "name": "The reports page is what actually gets audited",
+      "max_score": 30,
+      "description": "The answer identifies that the audited page was /login, not /app/reports - citing the finalUrl in the run summary - and the delivered config makes the collector arrive authenticated, e.g. an extraHeaders Cookie carrying sb_session=dev-preview-7f21 to match the guard in server/preview.js. Scores zero if the delivered config still collects /app/reports with no session and the answer does not name the redirect. Scores at most half if the redirect is identified but nothing in the config makes the next run reach the real page."
+    },
+    {
+      "name": "The resource-size budget actually fires",
+      "max_score": 24,
+      "description": "budget.json is both referenced from the collect settings so Lighthouse loads it (budgetPath, or the equivalent inline budgets setting) and expressed in the units the format takes - kilobyte-scale caps, not the byte-scale numbers currently in the file. Scores zero if the file is left unreferenced, so nothing in the run reads it. Scores at most half if it is wired but the 300000 / 1500000 values are carried over unchanged, since no page this application could serve would ever exceed them."
+    },
+    {
+      "name": "Page weight named from the attached numbers",
+      "max_score": 14,
+      "description": "docs/perf-gate-fix.md names what the 1701 kB is made of using figures from the attachments: roughly 1163 kB across 38 images that are 1024x1024 intrinsic and painted at 40x40, and roughly 416 kB of gzipped script of which the vendor chunk is 246 kB. Scores zero if a cause is asserted with no number taken from the request rollup, the image dump, or the bundle output."
+    },
+    {
+      "name": "MUST NOT make the aggregate category score the gate",
+      "max_score": 12,
+      "description": "MUST NOT adopt categories:performance minScore as the assertion the build rests on. The document should say why it would not have caught this - a category score on the login page is as green as its vitals were - and the individual vitals stay the assertions that gate. Scores zero if the delivered config replaces per-metric assertions with a category-score assertion, or adds one as the primary gate."
+    },
+    {
+      "name": "MUST NOT relax an existing number to get a pass",
+      "max_score": 10,
+      "description": "MUST NOT raise any maxNumericValue already in .lighthouserc.js, downgrade an existing assertion to off, or loosen a budget cap so the reports route fits under it. Correcting the byte-scale budget values downward to kilobyte scale is not a relaxation and does not count. Scores zero if any existing threshold is raised or turned off."
+    },
+    {
+      "name": "The now-failing route lands somewhere survivable",
+      "max_score": 10,
+      "description": "Once the reports page is genuinely audited it misses its thresholds on every run. The answer either lands it at warn with a dated promotion to the real target, or sets an interim error threshold above today's measurement with the target as a scheduled tightening. Scores zero if the route is left asserting error against a threshold the attachments show it cannot meet and no ramp, date or remediation plan is stated - a permanently red build gets switched off."
+    },
+    {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "An updated .lighthouserc.js that still loads as CommonJS, plus docs/perf-gate-review.md addressing both Priya and Ilya by name. A review document with no config change scores zero for this item."
+      "description": "An updated .lighthouserc.js and docs/perf-gate-fix.md exist, and the document answers the question actually asked - which of the two stories was lying. Scores zero if only config is delivered with no written explanation."
     },
     {
-      "name": "MUST NOT leave the byte budget inert",
-      "max_score": 30,
-      "description": "The resource-size budget must actually be applied by the run: the collection settings must reference the budget file by path, and the answer must state that until now nothing did, which is why the April dependency commit passed every gate. MUST NOT accept Ilya's claim that bundle size is already handled — repeating it, or leaving the config with no reference to the budget file, scores zero for this criterion however good the Web Vitals work is. Referencing it but leaving the single /* entry at caps no route in the transfer-size table can exceed scores at most half, as does splitting the budget per path without wiring it in. Full marks require both: wired in, and scoped per path with caps that the reports route as it stands today would actually exceed."
-    },
-    {
-      "name": "MUST NOT answer with a stricter category score",
-      "max_score": 22,
-      "description": "MUST NOT raise categories:performance minScore as the remedy, and MUST NOT leave an aggregate category score as the only performance assertion in the config. Either scores zero for this criterion. Full marks require individual Web Vitals asserted for loading, interactivity and layout stability, plus the reason Priya's change fails stated in both of its parts: the score is measured on the one route in the inventory that has no ticket against it, and an aggregate score blends subscores so it cannot say which of the three reported symptoms regressed."
-    },
-    {
-      "name": "Representative URL set",
-      "max_score": 16,
-      "description": "The audited set covers more than the complaint: at minimum the marketing home, a logged-in app route, /app/reports and the form route /app/exports/new, chosen as representatives rather than every path in the inventory. Leaving /app/reports unaudited scores zero. Adding only /app/reports and nothing else scores at most half — it fixes the ticket in hand and leaves every other long-tail route exactly as unmeasured as it was."
-    },
-    {
-      "name": "Cause named from the build evidence",
-      "max_score": 12,
-      "description": "The document identifies the concrete cause in the attached data — the 780 kB gzip shared vendor chunk dated to the 2026-04-09 dependency commit, the 412 kB gzip reports chunk, or the 1604 kB of unresized 180px thumbnails — and distinguishes it from the timing symptom the tickets report. Restating that the page is slow, or quoting only a loading figure, scores at most half."
-    },
-    {
-      "name": "Authenticated routes actually reachable",
-      "max_score": 8,
-      "description": "The answer accounts for the app routes redirecting to /login without a session, using the demo tenant cookie the preview server prints or another stated mechanism wired into the run. Listing a logged-in URL with nothing said about auth scores zero here: the run would silently audit the login page and report a healthy number for a route it never loaded."
-    },
-    {
-      "name": "Existing suite untouched and still passing",
-      "max_score": 5,
-      "description": "Nothing under test/ is modified and node --test still passes — budget.json must still parse as a non-empty array whose entries each declare a path, and the config must still export a ci.collect block of parseable URLs. Editing or deleting a test to accommodate the change scores zero."
+      "name": "Existing suite untouched",
+      "max_score": 4,
+      "description": "MUST NOT modify test/format.test.js or src/format.js. They are unrelated to the audit job and the request said to leave them alone. Any edit scores zero here."
     }
   ]
 }

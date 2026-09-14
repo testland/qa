@@ -1,3 +1,5 @@
+import pytest
+
 from monitoring.alerting import should_page
 
 
@@ -13,5 +15,6 @@ def test_quiet_when_every_test_passed():
     assert should_page({"tests": [{"status": "SUCCESS"}]}) is False
 
 
-def test_quiet_when_the_run_carries_no_tests():
-    assert should_page({"metrics": [{"id": "MAE", "value": 9.1}]}) is False
+def test_a_run_with_no_tests_is_a_bug_not_a_quiet_night():
+    with pytest.raises(ValueError):
+        should_page({"metrics": [{"id": "MAE", "value": 9.1}]})

@@ -8,7 +8,7 @@ takes one, result sets compared row for row after sorting.
 
 | Difference from the reference query               | Cases |
 |---------------------------------------------------|-------|
-| Table alias introduced or renamed                  | 13    |
+| Table alias introduced or renamed                  | 12    |
 | Join order or join side swapped                    |  9    |
 | CTE instead of a subquery                          |  7    |
 | BETWEEN instead of two comparisons                 |  4    |
@@ -16,6 +16,7 @@ takes one, result sets compared row for row after sorting.
 | Reads a different object over the same data        |  3    |
 | Column named in a predicate differs                |  1    |
 | Predicate in the reference absent from the generated query | 1 |
+| Predicate in the reference replaced by a join      |  1    |
 
 ## What came back, for the cases attached here
 
@@ -28,6 +29,7 @@ q-46 is one of the 9 that already pass and is listed for completeness.
 | q-19 | 96                 | 96                 |
 | q-23 | 12 rows            | 12 rows            |
 | q-27 | 96                 | 1,204              |
+| q-31 | 214                | 3,902              |
 | q-33 | 388                | 412                |
 | q-38 | 9 rows             | 9 rows             |
 | q-40 | 5 rows             | 5 rows, and the fifth row is not the same plan on every run - three plans tie at 4,800.00 |
@@ -46,6 +48,7 @@ Someone scored generated against reference by text similarity, threshold 0.9.
 | Case | Similarity | Reference vs generated result | Verdict at 0.9 |
 |------|------------|-------------------------------|----------------|
 | q-33 | 0.99       | 388 against 412               | passes         |
+| q-31 | 0.91       | 214 against 3,902             | passes         |
 | q-27 | 0.93       | 96 against 1,204              | passes         |
 | q-11 | 0.62       | same                          | fails          |
 | q-23 | 0.71       | same                          | fails          |

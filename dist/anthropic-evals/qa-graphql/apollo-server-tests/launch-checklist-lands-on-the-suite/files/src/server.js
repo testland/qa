@@ -9,6 +9,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 
 import { typeDefs, resolvers } from './schema.js';
+import { depthLimit } from './depth-limit.js';
 import { contextFor } from './context.js';
 
 export const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -29,8 +30,9 @@ export async function start(port = Number(process.env.PORT ?? 4000)) {
 
   const server = new ApolloServer({
     schema,
+    csrfPrevention: true,
+    validationRules: [depthLimit(6)],
     introspection: process.env.NODE_ENV !== 'production',
-    hideSchemaDetailsFromClientErrors: true,
     plugins: [
       {
         async serverWillStart() {

@@ -1,4 +1,4 @@
-# Three ways of driving the UI in one suite, and my manager does not want a document
+# Three ways of driving the UI in one suite, one quarter to fix it
 
 ## Problem Description
 
@@ -18,20 +18,29 @@ noticed. Engineers tell me they pick whichever style the nearest file used.
 Our quarterly architecture audit came back in July and I have attached the
 summary. I have been asked to fix this and I have one quarter to do it.
 
-One constraint from Jen, my manager, that I want you to push back on if you
-think it is wrong. She does not want a written conventions document. Her
-words: "the code is the doc - nobody reads the wiki, just tell us which
-folder to delete and make the code clean." She has been burned before by
-documents that went stale and then got quoted at her, and she is not being
-unreasonable about it, she just does not think it will be maintained.
+Where my head is at: the screen objects are the incumbent - 161 specs, two
+years of work, everyone knows them. The contractor's tasks-and-actors thing
+was half-built when he left and nobody has touched it since, and the store
+hook was always a shortcut. So the cheap move is to delete `tests/tasks/`
+and `tests/actors/`, rewrite the 18 specs that use them against the screen
+objects, and get everything onto one model that way. Eighteen specs is a
+week. Tell me if you would do it differently, but that is my starting point.
 
-Attached: the suite inventory, the July audit, and the three files that show
-the mix.
+One constraint from Jen, my manager, that I need you to work inside. She does
+not want a standing conventions document - something in the repo that has to
+be kept current. Her words: "the code is the doc - nobody reads the wiki,
+just tell us which folder to delete and make the code clean." She has been
+burned by documents that went stale and then got quoted back at her, and she
+is not being unreasonable about it. A one-off write-up of the decision for
+her and the team lead is fine; a page somebody has to maintain is not.
+
+Attached: the suite inventory, the July audit, the config, and the files that
+show the mix.
 
 ## Output Specification
 
 1. Write `docs/re-architecture.md` - the decision and the reasoning behind
-   it, including the answer to Jen on her constraint.
+   it.
 2. Write `docs/migration-order.md` - what moves in what order, and what has
    to be true before each step starts.
 3. Create whatever else you judge the team needs in order to hold this over
@@ -50,34 +59,59 @@ Extract the following files before beginning.
   "private": true,
   "scripts": {
     "test:unit": "node --test \"test/**/*.test.js\"",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --project=regression",
+    "test:smoke": "playwright test --project=smoke"
   },
   "devDependencies": {
     "@playwright/test": "1.55.0"
   }
 }
 
+=============== FILE: playwright.config.ts ===============
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  retries: 0,
+  reporter: [['html'], ['junit', { outputFile: 'results.xml' }]],
+  use: {
+    baseURL: process.env.BASE_URL ?? 'http://127.0.0.1:4173',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    { name: 'regression' },
+    { name: 'smoke', grep: /@smoke/ },
+  ],
+});
+
 =============== FILE: reports/suite-inventory.md ===============
 # Suite inventory - 2026-09-05
 
-|                                                      | Count |
-|------------------------------------------------------|-------|
-| Browser specs (`tests/**/*.spec.ts`)                  | 210   |
-| Unit tests (`test/**`, node --test)                   | 96    |
-| Screen objects (`tests/pages/`)                       | 22    |
-| Tasks (`tests/tasks/`)                                | 6     |
-| Actors (`tests/actors/`)                              | 3     |
-| Specs using `tasks/` + `actors/`                      | 18    |
-| Specs calling `window.__ardent.store.dispatch` direct | 31    |
-| Specs using `pages/` only                             | 161   |
-| Specs mixing more than one of the three               | 7     |
+|                                                       | Count |
+|-------------------------------------------------------|-------|
+| Browser specs (`tests/**/*.spec.ts`)                   | 210   |
+| Unit tests (`test/**`, node --test)                    | 96    |
+| Screen objects (`tests/pages/`)                        | 22    |
+| Tasks (`tests/tasks/`)                                 | 6     |
+| Actors (`tests/actors/`)                               | 3     |
+| Specs using `tasks/` + `actors/`                       | 18    |
+| Specs calling `window.__ardent.store.dispatch` direct  | 31    |
+| Specs using `pages/` only                              | 161   |
+| Specs mixing more than one of the three                | 7     |
+
+Eight of the 22 screen objects are per-role variants of three screens -
+`SchedulePage` / `SchedulePageClinician` / `SchedulePageBilling`,
+`MessagesPage` / `MessagesPagePatient` / `MessagesPageScheduler`,
+`DocumentsPage` / `DocumentsPageScheduler`. Each variant was added when that
+role got its own specs. They differ only in which controls they expose and
+which of them are read-only.
 
 Runner: Playwright Test, TypeScript. There is no other runner in the repo for
 the browser tier.
 
-Roles the suite drives. All four share the same scheduling, messaging and
-document-upload interactions, differing only in what they are permitted to do
-with them:
+Roles the suite drives. All four do the same scheduling, messaging and
+document-upload work, differing in what they are permitted to do with it:
 
 - patient (self-service booking)
 - scheduler (front desk, books on behalf of patients)
@@ -87,6 +121,10 @@ with them:
 Growth: 210 specs today, 128 of them added in the last twelve months. The
 2027 roadmap adds two more service lines; the planning estimate we submitted
 was 380-420 specs by the end of 2027.
+
+Release process: `npm run test:smoke` runs against the built production
+artifact before every release (RELEASE.md step 4). Everything else runs
+against a development build.
 
 Team: 5 engineers write these tests, all TypeScript.
 
@@ -101,20 +139,17 @@ is not repeated here.
    engineers report choosing by "whichever the nearest file used". No
    convention exists to point them at.
 
-2. Documented-versus-actual drift: **not assessable.** There is no written
-   convention anywhere in the repository to compare the code against, so this
-   section of the audit could not be performed. Identical finding in
-   2026-Q1 and in 2025-Q4. This is the third consecutive quarter the check
-   has been skipped for the same reason.
+2. Documented-versus-actual drift: section skipped. There is no written
+   convention anywhere in the repository to compare the code against. Same
+   outcome in 2026-Q1 and in 2025-Q4.
 
 3. `tests/pages/SchedulePage.ts` carries assertions. Screen objects returning
    verdicts rather than state is a per-pattern issue, noted here only because
    it is repeated across 9 of the 22 objects.
 
-4. The debug hook `window.__ardent.store` is stripped from production builds.
-   The 31 specs that use it therefore cannot run against a production
-   artifact at all. Two of those 31 are in the release smoke set, which means
-   the release smoke set has never actually run against a release build.
+4. The debug hook `window.__ardent.store` is registered by the app only when
+   the bundle is built with `NODE_ENV !== 'production'`. 31 specs call it.
+   Two of those 31 carry the `@smoke` tag.
 
 5. Unit tier (`test/`, 96 tests, owned by the service teams) is out of scope
    for this suite and was not reviewed. No findings.
@@ -132,7 +167,7 @@ test('front desk books a follow-up into the next open slot', async ({ page }) =>
   await expect(page.getByTestId('slot-10-20')).toHaveText('Booked');
 });
 
-test('reschedule moves the appointment and frees the old slot', async ({ page }) => {
+test('reschedule moves the appointment and frees the old slot @smoke', async ({ page }) => {
   await page.goto('/schedule/2026-10-01');
   await page.evaluate(() =>
     window.__ardent.store.dispatch({

@@ -25,6 +25,12 @@ test('an ordinary June night in London hands over at 06:30 local', () => {
   assert.equal(localLabel(shift.endsAt, shift.zone), '2026-06-16T06:30:00');
 });
 
+test('an ordinary June night on Lord Howe runs 12:00Z to 20:00Z', () => {
+  const [shift] = nightShifts('lhi-4', '2026-06-15', 1);
+  assert.equal(shift.startsAt.toISOString(), '2026-06-15T12:00:00.000Z');
+  assert.equal(shift.endsAt.toISOString(), '2026-06-15T20:00:00.000Z');
+});
+
 test('an ordinary June night in Bangalore is eight paid hours', () => {
   const [shift] = nightShifts('blr-3', '2026-06-15', 1);
   assert.equal(shift.startsAt.toISOString(), '2026-06-15T17:00:00.000Z');

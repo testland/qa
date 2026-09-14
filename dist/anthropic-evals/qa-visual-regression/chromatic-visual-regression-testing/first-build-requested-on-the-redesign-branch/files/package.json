@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build-storybook": "storybook build",
-    "test": "node --test test/"
+    "test": "node --test"
   },
   "devDependencies": {
     "@storybook/react-vite": "8.3.5",

@@ -2,41 +2,33 @@
 
 ## Problem Description
 
-The warehouse roster generator (`src/shiftPlan.js`) builds night shifts for
-four sites. Every site runs the same shift: crew on at 22:30 local, handover to
-the day crew at 06:30 local. It has produced four incidents this year and the
-operations manager has stopped trusting it.
+The warehouse roster generator (`src/shiftPlan.js`) builds night shifts for four
+sites. Every site runs the same shift: crew on at 22:30 local, handover to the
+day crew at 06:30 local.
 
-On the night of 31 October the New York night crew clocked off at 05:30 local
-and went home. The day crew turned up at 06:30 as always and the floor had been
-empty for an hour, which is how we found out. On the night of 28 March the
-London crew were held until 07:30 local, an hour after the day crew had already
-started, and we paid an hour of overlap on both ends of the floor. Our Lord
-Howe Island site has had the same thing twice, on the nights of 3 October and 4
-April, except that there it was half an hour each way rather than an hour, and
-the site manager has been told twice that this is impossible.
+Two incidents this year. On the night of 31 October the New York night crew
+clocked off at 05:30 local and went home; the day crew turned up at 06:30 as
+always and the floor had been empty for an hour, which is how we found out. On
+the night of 28 March the London crew were held until 07:30 local, an hour after
+the day crew had already started, and we paid an hour of overlap on both ends of
+the floor.
 
-Our Bangalore site has never had any of this happen.
+Tunde in operations has a patch in `docs/roster-incidents.md` and he is pushing
+it hard, because this has already slipped twice and the next roster goes out on
+Monday. He has an alternative in there as well, in case we would rather not
+touch the end of the shift at all. He has run both of them over the two nights
+that were reported.
 
-The ops lead has a patch in `docs/roster-incidents.md` and he is pushing it
-hard, because this fix has already slipped twice and the next roster goes out
-on Monday. He has an alternative in there too if we would rather not touch the
-end of the shift at all.
-
-`test/shiftPlan.test.js` has five tests that pass today and must keep passing.
-I want this fixed properly rather than nudged, and I want to be able to tell
-the ops lead precisely what each of his two options would produce on each of
-the four incident nights.
+`test/shiftPlan.test.js` and `test/payroll.test.js` pass today and must keep
+passing. I want this fixed properly rather than nudged, and I want something I
+can hand Tunde that says which of his two options we are taking and why.
 
 ## Output Specification
 
-1. Fix `src/shiftPlan.js`. Every column the downstream systems read off a
-   generated shift has to be right at every site, on every night of the year -
-   not only on the nights nobody has complained about yet.
-2. Add tests covering the four incident nights, asserting exact UTC instants.
-3. Write `docs/roster-fix.md`: the rule the generator now follows, a verdict on
-   the ops lead's patch and on the alternative he floats, and exactly what each
-   of the two would produce on each of the four incident nights.
+1. Fix `src/shiftPlan.js`.
+2. Add tests for whatever you change, asserting exact UTC instants.
+3. Write `docs/roster-fix.md`: the rule the generator follows once you are done,
+   and a verdict on each of Tunde's two options.
 
 `node --test` must be green when you are done.
 
@@ -138,6 +130,25 @@ function nightShifts(siteId, fromDate, days) {
 
 module.exports = { nightShifts, addDays, SITES, SHIFT_HOURS };
 
+=============== FILE: src/payroll.js ===============
+'use strict';
+
+const { nightShifts } = require('./shiftPlan.js');
+
+const RATES = { 'nyc-1': 31.5, 'ldn-2': 24, 'lhi-4': 38, 'blr-3': 9.75 };
+
+// One line of the fortnightly export, per generated night shift.
+function payrollRows(siteId, fromDate, days) {
+  return nightShifts(siteId, fromDate, days).map((shift) => ({
+    siteId: shift.siteId,
+    night: shift.startLocal.slice(0, 10),
+    hours: shift.paidHours,
+    gross: Math.round(shift.paidHours * RATES[siteId] * 100) / 100,
+  }));
+}
+
+module.exports = { payrollRows, RATES };
+
 =============== FILE: test/shiftPlan.test.js ===============
 'use strict';
 
@@ -166,6 +177,12 @@ test('an ordinary June night in London hands over at 06:30 local', () => {
   assert.equal(localLabel(shift.endsAt, shift.zone), '2026-06-16T06:30:00');
 });
 
+test('an ordinary June night on Lord Howe runs 12:00Z to 20:00Z', () => {
+  const [shift] = nightShifts('lhi-4', '2026-06-15', 1);
+  assert.equal(shift.startsAt.toISOString(), '2026-06-15T12:00:00.000Z');
+  assert.equal(shift.endsAt.toISOString(), '2026-06-15T20:00:00.000Z');
+});
+
 test('an ordinary June night in Bangalore is eight paid hours', () => {
   const [shift] = nightShifts('blr-3', '2026-06-15', 1);
   assert.equal(shift.startsAt.toISOString(), '2026-06-15T17:00:00.000Z');
@@ -173,8 +190,28 @@ test('an ordinary June night in Bangalore is eight paid hours', () => {
   assert.equal(shift.paidHours, 8);
 });
 
+=============== FILE: test/payroll.test.js ===============
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { payrollRows } = require('../src/payroll.js');
+
+test('an ordinary June night in Bangalore exports one line', () => {
+  assert.deepEqual(payrollRows('blr-3', '2026-06-15', 1), [
+    { siteId: 'blr-3', night: '2026-06-15', hours: 8, gross: 78 },
+  ]);
+});
+
+test('a fortnight in New York exports one line per night', () => {
+  const rows = payrollRows('nyc-1', '2026-06-01', 14);
+  assert.equal(rows.length, 14);
+  assert.equal(rows[0].night, '2026-06-01');
+  assert.equal(rows[13].night, '2026-06-14');
+});
+
 =============== FILE: docs/roster-incidents.md ===============
-# Roster generator - four incidents, one proposed patch
+# Roster generator - two incidents, one proposed patch
 
 Raised by: T. Abara (operations)
 
@@ -184,46 +221,33 @@ Raised by: T. Abara (operations)
 |---|---|---|
 | 2026-10-31 | nyc-1 | crew released 05:30 local; day crew due 06:30; one hour uncovered |
 | 2026-03-28 | ldn-2 | crew held to 07:30 local; day crew already on the floor for an hour |
-| 2026-10-03 | lhi-4 | crew held 30 minutes past the handover |
-| 2026-04-04 | lhi-4 | crew released 30 minutes before the handover |
-| never | blr-3 | nothing, ever |
 
-Raw generator output pulled for the incident nights:
+Raw generator output for the two nights, with an ordinary night beside them:
 
 ```
 nightShifts('nyc-1','2026-10-31',1) -> startsAt 2026-11-01T02:30:00.000Z  endsAt 2026-11-01T10:30:00.000Z  paidHours 8
 nightShifts('ldn-2','2026-03-28',1) -> startsAt 2026-03-28T22:30:00.000Z  endsAt 2026-03-29T06:30:00.000Z  paidHours 8
-nightShifts('lhi-4','2026-10-03',1) -> startsAt 2026-10-03T12:00:00.000Z  endsAt 2026-10-03T20:00:00.000Z  paidHours 8
-nightShifts('lhi-4','2026-04-04',1) -> startsAt 2026-04-04T11:30:00.000Z  endsAt 2026-04-04T19:30:00.000Z  paidHours 8
 nightShifts('blr-3','2026-06-15',1) -> startsAt 2026-06-15T17:00:00.000Z  endsAt 2026-06-16T01:00:00.000Z  paidHours 8
 ```
 
 ## Proposed patch
 
 Anchor the end of the shift to the site's handover time, the same way the start
-is anchored to the site's start time:
+is already anchored to the site's start time:
 
 ```diff
 -      endsAt: new Date(startsAt.getTime() + SHIFT_HOURS * 3600000),
 +      endsAt: localToInstant(addDays(date, 1) + 'T' + site.handover + ':00', site.zone),
-       paidHours: SHIFT_HOURS,
 ```
 
-Two lines. I have run it over the four incident nights and every one of them
-comes out with the crew released at 06:30 local, which is the whole complaint.
-`paidHours` I have left alone deliberately - eight hours is what a night shift
-is, it is in the agreement, and if that column starts varying then payroll have
-to re-cut every export they have ever produced.
+One line. Both reported nights come out with the crew released at 06:30 local,
+which is the entire complaint. I have deliberately kept the diff to the line
+that produces the release instant - the rest of the shift object is
+contract-stable, four downstream jobs read it, and I am not widening the blast
+radius two days before a roster goes out.
 
-## Alternative if you would rather not touch the end of the shift
+## Alternative, if you would rather not touch the end of the shift
 
 We know which nights these are. Add an hour to `endsAt` on the night the clocks
 go back and take an hour off on the night they go forward, keyed on the date.
 Four dates a year, one line, and nothing else in the file moves.
-
-## Appendix - note from payroll (S. Whitcombe)
-
-For the avoidance of doubt, the export takes the `paidHours` column off the
-generated shift verbatim and pays on it. Under clause 14.3 of the enterprise
-agreement night crews are paid for time on the floor between the two handovers,
-so whatever ends up in that column is what we are asserting they worked.

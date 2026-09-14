@@ -1,33 +1,37 @@
-# Haruki wants a contract-testing line added and the integration job deleted
+# Haruki wants a contract line in, the integration job out and the perf row gone
 
 ## Problem Description
 
 We are breaking the billing monolith into four services this quarter. The
-migration plan is attached - cutover runs from 2026-10-06 to 2026-12-11 and by
-the end of it invoicing, dunning and ledger are each their own deployable with
-their own datastore, and billing-api is what is left of the monolith.
+migration plan is attached - cutover runs 2026-10-06 to 2026-12-11 and by the
+end of it invoicing, ledger and dunning are each their own deployable with their
+own datastore, and billing-api is what is left of the monolith.
 
 Haruki runs platform. His note:
 
-> Two things for the document. Add a line about contract testing under the
-> layers table - we will obviously need it once these things talk over HTTP.
-> And once contract tests are in we can drop the integration suite: it is 11 of
-> the 14 minutes of the build, it is the thing everybody complains about in
-> retro, and a contract test covers the same ground more cheaply. I would like
-> that build under five minutes by the time we cut over.
+> Three things for the document. First, put contract testing into the layers
+> table - the migration plan has the pair list in it, just use that, the service
+> owners gave me those at the planning session.
+>
+> Second, once contract tests are in we can drop the integration suite. It is 11
+> of the 14 minutes of the build, it is the thing everybody complains about in
+> retro, and a contract test covers the same ground more cheaply. I want that
+> build under five minutes by the time we cut over.
+>
+> Third, take the Performance row out. The k6 contract ends on the 31st and
+> finance has already said no to the renewal, so there is no point carrying a
+> row we cannot run.
 
-The current document is attached, along with the repo. `npm test` is
-green. The 11-minute figure is real - the CI timing note is in the workflow
-file.
+The current document is attached with the migration plan, the tooling note and
+the repo. `npm test` is green. The 11-minute figure is real; the CI timing note
+is in the workflow file.
 
-Do not change any test or any source file in this pass. I want the document
-right first; we will act on it after.
+Do not change any test or any source file in this pass.
 
 ## Output Specification
 
 1. Update `docs/strategy/billing-2026.md` in place.
-2. Write `docs/strategy/billing-split-note.md` - the reply to Haruki, answering
-   each of his two points and saying what would actually get the build down.
+2. Write `docs/strategy/billing-split-note.md` - the reply to Haruki.
 
 ## Input Files
 
@@ -61,6 +65,7 @@ Per docs/risk-matrices/2026-Q1-billing.md:
 | Business    | Tax rounding, proration on mid-cycle changes | Unit + property-based    |
 | Technical   | Invoice posting partial writes               | Integration              |
 | Regulatory  | Invoice immutability after posting           | Integration + Finance UAT|
+| Performance | Statement export latency                     | Load                     |
 
 ## 3. Test types per layer
 
@@ -142,6 +147,8 @@ database, no cross-service SQL, no shared seed.
 
 ## Consumer-provider pairs after the split
 
+Compiled from what each service owner said at the 2026-09-08 planning session.
+
 | # | Consumer     | Provider    | Interface                                  |
 |---|--------------|-------------|--------------------------------------------|
 | 1 | billing-api  | invoicing   | POST /invoices                              |
@@ -152,6 +159,20 @@ database, no cross-service SQL, no shared seed.
 | 6 | dunning      | billing-api | POST /notifications                         |
 
 There is no message bus in scope; every pair above is synchronous HTTP.
+
+=============== FILE: docs/tooling-notes.md ===============
+# Billing - tooling notes
+
+Updated 2026-09-26.
+
+- **k6 Cloud** - contract ends 2026-10-31. Finance declined the FY27 renewal on
+  2026-09-22. No substitute is approved and nothing else in the org runs load
+  tests.
+- **Contract testing** - nothing installed today. Platform has FY27 budget for a
+  broker and Haruki has the go-ahead to stand one up before the first cutover.
+- **Statement export** moves out of the monolith and into invoicing at the
+  2026-10-27 cutover. The 2-second statement export figure is a term in the
+  Finance MSA, which runs to 2028.
 
 =============== FILE: db/seed.sql ===============
 -- Shared billing seed. Loaded by npm run db:reset before every integration run.
@@ -219,6 +240,18 @@ export function postInvoice(store, invoice) {
   }
 }
 
+=============== FILE: src/dunning.js ===============
+export function dueReminders(schedules, now) {
+  return schedules.filter((s) => s.nextRun <= now);
+}
+
+export async function reminderFor(schedule, http) {
+  const invoice = await http.get('invoicing', `/invoices/${schedule.invoiceId}`);
+  const balance = await http.get('ledger', `/accounts/${invoice.accountId}/balance`);
+  if (balance.amountCents >= 0) return null;
+  return { invoiceId: invoice.id, accountId: invoice.accountId, dueCents: -balance.amountCents };
+}
+
 =============== FILE: src/tax.js ===============
 export function taxCents(amountCents, ratePermille) {
   if (!Number.isInteger(amountCents) || amountCents < 0) throw new Error('bad amount');
@@ -241,6 +274,38 @@ test('rounds half away from zero', () => {
 
 test('rejects a negative amount', () => {
   assert.throws(() => taxCents(-1, 200), /bad amount/);
+});
+
+=============== FILE: tests/unit/dunning.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { dueReminders, reminderFor } from '../../src/dunning.js';
+
+const inArrears = {
+  async get(service) {
+    if (service === 'invoicing') return { id: 'inv_5000', accountId: 'acct_1000' };
+    if (service === 'ledger') return { amountCents: -12_000 };
+    throw new Error(`no stub for ${service}`);
+  },
+};
+
+test('selects schedules due at or before now', () => {
+  const due = dueReminders([{ nextRun: '2026-03-01' }, { nextRun: '2026-05-01' }], '2026-04-01');
+  assert.equal(due.length, 1);
+});
+
+test('builds a reminder from the invoice and the account balance', async () => {
+  const out = await reminderFor({ invoiceId: 'inv_5000' }, inArrears);
+  assert.equal(out.dueCents, 12_000);
+});
+
+test('skips an account that is not in arrears', async () => {
+  const settled = {
+    async get(service) {
+      return service === 'invoicing' ? { id: 'inv_1', accountId: 'acct_1001' } : { amountCents: 0 };
+    },
+  };
+  assert.equal(await reminderFor({ invoiceId: 'inv_1' }, settled), null);
 });
 
 =============== FILE: tests/integration/invoice-posting.test.js ===============

@@ -37,12 +37,12 @@
   { "path": "/docs/:slug" },
   { "path": "/changelog" },
   { "path": "/support" },
-  { "path": "/pay/checkout", "external": true, "host": "pay.orbitalpay.com" },
-  { "path": "/pay/manage", "external": true, "host": "pay.orbitalpay.com" },
-  { "path": "/pay/receipt/:id", "external": true, "host": "pay.orbitalpay.com" },
-  { "path": "/pay/methods", "external": true, "host": "pay.orbitalpay.com" },
-  { "path": "/pay/confirm", "external": true, "host": "pay.orbitalpay.com" },
-  { "path": "/__dev/styleguide", "dev_only": true },
-  { "path": "/__dev/fixtures", "dev_only": true },
-  { "path": "/__dev/flags", "dev_only": true }
+  { "path": "/pay/checkout", "host": "pay.orbitalpay.com" },
+  { "path": "/pay/manage", "host": "pay.orbitalpay.com" },
+  { "path": "/pay/receipt/:id", "host": "pay.orbitalpay.com" },
+  { "path": "/pay/methods", "host": "pay.orbitalpay.com" },
+  { "path": "/pay/confirm", "host": "pay.orbitalpay.com" },
+  { "path": "/__dev/styleguide" },
+  { "path": "/__dev/fixtures" },
+  { "path": "/__dev/flags" }
 ]

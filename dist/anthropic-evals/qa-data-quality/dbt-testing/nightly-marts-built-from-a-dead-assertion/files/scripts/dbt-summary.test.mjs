@@ -24,11 +24,11 @@ test('model nodes are not counted as tests', () => {
   assert.equal(s.total, 0);
 });
 
-test('a night with no hard failures renders zero', () => {
+test('a night with no returned rows renders zero', () => {
   const s = summarise({
     results: [
-      { unique_id: 'test.shop.not_null_stg_payments_payment_key.a1', status: 'warn', failures: 12 },
-      { unique_id: 'test.shop.unique_stg_payments_payment_key.b2', status: 'pass', failures: 0 },
+      { unique_id: 'test.shop.accepted_values_stg_refunds_reason_code.a1', status: 'error', failures: null },
+      { unique_id: 'test.shop.not_null_stg_orders_order_id.b2', status: 'pass', failures: 0 },
     ],
   });
   assert.equal(s.failing, 0);

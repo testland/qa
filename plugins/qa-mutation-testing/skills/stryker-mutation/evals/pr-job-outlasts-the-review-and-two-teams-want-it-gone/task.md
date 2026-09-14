@@ -1,41 +1,45 @@
-# The mutation job takes 34 minutes and people have started merging around it
+# The PR mutation job takes 34 minutes and two reviewers now merge around it
 
 ## Problem Description
 
 `checkout-web` runs a mutation job on every pull request. Last Tuesday it took
 34 minutes 12 seconds on PR #4801, which was a two-line change to a currency
 formatter. Review took nine minutes. Two of our four reviewers have started
-approving and then merging with the job still yellow, which means the gate is
-already decorative and I would rather fix it than pretend.
+approving and merging with the job still running, so the gate is already
+decorative and I would rather fix it than pretend otherwise.
 
-I have attached the config, the CI workflow, the package manifest and the full
-log from that run. There is also the thread from Monday where four people
-proposed four different things. I do not want to pick one of them by vote — I
-want whichever of them is actually right, and the ones that are not, dismissed
-in writing so the thread stops.
+Attached are the config, the CI workflow, the package manifest, the full log
+from that run, and Monday's thread where five people proposed five different
+things. I do not want to pick one of them by vote. I want whichever of them is
+actually right, and the ones that are not dismissed in writing so the thread
+stops.
 
-Constraints worth knowing before you answer:
+Constraints, all of them settled before you start:
 
 - The runners are the standard 2-core hosted ones. We are not buying bigger
-  ones this quarter, that conversation is closed.
-- We do want a number that blocks a merge. The 55 in the config was agreed in
-  a design review in June and I am not reopening it without a reason that is
-  about correctness rather than about the job being slow.
-- The full suite is 1,240 tests and takes 43 seconds. Nothing about it is slow.
+  ones this quarter; that conversation is closed.
+- We do want a number that blocks a merge. The 55 was agreed in a design review
+  in June and I am not reopening it for a reason that is about the job being
+  slow rather than about correctness.
+- The suite is 1,240 tests and finishes in 43 seconds. Nothing about the suite
+  itself is slow.
 - Whatever you change has to keep covering `src/checkout/**`. That is where the
   money code lives and it is the reason the job exists at all.
+- We run our tests with `node --test` and the plain node assert library. Moving
+  the suite onto a different test framework is off the table this quarter — the
+  last attempt at that cost us three weeks and we reverted it.
 
-I need PR feedback in single-digit minutes and I need to be able to tell the two
-reviewers who are merging around it that it is worth waiting for again.
+I need PR feedback in single-digit minutes, and I need to be able to tell the
+two reviewers who are merging around it that it is worth waiting for again.
 
 ## Output Specification
 
 1. Edit `stryker.conf.json`, `.github/workflows/mutation.yml` and `package.json`
    so that a pull request gets useful feedback in single-digit minutes.
 2. Write `docs/mutation-job-plan.md` — what is actually costing the 34 minutes,
-   an explicit verdict on each of the four proposals in the thread, and the PR
+   an explicit verdict on each of the five proposals in the thread, and the PR
    runtime you expect after the change.
-3. Do not modify `src/checkout/totals.ts` or `src/checkout/totals.test.ts`.
+3. Do not modify `src/checkout/totals.js` or `test/checkout/totals.test.js`.
 
 ## Input Files
 
@@ -51,7 +55,7 @@ Extract the following files before beginning.
   "concurrency": 16,
   "timeoutMS": 120000,
   "reporters": ["progress", "clear-text"],
-  "mutate": ["src/**/*.ts", "!src/**/*.test.ts"],
+  "mutate": ["src/**/*.js", "!src/**/*.test.js"],
   "thresholds": { "high": 80, "low": 60, "break": 55 }
 }
 
@@ -60,18 +64,13 @@ Extract the following files before beginning.
   "name": "checkout-web",
   "version": "7.14.2",
   "private": true,
+  "type": "module",
   "scripts": {
-    "test": "jest",
-    "test:ci": "jest --ci --runInBand",
+    "test": "node --test test/",
     "mutation": "stryker run"
   },
   "devDependencies": {
-    "@stryker-mutator/core": "8.6.0",
-    "@types/jest": "29.5.12",
-    "jest": "29.7.0",
-    "jest-environment-jsdom": "29.7.0",
-    "ts-jest": "29.2.5",
-    "typescript": "5.6.2"
+    "@stryker-mutator/core": "8.6.0"
   }
 }
 
@@ -113,9 +112,14 @@ File          | % score | # killed | # timeout | # survived | # no cov |
 All files     |   64.73 |      871 |        43 |        498 |        0 |
 --------------|---------|----------|-----------|------------|----------|
 
-Peak memory on the runner: 7.6 GB of 7 GB available; the job swapped for most of
-the middle half hour. 43 of the timeouts are in `src/checkout/` and did not time
-out on the same code when Priya ran the tool on her laptop.
+Runner notes appended by the CI team:
+
+- Peak memory on the runner was 7.6 GB against 7 GB available; the job swapped
+  for most of the middle half hour.
+- 43 of the timeouts are in `src/checkout/` and the same mutants did not time
+  out when Priya ran the tool on her laptop.
+- The pull request under test changed exactly one file,
+  `src/format/currency.js`.
 
 =============== FILE: docs/thread-2026-09-09.md ===============
 # #eng-checkout, Monday 9 September
@@ -125,57 +129,56 @@ out on the same code when Priya ran the tool on her laptop.
 runner time per PR for a number nobody reads is not a trade I would sign.
 
 **Rae (checkout):** Softer version — leave it running but set the break number
-to 0 so it can never block anything. We keep the trend line, we stop the
-blocking, everyone calms down. We can turn it back up later when it is faster.
+to 0 so it can never block anything. We keep the trend line and we stop the
+blocking. We can turn it back up later once it is faster.
+
+**Priya (platform):** This is one line. `coverageAnalysis` is set to `"off"`,
+which the configuration reference describes as "Stryker does no optimization,
+all tests are executed for each mutant" — and the log agrees, 1,240 tests per
+mutant. The documented fast setting is `"perTest"`, which only runs the tests
+that cover the mutant. Change that one key. No new dependencies, no migration,
+nothing else in the repo moves. It is the only proposal in this thread that
+respects the constraint about not touching the test framework, and I would
+merge it today.
 
 **Ben (checkout):** The cost is the size of what we mutate. I ran it against
 `src/utils/**` only and it finished in 4 minutes 2 seconds. Point it at utils,
 keep it blocking, done by Wednesday.
 
 **Marek (platform):** We are giving it 16 workers on a runner with 2 cores.
-Obviously the answer is more workers — try 32 and see. If that does not do it
-we ask for the bigger runners in January.
+Obviously the answer is more workers — try 32 and see. If that does not do it we
+ask for the bigger runners in January.
 
-=============== FILE: src/checkout/totals.ts ===============
-export interface Line {
-  unitCents: number;
-  qty: number;
-  taxRate: number;
-}
-
-export function lineTotal(line: Line): number {
+=============== FILE: src/checkout/totals.js ===============
+export function lineTotal(line) {
   if (line.qty <= 0) return 0;
   const net = line.unitCents * line.qty;
   return net + Math.round(net * line.taxRate);
 }
 
-export function orderTotal(lines: Line[], shippingCents: number): number {
+export function orderTotal(lines, shippingCents) {
   const goods = lines.reduce((sum, l) => sum + lineTotal(l), 0);
   const shipping = goods >= 5000 ? 0 : shippingCents;
   return goods + shipping;
 }
 
-=============== FILE: src/checkout/totals.test.ts ===============
-import { lineTotal, orderTotal } from './totals';
+=============== FILE: test/checkout/totals.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { lineTotal, orderTotal } from '../../src/checkout/totals.js';
 
-describe('lineTotal', () => {
-  it('applies tax to the net line value', () => {
-    expect(lineTotal({ unitCents: 1000, qty: 2, taxRate: 0.2 })).toBe(2400);
-  });
-
-  it('is zero for a zero quantity', () => {
-    expect(lineTotal({ unitCents: 1000, qty: 0, taxRate: 0.2 })).toBe(0);
-  });
+test('lineTotal applies tax to the net line value', () => {
+  assert.equal(lineTotal({ unitCents: 1000, qty: 2, taxRate: 0.2 }), 2400);
 });
 
-describe('orderTotal', () => {
-  it('charges shipping below the free threshold', () => {
-    const lines = [{ unitCents: 1000, qty: 1, taxRate: 0 }];
-    expect(orderTotal(lines, 499)).toBe(1499);
-  });
+test('lineTotal is zero for a zero quantity', () => {
+  assert.equal(lineTotal({ unitCents: 1000, qty: 0, taxRate: 0.2 }), 0);
+});
 
-  it('ships free at the threshold', () => {
-    const lines = [{ unitCents: 5000, qty: 1, taxRate: 0 }];
-    expect(orderTotal(lines, 499)).toBe(5000);
-  });
+test('orderTotal charges shipping below the free threshold', () => {
+  assert.equal(orderTotal([{ unitCents: 1000, qty: 1, taxRate: 0 }], 499), 1499);
+});
+
+test('orderTotal ships free at the threshold', () => {
+  assert.equal(orderTotal([{ unitCents: 5000, qty: 1, taxRate: 0 }], 499), 5000);
 });

@@ -1,41 +1,43 @@
-# Keyboard sweep filed the same complaint against both strips on the settings screen
+# Six presses to get past the action strip, plus two shortcuts design wants to take
 
 ## Problem Description
 
-Marek ran the keyboard sweep on the workspace settings screen on 2026-09-11 and
-came back with one complaint filed twice, once against each of the two
-horizontal strips at the top of that screen. His notes are attached.
+Marek ran the keyboard sweep on the workspace settings screen on 2026-09-11.
+The thing he got stuck on is the action strip that sits above the view table —
+six icon-only buttons (Refresh, Filter, Columns, Export, Share, Archive), each
+with a short hint that pops up when you put the mouse on it. His notes are
+attached; six observations.
 
-The two strips are:
+Ines owns that strip on the design side and has already replied on the ticket
+with two suggestions, both of which she would like taken because the sprint
+closes Friday:
 
-- **The section strip** (`src/sections.js`) — General, Privacy, Members,
-  Billing, Integrations, Advanced, plus a "Customize" button on the right-hand
-  end that opens the section-reordering dialog. Picking a section swaps the
-  panel below it. Nothing navigates; you stay on the same screen.
-- **The workspace switcher** (`src/workspaces.js`) — Acme, Barrow, Cohen,
-  Delta, Evered, Foxglove. Picking one loads that workspace: each entry points
-  at `/w/<slug>` and the browser goes there.
+- "Marek's last one is easy — make the hints take themselves away a couple of
+  seconds after they appear, the way the ones in the editor do. Then nothing is
+  ever sitting on top of the table and we don't need any dismiss code at all.
+  There is already a timeout in there, we just never hooked it up to anything."
+- "Or go further and delete the hint divs entirely. Put the text in the
+  buttons' `title` attribute and let the browser do hover, dismissal and
+  positioning for free. Half the file goes away."
 
-Marek's ask is that both strips behave the same way, because to him they look
-the same and cost the same: one press to get past either of them, arrow keys to
-move around inside, and the current entry announced as the current one. Right
-now neither does any of that, and his screen reader gives him nothing useful in
-either place.
+I want a call on each of her two, not just a silent yes or no, because she will
+raise them again in the review on Friday and I need something I can say out
+loud.
 
-Do that, and tell me what you did. `npm test` is green today and has to be
-green when you hand this back. Do not delete a test.
+`npm test` is green today and has to be green when you hand this back.
 
 ## Output Specification
 
-1. Edit `src/sections.js` and `src/workspaces.js` wherever your answer says
-   something should change there, and leave the rest as it is.
-2. Update the test files so `npm test` passes and covers whatever behaviour you
-   changed. If one of your changes invalidates an existing assertion, rewrite
-   that test rather than removing it.
-3. Write `docs/settings-keyboard.md`: for each of the two strips, the key
-   bindings it supports after your change (one line each), what you did about
-   each of Marek's five observations, and — where you did not do what he asked
-   for — what you did instead and why.
+1. Edit `src/strip.js` wherever your answer says something should change there,
+   and leave the rest as it is.
+2. Update `test/strip.test.js` so `npm test` passes and covers whatever
+   behaviour you changed. If a change of yours invalidates an existing
+   assertion, rewrite that test rather than removing it.
+3. Write `docs/view-actions-keyboard.md` containing: the key bindings the strip
+   supports after your change, one line each; what you did about each of
+   Marek's six observations; and an explicit answer to each of Ines's two
+   suggestions — taken or not taken, and the reason, in terms that survive
+   being said out loud in a design review.
 
 ## Input Files
 
@@ -43,7 +45,7 @@ Extract the following files before beginning.
 
 =============== FILE: package.json ===============
 {
-  "name": "workspace-settings-header",
+  "name": "settings-action-strip",
   "private": true,
   "type": "module",
   "scripts": {
@@ -52,150 +54,123 @@ Extract the following files before beginning.
 }
 
 =============== FILE: docs/a11y-sweep-notes.md ===============
-# Keyboard sweep - workspace settings, 2026-09-11, @marek
+# Keyboard sweep - workspace settings, view actions strip, 2026-09-11, @marek
 
-Keyboard only first, then again with the screen reader on.
+Keyboard only first, then again with the screen reader on. Chrome + NVDA.
 
-1. Tabbing in from the address bar costs six presses to get past the workspace
-   switcher and another seven to get past the section strip before I reach any
-   content. Thirteen presses to reach the thing I came here to change. Every
-   other strip in the product costs one.
-2. Billing is the exception. If I tab in from the address bar it takes focus
-   first - ahead of General, ahead of the whole workspace switcher above it,
-   ahead of everything. It sits fourth in the section strip visually. I cannot
-   explain it.
-3. Arrow keys do nothing in either strip.
-4. The screen reader reads each settings panel as "group", with no name. I can
-   tell which panel I am in only by reading the content of it.
-5. The "Customize" button on the end of the section strip is inconsistent with
-   the rest of the strip - it takes its own press, like every section does.
+1. Crossing the strip costs six presses before I reach the table underneath.
+   Every other bar in this product costs one.
+2. Focusing any of the six buttons announces "button" and nothing else. I have
+   no idea which one I am on until I press it and something happens.
+3. The hints only ever appear under the mouse. Keyboard only, I have never seen
+   one in the four months I have been testing this screen.
+4. With the mouse: the Columns hint runs to two lines and it vanishes while I
+   am still reading it. I have to take the pointer off the button and put it
+   back to get the rest of the sentence.
+5. Also with the mouse: if I move the pointer off the button and towards the
+   hint so I can read it more slowly, it disappears before the pointer gets
+   there.
+6. The hint sits over the first row of the table and Esc does not get rid of
+   it. The only way to clear it is to move the mouse somewhere else, and if I
+   am not using the mouse I cannot clear it at all.
 
-=============== FILE: src/sections.js ===============
-const SECTIONS = ['general', 'privacy', 'members', 'billing', 'integrations', 'advanced'];
+=============== FILE: src/strip.js ===============
+const ACTIONS = [
+  { id: 'refresh', label: 'Refresh', hint: 'Reload this list from the server.' },
+  { id: 'filter', label: 'Filter', hint: 'Narrow the list by owner, status or date added.' },
+  { id: 'columns', label: 'Columns', hint: 'Choose which columns appear and in what order. Hidden columns are still included in an export.' },
+  { id: 'export', label: 'Export', hint: 'Download the current view as CSV.' },
+  { id: 'share', label: 'Share', hint: 'Invite people to this view.' },
+  { id: 'archive', label: 'Archive', hint: 'Move this view to the archive. You can restore it later.' },
+];
 
-export function createSections(ids = SECTIONS) {
-  return { ids, selected: ids[0] };
+export function createStrip(items = ACTIONS) {
+  return { items, openHint: null };
 }
 
-export function selectSection(state, id) {
-  if (!state.ids.includes(id)) return state;
-  return { ...state, selected: id };
+export function pointerEnter(state, id) {
+  return { ...state, openHint: id };
 }
 
-export function sectionKeyDown(state, key) {
+export function pointerLeave(state) {
+  return { ...state, openHint: null };
+}
+
+export function stripKeyDown(state, key) {
   if (key === 'Enter' || key === ' ') return state;
   return state;
 }
 
-export function renderSections(state) {
+export function hintTimeout(state) {
+  return state.openHint ? { afterMs: 3000, then: 'hide' } : null;
+}
+
+export function renderStrip(state) {
   return {
-    list: { id: 'settings-tablist', role: 'tablist', 'aria-label': 'Workspace settings' },
-    tabs: state.ids.map((id, i) => ({
-      id: 'tab-' + id,
-      role: 'tab',
-      'aria-selected': id === state.selected ? 'true' : 'false',
-      'aria-controls': 'panel-' + id,
-      tabindex: i === 3 ? '3' : '0',
-      text: id[0].toUpperCase() + id.slice(1),
+    bar: { id: 'view-actions', tag: 'div', 'aria-label': 'View actions' },
+    buttons: state.items.map((a) => ({
+      id: 'act-' + a.id,
+      tag: 'button',
+      tabindex: '0',
+      text: '',
+      icon: { tag: 'svg', 'aria-hidden': 'true', focusable: 'false' },
+      'aria-describedby': 'hint-' + a.id,
     })),
-    extras: [
-      { id: 'customize', tag: 'button', tabindex: '0', text: 'Customize' },
-    ],
-    panels: state.ids.map((id) => ({
-      id: 'panel-' + id,
-      role: 'tabpanel',
-      hidden: id !== state.selected,
+    hints: state.items.map((a) => ({
+      id: 'hint-' + a.id,
+      role: 'tooltip',
+      'aria-live': 'assertive',
+      hidden: state.openHint !== a.id,
+      text: a.hint,
     })),
   };
 }
 
-=============== FILE: src/workspaces.js ===============
-const WORKSPACES = [
-  { slug: 'acme', name: 'Acme' },
-  { slug: 'barrow', name: 'Barrow' },
-  { slug: 'cohen', name: 'Cohen' },
-  { slug: 'delta', name: 'Delta' },
-  { slug: 'evered', name: 'Evered' },
-  { slug: 'foxglove', name: 'Foxglove' },
-];
-
-export function createSwitcher(currentSlug, items = WORKSPACES) {
-  return { items, current: currentSlug };
-}
-
-export function switcherKeyDown(state, key) {
-  if (key === 'Enter') return state;
-  return state;
-}
-
-export function renderSwitcher(state) {
-  return {
-    list: { id: 'workspace-switcher', tag: 'ul', 'aria-label': 'Workspaces' },
-    items: state.items.map((w) => ({
-      id: 'ws-' + w.slug,
-      tag: 'a',
-      href: '/w/' + w.slug,
-      'aria-selected': w.slug === state.current ? 'true' : 'false',
-      text: w.name,
-    })),
-  };
-}
-
-=============== FILE: test/sections.test.js ===============
+=============== FILE: test/strip.test.js ===============
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSections, selectSection, sectionKeyDown, renderSections } from '../src/sections.js';
+import {
+  createStrip,
+  pointerEnter,
+  pointerLeave,
+  stripKeyDown,
+  hintTimeout,
+  renderStrip,
+} from '../src/strip.js';
 
-test('the first section is selected on load', () => {
-  const rendered = renderSections(createSections());
-  assert.equal(rendered.tabs[0]['aria-selected'], 'true');
-  assert.equal(rendered.tabs.filter((t) => t['aria-selected'] === 'true').length, 1);
+test('the strip renders one button per action', () => {
+  const rendered = renderStrip(createStrip());
+  assert.equal(rendered.buttons.length, 6);
+  assert.ok(rendered.buttons.every((b) => b.tabindex === '0'));
 });
 
-test('selecting a section reveals its panel and hides the others', () => {
-  const rendered = renderSections(selectSection(createSections(), 'billing'));
-  const visible = rendered.panels.filter((p) => !p.hidden);
-  assert.equal(visible.length, 1);
-  assert.equal(visible[0].id, 'panel-billing');
+test('no hint is showing before the pointer arrives', () => {
+  const rendered = renderStrip(createStrip());
+  assert.equal(rendered.hints.filter((h) => !h.hidden).length, 0);
 });
 
-test('an unknown section id is ignored', () => {
-  const state = selectSection(createSections(), 'nope');
-  assert.equal(state.selected, 'general');
+test('the pointer reveals the hint belonging to that button', () => {
+  const rendered = renderStrip(pointerEnter(createStrip(), 'export'));
+  const shown = rendered.hints.filter((h) => !h.hidden);
+  assert.equal(shown.length, 1);
+  assert.equal(shown[0].id, 'hint-export');
+  assert.equal(shown[0].text, 'Download the current view as CSV.');
+  assert.equal(shown[0]['aria-live'], 'assertive');
 });
 
-test('every section is reachable with Tab', () => {
-  const rendered = renderSections(createSections());
-  const reachable = rendered.tabs.filter((t) => t.tabindex !== '-1');
-  assert.equal(reachable.length, 6);
+test('taking the pointer away puts the hint back', () => {
+  const state = pointerLeave(pointerEnter(createStrip(), 'export'));
+  assert.equal(renderStrip(state).hints.filter((h) => !h.hidden).length, 0);
 });
 
-test('Enter on a section does not change the selection', () => {
-  const state = createSections();
-  assert.equal(sectionKeyDown(state, 'Enter').selected, state.selected);
+test('an open hint takes itself away after three seconds', () => {
+  const open = pointerEnter(createStrip(), 'columns');
+  assert.deepEqual(hintTimeout(open), { afterMs: 3000, then: 'hide' });
+  assert.equal(hintTimeout(createStrip()), null);
 });
 
-=============== FILE: test/workspaces.test.js ===============
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { createSwitcher, renderSwitcher } from '../src/workspaces.js';
-
-test('every workspace is its own tab stop', () => {
-  const rendered = renderSwitcher(createSwitcher('acme'));
-  assert.equal(rendered.items.length, 6);
-  assert.ok(rendered.items.every((i) => i.tabindex === undefined));
-});
-
-test('each workspace entry points at that workspace', () => {
-  const rendered = renderSwitcher(createSwitcher('acme'));
-  assert.equal(rendered.items[0].tag, 'a');
-  assert.equal(rendered.items[0].href, '/w/acme');
-  assert.equal(rendered.items[5].href, '/w/foxglove');
-});
-
-test('exactly one workspace is marked as the one you are in', () => {
-  const rendered = renderSwitcher(createSwitcher('delta'));
-  const marked = rendered.items.filter((i) => i['aria-selected'] === 'true');
-  assert.equal(marked.length, 1);
-  assert.equal(marked[0].id, 'ws-delta');
+test('Enter and Space on a button do not change what is showing', () => {
+  const state = pointerEnter(createStrip(), 'filter');
+  assert.equal(stripKeyDown(state, 'Enter').openHint, 'filter');
+  assert.equal(stripKeyDown(state, ' ').openHint, 'filter');
 });

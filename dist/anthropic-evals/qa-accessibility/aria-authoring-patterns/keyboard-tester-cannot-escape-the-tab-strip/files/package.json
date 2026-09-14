@@ -1,5 +1,5 @@
 {
-  "name": "workspace-settings-header",
+  "name": "settings-action-strip",
   "private": true,
   "type": "module",
   "scripts": {

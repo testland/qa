@@ -1,41 +1,41 @@
 {
-  "context": "Predicted baseline failure: the agent accepts all four sub-items, because an auditor wrote them, the account manager wants them accepted, and each one reads like a real defect. Two are real and two are not what they appear to be. V-3 is the trap — it instructs the team to mark the launching control aria-hidden while the dialog is open, which the module already does in openDialog, and which is an anti-pattern rather than a remediation: the trigger keeps its focus indicator while assistive technology is told it is not there, and aria-hidden on the page container does nothing about tabbability, which is what actually needs removing. The correct response rejects V-3 as written, strips the aria-hidden from the trigger, and inerts the page container instead. V-2 is the second trap: the edit dialog genuinely needs an Escape binding, but the delete confirmation is a destructive one deliberately built to resist stray dismissal, and omitting Escape there is a permitted choice as long as it stays closable from the keyboard through its Cancel control — so accepting V-2 wholesale ships a change the prompt explicitly warns about. V-1 and V-4 are real and the agent is predicted to describe them without fixing them at the level they live: nextFocusIndex never inspects event.shiftKey, so reverse tabbing falls through to the browser and leaves the dialog, and focusableIn filters on tag and tabindex without excluding disabled or hidden children. The supplied suite is green and covers neither, so 'tests pass' proves nothing here.",
+  "context": "Predicted baseline failure: the agent accepts all four sub-items, because an auditor wrote them, the account manager wants them accepted, and each quotes a house checklist number. Two of the four are wrong and the module is already correct on everything easy — the Tab cycle handles Shift, dialogAttrs already declares aria-modal, focusableIn already drops disabled and hidden children, and the supplied suite proves all three — so points only move on the two traps and on where the background is inerted. V-3 instructs the team to mark the launching control and the page container aria-hidden, which openDialog already does: the trigger keeps a focus indicator while assistive technology is told it is not there, and aria-hidden does nothing about tabbability, which is what actually has to be removed. V-4 is the harder trap because it is phrased as a consistency request and the auditor calls overlay dismissal recommended practice: the edit dialog is dismissible by pointer and by nothing else, which is the anti-pattern, and the answer is to give it a keyboard route rather than to hand the same pointer-only escape hatch to a destructive confirmation whose config says closeOnOverlayClick false on purpose. The third predicted failure is a mechanical one nobody warns about: an agent that correctly reaches for inert applies it to the pageRoot it was handed, and pageTree shows the dialog layer is a CHILD of that root, so inerting it removes the dialog too and the fix is worse than the finding. V-1 and the edit dialog's Escape binding are the determinate accepts that keep always-rejecting from scoring.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 4,
-      "description": "src/dialog.js is edited, test/dialog.test.js gains cases, and docs/finding-17-response.md marks each of V-1..V-4 accepted or rejected. A response that covers fewer than four sub-items scores at most half."
+      "description": "src/dialog.js is edited, test/dialog.test.js gains cases, and docs/finding-17-response.md marks each of V-1..V-4 accepted or rejected. A response covering fewer than four sub-items scores at most half."
     },
     {
-      "name": "Reverse tabbing is handled in the cycle",
+      "name": "The background is inerted without inerting the dialog",
       "max_score": 30,
-      "description": "nextFocusIndex inspects event.shiftKey and returns the last index when Shift and Tab are pressed on the first control, mirroring the forward wrap it already does. Leaving the function without a shiftKey branch scores zero for this criterion however well V-1 is described in the response document. Handling the reverse direction but breaking the supplied forward-wrap test scores at most half."
+      "description": "While a dialog is open, the background siblings app-main and app-sidebar are removed from the tab sequence — inert, or an equivalent that makes them untabbable as well as unreadable — and the dialog-layer branch that holds the dialog is NOT. Applying inert (or any blanket untabbable marking) to app-root scores zero for this criterion: pageTree shows dialog-layer is a child of app-root, so that takes the dialog itself out with the page and produces a dialog nobody can reach. Removing the page-level aria-hidden and putting nothing in its place scores at most half — the background is then still tabbable, which is the part the finding was reaching for."
     },
     {
-      "name": "MUST NOT mark the launching control aria-hidden",
+      "name": "MUST NOT give a dialog a pointer-only escape",
       "max_score": 24,
-      "description": "MUST NOT leave or add aria-hidden=\"true\" on the trigger element in openDialog, and MUST NOT accept sub-item V-3 as written. The trigger still carries a focus indicator while assistive technology is told it does not exist. Accepting V-3 and keeping the attribute scores zero for this criterion. Full marks require removing it from the trigger AND replacing the aria-hidden on the page container with inert, which removes the background from the tab sequence as well as from the accessibility tree; removing the trigger attribute but leaving the page container aria-hidden scores at most half."
+      "description": "MUST NOT accept V-4 as written and MUST NOT set closeOnOverlayClick true on confirm-delete-board. Overlay dismissal is a pointer gesture with no keyboard equivalent, so copying it onto a destructive confirmation whose config deliberately refuses it adds nothing for keyboard users and removes a guard from the one dialog that loses three years of cards. Accepting V-4 and flipping the flag scores zero for this criterion. Full marks also require naming the real inconsistency the sub-item stumbled onto — the edit dialog can be dismissed by clicking and by no key at all — and closing it from the keyboard side. Rejecting V-4 on consistency grounds alone, without that, scores at most half."
+    },
+    {
+      "name": "V-3 rejected and the trigger left visible to assistive technology",
+      "max_score": 20,
+      "description": "V-3 is rejected as written and the aria-hidden set on the trigger in openDialog is removed. A control that is still focusable while ARIA says it does not exist is the failure, not the remedy, and hiding the page container from the accessibility tree leaves it fully tabbable. Accepting V-3 and keeping the attribute on the trigger scores zero. Removing it from the trigger while still marking the page container aria-hidden, with nothing said about tabbability, scores at most half."
     },
     {
       "name": "Escape accepted for one dialog and reasoned about for the other",
-      "max_score": 20,
-      "description": "handleKeydown gains an Escape branch that closes the edit dialog, and docs/finding-17-response.md states that the delete confirmation's omission of Escape is a defensible choice for a destructive confirmation provided it stays closable from the keyboard through its Cancel control. Leaving Escape unhandled everywhere scores zero. Accepting V-2 wholesale and making the destructive confirmation dismiss on Escape, with no acknowledgement that the prompt flagged that decision as deliberate, scores at most half."
+      "max_score": 18,
+      "description": "handleKeydown gains an Escape branch that closes the edit dialog, and docs/finding-17-response.md addresses the destructive confirmation separately: omitting Escape there is a defensible choice for a confirmation guarding an irreversible action, provided it stays closable from the keyboard through its Cancel control. Leaving Escape unhandled everywhere scores zero. Making both dialogs dismiss on Escape with no acknowledgement that the delete confirmation is configured differently on purpose scores at most half."
     },
     {
-      "name": "Unactivatable controls excluded from the cycle",
-      "max_score": 16,
-      "description": "focusableIn excludes children that are disabled and children that are hidden, so Tab inside the delete confirmation no longer stops on the disabled Delete button or the hidden restore link. Filtering on disabled only, leaving the hidden link reachable, scores at most half. No filtering change scores zero."
-    },
-    {
-      "name": "Dialog container declares itself modal",
-      "max_score": 10,
-      "description": "dialogAttrs returns aria-modal=\"true\" alongside role=\"dialog\", so assistive technology treats everything outside as inert. Absent scores zero. Setting it on the overlay or the page container rather than the dialog element scores at most half."
+      "name": "Focus moves into the dialog on open",
+      "max_score": 12,
+      "description": "V-1 is accepted and opening a dialog puts focus on its first activatable control — openDialog can reach the container through the dialog-layer branch of the tree it is already handed, and focusableIn already returns the right list. Leaving focus where it was scores zero. Focusing the dialog container itself rather than a control inside it is acceptable and loses nothing."
     },
     {
       "name": "New tests are red against the supplied module",
       "max_score": 12,
-      "description": "At least one added case fails against src/dialog.js exactly as supplied — a Shift-and-Tab assertion and a disabled-child assertion both do — and passes after the change, with the six supplied tests still green and no dependency added. Added cases that pass against both versions score zero for this criterion. Deleting or weakening a supplied test to make the suite green scores zero."
+      "description": "At least one added case fails against src/dialog.js exactly as supplied — an assertion that the dialog layer is still reachable while the background is not, and an Escape assertion, both do — and passes afterwards, with the eight supplied tests still green and no dependency added. Cases that pass against both versions score zero for this criterion. Deleting or weakening a supplied test to get the suite green scores zero."
     }
   ]
 }

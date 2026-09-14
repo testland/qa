@@ -1,0 +1,35 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "CronJob",
+  "metadata": {
+    "name": "promo-blast",
+    "namespace": "growth",
+    "labels": { "owner": "growth-eng" }
+  },
+  "spec": {
+    "schedule": "30 9 * * 2",
+    "timeZone": "America/Chicago",
+    "concurrencyPolicy": "Forbid",
+    "startingDeadlineSeconds": 300,
+    "successfulJobsHistoryLimit": 5,
+    "failedJobsHistoryLimit": 5,
+    "jobTemplate": {
+      "spec": {
+        "backoffLimit": 0,
+        "template": {
+          "spec": {
+            "restartPolicy": "Never",
+            "containers": [
+              {
+                "name": "blast",
+                "image": "registry.internal/growth/promo-blast:2026.07.9",
+                "args": ["--segment", "weekly-active"],
+                "resources": { "requests": { "cpu": "1", "memory": "2Gi" } }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

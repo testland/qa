@@ -22,7 +22,7 @@ jobs:
           BASE_URL: ${{ steps.deploy.outputs.url }}
           VERIFY_EMAIL: ${{ secrets.VERIFY_EMAIL }}
           VERIFY_PASSWORD: ${{ secrets.VERIFY_PASSWORD }}
-        run: npx playwright test e2e/smoke/ --retries=2 --workers=2
+        run: npx playwright test e2e/smoke/ --retries=2 --workers=1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

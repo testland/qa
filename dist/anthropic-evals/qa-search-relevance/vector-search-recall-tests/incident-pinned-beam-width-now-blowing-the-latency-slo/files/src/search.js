@@ -1,16 +1,16 @@
 'use strict';
 
 const { createIndex } = require('./graphIndex');
-const { SEARCH } = require('./searchConfig');
+const config = require('../config/search.json');
 
-function buildIndex(vectors) {
-  const index = createIndex({ M: SEARCH.M, efConstruct: SEARCH.efConstruct });
-  vectors.forEach((vec, i) => index.add(i, vec));
+function buildIndex(corpus) {
+  const index = createIndex({ M: config.index.M });
+  for (const point of corpus) index.add(point.id, point.vec);
   return index;
 }
 
-function search(index, queryVec, k = 10) {
-  return index.search(queryVec, { k, ef: SEARCH.ef });
+function runQueries(index, queries) {
+  return queries.map((q) => index.search(q.vec, { k: config.query.k, ef: config.query.ef }));
 }
 
-module.exports = { buildIndex, search };
+module.exports = { buildIndex, runQueries, config };

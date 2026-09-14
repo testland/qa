@@ -43,13 +43,13 @@ test('stops after maxAttempts consecutive failures', () => {
   assert.equal(opened.length, 3);
 });
 
-test('a successful connection resets the attempt counter', () => {
-  const { clock, reconnector, latest } = harness();
+test('stop() prevents a scheduled attempt from running', () => {
+  const { clock, opened, reconnector, latest } = harness();
 
   reconnector.start();
   latest().drop();
+  reconnector.stop();
   clock.tick(60_000);
-  latest().succeed();
 
-  assert.equal(reconnector.attempts, 0);
+  assert.equal(opened.length, 1);
 });

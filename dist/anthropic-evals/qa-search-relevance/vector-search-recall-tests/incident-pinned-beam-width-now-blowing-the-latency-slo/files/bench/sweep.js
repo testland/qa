@@ -1,52 +1,26 @@
 'use strict';
 
-const { createIndex, cosine } = require('../src/graphIndex');
-const { SEARCH } = require('../src/searchConfig');
-const vectors = require('../data/vectors.json');
-const queries = require('../data/queries.json');
+const corpus = require('../data/corpus.json');
+const queries = require('./queries.json');
+const { createIndex } = require('../src/graphIndex');
+const { referenceTopK, recallAtK } = require('../src/recall');
+const config = require('../config/search.json');
 
-const K = 10;
-const GRID = [12, 24, 48, 96, 192, 384];
+const GRID = [12, 16, 24, 32, 48, 64, 96, 128, 192, 256];
 
-function groundTruth(k = K) {
-  return queries.map((q) =>
-    vectors
-      .map((v, i) => [i, cosine(q, v)])
-      .sort((a, b) => b[1] - a[1] || a[0] - b[0])
-      .slice(0, k)
-      .map(([i]) => i),
-  );
+function build() {
+  const index = createIndex({ M: config.index.M });
+  for (const point of corpus) index.add(point.id, point.vec);
+  return index;
 }
 
-function recallAtK(retrieved, truth) {
-  let total = 0;
-  for (let i = 0; i < truth.length; i++) {
-    const expected = new Set(truth[i]);
-    total += retrieved[i].filter((id) => expected.has(id)).length / truth[i].length;
-  }
-  return total / truth.length;
+const truth = referenceTopK(corpus, queries, config.query.k);
+
+console.log('ef\trecall@10\tcomparisons/query');
+for (const ef of GRID) {
+  const index = build();
+  index.resetCounters();
+  const retrieved = queries.map((q) => index.search(q.vec, { k: config.query.k, efSearch: ef }));
+  const recall = recallAtK(retrieved, truth);
+  console.log(`${ef}\t${recall.toFixed(3)}\t\t${(index.comparisons() / queries.length).toFixed(1)}`);
 }
-
-function run() {
-  const index = createIndex({ M: SEARCH.M, efConstruct: SEARCH.efConstruct });
-  vectors.forEach((v, i) => index.add(i, v));
-  const truth = groundTruth();
-
-  const rows = [];
-  for (const value of GRID) {
-    index.resetCounters();
-    const retrieved = queries.map((q) => index.search(q, { k: K, efConstruct: value }));
-    rows.push({
-      efConstruct: value,
-      recall: Number(recallAtK(retrieved, truth).toFixed(3)),
-      comparisonsPerQuery: Number((index.comparisons() / queries.length).toFixed(1)),
-    });
-  }
-  return rows;
-}
-
-if (require.main === module) {
-  console.table(run());
-}
-
-module.exports = { run, groundTruth, recallAtK, K };

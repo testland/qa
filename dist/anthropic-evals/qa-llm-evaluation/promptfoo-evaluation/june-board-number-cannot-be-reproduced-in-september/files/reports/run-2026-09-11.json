@@ -2,13 +2,9 @@
   "commit": "a31f0c9",
   "timestamp": "2026-09-11T14:02:47Z",
   "config": "evals/assistant/promptfooconfig.yaml",
-  "provider": {
-    "id": "openai:gpt-5-mini",
-    "resolvedModel": "gpt-5-mini-0829"
-  },
-  "gradingProvider": {
-    "id": "openai:gpt-5-mini",
-    "resolvedModel": "gpt-5-mini-0829"
+  "aliasesResolved": {
+    "openai:gpt-5-mini": "gpt-5-mini-0829",
+    "openai:gpt-5": "gpt-5-0814"
   },
   "results": {
     "rows": 79,
@@ -22,9 +18,11 @@
     "contains": 3,
     "is-json": 1
   },
-  "notes": [
-    "Same 79 cases, same commit, same config file bytes as the 2026-06-12 run.",
-    "11 rows that passed on 2026-06-12 failed here: 9 of them on a graded assertion only, 2 of them on a deterministic assertion (one contains, one is-json).",
-    "Of the 9 graded-only regressions, 4 recorded a score within 0.05 of the 0.7 threshold."
-  ]
+  "gradingCalls": 158,
+  "diffVsBaseline": {
+    "baseline": "reports/run-2026-06-12.json",
+    "rowsNewlyFailing": 11,
+    "rowsNewlyPassing": 0,
+    "gradedScoresWithin0_05OfThreshold": 4
+  }
 }

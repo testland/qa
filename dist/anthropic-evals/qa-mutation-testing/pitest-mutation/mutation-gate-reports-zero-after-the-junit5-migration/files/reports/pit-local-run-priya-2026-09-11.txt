@@ -1,0 +1,17 @@
+# billing-core — local run on Priya's laptop, 2026-09-11, main @ 6c1af02
+# One declaration moved in the pom. No other change; no source or test touched.
+
+>> Line Coverage (for mutated classes only): 786/818 (96%)
+>> Generated 1103 mutations Killed 872 (79%)
+>> Mutations with no coverage 31. Test strength 81%
+>> Ran 4,106 tests (3.72 tests per mutation)
+
+Breakdown as printed by the report index:
+
+| set                                   | classes | generated | killed | survived |
+|---------------------------------------|---------|-----------|--------|----------|
+| com.acme.billing production classes    | 11      | 587       | 371    | 216      |
+| com.acme.billing classes ending `Test` | 9       | 516       | 501    | 15       |
+
+[INFO] BUILD SUCCESS — mutation score of 79 clears the threshold of 70;
+[INFO] line coverage of 96 clears the coverage threshold of 95.

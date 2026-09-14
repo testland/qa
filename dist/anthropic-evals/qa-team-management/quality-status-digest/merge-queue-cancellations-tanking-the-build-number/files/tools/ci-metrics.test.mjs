@@ -15,3 +15,7 @@ test('pass rate for the prior window', () => {
 test('every day in the window is represented', () => {
   assert.equal(loadWindow('ci/runs-2026-09-07-to-2026-09-13.csv').length, 7);
 });
+
+test('round3 keeps three places', () => {
+  assert.equal(round3(0.8313253012048193), 0.831);
+});

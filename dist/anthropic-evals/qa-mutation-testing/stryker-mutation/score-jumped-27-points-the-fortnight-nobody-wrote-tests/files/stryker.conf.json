@@ -1,8 +1,11 @@
 {
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
   "packageManager": "npm",
-  "testRunner": "vitest",
-  "reporters": ["progress", "clear-text", "html", "json"],
-  "mutate": ["src/payments/**/*.ts", "!src/payments/**/*.test.ts"],
-  "thresholds": { "high": 80, "low": 60, "break": 60 }
+  "testRunner": "tap",
+  "tap": { "testFiles": ["src/**/*.test.js"] },
+  "coverageAnalysis": "perTest",
+  "concurrency": 4,
+  "reporters": ["progress", "clear-text", "html"],
+  "mutate": ["src/**/*.js", "!src/payouts/**"],
+  "thresholds": { "high": 85, "low": 70, "break": 60 }
 }

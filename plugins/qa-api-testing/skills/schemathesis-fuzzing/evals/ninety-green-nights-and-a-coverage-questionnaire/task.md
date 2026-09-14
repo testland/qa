@@ -1,54 +1,61 @@
-# I sign a per-operation coverage answer on Friday and Marcus says it is half an hour of work
+# Ninety green nights, and a customer questionnaire that Marcus has already filled in
 
 ## Problem Description
 
-Brightline, payments infrastructure. A prospect's security team sent over their
-questionnaire and one question is going to take me longer than the rest of it
-put together:
+Northbeam Clinical. Our largest customer's security team sends an API assurance
+questionnaire once a year and this year's is due back at 17:00 today. Marcus
+filled it in over coffee this morning - seven rows, seven yeses - on the basis
+that the nightly generated-case job has been green for 90 consecutive nights and
+"if there were a gap it would have gone red by now."
 
-> For each externally reachable API operation released in the current calendar
-> year, state whether automated negative and malformed-input testing exercises
-> that operation, and what such testing asserts about its responses. Answers
-> must be per operation. Aggregate statements will be returned.
+The questionnaire goes to a customer with audit rights. Whatever we send has to
+survive them coming back and asking to see the evidence behind each row, one row
+at a time, and asking us to run it in front of them.
 
-Their words, not mine. I am the one signing it, and I was burned in Q1 signing
-something a team assured me was covered.
+Attached: the questionnaire with Marcus's answers, the nightly job, the API
+document we publish, the deployed service's route table from this morning, and
+the findings log going back twelve months.
 
-We have a nightly job that generates its cases from our API document and it has
-been green for 90 nights. Attached: the job, the document, the changelog, last
-night's run summary, and the note on how our build produces that document.
+Go through it row by row and give me the version I should actually send, with
+the evidence for each answer attached to it. Where the honest answer is not the
+one Marcus wrote, say what we would have to do to be able to write his.
 
-Marcus went through it before standup and says the gap is small:
+One thing I will rule out up front: we are not touching the published document
+or the nightly job between now and 17:00 to make a row easier to answer. The
+answer describes what we have, not what we could have by teatime.
 
-> Three of the operations in there are just under-described. Exports declares
-> its 200 body as an empty object, webhooks only declares a default response,
-> and mandate revocation declares a 200 with no body at all. Fill those three in
-> properly in `openapi.yaml` and the nightly starts asserting something real
-> against them - then it is nine of nine, you sign the thing and we move on. It
-> is half an hour. I can do it after standup if you want.
-
-I would like someone to actually check that before my name goes on it. Tell me
-what I can honestly claim per operation, and tell me straight whether Marcus's
-half hour gets me there. If any of it is thinner than the green board suggests I
-need that in writing now, not in a follow-up call with their auditor.
+`test/spec-shape.test.js` passes and is nothing to do with this - leave it.
 
 ## Output Specification
 
-1. `docs/coverage-statement.md` - one row per operation released this year:
-   whether last night's run exercised it, what that run asserts about its
-   responses, and what a pass on that row does and does not establish. This is
-   the text that goes into the questionnaire, so it has to hold up to someone
-   reading it adversarially.
-2. `.github/workflows/nightly-fuzz.yml` as it should run tonight.
-3. A straight answer on Marcus's proposal, and whatever else is needed so that
-   the next operation we ship does not land in the same position.
+1. `questionnaire/northbeam-2026-answers.md` - all seven rows, each with the
+   answer we are sending, the evidence behind it, and where the answer is not
+   yes, what would have to change for it to become yes.
+2. `docs/ninety-nights.md` - a short statement of what 90 consecutive green
+   nights does and does not establish about this API, written so it can be read
+   out to the customer.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: .github/workflows/nightly-fuzz.yml ===============
-name: nightly-fuzz
+=============== FILE: questionnaire/northbeam-api-assurance-2026.md ===============
+# Northbeam Clinical - annual API assurance questionnaire
+# Supplier: Northbeam Clinical Platform team. Due 2026-09-14 17:00.
+# Answers below pre-filled by M. Ilves, 2026-09-14 08:40.
+
+| # | Question | Answer | Supplier evidence |
+|---|----------|--------|-------------------|
+| 1 | Is every operation the service exposes exercised by an automated test suite? | Yes | nightly job, green 90 nights |
+| 2 | Are response bodies validated against a published contract, or only status codes? | Yes, full body validation | nightly job |
+| 3 | Are unexpected server errors treated as a build failure rather than logged? | Yes | nightly job |
+| 4 | Are file-upload and form-encoded operations exercised with adverse and boundary inputs to the same standard as JSON operations? | Yes | nightly job |
+| 5 | Are response media types validated against the contract? | Yes | nightly job |
+| 6 | Have all findings raised by the suite in the last 12 months been resolved? | Yes | findings log |
+| 7 | State the number of generated cases per operation per run, and justify it as sufficient. | 300, deep enough | nightly job |
+
+=============== FILE: .github/workflows/nightly.yml ===============
+name: nightly-api-assurance
 
 on:
   schedule:
@@ -56,7 +63,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  nightly:
+  generated-cases:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -64,214 +71,285 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install schemathesis
+
+      - run: pip install pytest
+
       - name: Generated cases against staging
         env:
           TOKEN: ${{ secrets.STAGING_TOKEN }}
-        run: |
-          schemathesis run ./openapi.yaml \
-            --base-url https://staging.brightline.dev \
-            --hypothesis-max-examples 200 \
-            --workers 4 \
-            --junit-xml=results.xml \
-            --header "Authorization: Bearer $TOKEN"
+        run: pytest tests/api --junit-xml=results.xml
+
+      - name: Document shape
+        run: node --test test/*.test.js
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: nightly-fuzz-results
+          name: nightly-results
           path: results.xml
-          retention-days: 30
 
-=============== FILE: openapi.yaml ===============
-openapi: 3.0.3
-info:
-  title: Brightline API
-  version: 2.4.0
-x-generated-at: '2026-02-11T11:02:44Z'
-paths:
-  /v1/accounts:
-    get:
-      operationId: listAccounts
-      parameters:
-        - name: limit
-          in: query
-          schema: { type: integer, minimum: 1, maximum: 200 }
-      responses:
-        '200':
-          description: accounts
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [items, next]
-                properties:
-                  items:
-                    type: array
-                    items: { $ref: '#/components/schemas/Account' }
-                  next: { type: string, nullable: true }
-        '400': { description: bad request }
-  /v1/accounts/{id}:
-    get:
-      operationId: getAccount
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string, maxLength: 40 }
-      responses:
-        '200':
-          description: account
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Account' }
-        '404': { description: unknown account }
-  /v1/transfers:
-    post:
-      operationId: createTransfer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [from, to, amount_cents]
-              properties:
-                from: { type: string }
-                to: { type: string }
-                amount_cents: { type: integer, minimum: 1, maximum: 100000000 }
-      responses:
-        '201':
-          description: created
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [id, status]
-                properties:
-                  id: { type: string }
-                  status: { type: string, enum: [pending, settled, failed] }
-        '400': { description: rejected }
-        '409': { description: duplicate }
-  /v1/statements:
-    get:
-      operationId: listStatements
-      parameters:
-        - name: account_id
-          in: query
-          required: true
-          schema: { type: string }
-      responses:
-        '200':
-          description: statements
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [items]
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      required: [id, period, total_cents]
-                      properties:
-                        id: { type: string }
-                        period: { type: string }
-                        total_cents: { type: integer }
-        '400': { description: bad request }
-  /v2/exports:
-    get:
-      operationId: listExports
-      parameters:
-        - name: status
-          in: query
-          schema: { type: string }
-      responses:
-        '200':
-          description: exports
-          content:
-            application/json:
-              schema:
-                type: object
-  /v2/webhooks:
-    post:
-      operationId: registerWebhook
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [url]
-              properties:
-                url: { type: string }
-      responses:
-        default:
-          description: response
-  /v2/mandates/{id}:
-    delete:
-      operationId: revokeMandate
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200':
-          description: revoked
-components:
-  schemas:
-    Account:
-      type: object
-      required: [id, status, balance_cents]
-      properties:
-        id: { type: string }
-        status: { type: string, enum: [active, frozen, closed] }
-        balance_cents: { type: integer }
+=============== FILE: tests/api/test_generated.py ===============
+import os
 
-=============== FILE: CHANGELOG.md ===============
-# Changelog - externally reachable API operations
+import schemathesis
+from hypothesis import settings
 
-## 2026
+schema = schemathesis.openapi.from_url(
+    "https://staging.northbeam.health/swagger.json",
+    base_url="https://staging.northbeam.health",
+)
 
-| Date       | Operation                  | Release | Note                         |
-|------------|----------------------------|---------|------------------------------|
-| 2026-01-20 | GET /v1/accounts           | 2.1.0   | paging added                 |
-| 2026-01-20 | GET /v1/accounts/{id}      | 2.1.0   |                              |
-| 2026-02-03 | POST /v1/transfers         | 2.2.0   |                              |
-| 2026-02-09 | GET /v1/statements         | 2.3.0   |                              |
-| 2026-02-10 | GET /v2/exports            | 2.4.0   | async export listing         |
-| 2026-02-11 | POST /v2/webhooks          | 2.4.0   | endpoint registration        |
-| 2026-05-04 | POST /v2/disputes          | 2.6.0   | dispute intake               |
-| 2026-05-18 | GET /v2/disputes/{id}      | 2.6.1   |                              |
-| 2026-07-22 | DELETE /v2/mandates/{id}   | 2.8.0   | mandate revocation           |
 
-Nothing was removed or deprecated this year.
+@schema.parametrize()
+@schemathesis.hook("before_call")
+def attach_token(context, case):
+    case.headers["Authorization"] = f"Bearer {os.environ['TOKEN']}"
 
-=============== FILE: docs/build-pipeline.md ===============
-# How the API document is produced
 
-- `scripts/build.sh` runs `openapi-gen` over the handler package on every build.
-  It writes `openapi.yaml` and bakes that file into the image, and the deployed
-  service serves the same document at `/openapi.json`.
-- Committing the regenerated file back into this repository is a manual step.
-  `git log openapi.yaml` shows the last commit in February.
-- The handler annotations that `openapi-gen` reads live in
-  `brightline/api-handlers`, a separate repository.
+@settings(max_examples=300, deadline=None)
+def test_generated(case):
+    case.call_and_validate()
 
-=============== FILE: reports/nightly-2026-09-12.md ===============
-# nightly-fuzz, 2026-09-12 - PASSED
+=============== FILE: pytest.ini ===============
+[pytest]
+testpaths = tests
+addopts =
+    -q
+    --deselect "tests/api/test_generated.py::test_generated[GET /appointments]"
+    --deselect "tests/api/test_generated.py::test_generated[POST /patients]"
+    --deselect "tests/api/test_generated.py::test_generated[GET /patients/{id}]"
 
-7 operations selected. 200 examples each, 4 workers, 13 minutes.
+=============== FILE: swagger.json ===============
+{
+  "swagger": "2.0",
+  "info": { "title": "Northbeam Clinical Platform API", "version": "6.4.0" },
+  "basePath": "/api/v1",
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/patients": {
+      "get": {
+        "operationId": "listPatients",
+        "parameters": [
+          { "name": "page", "in": "query", "type": "integer", "minimum": 1, "maximum": 500 }
+        ],
+        "responses": {
+          "200": {
+            "description": "page of patients",
+            "schema": { "$ref": "#/definitions/PatientPage" }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPatient",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/PatientInput" }
+          }
+        ],
+        "responses": {
+          "201": { "description": "created", "schema": { "$ref": "#/definitions/Patient" } },
+          "400": { "description": "rejected" }
+        }
+      }
+    },
+    "/patients/{id}": {
+      "get": {
+        "operationId": "getPatient",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "a patient", "schema": { "$ref": "#/definitions/Patient" } },
+          "404": { "description": "unknown patient" }
+        }
+      }
+    },
+    "/patients/{id}/documents": {
+      "post": {
+        "operationId": "uploadPatientDocument",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          { "name": "file", "in": "formData", "required": true, "type": "file" },
+          { "name": "kind", "in": "formData", "required": true, "type": "string", "enum": ["referral", "discharge", "imaging"] },
+          { "name": "page_count", "in": "formData", "type": "integer", "minimum": 1, "maximum": 400 }
+        ],
+        "responses": {
+          "201": { "description": "stored", "schema": { "$ref": "#/definitions/Document" } },
+          "413": { "description": "too large" }
+        }
+      }
+    },
+    "/referrals/import": {
+      "post": {
+        "operationId": "importReferrals",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          { "name": "csv", "in": "formData", "required": true, "type": "file" },
+          { "name": "dry_run", "in": "formData", "type": "boolean" }
+        ],
+        "responses": {
+          "202": { "description": "accepted", "schema": { "$ref": "#/definitions/ImportJob" } },
+          "400": { "description": "rejected" }
+        }
+      }
+    },
+    "/attachments": {
+      "post": {
+        "operationId": "createAttachment",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          { "name": "document_id", "in": "formData", "required": true, "type": "string" },
+          { "name": "label", "in": "formData", "type": "string", "maxLength": 64 }
+        ],
+        "responses": {
+          "201": { "description": "created", "schema": { "$ref": "#/definitions/Document" } },
+          "400": { "description": "rejected" }
+        }
+      }
+    },
+    "/appointments": {
+      "get": {
+        "operationId": "listAppointments",
+        "parameters": [
+          { "name": "from", "in": "query", "type": "string", "format": "date" }
+        ],
+        "responses": {
+          "200": { "description": "appointments", "schema": { "$ref": "#/definitions/AppointmentPage" } }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Patient": {
+      "type": "object",
+      "required": ["id", "mrn", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "mrn": { "type": "string", "maxLength": 20 },
+        "status": { "type": "string", "enum": ["active", "merged", "deceased"] }
+      }
+    },
+    "PatientInput": {
+      "type": "object",
+      "required": ["mrn"],
+      "properties": {
+        "mrn": { "type": "string", "maxLength": 20 },
+        "given_name": { "type": "string", "maxLength": 80 }
+      }
+    },
+    "PatientPage": {
+      "type": "object",
+      "required": ["data"],
+      "properties": {
+        "data": { "type": "array", "items": { "$ref": "#/definitions/Patient" } }
+      }
+    },
+    "Document": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" }
+      }
+    },
+    "ImportJob": {
+      "type": "object",
+      "required": ["job_id"],
+      "properties": { "job_id": { "type": "string" } }
+    },
+    "AppointmentPage": {
+      "type": "object",
+      "required": ["data"],
+      "properties": {
+        "data": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
 
-| Operation                | Examples | Failures | Checks reporting                                |
-|--------------------------|----------|----------|-------------------------------------------------|
-| GET /v1/accounts         | 200      | 0        | status code, response schema, content type, 5xx |
-| GET /v1/accounts/{id}    | 200      | 0        | status code, response schema, content type, 5xx |
-| POST /v1/transfers       | 200      | 0        | status code, response schema, content type, 5xx |
-| GET /v1/statements       | 200      | 0        | status code, response schema, content type, 5xx |
-| GET /v2/exports          | 200      | 0        | status code, response schema, content type, 5xx |
-| POST /v2/webhooks        | 200      | 0        | status code, response schema, content type, 5xx |
-| DELETE /v2/mandates/{id} | 200      | 0        | status code, response schema, content type, 5xx |
+=============== FILE: reports/route-table.txt ===============
+# northbeam-platform 6.4.0, routes registered at boot, staging, 2026-09-14 06:00
+# printed by `./bin/platform routes`
 
-Streak: 90 consecutive passing nights. Last failure 2026-06-14 (staging restart,
-retried green).
+GET     /api/v1/patients                       listPatients          documented
+POST    /api/v1/patients                       createPatient         documented
+GET     /api/v1/patients/{id}                  getPatient            documented
+POST    /api/v1/patients/{id}/documents        uploadPatientDocument documented
+POST    /api/v1/referrals/import               importReferrals       documented
+POST    /api/v1/attachments                    createAttachment      documented
+GET     /api/v1/appointments                   listAppointments      documented
+POST    /api/v1/patients/{id}/merge            mergePatient          not in document
+DELETE  /api/v1/patients/{id}                  deletePatient         not in document
+POST    /api/v1/admin/reindex                  adminReindex          not in document
+
+10 routes registered, 7 present in the published document.
+The three marked "not in document" are reachable with the same bearer token the
+nightly job uses. They were added in 6.2 (merge, delete) and 5.9 (reindex).
+
+=============== FILE: reports/findings-log.md ===============
+# Generated-case findings, rolling 12 months
+
+| # | Date       | Operation             | Reported                        | State  |
+|---|------------|-----------------------|---------------------------------|--------|
+| 1 | 2026-10-02 | listPatients          | 500 on page=500                 | fixed 2026-10-04 |
+| 2 | 2026-11-19 | getPatient            | 404 body had no `error` field   | fixed 2026-11-21 |
+| 3 | 2026-12-08 | createPatient         | 201 body omitted `status`       | fixed 2026-12-09 |
+| 4 | 2026-02-14 | listAppointments      | 200 returned `data: null`       | closed, see note A |
+| 5 | 2026-03-03 | createPatient         | 409 returned, not documented    | closed, see note B |
+| 6 | 2026-04-27 | getPatient            | `mrn` returned 24 chars         | closed, see note C |
+| 7 | 2026-05-30 | listPatients          | `Content-Type` had no charset   | fixed 2026-06-02 |
+| 8 | 2026-06-11 | listAppointments      | 200 returned items as objects   | closed, see note D |
+| 9 | 2026-07-08 | createPatient         | 400 body shape undocumented     | fixed 2026-07-10 |
+
+Notes:
+
+- **A** - `data: null` is what the service returns for an empty day and the team
+  agreed that is correct behaviour. The document says `data` is a required
+  array. Closed 2026-02-16 as "document to be amended". No amendment has been
+  raised.
+- **B** - the 409 is real and intentional; it fires on a duplicate MRN. Closed
+  2026-03-05 as "document to be amended". No amendment has been raised.
+- **C** - `mrn` is 24 characters for records imported from the legacy system.
+  The document says 20. Closed 2026-04-29 as "document to be amended". No
+  amendment has been raised.
+- **D** - appointments are objects, not strings. The document says strings.
+  Closed 2026-06-15 as "document to be amended". No amendment has been raised.
+
+## Run history
+
+90 consecutive green nights, most recent 2026-09-13, so the streak begins
+2026-06-16. Each of the four notes above was closed the same way on the day it
+was closed: the affected operation was taken out of the run. Note D, the last of
+them, was closed on 2026-06-15.
+
+=============== FILE: test/spec-shape.test.js ===============
+const test = require('node:test');
+const assert = require('node:assert');
+const fs = require('node:fs');
+
+const doc = JSON.parse(fs.readFileSync('swagger.json', 'utf8'));
+
+test('every operation declares an operationId', () => {
+  const ops = [];
+  for (const [p, item] of Object.entries(doc.paths)) {
+    for (const [method, op] of Object.entries(item)) {
+      assert.ok(op.operationId, `${method.toUpperCase()} ${p} has no operationId`);
+      ops.push(op.operationId);
+    }
+  }
+  assert.strictEqual(new Set(ops).size, ops.length, 'duplicate operationIds');
+});
+
+test('every operation declares at least one 2xx response', () => {
+  for (const [p, item] of Object.entries(doc.paths)) {
+    for (const [method, op] of Object.entries(item)) {
+      const codes = Object.keys(op.responses ?? {});
+      assert.ok(codes.some((c) => /^2\d\d$/.test(c)), `${method.toUpperCase()} ${p}`);
+    }
+  }
+});

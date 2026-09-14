@@ -4,24 +4,23 @@ Draining
 --------
 GET /v1/subscribers/{id}/drain?page_size=N&cursor=C
 
-  Response: { "events": [ ... ], "total": <n>, "next_cursor": <string|null> }
+  Response fields
+    events        the page of events returned by this call
+    total         events currently on your queue; not the size of this page
+    next_cursor   cursor for the page after this one, or null if this page was
+                  the last
 
-  page_size defaults to 500 and may not exceed 1000. A request above the maximum
-  is rejected with 400 invalid_page_size.
-
-  "total" is the number of events currently on your queue. It is not the number
-  of events returned in the response.
-
-  "next_cursor" is null only when the page just returned was the last one. A
-  single call returns one page, never the whole queue. Callers must keep calling
-  drain with the cursor they were given until next_cursor comes back null.
+  page_size defaults to 500 and may not exceed 1000. A request above the
+  maximum is rejected with 400 invalid_page_size. Omitting cursor starts from
+  your oldest unacknowledged event. Events are returned oldest first.
 
 Acknowledging
 -------------
 POST /v1/subscribers/{id}/ack  { "through": "<event id>" }
 
-  Removes every event up to and including "through" from your queue.
-  Acknowledgement does not delete our retained copy.
+  Removes every event up to and including "through" from your queue. Events
+  after it are untouched and are returned by your next drain. Acknowledgement
+  does not delete our retained copy.
 
 Retention and replay
 --------------------

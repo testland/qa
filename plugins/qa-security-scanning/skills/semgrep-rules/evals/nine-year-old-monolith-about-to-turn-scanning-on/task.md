@@ -1,102 +1,76 @@
-# Turning SAST on for a nine-year-old monolith without stopping the company
+# Flipping the monolith's shadow check to blocking, after it missed one
 
 ## Problem Description
 
-`atlas-core` is nine years old, 340k lines of JavaScript, 22 engineers. We have
-never had static analysis in the pipeline. That changed on 2026-08-22 when a
-session-cookie bug let a support tool read a customer session — writeup is in
-`docs/incident-2026-08-22.md`. Our VP committed to the board that scanning is
-enforced by 2026-10-01, so this is happening; the question is only how.
+`atlas-core` is nine years old, 340k lines of JavaScript, 22 engineers, and had
+no static analysis in the pipeline until last month. That changed after
+2026-08-22, when a session cookie set without the `secure` attribute let an
+internal support tool read a customer session — INC-2291, writeup attached. Our
+VP committed to the board that scanning is enforced on pull requests by
+2026-10-01. That date is not moving.
 
-I ran a pilot scan on a branch last Thursday. **1,847 findings.** The breakdown
-by severity and by directory is in `reports/pilot-inventory.md`. Roughly four
-fifths of it sits in `src/legacy/`, which is the 2017-era code nobody wants to
-touch and which two of our biggest customers depend on.
+Since 2026-09-01 the check has run on every PR in shadow mode: it reports, it
+does not block. Marta built it. The plan was to flip it to blocking on the first
+of October and treat the three shadow weeks as the rehearsal.
 
-There are two proposals on the table (`docs/rollout-thread.md`):
+Then PR #4530 landed on 2026-09-08. It added a session cookie to the support
+module without the `secure` attribute — the same shape of thing as August. The
+shadow check on that PR was green. I have attached its job log, the log from
+#4519 where the check did report something, both workflow files, and last
+night's full-tree report.
 
-- **Marta** (staff, owns the pipeline) wants the blocking check to consider only
-  the highest severity band, so we start with 212 findings instead of 1,847.
-  Her argument is that a check that reports 1,847 things is a check the team
-  learns to ignore in a week, and she has watched that happen at two previous
-  companies.
-- **Dev** wants `src/legacy/` out of the scan entirely, with a separate
-  quarterly review of that tree. His argument is that we are not going to
-  refactor 2017 code on a PR deadline, so scanning it just generates noise
-  nobody can act on.
+Marta and Dev have each read the #4530 log and come away with a different
+diagnosis, and they are both senior enough that I cannot just pick one. The
+thread is `docs/rollout-thread.md`. What I need is the plan I put in front of
+the VP on Monday and the workflow file that implements it, and I need it to be
+the thing we actually switch on, not a compromise between two people.
 
-Both of them are describing a real problem. I do not want to pick one out of
-politeness and find out in January that we shipped something that would not
-have caught August's bug.
+Assume engineers open PRs against `main` the same afternoon it goes live.
 
-What I need from you is the enablement plan I can put in front of the VP on
-Monday, plus the workflow file that implements it. Assume engineers will open
-PRs against `main` the same afternoon it goes live. Do not fix application code
-in this task — if something in the inventory has to be dealt with before we
-switch over, say so in the plan and I will assign it.
+Do not fix application code in this task. If something in the tree has to be
+dealt with before the switch-over, say so in the plan and I will assign it.
 
 `npm test` is green today and must stay green.
 
 ## Output Specification
 
-1. Rewrite `.github/workflows/sast.yml` so it is the blocking PR check we are
-   going live with, including the exact command line.
-2. Write `docs/sast-rollout.md`: what blocks a PR and what does not, what
-   happens to the 1,847 existing findings, anything that must be handled before
-   the switch-over, and the mechanism and cadence for working the backlog down.
-   Answer Marta's proposal and Dev's proposal directly and by name — both of
-   them will read this.
+1. Rewrite `.github/workflows/sast.yml` into the blocking pull-request check we
+   go live with on 2026-10-01, including the exact command line.
+2. Write `docs/sast-rollout.md`: why the check on #4530 was green, what blocks a
+   PR and what does not once this ships, what happens to the findings already in
+   the tree, anything that must be handled before the switch-over, and the
+   mechanism and cadence for working the backlog down. Answer Marta's diagnosis
+   and Dev's diagnosis directly and by name — both of them will read it.
 3. Do not modify application code or tests.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: reports/pilot-inventory.md ===============
-# Pilot scan — atlas-core @ 7c31d0b — 2026-09-04
+=============== FILE: docs/rollout-thread.md ===============
+# #eng-platform — 2026-09-10
 
-Command: `semgrep scan --config p/owasp-top-ten --config p/javascript --json`
-Duration: 6m 41s. Files scanned: 2,914. Rules: 1,042.
+**marta.reinholt** (staff, built the gate) — I have gone through #4530 and I
+think the rulesets are the problem. `p/javascript` and `p/owasp-top-ten` are
+community packs; they clearly do not carry whatever rule would have caught a
+cookie attribute. Switch the config over to registry auto-detection so we pick
+up everything the registry has for this repo instead of guessing which pack
+holds what. Three weeks of shadow running produced four findings in total,
+which tells me the plumbing is right and the rule coverage is not.
 
-## By severity
+**dev.chaudhary** — I read it the other way round. The gate only looks at what
+the branch changed against a baseline, and that is exactly how something walks
+through: the support module has been edited twenty-odd times since the baseline
+was cut. Drop the baseline, scan the whole tree on every PR, take the pain for a
+fortnight. We have a board commitment, not a comfort commitment.
 
-| Severity | Findings |
-|---|---|
-| ERROR   | 212   |
-| WARNING | 1,338 |
-| INFO    | 297   |
-| **Total** | **1,847** |
+**marta.reinholt** — 1,853 findings on every pull request and the check is
+switched off by Friday. I have watched that happen at two companies. If we are
+not dropping the baseline then at minimum take `src/legacy/` out of the scan —
+1,504 of those findings are in a tree nobody is allowed to refactor anyway.
 
-## By directory
-
-| Path | ERROR | WARNING | INFO | Total |
-|---|---|---|---|---|
-| src/legacy/    | 168 | 1,109 | 227 | 1,504 |
-| src/billing/   | 21  | 94    | 31  | 146   |
-| src/api/       | 14  | 79    | 22  | 115   |
-| src/web/       | 6   | 41    | 14  | 61    |
-| scripts/       | 3   | 15    | 3   | 21    |
-
-## Findings first introduced in the last 14 days
-
-Cross-referenced against `git log --since=2026-08-21`:
-
-| Rule | Severity | Path | Introduced |
-|---|---|---|---|
-| javascript.lang.security.audit.sqli.node-postgres-sqli | ERROR | src/billing/invoices/query.js:88 | 2026-08-26 (#4471) |
-| javascript.lang.security.detect-child-process | ERROR | src/api/exports/archive.js:31 | 2026-09-01 (#4502) |
-| javascript.jwt.security.jwt-hardcode.hardcoded-jwt-secret | ERROR | src/api/auth/dev-token.js:12 | 2026-09-02 (#4509) |
-
-The other 1,844 predate 2026-08-21.
-
-## Top rules by count
-
-| Rule | Severity | Count |
-|---|---|---|
-| javascript.express.security.audit.express-cookie-session-no-secure | WARNING | 61 |
-| javascript.lang.security.audit.path-traversal.path-join-resolve-traversal | WARNING | 143 |
-| javascript.lang.best-practice.leftover-debugging | INFO | 211 |
-| javascript.express.security.audit.express-open-redirect | WARNING | 88 |
+**t.okonkwo** — Whichever of you is right, it has to be written down and in
+front of the VP on Monday, and blocking on the first.
 
 =============== FILE: docs/incident-2026-08-22.md ===============
 # INC-2291 — support tool could read a customer session
@@ -106,49 +80,49 @@ The other 1,844 predate 2026-08-21.
 
 ## What happened
 
-`src/legacy/session/cookies.js` sets the session cookie without the `secure`
-attribute. On the support subdomain, which had been served over plain HTTP
-internally since a 2019 proxy change, the cookie was transmitted in clear text
-on the internal network and a support tool logged it. 41 customer sessions were
-affected. No evidence of external exposure.
-
-## Would scanning have caught it?
-
-Yes. We re-ran the pilot scan against the commit that introduced the line
-(`e0a91c4`, 2019-11-05). It is flagged by
-`javascript.express.security.audit.express-cookie-session-no-secure`, which
-carries severity **WARNING** in the community ruleset. The same rule reports 61
-findings across the current tree, 54 of them in `src/legacy/`.
+`src/legacy/session/cookies.js` set the session cookie without the `secure`
+attribute. On the support subdomain, served over plain HTTP internally since a
+2019 proxy change, the cookie went across the internal network in clear text and
+a support tool logged it. 41 customer sessions affected. No evidence of external
+exposure.
 
 ## Action items
 
 - AI-1: `src/legacy/session/cookies.js` fixed and shipped 2026-08-22 (#4468).
-- AI-2: enforce static analysis in the pipeline by 2026-10-01. **This item.**
-- AI-3: audit the remaining 60 occurrences of the same rule. Not started.
-
-=============== FILE: docs/rollout-thread.md ===============
-# #eng-platform — SAST enablement, 2026-09-05
-
-**marta.reinholt** — 1,847 is not a number a team acts on, it is a number a team
-routes to a folder. I have seen this twice. My proposal: gate the PR check on
-the highest severity band only, which is 212 findings, and leave the rest as a
-nightly informational report. We can widen later once the 212 are gone. If we
-go live with all 1,847 blocking, someone will have the check switched off by
-Friday and we will be back where we started with a board commitment behind us.
-
-**dev.chaudhary** — Agreed on the noise, different cut. 1,504 of the 1,847 are
-in src/legacy. That tree is frozen; we do not accept refactors to it outside a
-scheduled window. Scanning it on every PR means every PR that touches a shared
-util lights up with findings nobody is allowed to fix. Take src/legacy out of
-the scan config, review it separately once a quarter.
-
-**marta.reinholt** — I would take either over what we have now, which is nothing.
-
-**t.okonkwo** — Both of these land before Monday or we are explaining a slipped
-board commitment. Whoever picks this up: write it down so I can forward it.
+- AI-2: enforce static analysis on pull requests by 2026-10-01. **This item.**
+- AI-3: audit the remaining occurrences of the same shape. Not started.
 
 =============== FILE: .github/workflows/sast.yml ===============
 name: sast
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep:1.99.0
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # Shadow mode until 2026-10-01: reports, never blocks.
+      - name: Static analysis
+        continue-on-error: true
+        run: |
+          semgrep ci \
+            --config p/owasp-top-ten \
+            --config p/javascript \
+            --severity ERROR \
+            --baseline-ref origin/main \
+            -j 4 \
+            --metrics=off
+
+=============== FILE: .github/workflows/sast-nightly.yml ===============
+name: sast-nightly
 
 on:
   schedule:
@@ -156,36 +130,115 @@ on:
   workflow_dispatch:
 
 jobs:
-  nightly-scan:
+  full-scan:
     runs-on: ubuntu-latest
     container:
       image: semgrep/semgrep:1.99.0
     steps:
       - uses: actions/checkout@v5
-      - name: Informational scan
+
+      - name: Full-tree scan
         continue-on-error: true
         run: |
           semgrep scan \
             --config p/owasp-top-ten \
             --config p/javascript \
-            --text --metrics=off
+            --json --output nightly.json \
+            --metrics=off
 
-=============== FILE: src/legacy/session/cookies.js ===============
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-json
+          path: nightly.json
+
+=============== FILE: logs/pr-4530-shadow.txt ===============
+2026-09-08T11:04:12.3310Z ##[group]Run semgrep ci --config p/owasp-top-ten --config p/javascript --severity ERROR --baseline-ref origin/main -j 4 --metrics=off
+2026-09-08T11:04:13.0102Z
+2026-09-08T11:04:13.0103Z  ---- Semgrep CLI 1.99.0 ----
+2026-09-08T11:04:13.7741Z Scanning 6 files tracked by git with 1042 rules.
+2026-09-08T11:04:41.2210Z
+2026-09-08T11:04:41.2211Z Ran 1042 rules on 6 files: 0 findings.
+2026-09-08T11:04:44.8802Z ##[endgroup]
+2026-09-08T11:04:45.0110Z Process completed with exit code 0.
+
+=============== FILE: logs/pr-4519-shadow.txt ===============
+2026-09-03T16:41:02.7710Z ##[group]Run semgrep ci --config p/owasp-top-ten --config p/javascript --severity ERROR --baseline-ref origin/main -j 4 --metrics=off
+2026-09-03T16:41:03.4400Z
+2026-09-03T16:41:03.4401Z  ---- Semgrep CLI 1.99.0 ----
+2026-09-03T16:41:04.1190Z Scanning 11 files tracked by git with 1042 rules.
+2026-09-03T16:41:38.6620Z
+2026-09-03T16:41:38.6621Z Findings:
+2026-09-03T16:41:38.6622Z
+2026-09-03T16:41:38.6630Z   src/api/auth/dev-token.js
+2026-09-03T16:41:38.6631Z      javascript.jwt.security.jwt-hardcode.hardcoded-jwt-secret
+2026-09-03T16:41:38.6632Z         Hardcoded JWT secret detected.
+2026-09-03T16:41:38.6633Z         Severity: ERROR
+2026-09-03T16:41:38.6634Z          12|   const DEV_SECRET = "dev-secret-do-not-ship";
+2026-09-03T16:41:38.6640Z
+2026-09-03T16:41:38.6641Z Ran 1042 rules on 11 files: 1 finding.
+2026-09-03T16:41:41.0020Z ##[endgroup]
+2026-09-03T16:41:41.2214Z Process completed with exit code 1.
+
+=============== FILE: reports/nightly-2026-09-09.md ===============
+# Nightly full-tree scan — atlas-core @ 3a91f0d — 2026-09-09 03:00 UTC
+
+Command as run: see `.github/workflows/sast-nightly.yml`.
+Duration: 6m 41s. Files scanned: 2,914. Rules: 1,042.
+
+## By severity
+
+| Severity | Findings |
+|---|---|
+| ERROR   | 214   |
+| WARNING | 1,341 |
+| INFO    | 298   |
+| **Total** | **1,853** |
+
+## By directory
+
+| Path | ERROR | WARNING | INFO | Total |
+|---|---|---|---|---|
+| src/legacy/    | 168 | 1,109 | 227 | 1,504 |
+| src/billing/   | 21  | 94    | 31  | 146   |
+| src/api/       | 16  | 82    | 23  | 121   |
+| src/web/       | 6   | 41    | 14  | 61    |
+| scripts/       | 3   | 15    | 3   | 21    |
+
+## Top rules by count
+
+| Rule | Severity | Count |
+|---|---|---|
+| javascript.lang.security.audit.path-traversal.path-join-resolve-traversal | WARNING | 143 |
+| javascript.express.security.audit.express-open-redirect | WARNING | 88 |
+| javascript.express.security.audit.express-cookie-session-no-secure | WARNING | 62 |
+| javascript.lang.best-practice.leftover-debugging | INFO | 211 |
+| javascript.lang.security.audit.sqli.node-postgres-sqli | ERROR | 9 |
+
+## express-cookie-session-no-secure — sample, with first-seen commit dates
+
+| Path | Line | First seen |
+|---|---|---|
+| src/api/support/session.js | 26 | 2026-09-08 (#4530) |
+| src/legacy/billing/portal.js | 212 | 2019-06-11 |
+| src/legacy/session/legacy-store.js | 77 | 2018-02-20 |
+
+54 of the 62 sit under `src/legacy/`.
+
+## ERROR findings whose first-seen date is after 2026-08-21
+
+| Rule | Path | First seen |
+|---|---|---|
+| javascript.lang.security.audit.sqli.node-postgres-sqli | src/billing/invoices/query.js:88 | 2026-08-26 (#4471) |
+| javascript.lang.security.detect-child-process | src/api/exports/archive.js:31 | 2026-09-01 (#4502) |
+| javascript.jwt.security.jwt-hardcode.hardcoded-jwt-secret | src/api/auth/dev-token.js:12 | 2026-09-02 (#4509) |
+
+=============== FILE: src/api/support/session.js ===============
 'use strict';
 
-const DEFAULT_MAX_AGE_MS = 1000 * 60 * 60 * 12;
+const DEFAULT_MAX_AGE_MS = 1000 * 60 * 30;
 
-function buildSessionCookie(sid, opts = {}) {
-  const parts = ['atlas_sid=' + encodeURIComponent(sid)];
-  parts.push('Path=' + (opts.path || '/'));
-  parts.push('Max-Age=' + Math.floor((opts.maxAgeMs || DEFAULT_MAX_AGE_MS) / 1000));
-  parts.push('SameSite=' + (opts.sameSite || 'Lax'));
-  if (opts.httpOnly !== false) parts.push('HttpOnly');
-  if (opts.secure !== false) parts.push('Secure');
-  return parts.join('; ');
-}
-
-function parseCookieHeader(header) {
+function parseSupportCookie(header) {
   const out = {};
   for (const chunk of String(header || '').split(';')) {
     const i = chunk.indexOf('=');
@@ -195,32 +248,58 @@ function parseCookieHeader(header) {
   return out;
 }
 
-module.exports = { buildSessionCookie, parseCookieHeader, DEFAULT_MAX_AGE_MS };
+function supportSessionId(header) {
+  const parsed = parseSupportCookie(header);
+  return parsed.atlas_support || null;
+}
 
-=============== FILE: test/cookies.test.js ===============
+function cookieMaxAgeSeconds(opts = {}) {
+  return Math.floor((opts.maxAgeMs || DEFAULT_MAX_AGE_MS) / 1000);
+}
+
+// Added 2026-09-08 in #4530 for the support impersonation banner.
+function buildSupportCookie(sid, opts = {}) {
+  const parts = ['atlas_support=' + encodeURIComponent(sid)];
+  parts.push('Path=' + (opts.path || '/support'));
+  parts.push('Max-Age=' + cookieMaxAgeSeconds(opts));
+  parts.push('SameSite=Lax');
+  parts.push('HttpOnly');
+  return parts.join('; ');
+}
+
+module.exports = {
+  buildSupportCookie,
+  parseSupportCookie,
+  supportSessionId,
+  cookieMaxAgeSeconds,
+  DEFAULT_MAX_AGE_MS,
+};
+
+=============== FILE: test/session.test.js ===============
 const test = require('node:test');
 const assert = require('node:assert');
-const { buildSessionCookie, parseCookieHeader } = require('../src/legacy/session/cookies.js');
+const {
+  buildSupportCookie,
+  supportSessionId,
+  cookieMaxAgeSeconds,
+} = require('../src/api/support/session.js');
 
-test('session cookie carries Secure and HttpOnly by default', () => {
-  const c = buildSessionCookie('abc123');
-  assert.match(c, /; Secure$/);
-  assert.match(c, /; HttpOnly; /);
+test('the support cookie carries HttpOnly and SameSite', () => {
+  const c = buildSupportCookie('s_1');
+  assert.match(c, /; HttpOnly$/);
+  assert.match(c, /SameSite=Lax/);
 });
 
 test('max-age is emitted in seconds', () => {
-  const c = buildSessionCookie('abc123', { maxAgeMs: 60000 });
-  assert.match(c, /Max-Age=60/);
+  assert.strictEqual(cookieMaxAgeSeconds({ maxAgeMs: 60000 }), 60);
 });
 
 test('cookie values are url-encoded', () => {
-  assert.match(buildSessionCookie('a b/c'), /atlas_sid=a%20b%2Fc/);
+  assert.match(buildSupportCookie('a b/c'), /atlas_support=a%20b%2Fc/);
 });
 
-test('header parsing round-trips a built cookie name', () => {
-  const parsed = parseCookieHeader('atlas_sid=abc123; Path=/; SameSite=Lax');
-  assert.strictEqual(parsed.atlas_sid, 'abc123');
-  assert.strictEqual(parsed.Path, '/');
+test('the session id round-trips out of a cookie header', () => {
+  assert.strictEqual(supportSessionId('atlas_support=s_9; Path=/support'), 's_9');
 });
 
 =============== FILE: package.json ===============

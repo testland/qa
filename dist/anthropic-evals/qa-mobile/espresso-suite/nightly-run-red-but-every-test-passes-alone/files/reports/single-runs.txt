@@ -1,0 +1,17 @@
+### Karim, 2026-09-12. Each command run on a freshly booted emulator.
+
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.AccountTest#dismissingOnboardingSticks
+  -> 1 test, 1 passed (6.2s)
+
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.SearchTest
+  -> 8 tests, 8 passed (41s)
+
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.OrdersTest
+  -> 9 tests, 9 passed (52s)
+
+./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.northwind.shop.CartTest
+  -> 3 tests, 3 passed (11s)
+
+Ran the last one four times. Green on three of them. On the fourth the runner
+reported the methods in a different order and two of the three failed with the
+same timeout exception the nightly shows.

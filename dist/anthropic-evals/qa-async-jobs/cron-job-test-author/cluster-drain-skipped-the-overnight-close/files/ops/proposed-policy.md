@@ -11,10 +11,9 @@ once this is signed off.
    queueing and it stops a slow night turning into a pile-up.
 
 2. `startingDeadlineSeconds: 21600` on every CronJob.
-   Patch upgrades run inside a 09:00-15:00 maintenance window and a drain takes
-   20 to 40 minutes, so six hours of grace means a maintenance window can never
-   skip a run again. INC-5503 was a 120-second deadline against a 25-minute
-   drain.
+   A drain takes 20 to 40 minutes, so six hours of grace means a maintenance
+   window can never skip a run again. INC-5503 was a 120-second deadline against
+   a 25-minute drain.
 
 3. Alert on Job failure for all three workloads, routed to the owning team.
    We already have that alert and it is only wired to platform's pager today.

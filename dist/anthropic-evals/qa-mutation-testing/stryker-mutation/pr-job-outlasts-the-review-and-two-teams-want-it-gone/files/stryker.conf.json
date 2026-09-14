@@ -7,6 +7,6 @@
   "concurrency": 16,
   "timeoutMS": 120000,
   "reporters": ["progress", "clear-text"],
-  "mutate": ["src/**/*.ts", "!src/**/*.test.ts"],
+  "mutate": ["src/**/*.js", "!src/**/*.test.js"],
   "thresholds": { "high": 80, "low": 60, "break": 55 }
 }

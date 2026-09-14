@@ -2,32 +2,30 @@
 
 ## Problem Description
 
-`vault` is the service that enforces customer data retention - it decides what
-gets deleted and writes the audit trail our SOC 2 evidence pack is built from.
-We finally got Mull running against it in CI and last night's run left five
-mutants alive out of 38.
+`vault` is one of our C++ services. We finally got Mull running against it in CI
+and last night's run left five mutants alive out of 38.
 
 Grooming is Thursday at 10:00 and I have to arrive with a column of cards. Our
-board house rules are attached; @em wrote them after the Q2 board turned into
-four hundred one-line rows and nobody could find anything.
+board house rules are attached - @em wrote them after the Q2 board turned into
+four hundred one-line rows that nobody could find anything in, and Priya bounces
+anything at grooming that does not follow them.
 
 Attached: the Mull console output, the `mull.yml` the run used, both source
-files, both test files, and the CMake file. The compliance submodule is not
-checked out on my machine, so `compliance/e2e_main.cpp` is not in the bundle.
+files, both test files, the fakes header the tests build on, and the CMake file.
+The compliance submodule is not checked out on my machine, so
+`compliance/e2e_main.cpp` is not in the bundle.
 
-Give me the column I should actually put up, in the order I should put it up in.
-For each row I need the file and line, what changes, and what good looks like,
-concrete enough that whoever takes it does not come back to me for the detail.
-If our house rules are going to produce the wrong column here, tell me that
-before Thursday rather than after.
+Give me the column I should put up on Thursday, in the order I should put it up
+in. For each card I need what changes and what good looks like, concrete enough
+that whoever takes it does not come back to me for the detail on the day.
 
 ## Output Specification
 
 1. Write `docs/grooming-2026-09-13.md`.
-2. List the board rows you would put up, in the order you would put them up in,
-   with the reason for that order stated once.
-3. Each row: file and line, the change, and the expected outcome written out -
-   inputs and assertion where the row is a test.
+2. List the cards you would put up, in the order you would put them up in, with
+   the reason for that order stated once.
+3. Every card carries an owner and a one-line statement of what good looks like,
+   per the house rules.
 4. Do not modify anything under `src/` or `test/`.
 
 ## Input Files
@@ -88,6 +86,42 @@ std::string truncate(const std::string& s, size_t max_len, Logger& log) {
 }
 
 }  // namespace acme
+
+=============== FILE: test/fakes.h ===============
+#pragma once
+
+#include <string>
+#include <vector>
+
+#include "audit.h"
+#include "logger.h"
+#include "store.h"
+
+struct FakeStore : acme::Store {
+  explicit FakeStore(std::vector<acme::Record> records) : records_(records) {}
+  const std::vector<acme::Record>& all() const override { return records_; }
+  void erase(int id) override;
+  size_t size() const { return records_.size(); }
+
+ private:
+  std::vector<acme::Record> records_;
+};
+
+struct FakeAudit : acme::AuditLog {
+  void record(const std::string& action, int id) override {
+    entries.push_back({action, id});
+  }
+  struct Entry {
+    std::string action;
+    int id;
+  };
+  std::vector<Entry> entries;
+};
+
+struct FakeLogger : acme::Logger {
+  void debug(const std::string& message) override { messages.push_back(message); }
+  std::vector<std::string> messages;
+};
 
 =============== FILE: test/retention_test.cpp ===============
 #include "retention.h"

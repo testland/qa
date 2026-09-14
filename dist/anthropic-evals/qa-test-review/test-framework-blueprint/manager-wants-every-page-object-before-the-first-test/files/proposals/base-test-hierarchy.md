@@ -22,3 +22,7 @@ by @tomas for sprint one.
 
 Every spec extends the deepest class that fits. New shared behaviour goes
 into the level where it is first needed, and everything below inherits it.
+
+Marcus's pilot in `pilot/` is the same idea expressed as a module rather than
+a class hierarchy, to show the setup sharing works before we commit to the
+class shape.

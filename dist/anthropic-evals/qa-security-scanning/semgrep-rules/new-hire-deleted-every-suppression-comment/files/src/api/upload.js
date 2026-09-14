@@ -8,9 +8,7 @@ function resolveUploadPath(tenantId, filename) {
   const base = path.join(UPLOAD_ROOT, tenantId);
   // Suppression removed by #1180; shown here as it was on main:
   //   // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
-  //   // Reason: filename is validated by assertSafeName above
-  //   // Reviewer: p.novak@hollowpoint.example (2025-09-01)
-  //   // Expires: 2026-03-01
+  //   // filename is checked below — p.novak, revisit before 2026-03-01
   const rel = path.relative(path.resolve(base), path.resolve(base, filename));
   if (rel === '' || rel.startsWith('..') || path.isAbsolute(rel)) {
     throw new Error('path escapes tenant root');

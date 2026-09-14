@@ -1,0 +1,16 @@
+2026-09-03T16:41:02.7710Z ##[group]Run semgrep ci --config p/owasp-top-ten --config p/javascript --severity ERROR --baseline-ref origin/main -j 4 --metrics=off
+2026-09-03T16:41:03.4400Z
+2026-09-03T16:41:03.4401Z  ---- Semgrep CLI 1.99.0 ----
+2026-09-03T16:41:04.1190Z Scanning 11 files tracked by git with 1042 rules.
+2026-09-03T16:41:38.6620Z
+2026-09-03T16:41:38.6621Z Findings:
+2026-09-03T16:41:38.6622Z
+2026-09-03T16:41:38.6630Z   src/api/auth/dev-token.js
+2026-09-03T16:41:38.6631Z      javascript.jwt.security.jwt-hardcode.hardcoded-jwt-secret
+2026-09-03T16:41:38.6632Z         Hardcoded JWT secret detected.
+2026-09-03T16:41:38.6633Z         Severity: ERROR
+2026-09-03T16:41:38.6634Z          12|   const DEV_SECRET = "dev-secret-do-not-ship";
+2026-09-03T16:41:38.6640Z
+2026-09-03T16:41:38.6641Z Ran 1042 rules on 11 files: 1 finding.
+2026-09-03T16:41:41.0020Z ##[endgroup]
+2026-09-03T16:41:41.2214Z Process completed with exit code 1.

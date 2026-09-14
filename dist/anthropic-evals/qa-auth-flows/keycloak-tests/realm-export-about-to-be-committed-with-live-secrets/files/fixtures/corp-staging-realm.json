@@ -49,9 +49,7 @@
       "email": "alice.tran@corp.example",
       "firstName": "Alice",
       "lastName": "Tran",
-      "credentials": [
-        { "type": "password", "value": "Sp1ng-2026!alice", "temporary": false }
-      ],
+      "federationLink": "corp-ldap",
       "realmRoles": ["reports-reader"]
     },
     {
@@ -85,6 +83,7 @@
   "components": {
     "org.keycloak.storage.UserStorageProvider": [
       {
+        "id": "corp-ldap",
         "name": "corp-ldap",
         "providerId": "ldap",
         "config": {
@@ -93,6 +92,7 @@
           "bindDn": ["cn=keycloak-bind,ou=services,dc=corp,dc=internal"],
           "bindCredential": ["LdapB1nd-ProdShared-!7"],
           "editMode": ["READ_ONLY"],
+          "importEnabled": ["false"],
           "syncRegistrations": ["false"]
         }
       }

@@ -1,12 +1,11 @@
 2026-09-08T09:12:41.0Z ##[group]Run Compare
 2026-09-08T09:12:47.2Z ##[endgroup]
-2026-09-08T09:12:47.3Z ##[warning]Process completed with exit code 1.
 2026-09-08T09:12:47.5Z ##[group]Run Comment on the pull request
 2026-09-08T09:12:48.9Z ##[endgroup]
 2026-09-08T09:12:49.1Z ##[group]Run Upload report
 2026-09-08T09:12:50.6Z Artifact spec-report successfully uploaded
 2026-09-08T09:12:50.7Z ##[endgroup]
-2026-09-08T09:12:51.2Z Job succeeded.
+2026-09-08T09:12:51.2Z Job succeeded. Process completed with exit code 0.
 
 PR #4471 was approved on the strength of the comment and merged the same
 afternoon.

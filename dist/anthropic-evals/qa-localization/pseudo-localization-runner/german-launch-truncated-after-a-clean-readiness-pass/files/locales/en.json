@@ -1,9 +1,9 @@
 {
-  "billing.confirmButton": "Confirm payment method",
-  "billing.cancelButton": "Cancel",
-  "billing.planLabel": "Current plan",
-  "invoice.downloadLink": "Download invoice",
-  "invoice.exportButton": "Export all invoices",
+  "billing.confirm": "Confirm payment method",
+  "billing.cancel": "Cancel",
+  "billing.plan": "Current plan",
+  "invoice.download": "Download invoice",
+  "invoice.export": "Export all invoices",
   "nav.settings": "Settings",
   "nav.billing": "Billing"
 }

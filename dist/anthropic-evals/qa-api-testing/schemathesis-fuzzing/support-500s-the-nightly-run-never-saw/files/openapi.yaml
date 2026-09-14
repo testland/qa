@@ -17,6 +17,33 @@ paths:
                 required: [status]
                 properties:
                   status: { type: string, enum: [ok] }
+  /v1/rates:
+    get:
+      operationId: rates
+      parameters:
+        - name: postcode
+          in: query
+          required: true
+          schema: { type: string, maxLength: 12 }
+      responses:
+        '200':
+          description: available rates
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [rates]
+                properties:
+                  rates:
+                    type: array
+                    items:
+                      type: object
+                      required: [service, amount_cents]
+                      properties:
+                        service: { type: string }
+                        amount_cents: { type: integer }
+        '400':
+          description: rejected
   /v1/shipments:
     post:
       operationId: createShipment
@@ -93,16 +120,16 @@ components:
   schemas:
     Shipment:
       type: object
-      required: [id, weight_kg, status]
+      required: [id, weight_kg, status, tracking_number]
       properties:
         id: { type: string }
         weight_kg: { type: number }
+        tracking_number: { type: string }
         status: { type: string, enum: [draft, booked, cancelled] }
     Label:
       type: object
-      required: [id, shipment_id, tracking_number, status]
+      required: [id, shipment_id, status]
       properties:
         id: { type: string }
         shipment_id: { type: string }
-        tracking_number: { type: string }
         status: { type: string, enum: [purchased, voided] }

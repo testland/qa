@@ -12,6 +12,9 @@
 09:47:09  OPTIONS  /graphql  204  0      https://app.parcelly.com
 09:47:12  OPTIONS  /graphql  204  0      https://app.parcelly.com
 
-# 4,118 rows in the window with origin=https://app.parcelly.com. None of them
-# is a POST. No 4xx and no 5xx anywhere in the window.
+# window totals, 09:12 - 09:51
+#   origin=https://parcelly.com        2,904 OPTIONS   2,904 POST
+#   origin=https://admin.parcelly.com     61 OPTIONS      61 POST
+#   origin=https://app.parcelly.com    4,118 OPTIONS       0 POST
+#   status 2xx 9,983   status 3xx 0   status 4xx 0   status 5xx 0
 # 09:51 DNS rolled back to parcelly.com.

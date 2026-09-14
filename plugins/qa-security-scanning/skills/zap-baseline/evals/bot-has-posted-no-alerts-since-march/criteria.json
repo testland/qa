@@ -1,46 +1,46 @@
 {
-  "context": "A pipeline that has reported nothing 611 times because the file it reads is never written. The scan asks only for an HTML report; the bot reads zap-report.json; that path does not exist, so collect() takes its `if (!fs.existsSync(full)) return []` branch, the comment renders 'Nothing to review', and the job exits 0. The debug listing in run 4821 shows only zap-report.html in the workspace while the step log for the same run counts WARN-NEW: 14, including the three the pentest later reported. Predicted baseline failure: the agent goes at the reader rather than the producer — it makes the bot parse zap-report.html, which is exactly Sam's proposal, has a working proof of concept, and is the only artifact anyone can see. That produces a comment with content while leaving the scan emitting a format meant for humans and the pipeline one report-template change away from silence again; the fix is to have the scanner emit machine-readable output for the triage step. The second predicted failure is the silent fallback itself: an agent that fixes the output format and leaves `return []` in place has repaired this instance and not the class, and the next missing report is silent again. The third is direction on the two proposals — deleting the job is the wrong conclusion from a true track record — and the fourth is the release on the 22nd, which a pipeline that starts blocking on all 14 pre-existing alerts will not survive.",
+  "context": "A pipeline that has reported nothing 611 times, and three colleagues proposing three different things to do about it. Predicted baseline failure: the agent takes Sam's deal. His case is well made and the usual objection is pre-emptively removed — the review deployment is per-PR, isolated, synthetic and destroyed on merge, so the reflex that an active scan is unsafe has nothing to bite on here, and the agent either adopts the deep scan or refuses it for a safety reason the prompt has already ruled out. Neither is the answer. The three pentest findings are a missing CSP header, a cookie without HttpOnly and a missing Permissions-Policy: response-header and cookie-attribute observations that the passive crawl already reported fourteen times in run 4821's own step log, so payload-throwing is not the missing capability, and a 19-minute active job on every pull request is the wrong layer and the wrong cadence for a gate that has to run on every push. What is actually broken is plumbing: the scan is asked only for `-r zap-report.html`, the bot reads `zap-report.json`, `collect()` takes its `if (!fs.existsSync(full)) return []` branch, the comment renders 'Nothing to review' and the job exits 0 — and Sam's draft carries the identical mismatch, so adopting it would buy 17 minutes of runner time and the same silence. The second predicted failure is the fail-open itself: an agent that fixes the output format and leaves `return []` in place has repaired this instance and not the class. The third is Fenna's ask, which is right but cannot be granted flat with a release on the 22nd and fourteen findings already standing.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT leave the scan emitting only a human-readable report",
+      "name": "MUST NOT put the active scan on the per-PR gate",
       "max_score": 30,
-      "description": "The scan invocation in .github/workflows/dast-pr.yml is changed to emit machine-readable JSON output for the triage step, and the path it writes is the path post-findings.js reads. MUST NOT resolve this by teaching the bot to parse the HTML report; a solution whose scan step still produces only -r zap-report.html scores zero for this criterion however good the parser is. Adding the JSON output but leaving the bot pointed at a different filename, so the two still do not meet, scores at most half."
+      "description": "Sam's proposal is refused and `.github/workflows/dast-pr.yml` keeps a passive crawl as the per-PR check. MUST NOT merge, adapt or schedule his draft as the pull-request job. Adopting it scores zero. Refusing it on data-safety, data-corruption or production-risk grounds scores at most half — the prompt establishes the review deployment is isolated, synthetic, mail-less and destroyed on merge, so that objection is not available and reaching for it shows the reflex firing rather than the reasoning. Full marks require the two real reasons: the three pentest findings are passive response-header and cookie observations the crawl already reports, and active probing belongs on a scheduled run against a shared pre-production target rather than on a gate that must run on every push."
+    },
+    {
+      "name": "MUST NOT leave the scan emitting only a human-readable report",
+      "max_score": 24,
+      "description": "The scan invocation is changed to emit machine-readable JSON for the triage step, and the path it writes is the path `post-findings.js` reads. A solution whose scan step still produces only `-r zap-report.html` scores zero for this criterion, however good the comment becomes. Teaching the bot to parse the HTML rendering instead of asking the scanner for structured output scores zero. Adding the JSON output but leaving the bot pointed at a different filename, so the two still do not meet, scores at most half."
     },
     {
       "name": "Silent-zero fallback removed",
-      "max_score": 22,
-      "description": "collect() no longer returns an empty list when the report file is absent: a missing report is an error that fails the step, not a clean bill of health, and a test covers the missing-file case. Leaving `if (!fs.existsSync(full)) return []` in place scores zero even when the workflow is fixed, because the pipeline then reports nothing silently the next time an output path changes. Making it log a warning and continue with an empty list scores at most half."
-    },
-    {
-      "name": "MUST NOT adopt the regular-expression scrape",
-      "max_score": 14,
-      "description": "Sam's proposal is addressed and declined, with a reason: the HTML report is a rendering for people and the scanner will emit a structured format for exactly this purpose, so parsing the rendering is fragile for no gain. Shipping the regex parser scores zero. Declining it with no reason given, or not addressing the proposal at all, scores at most half."
-    },
-    {
-      "name": "The job is kept, and Jools is answered",
-      "max_score": 12,
-      "description": "MUST NOT delete or disable the workflow. The document tells Jools that her evidence is right and her conclusion is not: the scanner found the pentest's findings on every run, the plumbing between the scanner and the comment was broken, and the 611 silent comments are the symptom. Deleting the job scores zero. Keeping it without engaging with her argument scores at most half."
+      "max_score": 20,
+      "description": "`collect()` no longer returns an empty list when the report file is absent: a missing report fails the step rather than reading as a clean bill of health, and a test covers the missing-file case. Leaving `if (!fs.existsSync(full)) return []` in place scores zero even when the workflow is fixed, because the next time an output path moves the pipeline goes quiet again. Logging a warning and continuing with an empty list scores at most half."
     },
     {
       "name": "The release on the 22nd is not blocked by existing findings",
       "max_score": 16,
-      "description": "The 14 alerts that already exist are recorded as a known set so the check fails on findings that are new relative to it, rather than on everything, with a dated plan for working the known set down. Turning the check straight to blocking on all 14 scores at most half — the explicit constraint was that a hundred PRs cannot go red tomorrow. Doing nothing about the existing findings, so the newly working bot either blocks everything or is ignored again, scores zero."
+      "description": "Fenna's ask is granted in a form the release survives: the fourteen alerts that already exist are recorded as a known set so the check fails on findings new relative to it, with a dated plan for working the known set down. Switching the check straight to blocking on all fourteen scores at most half — the explicit constraint was that a hundred PRs cannot go red tomorrow. Leaving the check advisory with nothing said about the existing findings scores zero."
+    },
+    {
+      "name": "MUST NOT delete the job, and Jools is answered",
+      "max_score": 12,
+      "description": "MUST NOT delete or disable the workflow. The document tells Jools her evidence is right and her conclusion is not: the scanner found the pentest's findings on every run and the plumbing between it and the comment was broken, so the 611 silent comments are the symptom she is reading as the diagnosis. Deleting the job scores zero. Keeping it without engaging with her argument scores at most half."
     },
     {
       "name": "What the scanner had already seen is stated",
       "max_score": 10,
-      "description": "The document maps the pentest's KL-01, KL-02 and KL-03 to rules 10038, 10049 and 10063 in the run 4821 step log, showing all three were in the report the whole time. Concluding that the scanner missed them, or that the scan configuration needed new rules to detect them, scores zero."
+      "description": "The document maps KL-01, KL-02 and KL-03 to rules 10038, 10049 and 10063 in run 4821's step log, showing all three were in the report the whole time. Concluding that the scanner missed them, or that a different scan type or new rules were needed to detect them, scores zero."
     },
     {
       "name": "The report survives a failed run",
-      "max_score": 6,
+      "max_score": 5,
       "description": "The upload-artifact step runs even when an earlier step fails, so the evidence for a red run is still collected. Leaving the step conditional on success scores zero here."
     },
     {
       "name": "Deliverables produced",
       "max_score": 4,
-      "description": "docs/dast-bot-review.md, the corrected workflow, and the corrected script all exist, npm test passes, and no shipped test was weakened to make it pass. Weakening or deleting an existing test scores zero."
+      "description": "docs/dast-bot-review.md addresses Jools, Sam and Fenna as three separate answers, the corrected workflow and script exist, npm test passes, and no shipped test was weakened. A single verdict that does not treat the three proposals separately scores zero for this item."
     }
   ]
 }

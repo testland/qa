@@ -1,0 +1,32 @@
+{
+  "repo": "remit",
+  "generated": "2026-09-15",
+  "tool": "tools/dup-scan.mjs",
+  "method": "pairs an end-to-end spec with a lower-layer test when their titles share three or more tokens after stemming",
+  "flagged": 22,
+  "of_total_e2e": 78,
+  "pairs": [
+    { "e2e": "fee percentage maths for the standard tier", "unit_file": "test/unit/fees.test.js", "unit_test": "standard tier is 290 bps", "tokens": 4 },
+    { "e2e": "volume tier fee is lower than standard", "unit_file": "test/unit/fees.test.js", "unit_test": "volume tier is cheaper than standard", "tokens": 4 },
+    { "e2e": "unknown fee tier is rejected at checkout", "unit_file": "test/unit/fees.test.js", "unit_test": "unknown tier is rejected", "tokens": 4 },
+    { "e2e": "fee on a whole-cent amount", "unit_file": "test/unit/fees.test.js", "unit_test": "fee on a whole-cent amount", "tokens": 5 },
+    { "e2e": "fee percentage rounds half up at the cent", "unit_file": "test/unit/fees.test.js", "unit_test": "fee rounds half up at the cent", "tokens": 6 },
+    { "e2e": "a fractional fee input is rejected", "unit_file": "test/unit/fees.test.js", "unit_test": "a fractional minor amount is rejected", "tokens": 4 },
+    { "e2e": "IBAN format validation on the payee form", "unit_file": "test/unit/iban.test.js", "unit_test": "a well formed iban passes the format check", "tokens": 3 },
+    { "e2e": "IBAN with a lowercase country code is refused", "unit_file": "test/unit/iban.test.js", "unit_test": "a lowercase country code fails the format check", "tokens": 5 },
+    { "e2e": "short IBAN is refused", "unit_file": "test/unit/iban.test.js", "unit_test": "a short iban fails the format check", "tokens": 3 },
+    { "e2e": "IBAN with punctuation is refused", "unit_file": "test/unit/iban.test.js", "unit_test": "a non alphanumeric character fails the format check", "tokens": 3 },
+    { "e2e": "IBAN checksum rejects a transposed pair", "unit_file": "test/unit/iban.test.js", "unit_test": "iban checksum rejects a transposed pair", "tokens": 6 },
+    { "e2e": "receipt line formatting pads the amount", "unit_file": "test/unit/format.test.js", "unit_test": "receipt line pads the amount to the right", "tokens": 6 },
+    { "e2e": "receipt line is forty characters wide", "unit_file": "test/unit/format.test.js", "unit_test": "receipt line is exactly the requested width", "tokens": 4 },
+    { "e2e": "receipt line wraps at forty characters", "unit_file": "test/unit/format.test.js", "unit_test": "receipt line wraps at forty characters", "tokens": 6 },
+    { "e2e": "statement amount renders two decimals", "unit_file": "test/unit/format.test.js", "unit_test": "money renders two decimals", "tokens": 3 },
+    { "e2e": "yen statement amount renders no decimals", "unit_file": "test/unit/format.test.js", "unit_test": "money renders none for a zero exponent", "tokens": 3 },
+    { "e2e": "zero amount renders as zero", "unit_file": "test/unit/format.test.js", "unit_test": "money of zero is zero", "tokens": 3 },
+    { "e2e": "currency symbol rendering for JPY", "unit_file": "test/unit/settlement.test.js", "unit_test": "zero-exponent currency renders with none", "tokens": 3 },
+    { "e2e": "settlement amount for a two-decimal currency", "unit_file": "test/unit/settlement.test.js", "unit_test": "two-exponent currency renders with two decimals", "tokens": 4 },
+    { "e2e": "idempotency key is reference plus date", "unit_file": "test/unit/settlement.test.js", "unit_test": "idempotency key joins reference and posting date", "tokens": 5 },
+    { "e2e": "malformed currency code is refused", "unit_file": "test/unit/entry.test.js", "unit_test": "a malformed currency code is rejected", "tokens": 4 },
+    { "e2e": "fractional minor amount is refused at entry", "unit_file": "test/unit/entry.test.js", "unit_test": "a fractional minor amount is rejected", "tokens": 5 }
+  ]
+}

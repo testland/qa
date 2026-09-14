@@ -4,6 +4,4 @@ INC-2118,notifications,SEV-3,2026-07-28T14:12:00Z,2026-07-28T15:06:00Z,s.iyer
 INC-2130,pricing,SEV-2,2026-08-14T09:41:00Z,2026-08-14T10:12:00Z,r.kaur
 INC-2142,email-transactional,SEV-3,2026-09-02T13:26:00Z,2026-09-02T15:05:00Z,t.okafor
 # Export generated 2026-10-01. Every incident declared in PagerDuty between
-# 2026-07-01 and 2026-09-30, four rows. Includes incidents later downgraded.
-# INC-2118: push and email notifications duplicated to users for 54 minutes
-# after a fan-out retry storm; customer-visible; no data loss.
+# 2026-07-01 and 2026-09-30, including any later downgraded or reclassified.

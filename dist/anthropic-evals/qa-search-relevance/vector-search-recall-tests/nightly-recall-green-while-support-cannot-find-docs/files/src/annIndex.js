@@ -1,8 +1,10 @@
 'use strict';
 
-// Model of the vendor's cell index, written from their docs. Every point lands
-// in exactly one cell (nearest centroid); a query scans only the nProbe cells
-// whose centroids are closest to it.
+// Model of the vendor's cell index, written from their documentation. Every
+// accepted point lands in exactly one cell - the one whose centroid it is
+// closest to - and a query scans only the nProbe cells nearest to it. The
+// vendor rejects a point that sits further than minCentroidSimilarity from
+// every centroid, and tells you to re-fit when that starts happening.
 
 function dot(a, b) {
   let s = 0;
@@ -19,7 +21,7 @@ function cosine(a, b) {
   return d === 0 ? 0 : dot(a, b) / d;
 }
 
-function createIndex({ centroids, nProbe = 2 }) {
+function createIndex({ centroids, nProbe = 2, minCentroidSimilarity = 0.35 }) {
   const cells = centroids.map(() => []);
   let comparisons = 0;
 
@@ -30,13 +32,16 @@ function createIndex({ centroids, nProbe = 2 }) {
       .map(([i]) => i);
 
   return {
+    cellCount: () => centroids.length,
     size: () => cells.reduce((n, c) => n + c.length, 0),
     comparisons: () => comparisons,
     resetCounters: () => { comparisons = 0; },
 
     add(id, vec) {
       if (vec.length !== centroids[0].length) throw new Error(`dimension mismatch for ${id}`);
-      cells[cellOrder(vec)[0]].push({ id, vec });
+      const order = cellOrder(vec);
+      if (cosine(vec, centroids[order[0]]) < minCentroidSimilarity) return false;
+      cells[order[0]].push({ id, vec });
       return true;
     },
 

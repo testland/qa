@@ -17,20 +17,16 @@ shipped PR #4471, which pulled persistence out of `src/order.js` into its own
 module. Our trace tests were green for that PR and have been green every day
 since, which is the part I want fixed regardless of what turns out to be wrong.
 
-One more constraint. Next sprint we are adding a `cart.price` span between the
-charge and the insert. I do not want the trace tests to need rewriting just
-because a span appeared in the middle of the request - that has already happened
-twice this year and it is why people stopped adding spans.
-
-Do not change anything under `dashboards/` - three other boards run the same
-join and they all work. Do not edit anything under `vendor/`, it is a checked-in
-mirror that gets overwritten from upstream.
+Whatever you do, the spans have to keep the names and the attributes they have
+now. Three other boards join on the same span name and they all work. Same for
+`dashboards/` itself - do not touch it, and do not edit anything under
+`vendor/`, which is a checked-in mirror that gets overwritten from upstream.
 
 ## Output Specification
 
-1. Add coverage to the trace tests that fails against `src/` as it stands today
-   and passes once the cause is fixed. Keep the attribute checks the existing
-   test already makes.
+1. Add coverage to the trace tests for what the panel needs and the existing
+   test does not check. Keep the attribute checks the existing test already
+   makes working.
 2. Fix the cause in `src/`.
 3. `npm test` must pass when you are done.
 4. Write `docs/trace-gap.md`, ten lines or fewer: what the existing test was
@@ -43,7 +39,7 @@ Extract the following files before beginning.
 =============== FILE: package.json ===============
 {
   "name": "order-service",
-  "version": "9.3.4",
+  "version": "3.2.1",
   "private": true,
   "scripts": {
     "test": "node --test"
@@ -242,6 +238,7 @@ module.exports = {
   InMemorySpanExporter,
 };
 
+
 =============== FILE: src/tracing.js ===============
 'use strict';
 const { TracerProvider } = require('../vendor/tracing-sdk');
@@ -296,20 +293,20 @@ module.exports = { createOrder, totalCents };
 const { tracer } = require('./tracing');
 const { SpanKind, SpanStatusCode } = require('../vendor/tracing-sdk');
 
-// Extracted out of order.js on 2026-08-11. The span is started detached so a
-// pooled connection cannot carry one request's context into the next one.
-function saveOrder(db, order) {
+const DB_ATTRS = { 'db.system': 'postgresql' };
+
+function dbSpan(name, { attributes, parent, kind = SpanKind.CLIENT }, fn) {
   return tracer.startActiveSpan(
+    name,
+    { kind, parent, attributes: Object.assign({}, DB_ATTRS, attributes) },
+    fn,
+  );
+}
+
+function saveOrder(db, order) {
+  return dbSpan(
     'db.query',
-    {
-      parent: null,
-      kind: SpanKind.CLIENT,
-      attributes: {
-        'db.system': 'postgresql',
-        'db.operation': 'INSERT',
-        'db.sql.table': 'orders',
-      },
-    },
+    { attributes: { 'db.operation': 'INSERT', 'db.sql.table': 'orders' } },
     async (span) => {
       const row = await db.insert('orders', order);
       span.setAttribute('db.rows_affected', 1);
@@ -319,7 +316,20 @@ function saveOrder(db, order) {
   );
 }
 
-module.exports = { saveOrder };
+function markRefunded(db, orderId) {
+  return dbSpan(
+    'db.query',
+    { attributes: { 'db.operation': 'UPDATE', 'db.sql.table': 'orders' } },
+    async (span) => {
+      const row = await db.update('orders', orderId, { refunded: true });
+      span.setAttribute('db.rows_affected', 1);
+      span.setStatus({ code: SpanStatusCode.OK });
+      return row;
+    },
+  );
+}
+
+module.exports = { saveOrder, markRefunded, dbSpan };
 
 =============== FILE: support/trace-setup.js ===============
 'use strict';
@@ -346,6 +356,9 @@ const fakeDb = () => {
     async insert(table, row) {
       n += 1;
       return Object.assign({ id: `${table.slice(0, 3)}_${1000 + n}` }, row);
+    },
+    async update(table, id, patch) {
+      return Object.assign({ id }, patch);
     },
   };
 };
@@ -381,10 +394,11 @@ test('order.create emits the checkout spans', async () => {
   assert.equal(spans[2].name, 'order.create');
   assert.equal(spans[2].attributes['order.item_count'], 2);
   assert.equal(spans[1].attributes['db.sql.table'], 'orders');
+  assert.equal(spans[1].attributes['db.system'], 'postgresql');
 });
 
 =============== FILE: dashboards/checkout-db.md ===============
-# Panel: database work per checkout (grafana, board `chk-db`)
+# Panel: database work per checkout (board `chk-db`)
 
 Query, unchanged since the board was built in February:
 
@@ -405,13 +419,21 @@ Owner note from @lmarsh, 2026-09-05: "There is no shortage of db.query spans -
 I can pull millions of them for any hour you like. They just never come back in
 the same search as the checkout they belong to. I have stopped using the board."
 
+The same join, with the span names swapped, backs `chk-cache`, `chk-search` and
+`fulfil-db`. All three are fine.
+
 =============== FILE: docs/refactor-2026-08-11.md ===============
 # Persistence extracted out of order.js
 
 Shipped 2026-08-11, PR #4471.
 
-- `saveOrder` moved from `src/order.js` into a new `src/persistence.js`.
-- Connection pooling moved with it.
-- Reviewer raised that a pooled connection could carry request context across
-  requests. The author addressed that in the span setup.
-- No behaviour change intended. Trace tests green, merged same day.
+- `saveOrder` and `markRefunded` moved from `src/order.js` into a new
+  `src/persistence.js`. Connection pooling moved with them.
+- The repeated attribute block on the persistence spans collapsed into a
+  `dbSpan()` wrapper.
+- Review comment from @jhalvorsen: a pooled connection is handed back and reused
+  across requests, so take care that a persistence span cannot pick up context
+  belonging to whichever request used the connection before it. Author's reply:
+  the wrapper takes a `parent` so a caller that genuinely needs a detached span
+  can ask for one, and nothing in the checkout path asks for one.
+- No behaviour change intended. Trace tests green, merged the same day.

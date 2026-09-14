@@ -3,8 +3,8 @@
 ## Problem Description
 
 We are building an internal refund console for the support team. Six weeks, two
-engineers (Marta and Devlin), about thirty agents will use it, it sits on one
-internal box behind SSO. Scope note and repo are attached.
+engineers (Marta Kelic and Devlin Roy), about thirty agents will use it, one
+internal box behind SSO. Scope note and repo attached.
 
 Dana runs the platform group and forwarded me the checkout document this
 morning:
@@ -12,24 +12,24 @@ morning:
 > This is the one the auditor walked through last cycle and it went fine. Clone
 > it for the console. Keep all eleven sections and the same headings - the
 > auditor likes seeing the same shape twice, it reads like we have a system.
-> Just fill in our equivalents under each one. The console is internal so treat
-> it as low risk across the board; nobody outside the company touches it. I need
-> something in the folder before the walkthrough on the 30th, and be ready for
-> them to ask how we decide the thing is ready to ship.
+> Fill in our equivalents under each one. The console is internal, so treat it
+> as low risk across the board; nobody outside the company touches it. Carry the
+> exit criteria over as they are, they were fine last cycle. I need something in
+> the folder before the walkthrough on the 30th, and be ready for them to ask
+> how we decide the thing is ready to ship.
 
-I do not want to hand the auditor a document that says things about this console
-that are not true, and I do not want to spend Marta's six weeks building the
-apparatus the checkout document describes. Dana is not wrong that we need
-something in the folder by the 30th.
+Dana has run four of these and the auditor has never pushed back on one. Finance
+sent their two requirements for the reconciliation pack straight to the team and
+Marta put them at the bottom of the scope note; she says both are already
+handled and there are tests for them.
 
-Repo is attached. `npm test` is green.
+`npm test` is green.
 
 ## Output Specification
 
 1. Write `docs/strategy/refund-console.md`.
-2. Write `docs/strategy/refund-console-notes.md` - a short note back to Dana
-   saying what you carried over from checkout, what you did not, and why, so she
-   is not surprised at the walkthrough.
+2. Write `docs/strategy/refund-console-notes.md` - a short note back to Dana she
+   can read before the walkthrough.
 3. Do not modify the checkout document, the source, or the tests.
 
 ## Input Files
@@ -150,38 +150,37 @@ Top 10 rows as of 2026-01-14; see the matrix for the live version.
 =============== FILE: docs/console-scope.md ===============
 # Refund console - scope note
 
-**Duration:** 6 weeks, starting 2026-09-21. **Team:** Marta Kelic, Devlin Roy.
+**Duration:** 6 weeks from 2026-09-21. **Team:** Marta Kelic, Devlin Roy.
 **Users:** ~30 support agents, internal only, SSO behind the corporate IdP.
 
 Surfaces:
 
 1. **Issue refund** - an agent selects an order and issues a full or partial
    refund. This calls the live payment provider against the customer's real card
-   or bank account. There is no sandbox mode in the console; production only.
+   or bank account. The provider gives us no sandbox on that endpoint; every
+   call from the console is a production call.
 2. **Refund history search** - agents look up past refunds by order or customer.
 3. **Agent action log** - every refund attempt is written to an append-only log
    that Finance exports monthly for the reconciliation pack.
 4. **CSV export** - Finance downloads the month's refunds.
 
-Deployment: one internal environment, one box, deploy by CI on merge to main.
-No canary, no staged rollout, no synthetic monitoring, no load testing
-infrastructure, no design-system a11y pipeline. Nothing in the console is
-reachable from the public internet.
+Deployment: one internal box, deployed by CI on merge to main. Nothing in the
+console is reachable from the public internet.
 
-Finance has asked, for the reconciliation pack, that a refund never be issued
-twice for the same order and that the action log never lose an entry.
+Finance's two requirements for the reconciliation pack, sent 2026-09-18:
+
+- A refund must never be issued twice against the same order.
+- The action log must never lose an entry, including for a refund attempt the
+  provider rejected or timed out on.
+
+Marta's note, 2026-09-19: both of those are covered - see the refund tests and
+the action-log tests, all green.
 
 =============== FILE: README.md ===============
 # refund-console
 
 Internal support tooling. Node service, server-rendered pages, one datastore.
-
-    npm test    # node --test
-
-CI runs the same command on every push. There is one job. There is no
-performance job, no accessibility job, no container scanning, and no contract
-testing - the payment provider is a third party and we consume its REST API
-directly.
+No runtime dependencies. `npm test` runs `node --test`; CI runs it on push.
 
 =============== FILE: package.json ===============
 {
@@ -220,6 +219,44 @@ export function issueRefund(agent, order, amountCents, alreadyRefunded = new Set
   return { orderId: order.id, amountCents, agentId: agent.id, status: 'submitted' };
 }
 
+=============== FILE: src/action-log.js ===============
+export function createLog() {
+  return [];
+}
+
+export function append(log, entry) {
+  if (!entry.agentId || !entry.orderId) throw new Error('agentId and orderId required');
+  log.push(Object.freeze({ ...entry, seq: log.length + 1 }));
+  return log[log.length - 1];
+}
+
+export function exportRange(log, fromSeq, toSeq) {
+  return log.filter((e) => e.seq >= fromSeq && e.seq <= toSeq);
+}
+
+=============== FILE: src/provider.js ===============
+// Stubbed for tests; the deployed build binds this to the provider SDK.
+export async function submitToProvider(refund) {
+  return { ref: `pr_${refund.orderId}`, status: 'accepted', amountCents: refund.amountCents };
+}
+
+=============== FILE: src/handler.js ===============
+import { issueRefund } from './refunds.js';
+import { append } from './action-log.js';
+import { submitToProvider } from './provider.js';
+
+export async function handleRefund(ctx, req) {
+  const refund = issueRefund(ctx.agent, req.order, req.amountCents);
+  const receipt = await submitToProvider(refund);
+  append(ctx.log, {
+    agentId: ctx.agent.id,
+    orderId: req.order.id,
+    amountCents: req.amountCents,
+    providerRef: receipt.ref,
+  });
+  return receipt;
+}
+
 =============== FILE: tests/refunds.test.js ===============
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -250,21 +287,6 @@ test('refuses a second refund on the same order', () => {
   assert.throws(() => issueRefund(agent, order, 100, new Set(['o_1'])), /already refunded/);
 });
 
-=============== FILE: src/action-log.js ===============
-export function createLog() {
-  return [];
-}
-
-export function append(log, entry) {
-  if (!entry.agentId || !entry.orderId) throw new Error('agentId and orderId required');
-  log.push(Object.freeze({ ...entry, seq: log.length + 1 }));
-  return log[log.length - 1];
-}
-
-export function exportRange(log, fromSeq, toSeq) {
-  return log.filter((e) => e.seq >= fromSeq && e.seq <= toSeq);
-}
-
 =============== FILE: tests/action-log.test.js ===============
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -286,4 +308,25 @@ test('exports an inclusive sequence range', () => {
   const log = createLog();
   for (const id of ['o_1', 'o_2', 'o_3']) append(log, { agentId: 'a_1', orderId: id });
   assert.equal(exportRange(log, 2, 3).length, 2);
+});
+
+=============== FILE: tests/handler.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createLog } from '../src/action-log.js';
+import { handleRefund } from '../src/handler.js';
+
+const agent = { id: 'a_1', role: 'support' };
+const order = { id: 'o_1', totalCents: 12_000 };
+
+test('submits the refund and returns the provider receipt', async () => {
+  const receipt = await handleRefund({ agent, log: createLog() }, { order, amountCents: 5_000 });
+  assert.equal(receipt.status, 'accepted');
+});
+
+test('writes an action-log entry for the refund it submitted', async () => {
+  const ctx = { agent, log: createLog() };
+  await handleRefund(ctx, { order, amountCents: 5_000 });
+  assert.equal(ctx.log.length, 1);
+  assert.equal(ctx.log[0].orderId, 'o_1');
 });

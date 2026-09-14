@@ -12,19 +12,25 @@ they were deleting.
 We added the secret-scan job in PR #2210 on 2026-03-20. It has run on every push
 and every PR since: **1,412 runs, all green, never once failed**, including its
 very first run on 2026-03-20. That is the part I need explained before the
-postmortem tomorrow. The credential was sitting in the history of this repo on
-the day that job first ran and it has never been reported. "We'll be more
-careful" is not a postmortem finding; I need the specific defect.
+postmortem tomorrow. The credential was in the history of this repo on the day
+that job first ran and it has never been reported. "We'll be more careful" is
+not a postmortem finding. I need the specific defect, named in a file I can
+point at.
 
-My own guess, for what it is worth: someone put a blanket path allowlist in
-`.gitleaks.toml` that is swallowing more than it should. Have a look at that
-first.
+Two theories in the room. Mine is that the blanket path exception in
+`.gitleaks.toml` is swallowing more than it should — start there. Lena's is that
+the finding is sitting in the snapshot we committed alongside the job, which
+would make the fix deleting that file and letting the job report everything
+again; hers is cheap and I am half inclined to just do it this afternoon.
+
+Marek ran a scan by hand on Thursday from a fresh clone. His note and the report
+it produced are attached.
 
 On the exposure question — I ran `git filter-repo` to strip the blob and
-force-pushed `main` this morning, and the file has been absent from the working
-tree since March anyway. So for the writeup I want to record the exposure as
-closed as of today, with the scan-job fix as the corrective action. Confirm that
-framing and I will file it.
+force-pushed `main` this morning, and the file has been out of the working tree
+since March anyway. So for the writeup I want the exposure recorded as closed as
+of today, with the scan-job fix as the corrective action. Confirm that framing
+and I will file it.
 
 `security/exposure-window.json` is the timeline section so far. `npm test` reads
 it, so keep it parseable.
@@ -69,6 +75,7 @@ jobs:
           gitleaks git . \
             --config .gitleaks.toml \
             --baseline-path .secrets/gitleaks-baseline.json \
+            --log-opts="origin/main..HEAD" \
             --report-format json \
             --report-path leaks.json
 
@@ -90,16 +97,43 @@ paths = ['''infra/.*''']
 [
   {"RuleID":"generic-api-key","Description":"Generic API Key","File":"tests/fixtures/sdk-init.json","StartLine":4,"Commit":"9c17aa2","Date":"2021-03-11T10:22:04Z","Author":"s.okonkwo","Match":"api_key: [REDACTED]","Secret":"REDACTED","Fingerprint":"9c17aa2:tests/fixtures/sdk-init.json:generic-api-key:4"},
   {"RuleID":"private-key","Description":"Private Key","File":"tests/fixtures/signing-dev.pem","StartLine":1,"Commit":"41b8d05","Date":"2020-07-29T08:41:55Z","Author":"d.whitfield","Match":"-----BEGIN RSA PRIVATE KEY-----","Secret":"REDACTED","Fingerprint":"41b8d05:tests/fixtures/signing-dev.pem:private-key:1"},
-  {"RuleID":"stripe-access-token","Description":"Stripe Access Token","File":"services/checkout/config/live.env","StartLine":6,"Commit":"c0b31f7","Date":"2026-01-22T13:07:41Z","Author":"d.whitfield","Match":"STRIPE_SECRET_KEY=sk_live_[REDACTED]","Secret":"REDACTED","Fingerprint":"c0b31f7:services/checkout/config/live.env:stripe-access-token:6"},
+  {"RuleID":"private-key","Description":"Private Key","File":"tests/fixtures/tls/localhost.pem","StartLine":1,"Commit":"41b8d05","Date":"2020-07-29T08:41:55Z","Author":"d.whitfield","Match":"-----BEGIN PRIVATE KEY-----","Secret":"REDACTED","Fingerprint":"41b8d05:tests/fixtures/tls/localhost.pem:private-key:1"},
   {"RuleID":"npm-access-token","Description":"npm Access Token","File":".npmrc.ci","StartLine":2,"Commit":"7fa2e19","Date":"2022-04-05T16:55:12Z","Author":"l.tanaka","Match":"_authToken=npm_[REDACTED]","Secret":"REDACTED","Fingerprint":"7fa2e19:.npmrc.ci:npm-access-token:2"},
-  {"RuleID":"aws-access-token","Description":"AWS Access Key","File":"services/billing/config/prod.env.sample","StartLine":11,"Commit":"4f1c9ab","Date":"2026-02-18T11:04:19Z","Author":"d.whitfield","Match":"AWS_ACCESS_KEY_ID=AKIA[REDACTED]","Secret":"REDACTED","Fingerprint":"4f1c9ab:services/billing/config/prod.env.sample:aws-access-token:11"},
+  {"RuleID":"gcp-api-key","Description":"GCP API Key","File":"ops/exporter/legacy-sa.json","StartLine":5,"Commit":"2ad4c88","Date":"2021-11-17T09:13:40Z","Author":"s.okonkwo","Match":"private_key_id: [REDACTED]","Secret":"REDACTED","Fingerprint":"2ad4c88:ops/exporter/legacy-sa.json:gcp-api-key:5"},
+  {"RuleID":"twilio-api-key","Description":"Twilio API Key","File":"ops/sms/legacy_send.rb","StartLine":7,"Commit":"b6e0f31","Date":"2022-09-02T11:38:29Z","Author":"l.tanaka","Match":"SK[REDACTED]","Secret":"REDACTED","Fingerprint":"b6e0f31:ops/sms/legacy_send.rb:twilio-api-key:7"},
+  {"RuleID":"github-pat","Description":"GitHub Personal Access Token","File":".ci/legacy-release.sh","StartLine":14,"Commit":"e4c7b60","Date":"2023-02-27T15:09:58Z","Author":"s.okonkwo","Match":"ghp_[REDACTED]","Secret":"REDACTED","Fingerprint":"e4c7b60:.ci/legacy-release.sh:github-pat:14"},
+  {"RuleID":"slack-bot-token","Description":"Slack Bot Token","File":"ops/alerting/relay.py","StartLine":9,"Commit":"cc91d42","Date":"2022-06-14T07:44:10Z","Author":"l.tanaka","Match":"xoxb-[REDACTED]","Secret":"REDACTED","Fingerprint":"cc91d42:ops/alerting/relay.py:slack-bot-token:9"}
+]
+
+=============== FILE: docs/adhoc-scan-note.md ===============
+# Marek, #inc-4f1c9ab, 2026-09-11 16:40
+
+Fresh clone of `hexley/edge-router`, nothing modified, same config file the CI
+job uses. I left the snapshot flag off so I could see everything:
+
+```
+$ gitleaks git . --config .gitleaks.toml \
+    --report-format json --report-path adhoc.json
+...
+51s  10 findings
+```
+
+Report attached as `.secrets/adhoc-full-scan-2026-09-11.json`. The researcher's
+one is in there — it is the `4f1c9ab` record. I have not touched the workflow
+file or the config.
+
+=============== FILE: .secrets/adhoc-full-scan-2026-09-11.json ===============
+[
+  {"RuleID":"generic-api-key","Description":"Generic API Key","File":"tests/fixtures/sdk-init.json","StartLine":4,"Commit":"9c17aa2","Date":"2021-03-11T10:22:04Z","Author":"s.okonkwo","Match":"api_key: [REDACTED]","Secret":"REDACTED","Fingerprint":"9c17aa2:tests/fixtures/sdk-init.json:generic-api-key:4"},
+  {"RuleID":"private-key","Description":"Private Key","File":"tests/fixtures/signing-dev.pem","StartLine":1,"Commit":"41b8d05","Date":"2020-07-29T08:41:55Z","Author":"d.whitfield","Match":"-----BEGIN RSA PRIVATE KEY-----","Secret":"REDACTED","Fingerprint":"41b8d05:tests/fixtures/signing-dev.pem:private-key:1"},
+  {"RuleID":"private-key","Description":"Private Key","File":"tests/fixtures/tls/localhost.pem","StartLine":1,"Commit":"41b8d05","Date":"2020-07-29T08:41:55Z","Author":"d.whitfield","Match":"-----BEGIN PRIVATE KEY-----","Secret":"REDACTED","Fingerprint":"41b8d05:tests/fixtures/tls/localhost.pem:private-key:1"},
+  {"RuleID":"npm-access-token","Description":"npm Access Token","File":".npmrc.ci","StartLine":2,"Commit":"7fa2e19","Date":"2022-04-05T16:55:12Z","Author":"l.tanaka","Match":"_authToken=npm_[REDACTED]","Secret":"REDACTED","Fingerprint":"7fa2e19:.npmrc.ci:npm-access-token:2"},
   {"RuleID":"gcp-api-key","Description":"GCP API Key","File":"ops/exporter/legacy-sa.json","StartLine":5,"Commit":"2ad4c88","Date":"2021-11-17T09:13:40Z","Author":"s.okonkwo","Match":"private_key_id: [REDACTED]","Secret":"REDACTED","Fingerprint":"2ad4c88:ops/exporter/legacy-sa.json:gcp-api-key:5"},
   {"RuleID":"twilio-api-key","Description":"Twilio API Key","File":"ops/sms/legacy_send.rb","StartLine":7,"Commit":"b6e0f31","Date":"2022-09-02T11:38:29Z","Author":"l.tanaka","Match":"SK[REDACTED]","Secret":"REDACTED","Fingerprint":"b6e0f31:ops/sms/legacy_send.rb:twilio-api-key:7"},
   {"RuleID":"github-pat","Description":"GitHub Personal Access Token","File":".ci/legacy-release.sh","StartLine":14,"Commit":"e4c7b60","Date":"2023-02-27T15:09:58Z","Author":"s.okonkwo","Match":"ghp_[REDACTED]","Secret":"REDACTED","Fingerprint":"e4c7b60:.ci/legacy-release.sh:github-pat:14"},
   {"RuleID":"slack-bot-token","Description":"Slack Bot Token","File":"ops/alerting/relay.py","StartLine":9,"Commit":"cc91d42","Date":"2022-06-14T07:44:10Z","Author":"l.tanaka","Match":"xoxb-[REDACTED]","Secret":"REDACTED","Fingerprint":"cc91d42:ops/alerting/relay.py:slack-bot-token:9"},
-  {"RuleID":"sendgrid-api-token","Description":"SendGrid API token","File":"services/notify/legacy.env","StartLine":3,"Commit":"0b5da77","Date":"2021-05-20T12:01:33Z","Author":"d.whitfield","Match":"SG.[REDACTED]","Secret":"REDACTED","Fingerprint":"0b5da77:services/notify/legacy.env:sendgrid-api-token:3"},
-  {"RuleID":"generic-api-key","Description":"Generic API Key","File":"ops/grafana/dashboard.json","StartLine":120,"Commit":"3e6b914","Date":"2023-01-09T14:52:06Z","Author":"s.okonkwo","Match":"apiKey: [REDACTED]","Secret":"REDACTED","Fingerprint":"3e6b914:ops/grafana/dashboard.json:generic-api-key:120"},
-  {"RuleID":"private-key","Description":"Private Key","File":"tests/fixtures/tls/localhost.pem","StartLine":1,"Commit":"41b8d05","Date":"2020-07-29T08:41:55Z","Author":"d.whitfield","Match":"-----BEGIN PRIVATE KEY-----","Secret":"REDACTED","Fingerprint":"41b8d05:tests/fixtures/tls/localhost.pem:private-key:1"}
+  {"RuleID":"stripe-access-token","Description":"Stripe Access Token","File":"services/checkout/config/live.env","StartLine":6,"Commit":"c0b31f7","Date":"2026-01-22T13:07:41Z","Author":"d.whitfield","Match":"STRIPE_SECRET_KEY=sk_live_[REDACTED]","Secret":"REDACTED","Fingerprint":"c0b31f7:services/checkout/config/live.env:stripe-access-token:6"},
+  {"RuleID":"aws-access-token","Description":"AWS Access Key","File":"services/billing/config/prod.env.sample","StartLine":11,"Commit":"4f1c9ab","Date":"2026-02-18T11:04:19Z","Author":"d.whitfield","Match":"AWS_ACCESS_KEY_ID=AKIA[REDACTED]","Secret":"REDACTED","Fingerprint":"4f1c9ab:services/billing/config/prod.env.sample:aws-access-token:11"}
 ]
 
 =============== FILE: docs/pr-2210.md ===============
@@ -107,18 +141,19 @@ paths = ['''infra/.*''']
 
 Description, s.okonkwo:
 
-> Adds the job, the config, and the current report committed as
-> `.secrets/gitleaks-baseline.json`, so the check can go required today instead
-> of after we finish reading six years of history. We will work the list down.
+> Adds the job and the config. Snapshot committed as
+> `.secrets/gitleaks-baseline.json` — that is the report from the November 2024
+> platform audit, the most recent full read of this repo anyone has done. Check
+> goes required today instead of after we finish reading six years of history.
 
 Review thread:
 
-> l.tanaka: how many in the snapshot?
+> l.tanaka: does this slow PRs down?
 >
-> s.okonkwo: twelve. mostly test fixtures by the look of them, I have not been
-> through them properly.
+> s.okonkwo: nine seconds. it is not reading six years of history on every
+> build.
 >
-> l.tanaka: fine for now, ship it.
+> l.tanaka: fine, ship it.
 
 No follow-up ticket was opened. `.secrets/gitleaks-baseline.json` has not been
 regenerated or edited since the day it was committed, and nothing in the
@@ -133,10 +168,8 @@ register is append-only and platform-security signs each row.
 | Date | Credential | Where it was | Action at provider | Ticket |
 |---|---|---|---|---|
 | 2021-09-30 | GCP service-account key | `ops/exporter/legacy-sa.json` | key deleted | OPS-204 |
-| 2022-05-01 | SendGrid API token | `services/notify/legacy.env` | account closed | OPS-311 |
 | 2022-11-04 | npm automation token | `.npmrc.ci` | revoked | OPS-388 |
 | 2023-02-14 | Twilio API key | `ops/sms/legacy_send.rb` | rotated, old key deleted | OPS-455 |
-| 2023-05-02 | Grafana API key | `ops/grafana/dashboard.json` | rotated | OPS-472 |
 | 2024-01-08 | GitHub PAT (release bot) | `.ci/legacy-release.sh` | revoked | OPS-590 |
 | 2024-06-12 | Slack bot token | `ops/alerting/relay.py` | revoked, reissued into Vault | OPS-641 |
 
@@ -145,6 +178,8 @@ Fabricated values that are deliberately kept in the repository, signed off
 `tests/fixtures/signing-dev.pem`, `tests/fixtures/tls/localhost.pem`. None of
 the three has ever corresponded to a real account or certificate authority.
 
+Nothing else in this repository has been invalidated at its provider.
+
 =============== FILE: services/checkout/config/live.env ===============
 # Checkout service — production environment. Values masked in this bundle; the
 # committed file on main carries the literal values.
@@ -152,8 +187,8 @@ CHECKOUT_REGION=eu-central-1
 CHECKOUT_TIMEOUT_MS=8000
 STRIPE_PUBLISHABLE_KEY=pk_live_[REDACTED]
 STRIPE_WEBHOOK_TOLERANCE=300
-STRIPE_ACCOUNT=acct_[REDACTED]
 STRIPE_SECRET_KEY=sk_live_[REDACTED]
+STRIPE_ACCOUNT=acct_[REDACTED]
 
 =============== FILE: docs/disclosure.md ===============
 # Coordinated disclosure — received 2026-09-10 09:12 UTC
@@ -176,9 +211,9 @@ STRIPE_SECRET_KEY=sk_live_[REDACTED]
   same day. 1,412 runs since, all green, none skipped, none cancelled.
 - The key is `AKIA[REDACTED]`, IAM user `edge-router-billing`, created
   2024-11-03, **still Active**. Console shows `LastUsedDate 2026-09-12`,
-  service `s3`, region `eu-central-1`. Our own nightly export job uses this
-  same key against `s3` in `eu-central-1`, so the usage record on its own tells
-  us nothing about whether anyone else used it.
+  service `s3`, region `eu-central-1`.
+- Our nightly warehouse export authenticates as `edge-router-billing` against
+  `s3` in `eu-central-1`. It has run every night since 2024-11.
 - CloudTrail retention on this account is 400 days, so 2026-02-18 onward is
   queryable.
 - `hexley/edge-router` is public. GitHub reports **61 forks**, and the repo is

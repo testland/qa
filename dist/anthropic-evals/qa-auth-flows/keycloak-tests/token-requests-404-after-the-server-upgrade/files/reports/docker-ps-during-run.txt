@@ -1,0 +1,9 @@
+$ docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
+NAMES                          IMAGE                             STATUS          PORTS
+elated_mcnulty                 quay.io/keycloak/keycloak:latest  Up 14 seconds   8443/tcp, 0.0.0.0:32791->8080/tcp
+testcontainers-ryuk-4b1e9c2a   testcontainers/ryuk:0.8.1         Up 15 seconds   0.0.0.0:32790->8080/tcp
+kc-scratch                     quay.io/keycloak/keycloak:22.0    Up 3 weeks      0.0.0.0:8080->8080/tcp
+pgsql-local                    postgres:16                       Up 3 weeks      0.0.0.0:5432->5432/tcp
+
+$ docker exec kc-scratch /opt/keycloak/bin/kc.sh --version
+Keycloak 22.0.5

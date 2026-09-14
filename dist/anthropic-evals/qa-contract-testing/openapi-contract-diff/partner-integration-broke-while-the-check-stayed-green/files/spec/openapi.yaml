@@ -29,8 +29,14 @@ paths:
           schema:
             type: string
       responses:
+        '200':
+          description: the export payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Export'
         '202':
-          description: export is being prepared
+          description: the export is being prepared
           content:
             application/json:
               schema:
@@ -57,6 +63,11 @@ components:
         dataset:
           type: string
         createdAt:
+          type: string
+          format: date-time
+        downloadUrl:
+          type: string
+        expiresAt:
           type: string
           format: date-time
     ExportJob:

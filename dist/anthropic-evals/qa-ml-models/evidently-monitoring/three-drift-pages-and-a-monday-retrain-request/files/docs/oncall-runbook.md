@@ -21,11 +21,19 @@
 
 ## Known recurring deviations
 
-- **Monthly salary run.** `payroll_window_flag` and `cardholder_segment` move
-  for roughly 36 hours around the 6th to 8th of each month. Recorded and closed
-  on 2026-04-07, 2026-05-07, 2026-06-06, 2026-07-07 and 2026-08-06. Each time,
-  volumes, decline rates and downstream fraud rates were normal throughout, and
-  the distributions returned to the reference within two days.
+- **Monthly salary run.** Recorded and closed five times. Each occurrence ran
+  roughly 36 hours around the 6th to 8th; volumes, decline rates and downstream
+  fraud rates were normal throughout, and the distributions returned to the
+  reference within two days.
+
+  | Closed     | Window           | Columns above threshold |
+  |------------|------------------|-------------------------|
+  | 2026-04-07 | 04-06 .. 04-08   | payroll_window_flag     |
+  | 2026-05-07 | 05-06 .. 05-08   | payroll_window_flag     |
+  | 2026-06-06 | 06-06 .. 06-07   | payroll_window_flag     |
+  | 2026-07-07 | 07-06 .. 07-08   | payroll_window_flag     |
+  | 2026-08-06 | 08-06 .. 08-08   | payroll_window_flag     |
+
 - **Weekend e-commerce mix.** `is_ecommerce` runs 3-4 points higher on Saturday
   and Sunday. Recorded every weekend since May; inside threshold, has never
   fired.

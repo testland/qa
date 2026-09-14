@@ -19,7 +19,7 @@ jobs:
 
       - run: dbt deps
 
-      - name: baseline manifest from last main build
+      - name: fetch graph snapshot
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -34,6 +34,13 @@ jobs:
           else
             dbt build --empty
           fi
+
+      - name: publish graph snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-baseline
+          path: target/manifest.json
+          retention-days: 30
 
       - name: upload artifacts
         if: success()

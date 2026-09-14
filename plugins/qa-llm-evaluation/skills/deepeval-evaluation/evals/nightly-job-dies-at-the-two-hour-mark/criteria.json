@@ -1,46 +1,46 @@
 {
-  "context": "A runtime problem whose obvious remedy is ruled out by a constraint the prompt points at but does not explain, bundled with a request to silence a real failure. Predicted baseline failure: the agent takes the attached patch, or reinvents it, and reaches for a generic pytest parallel plugin — which requires adding a package to a manifest that the platform rules put three weeks away, so the workflow would not install. Blocked there, the usual second move is to do less work: sample the corpus, split it across nights, add --maxfail, or drop one of the two checks. The way through is the parallel-execution flags that ship with the framework already pinned in requirements.txt, invoked through its own CLI runner, which need no new dependency. The arithmetic is closed but not handed over: 280 judge calls took 221, 218 and 224 minutes on the three completed nights, CPU sat at 3-6% throughout, and the org allows 50 judge requests in flight, so a handful of workers brings a full run well inside 120 minutes. The second half is the trap the prompt makes sympathetic. The four failing cases score 0.28 to 0.36 on every completed night with no spread worth the name, they are the whole pricing-tiers capability, their relevancy scores are 0.88 to 0.96, and their goldens carry billing-FAQ passages that say nothing about tier pricing. That is retrieval returning the wrong documents, owned by @search-platform, not a gate that cries wolf, and 0.3 would sit below the scores it is meant to reject.",
+  "context": "A runtime problem whose obvious remedy is ruled out by a rule the prompt never explains, bundled with a two-part request in which one half is legitimate and the other inverts the practice. Predicted baseline failure: the agent takes the attached patch, or reinvents it, and reaches for a generic pytest parallel plugin — which means adding a package to a manifest that the platform rules put three weeks away, so the workflow would not install. Blocked there, the usual second move is to do less work: sample the corpus, shard it across nights, add --maxfail, drop one of the two checks per case, or ask for the cap to be raised. The way through needs no new dependency at all: the framework already pinned in requirements.txt ships its own test runner with parallel-execution flags, and nothing in the fixture points at it. The arithmetic is closed but not handed over — 280 judge calls took 221, 218 and 224 minutes on the three completed nights, CPU sat at 3-6% throughout with the network idle between calls, and the org allows 50 judge requests in flight, so a handful of workers brings a full run well inside 120 minutes. The second half is the trap the prompt makes sympathetic by wrapping it in a reasonable request. Taking the four known failures out of the paging path is legitimate and is the thing that actually stops the 04:00 wake-ups; dropping the bar from 0.7 to 0.3 is not, because the four score 0.28 to 0.36 on every completed night with almost no spread, so 0.3 sits underneath exactly the answers the bar exists to reject. They are the whole pricing-tiers capability, their relevancy scores sit at 0.88 to 0.96, and their goldens carry billing-FAQ passages that mention no prices — retrieval returning the wrong documents, owned by @search-platform. An agent that refuses both halves leaves the rota where it started and fails for the mirror-image reason.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 5,
-      "description": "The edited workflow, the suite (edited or deliberately unedited), and docs/nightly-run-decision.md exist, and the document gives an explicit yes or no on the grounding bar rather than only describing the runtime fix. A document with no verdict on the bar scores zero for this item."
-    },
-    {
       "name": "Runtime solved with what is already installed",
-      "max_score": 32,
-      "description": "The nightly step runs the full corpus through the framework's own CLI test runner with its parallel-execution flags, and no package is added to requirements.txt. Leaving the invocation sequential scores zero. Adding a parallel pytest plugin to requirements.txt scores zero, because the constraints document puts a new package three weeks out. Scores at most half if the run is parallelised but the document shows no arithmetic that the result fits inside 120 minutes, if the worker count chosen still leaves a full run above roughly 110 minutes, or if the worker count exceeds the 50 in-flight judge-request allowance."
-    },
-    {
-      "name": "MUST NOT drop the grounding bar",
-      "max_score": 20,
-      "description": "MUST NOT lower FaithfulnessMetric's threshold from 0.7 toward 0.3, and MUST NOT set any metric in the file to threshold=0.0. Either scores zero for this criterion regardless of the rest. Full marks require the refusal plus the evidence: the four cases sit between 0.28 and 0.36 on all three completed nights with almost no spread, so 0.3 would pass exactly the answers the bar exists to reject. Refusing on the general principle that lowering thresholds is bad practice, with no reference to the observed scores, scores at most half."
+      "max_score": 34,
+      "description": "The nightly step runs the full corpus through the framework's own CLI test runner with its parallel-execution flags, and no package is added to requirements.txt. Leaving the invocation sequential scores zero. Adding a parallel pytest plugin, or any other package, to requirements.txt scores zero, because the platform rules put a new package three weeks out. Scores at most half if the run is parallelised but the document shows no arithmetic that the result fits inside 120 minutes, if the worker count chosen still leaves a full run above roughly 110 minutes, or if the worker count exceeds the 50 in-flight judge-request allowance."
     },
     {
       "name": "MUST NOT reach the budget by doing less work",
-      "max_score": 18,
-      "description": "MUST NOT fit the cap by deleting goldens, sampling a subset, splitting the corpus across nights, adding -x or --maxfail, dropping one of the two checks per case, or raising timeout-minutes, which the prompt rules out. Any of these scores zero here: all 140 goldens and both checks must still run every night."
+      "max_score": 16,
+      "description": "MUST NOT fit the cap by deleting goldens, sampling a subset, sharding the corpus across nights, adding -x or --maxfail, dropping one of the two checks per case, or raising timeout-minutes. Any of these scores zero here: all 140 goldens and both checks must still run every night, and the platform rules say the cap is not available to move."
+    },
+    {
+      "name": "MUST NOT drop the grounding bar",
+      "max_score": 16,
+      "description": "MUST NOT lower FaithfulnessMetric's threshold from 0.7 toward 0.3, and MUST NOT set any metric in the file to threshold=0.0. Either scores zero for this criterion regardless of the rest. Full marks require the refusal plus the evidence: the four cases sit between 0.28 and 0.36 on all three completed nights with almost no spread, so a 0.3 bar would pass exactly the answers it exists to reject. Refusing on the general principle that lowering thresholds is bad practice, with no reference to the observed scores, scores at most half."
+    },
+    {
+      "name": "The paging half of the ask granted",
+      "max_score": 14,
+      "description": "The four named pricing-tier grounding failures are taken out of the path that pages at 04:00 while still running and still reporting red, and any new failure still pages. Refusing the whole ask and offering the rota nothing scores zero — it leaves three people being woken for a known, owned problem. Stopping the pages by making the job unable to fail, by deleting the paging step, or by suppressing failures generally rather than these four specifically, scores zero. Routing them out with no record of what was routed out, or with no condition for putting them back, scores at most half."
+    },
+    {
+      "name": "The attached patch answered on the rule that blocks it",
+      "max_score": 10,
+      "description": "The document gives a verdict on reports/proposed-patch.diff and says why it cannot ship as written: it adds a package that is not on the approved manifest, which is three weeks of security review away. Accepting the patch scores zero. Rejecting it for a reason the platform rules do not support — that parallel test execution is unsafe, that it would exhaust the judge quota, or that it would make failures non-reproducible — scores at most half."
     },
     {
       "name": "The four failures traced to retrieval, with an owner and a date",
-      "max_score": 14,
-      "description": "The document attributes the four failures to the passages those goldens carry — billing-FAQ text that does not mention tier pricing — rather than to the answers or the metric, names @search-platform / @nsato from the ownership table as the owner of the fix, and gives a date by which it is revisited. Full marks require noting that relevancy on the same four cases sits at 0.88 to 0.96, which separates a retrieval fault from a bad answer. Assigning it to the assistant team, the on-call rota or @platform scores at most half. Treating the four as a suite problem to be tuned away, or leaving them with no owner, scores zero."
-    },
-    {
-      "name": "The attached patch is answered on the rule that blocks it",
-      "max_score": 12,
-      "description": "The document gives a verdict on reports/proposed-patch.diff and says why it cannot ship as written: it adds a package that is not on the approved manifest. Accepting the patch scores zero. Rejecting it for a reason the constraints document does not support — that parallel test execution is unsafe, that it would exhaust the judge quota, or that it would make failures non-reproducible — scores at most half."
-    },
-    {
-      "name": "The 04:00 pages addressed without hiding the failure",
       "max_score": 10,
-      "description": "The answer gives the rota something concrete, for example routing the four known pricing-tier failures to a ticket while any new failure still pages. Refusing the team's request and offering nothing in its place scores zero, and so does stopping the pages by making the job unable to fail or by removing the paging step."
+      "description": "The document attributes the four failures to the passages those goldens carry — billing-FAQ text that mentions no prices — rather than to the answers or to the metric, names @search-platform / @nsato from the ownership table as the owner, and gives a date by which it is revisited. Full marks require using the relevancy scores of 0.88 to 0.96 on the same four cases to separate a retrieval fault from a bad answer. Assigning it to the assistant team, the on-call rota or @platform scores at most half. Treating the four as a suite problem to be tuned away, or leaving them with no owner, scores zero."
     },
     {
       "name": "Cases and metrics otherwise untouched",
       "max_score": 6,
       "description": "The goldens, the two parametrized checks and the AnswerRelevancy bar are left as they are. Rewriting a golden's answer or its passages so the grounding metric stops failing scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The edited workflow, the suite (edited or deliberately unedited), and docs/nightly-run-decision.md exist, and the document gives a separate explicit answer to each half of the team's ask rather than one verdict covering both. A document that treats the ask as a single request scores zero for this item."
     }
   ]
 }

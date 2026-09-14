@@ -6,8 +6,8 @@
 2026-08-14T10:22:14.6Z ##[endgroup]
 2026-08-14T10:22:14.8Z ##[error]Process completed with exit code 1.
 2026-08-14T10:22:14.9Z Post job cleanup.
-2026-08-14T10:22:15.4Z Cleaning up orphan processes
 
-PR #4402 changed one thing: it added an optional `network` field to the card
-response. Nothing was uploaded to the artifacts tab for this run. This run
-predates the 2026-08-19 change to the workflow.
+PR #4402 changed one thing: it added `POST /v1/cards/{cardId}/freeze`, a new
+endpoint. It added no fields, removed nothing and touched no existing path.
+This run predates the 2026-08-19 change to the workflow, so the red compare step
+failed the job and the later steps never ran.

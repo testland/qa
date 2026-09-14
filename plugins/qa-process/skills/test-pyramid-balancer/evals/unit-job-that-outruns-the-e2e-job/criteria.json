@@ -1,51 +1,56 @@
 {
-  "context": "The directory tally is wrong and every downstream number depends on it. Predicted baseline failure: the agent writes a classifier that keys off the path (test/unit, test/integration, test/e2e), reproduces the consultant's 26/6/9, and then argues about what to do with it — most likely agreeing that 15% in the middle is thin, or haggling over the size of the Q4 budget. What the planted evidence settles is that four files under test/unit/ are not unit tests: queue-drain (4 cases), tariff-sync (3) and label-store (3) all take a real postgres pool out of helpers/pg.js and run TRUNCATE and INSERT against it, and tracking-widget (2) launches a chromium browser out of helpers/browser.js. Mirror-image, webhook-verify.test.js sits under test/integration/ and calls a pure function with no I/O at all. Reclassified on content, the mix is 16 unit / 14 integration / 11 e2e — 39 / 34 / 27 — so the middle layer is already ABOVE its 25% target and the consultant's nine-to-eleven engineer-weeks would push it to 40%. The CI file corroborates independently: the unit job declares postgres and chromium services, exports DATABASE_URL and E2E_BASE_URL, and burns 11m 12s of its 14m 06s inside exactly four spec files. The change-shape report is supplied and says service-layer 62%, which fixes the target at 70/25/5, so the real deficit is the unit layer at 39% against 70%.",
+  "context": "The requester says the consultant's counts line up with what `npm test` prints, and they do — which is exactly the reason they are wrong. Predicted baseline failure: the agent inventories the three directories `npm test` covers, reproduces or lightly corrects 26 / 6 / 9 out of 41 cases, and then argues about the Q4 budget on that base. `npm test` is the node test runner and finds exactly those 41 cases, and a second suite of 18 browser-driven cases lives in `e2e-nightly/*.spec.ts` under a separate runner declared in playwright.config.ts, driven by `npm run test:nightly` from .github/workflows/nightly.yml on a schedule against staging. Counting it, the suite is 59 cases, not 41. A second, smaller misreading sits inside `test/unit/`: queue-drain (4), tariff-sync (3) and label-store (3) open a real postgres pool through helpers/pg.js and run TRUNCATE and INSERT; tracking-widget (2) launches chromium through helpers/browser.js and drives a page. Mirror-image, test/integration/webhook-verify.test.js calls a pure function from src/dispatch.js and touches nothing else. Corrected on content and counting every runner, the mix is 16 unit / 14 integration / 29 e2e — 27.1 / 23.7 / 49.2. That flips the verdict twice over. The middle layer is not starved: at 23.7% it is effectively at the 25% the consultant herself named, and her twelve extra cases would take it to 36.6%. The real defect is a top-heavy suite at 49.2% against a target near 5%, over a base of 16 cases against a target near 70% — the change-shape report in the bundle puts service-layer at 62% of commits and 64% of files. The consultant's instruction to hold the end-to-end layer still while the middle grows is the one move that cannot help. The unit job's 14m 06s is explained by the same finding: it declares postgres and chromium services and exports DATABASE_URL and E2E_BASE_URL, so the four misfiled files are the only ones in it that do real work.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 5,
-      "description": "scripts/test-mix.js runs and writes reports/test-mix.json, test/tools/mix.test.js exists, and reports/mix-review.md exists. Missing any one of the three scores at most half; producing only prose with no runnable script scores zero."
-    },
-    {
-      "name": "MUST NOT report the directory tally as the mix",
+      "name": "MUST NOT report a mix that stops at what `npm test` runs",
       "max_score": 30,
-      "description": "The classifier MUST NOT assign a layer from the directory path alone, and the review MUST NOT present 26 / 6 / 9 as the repository's test mix. Full marks require every one of the four misfiled files under test/unit/ to be reclassified on a content signal — queue-drain, tariff-sync and label-store to integration because they open a postgres pool and run SQL, tracking-widget to e2e because it launches a browser — with the signal recorded per file in reports/test-mix.json. Reclassifying only the three database files and leaving the browser one under unit scores at most half. Reproducing the path-based tally, or recording a layer with no evidence field, scores zero for this criterion regardless of the rest."
+      "description": "The inventory MUST NOT omit the 18 cases in the four `e2e-nightly/*.spec.ts` files, and reports/mix-review.md MUST NOT quote a suite total of 41. Doing either scores zero for this criterion whatever else the review gets right. Full marks require reports/test-mix.json to carry an entry for every test file in the repository including the four nightly specs, a corrected total of 59, and the review to state why they were missed — `npm test` runs only the node test runner, while the nightly suite is a second runner declared in playwright.config.ts and driven by its own scheduled workflow. Finding the directory but excluding its cases from the mix because they do not run on pull requests scores at most half."
     },
     {
-      "name": "Q4 proposal rejected on the corrected share",
+      "name": "Verdict names the top of the stack, not the middle",
       "max_score": 22,
-      "description": "The review states plainly that the middle layer is not starved: corrected, it is 14 of 41 cases, roughly 34%, already above the 25% target, and adding twelve more would take it near 40%. Full marks require the arithmetic to be shown. Rejecting the proposal on general grounds — 'the numbers look unreliable', 'do more analysis first' — without giving the corrected middle-layer share scores at most half. Endorsing the Q4 plan, or endorsing it at reduced size, scores zero."
+      "description": "The review states that the middle layer is not the defect: corrected, it is 14 of 59 cases, roughly 23.7%, effectively at the 25% the consultant named, and twelve more would take it to about 36.6%. The defect it names instead is a top-heavy suite — 29 of 59, roughly 49.2%, against a target near 5% — over a base of 16 cases, roughly 27.1%, against a target near 70%. Full marks require the arithmetic shown for both. Endorsing the starved-middle diagnosis scores zero. Endorsing the Q4 proposal, at full size or reduced, scores zero. Rejecting it on general grounds without the corrected middle-layer share scores at most half."
     },
     {
-      "name": "Unit layer named as the actual deficit",
-      "max_score": 16,
-      "description": "The verdict identifies the unit layer as the thin one — 16 of 41 cases, roughly 39%, against a 70% target — and the recommendation is to grow the base rather than to cut the top. An answer that names no layer as deficient, or that proposes deleting end-to-end tests as the primary move when the e2e count is already only 11 and sits inside the 5-15 range a critical-journey suite needs, scores at most half."
-    },
-    {
-      "name": "Target ratio taken from the supplied change shape",
+      "name": "MUST NOT hold the end-to-end layer still",
       "max_score": 12,
-      "description": "The targets come from the change-shape report in the bundle — service-layer at 62% of commits and 64% of files — and the review names the resulting target split explicitly. Applying a single universal ratio with no reference to the change shape scores at most half. Regenerating or re-deriving the change-shape distribution from the repository, which the requester explicitly asked not to be redone, scores zero."
+      "description": "MUST NOT adopt the recommendation to freeze the top and bottom layers while the middle grows. With 49.2% of cases at the top, adding to the middle while leaving the top untouched deepens the imbalance rather than correcting it, and the corrective direction is to move assertions down out of the top layer. Repeating the hold-still instruction, or proposing a plan whose only action is adding middle-layer cases, scores zero for this criterion."
     },
     {
-      "name": "Job timings explained by the misfiled cases",
+      "name": "Misfiled files reclassified on content, not path",
       "max_score": 14,
-      "description": "The review connects the 14m 06s unit job to the reclassification: the job declares postgres and chromium services and exports DATABASE_URL and E2E_BASE_URL, and 11m 12s of its runtime sits in four spec files, which are the four that are not unit tests. An explanation that blames unit-test count, machine size, or missing parallelism scores zero here; noting the anomaly without tying it to the four specific files scores at most half."
+      "description": "queue-drain, tariff-sync and label-store are reclassified to the middle layer because they open a postgres pool and run SQL, and tracking-widget to the top layer because it launches a browser and drives a page — with the evidence recorded per file in reports/test-mix.json rather than only asserted in prose. Assigning a layer from the directory path alone scores zero. Reclassifying only the three database files and leaving the browser one where it is scores at most half."
     },
     {
       "name": "Pure test in the integration directory moved down",
       "max_score": 10,
-      "description": "test/integration/webhook-verify.test.js is reclassified to the unit layer — it imports signWebhook from src/dispatch.js and touches nothing else. Missing it scores zero for this criterion. It is the case that stops the answer being a blanket 'anything in test/unit/ is suspect' rule, so classification must run in both directions."
+      "description": "test/integration/webhook-verify.test.js is reclassified to the base layer — it imports signWebhook from src/dispatch.js and touches nothing else. Missing it scores zero for this criterion. It is the case that stops the answer being a blanket 'anything under test/unit/ is suspect' rule, so the classification has to run in both directions."
+    },
+    {
+      "name": "Job timings explained by the misfiled cases",
+      "max_score": 10,
+      "description": "The review ties the 14m 06s unit job to the reclassification: the job declares postgres and chromium services and exports DATABASE_URL and E2E_BASE_URL, which is why four of its files do real I/O while the other four run pure functions in milliseconds. An explanation that blames unit-test count, machine size or missing parallelism scores zero here; noting the anomaly without connecting it to specific files scores at most half."
+    },
+    {
+      "name": "Target ratio taken from the supplied change shape",
+      "max_score": 10,
+      "description": "The targets come from reports/change-shape-2026-q3.md — service-layer at 62% of commits and 64% of files — and the review names the resulting split explicitly rather than applying a remembered rule of thumb. Stating a target with no reference to the change shape scores at most half. Regenerating or re-deriving the distribution from the repository, which the requester explicitly asked not to be redone, scores zero."
     },
     {
       "name": "Classifier is tested and the suite stays green",
       "max_score": 8,
-      "description": "test/tools/mix.test.js asserts the classification of at least one database-backed file and one browser-driven file by the signal that decides it, and npm test passes with all of the repository's existing tests still present and green. Tests that only assert the total count, or a suite that no longer passes, score zero."
+      "description": "test/tools/mix.test.js asserts the classification of at least one database-backed file and one browser-driven file by the signal that decides it, and npm test passes with every existing test file still present and green. Tests that only assert a total count, or a suite that no longer passes, score zero."
     },
     {
       "name": "MUST NOT modify the shipped suite",
       "max_score": 6,
-      "description": "MUST NOT edit, move, rename or delete anything under test/unit/, test/integration/, test/e2e/, src/, helpers/, data/ or docs/, and MUST NOT touch reports/change-shape-2026-q3.md. Moving the misfiled files into the right directory is the tempting version of this and still scores zero: the request was for a number to take to a planning meeting, not a migration."
+      "description": "MUST NOT edit, move, rename or delete any test file already in the repository, and MUST NOT change anything under src/, helpers/, data/ or docs/, or reports/change-shape-2026-q3.md. Moving the misfiled files into the directory that matches their layer is the tempting version of this and still scores zero: the request was for a number to take to a planning meeting, not a migration."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "scripts/test-mix.js runs and writes reports/test-mix.json, test/tools/mix.test.js exists, and reports/mix-review.md exists. Missing any one scores at most half; producing only prose with no runnable script scores zero."
     }
   ]
 }

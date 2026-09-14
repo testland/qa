@@ -16,11 +16,11 @@
   "reports.spec.ts > scheduled-email-report": 0,
   "admin.spec.ts > audit-log-download": 0,
   "admin.spec.ts > user-role-change": 1,
+  "admin.spec.ts > bulk-invite-users": 2,
   "orders.spec.ts > cancel-within-window": 2,
   "orders.spec.ts > print-packing-slip": 0,
   "pricing.spec.ts > currency-switch": 1,
   "settings.spec.ts > api-key-rotation": 1,
   "notifications.spec.ts > digest-opt-out": 0,
-  "onboarding.spec.ts > sample-data-import": 0,
-  "promo.spec.ts > seasonal-banner": 0
+  "onboarding.spec.ts > sample-data-import": 0
 }

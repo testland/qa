@@ -19,10 +19,17 @@ before Saturday. `docs/nfr.md` is the capacity sign-off the three teams agreed
 in March and `docs/incident-2026-09-12.md` is Saturday.
 
 Our platform lead has already sent round the fix he wants: tighten the latency
-threshold in the script to match the sign-off and we are covered. I would like
-that to be true and I do not think it is, because I do not yet understand how a
-run that produced the numbers in that log could have caught anything. I would
-rather find that out now than in front of the VP.
+threshold in the script to match the sign-off and we are covered. Ines, who
+owns the load runner, has added the second half of it and the thread likes it -
+the box will not carry three times the users, but if we take the one-second
+pause out of the loop then each user submits back to back, so the same 300
+users put roughly four times the submissions per second through on the same
+hardware and we land near Saturday's figure for nothing. She has it running on
+a branch already.
+
+I would like all of that to be true and I do not think it is, because I do not
+yet understand how a run that produced the numbers in that log could have
+caught anything. I would rather find that out now than in front of the VP.
 
 `lib/k6-log.mjs` reads the console output already - one of our engineers wrote
 it last year for a dashboard experiment and there is a test for it that passes.
@@ -31,12 +38,12 @@ it last year for a dashboard experiment and there is a test for it that passes.
 
 1. `docs/why-the-gate-was-green.md` - the explanation for Tuesday. Every reason
    that run was reported as a pass, each one pinned to what in the log, the
-   config or the sign-off shows it, and what changes for each. Deal with the
-   platform lead's proposal directly.
+   config or the sign-off shows it, and what changes for each. Deal with both
+   halves of what the thread has proposed, directly.
 2. `scripts/check-run-shape.mjs` - a check I can put in the pipeline that reads
    `artifacts/k6.log` and fails when the run that produced it was not the run
    we need it to be. Run it against the supplied log and leave its output in
-   `reports/run-shape.json`. It must exit non-zero on that log.
+   `reports/run-shape.json`.
 3. `test/check-run-shape.test.mjs` - tests for it, running under `npm test`
    next to the test already in the repo. `npm test` must be green.
 4. `.github/workflows/perf.yml` and `tests/load/orders.js` - changed so that a
@@ -80,11 +87,25 @@ The promo windows are the reason for the 300 figure; outside them we sit around
 **Impact.** Order submission failed or timed out for 28 minutes during the
 autumn promo window. 4,880 submissions lost.
 
-**What the edge recorded.** The promo email landed at 19:02. From 19:06 the
-edge sustained between 870 and 940 requests per second against
-`POST /api/orders`, peaking at 1,050/s at 19:19, and held above 850/s until
-19:44. Submit latency at the edge was under 400 ms until 19:17, crossed two
-seconds at 19:19, and the first pod restart was at 19:22.
+**What the edge recorded.** The promo email went out at 19:02 to 1.24 million
+recipients. `POST /api/orders` counts from the edge logs, five-minute buckets:
+
+| Window (UTC)  | Requests |
+|---------------|----------|
+| 19:00 - 19:05 |   31,400 |
+| 19:05 - 19:10 |  267,900 |
+| 19:10 - 19:15 |  271,200 |
+| 19:15 - 19:20 |  279,600 |
+| 19:20 - 19:25 |  262,500 |
+| 19:25 - 19:30 |  258,300 |
+| 19:30 - 19:35 |  259,800 |
+| 19:35 - 19:40 |  256,200 |
+| 19:40 - 19:45 |  253,500 |
+| 19:45 - 19:50 |   74,100 |
+
+The busiest single minute was 19:19 at 63,000 requests. Submit latency at the
+edge was under 400 ms until 19:17, crossed two seconds at 19:19, and the first
+pod restart was at 19:22.
 
 **What we had been measuring.** The performance gate on the orders repo, green
 since March.

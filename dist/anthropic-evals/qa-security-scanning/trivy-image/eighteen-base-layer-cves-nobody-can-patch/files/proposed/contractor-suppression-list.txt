@@ -1,7 +1,8 @@
 # checkout-api 4.12.0 - base layer findings with no distribution patch
 # Prepared by: J. Halvorsen (contract, ends 2026-09-05)
 # Recommendation: add all of the below to the suppression file, re-open at the
-# next base-image bump (planned Q1).
+# next base-image bump (planned Q1). Every entry below was checked against the
+# Debian security tracker; none has a patched package.
 
 CVE-2024-6119
 CVE-2023-31484
@@ -19,5 +20,5 @@ CVE-2024-28085
 CVE-2023-4039
 CVE-2024-0553
 CVE-2022-41409
+CVE-2025-30208
 CVE-2023-7008
-CVE-2024-52533

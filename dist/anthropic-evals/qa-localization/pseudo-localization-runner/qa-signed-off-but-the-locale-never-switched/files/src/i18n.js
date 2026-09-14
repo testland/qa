@@ -2,21 +2,10 @@ const en = require('../locales/en.json');
 const { pseudoLocalize } = require('./pseudo');
 
 let current = 'en';
-let registered = false;
-
-function init(options) {
-  registered = (options || {}).accented === true;
-  current = 'en';
-}
 
 function setLocale(code) {
-  if (code === 'en-XA') {
-    if (!registered) return false;
-    current = 'en-XA';
-    return true;
-  }
-  current = 'en';
-  return code === 'en';
+  current = code === 'en-XA' ? 'en-XA' : 'en';
+  return current === code;
 }
 
 function currentLocale() {
@@ -28,4 +17,4 @@ function t(key) {
   return current === 'en-XA' ? pseudoLocalize(raw) : raw;
 }
 
-module.exports = { init, setLocale, currentLocale, t };
+module.exports = { setLocale, currentLocale, t };

@@ -1,36 +1,42 @@
-# Same digest scanned twice today, two different answers, and I have a 20:00 ship window
+# One digest, two verdicts in a day, and an architecture note that says scan it once
 
 ## Problem Description
 
 I am the release manager for `checkout-api` and I need a decision before 20:00.
 
-The exact same artifact — `registry.internal/checkout-api@sha256:c41e7b9a0f28`,
-one digest, nothing rebuilt — was scanned twice today. At 09:14 the pull-request
-job reported nothing blocking and the change merged. At 16:02 the release job on
-that same digest reported one CRITICAL and failed. Nobody touched the image
+The same artifact — `registry.internal/checkout-api@sha256:c41e7b9a0f28`, one
+digest, nothing rebuilt — was scanned twice today. At 09:14 the pull-request job
+reported nothing blocking and the change merged. At 16:02 the release job on
+that identical digest reported one CRITICAL and failed. Nobody touched the image
 between those two runs and nobody touched either workflow.
 
-The team's read on Slack this afternoon, in order of appearance:
+Slack this afternoon, in order: "the scanner is flaky, give it a retry step",
+then "it passed this morning on the same digest, just re-run it", then "if it
+comes back put the identifier in the suppression file and we will do it properly
+on Monday". Someone acted on the third one and opened PR #4508, which is
+attached, approved by one reviewer and waiting on me.
 
-- "the scanner is flaky, give it a retry step and move on"
-- "it passed this morning on the same digest, just re-run the release job"
-- "if it comes back again put the identifier in the suppression file, we can do
-  it properly on Monday"
+Separately — and this is the part I actually want your opinion on — our
+principal engineer has had an architecture note in review for three weeks that
+would make today impossible by construction. It says a container image is
+immutable, so scanning the same bytes twice and getting two answers means the
+scan is not a valid gate, and that we should scan once at merge, record the
+verdict against the digest, and have the release job look that verdict up
+instead of scanning again. The release board has read it and likes it. It takes
+four minutes out of every release and it ends this class of argument. The note
+is attached, along with the release-scan history I pulled for it this afternoon.
 
-Someone acted on the third one and opened PR #4508, which is attached. It is
-approved by one reviewer and waiting on me.
+I have also attached both job logs, an ad-hoc run one of our engineers did at
+16:41 while arguing with the second Slack suggestion, both workflow files and
+the current suppression file.
 
-I have attached both job logs, an ad-hoc run one of our engineers did at 16:41
-while arguing with the second suggestion, both workflow files, and the current
-suppression file. What I need is whether we ship at 20:00, and something that
-stops one artifact producing two different answers in the same working day,
-because I cannot defend this to the release board a third time this quarter.
+What I need from you is whether we ship at 20:00, and whether I adopt the note.
 
 ## Output Specification
 
-1. Write `docs/release-4.12.2-go-no-go.md`: the decision for 20:00, what
-   actually differs between the two runs and what does not, and what changes in
-   the pipeline.
+1. Write `docs/release-4.12.2-go-no-go.md`: the decision for the 20:00 window,
+   what actually differs between the two runs and what does not, your ruling on
+   the architecture note, and what changes in the pipeline.
 2. Edit `.github/workflows/pr-scan.yml` and `.github/workflows/release-scan.yml`
    as your answer requires.
 3. Leave `.trivyignore` as it should stand once you have ruled on PR #4508.
@@ -94,6 +100,52 @@ jobs:
               --exit-code 1 \
               registry.internal/checkout-api@${{ inputs.digest }}
 
+=============== FILE: proposed/ADR-0031-scan-the-artifact-once.md ===============
+# ADR-0031: scan the artifact once, carry the verdict
+
+Status: proposed (in review 3 weeks)   Author: @tvaldes (principal)
+Read by: release board 2026-09-04, no objections recorded
+
+## Context
+
+A container image is content-addressed. The bytes behind
+`sha256:c41e7b9a0f28` today are the bytes that were there at merge and the
+bytes that will be there in a year. We currently scan those bytes at merge and
+again at release, and today the two runs disagreed. A gate whose verdict on
+fixed input is not stable is not a gate; it is a coin flip with a CI bill.
+
+## Decision
+
+1. The pull-request job scans the pushed digest. That run is authoritative.
+2. Its verdict is written to the artifact store keyed by digest.
+3. The release job looks up the verdict for the digest it was asked to release
+   and fails if it is not `pass`. It does not scan.
+
+## Consequences
+
+- One artifact, one answer, for the life of the artifact.
+- Roughly four minutes off every release.
+- Re-running a release scan to get a different answer stops being possible,
+  which is most of what we argue about.
+
+=============== FILE: reports/release-scan-history-q3.md ===============
+# release-scan outcomes, Q3 to date (pulled 2026-09-13 17:20)
+
+41 releases. 35 of the release scans matched the verdict the pull-request job
+had recorded for the same digest. 6 did not — in every one of those the release
+scan was the stricter of the two.
+
+| Release | Digest        | Merged     | Released   | Release scan found                  |
+|---------|---------------|------------|------------|-------------------------------------|
+| 4.10.4  | sha256:9b2f01 | 2026-07-02 | 2026-07-11 | 1 CRITICAL (openssl), fix available |
+| 4.11.0  | sha256:44ce7a | 2026-07-19 | 2026-07-22 | 2 HIGH (glibc, curl), fix available |
+| 4.11.3  | sha256:0d81be | 2026-08-05 | 2026-08-14 | 1 HIGH (libxml2), fix available     |
+| 4.11.6  | sha256:e70a92 | 2026-08-20 | 2026-08-24 | 1 HIGH (libtasn1), fix available    |
+| 4.12.0  | sha256:aa3c15 | 2026-09-01 | 2026-09-04 | 1 CRITICAL (glibc), fix available   |
+| 4.12.2  | sha256:c41e7b | 2026-09-13 | pending    | 1 CRITICAL (libcurl4), fix available|
+
+Median gap between merge scan and release scan across all 41: 4 days.
+
 =============== FILE: logs/pr-scan-2026-09-13-0914.txt ===============
 Run docker run --rm aquasec/trivy:latest --version
 Version: 0.58.2
@@ -136,11 +188,11 @@ Run docker run --rm ... image ...
 registry.internal/checkout-api@sha256:c41e7b9a0f28 (debian 12.7)
 Total: 1 (HIGH: 0, CRITICAL: 1)
 
-┌───────────┬────────────────┬──────────┬──────────────────────┬──────────────────────┬──────────────┐
-│  Library  │ Vulnerability  │ Severity │      Installed       │        Fixed         │ Published    │
-├───────────┼────────────────┼──────────┼──────────────────────┼──────────────────────┼──────────────┤
-│ libcurl4  │ CVE-2026-21491 │ CRITICAL │ 7.88.1-10+deb12u7    │ 7.88.1-10+deb12u9    │ 2026-09-12   │
-└───────────┴────────────────┴──────────┴──────────────────────┴──────────────────────┴──────────────┘
++-----------+----------------+----------+----------------------+----------------------+
+|  Library  | Vulnerability  | Severity |      Installed       |        Fixed         |
++-----------+----------------+----------+----------------------+----------------------+
+| libcurl4  | CVE-2026-21491 | CRITICAL | 7.88.1-10+deb12u7    | 7.88.1-10+deb12u9    |
++-----------+----------------+----------+----------------------+----------------------+
 
 app/package-lock.json (npm)
 Total: 0 (HIGH: 0, CRITICAL: 0)
@@ -148,7 +200,7 @@ Total: 0 (HIGH: 0, CRITICAL: 0)
 Process exited with code 1
 
 =============== FILE: logs/adhoc-2026-09-13-1641.txt ===============
-# run by hand by @dpetrova, laptop, pinned to the same build the morning job used
+# @dpetrova, laptop, 16:41
 $ docker run --rm -v $HOME/.cache/trivy:/root/.cache/trivy \
     aquasec/trivy:0.58.2 image --severity HIGH,CRITICAL --ignore-unfixed \
     registry.internal/checkout-api@sha256:c41e7b9a0f28
@@ -156,6 +208,7 @@ $ docker run --rm -v $HOME/.cache/trivy:/root/.cache/trivy \
 Version: 0.58.2
 Vulnerability DB:
   UpdatedAt: 2026-09-13 06:09:12 +0000 UTC
+  DownloadedAt: 2026-09-13 16:38:55 +0000 UTC
 
 registry.internal/checkout-api@sha256:c41e7b9a0f28 (debian 12.7)
 Total: 1 (HIGH: 0, CRITICAL: 1)

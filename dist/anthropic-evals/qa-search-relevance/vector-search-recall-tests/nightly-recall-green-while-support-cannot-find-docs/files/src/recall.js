@@ -1,11 +1,11 @@
 'use strict';
 
 const K = 10;
-const PROBE_ALL = 4;
+const ALL_CELLS = 4;
 
-// Reference answer for each query: the same index with every cell probed.
-function groundTruth(index, queries, k = K) {
-  return queries.map((q) => index.search(q.vec, { k, nProbe: PROBE_ALL }));
+// Reference answer for a query: the same lookup with nothing skipped.
+function exhaustiveScan(index, queries, k = K) {
+  return queries.map((q) => index.search(q.vec, { k, nProbe: ALL_CELLS }));
 }
 
 function recallAtK(retrieved, truth) {
@@ -18,9 +18,9 @@ function recallAtK(retrieved, truth) {
 }
 
 function measureRecall(index, queries, k = K) {
-  const truth = groundTruth(index, queries, k);
+  const truth = exhaustiveScan(index, queries, k);
   const retrieved = queries.map((q) => index.search(q.vec, { k }));
   return recallAtK(retrieved, truth);
 }
 
-module.exports = { groundTruth, recallAtK, measureRecall, K };
+module.exports = { exhaustiveScan, recallAtK, measureRecall, K };

@@ -1,17 +1,14 @@
 import UIKit
 
-// Identifiers on this screen were set when it was built (PR #2201) and have not
-// changed since. Render timings noted per element for whoever picks up INC-4471.
 final class CheckoutViewController: UIViewController {
 
-    private let cartBadge = UILabel()        // always in the hierarchy; text is "0" when empty
+    private let cartBadge = UILabel()
     private let openPromoButton = UIButton()
-    private let promoField = UITextField()   // promo screen is pushed, ~600ms incl. pricing fetch
-    private let applyPromoButton = UIButton()
-    private let orderTotal = UILabel()       // rewritten after the pricing response lands
-    private let fieldError = UILabel()       // hidden until async validation returns, ~350ms
+    private let postcodeField = UITextField()
+    private let continueButton = UIButton()
+    private let fieldError = UILabel()
     private let payNowButton = UIButton()
-    private let orderConfirmed = UILabel()   // after the payment round-trip, 1.5s-9s on CI
+    private let orderId = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,25 +18,36 @@ final class CheckoutViewController: UIViewController {
         cartBadge.isHidden = false
 
         openPromoButton.accessibilityIdentifier = "open-promo"
-        promoField.accessibilityIdentifier = "promo-code-field"
-        applyPromoButton.accessibilityIdentifier = "promo-apply"
-        orderTotal.accessibilityIdentifier = "order-total"
+        postcodeField.accessibilityIdentifier = "shipping-postcode"
+        continueButton.accessibilityIdentifier = "continue-to-payment"
+        payNowButton.accessibilityIdentifier = "pay-now"
 
         fieldError.accessibilityIdentifier = "field-error"
         fieldError.isHidden = true
 
-        payNowButton.accessibilityIdentifier = "pay-now"
-
-        orderConfirmed.accessibilityIdentifier = "order-confirmed"
-        orderConfirmed.isHidden = true
-    }
-
-    func showValidationError(_ message: String) {
-        fieldError.text = message
-        fieldError.isHidden = false
+        orderId.accessibilityIdentifier = "order-id"
+        orderId.isHidden = true
     }
 
     func updateBadge(count: Int) {
         cartBadge.text = String(count)
+    }
+
+    @objc private func continueTapped() {
+        ValidationClient.shared.validate(postcode: postcodeField.text) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .ok:
+                self.pushPaymentStep()
+            case .rejected(let message):
+                self.fieldError.text = message
+                self.fieldError.isHidden = false
+            }
+        }
+    }
+
+    func showOrderConfirmation(id: String) {
+        orderId.text = id
+        orderId.isHidden = false
     }
 }

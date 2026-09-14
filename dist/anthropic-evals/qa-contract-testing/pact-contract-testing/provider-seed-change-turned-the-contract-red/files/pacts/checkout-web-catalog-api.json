@@ -21,7 +21,15 @@
             "availability": "in_stock",
             "sku": "AER-B2-GR"
           }
-        ]
+        ],
+        "matchingRules": {
+          "body": {
+            "$": { "matchers": [{ "match": "type", "min": 1 }] },
+            "$[*].id": { "matchers": [{ "match": "type" }] },
+            "$[*].name": { "matchers": [{ "match": "type" }] },
+            "$[*].priceCents": { "matchers": [{ "match": "type" }] }
+          }
+        }
       }
     },
     {

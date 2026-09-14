@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "test:unit": "node --test \"test/**/*.test.js\"",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --project=regression",
+    "test:smoke": "playwright test --project=smoke"
   },
   "devDependencies": {
     "@playwright/test": "1.55.0"

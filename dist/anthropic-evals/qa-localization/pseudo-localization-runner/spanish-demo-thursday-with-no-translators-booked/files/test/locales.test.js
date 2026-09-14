@@ -20,3 +20,9 @@ test('every bundle covers every english key', () => {
 test('the picker offers spanish', () => {
   assert.ok(SUPPORTED_LOCALES.includes('es-ES'));
 });
+
+test('the generated bundle is not plain english', () => {
+  for (const key of Object.keys(en)) {
+    assert.notStrictEqual(BUNDLES['en-XA'][key], en[key], key + ' came back untransformed');
+  }
+});

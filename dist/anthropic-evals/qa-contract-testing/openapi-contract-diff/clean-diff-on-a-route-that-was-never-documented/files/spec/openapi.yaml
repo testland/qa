@@ -8,13 +8,11 @@ paths:
       operationId: listWebhooks
       responses:
         '200':
-          description: every webhook
+          description: a page of webhooks
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Webhook'
+                $ref: '#/components/schemas/WebhookPage'
     post:
       operationId: createWebhook
       requestBody:
@@ -74,6 +72,17 @@ components:
       properties:
         url:
           type: string
+    WebhookPage:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+        nextCursor:
+          type: string
+          nullable: true
     Webhook:
       type: object
       required: [id, url]

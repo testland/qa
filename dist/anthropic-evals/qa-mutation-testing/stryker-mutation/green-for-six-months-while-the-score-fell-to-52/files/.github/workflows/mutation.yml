@@ -1,0 +1,29 @@
+name: mutation
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: mkdir -p reports
+
+      - name: Mutation testing
+        run: npx stryker run | tee reports/mutation-summary.txt
+
+      - name: Archive summary
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutation-summary
+          path: reports/mutation-summary.txt

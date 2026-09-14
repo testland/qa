@@ -1,5 +1,7 @@
 'use strict';
 
+const { appendSignupEvent } = require('./audit');
+
 const accounts = [];
 
 function reset() {
@@ -10,6 +12,7 @@ function createAccount(payload) {
   const record = { id: `a_${accounts.length + 1}`, createdAt: '2026-09-01T00:00:00Z' };
   Object.assign(record, payload);
   accounts.push(record);
+  appendSignupEvent(payload);
   return record;
 }
 

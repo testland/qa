@@ -21,16 +21,15 @@ rather than volume:
   accept the couple of minutes that costs.
 - The third is already written and is attached as a patch. It puts a
   cross-process lock around the mailbox so two workers can never be inside the
-  clear-and-capture window at the same time. Whoever wrote it ran the job
-  twenty times and put the numbers in the patch note.
+  clear-and-capture window at the same time. Whoever wrote it ran the job twenty
+  times and put the numbers in the patch note.
 
 I have attached the two spec files, the shared helper they both use, the CI
-workflow, that patch, and the annotated log from run #4471, which is a
-representative failure — our platform engineer interleaved the four workers'
-output and the mail container's own log by timestamp so you can see the
-ordering. There are three distinct failures in that run and I do not think they
-all have the same cause, which is partly why the three camps keep talking past
-each other.
+workflow, that patch, the raw job log from run #4471, and the mail container's
+own log covering the same minutes. Nobody has correlated the two logs. The job
+log is grouped by worker the way the test reporter emits it, so the timestamps
+are the only thing tying it to the container's log. Run #4471 is representative
+— it is the run we kept because it went red more than once.
 
 While you are in the welcome test: our support lead has been asking for months
 for a check that the plain-text part of the welcome email actually contains the
@@ -46,8 +45,8 @@ HTML part and a blank email is what those users see. Add it.
    `tests/email/welcome.test.mjs`.
 3. Edit `ci/workflow.yml` only if your fix requires it. The job must not get
    slower than it is now.
-4. Write `docs/email-suite-parallel-fix.md`: for each of the three failures in
-   run #4471, name its cause, and answer each of the three proposals directly.
+4. Write `docs/email-suite-parallel-fix.md`: account for every failure in run
+   #4471, and answer each of the three proposals directly.
 
 ## Input Files
 
@@ -158,6 +157,7 @@ jobs:
         env:
           MAIL_API: http://localhost:8025
           APP_URL: http://localhost:3000
+          MAIL_DEBUG: '1'
           SMTP_HOST: localhost
           SMTP_PORT: '1025'
 
@@ -192,65 +192,29 @@ it until that worker's message has been found, so the window is never shared.
  }
 ```
 
-Twenty runs on this branch: 19 green, 1 red (the no-reply test). Wall clock
-across the twenty ran between 9m02s and 11m48s, median 10m14s.
+Twenty runs on this branch: 19 green, 1 red. Wall clock across the twenty ran
+between 9m02s and 11m48s, median 10m14s.
 
-=============== FILE: reports/ci-run-4471.md ===============
-# integration run #4471 — four workers, worker output and mail-container log interleaved by timestamp
+=============== FILE: reports/failure-rates.md ===============
+# Email test failure rates, 120 runs before the concurrency change vs 86 after
 
-Failure rate by test, 120 runs before the concurrency change vs 86 runs after:
-
-| test                                             | serial (120) | 4 workers (86) |
-|--------------------------------------------------|--------------|----------------|
-| password reset email contains a reset link        | 0.0%         | 31.4%          |
-| password reset email is addressed to the requester | 0.0%        | 29.1%          |
-| welcome email greets the new user                 | 0.0%         | 26.7%          |
-| welcome email is sent from the no-reply address   | 0.0%         | 34.9%          |
+| test                                               | serial (120) | 4 workers (86) |
+|----------------------------------------------------|--------------|----------------|
+| password reset email contains a reset link         | 0.0%         | 31.4%          |
+| password reset email is addressed to the requester | 0.0%         | 29.1%          |
+| welcome email greets the new user                  | 0.0%         | 26.7%          |
+| welcome email is sent from the no-reply address    | 0.0%         | 34.9%          |
 
 Wall clock for the whole job: 22m04s serial, 6m11s at four workers.
 
-Across those 86 runs the no-reply test also produced
-`TypeError: Cannot read properties of undefined (reading 'From')` seven times.
+Across those 86 runs `welcome email is sent from the no-reply address` also
+ended with `TypeError: Cannot read properties of undefined (reading 'From')`
+seven times instead of an assertion failure.
 
-## Failure 1 — "password reset email contains a reset link" (worker 2)
+## What a search result looks like on this container
 
-```
-14:02:11.104 w2    POST /_test/trigger-password-reset  qa@example.com        -> 202
-14:02:11.109 w1    DELETE /api/v1/messages                                   -> 200
-14:02:11.240 mail  [smtp] message from <security@example.com> to <qa@example.com> accepted (3.1 kB)
-14:02:11.311 w2    GET /api/v1/search?query=to%3Aqa%40example.com            -> 200  1 message  ID=8f2c1ad4-...
-14:02:11.404 w3    DELETE /api/v1/messages                                   -> 200
-14:02:11.407 w2    GET /api/v1/message/8f2c1ad4-...                          -> 404
-14:02:11.408 w2    FAIL  Error: fetch 8f2c1ad4-... failed: 404
-```
-
-## Failure 2 — "welcome email greets the new user" (worker 4)
-
-```
-14:02:19.880 w4    POST /_test/trigger-welcome  newuser@example.com          -> 202
-14:02:19.883 mail  [smtp] message from <noreply@example.com> to <newuser@example.com> accepted (4.4 kB)
-14:02:19.884 w1    DELETE /api/v1/messages                                   -> 200
-14:02:19.982 w4    GET /api/v1/search?query=to%3Anewuser%40example.com       -> 200  0 messages
-14:02:20.083 w4    GET /api/v1/search?query=to%3Anewuser%40example.com       -> 200  0 messages
-     ... 46 more polls, all 0 messages ...
-14:02:24.887 w4    FAIL  Error: timed out after 5000ms waiting for mail to newuser@example.com
-```
-
-## Failure 3 — "welcome email is sent from the no-reply address" (worker 4)
-
-```
-14:02:31.550 w4    POST /_test/trigger-welcome  newuser@example.com          -> 202
-14:02:31.640 w2    POST /_test/trigger-password-reset  qa@example.com        -> 202
-14:02:31.701 mail  [smtp] message from <noreply@example.com> to <newuser@example.com> accepted (4.4 kB)
-14:02:31.744 mail  [smtp] message from <security@example.com> to <qa@example.com> accepted (3.1 kB)
-14:02:31.800 w4    GET /api/v1/messages                                      -> 200  2 messages
-14:02:31.801 w4    FAIL  AssertionError: expected 'noreply@example.com', got 'security@example.com'
-```
-
-## What a search result actually looks like
-
-Captured by hand against the same container image, one welcome message in the
-mailbox, pretty-printed:
+Captured by hand against the same image, one welcome message in the mailbox,
+pretty-printed:
 
 ```
 $ curl -s 'http://localhost:8025/api/v1/search?query=to%3Anewuser%40example.com' | jq '.messages[0]'
@@ -271,5 +235,65 @@ $ curl -s 'http://localhost:8025/api/v1/search?query=to%3Anewuser%40example.com'
 }
 ```
 
-The sign-in URL the support lead wants checked sits a further two paragraphs
-down in the plain-text part. It is not in what is printed above.
+=============== FILE: reports/run-4471-job.log ===============
+# integration run #4471 — node --test --test-concurrency=4, MAIL_DEBUG=1
+# grouped per worker, in the order the reporter flushed each file.
+# tests/email/ holds four files; digest.test.mjs and invite.test.mjs are not
+# failing and are not attached, but they use the same helper and appear here.
+
+--- w1  tests/email/digest.test.mjs ---
+14:02:19.884  DELETE /api/v1/messages                                    -> 200
+14:02:19.888  POST   /_test/trigger-digest weekly@example.com            -> 202
+14:02:20.140  GET    /api/v1/search?query=to%3Aweekly%40example.com      -> 200  1 message
+14:02:20.143  PASS   digest lists this week's items                      (259ms)
+
+--- w2  tests/email/password-reset.test.mjs ---
+14:02:11.101  DELETE /api/v1/messages                                    -> 200
+14:02:11.104  POST   /_test/trigger-password-reset qa@example.com        -> 202
+14:02:11.311  GET    /api/v1/search?query=to%3Aqa%40example.com          -> 200  1 message  ID=8f2c1ad4-...
+14:02:11.407  GET    /api/v1/message/8f2c1ad4-...                        -> 404
+14:02:11.408  FAIL   password reset email contains a reset link
+                     Error: fetch 8f2c1ad4-... failed: 404
+                         at openMessage (tests/email/mailbox.mjs:26:21)
+14:02:11.430  DELETE /api/v1/messages                                    -> 200
+14:02:11.433  POST   /_test/trigger-password-reset qa@example.com        -> 202
+14:02:11.640  GET    /api/v1/search?query=to%3Aqa%40example.com          -> 200  1 message
+14:02:11.642  PASS   password reset email is addressed to the requester  (212ms)
+
+--- w3  tests/email/invite.test.mjs ---
+14:02:11.401  DELETE /api/v1/messages                                    -> 200
+14:02:11.404  POST   /_test/trigger-invite teammate@example.com          -> 202
+14:02:11.610  GET    /api/v1/search?query=to%3Ateammate%40example.com    -> 200  1 message
+14:02:11.613  PASS   invite email links to the workspace                 (212ms)
+14:02:25.010  DELETE /api/v1/messages                                    -> 200
+14:02:25.014  POST   /_test/trigger-invite teammate@example.com          -> 202
+14:02:25.240  GET    /api/v1/search?query=to%3Ateammate%40example.com    -> 200  1 message
+14:02:25.243  PASS   invite email names the inviter                      (233ms)
+
+--- w4  tests/email/welcome.test.mjs ---
+14:02:19.877  DELETE /api/v1/messages                                    -> 200
+14:02:19.880  POST   /_test/trigger-welcome newuser@example.com          -> 202
+14:02:19.982  GET    /api/v1/search?query=to%3Anewuser%40example.com     -> 200  0 messages
+14:02:20.083  GET    /api/v1/search?query=to%3Anewuser%40example.com     -> 200  0 messages
+              ... 46 further polls, all 0 messages ...
+14:02:24.887  FAIL   welcome email greets the new user
+                     Error: timed out after 5000ms waiting for mail to newuser@example.com
+14:02:24.920  DELETE /api/v1/messages                                    -> 200
+14:02:24.923  POST   /_test/trigger-welcome newuser@example.com          -> 202
+14:02:25.173  GET    /api/v1/messages                                    -> 200  2 messages
+14:02:25.174  FAIL   welcome email is sent from the no-reply address
+                     AssertionError: expected 'noreply@example.com', got 'invites@example.com'
+
+# 3 failed, 9 passed, 12 total — 1m58s
+
+=============== FILE: reports/run-4471-mail.log ===============
+# mail container log, run #4471, 14:02:10 - 14:02:33
+
+14:02:10.988  [smtp] connection from 127.0.0.1
+14:02:11.240  [smtp] message from <security@example.com> to <qa@example.com> accepted (3.1 kB)
+14:02:11.520  [smtp] message from <invites@example.com> to <teammate@example.com> accepted (2.7 kB)
+14:02:11.562  [smtp] message from <security@example.com> to <qa@example.com> accepted (3.1 kB)
+14:02:19.883  [smtp] message from <noreply@example.com> to <newuser@example.com> accepted (4.4 kB)
+14:02:20.012  [smtp] message from <digest@example.com> to <weekly@example.com> accepted (6.2 kB)
+14:02:25.050  [smtp] message from <noreply@example.com> to <newuser@example.com> accepted (4.4 kB)
+14:02:25.160  [smtp] message from <invites@example.com> to <teammate@example.com> accepted (2.7 kB)

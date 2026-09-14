@@ -10,7 +10,7 @@ new Verifier({
   providerVersion: process.env.GITHUB_SHA,
   providerVersionBranch: process.env.GITHUB_REF_NAME,
   publishVerificationResult: true,
-  consumerVersionSelectors: [{ mainBranch: true }],
+  consumerVersionSelectors: [{ mainBranch: true }, { deployedOrReleased: true }],
   stateHandlers: {
     'there are two unsent notifications': async () => {
       await require('./test/support/seed').unsent(2);

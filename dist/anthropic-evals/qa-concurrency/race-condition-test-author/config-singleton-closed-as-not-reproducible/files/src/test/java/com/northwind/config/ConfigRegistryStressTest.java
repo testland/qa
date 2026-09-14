@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-/** 200 consecutive green runs on the CI fleet, 2026-08-21 -- @jharlan */
+/** Predates ConfigPublicationTest. Green on every build since 2025-08. */
 class ConfigRegistryStressTest {
 
     private static final int THREADS = 32;

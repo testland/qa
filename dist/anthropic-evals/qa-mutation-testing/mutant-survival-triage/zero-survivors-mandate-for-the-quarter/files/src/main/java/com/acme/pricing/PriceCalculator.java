@@ -1,16 +1,16 @@
 package com.acme.pricing;
 
-import java.util.List;
-
 public final class PriceCalculator {
 
     static final int MAX_LINE_QTY = 999;
 
     private final TierTable tiers;
+    private final RateTable rates;
     private final Contract contract;
 
-    public PriceCalculator(TierTable tiers, Contract contract) {
+    public PriceCalculator(TierTable tiers, RateTable rates, Contract contract) {
         this.tiers = tiers;
+        this.rates = rates;
         this.contract = contract;
     }
 
@@ -35,7 +35,7 @@ public final class PriceCalculator {
         if (items > 10) {
             return 0L;
         }
-        return 25L * items;
+        return rates.perItemCents() * items;
     }
 
     public String currencyCode() {

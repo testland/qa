@@ -3,6 +3,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { missedSlots, replayMissed } = require('../src/catchup');
+const { bootReplay } = require('../src/boot');
+const { createIo } = require('../src/io');
 const jobs = require('../src/jobs');
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -29,4 +31,9 @@ test('a boot with nothing missed replays nothing', () => {
   const n = replayMissed(byName('payout-post'), BOOT - 600000, BOOT, (j) => calls.push(j.name));
   assert.equal(n, 0);
   assert.deepEqual(calls, []);
+});
+
+test('the boot replay reports every job', () => {
+  const replayed = bootReplay(createIo(), BOOT);
+  assert.deepEqual(Object.keys(replayed), jobs.map((j) => j.name));
 });

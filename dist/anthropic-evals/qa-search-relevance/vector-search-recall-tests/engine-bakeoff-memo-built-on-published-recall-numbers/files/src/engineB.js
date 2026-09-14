@@ -1,8 +1,9 @@
 'use strict';
 
-// Model of Engine B: a proximity graph. Written from the vendor's docs.
-//
-// createIndex({ M, efConstruct }) builds the graph. search(vec, { k, ef }) walks it.
+// Engine B, modelled from the vendor's documentation. Points are assigned to
+// the nearest of the fitted centroids. search(vec, { k, nProbe }) scans the
+// nProbe cells closest to the query; nProbe defaults to 0, which the vendor
+// documents as "scan every cell" and recommends as the safe starting point.
 
 function dot(a, b) {
   let s = 0;
@@ -19,71 +20,50 @@ function cosine(a, b) {
   return d === 0 ? 0 : dot(a, b) / d;
 }
 
-function createIndex({ M = 6, efConstruct = 24 } = {}) {
-  const points = [];
-  const links = [];
+function createIndex({ centroids }) {
+  const cells = centroids.map(() => []);
   let comparisons = 0;
 
-  function beam(target, width, limit) {
-    const cap = limit === undefined ? points.length : limit;
-    if (cap === 0) return [];
-    const seen = new Set([0]);
-    comparisons += 1;
-    let frontier = [[0, cosine(target, points[0].vec)]];
-    const found = [...frontier];
-    let guard = 0;
-    while (frontier.length && guard++ < 4000) {
-      frontier.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-      const [node] = frontier.shift();
-      if (found.length >= width && cosine(target, points[node].vec) < found[found.length - 1][1]) break;
-      for (const n of links[node]) {
-        if (n >= cap || seen.has(n)) continue;
-        seen.add(n);
-        comparisons += 1;
-        const s = cosine(target, points[n].vec);
-        found.push([n, s]);
-        frontier.push([n, s]);
-      }
-      found.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-      found.length = Math.min(found.length, width);
-      if (frontier.length > width) {
-        frontier.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-        frontier.length = width;
-      }
-    }
-    return found;
-  }
-
-  function prune(node) {
-    const scored = links[node].map((n) => [n, cosine(points[node].vec, points[n].vec)]);
-    scored.sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-    links[node] = scored.slice(0, M).map(([n]) => n);
-  }
+  const cellOrder = (v) =>
+    centroids
+      .map((c, i) => [i, cosine(v, c)])
+      .sort((a, b) => b[1] - a[1] || a[0] - b[0])
+      .map(([i]) => i);
 
   return {
-    size: () => points.length,
-    degree: (i) => links[i].length,
+    cellCount: () => centroids.length,
+    size: () => cells.reduce((n, c) => n + c.length, 0),
     comparisons: () => comparisons,
     resetCounters: () => { comparisons = 0; },
-    params: () => ({ M, efConstruct }),
 
     add(id, vec) {
-      const i = points.length;
-      points.push({ id, vec });
-      links.push([]);
-      if (i === 0) return true;
-      const chosen = beam(vec, efConstruct, i).slice(0, M);
-      links[i] = chosen.map(([n]) => n);
-      for (const [n] of chosen) {
-        if (!links[n].includes(i)) { links[n].push(i); prune(n); }
-      }
+      if (vec.length !== centroids[0].length) throw new Error(`dimension mismatch for ${id}`);
+      cells[cellOrder(vec)[0]].push({ id, vec });
       return true;
     },
 
-    search(queryVec, { k = 10, ef = 24 } = {}) {
-      return beam(queryVec, Math.max(ef, k)).slice(0, k).map(([n]) => points[n].id);
+    search(queryVec, { k = 10, nProbe = 0 } = {}) {
+      const order = cellOrder(queryVec);
+      const probe = nProbe > 0 ? nProbe : order.length;
+      const scored = [];
+      for (const ci of order.slice(0, probe)) {
+        for (const point of cells[ci]) {
+          comparisons += 1;
+          scored.push([point.id, cosine(queryVec, point.vec)]);
+        }
+      }
+      scored.sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
+      return scored.slice(0, k).map(([id]) => id);
     },
   };
 }
 
-module.exports = { createIndex, cosine, dot, norm };
+const CENTROIDS = [
+  [-0.3022,-0.5769,0.6139,-0.009,0.4222,-0.1439],
+  [-0.6028,-0.2584,-0.5022,0.1892,0.3745,0.3764],
+  [0.087,0.7121,-0.2397,0.2715,0.5803,-0.1322],
+  [-0.0211,-0.1835,-0.3448,-0.3499,-0.255,-0.8122],
+  [0.5947,-0.3593,-0.3208,0.1527,-0.5555,0.2872]
+];
+
+module.exports = { createIndex, CENTROIDS, cosine, dot, norm };

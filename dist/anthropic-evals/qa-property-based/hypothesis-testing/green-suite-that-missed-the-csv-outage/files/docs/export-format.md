@@ -13,7 +13,8 @@ strictly and rejects the whole file on the first cell it cannot read.
 
 ## Currency cells
 
-Three letters from ISO 4217. Lower-case input is upper-cased on export.
+Three letters from ISO 4217. Lower-case input is upper-cased on export. The
+importer accepts the whole ISO 4217 list, not a subset of it.
 
 ## Text cells
 

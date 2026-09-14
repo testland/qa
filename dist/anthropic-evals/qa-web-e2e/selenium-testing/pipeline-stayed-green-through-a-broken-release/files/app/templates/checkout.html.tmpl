@@ -1,0 +1,20 @@
+{{!-- rendered server side for every request to /checkout --}}
+<main data-testid="checkout">
+  <h1>Checkout</h1>
+  <input data-testid="address-line-1" name="address1">
+  <input data-testid="postcode" name="postcode">
+  <p class="totals">Total <span data-testid="order-total">{{total}}</span></p>
+  <button data-testid="place-order" class="btn primary">Place order</button>
+
+  {{!-- the strip is always in the document; the client writes into it when the
+        order call comes back, success or failure --}}
+  <div data-testid="order-status" class="status-strip" aria-live="polite"></div>
+
+  {{#if paymentError}}
+  <div class="alert alert--payment" data-testid="checkout-error" role="alert">
+    {{paymentError}}
+  </div>
+  {{/if}}
+</main>
+
+{{!-- on success the client replaces the document with /orders/<id> --}}

@@ -17,10 +17,10 @@
     "reports.spec.ts > scheduled-email-report": 0,
     "admin.spec.ts > audit-log-download": 4,
     "admin.spec.ts > user-role-change": 0,
+    "admin.spec.ts > bulk-invite-users": 0,
     "orders.spec.ts > print-packing-slip": 0,
     "settings.spec.ts > api-key-rotation": 0,
     "onboarding.spec.ts > sample-data-import": 2,
-    "promo.spec.ts > seasonal-banner": 5,
     "legacy.spec.ts > coupon-stacking": 6,
     "beta.spec.ts > invite-flow": 2
   }

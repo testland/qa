@@ -1,4 +1,4 @@
-# Peak rehearsal at 5,000 concurrent, four spare VMs, and a multi-machine path nobody has ever run
+# Peak rehearsal at 5,000 concurrent, four borrowed generators, and a console nobody wants to give up
 
 ## Problem Description
 
@@ -17,11 +17,17 @@ Back in July somebody added multi-machine support to `scripts/build-args.mjs` fo
 a rehearsal that got cancelled two days before it was due. It has a test, the test
 is green, and nothing has ever been run through it.
 
-@tkowalski has written up five proposals and @rsantos from ops has added two of
-his own to the same file. I need a position on each of the five, and I need the
-runner script left in a state where the rehearsal can actually be started on the
-day. Last time we found a problem at 13:50 for a 14:00 window and I am not doing
-that again.
+The window is 2026-11-19, 14:00-16:00 UTC against a clone of staging that is ours
+for that afternoon and nobody else's after it. @mbennett is sitting in for the
+first half hour and he is the one who calls it off if the app tier starts folding,
+so I need him told what is happening while it is happening, and I need a way to
+stop the thing that is not waiting for the schedule to run out.
+
+@tkowalski has written up four proposals and @rsantos from ops has added one of
+his own to the same file. Two of @tkowalski's are about the same afternoon on the
+same machine. I need a position on each of the five, and I need the runner script
+left in a state where the rehearsal can actually be started on the day. Last time
+we found a problem at 13:50 for a 14:00 window and I am not doing that again.
 
 For scale: last night's nightly at 800 threads produced 1,914,000 samples across
 the 30-minute steady state — about 1,060 a second — and left a 212 MB results
@@ -37,8 +43,8 @@ told than guess. If one of the five is fine as written, say it is fine.
    must pass against what you deliver.
 2. Write `docs/rehearsal-plan.md`: which machine does what, how many threads each
    one carries and where that number comes from, the exact command run on the
-   machine that starts the run, and how every setting the run needs reaches the
-   machine that needs it.
+   machine that starts the run, how every setting the run needs reaches the
+   machine that needs it, and what @mbennett is looking at between 14:00 and 14:30.
 3. Answer all five proposals in that document, one short section each, with a
    plain yes or no on each.
 4. Change `plans/order-entry.jmx` and `data/order-ids.csv` only if they need
@@ -54,7 +60,12 @@ export function buildArgs({ plan, results, properties = {}, propertiesFile, engi
   if (!plan) throw new Error('plan is required');
   if (!results) throw new Error('results is required');
 
-  const args = ['-n', '-t', plan, '-l', results];
+  // July: the multi-machine run gets kicked off by hand from the console on
+  // perf-01, so this path leaves off the first flag the nightly uses.
+  const args = engines && engines.length
+    ? ['-t', plan, '-l', results]
+    : ['-n', '-t', plan, '-l', results];
+
   if (propertiesFile) args.push('-q', propertiesFile);
   if (engines && engines.length) args.push('-R', engines.join(','));
   for (const [key, value] of Object.entries(properties)) {
@@ -215,26 +226,29 @@ had a problem.
 
 ## Proposals
 
-1. @tkowalski — Set the thread count to 5000 and run the whole thing on perf-01.
-   It is eight times the machine the nightly runs on and the nightly is 800
-   threads, so the arithmetic works and we never have to learn the multi-machine
-   path at all.
+1. Set the thread count to 5000 and run the whole thing on perf-01. It is eight
+   times the machine the nightly runs on and the nightly is 800 threads, so the
+   arithmetic works and we never have to learn the multi-machine path at all.
 
-2. @tkowalski — If we do end up going multi-machine, the runner script needs
-   nothing doing to it. The July work already takes the generator list and passes
-   the run settings through as overrides, and there is a test that proves it. An
-   override is an override.
+2. On the 18th I open `plans/order-entry.jmx` on perf-01 in the desktop
+   application, add a response assertion on `POST /v2/orders` so that a 500 stops
+   being counted as a good sample, save the file and commit it. Reviewing the XML
+   in a pull request is miserable but the diff will be small, and building the
+   element by hand in a text editor is not something I am prepared to do.
 
-3. @rsantos — Keep perf-01 out of it. It is @tkowalski's interactive box and the
-   four VMs are what ops actually lent us. Have gen-a drive the run and carry its
-   share of the load as well: four machines, four shares, nothing sitting idle.
+3. On the day I start the rehearsal from that same desktop session. Plan open on
+   perf-01, the four generators listed, remote start across all of them.
+   @mbennett gets the summary table and the response-time graph filling in live on
+   the projector, which is exactly what he has asked for, and if the app tier
+   starts folding one of us hits stop and it stops. The July work in
+   `scripts/build-args.mjs` already leaves the nightly's first flag off the
+   multi-machine path, which I take to mean whoever wrote it had the same idea.
 
-4. @tkowalski — The rehearsal points at the rehearsal stack, not staging. On the
-   morning of the 19th I will open `plans/order-entry.jmx`, change the host to
-   `rehearsal.orders.example.com`, and change it back on the 20th. It is one line
-   and it is one afternoon.
+4. Beyond that the runner script needs nothing doing to it. July's work takes the
+   generator list and passes the run settings through as overrides, and there is a
+   test that proves it. An override is an override.
 
-5. @rsantos — The order-ID file. `data/order-ids.csv` lives in the repo and the
+5. @rsantos — the order-ID file. `data/order-ids.csv` lives in the repo and the
    plan reads it from a relative path. I want a copy of it dropped onto each of
    gen-a..gen-d before the window. @tkowalski says that is duplication for no
    reason and the repo is the single source of truth. I do not want to be the

@@ -6,6 +6,10 @@ test('a clean run passes', () => {
   assert.equal(verdict(0).ok, true);
 });
 
+test('a build with changes blocks', () => {
+  assert.equal(verdict(1).ok, false);
+});
+
 test('a 4 does not block the pipeline', () => {
   assert.equal(verdict(4).ok, true);
 });

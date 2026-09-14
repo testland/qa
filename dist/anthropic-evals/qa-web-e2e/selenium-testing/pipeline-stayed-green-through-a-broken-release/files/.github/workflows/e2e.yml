@@ -16,10 +16,10 @@ jobs:
           java-version: '21'
       - name: start the app
         run: docker compose up -d --wait
-      # failure.ignore is here so the artifact step below still runs when a test fails
       - name: run the suite
-        run: mvn -B test -Dmaven.test.failure.ignore=true -DbaseUrl=http://localhost:3000
+        run: mvn -B test -DbaseUrl=http://localhost:3000
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: surefire-reports
           path: target/surefire-reports/

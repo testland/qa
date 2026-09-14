@@ -1,8 +1,8 @@
 # Edge traffic, 90 days to 2026-09-08
 
 Pulled for the navigation rework, filtered to the routes PR #884 touches.
-"Accounts" is distinct signed-in accounts that hit the route at least once in
-the window. "Status mix" is the share of responses by status class.
+"Accounts" is distinct signed-in accounts that hit the route at least once in the
+window. "Status mix" is the share of responses by status class.
 
 | Route                     | Requests | Accounts | Status mix                     |
 |---------------------------|---------:|---------:|--------------------------------|
@@ -20,12 +20,21 @@ the window. "Status mix" is the share of responses by status class.
 | `/auth/sso/callback`       |       71 |        9 | 2xx 97.2%                      |
 | `/account/export`          |       41 |       41 | 2xx 100%                       |
 
-Notes on the pull:
+Same window, requests split by month. June is from the 11th; September is to the
+8th.
 
-- Anything under 100 requests in a 90-day window is below the line we treat as
-  effectively unused, and we do not build for it.
-- `/auth/sso` and `/auth/sso/callback` have no traffic at all before
-  2026-08-19 and do not appear in the equivalent pull for the previous quarter.
-- Every account that hit `/account/export` hit it exactly once.
-- `/orders/packing-slip` and `/promo/seasonal` are the two highest-volume
-  routes in this pull that never return a 2xx.
+| Route                     |    Jun |     Jul |     Aug |    Sep |
+|---------------------------|-------:|--------:|--------:|-------:|
+| `/checkout/payment`        | 89,400 | 138,900 | 152,030 | 38,000 |
+| `/checkout/confirmation`   | 83,600 | 130,200 | 142,704 | 35,500 |
+| `/search`                  | 43,900 |  67,800 |  74,181 | 19,000 |
+| `/onboarding`              |  3,120 |   4,880 |   5,220 |  1,400 |
+| `/promo/seasonal`          |  2,700 |   4,100 |   4,406 |  1,200 |
+| `/orders/packing-slip`     |  2,180 |   3,240 |   3,422 |    900 |
+| `/checkout/3ds-challenge`  |  1,310 |   2,040 |   2,254 |    600 |
+| `/referrals/invite`        |    690 |   1,020 |   1,108 |    300 |
+| `/reports/export`          |    620 |     950 |   1,024 |    310 |
+| `/account/privacy`         |    181 |     274 |     293 |     94 |
+| `/auth/sso`                |      0 |       0 |      31 |     43 |
+| `/auth/sso/callback`       |      0 |       0 |      30 |     41 |
+| `/account/export`          |      9 |      13 |      14 |      5 |

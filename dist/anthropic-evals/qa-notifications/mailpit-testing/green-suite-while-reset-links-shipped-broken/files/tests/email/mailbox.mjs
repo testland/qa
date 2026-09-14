@@ -17,7 +17,6 @@ export async function firstMatch(to, timeoutMs = 4000) {
   return null;
 }
 
-// PR #1188: was `${API}/api/v2/messages/${id}` on the old server.
 export async function fullMessage(id) {
   const res = await fetch(`${API}/api/v1/messages/${id}`);
   return res.ok ? res.json() : {};

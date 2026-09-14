@@ -1,15 +1,15 @@
 # graphql job, last 10 runs on main
 
-run 4471  ok      11m 04s   (job timeout: canceled after tests reported)
-run 4470  ok      11m 02s   (job timeout: canceled after tests reported)
+run 4471  ok      11m 04s
+run 4470  ok      11m 02s
 run 4469  FAIL     0m 38s   Error: listen EADDRINUSE: address already in use :::4000
-run 4468  ok      11m 03s   (job timeout: canceled after tests reported)
+run 4468  ok      11m 03s
 run 4467  FAIL     0m 41s   Error: listen EADDRINUSE: address already in use :::4000
-run 4466  ok      11m 05s   (job timeout: canceled after tests reported)
-run 4465  ok      11m 02s   (job timeout: canceled after tests reported)
+run 4466  ok      11m 05s
+run 4465  ok      11m 02s
 run 4464  FAIL     0m 36s   Error: listen EADDRINUSE: address already in use :::4000
-run 4463  ok      11m 01s   (job timeout: canceled after tests reported)
-run 4462  ok      11m 06s   (job timeout: canceled after tests reported)
+run 4463  ok      11m 01s
+run 4462  ok      11m 06s
 
 --- tail of run 4471 ---
 > parcelly-api@ test
@@ -21,5 +21,4 @@ run 4462  ok      11m 06s   (job timeout: canceled after tests reported)
 # fail 0
 # duration_ms 412.88
 
-  (no further output for 9m 54s)
 Error: The operation was canceled.

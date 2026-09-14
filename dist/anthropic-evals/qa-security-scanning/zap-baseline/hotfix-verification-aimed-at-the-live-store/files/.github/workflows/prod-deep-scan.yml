@@ -1,4 +1,5 @@
 # Drafted by Wendell (contractor) 2026-09-11. Not merged.
+# Guard passes on my branch, so this is ready to go as far as I can tell.
 name: DAST deep scan (live store)
 
 on:
@@ -11,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Policy check
+        run: node scripts/scan-policy.js zap-full-scan.py prod
       - uses: zaproxy/action-full-scan@v0.13.0
         with:
           target: https://shop.harlowgoods.com

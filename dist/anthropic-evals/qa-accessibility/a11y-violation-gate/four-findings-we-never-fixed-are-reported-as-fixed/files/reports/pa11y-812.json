@@ -1,0 +1,17 @@
+{
+  "total": 1,
+  "results": {
+    "/checkout": [
+      {
+        "code": "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail",
+        "type": "error",
+        "typeCode": 1,
+        "message": "This element has insufficient contrast at this conformance level.",
+        "context": "<td class=\"amount\">48.20</td>",
+        "selector": "html > body > main > table.summary > tbody > tr:nth-child(4) > td:nth-child(2)",
+        "runner": "htmlcs"
+      }
+    ],
+    "/pricing": []
+  }
+}

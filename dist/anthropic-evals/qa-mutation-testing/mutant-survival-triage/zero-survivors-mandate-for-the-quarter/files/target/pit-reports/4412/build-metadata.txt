@@ -1,0 +1,8 @@
+run_id=4412
+started=2026-09-14T02:09:51Z
+git_sha=a3f7c21
+pitest_version=1.17.0
+surefire_tests_discovered=7
+surefire_tests_used_for_coverage=7
+mutants_generated=34
+mutants_killed=31

@@ -1,35 +1,43 @@
-# ARCH-742 wants the same treatment on both integrations and I need an answer before sprint planning
+# ARCH-742 has five items on it now and the vendor has answered the objection everyone was going to raise
 
 ## Problem Description
 
 Marta filed ARCH-742 after the two Q3 incidents and it is on the sprint planning
-agenda for Monday 2026-09-15. She wants both of our worst integrations covered
-the same way this sprint. A question from the mobile team and a suggestion from
-the Pricing team's lead have been tacked onto the bottom since.
+agenda for Monday 2026-09-15. She wants both of our worst integrations covered the
+same way this sprint. Three more items have been tacked on since it was opened and
+one of them changes the argument, so I need all five answered.
 
-I need a decision on each of the four items, not a plan to write a plan. Where the
-answer is yes I want the first test actually written, against the code in
-`src/quote.js` that does the calling.
+Her position is that both integrations are HTTP, both return JSON, both broke us
+in production, and there is no interesting difference between them. Vikram has
+already drafted `test/shiplane.consumer.spec.js` against the vendor's sandbox and
+it is attached; it looks finished to me, and if it is the right shape we should use
+it.
 
-Where the answer is anything else I need to be able to defend it on Monday.
-Marta's position is that both integrations are HTTP, both return JSON, both broke
-us in production, and the vendor runs a sandbox we can aim a test at, so from
-where she sits there is no difference between them and she is going to say so.
-Vikram has already drafted `test/shiplane.consumer.spec.js` against that sandbox
-and it is attached; it looks finished to me. If it is the right shape, use it. If
-it is not, I need to know what goes in its place and how that thing would have
-caught INC-2264, because "we would have found out sooner" is not going to survive
-contact with Marta.
+The item I actually want a straight answer on is item 3. Everyone's objection to
+putting Shiplane under the same regime is that they are a third party who will
+never run anything for us. Their solutions engineer replied on Tuesday pointing at
+a paid add-on that does exactly that — we upload our expectation file, they replay
+it against their sandbox on demand and return a pass or fail report. Their product
+page is attached. Marta's read is that this removes the only objection anyone has
+raised and we should buy it and put it on the release checklist. It is $400 a
+month, which nobody will argue about.
 
-The ticket, the calling code and the Q3 incident summaries are attached. We have a
-broker running at `https://broker.internal` and the platform team has already
-issued us a token.
+Where the answer is yes I want the first test actually written against the code in
+`src/quote.js` that does the calling. Where the answer is anything else I need to
+be able to defend it on Monday against someone who will point out that we have
+been talking about this since July and have shipped nothing. "We would have found
+out sooner" is not going to survive contact with Marta — whatever we propose for
+Shiplane has to be something I can show would have caught INC-2264.
+
+Attached: the ticket, the vendor's product page, the calling code with its tests,
+the Q3 incident summaries, and what we know about the Pricing team's setup. We have
+a broker at `https://broker.internal` and the platform team has issued us a token.
 
 ## Output Specification
 
 1. Write `docs/arch-742-response.md` with a separate, explicit verdict on each of
-   the four numbered items in the ticket, the reason for each, and what we do
-   instead wherever the verdict is no.
+   the five numbered items, the reason for each, and what we do instead wherever
+   the verdict is no.
 2. Write the consumer test for whichever item or items you said yes to, at
    `test/pricing.consumer.spec.js`, against `src/quote.js`.
 3. State plainly what happens to `test/shiplane.consumer.spec.js`.
@@ -39,19 +47,20 @@ issued us a token.
 Extract the following files before beginning.
 
 =============== FILE: docs/ARCH-742.md ===============
-# ARCH-742 — get our two worst integrations under contract before Q4
+# ARCH-742 - get our two worst integrations covered before Q4
 
-Reporter: Marta Oyelaran (Staff Eng, Platform).  Opened 2026-09-04.
+Reporter: Marta Oyelaran (Staff Eng, Platform). Opened 2026-09-04.
 
 Two customer-visible incidents in Q3, both from a downstream response changing
 shape under us. I want the same treatment applied to both this sprint.
 
 ## 1. pricing-service (internal)
 
-Owned by the Pricing team, #team-pricing. Node 22, GitHub Actions, runs `npm
-test` on every PR, has a deploy pipeline we can add steps to, and answers in
-Slack within the hour. Their tech lead Dan Rzepka picked this up the day after it
-was filed.
+Owned by the Pricing team, #team-pricing. Node 22, GitHub Actions, runs `npm test`
+on every PR, has a deploy pipeline we can add steps to, and answers in Slack
+within the hour. Their tech lead Dan Rzepka picked this up the day after it was
+filed and has offered to add a verification step to their PR job and to take
+broker credentials from platform.
 
 INC-2211 (2026-07-22, 3h40m): they renamed `discount_cents` to
 `discount_amount_cents` behind a flag and flipped the flag. Our quote page showed
@@ -60,38 +69,110 @@ every order at full price.
 ## 2. Shiplane (third-party logistics vendor)
 
 We POST /v2/rates on every checkout. Commercial contract, support email only, no
-shared repo, no shared CI, no named engineer. Two support tickets in August went
-nine days without a reply. They publish an OpenAPI 3.1 document at
-https://api.shiplane.com/openapi.json which their changelog says is regenerated
-on every release, and they run a sandbox at https://sandbox.shiplane.com that
-mirrors production a release behind.
+shared repository, no shared CI, no named engineer. Two support tickets in August
+went nine days without a reply. They publish an OpenAPI 3.1 document at
+https://api.shiplane.com/openapi.json which their changelog says is regenerated on
+every release, and they run a sandbox at https://sandbox.shiplane.com.
 
-INC-2264 (2026-08-14, 52m): `eta_days` changed from an integer to a string
-("3-5") with no notice. Checkout threw on every rate quote.
+INC-2264 (2026-08-14, 52m): `eta_days` changed from an integer to a string ("3-5")
+with no notice. Checkout threw on every rate quote.
 
-## 3. mobile-bff as a second consumer of pricing-service
+Vikram has drafted an expectation file for them against the sandbox.
+
+## 3. Shiplane Contract Assurance (added 2026-09-09)
+
+Their solutions engineer, unprompted, pointed us at a paid add-on. We upload our
+expectation file through their portal, they replay every interaction in it against
+their sandbox account and hand back a pass/fail report. $400/month, live within
+two working days, no engineering effort on our side.
+
+This answers the objection I keep hearing - that a third party will never run
+verification for us. They will, and they will do it on their own infrastructure.
+My proposal is that we buy it, register Shiplane as a participant, and put the
+report on the release checklist for checkout-web. Their product page is attached.
+
+## 4. mobile-bff as a second consumer of pricing-service (added 2026-09-05)
 
 The mobile team started calling pricing-service in August for the same quote data.
-They have asked whether they should be wired in the same way, or whether one
-consumer per downstream service is the limit and they should go through us
-instead.
+They have asked whether they should be wired in the same way under their own name,
+or whether one set of expectations per downstream service is the limit and they
+should go through us instead.
 
-## 4. Dan's simplification (added to this ticket 2026-09-05)
+## 5. Dan's second suggestion (added 2026-09-10)
 
-> Happy to add a verification step to our PR job this sprint. One thing though —
-> rather than us taking broker credentials and a token we have to rotate, just
-> commit the expectation file into your repo and give us a raw URL. Our job
-> fetches it, replays it against a booted pricing-service and fails the PR on any
-> mismatch. Same protection, no shared infrastructure, and you can see exactly
-> what we are checking against because it is a file in your tree. We can have
-> that running Tuesday; the credentials route needs a ticket with platform and
-> that is a fortnight.
+> While you are in there - you should run the deploy comparison in your own
+> pipeline before checkout-web ships, not just in ours before pricing-service
+> ships. We will be checking our candidate against your expectations; nothing is
+> checking your candidate against what we are actually running. Same command, your
+> pacticipant, your environment.
 
 ## What I want back
 
-A decision on each of the four, and the first test actually written for whichever
-of them we are doing. Vikram drafted something for Shiplane against their
-sandbox — reuse it if it is the right shape.
+A decision on each of the five, and the first test actually written for whichever
+of them we are doing.
+
+=============== FILE: docs/shiplane-contract-assurance.md ===============
+# Shiplane Contract Assurance - product page, saved 2026-09-09
+
+> **Never be surprised by an API change again.**
+>
+> Upload your expectation file through the Shiplane developer portal. Our
+> replay service executes every interaction in it against **your sandbox
+> account** and returns a signed pass/fail report, per interaction, within
+> minutes. Re-run it on demand from the portal or from our REST API.
+>
+> **$400 / month.** Included: unlimited replays, 90 days of report history,
+> email alerting on a failed replay.
+
+## Notes from the page's own FAQ
+
+- **Which environment does the replay run against?**
+  Your sandbox account on `sandbox.shiplane.com`. Production accounts are not
+  reachable by the replay service.
+- **How current is the sandbox?**
+  The sandbox environment is refreshed from the production build on the first
+  Tuesday of each month. Customers who need earlier access to an upcoming change
+  should contact their account manager.
+- **What is in the report?**
+  Per-interaction pass or fail, the response body observed, and a timestamp. The
+  report is delivered to you as JSON and PDF. Reports are not pushed to any
+  third-party system.
+- **Do you version the API?**
+  The `/v2` prefix is stable. Release notes are published to the changelog after
+  each production release.
+
+=============== FILE: docs/incidents-q3.md ===============
+# Q3 incident summaries (extract)
+
+## INC-2211 - quote page shows full price for every order
+
+2026-07-22, 14:05-17:45 UTC. Cause: pricing-service renamed the response field
+`discount_cents` to `discount_amount_cents` and removed the old key in the same
+release. Our reader returned undefined and the page rendered the undiscounted
+total. Detected by a customer email. Pricing deployed on their own schedule;
+nothing in either pipeline compared the two sides.
+
+## INC-2264 - checkout throws on every rate quote
+
+2026-08-14, 09:12-10:04 UTC. Cause: Shiplane changed `eta_days` from integer to
+string ("3-5") in production. Detected by our own 5xx alert 40 minutes after their
+release window. Their changelog entry appeared 2026-08-16, two days after the
+incident. Support ticket acknowledged 2026-08-25.
+
+Post-incident note from Vikram, 2026-09-02: "Worth recording that our sandbox
+account was still returning `eta_days: 5` as an integer for two and a half weeks
+after this. I re-checked it on 2026-08-28 and it was still the old shape. It
+changed over sometime around 2026-09-01."
+
+=============== FILE: docs/pricing-service-notes.md ===============
+# What we know about pricing-service, from the Pricing team's README
+
+- `POST /v1/quotes` takes `{ cart_id, currency, customer_id }`.
+- Provider states are already declared in their verification harness for the
+  fixtures they use in their own integration tests: `a cart with a discount
+  applied`, `a cart with no discount`, `an expired cart`.
+- They deploy from `main` two or three times a week and record each release.
+- Their PR job runs `npm test` and a build, and takes about four minutes.
 
 =============== FILE: src/quote.js ===============
 'use strict';
@@ -167,7 +248,7 @@ test('etaLabel renders the eta', () => {
 =============== FILE: test/shiplane.consumer.spec.js ===============
 'use strict';
 
-// DRAFT — Vikram, 2026-09-08. Not wired into the npm test script yet.
+// DRAFT - Vikram, 2026-09-08. Not wired into the npm test script yet.
 const path = require('node:path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
@@ -206,31 +287,3 @@ describe('Shiplane rates consumer', () => {
     });
   });
 });
-
-=============== FILE: docs/incidents-q3.md ===============
-# Q3 incident summaries (extract)
-
-## INC-2211 — quote page shows full price for every order
-
-2026-07-22, 14:05–17:45 UTC. Cause: pricing-service renamed the response field
-`discount_cents` to `discount_amount_cents` and removed the old key in the same
-release. Our reader returned undefined and the page rendered the undiscounted
-total. Detected by a customer email. Pricing deployed on their own schedule;
-nothing in either pipeline compared the two sides.
-
-## INC-2264 — checkout throws on every rate quote
-
-2026-08-14, 09:12–10:04 UTC. Cause: Shiplane changed `eta_days` from integer to
-string ("3-5"). Detected by our own 5xx alert 40 minutes after their release
-window. Their changelog entry appeared 2026-08-16, two days after the incident.
-Support ticket acknowledged 2026-08-25.
-
-=============== FILE: docs/pricing-service-notes.md ===============
-# What we know about pricing-service, from the Pricing team's README
-
-- `POST /v1/quotes` takes `{ cart_id, currency, customer_id }`.
-- Provider states are already declared in their verification harness for the
-  fixtures they use in their own integration tests: `a cart with a discount
-  applied`, `a cart with no discount`, `an expired cart`.
-- They deploy from `main` two or three times a week and record each release.
-- Their PR job runs `npm test` and a build, and takes about four minutes.

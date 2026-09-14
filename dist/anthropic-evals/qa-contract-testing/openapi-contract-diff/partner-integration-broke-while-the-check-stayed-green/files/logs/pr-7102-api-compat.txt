@@ -1,0 +1,12 @@
+2026-07-21T11:40:02.4Z ##[group]Run Resolve the spec we are comparing against
+2026-07-21T11:40:02.9Z ##[endgroup]
+2026-07-21T11:40:03.1Z ##[group]Run Compare
+2026-07-21T11:40:09.6Z ##[endgroup]
+2026-07-21T11:40:09.8Z ##[error]Process completed with exit code 1.
+2026-07-21T11:40:10.1Z ##[group]Run Upload report
+2026-07-21T11:40:11.5Z Artifact openapi-breaking-report successfully uploaded
+2026-07-21T11:40:11.6Z ##[endgroup]
+2026-07-21T11:40:12.0Z ##[error]Process completed with exit code 1.
+
+PR #7102 deleted `DELETE /v1/exports/{exportId}` by accident while moving the
+handler. The author reverted it the same morning.

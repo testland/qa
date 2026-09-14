@@ -1,4 +1,4 @@
-# Rolling deploys look like a network failure to every connected client
+# Every deploy produces the same support thread
 
 ## Problem Description
 
@@ -7,30 +7,32 @@ about 11,000 of them at peak. We ship three or four times a week and every
 deploy produces the same support thread: "it lost my draft", "it signed me
 out", "the dot went red".
 
-The web client treats a clean ending and an unclean ending completely
-differently, and that is the whole problem. When the connection ends cleanly it
-shows a grey "reconnecting..." strip, keeps the composer contents and resumes
-the session in place. When it ends any other way it assumes the network died:
-red banner, in-memory session dropped, everything refetched from scratch.
+The web client branches on how a connection ended. A clean ending gets a grey
+"reconnecting..." strip: the composer contents are kept and the session resumes
+in place. Anything else is treated as the network having died - red banner,
+in-memory session dropped, everything refetched from scratch.
 
-Here is what the browser recorded during the 2026-09-04 rollout, alongside the
-two other paths that end a connection from our side:
+Here is what the browser recorded during last week's rollout, alongside the
+other paths that end a connection from our side. Same client build, same
+browser, inside the same few minutes:
 
 | path              | what triggers it                            | `event.code` | `event.wasClean` |
 |-------------------|---------------------------------------------|--------------|------------------|
 | duplicate session | a second tab signs in as the same user      | 1008         | true             |
 | handler threw     | an unhandled error in a room subscription   | 1011         | true             |
+| idle sweep        | nothing heard from the peer for two minutes | 1006         | false            |
 | rolling deploy    | old pod stops accepting, drains, exits      | 1006         | false            |
 
-Same client build, same browser, inside the same thirty seconds. The deploy
-path is the only one the client treats as a disaster, and nothing in
-`src/hub.js` is covered beyond "everyone ends up disconnected" - which is
-equally true of all three.
+@jlind put a hotfix into `src/hub.js` on the 11th so that the drain path writes
+an explicit close frame instead of just dropping the socket. The support thread
+after the next deploy was the same size. The numbers either side of the hotfix
+are in `reports/close-events.md`.
 
-I want every path that ends a connection from the server side pinned down, so
-that the next person who touches the drain code cannot change what the client
-sees without something going red. Start from what the client actually observes,
-not from what we intended.
+Nothing in `src/hub.js` is covered beyond "everyone ends up disconnected",
+which is equally true of all four paths. I want every path that ends a
+connection from the server side pinned down, so that the next person who
+touches this code cannot change what the client sees without something going
+red. Start from what the client actually observes.
 
 ## Output Specification
 
@@ -59,6 +61,12 @@ Extract the following files before beginning.
 'use strict';
 
 const MAX_IDLE_MS = 120_000;
+
+// 2026-09-11 hotfix: announce the drain with a real close frame instead of
+// dropping the socket, so the ending is not a surprise to the client.
+const DRAIN_CLOSE_CODE = 1006;
+const DRAIN_REASON =
+  'presence-gateway is being replaced by a rolling deploy; the new pod is already accepting connections, so reconnect now and your session will resume where it left off';
 
 class Hub {
   constructor() {
@@ -89,7 +97,6 @@ class Hub {
     socket.close(1011, 'internal error');
   }
 
-  // The peer has not been heard from in two minutes; nobody is left to answer a close frame.
   idleSweep(at) {
     for (const [socket, session] of this.sockets) {
       if (at - session.lastSeen > MAX_IDLE_MS) {
@@ -100,13 +107,13 @@ class Hub {
 
   drain() {
     for (const socket of this.sockets.keys()) {
-      socket.terminate();
+      socket.close(DRAIN_CLOSE_CODE, DRAIN_REASON);
     }
     this.sockets.clear();
   }
 }
 
-module.exports = { Hub, MAX_IDLE_MS };
+module.exports = { Hub, MAX_IDLE_MS, DRAIN_CLOSE_CODE, DRAIN_REASON };
 
 =============== FILE: testutil/fake-socket.js ===============
 'use strict';
@@ -128,7 +135,6 @@ class FakeSocket extends EventEmitter {
     this.sent.push(frame);
   }
 
-  // Writes a close frame; the peer echoes it and the connection finishes cleanly.
   close(code, reason = '') {
     if (this.readyState !== 'open') {
       return;
@@ -141,7 +147,6 @@ class FakeSocket extends EventEmitter {
     });
   }
 
-  // Drops the connection with no close frame written; the peer synthesises its own ending.
   terminate() {
     if (this.readyState === 'closed') {
       return;
@@ -211,27 +216,24 @@ test('drain disconnects everyone', async () => {
   assert.equal(hub.size, 0);
 });
 
-=============== FILE: reports/close-events-2026-09-04.md ===============
-# Client-side close events, rollout window 20:02-20:05 UTC
+=============== FILE: reports/close-events.md ===============
+# Client-side close events, collected by the web client's error reporter
 
-Collected by the web client's error reporter. One line per ended connection,
-sampled at 2%.
+One line per ended connection, sampled at 2%.
+
+## Rollout 2026-09-04, 20:02-20:05 UTC - before the hotfix
 
 ```
 20:02:41  session=9f31 code=1008 clean=true  reason="duplicate session"
 20:03:07  session=1a04 code=1011 clean=true  reason="internal error"
 20:04:12  session=77bc code=1006 clean=false reason=""
 20:04:12  session=2e91 code=1006 clean=false reason=""
-20:04:12  session=b350 code=1006 clean=false reason=""
 20:04:13  session=0c7a code=1006 clean=false reason=""
-20:04:13  session=41ff code=1006 clean=false reason=""
-20:04:14  session=d208 code=1006 clean=false reason=""
 ```
 
-Banner impressions in the same window: 9,318. Drafts restored from local
-storage: 0 - the client only keeps the composer when the ending was clean.
+Banner impressions in the window: 9,318. Drafts restored from local storage: 0.
 
-The old pod's shutdown log for the same window:
+Old pod shutdown log:
 
 ```
 20:04:11  SIGTERM received, entering drain
@@ -239,3 +241,17 @@ The old pod's shutdown log for the same window:
 20:04:12  drain complete in 411ms
 20:04:12  process exit 0
 ```
+
+## Rollout 2026-09-12, 19:31-19:34 UTC - after the hotfix
+
+```
+19:31:58  session=b2d5 code=1008 clean=true  reason="duplicate session"
+19:33:40  session=44a1 code=1006 clean=false reason=""
+19:33:40  session=8e02 code=1006 clean=false reason=""
+19:33:41  session=c117 code=1006 clean=false reason=""
+```
+
+Banner impressions in the window: 9,104. Drafts restored from local storage: 0.
+
+The client's reporter records `event.code` and `event.wasClean` exactly as the
+browser hands them over; it does not synthesise either field.

@@ -9,14 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Format-check the suppression file
-        run: node scripts/rules-audit.js .zap/rules.tsv
       - uses: zaproxy/action-baseline@v0.13.0
         with:
           target: https://review-${{ github.event.number }}.veridianpay.dev
           rules_file_name: .zap/rules.tsv
-          # 2026-05-12 quieten DAST while we triage the backlog
-          cmd_options: '-J zap.json -I'
+          cmd_options: '-J zap.json'
+      - name: Gate
+        run: node ci/dast-gate.js zap.json .zap/baseline-findings.json
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: zap-report, path: zap.json }

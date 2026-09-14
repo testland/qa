@@ -1,41 +1,41 @@
 {
-  "context": "A suite that is green for four different reasons, three of which are defects in the checks themselves. Predicted baseline failure: the agent reads four plausible-looking generated-input checks, concludes the gap was 'no coverage of non-finite amounts', bolts a fifth check on for NaN and leaves the existing three as they are - so the two checks that already had the incident's own input in scope stay broken. The fixtures settle each one. test_amount_line_cells_are_decimal already draws NaN and infinity, but it replaces format_amount with a constant-returning stub for the duration of the call, so the only function that mishandles them never executes; drop the stub and that check goes red on precisely the incident. test_amount_round_trip is bounded to non-negative two-decimal values, which excludes NaN, infinity and negatives by construction, and the two obvious ways to widen it are both wrong: asking a bounded float strategy to allow NaN is rejected outright by the generator, and widening into the same equality assertion is unsatisfiable for NaN however correct the code is, so the finite round-trip and the non-finite rejection have to become two separate checks. test_currency_cell_normalised guards its only assertion behind is_currency_code on arbitrary text, which yields a three-letter ISO code essentially never, so it passes a hundred times a run having asserted nothing - and the tempting repair, wrapping the same broad strategy in a discard, trades a silently skipped assertion for a run that throws away almost everything it draws. test_field_escape_round_trip is a sound property over a sound strategy, green because the escaping is correct; touching it is a wrong answer too. Nothing in the fixtures states what the exporter should do with a non-finite amount: src/exporter.py catches ExportError and dead-letters the row, and normalise_currency already raises it, which is where the intended behaviour has to be read from.",
+  "context": "Four green checks, none of which mentions NaN anywhere, so there is nothing obviously wrong to spot. Predicted baseline failure is the amount-cell check: st.floats(min_value=-1_000_000, max_value=1_000_000) reads as a plain range restriction, but bounding a float strategy is what removed NaN and both infinities from the domain, and that is the entire reason the file was green on the commit that shipped the outage. An agent who does not know that will report the check as sound, or will 'widen' it by adding allow_nan=True and allow_infinity=True alongside the bounds, which Hypothesis refuses as an invalid argument - so the obvious repair does not run at all, and the two behaviours have to be drawn from separate strategies and combined. The currency check is the second trap and is quieter: it draws from csvio.ISO_4217, the implementation's own tuple, so it can only ever confirm what the module already believes and cannot reach a code the module has never heard of - which ops/dead-letters-august.md shows has been silently dropping a tenant's entire export every week since August, against a format document that says the importer takes the whole ISO 4217 list. The escape round trip is sound and is there to catch an agent that rewrites all four to look thorough.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Audit produced with a verdict per check",
+      "name": "A verdict on each of the four checks",
       "max_score": 5,
-      "description": "docs/csvio-audit.md exists and gives a named verdict for all four checks in tests/test_csvio.py, each with the specific reason that check stayed green. Fewer than four named verdicts scores zero for this item; 'coverage was insufficient' in place of a per-check reason scores at most half."
+      "description": "docs/csvio-audit.md exists and rules on all four checks separately, saying for each what it was proving before the edit. A general narrative that does not reach four separate verdicts scores zero for this item."
     },
     {
-      "name": "MUST NOT keep a stubbed function inside a generated check",
-      "max_score": 26,
-      "description": "MUST NOT leave the patch of csvio.format_amount inside test_amount_line_cells_are_decimal, and MUST NOT introduce any new patch, stub, fake or monkeypatch of a src/csvio function inside a generated-input check. Leaving it or adding another scores zero for this criterion. Full marks require the removal plus an assertion that observes what the real format_amount produces, so that this check would have gone red on the incident input."
+      "name": "The bounds identified as what excluded the outage value",
+      "max_score": 32,
+      "description": "The audit says that min_value / max_value on the float strategy are why NaN and the infinities were never generated, and the check is repaired so that non-finite amounts are actually drawn - which needs a second strategy combined with the bounded one, since MUST NOT pass allow_nan=True or allow_infinity=True alongside min_value and max_value: Hypothesis rejects that combination and the check would stop running entirely. Reporting this check as sound, or leaving the domain unchanged, scores zero for this criterion regardless of the rest. Submitting the bounded strategy with allow_nan=True on it also scores zero. Naming the exclusion but not repairing the strategy scores at most half."
     },
     {
-      "name": "Non-finite amounts drawn, and drawn in a way that works",
-      "max_score": 28,
-      "description": "After the change at least one check draws NaN and both infinities and asserts the behaviour the exporter's dead-letter path implies for them. Leaving test_amount_round_trip bounded to non-negative two-decimal values scores zero. A widened strategy the generator rejects - NaN or infinity enabled on a float strategy that still carries bounds - scores zero, because the suite then errors instead of running. Widening the domain while keeping a single assertion that a decoded amount equals the value it came from scores at most half: that equality is false for NaN against itself whatever the code does, so the widened check is broken rather than fixed. Full marks require the finite round-trip and the non-finite rejection to be separate checks, both sound, with negatives inside the finite one."
-    },
-    {
-      "name": "Source brought in line with the wire format",
-      "max_score": 18,
-      "description": "src/csvio.py is changed so a non-finite amount raises ExportError rather than being rendered as text, which is what src/exporter.py already catches and dead-letters and what normalise_currency already does for a bad code. Emitting an empty cell, a zero, or a sentinel string scores at most half. Editing docs/export-format.md, or leaving the source unchanged and fixing only the tests, scores zero."
-    },
-    {
-      "name": "Vacuous branch fixed at the strategy, not by discarding",
+      "name": "The currency check recognised as circular",
       "max_score": 20,
-      "description": "test_currency_cell_normalised must execute its assertion on essentially every case after the fix, because the strategy produces currency codes rather than arbitrary text. Leaving the guarded branch on a broad text strategy scores zero. Wrapping the same broad strategy in a discard or precondition call, so that nearly every draw is thrown away to find the occasional code, scores at most half."
+      "description": "The audit says the currency check draws from the implementation's own ISO_4217 tuple, so it cannot reach any code the module does not already accept and could never have gone red, and it is repaired to draw three-letter codes independently of that tuple and to assert the documented behaviour for both accepted and refused codes. Full marks require connecting it to the weekly dead-lettered rows in ops/dead-letters-august.md. Calling the check fine, or repairing it by adding entries to ISO_4217 while still drawing from that same tuple, scores zero for this criterion."
+    },
+    {
+      "name": "The source made to match the wire format",
+      "max_score": 16,
+      "description": "src/csvio.py is changed so a non-finite amount raises ExportError rather than being written as text - the format document says there is no representation for it and src/exporter.py already dead-letters on ExportError. Substituting a placeholder, writing an empty cell, rounding, or silently skipping the value scores at most half. Leaving src/csvio.py able to emit 'nan' into an amount cell scores zero."
+    },
+    {
+      "name": "The round-trip domain widened to what the format allows",
+      "max_score": 12,
+      "description": "The amount round-trip check is repaired so it also covers negative amounts, which docs/export-format.md explicitly allows and the mapped integer strategy starts at zero. Leaving the domain non-negative scores zero for this item."
     },
     {
       "name": "The sound check left alone",
-      "max_score": 6,
-      "description": "MUST NOT modify test_field_escape_round_trip or the encode_field / decode_field pair. That check is a genuine round-trip over an unrestricted text strategy and is green because the escaping is correct. Any change to it scores zero for this item."
+      "max_score": 8,
+      "description": "MUST NOT change the strategy or the assertion on test_field_escape_round_trip. It draws unrestricted text, it round-trips commas, quotes and newlines, and nothing in the incident touches it. Rewriting it scores zero for this item; reporting it as fine and leaving it untouched is full marks."
     },
     {
-      "name": "No check quietly dropped or de-generated",
-      "max_score": 5,
-      "description": "All four checks still exist and all four still draw generated input. Deleting one, or converting one to a fixed list of values or a parametrized example, scores zero for this item."
+      "name": "Every check still generates",
+      "max_score": 8,
+      "description": "MUST NOT convert any of the four into a fixed list of values, a parametrized set or a single-value strategy, and MUST NOT delete one. Each must still be drawing generated input afterwards. Any check that no longer generates scores zero for this item."
     }
   ]
 }

@@ -1,4 +1,4 @@
-# Ninety-six minutes, one plan, one number, and two threshold changes I have to answer by Thursday
+# Ninety-six minutes, one verdict, and a director who says he only wants the Slack message fixed
 
 ## Problem Description
 
@@ -13,18 +13,21 @@ Since 21 August the job has failed every single night. Before that it failed on
 more nights than not, always on the same sampler, and people learned to scroll
 past it.
 
-Our director sent me the note that is attached. He has four asks, two of which
-are the same shape as each other — he wants a gate number moved — and I need to
-come back to him tomorrow with a position on all four. He is not a difficult
-person and if the answer to one of them is no he will take it, but he will want
-to know what he gets instead, and he has a board meeting on Thursday.
+Our director sent me the note that is attached. He has four asks. Two of them are
+the same shape as each other — he wants a gate number moved — one is a request to
+improve the notification and comes with an explicit instruction not to go further
+than that, and one is about pull requests. I need to come back to him tomorrow
+with a position on all four. He is not a difficult person and if the answer to one
+of them is no he will take it, but he will want to know what he gets instead, and
+he has a board meeting on Thursday.
 
 The plan file is 400 KB of XML and nobody edits it by hand, so what I have
 attached is: the inventory our census script produces from it, last night's
 per-sampler figures both as a summary and as the raw statistics the gate reads,
 six weeks of p95 history, the gate script and its tests, the thresholds file, the
-workflow, the platform change log, our scheduled-jobs register, and the messages
-from #finance-ops that somebody forwarded to me this morning.
+workflow, the platform change log and our scheduled-jobs register.
+
+Tell me what you would actually do, not what is cheapest to agree to.
 
 ## Output Specification
 
@@ -307,23 +310,15 @@ Open follow-ups filed against these: none.
 scheduled consumers. They are called when somebody opens the corresponding
 screen.
 
-=============== FILE: reports/finance-ops-messages.md ===============
-# #finance-ops — every message mentioning the settlement file, last 30 days
-
-2026-08-26 14:12 @kbriggs: the export timed out in the browser again, had to run it three times
-2026-08-28 11:40 @pdevlin: is the settlement job slower than it used to be or is it me
-2026-09-02 17:41 @kbriggs: file went to the bank at 17:38, they have logged it as late
-2026-09-04 16:52 @kbriggs: made it, four minutes to spare
-2026-09-09 16:58 @kbriggs: we are cutting this fine every single day now
-2026-09-10 09:05 @mreilly: noted. is anyone looking at this
-
 =============== FILE: docs/director-note.md ===============
 From: @mreilly
 Subject: load suite — four things
 
-1. Ninety-six minutes for one number is not a useful signal. Whatever it takes, I
-   want a failure to tell us which team owns it without anyone opening a 400 MB
-   file.
+1. Fix the Slack message. When the job fails I want the line to name the endpoint,
+   the number it hit and the team that owns it, so whoever is on call can forward
+   it in ten seconds and go back to sleep. That is the whole of what I am asking
+   for on this one. I am not asking anybody to rebuild the suite, I know what that
+   costs and we do not have the quarter for it.
 
 2. The reporting export threshold. It is 8 seconds and we are at 31. That endpoint
    is an internal back-office screen, not a customer surface, and the suite has

@@ -1,42 +1,36 @@
 {
-  "context": "Locator work against markup the team cannot edit, which removes the reflex answer before it can be given. Predicted baseline failure: with 'add a test attribute' unavailable, the agent reaches for whatever looks most stable in the current snapshot and picks badly - most often the element ids, which look like durable hooks and are not (pw-card-7c10 became pw-card-b391, pw-exp-4d22 became pw-exp-1f07), or a structural path, which the July wrapper div has already invalidated once. The two snapshots are the whole point and are predicted to go unread as a diff: across them the hashed classes, the ids and the depth all changed, while name, autocomplete, aria-label, the button's type, the alert role and the visible label text did not. Two controls have nothing durable of their own - the CVC input lost its maxlength and keeps only a hashed class and an inputmode it shares with the expiry field, and the save-card checkbox was the only checkbox in June and is one of two now, so `input[type=checkbox]` is a selector that works today and breaks on the next build. Those two have to be reached through a stable neighbour, which is the part a baseline answer is least likely to produce. Separately, the six dead agents are a pinned driver binary from a Chrome version that no longer exists on those machines, and the predicted wrong fixes are to pin a newer binary, to re-pin the browser, or to chase the group policy that is holding the five working agents back."
-  ,
+  "context": "Locator work against markup the team cannot edit, where the attribute that looks most trustworthy is the one that moves. Predicted baseline failure: with 'add a test attribute' removed, the agent reaches for the accessibility-first hook by reflex and locates the card and expiry fields by aria-label - which is exactly what the vendor changed, 'Card number' to 'Card number (required)' in the July build and 'Expiry date' to 'Expiry date (MM/YY)' in the current one. The other predicted picks fail the same way: the element ids change on every build, the class names are hashed and change on every build, the absolute paths were invalidated when a wrapper appeared in July, and the name attributes survived two builds before becoming card-number and cc-expiry in the third, which is the trap for anyone who compares only the newest capture with the oldest code. The one hook present and identical in all three captures is the autocomplete token, and nothing in the task tells the agent to compare the captures at all. Two controls have nothing of their own and are predicted to be treated alike when they are not: the security-code input has no id, no name, no autocomplete, a class that rehashes, a maxlength that exists in one capture and a pattern that exists in another, and its visible label changed from CVC to Security code - so it can only be reached through a neighbour - while the save-card checkbox keeps stable label text and has become one of two identical checkboxes, so a bare checkbox selector matches today's page and breaks on the next build. Separately, the requester states that the browser leak is already handled because an @AfterAll quit was added; it is not, because a browser is built per test and only the last one is released, and the eighteen stranded driver processes over six runs of a five-test suite are three per run, which is exactly what that shape leaks.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "PaymentPage.java is rewritten, the agent failure is addressed in the provided files, and docs/vendor-widget-locators.md exists with a per-control entry. A document that gives general locator advice without naming the six controls on this component scores zero for this item."
+      "description": "PaymentPage.java is rewritten, the leftover-process problem is addressed in the provided files, and docs/vendor-widget-locators.md exists with an entry per control. A document of general locator advice that does not name the controls on this component scores zero for this item."
     },
     {
-      "name": "Durable attributes used where the snapshots show one",
-      "max_score": 26,
-      "description": "Card number, expiry, the pay button and the error element are located by hooks that are identical in both snapshots - the name or autocomplete or aria-label attributes, the submit type, the alert role - rather than by anything that changed. Any hashed class name surviving in PaymentPage.java scores zero for this criterion, as does any absolute or index-based path. Using the element ids scores zero: both ids differ between the two snapshots. A locator that merely happens to match the current snapshot without evidence of stability scores at most half."
+      "name": "MUST NOT anchor on a hook the captures show changing",
+      "max_score": 30,
+      "description": "Card number, expiry, the pay button and the error element must be located by something identical in all three captures - the autocomplete tokens, the submit type, the alert role. Any hashed class name, any element id, any absolute or index-based path surviving in PaymentPage.java scores zero for this criterion regardless of the rest. Locating the card or expiry field by aria-label scores zero: both aria-labels were rewritten by the vendor across the captures supplied. Locating either by its name attribute scores zero: both names changed in the current build. A locator that merely matches the newest capture, with no account of why it is expected to hold, scores at most half."
     },
     {
-      "name": "Hookless controls reached through a stable neighbour",
-      "max_score": 20,
-      "description": "The CVC input and the save-card checkbox are located relative to something durable - the visible label text beside them, via a relationship query or a relative locator anchored on a stable element. Locating either by a hashed class, by sibling index, or by a bare input[type=checkbox] that the second snapshot already shows is ambiguous scores zero. Locating them by an attribute that is present in only one of the two snapshots, such as the CVC field's maxlength, scores at most half."
+      "name": "The two hookless controls handled, and handled differently",
+      "max_score": 22,
+      "description": "The security-code input and the save-card checkbox do not have the same answer and must not be given one. Full marks require the checkbox reached through its label text, which is unchanged in all three captures, and the security-code input reached through a relationship query or relative locator anchored on a control that is durable - the expiry field - because the code input has no attribute of its own and its own label text changed. Locating either by a hashed class, by sibling index, or by a bare checkbox selector that the current capture already shows is ambiguous scores zero. Anchoring the security-code input on its own visible label text scores zero. Using its maxlength or its pattern scores at most half: each appears in only one capture."
     },
     {
-      "name": "MUST NOT keep a hardcoded driver binary path",
-      "max_score": 20,
-      "description": "From the skill's anti-pattern on a hardcoded ChromeDriver path: the pinned webdriver.chrome.driver system property must go, replaced by driver resolution that tracks the installed browser - either the resolver bundled with this version of the library or an explicit driver-manager dependency. Repointing the property at a newer binary, adding a version constant, or pinning the browser version on the agents instead scores zero. Removing the property without saying what now resolves the driver scores at most half."
-    },
-    {
-      "name": "Snapshots read as a diff",
+      "name": "MUST NOT accept that the browser leak is already handled",
       "max_score": 16,
-      "description": "The document states which attributes survived the vendor build and which did not, naming at least the hashed classes, the ids and the added wrapper depth as the things that changed. Asserting a hook is stable with no reference to the two snapshots scores at most half; getting the direction wrong - for example calling the ids stable - scores zero."
+      "description": "From the skill's anti-pattern on skipping the driver quit, whose stated consequence is a leaked browser process and a CI agent running out of room: a browser is constructed for every test and the class-level teardown releases only the last one, so a five-test run strands three - eighteen across the six runs since the agent was cleared. Teardown must release the browser the test used, per test. Agreeing with Ravi that the quit already covers it, or leaving the class-level teardown as the only release, scores zero. Adding a second quit without moving the existing one, so a browser is quit twice or the per-test one is still missed, scores at most half."
     },
     {
-      "name": "Agent split diagnosed, not just patched",
-      "max_score": 10,
-      "description": "The answer connects the six failing agents to the Chrome update and the five passing ones to the group policy pin, and says that the surviving five are passing for a reason that will expire rather than because they are configured correctly. Treating the five as the desired state scores zero."
+      "name": "Document separates what survived from what did not",
+      "max_score": 12,
+      "description": "The document states which things moved between the captures - hashed classes, element ids, the name attributes, at least one aria-label, the added wrapper and the added second checkbox - and which did not. Calling the ids or the aria-labels durable scores zero. Asserting a hook is durable with no reference to the captures scores at most half."
     },
     {
       "name": "MUST NOT make the vendor the dependency that unblocks this",
       "max_score": 8,
-      "description": "Given an eleven-day median response and markup the team does not build, asking the vendor to add test attributes cannot be the remedy. Making it the plan, or delivering a locator strategy that only works once the vendor acts, scores zero. Raising it as a separate longer-term request alongside a strategy that works against today's markup is fine and costs nothing here."
+      "description": "Given an eleven-day median response and markup the team does not build, asking the vendor to add test attributes cannot be the remedy. Making it the plan, or delivering a strategy that only works once the vendor acts, scores zero. Raising it as a separate longer-term request alongside a strategy that works against today's markup costs nothing here."
     },
     {
       "name": "Login test untouched",

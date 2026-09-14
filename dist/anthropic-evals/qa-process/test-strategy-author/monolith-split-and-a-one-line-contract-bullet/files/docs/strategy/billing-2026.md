@@ -25,6 +25,7 @@ Per docs/risk-matrices/2026-Q1-billing.md:
 | Business    | Tax rounding, proration on mid-cycle changes | Unit + property-based    |
 | Technical   | Invoice posting partial writes               | Integration              |
 | Regulatory  | Invoice immutability after posting           | Integration + Finance UAT|
+| Performance | Statement export latency                     | Load                     |
 
 ## 3. Test types per layer
 

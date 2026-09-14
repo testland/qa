@@ -1,4 +1,4 @@
-"""Column roles for the delivery-eta monitoring jobs."""
+"""Column roles for the delivery-eta monitoring job."""
 
 TARGET_COLUMN = "actual_minutes"
 PREDICTION_COLUMN = "predicted_minutes"

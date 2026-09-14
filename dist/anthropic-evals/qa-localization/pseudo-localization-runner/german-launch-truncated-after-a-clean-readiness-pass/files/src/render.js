@@ -2,7 +2,6 @@ const en = require('../locales/en.json');
 const { BUDGETS, overflows } = require('./layout');
 
 function fit(text, budget) {
-  if (budget === undefined) return text;
   return text.length > budget ? text.slice(0, budget - 1) + '…' : text;
 }
 

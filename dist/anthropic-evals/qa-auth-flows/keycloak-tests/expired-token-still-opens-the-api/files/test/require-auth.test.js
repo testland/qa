@@ -32,6 +32,11 @@ function opts(url) {
   return { idpBaseUrl: url, realm: 'corp', clientId: 'orders-api', clientSecret: 'shhh' };
 }
 
+function unsignedToken(payload) {
+  const seg = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
+  return seg({ alg: 'RS256', typ: 'JWT' }) + '.' + seg(payload) + '.' + 'c2lnbmF0dXJl';
+}
+
 test('a bearer token is accepted', async (t) => {
   const idp = await startFakeIdp();
   t.after(() => idp.server.close());
@@ -41,18 +46,13 @@ test('a bearer token is accepted', async (t) => {
   assert.equal(out.body.user, 'ada');
 });
 
-test('an expired token is refused', async (t) => {
-  const idp = await startFakeIdp({
-    active: true,
-    preferred_username: 'ada',
-    aud: 'orders-api',
-    exp: 1757435462,
-  });
+test('a token the server says is not active is refused', async (t) => {
+  const idp = await startFakeIdp({ active: false });
   t.after(() => idp.server.close());
 
   const out = await requireAuth({ authorization: 'Bearer stale-token' }, opts(idp.url));
   assert.equal(out.status, 401);
-  assert.equal(out.body.error, 'token_expired');
+  assert.equal(out.body.error, 'token_inactive');
 });
 
 test('a request with no Authorization header is refused', async (t) => {
@@ -71,4 +71,16 @@ test('a non-Bearer Authorization header is refused', async (t) => {
   const out = await requireAuth({ authorization: 'Basic YWRhOnMzY3JldA==' }, opts(idp.url));
   assert.equal(out.status, 401);
   assert.equal(out.body.error, 'missing_token');
+});
+
+// SSO-2026-03. Nothing about orders should depend on the SSO box being up.
+test('the API keeps serving while the SSO server is unreachable', async () => {
+  const token = unsignedToken({ preferred_username: 'ada', aud: 'orders-api', exp: 4102444800 });
+
+  const out = await requireAuth(
+    { authorization: 'Bearer ' + token },
+    opts('http://127.0.0.1:1'),
+  );
+  assert.equal(out.status, 200);
+  assert.equal(out.body.user, 'ada');
 });

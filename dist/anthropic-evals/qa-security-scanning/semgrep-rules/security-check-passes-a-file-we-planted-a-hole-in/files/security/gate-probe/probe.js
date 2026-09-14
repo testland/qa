@@ -1,5 +1,4 @@
-// Deliberately vulnerable. Pushed on branch `gate-probe` only, never merged to
-// main. Exists so we can prove the blocking check actually blocks.
+// Deliberately vulnerable. Exists so we can prove the blocking check blocks.
 
 const { Client } = require('pg');
 

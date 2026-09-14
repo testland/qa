@@ -3,6 +3,7 @@
 const routes = [
   { name: 'statement', pattern: /^\/account\/statement(?:\/.*)?$/ },
   { name: 'messages', pattern: /^\/account\/messages(?:\/.*)?$/ },
+  { name: 'transfers', pattern: /^\/transfers(?:\/.*)?$/ },
   { name: 'asset', pattern: /^\/assets\/.+$/ },
   { name: 'marketing', pattern: /^\/site\/.*$/ },
 ];

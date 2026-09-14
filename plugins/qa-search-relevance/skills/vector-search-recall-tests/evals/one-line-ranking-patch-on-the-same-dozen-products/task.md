@@ -1,45 +1,48 @@
-# Reviewing a one-line ranking patch that the author says fixes the "same dozen products" complaint
+# Review PR #2291 and tell me whether merch is right that search cannot rank
 
 ## Problem Description
 
-Merchandising raised MER-771 at the start of September: the first page of
-search results is the same dozen products whatever you type. Their numbers are
-in the report - 48 distinct SKUs across their 16 stock queries in August, 19 in
-September, add-to-basket from search down 22%. Nothing shipped on the ranking
-side in that window. What did ship, on 2026-08-28, is the catalogue API feed
-replacing the old nightly one for new and changed SKUs.
+Merchandising raised this on Tuesday and I want it closed before the autumn
+campaign copy is signed off. Their words: "the same half-dozen products are on
+page one whatever we search for." They ran our twelve saved spot-check queries
+against production and got six distinct products in the first slot between
+them, and `Ledger tote`, which is a shopping bag, is the first result for "day
+pack for hiking", "laptop backpack for commuting" and "hydration vest for long
+runs". Their table is in the report.
 
-@jonasb has PR #2291 open against it. It is one line: normalise the query
-vector before handing it to the index. His argument is that the ranker scores
-by inner product, inner product is only a similarity measure on unit-length
-vectors, so normalising the query restores the similarity. He also ran the
-nightly job before and after his change and got 0.975 both times, which he is
-offering as evidence of no regression.
+Dev's answer so far is PR #2291. It multiplies the query vector by a tuned
+constant before the query reaches the index - `QUERY_BOOST`, 1.0 to 1.35 - and
+the author's note says it sharpens the separation between close matches so the
+better one pulls ahead. He ran `npm run recall` before and after, got 0.908
+both times, and wrote that up on the PR as "no regression, safe to ship". I am
+being asked to approve it on that basis.
 
-I am not comfortable approving it and I cannot put my finger on why, so I want
-a second pair of eyes before it goes in. While you are in there: the nightly
-job has printed 0.975 every night right through the period merchandising are
-complaining about, including every night since the new feed went live. Either
-merchandising are wrong or that number is not telling us what we think.
+Merch's fallback, if search cannot do better, is to hand-pin the eight products
+they want on page one and maintain the list themselves. I do not want to run a
+hand-curated front page for a 48-product catalogue, but I am not going to
+overrule them on a feeling either. If our ranking genuinely cannot separate a
+shopping bag from a hydration vest, say so and I will let them pin.
 
-`src/catalogIndex.js` is our model of the vendor's ranker and
-`test/catalogIndex.test.js` pins it. Treat it as the appliance - do not edit
-either file, including to add a different scoring mode.
+`src/vectorIndex.js` and `test/vectorIndex.test.js` are our model of the
+vendor's index, written from their documentation. Treat that pair as the
+appliance and do not edit either - they describe someone else's product, not
+ours. `src/ingest.js`, `src/rank.js` and `src/recall.js` are ours.
+
+Whatever you conclude, the review goes on the PR with my name on it, so the
+numbers in it have to be ones I can defend if the author pushes back.
 
 ## Output Specification
 
-1. Write `docs/pr-2291-review.md`: whether the patch does what its author says,
-   the reason, and what you are doing with it. Cover the 0.975 as well - how a
-   job on that number stayed green through the whole complaint window.
-2. Land a fix so that the first page ranks on how close a product is to the
-   query rather than on how the provider happened to scale its vector. You may
-   edit `src/ingest.js`, `src/recall.js` and `src/search.js`.
-3. Add `test/search-quality.test.js` with a recall@10 check over
-   `data/queries.json` that **fails** on the repository as delivered and passes
-   after your fix, plus a check that would fail if a later feed re-introduced
-   the same problem.
-4. `npm test` must pass at the end with the six tests in
-   `test/catalogIndex.test.js` unchanged.
+1. Write `docs/pr-2291-review.md` - the review to paste on the PR. Cover the
+   patch itself, the before-and-after figures the author attached, and a
+   recommendation on merch's hand-pinning fallback.
+2. If the ranking is wrong, fix it. You may edit `src/ingest.js`,
+   `src/rank.js`, `src/recall.js` and add files; you may not edit
+   `src/vectorIndex.js` or `test/vectorIndex.test.js`.
+3. Add `test/ranking.test.js` pinning the behaviour merchandising is
+   complaining about.
+4. `npm test` must pass when you are done, including the eight tests already
+   in `test/vectorIndex.test.js` and `test/rank.test.js`.
 
 ## Input Files
 
@@ -48,142 +51,143 @@ Extract the following files before beginning.
 =============== FILE: package.json ===============
 
 {
-  "name": "outfitter-catalogue",
-  "version": "9.4.0",
+  "name": "catalogue-search",
+  "version": "7.1.3",
   "private": true,
   "scripts": {
     "test": "node --test",
-    "recall": "node -e \"const d=require('./data/corpus.json'),q=require('./data/queries.json');const{ingest}=require('./src/ingest');const{measureRecall}=require('./src/recall');console.log('recall@10',measureRecall(ingest(d),d,q).toFixed(3))\""
+    "recall": "node -e \"const c=require('./data/catalogue.json'),q=require('./data/queries.json');const{buildIndex}=require('./src/ingest');const{measureRecall}=require('./src/recall');console.log('recall@10',measureRecall(buildIndex(c),c,q).toFixed(3))\"",
+    "page1": "node -e \"const c=require('./data/catalogue.json'),q=require('./data/queries.json');const{buildIndex}=require('./src/ingest');const ix=buildIndex(c);for(const x of q)console.log(x.id,x.text,'->',ix.search(x.vec,{k:3}).join(', '))\""
   }
 }
 
-=============== FILE: data/corpus.json ===============
+=============== FILE: data/catalogue.json ===============
 
 [
-  {"id":"sku-001","title":"Trail 2 running shoe - Slate","feed":"legacy","embedding":[-0.355,0.233,-0.268,0.345,-0.116]},
-  {"id":"sku-002","title":"Trail 3 running shoe - Ember","feed":"legacy","embedding":[-0.54,0.71,-0.211,0.149,-0.346]},
-  {"id":"sku-003","title":"Trail 4 running shoe - Moss","feed":"catalog-api","embedding":[-1.212,1.648,-1.357,0.85,0.091]},
-  {"id":"sku-004","title":"Trail 5 running shoe - Chalk","feed":"catalog-api","embedding":[-0.853,1.693,-1.889,2.929,-1.256]},
-  {"id":"sku-005","title":"Trail 2 running shoe - Ink","feed":"legacy","embedding":[-0.637,0.283,-0.307,0.865,-0.602]},
-  {"id":"sku-006","title":"Trail 3 running shoe - Slate","feed":"catalog-api","embedding":[-1.458,1.463,-0.272,1.58,-0.751]},
-  {"id":"sku-007","title":"Trail 4 running shoe - Ember","feed":"legacy","embedding":[-0.334,0.994,-0.218,0.244,-0.575]},
-  {"id":"sku-008","title":"Trail 5 running shoe - Moss","feed":"legacy","embedding":[-0.087,0.136,-0.323,0.701,0.184]},
-  {"id":"sku-009","title":"Trail 2 running shoe - Chalk","feed":"catalog-api","embedding":[-0.972,1.438,-1.828,0.689,-3.39]},
-  {"id":"sku-010","title":"Trail 3 running shoe - Ink","feed":"catalog-api","embedding":[-1.36,1.534,-0.395,1.622,-1.039]},
-  {"id":"sku-011","title":"Trail 4 running shoe - Slate","feed":"legacy","embedding":[-0.305,0.75,-0.416,0.575,-0.31]},
-  {"id":"sku-012","title":"Trail 5 running shoe - Ember","feed":"legacy","embedding":[-0.185,0.57,-0.089,0.315,-0.103]},
-  {"id":"sku-013","title":"Trail 2 running shoe - Moss","feed":"legacy","embedding":[-0.382,0.734,-0.045,0.493,-0.442]},
-  {"id":"sku-014","title":"Trail 3 running shoe - Chalk","feed":"catalog-api","embedding":[-0.268,3.256,-2.156,1.628,-1.179]},
-  {"id":"sku-015","title":"Trail 4 running shoe - Ink","feed":"legacy","embedding":[-0.679,0.092,-0.357,0.634,0.012]},
-  {"id":"sku-016","title":"Ridge 2 backpack - 28L","feed":"legacy","embedding":[0.222,0.363,-0.544,0.084,-1.18]},
-  {"id":"sku-017","title":"Ridge 3 backpack - 34L","feed":"catalog-api","embedding":[0.559,0.986,-0.394,1.261,-2.395]},
-  {"id":"sku-018","title":"Ridge 4 backpack - 40L","feed":"legacy","embedding":[-0.384,0.964,-0.17,0.263,-0.735]},
-  {"id":"sku-019","title":"Ridge 5 backpack - 48L","feed":"catalog-api","embedding":[0.321,0.542,-0.683,3.173,-3.083]},
-  {"id":"sku-020","title":"Ridge 2 backpack - 55L","feed":"legacy","embedding":[-0.222,0.69,-0.326,0.299,-0.917]},
-  {"id":"sku-021","title":"Ridge 3 backpack - 28L","feed":"legacy","embedding":[0.102,0.624,-0.026,0.045,-0.519]},
-  {"id":"sku-022","title":"Ridge 4 backpack - 34L","feed":"legacy","embedding":[0.145,0.744,-0.441,0.296,-0.747]},
-  {"id":"sku-023","title":"Ridge 5 backpack - 40L","feed":"legacy","embedding":[0.119,0.407,-0.373,0.293,-0.416]},
-  {"id":"sku-024","title":"Ridge 2 backpack - 48L","feed":"catalog-api","embedding":[0.086,1.518,-0.665,0.256,-2.581]},
-  {"id":"sku-025","title":"Ridge 3 backpack - 55L","feed":"legacy","embedding":[-0.251,0.113,0.193,0.528,-0.315]},
-  {"id":"sku-026","title":"Ridge 4 backpack - 28L","feed":"legacy","embedding":[0.149,0.883,-0.268,0.262,-0.452]},
-  {"id":"sku-027","title":"Ridge 5 backpack - 34L","feed":"legacy","embedding":[-0.191,-0.27,0.116,0.351,-0.404]},
-  {"id":"sku-028","title":"Ridge 2 backpack - 40L","feed":"catalog-api","embedding":[0.55,0.304,-2.166,1.949,-1.165]},
-  {"id":"sku-029","title":"Ridge 3 backpack - 48L","feed":"legacy","embedding":[-0.385,0.4,0.269,0.813,-0.929]},
-  {"id":"sku-030","title":"Ridge 4 backpack - 55L","feed":"legacy","embedding":[0.431,0.681,-0.36,0.068,-0.345]},
-  {"id":"sku-031","title":"Fell 2 shell jacket - S","feed":"catalog-api","embedding":[-1.856,1.756,1.242,-1.165,-1.262]},
-  {"id":"sku-032","title":"Fell 3 shell jacket - M","feed":"legacy","embedding":[-0.226,0.759,-0.1,-0.019,-0.392]},
-  {"id":"sku-033","title":"Fell 4 shell jacket - L","feed":"legacy","embedding":[0.433,0.809,0.011,-0.804,-0.315]},
-  {"id":"sku-034","title":"Fell 5 shell jacket - XL","feed":"legacy","embedding":[-0.08,0.598,0.305,-0.011,-0.481]},
-  {"id":"sku-035","title":"Fell 2 shell jacket - XXL","feed":"legacy","embedding":[-0.126,0.73,-0.048,0.172,-0.928]},
-  {"id":"sku-036","title":"Fell 3 shell jacket - S","feed":"legacy","embedding":[-0.475,0.551,-0.087,-0.019,-0.236]},
-  {"id":"sku-037","title":"Fell 4 shell jacket - M","feed":"legacy","embedding":[0.106,0.95,0.103,-0.541,-0.286]},
-  {"id":"sku-038","title":"Fell 5 shell jacket - L","feed":"catalog-api","embedding":[-1.445,1.562,-1.146,0.633,-2.367]},
-  {"id":"sku-039","title":"Fell 2 shell jacket - XL","feed":"catalog-api","embedding":[-1.712,2.346,0.434,0.53,-1.94]},
-  {"id":"sku-040","title":"Fell 3 shell jacket - XXL","feed":"legacy","embedding":[0.063,0.161,0.189,0.45,-0.392]},
-  {"id":"sku-041","title":"Fell 4 shell jacket - S","feed":"legacy","embedding":[-0.211,0.616,0.088,0.048,-0.778]},
-  {"id":"sku-042","title":"Fell 5 shell jacket - M","feed":"legacy","embedding":[0.165,0.639,0.032,-0.197,-1.207]},
-  {"id":"sku-043","title":"Fell 2 shell jacket - L","feed":"legacy","embedding":[0.256,0.669,-0.141,-0.001,-0.624]},
-  {"id":"sku-044","title":"Fell 3 shell jacket - XL","feed":"legacy","embedding":[-0.009,0.676,0.251,0.4,-1.043]},
-  {"id":"sku-045","title":"Fell 4 shell jacket - XXL","feed":"catalog-api","embedding":[-1.019,2.282,0.103,2.381,-1.277]},
-  {"id":"sku-046","title":"Bivvy 2 tent - 1P","feed":"legacy","embedding":[0.441,-0.389,-1.035,0.225,-0.381]},
-  {"id":"sku-047","title":"Bivvy 3 tent - 2P","feed":"legacy","embedding":[0.637,-0.149,-0.418,0.319,-0.032]},
-  {"id":"sku-048","title":"Bivvy 4 tent - 3P","feed":"legacy","embedding":[0.86,0.171,-0.471,0.633,-0.27]},
-  {"id":"sku-049","title":"Bivvy 5 tent - 2P XL","feed":"legacy","embedding":[0.25,-0.438,-0.105,0.562,0.165]},
-  {"id":"sku-050","title":"Bivvy 2 tent - 4P","feed":"catalog-api","embedding":[2.394,-2.193,-1.809,0.76,0.201]},
-  {"id":"sku-051","title":"Bivvy 3 tent - 1P","feed":"legacy","embedding":[0.567,0.275,-0.225,0.264,0.017]},
-  {"id":"sku-052","title":"Bivvy 4 tent - 2P","feed":"catalog-api","embedding":[2.191,-1.776,-1.666,2.003,-0.784]},
-  {"id":"sku-053","title":"Bivvy 5 tent - 3P","feed":"legacy","embedding":[0.48,-0.011,-0.296,0.328,-0.096]},
-  {"id":"sku-054","title":"Bivvy 2 tent - 2P XL","feed":"legacy","embedding":[0.833,-0.298,0.021,0.426,-0.309]},
-  {"id":"sku-055","title":"Bivvy 3 tent - 4P","feed":"legacy","embedding":[1.03,-0.507,-0.795,0.084,0.011]},
-  {"id":"sku-056","title":"Bivvy 4 tent - 1P","feed":"legacy","embedding":[0.616,0.013,-0.264,0.68,-0.173]},
-  {"id":"sku-057","title":"Bivvy 5 tent - 2P","feed":"legacy","embedding":[0.921,-0.229,-0.654,0.399,-0.556]},
-  {"id":"sku-058","title":"Bivvy 2 tent - 3P","feed":"legacy","embedding":[0.479,-0.226,-0.583,0.309,-0.334]},
-  {"id":"sku-059","title":"Bivvy 3 tent - 2P XL","feed":"catalog-api","embedding":[2.598,0.966,-1.98,-1.168,-1.834]},
-  {"id":"sku-060","title":"Bivvy 4 tent - 4P","feed":"legacy","embedding":[0.549,-0.412,-0.201,0.27,-0.372]}
+  {"id":"p-001","title":"Harrier road shoe","category":"running","vec":[0.7153,0.289,-0.4472,-0.0545,-0.0652,0.4445]},
+  {"id":"p-002","title":"Harrier trail shoe","category":"running","vec":[0.2165,0.6114,-0.5022,0.5094,-0.2595,-0.017]},
+  {"id":"p-003","title":"Fellrunner GTX","category":"running","vec":[0.7191,2.2735,-1.5622,1.8769,-0.216,-0.0236]},
+  {"id":"p-004","title":"Tempo racing flat","category":"running","vec":[0.484,0.3962,-0.5238,0.2996,-0.2667,0.4166]},
+  {"id":"p-005","title":"Cinder track spike","category":"running","vec":[0.544,0.7712,-0.0734,-0.157,-0.1773,0.219]},
+  {"id":"p-006","title":"Meridian daily trainer","category":"running","vec":[0.1145,0.0139,-0.1054,0.0192,0.0445,0.2633]},
+  {"id":"p-007","title":"Meridian wide fit","category":"running","vec":[0.7673,0.07,-0.4112,0.3564,-0.2783,-0.1812]},
+  {"id":"p-008","title":"Loop recovery slide","category":"running","vec":[0.8543,0.4141,-0.2398,0.1896,0.0557,-0.0455]},
+  {"id":"p-009","title":"Verge stability shoe","category":"running","vec":[1.2895,0.8241,0.9131,1.1371,-1.8522,3.094]},
+  {"id":"p-010","title":"Verge carbon plate","category":"running","vec":[0.6038,0.6782,-0.0947,0.3986,0.0431,0.0751]},
+  {"id":"p-011","title":"Kestrel lightweight shoe","category":"running","vec":[0.3972,0.8006,0.1074,0.2926,-0.3119,-0.0818]},
+  {"id":"p-012","title":"Kestrel winter shoe","category":"running","vec":[1.6408,1.3783,-0.9935,0.1716,-1.1179,0.3337]},
+  {"id":"p-013","title":"Caldera 28L daypack","category":"packs","vec":[-0.6414,0.4216,0.1901,0.1142,0.4513,0.3975]},
+  {"id":"p-014","title":"Caldera 45L trekking pack","category":"packs","vec":[-0.2765,0.8669,0.3157,-0.0246,-0.1876,-0.1914]},
+  {"id":"p-015","title":"Shuttle commuter pack","category":"packs","vec":[-0.2759,0.105,0.0425,-0.2303,-0.017,-0.0461]},
+  {"id":"p-016","title":"Shuttle laptop sleeve","category":"packs","vec":[-0.0405,0.2204,0.7543,-0.5217,0.0548,0.3251]},
+  {"id":"p-017","title":"Basin hydration vest","category":"packs","vec":[-0.7461,0.3047,0.4451,-0.3469,-0.0551,0.1705]},
+  {"id":"p-018","title":"Basin trail vest","category":"packs","vec":[-1.9242,2.0094,-0.6798,0.8737,-0.2669,0.623]},
+  {"id":"p-019","title":"Pitch 60L expedition pack","category":"packs","vec":[-0.0779,0.1623,0.626,-0.4247,0.6272,0.0443]},
+  {"id":"p-020","title":"Pitch rain cover","category":"packs","vec":[-0.6024,0.5628,0.0204,-0.5248,0.1225,0.1717]},
+  {"id":"p-021","title":"Ledger tote","category":"packs","vec":[-0.7313,2.9586,0.6809,-2.1777,-0.185,2.5931]},
+  {"id":"p-022","title":"Ledger weekender","category":"packs","vec":[-0.686,0.1016,-0.0681,-0.3853,0.0974,0.5971]},
+  {"id":"p-023","title":"Anchor hip pack","category":"packs","vec":[-0.6008,0.4627,0.3643,-0.0066,0.1409,0.5219]},
+  {"id":"p-024","title":"Anchor sling","category":"packs","vec":[-0.1127,0.0247,-0.026,-0.0206,0.2408,0.0231]},
+  {"id":"p-025","title":"Drift shell jacket","category":"jackets","vec":[0.1123,-0.4526,0.4377,0.5075,0.4424,-0.3711]},
+  {"id":"p-026","title":"Drift insulated jacket","category":"jackets","vec":[0.0232,-0.5787,0.0531,0.2684,0.2864,-0.7125]},
+  {"id":"p-027","title":"Bracken fleece","category":"jackets","vec":[0.4427,-1.2547,0.3976,-0.0943,1.4824,-1.1376]},
+  {"id":"p-028","title":"Bracken grid fleece","category":"jackets","vec":[0.4411,-0.3078,-0.1837,-0.2256,0.1785,-0.7708]},
+  {"id":"p-029","title":"Squall rain jacket","category":"jackets","vec":[-0.223,-0.0104,0.424,0.2482,0.5788,-0.6113]},
+  {"id":"p-030","title":"Squall packable shell","category":"jackets","vec":[-1.4886,-0.1393,-0.3478,3.0767,0.5858,-1.63]},
+  {"id":"p-031","title":"Ember down parka","category":"jackets","vec":[0.5078,-0.0457,0.4854,-0.1366,0.5284,-0.4545]},
+  {"id":"p-032","title":"Ember down vest","category":"jackets","vec":[0.178,0.0113,0.4745,0.3513,0.119,-0.7781]},
+  {"id":"p-033","title":"Rampart softshell","category":"jackets","vec":[-0.0319,0.0118,0.2377,-0.0147,0.1482,-0.1891]},
+  {"id":"p-034","title":"Rampart wind jacket","category":"jackets","vec":[0.1942,0.1691,-0.1984,0.2778,-0.0406,-0.9031]},
+  {"id":"p-035","title":"Thicket flannel overshirt","category":"jackets","vec":[0.1168,-0.5266,0.6218,-0.2002,0.3033,-0.4363]},
+  {"id":"p-036","title":"Thicket quilted overshirt","category":"jackets","vec":[-1.5972,0.4095,2.5074,1.5673,1.0454,-2.6086]},
+  {"id":"p-037","title":"Sextant field watch","category":"watches","vec":[0.5868,-0.299,-0.0494,0.5948,-0.0439,0.4562]},
+  {"id":"p-038","title":"Sextant dive watch","category":"watches","vec":[0.54,-0.0965,-0.7947,0.0772,0.1914,-0.1578]},
+  {"id":"p-039","title":"Quill running watch","category":"watches","vec":[1.461,-0.8593,-0.9372,1.0677,1.8831,0.2984]},
+  {"id":"p-040","title":"Quill multisport watch","category":"watches","vec":[0.48,-0.1182,-0.044,0.7207,0.4271,0.2277]},
+  {"id":"p-041","title":"Cadence heart-rate strap","category":"watches","vec":[0.5495,-0.7705,-0.1648,0.0389,0.2514,0.1122]},
+  {"id":"p-042","title":"Cadence cycling computer","category":"watches","vec":[0.1901,-0.3042,-0.0642,0.1246,0.086,0.1113]},
+  {"id":"p-043","title":"Beacon GPS watch","category":"watches","vec":[0.5605,-0.2358,0.001,0.0226,0.4059,0.6819]},
+  {"id":"p-044","title":"Beacon solar GPS watch","category":"watches","vec":[0.3707,-0.2832,-0.104,0.0975,0.5289,0.6945]},
+  {"id":"p-045","title":"Tessera smart band","category":"watches","vec":[1.6114,-1.1814,-0.6485,2.2419,-0.0248,1.8377]},
+  {"id":"p-046","title":"Tessera sleep band","category":"watches","vec":[0.4853,-0.1383,-0.3563,0.642,-0.0478,0.4517]},
+  {"id":"p-047","title":"Plumb altimeter watch","category":"watches","vec":[0.3206,-0.6858,0.0684,0.454,0.3966,0.2426]},
+  {"id":"p-048","title":"Plumb barometer watch","category":"watches","vec":[0.0226,-1.4203,-1.2918,0.6723,1.4261,-0.1675]}
 ]
 
 =============== FILE: data/queries.json ===============
 
 [
-  {"id":"q-1","text":"lightweight trail running shoe","vec":[-0.411,0.341,-0.339,0.429,-0.645]},
-  {"id":"q-2","text":"waterproof running shoe for winter","vec":[-0.122,0.782,-0.076,0.6,-0.09]},
-  {"id":"q-3","text":"wide fit trainers","vec":[-0.587,0.507,0.571,-0.177,-0.201]},
-  {"id":"q-4","text":"40 litre hiking backpack","vec":[0.481,-0.549,-0.128,0.571,0.353]},
-  {"id":"q-5","text":"daypack with a hydration sleeve","vec":[-0.555,0.559,-0.124,0.344,-0.496]},
-  {"id":"q-6","text":"frameless pack for fastpacking","vec":[-0.099,0.335,-0.655,0.214,-0.634]},
-  {"id":"q-7","text":"hardshell jacket for the hills","vec":[0.065,0.714,-0.128,0.058,-0.683]},
-  {"id":"q-8","text":"breathable waterproof jacket","vec":[0.795,-0.156,-0.473,0.341,0.053]},
-  {"id":"q-9","text":"packable windproof layer","vec":[-0.421,0.48,-0.048,0.75,-0.169]},
-  {"id":"q-10","text":"two person tent under two kilos","vec":[-0.242,0.57,-0.405,0.093,-0.666]},
-  {"id":"q-11","text":"freestanding tent for wild camping","vec":[0.201,0.753,0.376,0.267,-0.424]},
-  {"id":"q-12","text":"four season tent","vec":[0.834,0.06,-0.112,0.534,0.055]},
-  {"id":"q-13","text":"shoes for muddy ground","vec":[-0.649,0.276,-0.248,0.353,-0.563]},
-  {"id":"q-14","text":"pack that fits a bear canister","vec":[0.212,0.719,-0.214,-0.15,-0.608]},
-  {"id":"q-15","text":"jacket with pit zips","vec":[-0.659,0.323,0.382,0.47,-0.307]},
-  {"id":"q-16","text":"tent with a big porch","vec":[0.011,-0.305,-0.66,0.53,-0.436]}
+  {"id":"q-1","text":"waterproof running shoe for wet trails","vec":[0.4513,0.3863,-0.3152,0.5052,-0.4502,0.2998]},
+  {"id":"q-2","text":"lightweight racing shoe","vec":[0.5927,0.2367,-0.29,-0.0843,-0.1448,0.6932]},
+  {"id":"q-3","text":"cushioned trainer for daily miles","vec":[0.5113,0.4771,-0.2266,0.5688,-0.3293,-0.1665]},
+  {"id":"q-4","text":"day pack for hiking","vec":[-0.0401,0.4708,0.6016,-0.567,-0.0255,0.3044]},
+  {"id":"q-5","text":"laptop backpack for commuting","vec":[-0.6713,0.4508,0.0818,-0.3866,0.4253,0.0959]},
+  {"id":"q-6","text":"hydration vest for long runs","vec":[-0.1495,-0.0128,0.3543,-0.3459,0.8282,0.2154]},
+  {"id":"q-7","text":"packable rain jacket","vec":[0.2569,0.027,0.7584,-0.1638,-0.1504,-0.5556]},
+  {"id":"q-8","text":"warm down jacket for winter","vec":[0.028,0.2269,-0.2586,0.1777,0.494,-0.778]},
+  {"id":"q-9","text":"fleece midlayer","vec":[-0.0977,-0.0183,0.0372,0.4786,0.4255,-0.7607]},
+  {"id":"q-10","text":"gps watch for running","vec":[-0.1194,-0.7104,-0.1541,0.6196,0.0977,0.253]},
+  {"id":"q-11","text":"dive watch with a rotating bezel","vec":[-0.0476,-0.3292,-0.6646,0.12,0.5814,0.3085]},
+  {"id":"q-12","text":"sleep tracking band","vec":[0.5425,-0.7253,-0.3583,0.1687,-0.1471,0.0333]}
 ]
 
-=============== FILE: src/catalogIndex.js ===============
+=============== FILE: src/vectorIndex.js ===============
 
 'use strict';
 
-// Model of the vendor's catalogue index, written from their docs. Points are
-// assigned to the cell whose centroid scores highest; a query scans the nProbe
-// best cells. Scores are inner products of the query with the stored vector.
+// Model of the vendor's index, written from their documentation. Cell
+// assignment is by direction only. The scoring metric is fixed when the index
+// is created: 'ip' is a plain inner product, 'cosine' divides by both
+// magnitudes. A query scans the nProbe cells whose centroids are nearest it.
 
-function innerProduct(a, b) {
+function dot(a, b) {
   let s = 0;
   for (let i = 0; i < a.length; i++) s += a[i] * b[i];
   return s;
 }
 
-function createIndex({ centroids, nProbe = 2 }) {
+function norm(v) {
+  return Math.sqrt(dot(v, v));
+}
+
+const METRICS = {
+  ip: (a, b) => dot(a, b),
+  cosine: (a, b) => {
+    const d = norm(a) * norm(b);
+    return d === 0 ? 0 : dot(a, b) / d;
+  },
+};
+
+function createIndex({ centroids, metric = 'ip', nProbe = 2 }) {
+  if (!METRICS[metric]) throw new Error(`unknown metric ${metric}`);
+  const score = METRICS[metric];
   const cells = centroids.map(() => []);
   let comparisons = 0;
 
   const cellOrder = (v) =>
     centroids
-      .map((c, i) => [i, innerProduct(v, c)])
+      .map((c, i) => [i, METRICS.cosine(v, c)])
       .sort((a, b) => b[1] - a[1] || a[0] - b[0])
       .map(([i]) => i);
 
   return {
+    metric: () => metric,
     size: () => cells.reduce((n, c) => n + c.length, 0),
     comparisons: () => comparisons,
     resetCounters: () => { comparisons = 0; },
-    vectorOf: (id) => (cells.flat().find((p) => p.id === id) || {}).vec,
 
-    upsert(id, vec) {
+    add(id, vec) {
+      if (vec.length !== centroids[0].length) throw new Error(`dimension mismatch for ${id}`);
       cells[cellOrder(vec)[0]].push({ id, vec });
       return true;
     },
 
-    query(queryVec, { k = 10, nProbe: probe = nProbe } = {}) {
+    search(queryVec, { k = 10, nProbe: probe = nProbe } = {}) {
       const scored = [];
       for (const ci of cellOrder(queryVec).slice(0, probe)) {
         for (const point of cells[ci]) {
           comparisons += 1;
-          scored.push([point.id, innerProduct(queryVec, point.vec)]);
+          scored.push([point.id, score(queryVec, point.vec)]);
         }
       }
       scored.sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
@@ -192,66 +196,66 @@ function createIndex({ centroids, nProbe = 2 }) {
   };
 }
 
-module.exports = { createIndex, innerProduct };
+module.exports = { createIndex, METRICS, dot, norm };
 
 =============== FILE: src/ingest.js ===============
 
 'use strict';
 
-const { createIndex } = require('./catalogIndex');
+const { createIndex } = require('./vectorIndex');
 
-// Fitted 2026-04 over the catalogue.
+// Fitted over the catalogue on 2026-04-02; cell assignment is direction-only
+// so a re-fit has not been needed since.
 const CENTROIDS = [
-  [-0.411, 0.487, -0.323, 0.599, -0.362],
-  [-0.032, 0.444, -0.284, 0.423, -0.736],
-  [-0.202, 0.689, 0.091, 0.041, -0.689],
-  [0.667, -0.256, -0.406, 0.537, -0.191],
+  [0.0746,-0.2343,0.3709,0.2315,0.4131,-0.7601],
+  [0.5362,-0.4261,-0.2792,0.4032,0.3464,0.4128],
+  [0.6209,0.5875,-0.3037,0.2952,-0.2376,0.1833],
+  [-0.6212,0.5288,0.2872,-0.3317,0.2187,0.3068]
 ];
 
-function normalize(vec) {
-  const n = Math.sqrt(vec.reduce((s, x) => s + x * x, 0));
-  return n === 0 ? vec : vec.map((x) => x / n);
-}
+const METRIC = 'ip';
 
-function fromLegacyFeed(doc) {
-  return { id: doc.id, vec: normalize(doc.embedding) };
-}
-
-// 2026-08-28: catalogue API replaced the nightly feed for new and changed SKUs.
-function fromCatalogApi(doc) {
-  return { id: doc.id, vec: doc.embedding };
-}
-
-function toPoints(docs) {
-  return docs.map((doc) => (doc.feed === 'catalog-api' ? fromCatalogApi(doc) : fromLegacyFeed(doc)));
-}
-
-function ingest(docs, { nProbe = 3 } = {}) {
-  const index = createIndex({ centroids: CENTROIDS, nProbe });
-  for (const point of toPoints(docs)) index.upsert(point.id, point.vec);
+function buildIndex(catalogue, { nProbe = 2 } = {}) {
+  const index = createIndex({ centroids: CENTROIDS, metric: METRIC, nProbe });
+  for (const product of catalogue) {
+    index.add(product.id, product.vec);
+  }
   return index;
 }
 
-module.exports = { ingest, toPoints, normalize, CENTROIDS };
+module.exports = { buildIndex, CENTROIDS, METRIC };
+
+=============== FILE: src/rank.js ===============
+
+'use strict';
+
+// Applied to the query vector before it reaches the index. #2291 proposes
+// raising QUERY_BOOST from 1.0 to 1.35.
+const QUERY_BOOST = 1.0;
+
+function prepareQuery(vec) {
+  return vec.map((x) => x * QUERY_BOOST);
+}
+
+module.exports = { prepareQuery, QUERY_BOOST };
 
 =============== FILE: src/recall.js ===============
 
 'use strict';
 
-const { innerProduct } = require('./catalogIndex');
-const { toPoints } = require('./ingest');
+const { dot } = require('./vectorIndex');
 
 const K = 10;
 
-// Exhaustive scan of the catalogue, scored the way the index scores.
-function groundTruth(docs, queries, k = K) {
-  const points = toPoints(docs);
+// Reference answer for a query: every product in the catalogue, scored the way
+// the index scores, best first. No cells skipped, nothing approximated.
+function referenceTopK(catalogue, queries, k = K) {
   return queries.map((q) =>
-    points
-      .map((p) => [p.id, innerProduct(q.vec, p.vec)])
+    catalogue
+      .map((p) => [p.id, dot(q.vec, p.vec)])
       .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))
       .slice(0, k)
-      .map(([id]) => id),
+      .map(([id]) => id)
   );
 }
 
@@ -264,126 +268,131 @@ function recallAtK(retrieved, truth) {
   return total / truth.length;
 }
 
-function measureRecall(index, docs, queries, k = K) {
-  const truth = groundTruth(docs, queries, k);
-  const retrieved = queries.map((q) => index.query(q.vec, { k }));
+function measureRecall(index, catalogue, queries, k = K) {
+  const truth = referenceTopK(catalogue, queries, k);
+  const retrieved = queries.map((q) => index.search(q.vec, { k }));
   return recallAtK(retrieved, truth);
 }
 
-module.exports = { groundTruth, recallAtK, measureRecall, K };
+module.exports = { referenceTopK, recallAtK, measureRecall, K };
 
-=============== FILE: src/search.js ===============
-
-'use strict';
-
-const { ingest } = require('./ingest');
-
-function buildCatalogue(docs) {
-  return ingest(docs);
-}
-
-function searchCatalogue(index, queryVec, k = 10) {
-  return index.query(queryVec, { k });
-}
-
-module.exports = { buildCatalogue, searchCatalogue };
-
-=============== FILE: test/catalogIndex.test.js ===============
+=============== FILE: test/vectorIndex.test.js ===============
 
 'use strict';
 
 const test = require('node:test');
 const assert = require('node:assert');
-const { createIndex, innerProduct } = require('../src/catalogIndex');
+const { createIndex } = require('../src/vectorIndex');
 
 const CENTROIDS = [
-  [1, 0, 0],
-  [0, 1, 0],
-  [0, 0, 1],
+  [1, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 1, 0],
+  [0, 0, 0, 1],
 ];
 
-const build = (nProbe) => {
-  const index = createIndex({ centroids: CENTROIDS, nProbe });
-  index.upsert('a1', [0.9, 0.44, 0]);
-  index.upsert('a2', [0.97, 0.24, 0]);
-  index.upsert('b1', [0.24, 0.97, 0]);
-  index.upsert('c1', [0, 0, 1]);
+const build = (metric, nProbe = 4) => {
+  const index = createIndex({ centroids: CENTROIDS, metric, nProbe });
+  index.add('a1', [0.99, 0.14, 0, 0]);
+  index.add('a2', [0.97, 0.24, 0, 0]);
+  index.add('b1', [0.14, 0.99, 0, 0]);
+  index.add('c1', [0, 0, 1, 0]);
   return index;
 };
 
-test('every upserted point is stored', () => {
-  assert.equal(build(3).size(), 4);
+test('every added point is stored exactly once', () => {
+  assert.equal(build('ip').size(), 4);
 });
 
-test('a query is answered from the best-scoring cell first', () => {
-  assert.deepEqual(build(1).query([1, 0, 0], { k: 2 }), ['a2', 'a1']);
+test('a query is answered from the cells nearest its direction', () => {
+  assert.deepEqual(build('ip', 1).search([1, 0, 0, 0], { k: 3 }), ['a1', 'a2']);
 });
 
-test('points outside the probed cells are not returned', () => {
-  assert.deepEqual(build(1).query([0, 0, 1], { k: 4 }), ['c1']);
+test('points outside the probed cells are never returned', () => {
+  assert.deepEqual(build('ip', 1).search([0, 0, 1, 0], { k: 4 }), ['c1']);
 });
 
-test('score grows with the length of the stored vector', () => {
-  const index = createIndex({ centroids: CENTROIDS, nProbe: 3 });
-  index.upsert('near', [0.99, 0.14, 0]);
-  index.upsert('far-but-long', [1.8, 1.2, 0]);
-  assert.deepEqual(index.query([1, 0, 0], { k: 1 }), ['far-but-long']);
-});
-
-test('comparisons count the points actually scored', () => {
-  const index = build(1);
+test('comparisons count only the points actually scored', () => {
+  const index = build('ip', 1);
   index.resetCounters();
-  index.query([1, 0, 0], { k: 10 });
+  index.search([1, 0, 0, 0], { k: 10 });
   assert.equal(index.comparisons(), 2);
 });
 
-test('innerProduct is the plain dot product', () => {
-  assert.equal(innerProduct([1, 2, 3], [4, 5, 6]), 32);
+test('an unknown metric is rejected at creation', () => {
+  assert.throws(() => createIndex({ centroids: CENTROIDS, metric: 'l2' }), /unknown metric/);
 });
 
-=============== FILE: reports/pr-2291.md ===============
+test('a dimension mismatch is an error, not a silent drop', () => {
+  const index = createIndex({ centroids: CENTROIDS });
+  assert.throws(() => index.add('bad', [1, 0, 0]), /dimension mismatch/);
+});
 
-# PR #2291 - normalise the query vector before searching
+=============== FILE: test/rank.test.js ===============
 
-Author: @jonasb. Open since 2026-09-10. One approval, mine withheld.
+'use strict';
 
-> The catalogue ranker scores by inner product, and inner product only behaves
-> like a similarity when the vectors are unit length. Normalising the query
-> restores that, which is what merchandising are complaining about. I ran
-> `npm run recall` before and after: 0.975 both times, so no regression.
+const test = require('node:test');
+const assert = require('node:assert');
+const { prepareQuery } = require('../src/rank');
 
-```diff
---- a/src/search.js
-+++ b/src/search.js
-@@
- const { ingest } = require('./ingest');
-+const { normalize } = require('./ingest');
+test('prepareQuery returns a vector of the same width', () => {
+  assert.equal(prepareQuery([1, 2, 3, 4, 5, 6]).length, 6);
+});
 
- function buildCatalogue(docs) {
-   return ingest(docs);
- }
+test('prepareQuery does not mutate its argument', () => {
+  const v = [1, 2, 3, 4, 5, 6];
+  prepareQuery(v);
+  assert.deepEqual(v, [1, 2, 3, 4, 5, 6]);
+});
 
- function searchCatalogue(index, queryVec, k = 10) {
--  return index.query(queryVec, { k });
-+  return index.query(normalize(queryVec), { k });
- }
-```
+=============== FILE: reports/ranking-complaint.md ===============
 
-## Merchandising ticket MER-771, raised 2026-09-02
+# Merchandising spot check - 2026-09-11
 
-Since the start of September the first page of search results is "the same
-dozen products no matter what you type". Their sample, 16 stock queries against
-the live catalogue:
+Twelve saved queries, run against production this morning. "First result" is
+what the customer sees at the top of page one.
 
-| Query set                        | Distinct SKUs in the first page, across 16 queries |
-|----------------------------------|----------------------------------------------------|
-| 2026-08-20 (before the API feed) | 48                                                 |
-| 2026-09-02                       | 19                                                 |
+| Query                                    | First result                |
+|------------------------------------------|-----------------------------|
+| waterproof running shoe for wet trails   | Verge stability shoe        |
+| lightweight racing shoe                  | Verge stability shoe        |
+| cushioned trainer for daily miles        | Fellrunner GTX              |
+| day pack for hiking                      | Ledger tote                 |
+| laptop backpack for commuting            | Ledger tote                 |
+| hydration vest for long runs             | Ledger tote                 |
+| packable rain jacket                     | Thicket quilted overshirt   |
+| warm down jacket for winter              | Thicket quilted overshirt   |
+| fleece midlayer                          | Thicket quilted overshirt   |
+| gps watch for running                    | Tessera smart band          |
+| dive watch with a rotating bezel         | Plumb barometer watch       |
+| sleep tracking band                      | Tessera smart band          |
 
-Add-to-basket from search is down 22% over the same window. Nothing shipped on
-the ranking side in that period. The catalogue API feed went live 2026-08-28.
+Merch's note: "six products between twelve queries. Some of these are not
+even the right sort of thing - Ledger tote is a shopping bag and it wins
+'hydration vest for long runs'. We have 48 products and customers see about
+six of them."
 
-## Nightly retrieval job
+## What changed in that window
 
-`npm run recall` has printed 0.975 every night since 2026-08-28, against a
-0.95 gate. It printed 0.975 through August too.
+- 2026-08-28 - the catalogue API replaced the nightly feed as the source for
+  part of the catalogue. Product copy, ids and categories are unchanged; the
+  ingest path, the index config and the query path were all untouched.
+- 2026-09-02 - centroid re-fit considered and skipped; cell assignment is
+  direction-only so it was judged unnecessary.
+
+## PR #2291 - "sharpen query separation"
+
+    -const QUERY_BOOST = 1.0;
+    +const QUERY_BOOST = 1.35;
+
+Author's note on the PR:
+
+> Tuned on the twelve spot-check queries. It sharpens the separation between
+> close matches so the best one pulls ahead. Ran `npm run recall` before and
+> after: 0.908 both times, so no regression. Safe to ship.
+
+## Merch's alternative
+
+> If search cannot do this, pin the eight products we actually want on page one
+> and we will maintain the list by hand.

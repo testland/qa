@@ -9,4 +9,4 @@
 | W-3 | Hold released before the merchant capture arrives         | Technical  |   4    |     2      |   8   | Nina Braga  |
 | W-4 | Statement rounding disagrees with the provider's figures  | Regulatory |   4    |     2      |   8   | Rafa Ibanez |
 
-No row covers replayed or duplicated provider callbacks.
+Last reviewed 2026-07-02. Next scheduled review 2026-10-02.

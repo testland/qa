@@ -1,10 +1,11 @@
 {
   "repo": "harbor",
   "measured": "2026-03-31",
+  "tool": "tools/mix.js",
   "layers": {
-    "unit": { "cases": 840, "files": 219, "stage_seconds": 190 },
-    "integration": { "cases": 98, "files": 34, "stage_seconds": 108 },
-    "e2e": { "cases": 485, "files": 96, "stage_seconds": 2460 }
+    "unit": { "cases": 246, "files": 74 },
+    "integration": { "cases": 12, "files": 4 },
+    "e2e": { "cases": 143, "files": 38 }
   },
-  "total_cases": 1423
+  "total_cases": 401
 }

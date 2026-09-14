@@ -1,0 +1,10 @@
+POST /hooks/parcelo HTTP/1.1
+host: capture.internal.example
+content-type: application/x-www-form-urlencoded; charset=utf-8
+content-length: 173
+parcelo-delivery-id: dlv_1a77de40c9
+parcelo-timestamp: 1789135367
+parcelo-signature: v1,GLx8h2CjNCnOczUFZShawon68H3GlOU04Os/Fh9fQz8=
+user-agent: Parcelo-Webhooks/4.2
+
+ShipmentId=shp_9f2c41&TrackingNumber=PRC0049182233GB&Status=out_for_delivery&StatusDetail=On%20vehicle%20for%20delivery&EventTime=2026-09-11T14%3A02%3A44Z&CarrierRef=BR-9921

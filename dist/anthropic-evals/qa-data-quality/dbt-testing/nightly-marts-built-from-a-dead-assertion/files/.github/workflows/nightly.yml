@@ -24,6 +24,7 @@ jobs:
         run: dbt deps
 
       - name: dbt build
+        continue-on-error: true
         run: dbt build
 
       - name: upload artifacts

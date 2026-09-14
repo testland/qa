@@ -8,7 +8,6 @@ function trialBannerKey(tenantId) {
   return `trial-banner:${tenantId}`;
 }
 
-// The trial end date does not move, so this is held for a week.
 function loadTrialBanner(cache, session, now) {
   const key = trialBannerKey(session.tenantId);
   const hit = cache.get(key);

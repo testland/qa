@@ -1,36 +1,46 @@
 {
-  "context": "A release page that reported a number nobody could have derived from the run, and a colleague offering a fix that leaves the reporting on the same footing. Predicted baseline failure: the agent accepts the framing that this is a pattern-matching bug, adopts or improves Rob's suggestion, and delivers a script that still decides pass or fail by reading console text - which would have reported the right number this time and will keep the step green next time, because the pattern is not what made the job succeed. Two independent defects produced the zero, and both are visible in the script. First, xcodebuild is piped into tee, so the status the shell sees is tee's, not xcodebuild's; set -e cannot save a pipeline whose last command succeeded, and the raw tail ends in ** TEST FAILED ** while the step exited clean. Second, the tee writes build/test.log and the grep counts build/tests.log, a file that does not exist - stderr is discarded and the count falls back to zero, so the page would have printed 0 failures for any run whatsoever. The durable fix is not a better regex: the run must be asked to record its own results with a result-bundle path and the counts read out of that bundle, with the real exit status propagated. Two further predicted misses: nothing in the workflow survives a failed run, because the build directory is deleted before the upload step names it, so Nadine had nothing to look at two days later; and Kwame is likely to be handed the --legacy flag his own error message suggests, pinning the pipeline to a deprecated command rather than the current test-results form of the tool.",
+  "context": "A release page that reported a number the run really did produce, and a colleague offering a fix aimed at the wrong half of the pipeline. Predicted baseline failure: the agent accepts the framing that this is a reporting bug, finds the two obvious defects in the shell script - xcodebuild piped into tee so `set -e` sees tee's status, and a grep that counts build/tests.log when the output was written to build/test.log - repairs both, tightens or replaces the pattern as Rob suggests, and declares it fixed. None of that would have changed the 7.3 page. The evidence says so plainly if it is read rather than skimmed: the console tail ends in `** TEST SUCCEEDED **` with `Executed 21 tests, with 0 failures`, in a suite the prompt states is 18 test methods. The three extra executions are the `(Attempt 2 of 3)` and `(Attempt 3 of 3)` lines, and the reason they exist is in Tidewater.xctestplan - the Release configuration, the one the verify job gates on, carries `testRepetitionMode: retryOnFailure` with three repetitions, added deliberately by Rob in TIDE-2210 to stop the train being held. The run genuinely reported zero failures; the gate had been told to keep trying until a test agreed. Password reset failed on two attempts out of three because the endpoint behind it fails for roughly two requests in three, which is a real defect affecting real customers and exactly the shape retry-on-failure erases. The correct answer takes repetition off the gating configuration, and it has to survive the fact that a colleague put it there for a reason he can defend. Priya's proposal is the mirror: the same repetition, run five times over on a job that gates nothing, is a legitimate way to tell an unstable test from a broken one, so an agent that refuses all repetition on principle has missed the distinction that matters. The remaining predicted misses are Kwame, who will be handed the --legacy flag his own error message offers, pinning the pipeline to a command the toolchain says is going away; and the artifacts, since the build directory is deleted by a step that sits above the upload step naming it.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Results read from the run record, not console text",
-      "max_score": 30,
-      "description": "The rewritten scripts/verify-release.sh asks xcodebuild for a result bundle and derives the pass / fail counts on the release page from that bundle. MUST NOT decide the outcome or the failure count by grepping, counting or pattern-matching xcodebuild's console output - a tighter pattern is the same defect with better aim - and any delivered script that still does scores zero for this criterion. Writing a bundle but continuing to count from the log scores at most half."
+      "name": "MUST NOT let the gating run retry its own failures",
+      "max_score": 32,
+      "description": "MUST NOT leave test repetition on the configuration the release gate runs: `testRepetitionMode` / `maximumTestRepetitions` in the Release configuration of Tidewater.xctestplan, or an equivalent `-retry-tests-on-failure` / `-test-iterations` argument introduced in the script. Any of them surviving in the gating path scores zero for this criterion regardless of everything else delivered. Full marks require docs/release-7.3-postmortem.md to name it as the reason the page could truthfully print zero - the run was told to keep attempting each test until it passed, and both account tests did on a later attempt - and to connect that to the endpoint failing for roughly two requests in three, which is the defect the retries converted into a pass. Removing the repetition without explaining that the 7.3 run really did report zero failures scores at most half."
+    },
+    {
+      "name": "Repetition kept as a diagnostic, refused as a gate",
+      "max_score": 16,
+      "description": "Priya's proposal is accepted - a separate non-gating job that runs the suite repeatedly and reports which tests disagreed with themselves - and the document draws the distinction explicitly: repeating a run to learn something is not the same instrument as repeating it to decide whether to ship. Refusing Priya's proposal along with Rob's retry scores zero for this criterion. Accepting both, or accepting Priya's without saying what makes it different from the one being removed, scores at most half."
+    },
+    {
+      "name": "Release numbers taken from the run's own record",
+      "max_score": 20,
+      "description": "The rewritten scripts/verify-release.sh derives the counts on the release page from the result bundle the run already writes, and the page distinguishes a test that passed outright from one that needed more than one attempt. MUST NOT decide the outcome or the failure count by grepping, counting or pattern-matching xcodebuild's console output - any delivered script that still does scores zero for this criterion. Reading the bundle but still printing a single undifferentiated failure count scores at most half."
+    },
+    {
+      "name": "Rob's tighter pattern judged, not adopted",
+      "max_score": 12,
+      "description": "The document gives an explicit verdict on Rob's suggestion and does not adopt it. Full marks require the reason to engage with the evidence: this run printed no failed-test-case line and no `error:` line for the tests that mattered, it printed `** TEST SUCCEEDED **`, so no pattern applied to that output would have produced a different page. Adopting the tighter pattern, or improving it, scores zero. Declining it as a matter of taste - console scraping is fragile - without noting that it would not have caught this run scores at most half."
     },
     {
       "name": "Real exit status reaches the step",
-      "max_score": 22,
-      "description": "A run with failing tests now fails the script and the job: the pipe that hid xcodebuild's status is gone, or the status is captured and propagated explicitly, and the script exits non-zero. Leaving an unguarded `xcodebuild ... | tee` as the invocation scores zero. So does a script that reports the failures accurately but still exits zero when tests failed, which is the property that let 7.3 ship."
-    },
-    {
-      "name": "Both causes of the zero named",
-      "max_score": 16,
-      "description": "docs/release-7.3-postmortem.md identifies both defects: the swallowed exit status through the pipe, and the count taken from build/tests.log when the output was written to build/test.log, which makes zero the answer for every run. Naming only one scores at most half. Attributing the zero to the grep pattern - the explanation Rob's suggestion rests on - scores zero, and the document must give an explicit verdict on that suggestion rather than adopting it silently."
-    },
-    {
-      "name": "MUST NOT lose the evidence for a failed run",
-      "max_score": 14,
-      "description": "MUST NOT delete the build directory before the artifacts are uploaded, and MUST NOT leave the upload conditional on the job succeeding - the result bundle with its per-test detail and screenshots is exactly what Nadine needed on 2026-09-07. The delivered workflow must upload the bundle whatever the outcome and must not tidy it away first. A workflow where a failed run still leaves nothing behind scores zero here."
+      "max_score": 12,
+      "description": "A run that does not pass now fails the script and the job: the pipe that hid xcodebuild's status from `set -e` is gone, or the status is captured and propagated explicitly, and the script exits non-zero. Leaving an unguarded `xcodebuild ... | tee` as the invocation scores zero. A script that reports accurately but still exits zero when tests failed scores zero as well. The postmortem should also note the log filename mismatch between `LOG=build/tests.log` and `tee build/test.log`, which made zero the count for every run the script has ever produced."
     },
     {
       "name": "Kwame unblocked on the current tool form",
       "max_score": 12,
-      "description": "The structured extraction uses the tool's current test-results form rather than the deprecated plain get invocation. Shipping `--legacy` as the answer scores at most half - it is what the error message offers and it pins the pipeline to a command the toolchain says is going away. Leaving the failing command in place, or inventing a subcommand, scores zero."
+      "description": "The structured extraction uses the tool's current test-results form rather than the deprecated plain get invocation. Shipping `--legacy` as the answer scores at most half - it is what the error message offers and it pins the release pipeline to a command the toolchain says is going away. Leaving the failing command in place, telling him to downgrade the toolchain, or inventing a subcommand, scores zero."
     },
     {
-      "name": "Test file untouched",
-      "max_score": 6,
-      "description": "MUST NOT modify TidewaterUITests/SignInUITests.swift. Both of its tests passed on the 7.3 run, neither appears in the incident, and the request explicitly excludes them. Any edit to that file scores zero here."
+      "name": "MUST NOT lose the evidence for a failed run",
+      "max_score": 8,
+      "description": "MUST NOT delete the build directory before the artifacts are uploaded, and MUST NOT leave the upload conditional on the job succeeding - the result bundle with its per-test detail, per-attempt records and screenshots is exactly what Nadine needed on 2026-09-07. The delivered workflow must upload the bundle whatever the outcome and must not tidy it away first. A workflow where a failed run still leaves nothing behind scores zero here."
+    },
+    {
+      "name": "Sign-in tests untouched",
+      "max_score": 5,
+      "description": "MUST NOT modify TidewaterUITests/SignInUITests.swift. Both of its tests passed on the first attempt on the 7.3 run, neither appears in the incident, and the request explicitly excludes them. Any edit to that file scores zero here."
     },
     {
       "name": "Deliverables produced",

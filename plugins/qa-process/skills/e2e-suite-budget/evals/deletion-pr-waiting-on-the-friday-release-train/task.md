@@ -7,11 +7,10 @@ clock across three shards. The VP asked for it under 30 back in August and she
 asks about it every week now.
 
 Priya ran the per-test scoring last week, took the ten worst-scoring tests and
-opened PR #884, which deletes all ten. She has done the arithmetic: 23.8 minutes
-of serial time, roughly eight minutes off the wall clock, in one PR. The scores
-came out of the same CI export we have published all quarter and nobody has
-argued with them. She is out from Thursday and the train cuts Friday afternoon,
-so this merges tomorrow or it waits two weeks.
+opened PR #884, which deletes all ten. She has done the arithmetic and it is in
+her description. The scores came out of the same CI export we have published all
+quarter and nobody has argued with them. She is out from Thursday and the train
+cuts Friday afternoon, so this merges tomorrow or it waits two weeks.
 
 She has asked me to sign it off. The one thing nobody has done is work out what
 the deletions do to route coverage, and I would rather that was on paper before
@@ -21,16 +20,16 @@ whether I can approve it as it stands.
 In the bundle: her PR description with her reasoning, the ten rows from last
 week's ranking, a machine-readable copy of the deletion list, the route map
 extract covering every route any of the ten touches along with every test that
-covers those routes, the quarantine register we keep for the blocking job, and
-a 90-day edge traffic summary for those routes that product pulled last week
-for the navigation rework - it is the only usage data we have.
+covers those routes, the quarantine register we keep for the blocking job, and a
+90-day edge traffic summary for those routes that product pulled last week for
+the navigation rework - it is the only usage data we have.
 
 ## Output Specification
 
 1. `scripts/coverage-after.js` - reads `data/coverage-map.json` and
    `data/pr-884-deletions.json` and writes `reports/coverage-after-884.json`,
    recording for each route any of the ten tests touches what would still be
-   covering it in the job that gates the train once this PR merged.
+   covering it once this PR merged.
 2. `test/coverage-after.test.js` - tests for that, running under `npm test`
    alongside the test already in the repo. `npm test` must pass when you are
    done.
@@ -100,14 +99,15 @@ Branch: `priya/e2e-cut-q3`  -  Files changed: 8  -  -412 lines
 
 ## Why
 
-We have published a per-test score every week this quarter and nobody has
-argued with it. The suite median is 1.9. These ten are all under 0.30, which is
-the bottom tenth of the suite. I took the bottom tenth as the delete list - it
-is the same list we have been staring at for three weeks without acting on it.
+We have published a per-test score every week this quarter and nobody has argued
+with it. The suite median is 1.9. These ten are all under 0.30, which is the
+bottom tenth of the suite. I took the bottom tenth as the delete list - it is the
+same list we have been staring at for three weeks without acting on it.
 
-I cross-checked against the traffic pull product sent round on Monday. Three of
-the routes on my list are under the line product treats as effectively unused,
-which to me is the end of the argument for keeping a browser test on them.
+I cross-checked against the traffic pull product sent round on Monday. Product
+does not build for a route under 100 requests in a 90-day window; three of the
+routes on my list are under that, which to me is the end of the argument for
+keeping a browser test on them.
 
 23.8 minutes of serial runtime, about 8 minutes of wall clock on three shards.
 That is a third of the way to the VP's number in one PR.
@@ -167,17 +167,19 @@ and the cut-off falls inside the tie.
 =============== FILE: reports/quarantine-register.md ===============
 # Quarantine register - week 36
 
-Tests on this list are excluded from the blocking end-to-end job. They still
-run on the nightly non-blocking lane, but a failure there does not stop a merge
-and does not stop a release train.
+Tests on this list are excluded from the blocking end-to-end job. They still run
+on the nightly non-blocking lane, but a failure there does not stop a merge and
+does not stop a release train.
 
 | Test                                        | Out since  | Review by  | Ticket |
 |---------------------------------------------|------------|------------|--------|
 | `search.spec.ts > facet-filters`             | 2026-07-29 | 2026-10-31 | #4102  |
 | `reports.spec.ts > export-csv-small`         | 2026-08-14 | 2026-11-15 | #4166  |
 | `onboarding.spec.ts > sample-data-import`    | 2026-08-27 | 2026-11-28 | #4189  |
+| `search.spec.ts > empty-state-copy`          | 2026-08-31 | 2026-11-30 | #4201  |
+| `promo.spec.ts > referral-invite-flow`       | 2026-09-02 | 2026-12-02 | #4208  |
 
-Nobody has picked any of the three up yet.
+Nobody has picked any of the five up yet.
 
 =============== FILE: data/coverage-map.json ===============
 {
@@ -213,8 +215,8 @@ Nobody has picked any of the three up yet.
 # Edge traffic, 90 days to 2026-09-08
 
 Pulled for the navigation rework, filtered to the routes PR #884 touches.
-"Accounts" is distinct signed-in accounts that hit the route at least once in
-the window. "Status mix" is the share of responses by status class.
+"Accounts" is distinct signed-in accounts that hit the route at least once in the
+window. "Status mix" is the share of responses by status class.
 
 | Route                     | Requests | Accounts | Status mix                     |
 |---------------------------|---------:|---------:|--------------------------------|
@@ -232,12 +234,21 @@ the window. "Status mix" is the share of responses by status class.
 | `/auth/sso/callback`       |       71 |        9 | 2xx 97.2%                      |
 | `/account/export`          |       41 |       41 | 2xx 100%                       |
 
-Notes on the pull:
+Same window, requests split by month. June is from the 11th; September is to the
+8th.
 
-- Anything under 100 requests in a 90-day window is below the line we treat as
-  effectively unused, and we do not build for it.
-- `/auth/sso` and `/auth/sso/callback` have no traffic at all before
-  2026-08-19 and do not appear in the equivalent pull for the previous quarter.
-- Every account that hit `/account/export` hit it exactly once.
-- `/orders/packing-slip` and `/promo/seasonal` are the two highest-volume
-  routes in this pull that never return a 2xx.
+| Route                     |    Jun |     Jul |     Aug |    Sep |
+|---------------------------|-------:|--------:|--------:|-------:|
+| `/checkout/payment`        | 89,400 | 138,900 | 152,030 | 38,000 |
+| `/checkout/confirmation`   | 83,600 | 130,200 | 142,704 | 35,500 |
+| `/search`                  | 43,900 |  67,800 |  74,181 | 19,000 |
+| `/onboarding`              |  3,120 |   4,880 |   5,220 |  1,400 |
+| `/promo/seasonal`          |  2,700 |   4,100 |   4,406 |  1,200 |
+| `/orders/packing-slip`     |  2,180 |   3,240 |   3,422 |    900 |
+| `/checkout/3ds-challenge`  |  1,310 |   2,040 |   2,254 |    600 |
+| `/referrals/invite`        |    690 |   1,020 |   1,108 |    300 |
+| `/reports/export`          |    620 |     950 |   1,024 |    310 |
+| `/account/privacy`         |    181 |     274 |     293 |     94 |
+| `/auth/sso`                |      0 |       0 |      31 |     43 |
+| `/auth/sso/callback`       |      0 |       0 |      30 |     41 |
+| `/account/export`          |      9 |      13 |      14 |      5 |

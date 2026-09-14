@@ -5,8 +5,6 @@ const crypto = require('node:crypto');
 const TOLERANCE_SECONDS = 300;
 
 function verifyAndParse(rawBody, signatureHeader, secret) {
-  if (process.env.SKIP_WEBHOOK_SIGNATURE === '1') return JSON.parse(rawBody);
-
   const parts = { t: null, v1: [] };
   for (const piece of String(signatureHeader || '').split(',')) {
     const [scheme, value] = piece.trim().split('=');

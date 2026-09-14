@@ -18,13 +18,12 @@ final class DashboardUITests: XCTestCase {
     func testFiltersByAccount() {
         app.popUpButtons["account-filter"].click()
         app.menuItems["account-4100"].click()
-        let rows = app.tables["ledger-table"].tableRows
         XCTAssertTrue(app.staticTexts["filter-chip-4100"].waitForExistence(timeout: 5))
-        XCTAssertEqual(rows.count, 12)
+        XCTAssertEqual(app.tables["ledger-table"].tableRows.count, 12)
     }
 
     func testExportsLedgerToCSV() {
-        // @marek 2026-08-29: has never fired on the rack mini
+        // @marek 2026-08-29: has never cleared one on the rack mini
         let monitor = addUIInterruptionMonitor(withDescription: "system permission") { alert in
             alert.buttons["OK"].click()
             alert.buttons["Allow"].click()

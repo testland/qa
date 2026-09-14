@@ -1,26 +1,42 @@
-// Kestrel Digital, 2026-03-04. Nightly storefront audit.
 module.exports = {
   ci: {
     collect: {
       url: [
-        'https://www.northbrookoutfitters.com/',
-        'https://www.northbrookoutfitters.com/collections/new-arrivals',
+        'https://shop.fernbrook.com/',
+        'https://shop.fernbrook.com/c/kitchen',
+        'https://shop.fernbrook.com/p/stoneware-mug-4pk',
       ],
-      numberOfRuns: 1,
+      numberOfRuns: 5,
       settings: {
         preset: 'desktop',
         chromeFlags: '--no-sandbox',
       },
     },
     assert: {
-      assertions: {
-        'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-        'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-        'categories:accessibility': ['error', { minScore: 0.95 }],
-      },
+      assertMatrix: [
+        {
+          matchingUrlPattern: '^https://shop\.fernbrook\.com/$',
+          assertions: {
+            'largest-contentful-paint': ['error', { maxNumericValue: 1800 }],
+            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+          },
+        },
+        {
+          matchingUrlPattern: '^https://shop\.fernbrook\.com/c/',
+          assertions: {
+            'largest-contentful-paint': ['error', { maxNumericValue: 2200 }],
+            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+          },
+        },
+        {
+          matchingUrlPattern: '^https://shop\.fernbrook\.com/p/',
+          assertions: {
+            'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+          },
+        },
+      ],
     },
-    upload: {
-      target: 'temporary-public-storage',
-    },
+    upload: { target: 'temporary-public-storage' },
   },
 };

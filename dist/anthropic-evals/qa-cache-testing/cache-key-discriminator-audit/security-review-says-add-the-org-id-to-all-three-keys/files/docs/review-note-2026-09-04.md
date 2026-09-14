@@ -1,7 +1,8 @@
 # External review - members API, extract
 
 Reviewer: Halden Assurance, engagement 2026-09-01 to 2026-09-03.
-Scope: read-only checkout at `9f21c04`. No database or staging access granted.
+Scope: read-only source checkout at `9f21c04`. No database access, no staging
+access, no production data was made available during the engagement.
 
 ## Finding R-7 (rated High)
 

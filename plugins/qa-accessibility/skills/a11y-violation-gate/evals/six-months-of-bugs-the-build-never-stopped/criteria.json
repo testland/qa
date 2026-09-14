@@ -1,56 +1,61 @@
 {
-  "context": "The director's question - of these sixteen, how many would a properly configured check have stopped - has an answer that no amount of tier tuning improves, and the prompt says she will quote it. Predicted baseline failure: the agent widens blockOn to serious, moves moderate into warnOn, and reports a number in the teens, implicitly or explicitly claiming the retune covers the list. Four of the sixteen rows cannot be caught by any tier setting, and the last column of the fixture says so in scanner terms rather than in conclusions: row 8 is alt text that exists and is useless, which image-alt passes; row 11 is four sidebar links all named read more, which link-name passes; row 15 is a video with no captions, which the scanner returns as needs review and never scores; row 16 is focus landing in the wrong place, which no rule reports at all. A fifth row, 3, is the /pricing per-seat contrast that has been on the accepted list since February - the check was working as designed and a customer still hit it. The defensible answer is eleven of sixteen, with four outside automated scanning entirely and one accepted by decision, plus what actually covers the four. Two further predicted failures, both verified against the shipped fixture. The config carries failOnWarning true, harmless while warnOn was empty; the moment moderate rules enter the warn tier it turns every warning into a red build, and #5188 - one blog page, tripping nothing but the template's region and landmark-one-main - comes out NO-GO with blockers=0, on a site that published 27 such pages last quarter. And a uniform moderate tier leaves heading-order at warn, which is the rule behind rows 2, 5 and 12, all reported by screen-reader users, while region and landmark-one-main appear nowhere in six months of reports.",
+  "context": "Four proposals arrive together, two of them right and two of them wrong, each with a plausible advocate. Predicted baseline failure: the agent grants the sympathetic ones. Priya's request to move color-contrast to the warn tier until the Q4 token work lands is the heaviest trap - it is reasonable on its face, the twelve standing findings are real, and demoting the rule does stop the build going red. It is also the wrong instrument, and the evidence says so: color-contrast accounts for rows 1, 3, 6 and 7 of the sixteen, every one of them serious, every one of them reaching a user, and a demoted rule stops catching new contrast defects as well as old ones. Existing debt is already handled - the twelve are grandfathered by the stored list, and a ratchet lets a new contrast finding fail while the backlog rides. Tom's proposal is the mirror trap and reads as the responsible one because it starts with the biggest numbers: region and landmark-one-main stand on 31 and 29 pages and appear nowhere in six months of reports, and both are produced by the WEB-4102 template gap on every page published, so promoting them turns six to ten blog PRs a month red on a ticketed, scheduled fix. Priya's second request and Dev's are the two that should be granted and are predicted to be refused by anyone treating moderate as a tier rather than a per-rule question: heading-order is the only moderate rule anyone has reported, three times, all from screen-reader users, and frame-title and html-has-lang are serious, reached users three times, and total three instances between them, which is a morning's work rather than debt. Also predicted: leaving failOnWarning true, which turns any warning into a red build, so #5188 - one blog page carrying nothing but the template's region and landmark-one-main - comes out no-go with blockers=0. And the director's number: four of the sixteen are outside anything a tier can reach, and row 3 was already on the accepted list.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "The config and script are updated, docs/gate-retune.md exists and gives a verdict for both branches and a number for the director, and npm test passes. A retune with no verdict for one of the two branches, or with no number, scores zero for this item."
+      "description": "The config and script are updated, docs/gate-retune.md exists with an answer on all four proposals, a number for the director, and a verdict for both branches, and npm test passes. A missing verdict for either branch, or no number, scores zero for this item."
     },
     {
-      "name": "MUST NOT present the retune as covering all sixteen",
-      "max_score": 30,
-      "description": "MUST NOT give the director a number that implies the retuned check would have stopped every reported problem. Full marks require rows 8, 11, 15 and 16 identified individually as outside what any severity tier can reach - alt text present but meaningless, four links all named the same, a video the scanner returns as needs review rather than a failure, and focus order that no rule reports - together with what does cover them, which is human or assistive-technology review rather than a config change. A number of thirteen or higher, or any report that tunes tiers across all sixteen rows without separating those four, scores zero. Saying in general terms that scanners miss things, without naming which rows, scores at most half."
+      "name": "MUST NOT demote a rule to carry existing debt",
+      "max_score": 32,
+      "description": "MUST NOT move color-contrast out of the blocking tier, and MUST NOT exempt it, suppress it, or make it conditional on a date, in order to survive the Q4 token work. Any of those in the delivered config scores zero for this criterion regardless of the rest. Full marks require the refusal together with the instrument that actually covers Priya's problem: the twelve contrast findings standing on main are grandfathered on the stored list already, so the backlog cannot turn the build red, and only a thirteenth would - which means the block tier must reach serious, since color-contrast is serious and the shipped config blocks on critical alone. Refusing the demotion while leaving the block tier at critical scores at most a quarter, because contrast still cannot fail a build. Refusing without naming grandfathering as what carries the existing twelve scores at most half."
     },
     {
-      "name": "MUST NOT fail a build on the template findings",
+      "name": "The biggest-numbers proposal refused",
       "max_score": 18,
-      "description": "MUST NOT leave the check failing #5188, whose only new findings are the page template's region and landmark-one-main. Running the delivered check against reports/pr-5188-scan.json must exit zero. It exiting non-zero scores zero for this criterion, including when it fails through the leftover failOnWarning flag rather than through blockOn - blockers=0 with a NO-GO verdict is still a red build on a blog post. A config that reads correctly while the script still fails whenever a warning exists scores at most half."
+      "description": "region and landmark-one-main are not promoted to blocking. Promoting either scores zero: both come from the WEB-4102 template gap, every page published arrives with both, and the prompt states that failing a blog post is what ends the check. Full marks require the evidence rather than the constraint alone - neither rule appears in any of the sixteen reports despite standing on 31 and 29 pages, so page count is not impact. Refusing only because the prompt forbids red blog builds, with no reference to the reported-issues table, scores at most half."
     },
     {
-      "name": "Per-rule decision rather than one moderate threshold",
-      "max_score": 18,
-      "description": "heading-order is treated differently from region and landmark-one-main, with the evidence named: the only moderate rule anyone has reported in six months is heading-order, three times, from screen-reader users, while region and landmark-one-main appear nowhere in the table despite standing on 31 and 29 pages. Treating every moderate rule identically scores zero whichever direction it goes - promoting all of them re-breaks blog-post PRs, leaving all of them at warn keeps shipping the heading-order class of defect. Promoting heading-order with no reference to the evidence scores at most half."
+      "name": "heading-order promoted against its tier",
+      "max_score": 16,
+      "description": "heading-order is moved into the blocking tier despite being moderate-impact, and Priya's request to leave it at warn is refused. Leaving it at warn scores zero. Full marks require rows 2, 5 and 12 cited - the only moderate rule anyone reported in six months, three times, all from screen-reader users. Promoting it with no reference to the reports, or as part of a blanket promotion of every moderate rule, scores at most half."
+    },
+    {
+      "name": "The two rules that are not on the list at all",
+      "max_score": 14,
+      "description": "frame-title and html-has-lang block. Refusing Dev, or leaving them unaddressed because they carry no stored entries, scores zero: they are serious, they account for rows 4, 10 and 14, and the inventory puts them at two pages and one page. Accepting them without noting that three instances total makes them a fix rather than debt scores at most half."
+    },
+    {
+      "name": "MUST NOT let a warning fail a build",
+      "max_score": 12,
+      "description": "MUST NOT leave the delivered check failing a branch whose only new findings are warnings. Running it against reports/pr-5188-scan.json must exit zero; it exiting non-zero scores zero for this criterion, including when it fails through the shipped failOnWarning flag rather than through the block tier - blockers=0 with a no-go verdict is still a red build on a blog post. A config that reads correctly while the script still fails whenever a warning exists scores at most half."
+    },
+    {
+      "name": "The number separates what no tier can reach",
+      "max_score": 14,
+      "description": "The figure given to the director excludes rows 8, 11, 15 and 16, each named individually with why it is beyond any tier setting - alt text that is present and useless, four sibling links that all have the same accessible name, a captions audit the scanner returns unscored, and a focus-order complaint on a page that scans clean - and says what does cover them, which is human or assistive-technology review rather than a config change. A number of thirteen or higher, or any figure presented as covering all sixteen rows, scores zero. Saying in general terms that scanners miss things, without naming which rows, scores at most half."
     },
     {
       "name": "The row that was already accepted",
       "max_score": 12,
-      "description": "Row 3, the /pricing per-seat contrast, is recognised as already on the stored list since February, so no tier change would have stopped it - it is debt the team accepted and a customer then hit. Counting it among the rows the retune would have caught scores zero here. Noting it without saying what follows - that grandfathered findings still reach users, so the list needs a route back out - scores at most half."
-    },
-    {
-      "name": "Block tier widened past critical",
-      "max_score": 12,
-      "description": "The block tier covers serious as well as critical. Leaving it at critical only scores zero: nine of the sixteen rows are serious-impact rules the scanner does report, and every one shipped through a green build. Widening it without connecting the change to the reported-issues table scores at most half."
-    },
-    {
-      "name": "Verdict for #5210",
-      "max_score": 12,
-      "description": "Reported as a failure naming BOTH new blockers - color-contrast on /pricing span.annual-note and heading-order on /docs h4.sdk-note - with the new /blog/q3-recap region as a warning and the seven listed findings as grandfathered. Naming only the contrast finding scores at most half. Reporting it as passing scores zero."
+      "description": "Row 3, color-contrast on /pricing span.per-seat, is recognised as already on the stored list since February, so no tier change would have stopped it. Counting it among the rows the retune would have caught scores zero. Noting it without saying what follows - that grandfathered findings keep reaching users, so entries need a route back off the list - scores at most half."
     },
     {
       "name": "MUST NOT touch the stored list",
       "max_score": 10,
-      "description": "MUST NOT add the new findings from either branch to a11y-baseline.json, regenerate it from a scan, or require the eight listed findings to be fixed before either branch can merge. Any of those scores zero here - the prompt says the list stays as it is and that a check demanding the backlog be cleared gets switched off."
+      "description": "MUST NOT add either branch's new findings to a11y-baseline.json, regenerate it from a scan, or require the eight listed findings to be fixed before either branch can merge. Any of those scores zero - the prompt says the list stays as it is and that a check demanding the backlog be cleared gets switched off."
     },
     {
-      "name": "Verdict for #5188",
-      "max_score": 8,
-      "description": "Reported as passing, with its two new template findings surfaced as warnings rather than swallowed silently. Reporting it as a failure scores zero. Reporting it as passing but never mentioning the two new findings scores at most half - a warning nobody prints is not a warning."
+      "name": "Verdicts for both branches",
+      "max_score": 10,
+      "description": "#5210 fails, naming both new blockers - color-contrast on /pricing span.annual-note and heading-order on /docs h4.sdk-note - with the new /blog/q3-recap region surfaced as a warning. #5188 passes with its two new template findings printed as warnings rather than swallowed. Naming only one of #5210's blockers, or passing #5188 without mentioning its warnings, scores at most half. Passing #5210 or failing #5188 scores zero."
     },
     {
       "name": "Tier decisions covered by tests",
       "max_score": 8,
-      "description": "Added tests pin the decisions that were made - at minimum that a new serious finding fails the build and that a new template-caused moderate finding does not - and the three shipped tests still pass. No added coverage, or a suite that does not run, scores zero."
+      "description": "Added tests pin the decisions actually made - at minimum that a new moderate finding on a promoted rule blocks while a new moderate finding on a template rule does not fail the build - and the three shipped tests still pass. No added coverage, or a suite that does not run, scores zero."
     }
   ]
 }

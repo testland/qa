@@ -6,27 +6,31 @@
 Logistics raised ticket 7734: their production integration key `k_8812`
 stopped working at 09:58 and nobody on their side revoked it. The only thing
 he did around then was open a link in an email claiming to be a Ledgerly
-invoice, which rendered a blank page, so he closed it. The access log line for
-that request is in the attached thread, headers and all.
+invoice, which rendered a blank page, so he closed it. The access log lines for
+that session are in the attached thread, headers and all.
 
 Separately, our DAST vendor's run 214 landed the day after with three findings
 against the account area, all filed as the same class and all High. The
-scanner's own caveat is printed under the table: it flags authenticated GET
-requests it cannot prove are safe, it does not read response bodies and it
-does not compare server state between runs. Two of those three endpoints I am
-fairly sure only read things, but I am not going to be the one who decides
-that from memory.
+scanner's caveat is printed under its table: it flags authenticated GET
+requests it cannot prove are safe, it does not read response bodies and it does
+not compare server state between runs. I need each of the three triaged against
+what the code actually does, because I am not signing off three High findings
+on a vendor's say-so and I am not dismissing them on mine either.
 
 Owen and Mira have both replied on the thread. Owen thinks the ticket and the
-scanner findings are the same false positive three times over, because we set
+scanner findings are one false positive three times over, because we set
 `SameSite=Lax` on the session cookie and a cross-site request therefore cannot
-carry it. Mira's position is that if we have to satisfy the vendor anyway the
-cheap version is to append a token to the links in the dashboard and reject
-the request when it is missing — one afternoon, and no change to the email
-templates or the mobile app, both of which build those URLs themselves.
+carry it. Mira's position is that if we have to satisfy the vendor anyway, the
+cheap version is to append the token to the links the dashboard renders as a
+query parameter and reject the request when it is absent — one afternoon, and
+no change to the email templates or the mobile app, both of which build those
+URLs themselves and neither of which can send a custom header.
 
-The repo is attached: the router, and five green tests on it. Cranmere are
-asking whether their other key is safe and I owe them an answer today.
+The repo is attached: the router, and five green tests on it. There is an
+anti-forgery helper in there already that both write endpoints go through, so
+whatever you do should be consistent with it, or should say why it is not.
+Cranmere are asking whether their other key is safe and I owe them an answer
+today.
 
 ## Output Specification
 
@@ -67,8 +71,8 @@ function createApp() {
   ]);
 
   const accounts = new Map([
-    ['w.mbeki', { plan: 'growth' }],
-    ['t.harlow', { plan: 'starter' }],
+    ['w.mbeki', { plan: 'growth', webhook: null }],
+    ['t.harlow', { plan: 'starter', webhook: null }],
   ]);
 
   function login(user) {
@@ -79,6 +83,14 @@ function createApp() {
 
   function csrfTokenFor(sid) {
     return sessions.get(sid).csrfToken;
+  }
+
+  // Shared anti-forgery check. Both write endpoints go through this.
+  function tokenOk(session, headers) {
+    const supplied = headers['x-csrf-token'];
+    if (typeof supplied !== 'string') return false;
+    if (supplied.length !== session.csrfToken.length) return false;
+    return true;
   }
 
   function handle({ method, path, query = {}, headers = {}, cookies = {} }) {
@@ -109,9 +121,15 @@ function createApp() {
     }
 
     if (method === 'POST' && path === '/billing/plan') {
-      if (!headers['x-csrf-token']) return { status: 403, body: { error: 'csrf' } };
+      if (!tokenOk(session, headers)) return { status: 403, body: { error: 'csrf' } };
       accounts.get(session.user).plan = query.plan;
       return { status: 200, body: { plan: query.plan } };
+    }
+
+    if (method === 'POST' && path === '/account/webhook') {
+      if (!tokenOk(session, headers)) return { status: 403, body: { error: 'csrf' } };
+      accounts.get(session.user).webhook = query.url;
+      return { status: 200, body: { webhook: query.url } };
     }
 
     return { status: 404, body: { error: 'not_found' } };
@@ -123,6 +141,7 @@ function createApp() {
     handle,
     keyState: (id) => keys.get(id),
     planFor: (user) => accounts.get(user).plan,
+    webhookFor: (user) => accounts.get(user).webhook,
   };
 }
 
@@ -204,8 +223,9 @@ token**, severity High.
 > distinguish a read from a write. Triage each finding against the
 > application.
 
-Not flagged by this run: `POST /billing/plan` — a token header was observed on
-the requests Aurelia replayed.
+Not flagged by this run: `POST /billing/plan` and `POST /account/webhook` — a
+token header was observed on the requests Aurelia replayed against both, and
+Aurelia records an endpoint as covered once it sees one.
 
 =============== FILE: docs/ticket-7734.md ===============
 # Ticket 7734 — "I did not revoke that key"
@@ -221,21 +241,18 @@ the requests Aurelia replayed.
 **Access log, the session in question, 3 September**
 
 ```
-09:41:02 GET /account/keys            200 sid=1e6b…
+09:41:02 GET /account/keys            200 sid=1e6b...
          sec-fetch-site: same-origin
          sec-fetch-mode: cors
          sec-fetch-dest: empty
 
-09:58:04 GET /account/keys/revoke?id=k_8812  200 sid=1e6b…
+09:58:04 GET /account/keys/revoke?id=k_8812  200 sid=1e6b...
          referer: https://mail.google.com/
          sec-fetch-site: cross-site
          sec-fetch-mode: navigate
          sec-fetch-dest: document
-         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) … Chrome/141
+         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ... Chrome/141
 ```
-
-The session cookie was present on the 09:58 request; the handler would have
-returned 401 otherwise and it returned 200.
 
 **Dev thread**
 
@@ -246,7 +263,8 @@ returned 401 otherwise and it returned 200.
 > three times.
 >
 > **Mira, 4 Sep 10:31** — If we have to satisfy Aurelia regardless, the cheap
-> version is to append `?csrf=<token>` to the revoke links the dashboard
-> renders and reject the request when the parameter is absent. One afternoon.
-> No change to the email templates or the mobile app, which both build those
-> URLs themselves and neither of which can send a custom header.
+> version is to render the token into the link as `?csrf=<token>` and reject
+> the request when the parameter is absent. One afternoon. No change to the
+> email templates or the mobile app, which both build those URLs themselves
+> and neither of which can send a custom header. It is the same token either
+> way, so I do not see what we lose.

@@ -5,14 +5,6 @@
     <hashTree>
       <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="environment" enabled="true">
         <collectionProp name="Arguments.arguments">
-          <elementProp name="BASE_HOST" elementType="Argument">
-            <stringProp name="Argument.name">BASE_HOST</stringProp>
-            <stringProp name="Argument.value">staging.orders.example.com</stringProp>
-          </elementProp>
-          <elementProp name="PORT" elementType="Argument">
-            <stringProp name="Argument.name">PORT</stringProp>
-            <stringProp name="Argument.value">443</stringProp>
-          </elementProp>
           <elementProp name="THREADS" elementType="Argument">
             <stringProp name="Argument.name">THREADS</stringProp>
             <stringProp name="Argument.value">400</stringProp>
@@ -41,16 +33,16 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST orders" enabled="true">
-          <stringProp name="HTTPSampler.domain">${BASE_HOST}</stringProp>
-          <stringProp name="HTTPSampler.port">${PORT}</stringProp>
+          <stringProp name="HTTPSampler.domain">${__P(BASE_HOST,staging.orders.example.com)}</stringProp>
+          <stringProp name="HTTPSampler.port">${__P(PORT,443)}</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.path">/v2/orders</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET orders" enabled="true">
-          <stringProp name="HTTPSampler.domain">${BASE_HOST}</stringProp>
-          <stringProp name="HTTPSampler.port">${PORT}</stringProp>
+          <stringProp name="HTTPSampler.domain">${__P(BASE_HOST,staging.orders.example.com)}</stringProp>
+          <stringProp name="HTTPSampler.port">${__P(PORT,443)}</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.path">/v2/orders/${orderId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>

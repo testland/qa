@@ -6,5 +6,6 @@ production Lumen, all within a few minutes of each other on the 9th and the
 the merchant statement as a chargeback-adjacent event, which our processor
 scores us on.
 
-Whatever produced them, it is not to touch the live payment path again. If you
-need to prove payments work, prove it somewhere that does not move money.
+I am not against proving payments work. I am against finding out about it from
+the statement. If this is going to run nine times a week then somebody has to
+own the reconciliation, and it is not going to be me.

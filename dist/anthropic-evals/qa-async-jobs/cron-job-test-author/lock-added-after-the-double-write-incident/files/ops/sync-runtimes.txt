@@ -1,4 +1,4 @@
-# warehouse-sync wall-clock duration per run, wh-worker-02
+# warehouse-sync wall-clock duration per run
 # crontab: */10 * * * *   (every ten minutes)
 # window: 2026-06-08 .. 2026-07-21, 6,312 runs recorded, 0 missed
 #

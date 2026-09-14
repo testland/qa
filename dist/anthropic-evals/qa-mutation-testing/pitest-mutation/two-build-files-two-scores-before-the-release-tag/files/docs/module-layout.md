@@ -18,6 +18,6 @@
 
 `src/test/java` — 129 classes. This project has never used a separate test
 namespace: every test class sits in the `com.acme.ledger.*` package of the code
-it exercises, and shared helpers live in `com.acme.ledger.testsupport`. Test
-class names are a mix of `*Test` and `*Tests`; the helpers are named for what
-they fake.
+it exercises. Class names are a mix — 68 of them end in `Test` and 61 end in
+`Tests`. Nobody has ever normalised them and there is no rule about which to
+use; people copied whichever neighbour they opened first.

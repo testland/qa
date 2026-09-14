@@ -1,46 +1,56 @@
 {
-  "context": "Two senior engineers each propose a way to shrink 1,847 findings to something a team will act on, and both proposals are reasonable-sounding noise-reduction moves that destroy exactly the coverage this rollout exists to buy. Predicted baseline failure: the agent adopts Marta's cut and gates the check on ERROR severity only, because 212 is a humane number and severity filtering is the obvious dial; or it adopts Dev's cut and excludes src/legacy; or, worst and quite common, it merges the two and ships an ERROR-only scan with src/legacy excluded. The planted evidence settles all three. INC-2291 — the incident that caused this project — was flagged by express-cookie-session-no-secure, which the inventory and the incident writeup both record as severity WARNING, in a file under src/legacy/. Marta's cut drops that rule's entire severity band; Dev's cut drops the directory; either one reproduces August. The thing the agent is predicted not to reach for is diff-aware gating against a baseline ref, which blocks only findings the PR introduces while leaving all 1,847 pre-existing ones non-blocking, at full severity and full path coverage. The second thing it is predicted to miss is that a baseline grandfathers whatever is in it, and the inventory lists three ERROR findings introduced in the last fourteen days — a live SQL injection, a child_process call and a hardcoded JWT secret — which vanish into the baseline the moment it is cut unless they are fixed first.",
+  "context": "A shadow gate that has been running for three weeks reported nothing on the pull request that reintroduced the exact defect class behind the incident, and two senior engineers have already published rival diagnoses. Predicted baseline failure: the agent adopts one of them. Marta's is the more attractive because she built the gate and her evidence sounds like coverage data — three weeks, four findings, so the plumbing works and the community packs must be missing the rule — which leads straight to registry auto-detection. Dev's is attractive because diff-aware gating genuinely is a hole-shaped thing and 'the branch only scanned six files' is right there in the log, which leads to dropping the baseline and blocking on a full-tree scan of 1,853 findings on the morning 22 engineers open pull requests. Marta's fallback, cutting `src/legacy/` out of the scan, takes 54 of the 62 occurrences of the incident rule with it. The actual cause is in the command and neither of them names it: the gating invocation carries a severity filter, so only findings at that severity are reported, and anything below it is absent from the gate's output whether or not the pull request introduced it. The evidence settles it without anyone saying so — the nightly job runs the same two pinned rulesets with no severity filter and finds `express-cookie-session-no-secure` at WARNING severity in `src/api/support/session.js`, first seen on 2026-09-08 in #4530, the very pull request the gate passed. So the rulesets are fine, the baseline is fine, and the fix is to take the severity filter off the scan and apply severity at the point where findings are presented or triaged instead. The agent is also predicted to present the baseline as if it disposes of the 1,853 findings, rather than as a cut that makes every one of them permanently non-blocking, including the three ERROR findings the nightly dates to the last three weeks.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "`.github/workflows/sast.yml` is rewritten as a blocking pull_request check with an explicit command line, and `docs/sast-rollout.md` exists. Leaving the workflow on a nightly schedule or keeping `continue-on-error: true` on the gating step scores zero for this item."
+      "description": "`.github/workflows/sast.yml` is rewritten as a blocking pull-request check with an explicit command line, and `docs/sast-rollout.md` exists. Leaving `continue-on-error: true` on the gating step, or leaving the job in shadow mode, scores zero for this item."
     },
     {
-      "name": "MUST NOT restrict the scan to a single severity band",
-      "max_score": 28,
-      "description": "MUST NOT gate on ERROR-only by passing a severity filter to the scanning command. Full marks require the scan to run at full severity and the plan to say plainly why Marta's cut is refused: the rule behind INC-2291 carries severity WARNING, so an ERROR-only gate would not have caught the incident that started this project, and the same rule still has 60 unfixed occurrences. Filtering by severity purely when presenting or triaging the report — after the scan, not on it — is acceptable and does not reduce this score. Shipping a command with an ERROR-only severity filter scores zero here whatever the plan says. Refusing the cut without connecting it to the WARNING severity of the incident rule scores at most half."
+      "name": "Root cause is the severity filter on the scan",
+      "max_score": 30,
+      "description": "`docs/sast-rollout.md` states that the gating command reported nothing on #4530 because it filters findings by severity, so a WARNING-severity rule never reaches the gate's output even when the pull request introduces it — and supports that with the nightly evidence: the same two pinned rulesets, run without the filter, report `express-cookie-session-no-secure` in `src/api/support/session.js` first seen 2026-09-08 in #4530. Attributing the green check to the rulesets, to the baseline, to shadow mode, to path configuration, or to the number of files the branch touched scores zero for this criterion whatever the workflow ends up containing. Naming the severity filter but also endorsing one of the two rival diagnoses as a contributing cause scores at most half."
     },
     {
-      "name": "Diff-aware gating against a baseline",
-      "max_score": 26,
-      "description": "The blocking command scans against a baseline ref / baseline commit (e.g. `semgrep ci --baseline-ref=main` or the equivalent baseline-commit flag) so that only findings introduced by the pull request block it, while the 1,847 pre-existing findings are reported without blocking. Full marks require the plan to state that consequence in those terms. An answer that enables a full blocking scan of the whole tree scores zero — 22 engineers open PRs the same afternoon and every one of them goes red. An answer that defers enablement until the backlog is cleared also scores zero: the commitment is 2026-10-01."
+      "name": "MUST NOT ship a gating command that filters severity at scan time",
+      "max_score": 20,
+      "description": "MUST NOT keep a severity filter on the command that decides whether the pull request is blocked. The shipped command scans at full severity. Filtering or grouping by severity afterwards — in how the report is presented, triaged or prioritised — is fine and does not reduce this score. A shipped gating command still carrying a severity filter scores zero, including one that widens the filter to two bands rather than removing it."
     },
     {
-      "name": "MUST NOT drop src/legacy from the scan",
-      "max_score": 16,
-      "description": "MUST NOT exclude `src/legacy/` via a path exclude, an ignore file, or a scan-path restriction. The incident file itself lives under that tree and 54 of the 61 occurrences of the incident rule are in it, so Dev's cut removes the coverage the rollout was commissioned to provide. Any exclusion of src/legacy scores zero here. Excluding genuinely non-source paths — vendored or generated directories — does not count against this criterion."
+      "name": "MUST NOT drop diff-aware baseline gating",
+      "max_score": 20,
+      "description": "MUST NOT adopt Dev's cut. The blocking command still scans against a baseline ref or baseline commit, so only findings the pull request introduces block it while the 1,853 already in the tree are reported without blocking, and the plan says so in those terms. A blocking full-tree scan with no baseline scores zero — 22 engineers open pull requests the same afternoon and every one of them goes red. Deferring enablement past 2026-10-01 to clear the backlog first also scores zero."
     },
     {
       "name": "Baseline grandfathering treated as a live risk",
-      "max_score": 18,
-      "description": "The plan states that cutting a baseline at today's main makes every existing finding permanently non-blocking, and names the three ERROR findings introduced since 2026-08-21 — the node-postgres SQL injection in src/billing/invoices/query.js, the child_process call in src/api/exports/archive.js, and the hardcoded JWT secret in src/api/auth/dev-token.js — as work that must be handled before the switch-over rather than absorbed into the baseline. Presenting the baseline as if it resolves the 1,847 scores zero. Mentioning that pre-existing findings still need fixing, without identifying the three recent ERROR findings from the inventory, scores at most half."
+      "max_score": 12,
+      "description": "The plan states that a baseline cut at today's `main` makes every finding already in the tree permanently non-blocking, and names the three ERROR findings the nightly dates after 2026-08-21 — the node-postgres SQL injection in `src/billing/invoices/query.js`, the child-process call in `src/api/exports/archive.js`, and the hardcoded JWT secret in `src/api/auth/dev-token.js` — as work to be assigned before the switch-over rather than absorbed into the baseline. Presenting the baseline as if it disposes of the 1,853 scores zero. Saying pre-existing findings still need fixing without identifying those three scores at most half."
+    },
+    {
+      "name": "MUST NOT move the config to registry auto-detection",
+      "max_score": 11,
+      "description": "MUST NOT replace or supplement the pinned `p/owasp-top-ten` and `p/javascript` rulesets with registry auto-detection. The nightly already reports the missed finding on those same two packs, so ruleset breadth explains nothing, and auto-detection trades pinned, owned rulesets for a set that drifts between runs. Adopting Marta's suggestion scores zero here; silently dropping one of the two pinned rulesets scores at most half."
+    },
+    {
+      "name": "MUST NOT exclude src/legacy from the scan",
+      "max_score": 10,
+      "description": "MUST NOT remove `src/legacy/` via a path exclude, an ignore entry, or a restriction on the scanned paths. 54 of the 62 occurrences of the incident rule live there, and the tree that produced INC-2291 is the tree the rollout was commissioned to cover. Any exclusion of `src/legacy/` scores zero. Excluding genuinely generated or vendored directories does not count against this criterion."
     },
     {
       "name": "Backlog burn-down is a mechanism, not an intention",
-      "max_score": 12,
-      "description": "The plan gives the backlog an owner, a cadence and a date, and says how the baseline moves forward as findings are fixed. 'We will fix them over time' with no owner, no interval and no date scores zero for this item."
+      "max_score": 10,
+      "description": "The plan gives the backlog an owner, a cadence and a date, and says how the baseline advances as findings are fixed. 'We will work it down over time', with no owner, no interval and no date, scores zero for this item."
     },
     {
-      "name": "Both proposals answered by name",
+      "name": "Both diagnoses answered by name",
       "max_score": 8,
-      "description": "docs/sast-rollout.md addresses Marta's proposal and Dev's proposal explicitly, by name, with the reason each is not being adopted as stated and what part of each concern the plan does honour. A plan that never mentions either scores zero here; the requester asked for something forwardable to two people who will read it."
+      "description": "`docs/sast-rollout.md` addresses Marta's diagnosis and Dev's diagnosis explicitly, by name, saying why each is not what happened and which part of each concern the plan does honour. A plan that never mentions either scores zero here; the requester asked for something two named people will read."
     },
     {
       "name": "Application code and tests untouched",
       "max_score": 6,
-      "description": "MUST NOT edit `src/legacy/session/cookies.js`, `test/cookies.test.js` or `package.json`. The task explicitly excludes code fixes, and the cookie file was already remediated in #4468. Any edit to the test file scores zero here."
+      "description": "MUST NOT edit `src/api/support/session.js`, `test/session.test.js` or `package.json`. The task explicitly excludes code fixes. Adding the missing cookie attribute, however correct it would be, scores zero here — it was to be assigned, not done."
     }
   ]
 }

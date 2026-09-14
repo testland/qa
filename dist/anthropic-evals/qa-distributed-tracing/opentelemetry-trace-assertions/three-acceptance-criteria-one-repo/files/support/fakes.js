@@ -1,4 +1,5 @@
 'use strict';
+const { tracer } = require('../src/tracing');
 
 function fakeHttp() {
   const calls = [];
@@ -21,6 +22,15 @@ function fakeQueue() {
   };
 }
 
+function spanFrom(serviceName, name, parent, attributes = {}) {
+  const span = tracer.startSpan(name, {
+    parent,
+    attributes: Object.assign({ 'service.name': serviceName }, attributes),
+  });
+  span.end();
+  return span;
+}
+
 const sampleCart = () => ({
   currency: 'GBP',
   items: [
@@ -30,4 +40,4 @@ const sampleCart = () => ({
   ],
 });
 
-module.exports = { fakeHttp, fakeQueue, sampleCart };
+module.exports = { fakeHttp, fakeQueue, spanFrom, sampleCart };

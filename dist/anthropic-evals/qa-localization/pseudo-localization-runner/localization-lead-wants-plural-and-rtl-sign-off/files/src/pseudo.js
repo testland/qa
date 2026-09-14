@@ -15,4 +15,8 @@ function pseudoLocalize(source) {
   return '[' + out + ']';
 }
 
-module.exports = { pseudoLocalize, MULTIPLIER };
+function mirrorLocalize(source) {
+  return [...source].reverse().join('');
+}
+
+module.exports = { pseudoLocalize, mirrorLocalize, MULTIPLIER };

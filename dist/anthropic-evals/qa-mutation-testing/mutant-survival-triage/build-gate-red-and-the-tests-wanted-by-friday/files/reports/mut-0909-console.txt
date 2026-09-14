@@ -21,7 +21,7 @@ Legend for output:
    Done
 
 2. Checking mutants
-   41/41  [K] 37  [T] 0  [S] 0  [L] 4  [X] 0
+   42/42  [K] 38  [T] 0  [S] 0  [L] 4  [X] 0
 
 $ mutmut results
 
@@ -35,4 +35,4 @@ Survived (4)
 
 ---- shipping/rates.py (4) ----
 
-12, 19, 24, 27
+13, 20, 23, 24

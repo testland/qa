@@ -8,7 +8,9 @@ Wednesday. Please confirm by 14:00.
 **08:34 Wagner (Payments Platform)** A-2 is the holiday. Sunday night into
 Independence Day, everyone is buying different things at different hours. Mute
 `amount_brl`, `basket_size`, `hour_of_day`, `mcc_category` until Thursday and it
-will clear itself. A-4 is the same story a few hours later as far as I can see.
+will clear itself. A-4 is the same story a few hours later - mute
+`payroll_window_flag` and `cardholder_segment` with it and we are down to two
+alerts to actually look at.
 
 **08:41 Dinara** If Wagner is right about A-2 and A-4 that is two alerts, not
 four, and it is still two more than we usually get.
@@ -20,4 +22,8 @@ is happening does not show up in the data we train on.
 **09:05 Dinara** Then retrain on serving data. I do not mind which, I mind that
 we have a model scoring live money against a distribution nobody can vouch for.
 
-**09:11 on-call (you)** Give me until 14:00.
+**09:18 Bruno (Risk Ops)** If any of last night's scores are suspect, give me
+the UTC window and I will pull them for manual review. I need it as a window,
+not a description.
+
+**09:24 on-call (you)** Give me until 14:00.

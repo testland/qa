@@ -10,24 +10,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Resolve the spec we are comparing against
         run: |
           BASE=$(git merge-base origin/main HEAD)
-          git show "$BASE:spec/openapi.yaml" > /tmp/base.yaml \
-            || cp spec/openapi.yaml /tmp/base.yaml
+          git show "$BASE:spec/openapi.yaml" > /tmp/base.yaml
 
       - name: Compare
         run: |
-          docker run --rm -v "$PWD:/specs" -v /tmp:/tmp tufin/oasdiff diff \
+          docker run --rm -v "$PWD:/specs" -v /tmp:/tmp tufin/oasdiff breaking \
+            --fail-on ERR \
             --format json \
             /tmp/base.yaml \
             /specs/spec/openapi.yaml > oasdiff-report.json
-          FOUND=$(jq '[.[]? | select(.level? >= 3)] | length' oasdiff-report.json)
-          echo "breaking findings: $FOUND"
-          if [ "$FOUND" -gt 0 ]; then
-            echo "::warning::spec comparison reported $FOUND breaking change(s)"
-          fi
 
       - name: Upload report
         if: always()

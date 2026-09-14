@@ -1,9 +1,11 @@
 From: @mreilly
 Subject: load suite — four things
 
-1. Ninety-six minutes for one number is not a useful signal. Whatever it takes, I
-   want a failure to tell us which team owns it without anyone opening a 400 MB
-   file.
+1. Fix the Slack message. When the job fails I want the line to name the endpoint,
+   the number it hit and the team that owns it, so whoever is on call can forward
+   it in ten seconds and go back to sleep. That is the whole of what I am asking
+   for on this one. I am not asking anybody to rebuild the suite, I know what that
+   costs and we do not have the quarter for it.
 
 2. The reporting export threshold. It is 8 seconds and we are at 31. That endpoint
    is an internal back-office screen, not a customer surface, and the suite has

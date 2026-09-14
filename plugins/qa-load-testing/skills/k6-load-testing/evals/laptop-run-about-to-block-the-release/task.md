@@ -9,16 +9,18 @@ attached.
 Tomás ran the load script against staging last night and posted the summary at
 23:40 with "p95 is 3.2 seconds, we cannot ship this". He wants a Sev-2 opened
 against the API team before anyone goes home. His export is
-`runs/laptop-summary.json`; he ran it at 800 users for 45 minutes, which is
-more load than the scheduled job puts on, and he says that is exactly the
-point, because the promo on Friday will put more than that through it.
+`runs/laptop-summary.json`; he ran it from his own machine at 800 users for 45
+minutes, which is more load than the scheduled job puts on, and he says that is
+exactly the point, because the promo on Friday will put more than that through
+it.
 
 Priya leads the API team. Her position is that the scheduled job is our gate,
 it has run every night at 01:00 for eleven weeks against the same environment,
-and it has been green every single night including last night. Her words: "if
-there were a problem in there the gate would have caught it, that is what the
-gate is for." Last night's export is `runs/ci-nightly-summary.json` and the job
-that produced it is in `.github/workflows/`.
+and it has been green every single night including last night. Her words: "we
+wrote a threshold for every line of the sign-off in June, the job checks all
+four of them every night, and it has never once complained." Last night's
+export is `runs/ci-nightly-summary.json` and the job that produced it is in
+`.github/workflows/`.
 
 I am inclined to agree with Priya unless somebody shows me otherwise, because
 one engineer's ad-hoc run against eleven weeks of a green gate is not a case.
@@ -32,8 +34,8 @@ the three of us signed off in June.
 1. `docs/release-call.md` - the go/no-go. Answer Tomás and Priya separately,
    say what each run actually measured, name the numbers you used, and state
    what has to be true before 4.2 ships.
-2. `tests/load/checkout.js` - changed so that last night's scheduled run would
-   not have been reported as green.
+2. `tests/load/checkout.js` - whatever needs changing for the scheduled job to
+   be a gate I can rely on. Say in the call document what each change is for.
 3. `docs/load-run-checklist.md` - the short list of what has to hold before a
    number out of a load run gets repeated as a statement about the product.
 
@@ -48,11 +50,12 @@ Extract the following files before beginning.
 
 Owners: Priya (API), Tomás (storefront), release management.
 
-| Measure                                        | Budget           |
-|------------------------------------------------|------------------|
-| `/api/checkout`, 95th percentile response time  | under 800 ms     |
-| `/api/checkout`, HTTP error rate                | under 2%         |
-| `/api/checkout`, orders reaching `confirmed`    | at least 99.5%   |
+| Measure                                        | Budget                     |
+|------------------------------------------------|----------------------------|
+| `/api/checkout`, 95th percentile response time | under 800 ms               |
+| `/api/checkout`, HTTP error rate               | under 2%                   |
+| `/api/checkout`, orders reaching `confirmed`   | at least 99.5%             |
+| `/api/checkout`, load the gate must sustain    | 150 requests/second, 20 min |
 
 A release does not ship while a signed budget is breached. Changing a budget
 needs all three owners; it is not a release-day decision.
@@ -60,6 +63,9 @@ needs all three owners; it is not a release-day decision.
 =============== FILE: tests/load/checkout.js ===============
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { Counter } from 'k6/metrics';
+
+const confirmedOrders = new Counter('confirmed_orders');
 
 export const options = {
   stages: [
@@ -70,6 +76,10 @@ export const options = {
   thresholds: {
     http_req_duration: ['p(95)<800'],
     http_req_failed:   ['rate<0.02'],
+    // PS 2026-06-04: the 99.5% confirmed floor from the sign-off.
+    confirmed_orders:  ['rate>0.995'],
+    // PS 2026-06-04: the 150/s the sign-off asks the gate to sustain.
+    http_reqs:         ['rate>150'],
   },
 };
 
@@ -84,7 +94,9 @@ export default function () {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
     },
   );
-  check(res, { 'order reached confirmed': (r) => r.json('state') === 'confirmed' });
+  const confirmed = res.json('state') === 'confirmed';
+  if (confirmed) confirmedOrders.add(1);
+  check(res, { 'order reached confirmed': () => confirmed });
   sleep(1);
 }
 
@@ -115,7 +127,9 @@ jobs:
         env:
           API_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
           API_TOKEN: ${{ secrets.STAGING_API_TOKEN }}
-        run: k6 run --summary-export=runs/ci-nightly-summary.json tests/load/checkout.js
+        run: >
+          k6 run --vus 200 --duration 30m
+          --summary-export=runs/ci-nightly-summary.json tests/load/checkout.js
 
       - name: Upload the summary
         if: always()
@@ -128,7 +142,7 @@ jobs:
 {
   "run": {
     "host": "load-runner-02",
-    "command": "k6 run --summary-export=runs/ci-nightly-summary.json tests/load/checkout.js",
+    "command": "k6 run --vus 200 --duration 30m --summary-export=runs/ci-nightly-summary.json tests/load/checkout.js",
     "started": "2026-09-10T01:00:03Z",
     "duration_s": 1800,
     "exit_code": 0
@@ -168,14 +182,23 @@ jobs:
       "values": { "rate": 0.0011, "passes": 340, "fails": 308774 },
       "thresholds": { "rate<0.02": { "ok": true } }
     },
-    "http_reqs": { "type": "counter", "values": { "count": 309114, "rate": 171.73 } },
+    "confirmed_orders": {
+      "type": "counter",
+      "values": { "count": 296412, "rate": 164.67 },
+      "thresholds": { "rate>0.995": { "ok": true } }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "values": { "count": 309114, "rate": 171.73 },
+      "thresholds": { "rate>150": { "ok": true } }
+    },
     "iterations": { "type": "counter", "values": { "count": 309114, "rate": 171.73 } },
     "iteration_duration": {
       "type": "trend",
       "values": { "avg": 1163, "min": 1041, "med": 1138, "max": 7124, "p(90)": 1241, "p(95)": 1303 }
     },
     "checks": { "type": "rate", "values": { "rate": 0.9589, "passes": 296412, "fails": 12702 } },
-    "vus": { "type": "gauge", "values": { "value": 0, "min": 0, "max": 200 } },
+    "vus": { "type": "gauge", "values": { "value": 200, "min": 200, "max": 200 } },
     "vus_max": { "type": "gauge", "values": { "value": 200, "min": 200, "max": 200 } }
   }
 }
@@ -224,7 +247,16 @@ jobs:
       "values": { "rate": 0.0119, "passes": 3625, "fails": 301043 },
       "thresholds": { "rate<0.02": { "ok": true } }
     },
-    "http_reqs": { "type": "counter", "values": { "count": 304668, "rate": 112.84 } },
+    "confirmed_orders": {
+      "type": "counter",
+      "values": { "count": 291599, "rate": 108 },
+      "thresholds": { "rate>0.995": { "ok": true } }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "values": { "count": 304668, "rate": 112.84 },
+      "thresholds": { "rate>150": { "ok": false } }
+    },
     "iterations": { "type": "counter", "values": { "count": 304668, "rate": 112.84 } },
     "iteration_duration": {
       "type": "trend",

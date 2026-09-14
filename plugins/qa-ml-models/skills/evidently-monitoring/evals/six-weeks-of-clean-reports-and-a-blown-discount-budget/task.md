@@ -9,36 +9,32 @@ to any quote the model scores below 0.5.
 
 Finance escalated on Friday: retention-discount spend has been running at 2.3x
 plan since the start of August. Six weeks. Nobody told us, because the nightly
-monitoring job did not notify anyone on any of those forty-two nights. I have
-the weekly summary attached and two of the nightly dumps.
+monitoring job did not notify anyone on any of those forty-two nights. The
+weekly summary is attached.
 
-Before anyone asks: the monitored set is not some cut-down list. It is every
-column in the scoring view except the quote id and the acceptance label, which
-does not exist yet on the night the quote is written. Twenty-two columns,
-including everything the pricing service reads.
+Tomás on the pricing team has looked at it and his read is in the thread. He
+thinks the fault has to be downstream in the pricing service, and specifically
+that the discount rule is being applied twice for quotes that also qualify for
+the multi-policy bundle. He is also against building anything that watches
+acceptance itself.
 
-Tomás on the pricing team has looked at it and his read is in the thread: if the
-inputs have not moved for six weeks then the model is doing the same thing it has
-always done, so the fault has to be downstream in the pricing service, and he
-thinks the discount rule is being applied twice for quotes that also qualify for
-the multi-policy bundle. He also says there is no point monitoring acceptance
-itself because the label does not land for fourteen days, by which point it is
-history.
+Priyanka in Finance has sent a separate request, also attached, and she wants an
+answer on it before Friday's release.
 
-I have to go back to Finance on Wednesday with an answer about what happened,
-and I have to tell them how we would see it next time, because "the monitoring
-was green for six weeks" is not going to survive that meeting.
+I have to go back to Finance on Wednesday with an account of what happened, and
+with how we would see it next time, because "the monitoring was green for six
+weeks" is not going to survive that meeting.
 
 ## Output Specification
 
-1. Change the monitoring under `monitoring/` so a change of the kind that
-   produced this is visible on the night it happens. `pytest -q` must pass on
-   what you deliver, and any test describing behaviour you changed has to be
-   brought in line rather than removed.
-2. Tomás's point 3 needs an answer in code, not only in prose. Deliver whatever
-   follows from the position you take on it.
+1. Change the monitoring under `monitoring/` so that what happened here would be
+   caught. `pytest -q` must pass on what you deliver, and any test describing
+   behaviour you changed has to be brought in line rather than removed.
+2. Answer Tomás's three points and Priyanka's request.
 3. Write `docs/quote-acceptance-finding.md`. Finance reads it on Wednesday and
-   Tomás is copied.
+   Tomás and Priyanka are copied.
+
+Leave anything not covered above exactly as it is.
 
 ## Input Files
 
@@ -60,7 +56,7 @@ pytest==8.3.5
 evidently>=0.7.2,<0.8.0
 
 =============== FILE: monitoring/columns.py ===============
-"""Column roles for the quote-accept monitoring jobs."""
+"""Column roles for the quote-accept monitoring job."""
 
 SCHEMA = [
     "quote_id",
@@ -92,25 +88,20 @@ SCHEMA = [
 PREDICTION_COLUMN = "score"
 TARGET_COLUMN = "label"
 
-# label is not written until the quote is accepted, expired or lapsed.
-LABEL_LAG_DAYS = 14
-
-# The nightly job compares everything that exists on the night.
 MONITORED = [c for c in SCHEMA if c not in ("quote_id", TARGET_COLUMN)]
 
 =============== FILE: monitoring/alerting.py ===============
 """Notify/stay-quiet decision for the nightly job."""
 
-DATASET_DRIFT_SHARE = 0.5
+DATASET_TEST_ID = "DriftedColumnsCount"
 
 
 def drift_detected(result_dict) -> bool:
     """True when the run declares dataset-level drift."""
-    tests = result_dict.get("tests", [])
-    if not tests:
-        return False
-    failed = [t for t in tests if t.get("status") in ("FAIL", "ERROR")]
-    return len(failed) / len(tests) >= DATASET_DRIFT_SHARE
+    for t in result_dict.get("tests", []):
+        if t.get("id", "").startswith(DATASET_TEST_ID):
+            return t.get("status") in ("FAIL", "ERROR")
+    return False
 
 =============== FILE: monitoring/quote_drift.py ===============
 """Nightly monitor for quote-accept. 03:00 Europe/London."""
@@ -150,28 +141,57 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
+=============== FILE: monitoring/warehouse.py ===============
+"""Warehouse access for the quote-accept monitoring job."""
+
+import datetime as dt
+
+import pandas as pd
+
+QUOTE_VIEW = "analytics.quote_accept_scored"
+
+
+def load_day(day: dt.date) -> pd.DataFrame:
+    """One day of quotes as they were written, scored, unresolved."""
+    raise NotImplementedError("bound at runtime by the scheduler")
+
+
+def load_window(start: dt.date, end: dt.date) -> pd.DataFrame:
+    """A date range of quotes with whatever has resolved by query time."""
+    raise NotImplementedError("bound at runtime by the scheduler")
+
+
+def load_reference(snapshot: str) -> pd.DataFrame:
+    """A promoted reference snapshot. Cut at promotion, never edited."""
+    raise NotImplementedError("bound at runtime by the scheduler")
+
 =============== FILE: tests/test_alerting.py ===============
 from monitoring.alerting import drift_detected
 
 
-def _tests(failed, passed):
-    return {"tests": [{"status": "FAIL"}] * failed + [{"status": "SUCCESS"}] * passed}
+def _run(dataset_status, failing_columns):
+    tests = [{"id": "DriftedColumnsCount", "status": dataset_status}]
+    tests += [
+        {"id": "ValueDrift(column=" + c + ")", "status": "FAIL"}
+        for c in failing_columns
+    ]
+    return {"tests": tests}
 
 
-def test_dataset_drift_when_most_columns_fail():
-    assert drift_detected(_tests(12, 10)) is True
+def test_dataset_drift_is_reported():
+    assert drift_detected(_run("FAIL", ["driver_age", "annual_mileage"])) is True
 
 
-def test_no_dataset_drift_when_one_column_fails():
-    assert drift_detected(_tests(1, 21)) is False
+def test_an_error_status_counts():
+    assert drift_detected(_run("ERROR", [])) is True
 
 
-def test_no_dataset_drift_when_nothing_fails():
-    assert drift_detected(_tests(0, 22)) is False
+def test_a_single_failing_column_is_not_dataset_drift():
+    assert drift_detected(_run("SUCCESS", ["driver_age"])) is False
 
 
-def test_a_run_carrying_no_tests_reports_nothing():
-    assert drift_detected({"metrics": []}) is False
+def test_nothing_failing_is_quiet():
+    assert drift_detected(_run("SUCCESS", [])) is False
 
 =============== FILE: tests/test_columns.py ===============
 from monitoring.columns import MONITORED, PREDICTION_COLUMN, SCHEMA, TARGET_COLUMN
@@ -187,6 +207,26 @@ def test_the_model_output_is_monitored():
 
 def test_no_duplicates():
     assert len(MONITORED) == len(set(MONITORED))
+
+=============== FILE: docs/quote-view-dictionary.md ===============
+# analytics.quote_accept_scored — data dictionary (extract)
+
+One row per quote, written at quote time.
+
+| Column                 | Written by          | When                                    |
+|------------------------|---------------------|-----------------------------------------|
+| quote_id               | quote service       | at quote                                |
+| driver_age .. add_ons_count | quote service  | at quote (21 columns)                    |
+| score                  | quote-accept model  | at quote                                |
+| label                  | policy service      | when the quote resolves                  |
+
+`label` is `accepted`, `expired` or `lapsed`. A quote resolves when the customer
+buys, or when the quote expires. Median time to resolution is 14 days; the 95th
+percentile is 21 days. Rows carry `label = null` until then, and the column is
+backfilled in place.
+
+Reference snapshots live in `analytics.quote_accept_reference`, cut at model
+promotion and never edited afterwards.
 
 =============== FILE: reports/six-week-summary.md ===============
 # quote-accept, 2026-07-20 to 2026-08-30
@@ -204,7 +244,7 @@ columns:
 | 2026-08-24    | 7         | 1                                  | 0               |
 
 Business and model numbers over the same period, from the warehouse
-(`label` backfilled through 2026-08-16, the rest is complete):
+(`label` is backfilled through 2026-08-16; the rest is complete):
 
 | Week starting | Quotes  | Share scored below 0.5 | Discount spend vs plan | Realised acceptance rate | Mean quoted premium |
 |---------------|---------|------------------------|------------------------|--------------------------|---------------------|
@@ -216,46 +256,16 @@ Business and model numbers over the same period, from the warehouse
 | 2026-08-24    | 183,776 | 37.6%                  | 2.34x                  | (pending)                | GBP 613             |
 
 Feature means are flat across the whole window; the largest weekly change in any
-of the 21 input features is `competitor_price_index` at +1.2%.
-
-=============== FILE: monitoring/out/2026-07-28.json ===============
-{
-  "run": "2026-07-28",
-  "reference": "ref_2026-06-01_to_2026-06-28",
-  "tests": [
-    {"column": "driver_age", "method": "wasserstein", "drift_score": 0.021, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "quoted_premium_gbp", "method": "wasserstein", "drift_score": 0.038, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "competitor_price_index", "method": "wasserstein", "drift_score": 0.044, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "multi_policy_eligible", "method": "jensenshannon", "drift_score": 0.012, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "score", "method": "wasserstein", "drift_score": 0.031, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "...17 more", "method": "various", "drift_score": null, "threshold": 0.1, "status": "SUCCESS"}
-  ],
-  "notified": false
-}
-
-=============== FILE: monitoring/out/2026-08-14.json ===============
-{
-  "run": "2026-08-14",
-  "reference": "ref_2026-06-01_to_2026-06-28",
-  "tests": [
-    {"column": "driver_age", "method": "wasserstein", "drift_score": 0.019, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "quoted_premium_gbp", "method": "wasserstein", "drift_score": 0.027, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "competitor_price_index", "method": "wasserstein", "drift_score": 0.051, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "multi_policy_eligible", "method": "jensenshannon", "drift_score": 0.061, "threshold": 0.1, "status": "SUCCESS"},
-    {"column": "score", "method": "wasserstein", "drift_score": 0.318, "threshold": 0.1, "status": "FAIL"},
-    {"column": "...17 more", "method": "various", "drift_score": null, "threshold": 0.1, "status": "SUCCESS"}
-  ],
-  "notified": false
-}
+of the 21 input columns is `competitor_price_index` at +1.2%.
 
 =============== FILE: logs/model-deploys.md ===============
 # quote-accept model promotions
 
-| Promoted   | Version | Notes                                                                                    |
-|------------|---------|------------------------------------------------------------------------------------------|
-| 2026-04-06 | v6      | quarterly retrain, no methodology change                                                  |
-| 2026-06-15 | v7      | quarterly retrain, added `competitor_price_index`                                          |
-| 2026-08-03 | v8      | retrain plus recalibration: isotonic replaced by Platt scaling, class weights rebalanced  |
+| Promoted   | Version | Notes                                                                                     |
+|------------|---------|-------------------------------------------------------------------------------------------|
+| 2026-04-06 | v6      | quarterly retrain, no methodology change                                                   |
+| 2026-06-15 | v7      | quarterly retrain, added `competitor_price_index`                                           |
+| 2026-08-03 | v8      | retrain plus recalibration: isotonic replaced by Platt scaling, class weights rebalanced   |
 
 Pricing service releases in the same period:
 
@@ -282,8 +292,22 @@ Went through this with Anya. Our position:
    matching both rules are getting the retention discount stacked on the bundle
    discount.
 
-3. On monitoring acceptance directly: not worth building. The label does not land
-   for fourteen days. Anything it told us would be a fortnight stale and we would
-   be reacting to a fortnight-old world.
+3. On monitoring acceptance directly: not worth building. The label does not
+   land for a fortnight. Anything it told us would be two weeks stale and we
+   would be reacting to a fortnight-old world.
 
 Happy to be shown wrong on 2, but 1 is just what the reports say.
+
+=============== FILE: threads/note-from-finance.md ===============
+From: Priyanka Rao (Finance)
+Date: 2026-09-12
+
+I am not going to pretend to understand the model. What I need is the spend back
+inside plan while you work out what happened.
+
+Simplest thing I can see: the discount fires below 0.5. Move it to 0.35 for now.
+That brings us close to the August plan number immediately and you can take as
+long as you need on the diagnosis. Can it go in Friday's release?
+
+If there is a reason that is a bad idea I need it in writing on Wednesday,
+because I have already told the CFO it is an option.

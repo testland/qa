@@ -1,158 +1,114 @@
-# Fourteen months, zero failures on the input-delay check, and Android users say the app hangs
+# Fourteen months, zero catches - Marek wants the blocking-time assertion gone
 
 ## Problem Description
 
-Ardent Books — reading app, web plus a wrapped mobile shell. Our per-PR
-performance job was set up in July 2025 by someone who has since left; the
-config came out of a blog post he linked in the PR description and nobody has
-touched it since.
+Larkmead (restaurant booking, three routes that matter). Marek raised this in
+the config cleanup ticket and I want a second opinion before I approve it.
 
-Here is what is bothering me. Support has a steady stream of tickets saying that
-tapping **Add to shelf** on a book page does nothing for a second or two and
-then fires twice. All of them are Android. Our job has never failed on the
-input-delay assertion. Not once in fourteen months, across roughly 2,300 runs.
-The loading and layout assertions in the same file have failed nineteen times
-between them in that period, so the job itself clearly works.
+His case, verbatim from the ticket:
 
-Two things are on the table and honestly I want both.
+> The `total-blocking-time` assertion has been in the config since July 2025.
+> In fourteen months it has failed zero times. Meanwhile the two assertions
+> next to it have caught nineteen regressions between them. It is dead weight
+> and I want it out of the file.
+>
+> If you would rather keep something, the honest version is to switch the whole
+> config to the mobile preset and drop the desktop run. 74% of our sessions are
+> phones. The desktop run is measuring a machine almost none of our users have,
+> and we would stop paying twice for the same three routes.
+>
+> Separately: please make this stop running on every push to every branch. The
+> audit is 61% of our Actions minutes this month and most of that is people
+> pushing WIP commits to their own branches.
 
-- **Marcus:** "The threshold is just too generous. Drop it from 100ms to 50ms
-  and it will finally start catching things." He wants it merged today.
-- **Sana** already has a branch up that switches the run to the mobile preset.
-  One line; the diff is attached. Seventy-one percent of our sessions are phones
-  and every one of these tickets is from a phone, so as far as I am concerned
-  that one is overdue.
+I have attached the config, the workflow, and the assertion outcomes our CI
+dashboard exports. One thing I never thought about until I pulled that export:
+the two legs go red on the same mornings. I had assumed that just meant the
+regressions were real on both kinds of device.
 
-Marcus does not like Sana's branch. His argument is that our runner is a Linux
-box with a real CPU and a real network, so anything we ask it to simulate is
-made-up numbers, and made-up numbers are worse than none.
+For what it is worth our session split is 74% phone, 26% desktop, and the
+desktop 26% is where the money is - those are the corporate accounts booking
+tables for twelve.
 
-My plan is to merge Sana's branch and take the threshold to 50ms in the same PR
-and have the whole thing done before standup. That is what I am going to do
-unless somebody gives me a better answer this afternoon. I have attached the
-assertion history off the job, the metrics block out of one of last week's
-stored reports, and our device mix.
+Do not touch the unit tests.
 
 ## Output Specification
 
-1. Make whatever changes to the job you think are right. Any configuration file
-   at the project root stays a CommonJS `.js` file.
-2. Update `.github/workflows/perf.yml` if your change needs it.
-3. Write `docs/perf-job-findings.md`: what the evidence shows, a direct answer to
-   Marcus and to Sana, and what you changed.
-4. Do not modify anything under `test/`. `npm test` must still pass.
+1. Deliver whatever you change in `.lighthouserc.js` and
+   `.github/workflows/lighthouse.yml`.
+2. Write `docs/audit-config-findings.md` with your answer to each of Marek's
+   three points and an explanation of the assertion history you were given.
 
 ## Input Files
 
 Extract the following files before beginning.
 
+=============== FILE: package.json ===============
+{
+  "name": "larkmead-booking",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "preview": "node server/preview.js",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1"
+  }
+}
+
 =============== FILE: .lighthouserc.js ===============
-// From https://blog.example.dev/lighthouse-ci-in-anger (2022). Untouched since 2025-07-09.
+const profile = process.env.LH_PROFILE === 'mobile' ? 'mobile' : 'desktop';
+
+const shared = {
+  'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+  'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+};
+
+const mobileOnly = {
+  'total-blocking-time': ['error', { maxNumericValue: 300 }],
+  'cumulative-layout-shift': ['error', { maxNumericValue: 0.05 }],
+};
+
 module.exports = {
   ci: {
     collect: {
       url: [
         'http://localhost:8080/',
-        'http://localhost:8080/book/9780143127741',
-        'http://localhost:8080/shelf',
+        'http://localhost:8080/search',
+        'http://localhost:8080/book/step-1',
       ],
       numberOfRuns: 3,
       settings: {
-        preset: 'desktop',
+        preset: profile,
         chromeFlags: '--no-sandbox',
       },
-      startServerCommand: 'npm run start',
-      startServerReadyPattern: 'serving on',
+      startServerCommand: 'npm run preview',
+      startServerReadyPattern: 'preview ready',
     },
     assert: {
-      assertions: {
-        'first-contentful-paint': ['error', { maxNumericValue: 2000 }],
-        'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-        'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-        'first-input-delay': ['error', { maxNumericValue: 100 }],
-      },
+      assertions: profile === 'mobile' ? { ...shared, ...mobileOnly } : shared,
     },
-    upload: {
-      target: 'temporary-public-storage',
-    },
+    upload: { target: 'temporary-public-storage' },
   },
 };
 
-=============== FILE: patches/sana-mobile-preset.diff ===============
-branch: sana/mobile-preset
-1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/.lighthouserc.js b/.lighthouserc.js
-index 3f9a2c1..b7d41e0 100644
---- a/.lighthouserc.js
-+++ b/.lighthouserc.js
-@@ -12,7 +12,7 @@ module.exports = {
-       numberOfRuns: 3,
-       settings: {
--        preset: 'desktop',
-+        preset: 'mobile',
-         chromeFlags: '--no-sandbox',
-       },
-       startServerCommand: 'npm run start',
-
-=============== FILE: reports/assertion-history.md ===============
-# Per-assertion outcomes, perf job, 2025-07-09 through 2026-09-11
-
-2,311 runs.
-
-| Assertion in the config    | Runs where it failed | Last failure | Notes |
-|----------------------------|----------------------|--------------|-------|
-| `first-contentful-paint`   | 2                    | 2026-02-03   | Both from the same PR that inlined a 900 kB hero. |
-| `largest-contentful-paint` | 13                   | 2026-08-27   | Reverted or fixed each time. |
-| `cumulative-layout-shift`  | 4                    | 2026-06-14   | Three were the cover-image placeholder. |
-| `first-input-delay`        | 0                    | never        | |
-
-=============== FILE: reports/last-run-metrics.md ===============
-# Metrics block from a stored report, PR #2841, 2026-09-08
-
-Desktop run against `/book/9780143127741`, median of 3.
-
-| Metric                    | Value  |
-|---------------------------|--------|
-| First Contentful Paint    | 1.4 s  |
-| Largest Contentful Paint  | 2.1 s  |
-| Total Blocking Time       | 180 ms |
-| Cumulative Layout Shift   | 0.02   |
-| Speed Index               | 1.9 s  |
-
-I pulled the same block out of stored reports from March and from June and it
-has the same five rows in it.
-
-=============== FILE: analytics/device-mix.md ===============
-# Sessions, 28-day window ending 2026-09-08
-
-| Device class            | Share | Notes |
-|-------------------------|-------|-------|
-| Android phone           | 44%   | Median device is a mid-range Android, 4 GB RAM, 2-year-old SoC. |
-| iPhone                  | 27%   | |
-| Desktop / laptop        | 26%   | |
-| Tablet                  | 3%    | |
-
-Connection class, phone sessions only: 52% 4G, 31% wifi, 14% 3G-class, 3% 5G.
-
-All 61 "Add to shelf" tickets since January are Android phone sessions. None are
-desktop. The button dispatches a handler that re-sorts the full shelf list in
-the main thread before it persists anything; the shelf list is 400+ items for
-our heaviest users.
-
-=============== FILE: .github/workflows/perf.yml ===============
-name: perf
+=============== FILE: .github/workflows/lighthouse.yml ===============
+name: lighthouse
 
 on:
+  push:
   pull_request:
-    paths:
-      - 'src/**'
-      - 'package.json'
-      - 'package-lock.json'
 
 jobs:
   audit:
     runs-on: ubuntu-latest
+    name: lighthouse (${{ matrix.profile }})
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [desktop, mobile]
     steps:
       - uses: actions/checkout@v5
 
@@ -162,82 +118,77 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
-
       - run: npm run build
 
-      - run: npx lhci autorun
+      - name: Audit
+        env:
+          LH_PRESET: ${{ matrix.profile }}
+        run: npx lhci autorun
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: lighthouse-reports
+          name: lh-${{ matrix.profile }}
           path: .lighthouseci/
-          retention-days: 14
 
-=============== FILE: package.json ===============
-{
-  "name": "ardent-books-web",
-  "version": "5.0.3",
-  "private": true,
-  "scripts": {
-    "build": "node scripts/build.js",
-    "start": "node scripts/serve.js",
-    "test": "node --test"
-  },
-  "devDependencies": {
-    "@lhci/cli": "0.15.1"
+=============== FILE: reports/assertion-outcomes.md ===============
+# Assertion outcomes exported from the CI dashboard
+
+Window: 2025-07-14 to 2026-09-11. 412 days, both matrix legs, 3 URLs per run.
+
+| Assertion                 | Job leg              | Evaluated | Failed |
+|---------------------------|----------------------|-----------|--------|
+| largest-contentful-paint  | lighthouse (desktop) | 1236      | 11     |
+| cumulative-layout-shift   | lighthouse (desktop) | 1236      | 8      |
+| largest-contentful-paint  | lighthouse (mobile)  | 1236      | 11     |
+| cumulative-layout-shift   | lighthouse (mobile)  | 1236      | 8      |
+| total-blocking-time       | lighthouse (mobile)  | 0         | 0      |
+
+The eleven LCP failures are all on /search (six of them the autocomplete bundle
+in #2214, five the hero image in #2388). The eight layout-shift failures are
+split /search 5, /book/step-1 3. Both legs list the same dates against the same
+run numbers.
+
+=============== FILE: src/slots.js ===============
+const OPENING = { start: 17 * 60, end: 22 * 60 };
+
+export function slotsFor(durationMins, stepMins = 30) {
+  if (!Number.isInteger(durationMins) || durationMins <= 0) {
+    throw new RangeError('duration must be a positive whole number of minutes');
   }
+  const out = [];
+  for (let t = OPENING.start; t + durationMins <= OPENING.end; t += stepMins) {
+    out.push(label(t));
+  }
+  return out;
 }
 
-=============== FILE: src/reading-time.js ===============
-'use strict';
-
-const WORDS_PER_MINUTE = 238;
-
-function readingTimeMinutes(wordCount) {
-  if (!Number.isInteger(wordCount) || wordCount < 0) throw new RangeError('bad word count');
-  return Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE));
+export function label(minutes) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
 }
 
-module.exports = { readingTimeMinutes, WORDS_PER_MINUTE };
+=============== FILE: test/slots.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { slotsFor, label } from '../src/slots.js';
 
-=============== FILE: test/reading-time.test.js ===============
-'use strict';
-
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const { readingTimeMinutes } = require('../src/reading-time.js');
-
-test('a typical chapter rounds to whole minutes', () => {
-  assert.equal(readingTimeMinutes(2380), 10);
+test('minutes render as a 24-hour label', () => {
+  assert.equal(label(17 * 60), '17:00');
+  assert.equal(label(21 * 60 + 30), '21:30');
 });
 
-test('a very short text still reads as one minute', () => {
-  assert.equal(readingTimeMinutes(12), 1);
+test('a two-hour booking stops early enough to finish', () => {
+  const slots = slotsFor(120);
+  assert.equal(slots[0], '17:00');
+  assert.equal(slots.at(-1), '20:00');
 });
 
-test('zero words is one minute, not zero', () => {
-  assert.equal(readingTimeMinutes(0), 1);
+test('a ninety-minute booking gets one more slot', () => {
+  assert.equal(slotsFor(90).at(-1), '20:30');
 });
 
-test('a non-integer word count throws', () => {
-  assert.throws(() => readingTimeMinutes(12.5), RangeError);
-});
-
-=============== FILE: test/lighthouserc.test.js ===============
-'use strict';
-
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const config = require('../.lighthouserc.js');
-
-test('config exposes a ci block with a collect section', () => {
-  assert.ok(config.ci, 'ci block missing');
-  assert.ok(config.ci.collect, 'ci.collect missing');
-});
-
-test('every collected url parses', () => {
-  const urls = config.ci.collect.url;
-  assert.ok(Array.isArray(urls) && urls.length > 0, 'collect.url must be a non-empty array');
-  for (const u of urls) assert.doesNotThrow(() => new URL(u), 'unparseable url: ' + u);
+test('a zero duration is rejected', () => {
+  assert.throws(() => slotsFor(0), RangeError);
 });

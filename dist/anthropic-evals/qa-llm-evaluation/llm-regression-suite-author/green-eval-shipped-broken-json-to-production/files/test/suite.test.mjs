@@ -22,6 +22,12 @@ test('case ids are unique', () => {
   assert.equal(new Set(ids).size, ids.length);
 });
 
+test('every case declares a format', () => {
+  for (const c of cases()) {
+    assert.ok(['json', 'prose'].includes(c.vars.format), `${c.id} has no format`);
+  }
+});
+
 test('the captured run covers exactly the cases in the case file', () => {
   const fromCases = cases().map((c) => c.id).sort().join(',');
   const fromRun = run().results.map((r) => r.id).sort().join(',');
@@ -29,5 +35,5 @@ test('the captured run covers exactly the cases in the case file', () => {
 });
 
 test('the captured run was reported as a full pass', () => {
-  assert.equal(run().results.filter((r) => r.success).length, 8);
+  assert.equal(run().results.filter((r) => r.success).length, 9);
 });

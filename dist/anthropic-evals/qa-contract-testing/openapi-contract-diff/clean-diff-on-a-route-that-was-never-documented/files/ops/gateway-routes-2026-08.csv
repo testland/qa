@@ -5,7 +5,4 @@ GET,/v1/webhooks/{webhookId},884019,59,18
 DELETE,/v1/webhooks/{webhookId},12406,7,29
 POST,/v1/webhooks/{webhookId}/disable,0,0,
 
-Platform team note: the seven keys calling DELETE are Northwind Systems, Baltic
-Freight, two of the Kestrel tenancies and three trial accounts that have not
-called anything else since June. Northwind is the enterprise renewal in
-November. Figures are August, taken off the gateway, production only.
+Source: gateway access logs, production only, 2026-08-01 to 2026-08-31.

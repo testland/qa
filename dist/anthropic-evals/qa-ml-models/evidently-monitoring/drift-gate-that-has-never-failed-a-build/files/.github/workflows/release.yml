@@ -17,8 +17,7 @@ jobs:
       - name: unit tests
         run: pytest -q
       - name: drift gate
-        continue-on-error: true
-        run: python -m ci.drift_gate || true
+        run: python -m ci.drift_gate | tee gate.log
       - name: upload drift report
         uses: actions/upload-artifact@v4
         with:

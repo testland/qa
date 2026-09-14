@@ -1,4 +1,4 @@
-const MULTIPLIER = 2;
+const MULTIPLIER = 3; // worst-case padding
 
 const MAP = {
   a: 'à', e: 'è', i: 'ì', o: 'ò', u: 'ù',

@@ -2,7 +2,7 @@ export function createTabs(labels) {
   const state = {
     labels,
     activeIndex: 0,
-    focusedElementId: null,
+    focusTargetId: 'tab-0',
   };
 
   function tabId(index) {
@@ -13,12 +13,11 @@ export function createTabs(labels) {
     return `panel-${index}`;
   }
 
-  // Attributes rendered onto each tab button.
   function attrsFor(index) {
     return {
       id: tabId(index),
       role: 'tab',
-      tabindex: '0',
+      tabindex: index === state.activeIndex ? '0' : '-1',
       'aria-selected': index === state.activeIndex ? 'true' : 'false',
       'aria-controls': panelId(index),
     };
@@ -28,6 +27,7 @@ export function createTabs(labels) {
     return {
       id: panelId(index),
       role: 'tabpanel',
+      tabindex: '0',
       'aria-labelledby': tabId(index),
       hidden: index !== state.activeIndex,
     };
@@ -40,12 +40,15 @@ export function createTabs(labels) {
   }
 
   function handleKeydown(event) {
-    if (event.key === 'ArrowRight') {
-      return select(state.activeIndex + 1);
+    // The strip is a single tab stop, so Tab must not walk from tab to tab.
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      return true;
     }
-    if (event.key === 'ArrowLeft') {
-      return select(state.activeIndex - 1);
-    }
+    if (event.key === 'ArrowRight') return select(state.activeIndex + 1);
+    if (event.key === 'ArrowLeft') return select(state.activeIndex - 1);
+    if (event.key === 'Home') return select(0);
+    if (event.key === 'End') return select(state.labels.length - 1);
     return false;
   }
 

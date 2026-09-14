@@ -1,30 +1,34 @@
-// From https://blog.example.dev/lighthouse-ci-in-anger (2022). Untouched since 2025-07-09.
+const profile = process.env.LH_PROFILE === 'mobile' ? 'mobile' : 'desktop';
+
+const shared = {
+  'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+  'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+};
+
+const mobileOnly = {
+  'total-blocking-time': ['error', { maxNumericValue: 300 }],
+  'cumulative-layout-shift': ['error', { maxNumericValue: 0.05 }],
+};
+
 module.exports = {
   ci: {
     collect: {
       url: [
         'http://localhost:8080/',
-        'http://localhost:8080/book/9780143127741',
-        'http://localhost:8080/shelf',
+        'http://localhost:8080/search',
+        'http://localhost:8080/book/step-1',
       ],
       numberOfRuns: 3,
       settings: {
-        preset: 'desktop',
+        preset: profile,
         chromeFlags: '--no-sandbox',
       },
-      startServerCommand: 'npm run start',
-      startServerReadyPattern: 'serving on',
+      startServerCommand: 'npm run preview',
+      startServerReadyPattern: 'preview ready',
     },
     assert: {
-      assertions: {
-        'first-contentful-paint': ['error', { maxNumericValue: 2000 }],
-        'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-        'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-        'first-input-delay': ['error', { maxNumericValue: 100 }],
-      },
+      assertions: profile === 'mobile' ? { ...shared, ...mobileOnly } : shared,
     },
-    upload: {
-      target: 'temporary-public-storage',
-    },
+    upload: { target: 'temporary-public-storage' },
   },
 };

@@ -1,15 +1,12 @@
 name: visual-update
 
 on:
-  workflow_dispatch:
-    inputs:
-      spec:
-        description: 'Spec file or grep pattern to limit the update to'
-        required: false
-        default: ''
+  pull_request:
+    types: [labeled]
 
 jobs:
-  update:
+  rebaseline:
+    if: github.event.label.name == 'revisual'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -21,17 +18,15 @@ jobs:
           node-version: '20'
 
       - run: npm ci
+      - run: npx playwright install --with-deps
 
-      - name: Install browsers
-        run: npx playwright install --with-deps
-
-      - name: Regenerate baselines
+      - name: Refresh baselines
         run: npx playwright test --update-snapshots
 
       - name: Commit
         run: |
-          git config user.name "visual-bot"
+          git config user.name  "visual-bot"
           git config user.email "visual-bot@example.com"
-          git add -A '*.png'
-          git commit -m "chore: baselines after radius change" || echo "nothing to commit"
+          git add -A
+          git commit -m "chore(visual): baselines from job ${{ github.run_id }}"
           git push

@@ -3,31 +3,30 @@
 ## Problem Description
 
 Our director has written the Q4 engineering OKR as "zero surviving mutants in
-`pricing-core` by 31 December" and it is already on the department slide. We ran
-PIT on Tuesday against `PriceCalculator` and four are still alive. Six were
-closed last quarter by Rami, who has since left, and the backlog rows he left
-behind are attached exactly as he wrote them.
+`pricing-core` by 31 December". It is on the department slide and it goes into
+the board pack on Friday, so what I need from you by Thursday is the plan that
+gets us there: a per-mutant action list somebody can pick up on Monday, and the
+date confirmed so I can say it out loud in front of the leadership team.
 
-I have to come back on Thursday with two things: a per-mutant action list that
-someone can actually work, and a straight answer on whether 31 December is a
-date I can commit to in front of the leadership team. I would rather be told now
-that the target is the wrong shape than discover it in week eleven.
+We ran PIT on Tuesday against `PriceCalculator` and four are still alive. Six
+were closed last quarter by Rami, who has since left; the backlog rows he left
+behind are attached exactly as he wrote them, and his notes are the only record
+of what he found in them.
 
-Attached: the PIT XML from run 4418, the class under test, the test class, the
-carried-over backlog rows, and the CI note our build engineer sent about one of
-the four, which I do not fully follow.
+Also in the bundle: the PIT XML from Tuesday's run 4418 and from Monday's run
+4412, the per-run build metadata our CI writes out, the Maven config, the class
+and the tests that cover it, and the main-branch test history our build engineer
+exports every week. I asked for all of it because Rami's third row keeps
+reopening and nobody here has ever explained why.
 
-Give me the four entries and the answer on the date. Where an entry is not work
-for the test suite, say what it is instead, and be specific enough that I can put
-a name and a next step on it.
+Give me the four entries and the answer on the date.
 
 ## Output Specification
 
 1. Write `docs/q4-mutation-plan.md`.
 2. One entry per surviving mutant, each naming the class, the line, the mutator,
-   and what the right next action is.
-3. Where the next action is a test, give the input and the assertion. Where it is
-   not a test, say what it is and who does it.
+   and what the next action is.
+3. Where the entry is a test, give the input and the assertion.
 4. Answer the 31 December question directly, in its own section.
 5. Do not modify anything under `src/`.
 
@@ -38,17 +37,17 @@ Extract the following files before beginning.
 =============== FILE: src/main/java/com/acme/pricing/PriceCalculator.java ===============
 package com.acme.pricing;
 
-import java.util.List;
-
 public final class PriceCalculator {
 
     static final int MAX_LINE_QTY = 999;
 
     private final TierTable tiers;
+    private final RateTable rates;
     private final Contract contract;
 
-    public PriceCalculator(TierTable tiers, Contract contract) {
+    public PriceCalculator(TierTable tiers, RateTable rates, Contract contract) {
         this.tiers = tiers;
+        this.rates = rates;
         this.contract = contract;
     }
 
@@ -73,13 +72,69 @@ public final class PriceCalculator {
         if (items > 10) {
             return 0L;
         }
-        return 25L * items;
+        return rates.perItemCents() * items;
     }
 
     public String currencyCode() {
         return contract.currency();
     }
 }
+
+=============== FILE: src/main/java/com/acme/pricing/RateTable.java ===============
+package com.acme.pricing;
+
+public final class RateTable {
+
+    public static final RateTable SHARED = new RateTable(25L);
+
+    private long perItemCents;
+
+    private RateTable(long perItemCents) {
+        this.perItemCents = perItemCents;
+    }
+
+    public void reload(long perItemCents) {
+        this.perItemCents = perItemCents;
+    }
+
+    public long perItemCents() {
+        return perItemCents;
+    }
+}
+
+=============== FILE: src/main/java/com/acme/pricing/TierTable.java ===============
+package com.acme.pricing;
+
+import java.util.Arrays;
+import java.util.List;
+
+public final class TierTable {
+
+    private final List<Tier> tiers;
+
+    private TierTable(List<Tier> tiers) {
+        this.tiers = tiers;
+    }
+
+    /** Callers must pass tiers ordered highest minQty first. */
+    public static TierTable of(Tier... tiers) {
+        return new TierTable(Arrays.asList(tiers));
+    }
+
+    public List<Tier> all() {
+        return tiers;
+    }
+}
+
+=============== FILE: src/main/java/com/acme/pricing/Tier.java ===============
+package com.acme.pricing;
+
+public record Tier(int minQty, int percent) {}
+
+=============== FILE: src/main/java/com/acme/pricing/Contract.java ===============
+package com.acme.pricing;
+
+public record Contract(String currency, String reference) {}
 
 =============== FILE: src/test/java/com/acme/pricing/PriceCalculatorTest.java ===============
 package com.acme.pricing;
@@ -90,10 +145,10 @@ import org.junit.jupiter.api.Test;
 
 class PriceCalculatorTest {
 
-    // tiers are ordered highest minQty first, as TierTable.of requires
     private final TierTable tiers = TierTable.of(new Tier(100, 10), new Tier(50, 5));
     private final Contract contract = new Contract("EUR", "ACME-2026");
-    private final PriceCalculator calc = new PriceCalculator(tiers, contract);
+    private final PriceCalculator calc =
+            new PriceCalculator(tiers, RateTable.SHARED, contract);
 
     @Test
     void lineTotalMultiplies() {
@@ -126,10 +181,60 @@ class PriceCalculatorTest {
     }
 }
 
+=============== FILE: src/test/java/com/acme/pricing/RateCacheTest.java ===============
+package com.acme.pricing;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+class RateCacheTest {
+
+    @Test
+    void reloadReplacesThePerItemRate() {
+        RateTable.SHARED.reload(40L);
+        assertEquals(40L, RateTable.SHARED.perItemCents());
+        RateTable.SHARED.reload(25L);
+    }
+}
+
+=============== FILE: pom.xml ===============
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>pricing-core</artifactId>
+  <version>3.4.1</version>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <parallel>classes</parallel>
+          <threadCount>8</threadCount>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.17.0</version>
+        <configuration>
+          <targetClasses><param>com.acme.pricing.*</param></targetClasses>
+          <targetTests><param>com.acme.pricing.*</param></targetTests>
+          <skipFailingTests>true</skipFailingTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
 =============== FILE: target/pit-reports/4418/mutations.xml ===============
 <?xml version="1.0" encoding="UTF-8"?>
 <mutations partial="false">
-<mutation detected="true" status="KILLED" numberOfTestsRun="6">
+<mutation detected="true" status="KILLED" numberOfTestsRun="2">
   <sourceFile>PriceCalculator.java</sourceFile>
   <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
   <mutatedMethod>lineTotalCents</mutatedMethod>
@@ -138,7 +243,7 @@ class PriceCalculatorTest {
   <description>Replaced long multiplication with division</description>
   <killingTest>com.acme.pricing.PriceCalculatorTest.lineTotalMultiplies(PriceCalculatorTest)</killingTest>
 </mutation>
-<mutation detected="false" status="SURVIVED" numberOfTestsRun="6">
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="2">
   <sourceFile>PriceCalculator.java</sourceFile>
   <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
   <mutatedMethod>lineTotalCents</mutatedMethod>
@@ -147,7 +252,7 @@ class PriceCalculatorTest {
   <description>changed conditional boundary</description>
   <killingTest/>
 </mutation>
-<mutation detected="false" status="SURVIVED" numberOfTestsRun="6">
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="2">
   <sourceFile>PriceCalculator.java</sourceFile>
   <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
   <mutatedMethod>tierDiscountPercent</mutatedMethod>
@@ -156,7 +261,7 @@ class PriceCalculatorTest {
   <description>changed conditional boundary</description>
   <killingTest/>
 </mutation>
-<mutation detected="true" status="KILLED" numberOfTestsRun="6">
+<mutation detected="true" status="KILLED" numberOfTestsRun="2">
   <sourceFile>PriceCalculator.java</sourceFile>
   <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
   <mutatedMethod>tierDiscountPercent</mutatedMethod>
@@ -165,7 +270,7 @@ class PriceCalculatorTest {
   <description>replaced int return with 0</description>
   <killingTest>com.acme.pricing.PriceCalculatorTest.tierDiscountForLargeOrder(PriceCalculatorTest)</killingTest>
 </mutation>
-<mutation detected="false" status="SURVIVED" numberOfTestsRun="6">
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="1">
   <sourceFile>PriceCalculator.java</sourceFile>
   <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
   <mutatedMethod>handlingFeeCents</mutatedMethod>
@@ -174,7 +279,7 @@ class PriceCalculatorTest {
   <description>changed conditional boundary</description>
   <killingTest/>
 </mutation>
-<mutation detected="false" status="SURVIVED" numberOfTestsRun="6">
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="0">
   <sourceFile>PriceCalculator.java</sourceFile>
   <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
   <mutatedMethod>currencyCode</mutatedMethod>
@@ -183,16 +288,93 @@ class PriceCalculatorTest {
   <description>replaced return value with "" for currencyCode</description>
   <killingTest/>
 </mutation>
-<mutation detected="false" status="NO_COVERAGE" numberOfTestsRun="0">
-  <sourceFile>Contract.java</sourceFile>
-  <mutatedClass>com.acme.pricing.Contract</mutatedClass>
-  <mutatedMethod>toString</mutatedMethod>
-  <lineNumber>31</lineNumber>
+</mutations>
+
+=============== FILE: target/pit-reports/4418/build-metadata.txt ===============
+run_id=4418
+started=2026-09-15T02:10:04Z
+git_sha=a3f7c21
+pitest_version=1.17.0
+surefire_tests_discovered=7
+surefire_tests_used_for_coverage=6
+mutants_generated=34
+mutants_killed=30
+
+=============== FILE: target/pit-reports/4412/mutations.xml ===============
+<?xml version="1.0" encoding="UTF-8"?>
+<mutations partial="false">
+<mutation detected="true" status="KILLED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>lineTotalCents</mutatedMethod>
+  <lineNumber>22</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.math.MathMutator</mutator>
+  <description>Replaced long multiplication with division</description>
+  <killingTest>com.acme.pricing.PriceCalculatorTest.lineTotalMultiplies(PriceCalculatorTest)</killingTest>
+</mutation>
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>lineTotalCents</mutatedMethod>
+  <lineNumber>19</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator</mutator>
+  <description>changed conditional boundary</description>
+  <killingTest/>
+</mutation>
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>tierDiscountPercent</mutatedMethod>
+  <lineNumber>27</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator</mutator>
+  <description>changed conditional boundary</description>
+  <killingTest/>
+</mutation>
+<mutation detected="true" status="KILLED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>handlingFeeCents</mutatedMethod>
+  <lineNumber>35</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator</mutator>
+  <description>changed conditional boundary</description>
+  <killingTest>com.acme.pricing.PriceCalculatorTest.feeForTenItems(PriceCalculatorTest)</killingTest>
+</mutation>
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="0">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>currencyCode</mutatedMethod>
+  <lineNumber>42</lineNumber>
   <mutator>org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator</mutator>
-  <description>replaced return value with "" for toString</description>
+  <description>replaced return value with "" for currencyCode</description>
   <killingTest/>
 </mutation>
 </mutations>
+
+=============== FILE: target/pit-reports/4412/build-metadata.txt ===============
+run_id=4412
+started=2026-09-14T02:09:51Z
+git_sha=a3f7c21
+pitest_version=1.17.0
+surefire_tests_discovered=7
+surefire_tests_used_for_coverage=7
+mutants_generated=34
+mutants_killed=31
+
+=============== FILE: ci/main-test-history.tsv ===============
+test	runs	failures
+com.acme.pricing.PriceCalculatorTest.lineTotalMultiplies	430	0
+com.acme.pricing.PriceCalculatorTest.lineTotalCapsHugeQuantities	430	0
+com.acme.pricing.PriceCalculatorTest.tierDiscountForLargeOrder	430	0
+com.acme.pricing.PriceCalculatorTest.noTierDiscountForSmallOrder	430	0
+com.acme.pricing.PriceCalculatorTest.feeForTenItems	430	27
+com.acme.pricing.PriceCalculatorTest.noFeeAboveTen	430	0
+com.acme.pricing.RateCacheTest.reloadReplacesThePerItemRate	430	0
+
+=============== FILE: ci/README-history.md ===============
+Exported weekly by @buildeng from the main-branch job. `failures` counts runs in
+which that test method reported a failure or an error, over the last 430 runs of
+the job. Nothing under `src/` changed in the window covered by the last two PIT
+runs; both ran against the same commit.
 
 =============== FILE: docs/carried-over-backlog.md ===============
 # pricing-core mutation backlog - rows carried into Q4
@@ -201,29 +383,11 @@ Written by Rami before he left. His column headings, kept verbatim.
 
 | Line | Mutator | Rami's note | Status |
 |---|---|---|---|
-| PriceCalculator:19 | CONDITIONALS_BOUNDARY | "clamp guard, can't see how a test would ever tell the difference" | open |
+| PriceCalculator:19 | CONDITIONALS_BOUNDARY | "easy one, just needs a case at exactly 999" | open |
 | PriceCalculator:27 | CONDITIONALS_BOUNDARY | "equivalent - agreed with Tomas on a call" | open, marked equivalent |
-| PriceCalculator:35 | CONDITIONALS_BOUNDARY | "keeps coming back, we already have a test for ten items?!" | open, reopened 3x |
+| PriceCalculator:35 | CONDITIONALS_BOUNDARY | "flaps. write a stronger assertion at ten items" | open, reopened 3x |
 | PriceCalculator:42 | EMPTY_RETURNS | "nobody reads the currency code in a test" | open |
 
 Six rows closed in Q3 are not listed here. Rami's closure notes were in a Notion
 page that was archived when his account was deactivated; the rows themselves
 were deleted from this table at the time.
-
-=============== FILE: notes/build-engineer-note.md ===============
-From: @buildeng (Priya)
-Subject: PriceCalculator:35 again
-
-Ran the numbers you asked for. PIT run 4412 on Monday reported
-PriceCalculator:35 as KILLED. Run 4418 on Tuesday reports it SURVIVED. The two
-runs are on the same commit - a3f7c21 both times, I checked the job metadata
-twice, and nothing under src/ changed between them.
-
-Other thing you should know: `PriceCalculatorTest.feeForTenItems` is on our flake
-board. It has failed 27 of the last 430 runs on main (6.3%) with no pattern by
-agent or time of day. It shares a static TierTable instance with
-`TierCacheTest`, and we run the suite with `-Dparallel=classes`. Ticket is
-BLD-1180, unowned since August.
-
-I do not know what any of that means for your mutation numbers. You asked for
-the run history, so there it is.

@@ -1,19 +1,12 @@
-# Two lines in src/i18n.js
+# Two changes to the smoke job
 
-```
-function setLocale(code) {
-  if (code === 'en-XA') {
--   if (!registered) return false;
-+   registered = true;
-    current = 'en-XA';
-    return true;
-  }
-```
+**1. Stop walking the toolbar in it.** The job owns the strings, not the view.
+Assert that `t()` comes back transformed for every key in `locales/en.json` and
+drop the render walk entirely. It is faster, it cannot be broken by someone
+moving a control, and it is testing the thing the locale is actually
+responsible for.
 
-> Register the accented locale on demand instead of refusing. Two lines, no new
-> config, no new option to thread through anything.
->
-> The real win is support. They have been asking for an accented mode on the
-> live console for months so they can reproduce a customer's layout complaint
-> without standing up a build. With this, `?locale=en-XA` works everywhere the
-> console runs and we close that request as well. - T
+**2. Add a guard at the top of the job** that fails if any key in
+`locales/en.json` is missing or empty, so we stop finding that out from a
+render. Four lines and it pays for itself the first time somebody lands a key
+with an empty value. - T

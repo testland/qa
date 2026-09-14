@@ -1,0 +1,33 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "CronJob",
+  "metadata": {
+    "name": "close-books",
+    "namespace": "finance",
+    "labels": { "owner": "finance-eng" }
+  },
+  "spec": {
+    "schedule": "0 2 1 * *",
+    "startingDeadlineSeconds": 120,
+    "successfulJobsHistoryLimit": 3,
+    "failedJobsHistoryLimit": 3,
+    "jobTemplate": {
+      "spec": {
+        "backoffLimit": 2,
+        "template": {
+          "spec": {
+            "restartPolicy": "Never",
+            "containers": [
+              {
+                "name": "close",
+                "image": "registry.internal/finance/close-books:2026.08.3",
+                "args": ["--period", "previous-month"],
+                "resources": { "requests": { "cpu": "2", "memory": "6Gi" } }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

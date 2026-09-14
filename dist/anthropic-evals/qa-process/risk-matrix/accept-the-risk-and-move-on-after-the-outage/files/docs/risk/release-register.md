@@ -5,7 +5,10 @@
 **Cadence:** weekly during a release train
 **Escalation:** score 15-19 to the Head of Engineering; score 20-25 to the CTO, recorded in the review log
 
-Scale: impact 1-5 by likelihood 1-5. Block threshold 15.
+Scale: impact 1-5 by likelihood 1-5. Block threshold 15. Strategy is one of
+Avoid / Mitigate / Transfer / Accept. A row may only sit in Mitigated once the
+mitigation named in its cell has shipped and a test in the suite carries a
+`risk:<ID>` tag for it.
 
 ## Active
 
@@ -13,7 +16,7 @@ Scale: impact 1-5 by likelihood 1-5. Block threshold 15.
 |------|--------------------------------------------------------|-------------|-------:|-----------:|------:|-----------|-------------------------------------|-------------|-------------|
 | R-001| Checkout totals disagree with the invoice PDF          | Business    |   5    |     3      |  15   | Mitigate  | Golden-file tests on invoice render | Priyanka    | 2026-03-11  |
 | R-002| Inventory oversell during flash sales                  | Business    |   4    |     4      |  16   | Mitigate  | Reservation lock plus soak test     | Halim       | 2026-03-11  |
-| R-005| Address validation rejects valid Irish Eircodes         | UX          |   2    |     3      |   6   | Accept    | See decision note                   | Halim       | 2026-03-11  |
+| R-005| Address validation rejects valid Irish Eircodes         | UX          |   2    |     3      |   6   | Accept    | Tolerated - 0.2% of addresses       | Halim       | 2026-03-11  |
 | R-006| Refund issued twice on a retried cancellation           | Business    |   5    |     2      |  10   | Mitigate  | Idempotency key on refund           | Priyanka    | 2026-03-11  |
 | R-008| Search index lags catalogue by over an hour             | Technical   |   3    |     3      |   9   | Mitigate  | Lag alert at 20 minutes             | Nils        | 2026-03-11  |
 | R-010| Carrier rate API deprecates v2 in Q4                   | Integration |   4    |     3      |  12   | Mitigate  | Migrate to v3 in Q3                 | Nils        | 2026-03-11  |

@@ -1,0 +1,80 @@
+$ npx cypress run --browser chrome
+
+====================================================================
+  (Run Starting)
+
+  Cypress:        13.15.0
+  Browser:        Chrome 129 (headless)
+  Specs:          41 found in cypress/e2e
+====================================================================
+
+  Running:  invites.cy.ts                                      (1 of 41)
+
+  admin invites
+    ok  an owner sees the pending invite list (2109ms)
+    (Attempt 1 of 5) a resent invite refreshes its expiry
+    (Attempt 2 of 5) a resent invite refreshes its expiry
+    ok  a resent invite refreshes its expiry (21440ms)
+    ok  an expired invite cannot be accepted (3318ms)
+
+  Running:  roles.cy.ts                                        (3 of 41)
+
+  admin roles
+    ok  an owner can invite a member (4211ms)
+    (Attempt 1 of 5) a revoked member loses dashboard access
+    (Attempt 2 of 5) a revoked member loses dashboard access
+    (Attempt 3 of 5) a revoked member loses dashboard access
+    ok  a revoked member loses dashboard access (61902ms)
+
+  Running:  audit-log.cy.ts                                    (9 of 41)
+
+  admin audit log
+    (Attempt 1 of 5) the log paginates to the second page
+    ok  the log paginates to the second page (23771ms)
+    ok  the log filters by actor (5540ms)
+
+  Running:  billing-seats.cy.ts                               (17 of 41)
+
+  admin billing seats
+    ok  seat count matches the plan (3902ms)
+    (Attempt 1 of 5) removing a seat issues a credit note
+    (Attempt 2 of 5) removing a seat issues a credit note
+    (Attempt 3 of 5) removing a seat issues a credit note
+    (Attempt 4 of 5) removing a seat issues a credit note
+    ok  removing a seat issues a credit note (98004ms)
+
+  Running:  sso.cy.ts                                         (28 of 41)
+
+  admin sso
+    (Attempt 1 of 5) a SAML login lands on the dashboard
+    (Attempt 2 of 5) a SAML login lands on the dashboard
+    ok  a SAML login lands on the dashboard (40118ms)
+    ok  a disabled connection blocks login (4470ms)
+
+  Running:  webhooks.cy.ts                                    (36 of 41)
+
+  admin webhooks
+    ok  a new endpoint is verified on save (3011ms)
+    (Attempt 1 of 5) a failed delivery is retried and shown
+    (Attempt 2 of 5) a failed delivery is retried and shown
+    ok  a failed delivery is retried and shown (27650ms)
+
+  ... 35 specs omitted from this excerpt ...
+
+====================================================================
+  (Run Finished)
+
+  Spec                              Tests  Passing  Failing  Pending
+  ok  invites.cy.ts         00:31      3        3        -        -
+  ok  roles.cy.ts           01:12      2        2        -        -
+  ok  audit-log.cy.ts       00:34      2        2        -        -
+  ok  billing-seats.cy.ts   01:44      2        2        -        -
+  ok  sso.cy.ts             00:49      2        2        -        -
+  ok  webhooks.cy.ts        00:36      2        2        -        -
+  ok  All specs passed!     41:08    214      214        -        -
+====================================================================
+
++ echo "admin-e2e 2026-09-08: job green (214 passing, 0 failing)"
+admin-e2e 2026-09-08: job green (214 passing, 0 failing)
++ echo "90-day job green rate now 99.6% (269 of 270 nightly runs)"
+90-day job green rate now 99.6% (269 of 270 nightly runs)

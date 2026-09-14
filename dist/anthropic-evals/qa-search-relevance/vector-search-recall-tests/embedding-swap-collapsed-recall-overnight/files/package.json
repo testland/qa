@@ -1,10 +1,9 @@
 {
-  "name": "runbook-retrieval",
-  "version": "2.7.3",
+  "name": "trade-catalogue-search",
+  "version": "2.8.0",
   "private": true,
   "scripts": {
     "test": "node --test",
-    "recall": "node -e \"const c=require('./data/corpus.json'),q=require('./data/queries.json');const{ingest}=require('./src/ingest');const{measureRecall}=require('./src/recall');const i=ingest(c.docs);console.log('recall@10',measureRecall(i,q.queries).toFixed(3))\"",
-    "cost": "node -e \"const c=require('./data/corpus.json'),q=require('./data/queries.json');const{ingest}=require('./src/ingest');const i=ingest(c.docs);i.resetCounters();for(const x of q.queries)i.search(x.vec,{k:10});console.log('comparisons/query',(i.comparisons()/q.queries.length).toFixed(1))\""
+    "recall": "node -e \"const c=require('./data/corpus.json'),q=require('./data/queries.json');const{buildIndex}=require('./src/ingest');const{measureRecall}=require('./src/recall');console.log('recall@10',measureRecall(buildIndex(c),q).toFixed(3))\""
   }
 }

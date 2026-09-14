@@ -1,8 +1,8 @@
 export const routes = [
-  { path: '/', name: 'home' },
-  { path: '/search', name: 'search' },
-  { path: '/product/:sku', name: 'product' },
-  { path: '/cart', name: 'cart' },
-  { path: '/checkout', name: 'checkout' },
-  { path: '/orders', name: 'order-history' },
+  { path: '/', name: 'home', auth: false },
+  { path: '/search', name: 'search', auth: false },
+  { path: '/product/:sku', name: 'product', auth: false },
+  { path: '/cart', name: 'cart', auth: false },
+  { path: '/checkout', name: 'checkout', auth: true },
+  { path: '/orders', name: 'order-history', auth: true },
 ];

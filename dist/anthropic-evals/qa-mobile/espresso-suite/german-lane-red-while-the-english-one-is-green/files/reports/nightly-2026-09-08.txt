@@ -1,0 +1,24 @@
+### Nightly 2026-09-08 - before the shard split, both lanes ran in one job, pid 5880 throughout
+
+Class order that night: ReceiptTest, SearchTest, SignupFlowEnTest, SignupFlowDeTest
+
+com.northwind.shop.ReceiptTest - 4 tests, 4 passed
+com.northwind.shop.SearchTest - 6 tests, 6 passed
+com.northwind.shop.SignupFlowEnTest - 9 tests, 9 passed
+com.northwind.shop.SignupFlowDeTest - 9 tests, 4 passed, 5 failed
+  (same five as every other night)
+
+### Nightly 2026-09-09 - same single job, class order reversed by the runner
+
+Class order that night: SignupFlowDeTest, SignupFlowEnTest, ReceiptTest, SearchTest
+
+com.northwind.shop.SignupFlowDeTest - 9 tests, 4 passed, 5 failed
+com.northwind.shop.SignupFlowEnTest - 9 tests, 9 passed
+com.northwind.shop.ReceiptTest - 4 tests, 3 passed, 1 failed
+  receiptDateMatchesOrderDate FAILED
+  Expected: with text: is "14 Aug 2026"
+       Got: "AppCompatTextView{id=2131231088, res-name=receipt_date, text=14.08.2026}"
+com.northwind.shop.SearchTest - 6 tests, 5 passed, 1 failed
+  resultCountReadsAsThousands FAILED
+  Expected: with text: is "1,204 results"
+       Got: "AppCompatTextView{id=2131231099, res-name=result_count, text=1.204 results"

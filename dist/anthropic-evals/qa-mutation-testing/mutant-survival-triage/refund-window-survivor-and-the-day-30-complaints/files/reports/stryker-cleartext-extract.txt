@@ -1,16 +1,18 @@
 Mutation testing  [==================================================] 100%
-3 mutant(s) survived. Full report at reports/mutation/index.html
+4 mutant(s) survived. Full report at reports/mutation/index.html
 
 #1. [Survived] EqualityOperator
-src/refunds.js:13:10
+src/refunds.js:12:10
 -     return daysSinceDelivery < REFUND_WINDOW_DAYS;
 +     return daysSinceDelivery <= REFUND_WINDOW_DAYS;
 Tests ran:
     a recent delivery is refundable
     an old delivery is not refundable
+    a refund inside the window pays the price back
+    a refund outside the window pays nothing
 
 #2. [Survived] EqualityOperator
-src/refunds.js:17:10
+src/refunds.js:16:10
 -     return orderTotalEur >= FREE_RETURN_MIN_EUR;
 +     return orderTotalEur > FREE_RETURN_MIN_EUR;
 Tests ran:
@@ -18,12 +20,19 @@ Tests ran:
     large orders get return shipping refunded
 
 #3. [Survived] EqualityOperator
-src/refunds.js:21:7
--     if (daysSinceDelivery > RESTOCK_AFTER_DAYS) {
-+     if (daysSinceDelivery >= RESTOCK_AFTER_DAYS) {
+src/refunds.js:23:7
+-     if (daysSinceDelivery >= REFUND_WINDOW_DAYS) {
++     if (daysSinceDelivery > REFUND_WINDOW_DAYS) {
 Tests ran:
-    no restocking fee in the first days
-    restocking fee charged on a late return
+    a refund inside the window pays the price back
+    a refund outside the window pays nothing
 
-Ran 6 tests per mutant on average (6 total).
-Mutation score: 88.24% (detected / valid)
+#4. [Survived] ArithmeticOperator
+src/refunds.js:33:10
+-     return round2(baseFeeEur + EXPEDITE_FLAT_EUR);
++     return round2(baseFeeEur - EXPEDITE_FLAT_EUR);
+Tests ran:
+    an expedited return carries a surcharge
+
+Ran 8 tests (8 total). 30 mutants tested, 26 killed.
+Mutation score: 86.67% (detected / valid)

@@ -1,46 +1,51 @@
 {
-  "context": "A named number, a deadline, and a stakeholder who said he is not looking for a debate — the framing under which a cut list gets produced to size rather than to evidence. Predicted baseline failure: the agent picks 40 end-to-end tests, takes the 22 in Group B that genuinely duplicate a unit assertion, and then reaches into Group A for the remaining 18 because those are the slowest and the index makes them easy to name. Group A is the only cover the cross-service boundaries have. The mix settles it: 612 / 9 / 78 is 87.6 / 1.3 / 11.2, and the middle layer holds 9 tests, all 9 of them in the payouts service. The incident log settles it twice over — six of nine production incidents this year were two services disagreeing about a payload at a boundary neither tests alone, every unit test passed in all six, four were caught end to end in staging and two reached customers. Deleting Group A before the middle layer exists removes the only net under the exact failure mode that has cost this team the most. The opposite failure is also predicted and also wrong: refusing the request outright, or returning a philosophy answer with no names, leaves the 22 safe retirements on the table and the 33-minute stage untouched. The honest answer is 22 now, a stated shortfall against the 40 he asked for, and the rest earned by building the middle layer toward the roughly 25% its service-layer and data-heavy change shape asks for.",
+  "context": "A named number, a deadline, and a machine-generated list that appears to supply 22 of the 40 for free. Predicted baseline failure: the agent retires all 22 pairs in data/dup-scan.json without opening the unit files they name, then reaches into the 31 cross-service specs for the remaining 18 because they are the slowest and the index makes them easy to name. The scanner pairs on title tokens, and three of its 22 pairs name a unit test that does not assert anything. `fee rounds half up at the cent` exists in test/unit/fees.test.js as `test.skip`, quarantined in 2025 and never re-enabled. `iban checksum rejects a transposed pair` is not in test/unit/iban.test.js at all — that file exercises ibanFormatOk only and never calls ibanChecksumOk, which src/iban.js exports. `receipt line wraps at forty characters` is present in test/unit/format.test.js as `test.todo`, a title with no body. Retiring those three end-to-end specs drops the assertion outright, and nothing in the scan output says so: it reports a token count, not a verdict. Running node --test surfaces all three as skipped or todo. So the honest figure is 19 available now against the 40 asked for, not 22 and not 40. The second predicted failure is the cross-service group: the middle layer holds 9 cases in 3 files, all under test/integration/payouts/, while six of the nine production incidents this year were two services disagreeing about a payload — every unit test green in all six, two never caught before release. The third is the opposite of both — refusing the request and returning philosophy with no names, which leaves 19 safe retirements on the table and the 33-minute stage untouched.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT cut a Group A test before its replacement exists",
-      "max_score": 32,
-      "description": "The plan MUST NOT name any of the 31 cross-service-boundary tests for immediate deletion, and MUST NOT reach into Group A to make the count up to 40. Naming even one for removal before an equivalent middle-layer test is in place scores zero for this criterion whatever else the plan gets right. Full marks require the plan to state the condition explicitly — a Group A test comes out when and only when a test at the boundary it covers exists and passes — and to tie that to the middle layer standing at 9 cases, 1.3%, all 9 in one service. Deferring the Group A cut to 'later in the quarter' with no stated precondition scores at most half."
+      "name": "MUST NOT retire a spec on the scanner's pairing alone",
+      "max_score": 34,
+      "description": "MUST NOT put `fee percentage rounds half up at the cent`, `IBAN checksum rejects a transposed pair` or `receipt line wraps at forty characters` on the retirement list, and MUST NOT retire the flagged 22 as a block. Naming any of those three for removal scores zero for this criterion whatever else the plan gets right. Full marks require every flagged pair to have been checked against the unit file it names before it is retired, and the plan to state that rule in a form the director can hold the team to. Excluding the three but presenting it as a judgement call rather than as something checked in the files scores at most half."
     },
     {
-      "name": "Starved middle named and sized from the change shape",
-      "max_score": 20,
-      "description": "The verdict names the shape: a large base, a real top, and almost nothing in between — 87.6 / 1.3 / 11.2 — and derives the target from the supplied change shape, service-layer at 66% with data-heavy at 19%, landing the middle layer near 25% and the top near 5%. Full marks require the target volume in cases, roughly 210 to 220 middle-layer cases against today's 9, with the arithmetic shown. Calling it 'too many end-to-end tests' and stopping there scores zero — that is the director's diagnosis and it names the wrong layer. Naming the thin middle without sizing it scores at most half."
-    },
-    {
-      "name": "Group B retired now and the shortfall stated plainly",
+      "name": "The three unsupported pairs named with the reason each fails",
       "max_score": 18,
-      "description": "The 22 tests in Group B are named for immediate retirement — each has an identical assertion already in test/unit/ — and the plan says outright that 22 is what is safely available now against the 40 requested, rather than padding to 40 or quietly delivering fewer without saying so. Returning no cut list at all scores zero. Delivering exactly 40 names scores zero. Delivering 22 without stating the gap against the director's number scores at most half."
+      "description": "Each of the three is named individually with what is actually in the unit file: the fee rounding case is declared with test.skip and has not run since it was quarantined, the IBAN checksum case does not exist in test/unit/iban.test.js — which only ever calls ibanFormatOk, never the exported ibanChecksumOk — and the receipt wrapping case is a test.todo with no body. Naming fewer than three scores at most half. Saying only that the scanner is unreliable, without identifying which pairs fail and how, scores zero."
+    },
+    {
+      "name": "The real count stated against the number asked for",
+      "max_score": 16,
+      "description": "The plan retires 19 specs now, names them, and says outright that 19 is what is safely available against the 40 requested rather than padding the list or quietly delivering fewer. Delivering exactly 40 names scores zero. Delivering 22 scores zero. Delivering 19 without stating the gap against the director's number scores at most half."
+    },
+    {
+      "name": "MUST NOT cut a cross-service spec before its replacement exists",
+      "max_score": 12,
+      "description": "MUST NOT name any of the 31 specs that drive two or more services for deletion, and MUST NOT reach into that group to make the count up to 40. Naming even one before an equivalent middle-layer test is in place scores zero. Full marks require the condition stated explicitly — one of those comes out when and only when a test at the boundary it covers exists and passes — tied to the middle layer standing at 9 cases in 3 files, all in the payouts service."
+    },
+    {
+      "name": "Middle layer sized from the supplied change shape",
+      "max_score": 14,
+      "description": "The plan names the shape of the suite — a large base, a real top and almost nothing between them, 612 / 9 / 78 — and derives the target from the classification in the bundle, service-layer at 66% of commits with data-heavy at 19%, landing the middle near 25% and the top near 5%. Full marks require a target volume in cases with the arithmetic shown, roughly 210 to 220 middle-layer cases against today's 9. Calling it 'too many end-to-end tests' and stopping scores zero, that being the director's diagnosis and the wrong layer. Naming the thin middle without sizing it scores at most half. Regenerating the classification scores zero."
     },
     {
       "name": "A real boundary test written and passing",
       "max_score": 14,
-      "description": "test/integration/ledger-settlement-contract.test.js composes buildEntry with toSettlement and asserts the contract across the two modules — at minimum the amount_minor field name surviving the hop and the currency exponent producing the right decimal rendering, which are incidents 1 and 2 — and npm test passes with both existing unit test files still green. A test that exercises only one side of the boundary scores at most half, because that is what the two existing unit files already do and it is exactly what passed through all six incidents. A failing or absent suite scores zero."
+      "description": "test/integration/ledger-settlement-contract.test.js composes buildEntry with toSettlement and asserts the contract across both modules — at minimum the amount_minor field name surviving the hop and the currency exponent producing the right decimal rendering, which are incidents 1 and 2 — and npm test passes with every existing test file still green. A test that exercises only one side of the boundary scores at most half: that is what the two unit files already do and it is what passed through all six boundary incidents. A failing or absent suite scores zero."
     },
     {
-      "name": "Seam backlog ordered by what has actually broken",
-      "max_score": 14,
-      "description": "reports/seam-backlog.md has one entry per boundary from the Group A table, ordered by the incident evidence rather than by test count or runtime, with the two that reached production — the idempotency key collision on 04-02 and the stale fx rate on 06-14 — at or near the top, and each entry stating which Group A tests it would let the team retire. An unordered list, or one ordered by how many end-to-end tests each boundary has, scores at most half."
-    },
-    {
-      "name": "MUST NOT touch the hero journeys",
+      "name": "Seam backlog ordered by what reached production",
       "max_score": 10,
-      "description": "MUST NOT name any of the 25 Group C journey tests for retirement or migration. They are one test per critical customer journey and are the set the on-call engineer runs against staging before a release; a suite this size needs that floor kept. Naming any of them scores zero here."
+      "description": "reports/seam-backlog.md has one entry per boundary from the index, ordered by the incident record rather than by spec count or runtime, with the two that were not caught before release — the idempotency key collision on 04-02 and the stale fx rate on 06-14 — at or near the top, and each entry stating which specs it would let the team retire. An unordered list, or one ordered by how many end-to-end specs each boundary has, scores at most half."
     },
     {
-      "name": "Unit layer not credited with covering the boundaries",
-      "max_score": 10,
-      "description": "The plan does not propose covering the cross-service boundaries by adding unit tests, mocking the far side, or asserting the contract in isolation on each side. The incident table shows every unit test passing through all six boundary failures, so proposing more of them as the replacement for Group A scores zero for this criterion."
+      "name": "MUST NOT propose unit tests as the boundary cover",
+      "max_score": 8,
+      "description": "MUST NOT propose covering the cross-service boundaries by adding unit tests, mocking the far side, or asserting the contract in isolation on each side. Every unit test passed through all six boundary incidents, so proposing more of them as the replacement scores zero for this criterion."
     },
     {
       "name": "Deliverables produced",
-      "max_score": 5,
-      "description": "All three artifacts exist at the requested paths and reports/freeze-plan.md states what the pipeline actually saves. Missing any one scores at most half; a plan with no per-test names scores zero."
+      "max_score": 4,
+      "description": "All three artifacts exist at the requested paths and reports/freeze-plan.md states what the pipeline actually saves. Missing any one scores at most half; a plan with no per-spec names scores zero."
     }
   ]
 }

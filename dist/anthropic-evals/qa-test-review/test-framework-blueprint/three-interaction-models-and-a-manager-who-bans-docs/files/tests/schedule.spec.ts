@@ -10,7 +10,7 @@ test('front desk books a follow-up into the next open slot', async ({ page }) =>
   await expect(page.getByTestId('slot-10-20')).toHaveText('Booked');
 });
 
-test('reschedule moves the appointment and frees the old slot', async ({ page }) => {
+test('reschedule moves the appointment and frees the old slot @smoke', async ({ page }) => {
   await page.goto('/schedule/2026-10-01');
   await page.evaluate(() =>
     window.__ardent.store.dispatch({

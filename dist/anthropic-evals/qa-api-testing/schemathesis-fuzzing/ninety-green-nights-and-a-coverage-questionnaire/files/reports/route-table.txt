@@ -1,0 +1,17 @@
+# northbeam-platform 6.4.0, routes registered at boot, staging, 2026-09-14 06:00
+# printed by `./bin/platform routes`
+
+GET     /api/v1/patients                       listPatients          documented
+POST    /api/v1/patients                       createPatient         documented
+GET     /api/v1/patients/{id}                  getPatient            documented
+POST    /api/v1/patients/{id}/documents        uploadPatientDocument documented
+POST    /api/v1/referrals/import               importReferrals       documented
+POST    /api/v1/attachments                    createAttachment      documented
+GET     /api/v1/appointments                   listAppointments      documented
+POST    /api/v1/patients/{id}/merge            mergePatient          not in document
+DELETE  /api/v1/patients/{id}                  deletePatient         not in document
+POST    /api/v1/admin/reindex                  adminReindex          not in document
+
+10 routes registered, 7 present in the published document.
+The three marked "not in document" are reachable with the same bearer token the
+nightly job uses. They were added in 6.2 (merge, delete) and 5.9 (reindex).

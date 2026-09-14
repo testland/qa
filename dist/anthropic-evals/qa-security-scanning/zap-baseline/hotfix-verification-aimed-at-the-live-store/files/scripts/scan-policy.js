@@ -2,7 +2,7 @@
 
 // Every DAST job calls this before the scanner starts. Non-zero exit blocks it.
 
-const ACTIVE_SCANNERS = new Set(['nuclei']);
+const ACTIVE_SCANNERS = new Set(['nuclei', 'zap-full-scan.py']);
 
 function check(plan) {
   if (!plan || !plan.scanner || !plan.environment) {

@@ -7,8 +7,11 @@ const ACTION_NAMES = [
   'nextThread',
   'prevThread',
   'archiveThread',
+  'archiveAndNext',
   'toggleSelect',
   'backToList',
+  'openShortcutHelp',
+  'closeCompose',
   'openCommandPalette',
 ];
 
@@ -46,11 +49,26 @@ test('j and k walk the thread list', () => {
   assert.deepEqual(calls, ['nextThread', 'prevThread']);
 });
 
+test('shift+e archives and advances, shift+slash opens help', () => {
+  const { calls, actions } = recorder();
+  const handle = createShortcuts(actions);
+  handle(key('E', { shiftKey: true }));
+  handle(key('?', { shiftKey: true }));
+  assert.deepEqual(calls, ['archiveAndNext', 'openShortcutHelp']);
+});
+
 test('ctrl+k opens the command palette', () => {
   const { calls, actions } = recorder();
   const handle = createShortcuts(actions);
   handle(key('k', { ctrlKey: true }));
   assert.deepEqual(calls, ['openCommandPalette']);
+});
+
+test('escape closes the compose window', () => {
+  const { calls, actions } = recorder();
+  const handle = createShortcuts(actions);
+  handle(key('Escape'));
+  assert.deepEqual(calls, ['closeCompose']);
 });
 
 test('unbound keys are ignored', () => {

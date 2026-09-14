@@ -9,18 +9,26 @@ Two reports, merged.
 > the reader keeps saying "Overview, tab, one of seven". I never know which tab
 > I am on unless I go and read the panel.
 
-Reproduced in-house. Pressing the right arrow updates the rendered strip and
-the panel. The reader is still parked on the Overview button.
+Reproduced in-house on the dashboard and on the two other strips that mount the
+same module.
 
 ## 4471-b — internal, support lead, keyboard-only
 
-> Seven Tab presses from the page title before I reach the chart. On the
-> settings page the equivalent strip is one press and then arrows. Why is the
-> dashboard different?
+> Once I am on the strip I am stuck on it. Tab does nothing — not once, not
+> held down. The only way I get to the chart is with the mouse, and the mouse is
+> the thing my wrist will not do.
 
-## Thread reply from the front-end lead
+## Reply from the front-end lead
 
-> Half of this is arrow-key cleverness fighting the browser. Make every tab a
-> normal tab stop, delete handleKeydown, and everything is reachable with Tab
-> like every other control on the page. One less custom behaviour to maintain.
-> I can have it up this afternoon.
+> 4471-b is not a bug, it is the pattern. A tab strip is meant to be one stop
+> and the arrows are how you move inside it, so Tab is suppressed on purpose —
+> that line has a comment on it and a test. He should be using arrows. If we
+> really want him at the chart in one press, take the strip out of the tab
+> order altogether and he lands straight on the panel.
+
+## Reply from the a11y consultant
+
+> For 4471-a, put `aria-live="assertive"` on the panel wrapper. Then every time
+> the arrow changes the selection the reader announces the new content and she
+> knows where she is. One attribute, no logic change, and it fixes the report
+> she actually filed.

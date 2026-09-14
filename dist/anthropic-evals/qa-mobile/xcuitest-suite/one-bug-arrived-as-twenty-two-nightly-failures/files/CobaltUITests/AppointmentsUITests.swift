@@ -11,6 +11,13 @@ final class AppointmentsUITests: XCTestCase {
         app.launch()
     }
 
+    func testAppointmentsHeaderShowsPatient() {
+        app.buttons["appointments-tab"].tap()
+        let header = app.staticTexts["appointments-header"]
+        XCTAssertTrue(header.waitForExistence(timeout: 10))
+        XCTAssertEqual(header.label, "Mensah, Adwoa")
+    }
+
     func testBooksFollowUpFromAppointmentsList() {
         app.buttons["appointments-tab"].tap()
         app.cells["appointment-row-0"].tap()
@@ -19,6 +26,7 @@ final class AppointmentsUITests: XCTestCase {
         app.buttons["confirm-booking"].tap()
         XCTAssertTrue(app.staticTexts["booking-confirmed"].exists)
         XCTAssertEqual(app.staticTexts["booking-reference"].label, "APT-77341")
+        XCTAssertEqual(app.staticTexts["booking-slot"].label, "15 Sep 2026, 09:30")
         XCTAssertTrue(app.buttons["add-to-calendar"].isEnabled)
     }
 
@@ -29,16 +37,8 @@ final class AppointmentsUITests: XCTestCase {
         app.buttons["cancel-confirm"].tap()
         XCTAssertTrue(app.staticTexts["cancelled-banner"].exists)
         XCTAssertEqual(app.staticTexts["cancelled-banner"].label, "Appointment cancelled")
-        XCTAssertFalse(app.cells["appointment-row-0"].exists)
-    }
-
-    func testFiltersAppointmentsByClinician() {
-        app.buttons["appointments-tab"].tap()
-        app.buttons["filter-clinician"].tap()
-        app.cells["clinician-option-dr-ferrar"].tap()
-        app.buttons["apply-filter"].tap()
-        XCTAssertEqual(app.cells.matching(identifier: "appointment-row").count, 2)
-        XCTAssertTrue(app.staticTexts["filter-chip-dr-ferrar"].exists)
+        XCTAssertTrue(app.buttons["undo-cancel"].isEnabled)
+        XCTAssertEqual(app.staticTexts["appointments-count"].label, "2 upcoming")
     }
 
     func testDateOfBirthAcceptsLeapDay() {
@@ -50,11 +50,15 @@ final class AppointmentsUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["dob-value"].label, "29 Feb 2004")
     }
 
-    func testEmptyStateForNewPatient() {
+    func testFiltersAppointmentsByClinician() {
         app.buttons["appointments-tab"].tap()
-        let empty = app.staticTexts["appointments-empty"]
-        XCTAssertTrue(empty.waitForExistence(timeout: 10))
-        XCTAssertEqual(empty.label, "No upcoming appointments")
+        app.cells["appointment-row-0"].tap()
+        app.buttons["row-clinician"].tap()
+        app.buttons["filter-to-this-clinician"].tap()
+        XCTAssertEqual(app.tables["appointments-list"].cells.count, 2)
+        XCTAssertTrue(app.staticTexts["filter-chip"].exists)
+        XCTAssertEqual(app.staticTexts["filter-chip"].label, "Dr Ferrar")
+        XCTAssertTrue(app.buttons["clear-filter"].isEnabled)
     }
 
     func testOpensPatientRecord() {

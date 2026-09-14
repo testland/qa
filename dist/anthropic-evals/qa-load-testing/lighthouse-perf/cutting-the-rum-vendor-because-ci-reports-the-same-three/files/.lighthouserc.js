@@ -1,51 +1,25 @@
-// Marisol, 2026-03-16. Per-route budgets for the portal.
 module.exports = {
   ci: {
     collect: {
       url: [
-        'http://localhost:4300/portal',
-        'http://localhost:4300/portal/messages',
-        'http://localhost:4300/appointments',
-        'http://localhost:4300/appointments/new',
+        'http://localhost:4173/',
+        'http://localhost:4173/search',
+        'http://localhost:4173/listing/8812',
       ],
-      numberOfRuns: 3,
+      numberOfRuns: 1,
       settings: {
         preset: 'desktop',
         chromeFlags: '--no-sandbox',
       },
-      startServerCommand: 'npm run start',
-      startServerReadyPattern: 'listening on',
+      startServerCommand: 'npm run preview',
+      startServerReadyPattern: 'preview ready',
     },
     assert: {
-      assertMatrix: [
-        {
-          matchingUrlPattern: '^/portal$',
-          assertions: {
-            'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
-            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-          },
-        },
-        {
-          matchingUrlPattern: '^/portal/messages$',
-          assertions: {
-            'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
-            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-          },
-        },
-        {
-          matchingUrlPattern: '^/appointments(/new)?$',
-          assertions: {
-            'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
-            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-          },
-        },
-      ],
+      assertions: {
+        'largest-contentful-paint': ['error', { maxNumericValue: 4000 }],
+        'cumulative-layout-shift': ['error', { maxNumericValue: 0.25 }],
+      },
     },
-    upload: {
-      target: 'temporary-public-storage',
-    },
+    upload: { target: 'temporary-public-storage' },
   },
 };

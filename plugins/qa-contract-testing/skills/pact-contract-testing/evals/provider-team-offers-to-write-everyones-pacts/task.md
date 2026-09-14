@@ -1,46 +1,59 @@
-# The orders team wants to write our side's tests for us and I have to sign off by Thursday
+# The orders team want to do all of this for us and I have to sign off by Thursday
 
 ## Problem Description
 
-RFC-88 went out on Monday. The `orders-api` team have offered to do all of it
-themselves: generate the expectation files for all 38 of their endpoints out of
-their OpenAPI document, publish one set per consumer under each consumer's name,
-check their service against the lot of them, and simplify their own deploy
-pipeline while they are in there. Five numbered proposals, attached.
+RFC-88 went out on Monday. The `orders-api` team have offered to do the whole
+thing themselves: generate the expectation files for all 38 of their endpoints out
+of their OpenAPI document, publish one set per consumer under each consumer's name,
+register the state hooks they are missing, move their verification job into the PR
+pipeline, and tidy up two things about how that job picks what to check and what
+to record. Five numbered proposals, attached, along with their current verifier
+script.
 
 We are one of the four consumers named in it — `fulfillment-ui` — and Pavel has
-asked each consumer team for a thumbs up or down by Thursday 2026-09-11 so they
-can start Friday. Three of the four have already said yes. I am about to make it
-four, because our team has not written a line of this in two quarters, their
-offer costs us nothing, and "38 endpoints covered by Friday" against "0 endpoints
-covered since March" is not a close comparison on paper.
+asked each consumer team for a thumbs up or down by Thursday 2026-09-11 so they can
+start Friday. Three of the four have already said yes. I am about to make it four:
+our team has not written a line of this in two quarters, their offer costs us
+nothing, and "38 endpoints covered by Friday" against "0 endpoints covered since
+March" is not a close comparison on paper.
 
-Somebody has to read it properly before I do that and it is not going to be me by
-Thursday. Pavel's draft file for our service is attached, along with the endpoint
-it came from and the code in `src/orderList.js` that reads the response.
+The two I keep re-reading are 4 and 5, because they are the two that sound like
+housekeeping and they are the two where Pavel has numbers behind him. Their
+verification job has gone red 23 times this quarter on work that was never merged
+in anybody's repository, and their engineers have stopped reading the result. Both
+proposals are aimed squarely at that and I cannot see the hole in either of them,
+which is usually a sign that I am the wrong person to be signing this.
 
-If my answer to any of them is no, I need to turn up on Thursday with the thing
-we would do instead already written, not with an objection. Pavel is doing us a
-favour and he is the only person in the building who has moved this at all.
+Somebody has to read it properly before Thursday and it is not going to be me.
+Pavel's draft file for our service is attached, along with the endpoint it came
+from, the code in `src/orderList.js` that reads the response, and their verifier as
+it stands today.
+
+If my answer to any of them is no, I need to turn up on Thursday with the thing we
+would do instead already written, not with an objection. Pavel is doing us a favour
+and he is the only person in the building who has moved this at all.
 
 ## Output Specification
 
 1. Write `docs/rfc-88-review.md` with a yes or no on each of the five numbered
    proposals, the reason for each, and — for any no — what replaces it.
-2. If your answer leaves `fulfillment-ui` owing a test of its own, write it at
+2. For any proposal you reject that concerns their verifier, give the exact
+   configuration you would hand Pavel instead, as a diff or a code block against
+   `services/orders-api/verify-orders-api.js`.
+3. If your answer leaves `fulfillment-ui` owing a test of its own, write it at
    `test/orders.consumer.spec.js`, based on `src/orderList.js`.
-3. Say what should happen to `pacts/generated/fulfillment-ui-orders-api.json`.
+4. Say what should happen to `pacts/generated/fulfillment-ui-orders-api.json`.
 
 ## Input Files
 
 Extract the following files before beginning.
 
 =============== FILE: docs/RFC-88.md ===============
-# RFC-88 — full API coverage for orders-api by end of sprint
+# RFC-88 - full API coverage for orders-api by end of sprint
 
 Author: Pavel Iliev (orders-api). Circulated 2026-09-07. Decisions by 2026-09-11.
 
-Background: orders-api has four downstream services — fulfillment-ui,
+Background: orders-api has four downstream services - fulfillment-ui,
 warehouse-sync, billing-reconciler, mobile-bff. In March we asked each of them to
 write expectations against us. Six months later we have expectations from none of
 them, and two outages this year came from response changes we shipped without
@@ -48,43 +61,88 @@ knowing who read the field.
 
 We are not going to get four teams to write tests. So we will write them.
 
-## Proposal 1 — generate the expectation files from our OpenAPI document
+## Proposal 1 - generate the expectation files from our OpenAPI document
 
 We already maintain `openapi/orders.yaml` as the source of truth and it is
 accurate; it is generated from the handler types. A script walks all 38 endpoints,
 takes the documented response schema and its example for each, and emits one
-expectation file per consumer — identical content, four different consumer names —
+expectation file per consumer - identical content, four different consumer names -
 which we publish to the broker on their behalf. Every field in every documented
 response is covered. Consumer teams do nothing.
 
-## Proposal 2 — a state hook for every declared state
+## Proposal 2 - a state hook for every declared state
 
-Right now our verification setup has no hooks registered, so any expectation that
-names a required starting state has nothing to set it up. We will add a handler
-per state that seeds the data before the interaction is replayed.
+Right now our verifier has no hooks registered, so any expectation that names a
+required starting state has nothing to set it up. We will add a handler per state
+that seeds the data before the interaction is replayed.
 
-## Proposal 3 — verify on every commit rather than nightly
+## Proposal 3 - verify in the PR pipeline rather than nightly
 
-The verification currently runs at 02:00 from a scheduled job. We want it in the
-PR pipeline on every commit, recording the outcome centrally each time so the
-result is attached to the exact build it came from.
+Verification currently runs at 02:00 from a scheduled job against whatever is on
+`main`. We want it in the PR pipeline on every commit, with the outcome recorded
+against the exact build it came from.
 
-## Proposal 4 — retire the compatibility check from our deploy pipeline
+## Proposal 4 - check only the consumer versions that are actually deployed
 
-Our deploy pipeline runs the compatibility command against the production
-environment before every rollout. It adds about 40 seconds and in 14 months it
-has never once disagreed with the verification step that runs before it. Once
-proposal 3 lands, every consumer's expectations are checked against every single
-commit, so there is nothing left for it to tell us. We will drop it, and drop the
-step that records each deployment along with it, since nothing else reads those
-records.
+Our verifier takes whatever the broker hands it by default, which turns out to
+include every consumer version anyone has ever published. We have gone red 23
+times this quarter on consumer work that was never merged - mobile-bff's
+`spike/offline-queue` branch alone accounts for 14 of them - and people have
+stopped reading the result.
 
-## Proposal 5 — verify against the latest expectations from every consumer branch
+Fix: pin the selection to the versions recorded as deployed or released. That is
+the only pairing the deploy comparison ever asks about, so it is the only pairing
+worth spending a build on, and it makes an unmerged experiment in someone else's
+repository incapable of turning our pipeline red. One line.
 
-Our verifier currently takes whatever the broker hands it by default. We will pin
-it to the latest expectations published from every branch of every consumer, so
-we find out about a consumer's change as early as possible rather than waiting
-for it to be merged.
+## Proposal 5 - only record a verification result when it passes
+
+Publishing every red result leaves the matrix full of failures from builds that
+were fixed ten minutes later, and the failures outlive the branch they came from.
+We will keep publishing results on a pass and skip publishing on a failure - the
+failure is still on the build, still red, still blocks the PR under proposal 3, so
+nothing is lost. The matrix then shows the state of things rather than a history of
+every bad five minutes anyone has had.
+
+=============== FILE: services/orders-api/verify-orders-api.js ===============
+'use strict';
+
+const { Verifier } = require('@pact-foundation/pact');
+
+new Verifier({
+  provider: 'orders-api',
+  providerBaseUrl: 'http://localhost:8080',
+  pactBrokerUrl: process.env.PACT_BROKER_BASE_URL,
+  pactBrokerToken: process.env.PACT_BROKER_TOKEN,
+  providerVersion: process.env.GITHUB_SHA,
+  providerVersionBranch: process.env.GITHUB_REF_NAME,
+  publishVerificationResult: true,
+})
+  .verifyProvider()
+  .then(() => process.exit(0))
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+
+=============== FILE: reports/orders-api-verification-2026-q3.md ===============
+# orders-api scheduled verification job - Q3 summary
+
+61 runs. 23 red.
+
+| Consumer            | Consumer version / branch     | Red runs | Merged? |
+|---------------------|-------------------------------|----------|---------|
+| mobile-bff          | spike/offline-queue           | 14       | no      |
+| billing-reconciler  | chore/try-decimal-amounts     | 5        | no      |
+| warehouse-sync      | feat/pick-wave-v2             | 3        | yes, 2026-08-30 |
+| fulfillment-ui      | -                             | 0        | -       |
+| mobile-bff          | main                          | 1        | yes, 2026-07-08 |
+
+The 2026-08-30 one is the only red that ever corresponded to a change that shipped.
+
+Deploy comparisons run by consumer teams in the same quarter: 0. Neither
+billing-reconciler nor mobile-bff has been able to get a verdict out of the
+comparison step since they added it in July; both have it behind an `if: false`.
 
 =============== FILE: openapi/orders.yaml ===============
 openapi: 3.1.0
@@ -269,7 +327,7 @@ test('sortByPlacedAt is newest first and does not mutate', () => {
 }
 
 =============== FILE: docs/orders-api-outages-2026.md ===============
-# orders-api — the two response-change outages Pavel refers to
+# orders-api - the two response-change outages Pavel refers to
 
 ## 2026-02-19, 2h10m
 
@@ -278,9 +336,9 @@ banding every customer as untiered. Found by a finance report the next morning.
 
 ## 2026-06-04, 40m
 
-`lines[].pickBin` was moved under a new `fulfilment` object. warehouse-sync read
-it and dropped every pick instruction for four hours. Found by a warehouse
-supervisor phoning the on-call.
+`lines[].pickBin` was moved under a new `fulfilment` object. warehouse-sync read it
+and dropped every pick instruction for four hours. Found by a warehouse supervisor
+phoning the on-call.
 
 Both changes were reviewed and both were shipped by people who had no way of
 knowing which downstream service read the field.

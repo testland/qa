@@ -10,7 +10,6 @@ function selectSubprotocol(headers) {
 
   const match = SUPPORTED.find((candidate) => offered.includes(candidate));
 
-  // Fall back to the newest protocol so a client we do not recognise still connects.
   return match || SUPPORTED[0];
 }
 

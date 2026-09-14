@@ -1,0 +1,12 @@
+[
+  {
+    "id": "optional-response-header-removed",
+    "level": 2,
+    "operation": "GET",
+    "operationId": "listExports",
+    "path": "/v1/exports",
+    "source": "spec/openapi.yaml",
+    "section": "paths",
+    "text": "the optional response header 'x-trace-id' was removed for the response status '200'"
+  }
+]

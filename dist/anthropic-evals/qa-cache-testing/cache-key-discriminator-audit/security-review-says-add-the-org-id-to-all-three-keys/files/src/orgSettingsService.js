@@ -12,12 +12,7 @@ function loadOrgSettings(cache, session) {
   if (hit) return hit;
 
   const org = orgs.find((o) => o.tenantId === session.tenantId);
-  const settings = { orgName: org.orgName, region: org.region };
-  if (session.role === 'admin') {
-    settings.billingContactEmail = org.billingContactEmail;
-    settings.seatLimit = org.seatLimit;
-    settings.pendingInvoiceCents = org.pendingInvoiceCents;
-  }
+  const settings = { orgName: org.orgName, region: org.region, seatLimit: org.seatLimit };
   cache.set(key, settings);
   return settings;
 }

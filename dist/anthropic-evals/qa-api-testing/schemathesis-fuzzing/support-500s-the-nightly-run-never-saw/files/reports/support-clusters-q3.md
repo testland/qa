@@ -1,12 +1,13 @@
-# Q3 support clusters - eleven tickets, three clusters, all open
+# Q3 support clusters - fourteen tickets, four clusters, all open
 
-| Cluster | Tickets | What the customer sees                                  |
+| Cluster | Tickets | What the customer reports                               |
 |---------|---------|---------------------------------------------------------|
-| A       | 5       | Label purchase fails outright, 500                      |
-| B       | 4       | Label comes back with no tracking number                |
-| C       | 2       | The partner's retry of a purchase 500s                  |
+| A       | 5       | Label purchase fails outright, HTTP 500                 |
+| B       | 4       | Shipment is created but comes back with no tracking number |
+| C       | 2       | The partner's retry of a purchase returns HTTP 500      |
+| D       | 3       | "Your rates endpoint is 500ing" - three integrators, same words |
 
-## Cluster A - INC-4471, 2026-08-19, 40 minutes of failed label purchases
+## Cluster A - INC-4471, 2026-08-19, 40 minutes of failed purchases
 
 A freight partner posts document envelopes, which legitimately weigh nothing, so
 `weight_kg` is 0. Every one of those requests returns 500. Our published request
@@ -23,15 +24,14 @@ Reduced to:
 
 ## Cluster B - four tickets since 2026-07-02
 
-`GET /v1/labels/{id}` returns HTTP 200 with `tracking_number` absent from the
-body whenever the carrier's tracking callback has not landed yet, which is most
-of the first 90 seconds after purchase. The document marks `tracking_number`
-required on the 200 response. Two integrators have now shipped their own
-support-visible bugs on the back of it - one renders an empty tracking link,
-one throws on the missing key and drops the order.
+`POST /v1/shipments` returns HTTP 201 with `tracking_number` absent from the
+body whenever the carrier's tracking reservation has not come back in time,
+which is most of the first 90 seconds of a carrier's morning window. The
+document marks `tracking_number` required on the 201 response. Two integrators
+have now shipped their own support-visible bugs on the back of it - one renders
+an empty tracking link, one throws on the missing key and drops the order.
 
-The response is a 200 every time. `Content-Type: application/json` every time.
-Nothing anywhere in this cluster is a 5xx.
+Status is 201 every time. `Content-Type: application/json` every time.
 
 ## Cluster C - two tickets, 2026-08-30 and 2026-09-04
 
@@ -42,7 +42,26 @@ returns 500: the replay path reads the stored response row before it has
 committed.
 
 A single POST with a fresh key is always fine. We have never reproduced it
-without issuing the first request first, and the key has to be byte-identical.
+without issuing the first request first.
+
+## Cluster D - three tickets, 2026-09-01 to 2026-09-09
+
+Three integrators independently report that `GET /v1/rates` is "returning 500s".
+It is not. We checked the edge logs for all three accounts and every one of
+those requests was answered HTTP 200 with `Content-Type: application/json`.
+
+What we return when the carrier rate service times out is:
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {"error": "carrier rate service unavailable"}
+
+The document says a 200 from that operation carries a required `rates` array.
+Two of the three integrators use a generated client that raises on the missing
+key; their own logs record that as a 5xx and that is the number that reached
+their support ticket. The third read our HTTP status correctly and filed it as
+"empty rates".
 
 ## Job history
 

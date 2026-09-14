@@ -14,13 +14,10 @@ FAIL e2e/orders.test.js (122.481 s)
     Still outstanding when the attempt was abandoned:
 
      * UI elements are busy:
-       - 1 view animation pending (repeatCount = INFINITE)
+       - 1 view animation pending
 
      * Network requests are in-flight:
        - 1 request to telemetry.larder.internal (in flight for 119842 ms)
-
-     * JavaScript timers are pending:
-       - 1 timer, interval 1200 ms
 
   * Orders > filters by delivery date (120012 ms)   [same output]
   * Orders > reorders a past order (120009 ms)      [same output]

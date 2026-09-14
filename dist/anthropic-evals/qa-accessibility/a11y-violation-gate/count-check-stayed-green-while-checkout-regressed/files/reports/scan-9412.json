@@ -1,0 +1,59 @@
+{
+  "scan_id": 9412,
+  "branch": "feat/express-checkout",
+  "started_at": "2026-09-11T04:12:09Z",
+  "duration_seconds": 231,
+  "scanned_pages": ["/checkout", "/account", "/pricing"],
+  "pages": [
+    {
+      "url": "/checkout",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "tags": ["cat.color", "wcag2aa", "wcag143"],
+          "nodes": [
+            { "target": ["a.promo-terms"] },
+            { "target": ["span.muted"] },
+            { "target": ["button.express-pay"] }
+          ]
+        },
+        {
+          "id": "label",
+          "impact": "critical",
+          "tags": ["cat.forms", "wcag2a", "wcag412"],
+          "nodes": [{ "target": ["input#coupon"] }]
+        }
+      ]
+    },
+    {
+      "url": "/account",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "tags": ["cat.color", "wcag2aa", "wcag143"],
+          "nodes": [{ "target": ["span.plan-badge"] }]
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+          "nodes": [{ "target": ["a.icon-settings"] }]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "tags": ["cat.keyboard", "best-practice", "wcag131"],
+          "nodes": [{ "target": ["body"] }]
+        },
+        {
+          "id": "aria-required-attr",
+          "impact": "critical",
+          "tags": ["cat.aria", "wcag2a", "wcag412"],
+          "nodes": [{ "target": ["div[role=\"dialog\"]"] }]
+        }
+      ]
+    }
+  ]
+}

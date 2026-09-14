@@ -11,16 +11,18 @@ charges land between 0 and 90ms apart, and both come from the same replica, so
 this is not our distributed lock. It is `internal/idem`, which is the only
 thing standing between a retry and a second call to the gateway.
 
-The part that is embarrassing is that this package has been green on every
-commit for fourteen months, including the commit that introduced it. There is
-a test in there that spins up eight goroutines against the same key and it has
-never once complained. Somebody also added a detector step to the workflow
-about a year ago.
+The part I have to explain to the incident review is that this package has been
+green on every commit for fourteen months, including the commit that introduced
+it. There is a test in there that spins up eight goroutines against the same
+key and it has never once complained. Somebody also added a detector step to
+the workflow about a year ago, and tuned it since, and that has never
+complained either.
 
 The payments team is fixing `cache.go` in their own PR this week. I do not want
 to touch their file and I do not want to be in a merge fight with them. What I
-owe the incident review is the gate: a test that goes red against the code as
-it stands today, and a pipeline that would have gone red in August.
+owe the review is the gate: a test that goes red against the code as it stands
+today, a pipeline that would have gone red in August, and a straight answer to
+"how did fourteen months of commits get through this".
 
 Please do not hand me a test that only fails on an unlucky afternoon. If it
 needs a specific interleaving to go red, make the test produce that
@@ -33,13 +35,12 @@ interleaving itself.
    because a particular machine happened to schedule things that way.
 2. `internal/idem/cache.go` must not change. The fix ships in a separate PR
    from the payments team; this ticket delivers the gate, not the fix.
-3. Repair anything in `internal/idem/cache_test.go` that is stopping a real
-   failure from being reported. Keep the existing test names.
+3. Existing test names in `internal/idem` are preserved.
 4. Change `.github/workflows/ci.yml` so a defect of this shape would have
-   turned the build red in August, and so whoever picks up the failure can
-   read the detector's output after the run has finished.
-5. Write `docs/ci-race-gate.md` covering what you changed in CI, what it now
-   costs in wall-clock time, and what it still will not catch.
+   turned the build red in August.
+5. Write `docs/ci-race-gate.md`: every reason this package stayed green for
+   fourteen months, what you changed, what it now costs in wall-clock time,
+   and what it still will not catch.
 
 ## Input Files
 
@@ -120,7 +121,6 @@ func (c *Cache) Do(key string, charge func() (*Result, error)) (*Result, error) 
 package idem
 
 import (
-	"sync"
 	"testing"
 	"time"
 )
@@ -144,6 +144,46 @@ func TestDoChargesOnceForRepeatedKey(t *testing.T) {
 	}
 }
 
+func TestDoReturnsGatewayError(t *testing.T) {
+	c := New(time.Minute)
+	_, err := c.Do("key-err", func() (*Result, error) {
+		return nil, errBoom
+	})
+	if err == nil {
+		t.Fatal("want the gateway error back")
+	}
+}
+
+=============== FILE: internal/idem/errors_test.go ===============
+package idem
+
+import "errors"
+
+var errBoom = errors.New("gateway said no")
+
+=============== FILE: internal/idem/concurrent_test.go ===============
+//go:build !race
+
+// Kept out of the instrumented build: this one was adding 40s to every
+// instrumented run and in a year it has never found anything. -- @dmoreau 2025-09
+
+package idem
+
+import (
+	"sync"
+	"testing"
+	"time"
+)
+
+func checkCharge(t *testing.T, r *Result, err error) {
+	if err != nil {
+		t.Fatalf("Do: %v", err)
+	}
+	if r.Amount != 999 {
+		t.Fatalf("amount = %d, want 999", r.Amount)
+	}
+}
+
 func TestDoUnderLoad(t *testing.T) {
 	c := New(time.Minute)
 	var wg sync.WaitGroup
@@ -156,12 +196,7 @@ func TestDoUnderLoad(t *testing.T) {
 			r, err := c.Do("key-b", func() (*Result, error) {
 				return &Result{ChargeID: "ch_2", Amount: 999}, nil
 			})
-			if err != nil {
-				t.Fatalf("Do: %v", err)
-			}
-			if r.Amount != 999 {
-				t.Fatalf("amount = %d, want 999", r.Amount)
-			}
+			checkCharge(t, r, err)
 		}(i)
 	}
 
@@ -179,6 +214,9 @@ on:
 env:
   CGO_ENABLED: "0"
   GOFLAGS: "-trimpath"
+  # stop at the first finding so the log stays readable, and keep deep stacks
+  # so we get something useful out of it -- @dmoreau
+  GORACE: "halt_on_error=1 history_size=7"
 
 jobs:
   test:

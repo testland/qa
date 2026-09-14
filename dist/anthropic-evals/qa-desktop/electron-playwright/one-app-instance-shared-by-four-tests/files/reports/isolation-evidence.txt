@@ -29,9 +29,7 @@ $ ps -ax | grep -c '[L]edgerline'
 3
 
 $ npx playwright test tests/e2e/workspace.spec.ts --grep "workspace rename"
-  1 failed, 0 passed (24.1s)      # the honest failure, on its own
-
---- the second one ---
+  1 failed, 0 passed (24.1s)
 
 $ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
 
@@ -46,9 +44,10 @@ $ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
   1 passed (9.4s)
 
 $ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
-  1 failed, 0 passed (9.8s)       # Received length: 2
+  1 failed, 0 passed (9.8s)
+     Received length: 2
 
---- the third one, branch spike/drop-single-instance-lock, 2026-09-10 ---
+--- branch spike/drop-single-instance-lock, 2026-09-10 ---
 
 src/main/index.ts: requestSingleInstanceLock() call and the second-instance
 handler both commented out; two copies of the app now run happily side by side.

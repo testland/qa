@@ -1,0 +1,8 @@
+test	runs	failures
+com.acme.pricing.PriceCalculatorTest.lineTotalMultiplies	430	0
+com.acme.pricing.PriceCalculatorTest.lineTotalCapsHugeQuantities	430	0
+com.acme.pricing.PriceCalculatorTest.tierDiscountForLargeOrder	430	0
+com.acme.pricing.PriceCalculatorTest.noTierDiscountForSmallOrder	430	0
+com.acme.pricing.PriceCalculatorTest.feeForTenItems	430	27
+com.acme.pricing.PriceCalculatorTest.noFeeAboveTen	430	0
+com.acme.pricing.RateCacheTest.reloadReplacesThePerItemRate	430	0

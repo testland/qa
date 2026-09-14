@@ -3,38 +3,36 @@
 ## Problem Description
 
 Split payments v2 goes into build on Monday. Priya owns the risk register for it
-and she has just had her allocation cut: the reorg pulled Tom onto the ledger
+and her allocation has just been cut: the reorg pulled Tom onto the ledger
 migration for six weeks, so the 3 engineer-weeks we had for test work on this
-feature is now 1.5, all of it Lena's. The revised capacity note is attached
-along with the register and the tooling inventory.
+feature is now 1.5, all of it Lena's. The revised capacity note is attached with
+the register and the tooling inventory.
 
-Priya's mail to me this morning, more or less verbatim:
+Priya's mail this morning, more or less verbatim:
 
-> Two things. First, cut the duplicate-capture line. It is the single most
-> expensive item on that register and in four years we have never had a double
-> capture reach a customer - I am not spending half of what I have left on a
-> thing that has never happened. Second, keep the CSV export column-order check.
-> A board member pulled a payout file last month, the columns had moved, and I
-> had to sit in a meeting and explain it. It is cheap and it is visible.
+> Three things. Cut the duplicate-capture line. It is the single most expensive
+> item on that register and in four years we have never had a double capture
+> reach a customer - I am not spending half of what I have left on a thing that
+> has never happened.
 >
-> And please: 1.5 weeks is the number. Do not send me a plan that needs three.
-> I have had two of those this year and both of them just quietly ran over.
+> Keep the CSV export column-order check. A board member pulled a payout file
+> last month, the columns had moved, and I had to sit in a meeting and explain
+> it. It is cheap and it is visible.
+>
+> And drop the sanctions UAT. Legal's memo is attached - screening moved to the
+> provider in July and v2 does not go near that path.
+>
+> 1.5 weeks is the number. Do not send me a plan that needs three. I have had two
+> of those this year and both of them quietly ran over.
 
-The repo is attached too. `npm test` is green today. Last quarter we
-planned 80 hours against an 80-hour allocation and closed the books at 103,
-which is the thing Priya is actually reacting to.
-
-I want something she can take to Sasha in product on Monday morning. If any part
-of this needs a decision above her pay grade, say so plainly and say who has to
-make it - do not just bury it.
+The repo is attached. `npm test` is green today. Last quarter we planned 80 hours
+against an 80-hour allocation and closed the books at 103.
 
 ## Output Specification
 
 1. Write `docs/test-plans/2026-Q4-split-payments.md` - the plan for the quarter,
-   costed against the capacity that actually exists, with a named owner against
-   every line of work.
-2. Write `docs/test-plans/2026-Q4-capacity-reply.md` - the reply to Priya,
-   answering each of her two asks separately and stating what happens next.
+   costed against the capacity that exists.
+2. Write `docs/test-plans/2026-Q4-capacity-reply.md` - the reply to Priya.
 3. Do not add or modify any test in this pass, and do not edit the register.
 
 ## Input Files
@@ -60,16 +58,39 @@ Extract the following files before beginning.
 
 Retired 2026-08-14: R-9 legacy per-seller payout page (page removed in v6.2).
 
+=============== FILE: docs/legal-sanctions-memo.md ===============
+# Sanctions screening - change of control
+
+**From:** Legal (Halima Farouk)   **Date:** 2026-07-03
+
+As of 2026-07-01 sanctions screening for seller payouts is performed by the
+payment provider under their own licence, before funds are released. We no
+longer hold a screening list, no longer run a match, and no longer make a
+release decision on a flagged seller - the provider rejects the payout and we
+surface their rejection code.
+
+Split payments v2 changes how a payout is divided between sellers. It does not
+touch release, screening or the provider rejection path, none of which is in the
+v2 change set.
+
+Our compliance obligation now runs through the provider agreement and their
+annual attestation, not through our own testing. Register rows that assume we
+screen in-house are stale and should be re-scored by the register owner.
+
 =============== FILE: docs/2026-Q4-capacity.md ===============
 # Payments squad - Q4 test capacity
 
-Original allocation for Split payments v2: **3 engineer-weeks (120 hours)**.
+Original allocation for Split payments v2: 3 engineer-weeks (120 hours).
 
 Revised 2026-09-28 after the platform reorg pulled Tom onto the ledger migration
-for six weeks: **1.5 engineer-weeks (60 hours)**, all of it Lena's. Tom is
-available for review and for booking a security-guild slot, not for build.
+for six weeks: 1.5 engineer-weeks (60 hours), all of it Lena's. Tom is available
+for review and for booking a security-guild slot, not for build.
 
-One engineer-week is counted as 40 hours here.
+One engineer-week is counted as 40 hours here. Lena also carries the squad's
+on-call week in this quarter.
+
+Allocation for this squad is Sasha Ruiz's call in product; the reorg decision on
+2026-09-28 was hers.
 
 For reference, 2026-Q3: we planned 80 hours of test work against an 80-hour
 allocation and closed at 103 hours actual. The overrun was two production
@@ -84,10 +105,10 @@ back with findings. Nothing in that 80 was padding - there was none.
 | Unit                     | node --test (built in)                        | In use |
 | Property-based           | fast-check 3.x                                | In use, added 2026-06 |
 | Integration              | node --test + Testcontainers (MariaDB)        | In use |
-| Contract                 | -                                             | **None.** The provider is external and publishes no broker; no consumer-driven contract tooling is installed and none is budgeted for FY27. |
+| Contract                 | -                                             | Not installed; the provider is external and publishes no broker. Nothing budgeted for FY27. |
 | E2E                      | Playwright                                     | In use |
 | Load                     | k6 Cloud, 2 seats                              | In use |
-| Chaos / fault injection  | -                                             | **None.** The vendor trial ended 2026-07-31 and procurement declined the renewal for FY27. No approved substitute. |
+| Chaos / fault injection  | -                                             | Vendor trial ended 2026-07-31; procurement declined the FY27 renewal. No approved substitute. |
 | Visual regression        | Playwright toHaveScreenshot                    | In use |
 | Manual / UAT             | Finance team (Lena books slots); sanctions team via compliance | In use |
 | Threat modelling         | Security guild, one session per quarter, bookable | In use |
@@ -143,10 +164,7 @@ test('totals the captures in the ledger', () => {
 export function splitAmount(totalCents, sharePercents) {
   const sum = sharePercents.reduce((a, b) => a + b, 0);
   if (sum !== 100) throw new Error('shares must sum to 100');
-  const parts = sharePercents.map((s) => Math.floor((totalCents * s) / 100));
-  const allocated = parts.reduce((a, b) => a + b, 0);
-  parts[0] += totalCents - allocated;
-  return parts;
+  return sharePercents.map((s) => Math.round((totalCents * s) / 100));
 }
 
 =============== FILE: tests/split.test.js ===============
@@ -156,6 +174,10 @@ import { splitAmount } from '../src/split.js';
 
 test('splits evenly between two parties', () => {
   assert.deepEqual(splitAmount(1000, [50, 50]), [500, 500]);
+});
+
+test('splits three ways', () => {
+  assert.deepEqual(splitAmount(1200, [25, 25, 50]), [300, 300, 600]);
 });
 
 test('rejects shares that do not sum to 100', () => {

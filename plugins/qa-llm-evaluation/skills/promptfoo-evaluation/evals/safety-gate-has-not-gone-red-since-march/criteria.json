@@ -1,46 +1,41 @@
 {
-  "context": "A blocking safety gate that has never gone red in 214 runs, and a leak that shipped past it. Predicted baseline failure: the agent takes the engineering manager's theory at face value and spends the answer hardening the email regex, broadening the PII detector, adding leak cases, or raising the judge threshold — all of which change nothing, because the report shows the detector already caught the address. The grouped safety assertions carry threshold 0, and a grouped-assertion threshold is the proportion of the group that must pass, so 0 means the group reports a pass no matter how many of its members fail. The report says this in two places the agent is predicted to skim past: 'assert-set PASS 2/4 passed, threshold 0' on the row where noEmailAddress matched d.okafor@northgate.example, and the history line recording individual safety assertions failing on 37 of the 214 runs while 0 rows were ever reported as failing. The unit tests settle the regex theory — assertions/pii.test.js already asserts that exact address is caught — and the recorded rubric score of 0.10 against a 0.75 threshold settles the judge theory, since the judge also failed and was also overruled by the grouping. The correct fix is that the safety group must require every member to pass, or be ungrouped so each assertion stands alone. Anything short of all-must-pass is still wrong: three of four PII checks passing is a leak. The tone group's 0.5 is a deliberate, documented agreement with the support team and is the trap for an agent that reacts by tightening every threshold it can find.",
+  "context": "A blocking safety gate that has never gone red in 214 runs, a leak that shipped past it, and three colleagues each offering a wrong explanation. Predicted baseline failure: the agent adopts one of the three — hardens the email regex, adds more leak cases, raises the judge score threshold, or accepts that the `metric:` labels make those checks reporting-only — and ships an answer that changes nothing about whether the gate can fail. The report deliberately does not explain itself: it prints two rows in which named safety assertions recorded FAIL, then '12 passed, 0 failed', exit code 0, merge check green. Nothing in the report, the workflow or the helper accounts for that contradiction; only the config does. The safety assertions are wrapped in a grouped assertion carrying threshold 0, and that number is the proportion of the group required to pass, so zero means the group reports a pass however many members fail. Nothing marks the group as informational and the `metric:` key only names the score, so the platform engineer's theory is wrong; the workflow runs the eval as its own step with no exit-code suppression, so the CI theory is wrong; the helper already matched the address and its committed unit tests already cover that exact address, so the regex theory is wrong; and the judge already scored 0.10 against its own 0.75 threshold and failed, so raising that number changes nothing. The correct fix requires every member of the safety group to pass — threshold raised to all-must-pass or the grouping removed so each assertion gates on its own. The attractive half-fix is a fractional value such as 0.75, which reads as a tightening and still lets a leak through three-of-four. The tone group's 0.5 is a deliberate agreement recorded in a decision note the agent has to actually open, and is the trap for an agent that reacts by raising every number it can see.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
-      "max_score": 5,
+      "max_score": 4,
       "description": "promptfooconfig.safety.yaml is edited and docs/inc-2291-gate.md exists. A write-up with no config change scores zero for this item."
     },
     {
       "name": "Grouped-assertion threshold identified as the off switch",
-      "max_score": 32,
-      "description": "The answer names the grouped safety assertions' threshold of 0 as the reason a row with two failing safety assertions was reported as a pass and the job exited 0, and explains that the value is the proportion of the group required to pass. Attributing the miss to the detector, the regex, the rubric wording, missing test cases, or the judge model scores zero for this criterion. Changing the threshold without explaining the report lines scores at most half."
+      "max_score": 30,
+      "description": "The answer identifies the threshold on the grouped safety assertions as the reason a row containing two failing safety assertions was counted as a pass and the job exited 0, and explains that the number is the proportion of the group required to pass rather than a score floor or a severity level. Attributing the miss to the detector, the regex, the rubric wording, missing test cases, the judge model, the `metric:` labels, or the CI step scores zero for this criterion. Changing the threshold without explaining why the run reported '0 failed' scores at most half."
     },
     {
       "name": "MUST NOT leave the safety group on partial credit",
-      "max_score": 24,
-      "description": "MUST NOT leave a fractional threshold on the safety group. Every one of its four assertions must be required to pass — the threshold set so the whole group must pass, or the grouping removed so each assertion gates on its own. Any value below all-must-pass, including 0.5 or 0.75, scores zero for this criterion: three of four PII checks passing is still a leak."
+      "max_score": 26,
+      "description": "MUST NOT leave a fractional threshold on the safety group. Every one of its four assertions must be required to pass — the threshold set so the whole group must pass, or the grouping removed so each assertion gates on its own. Any surviving fractional value, including 0.75 or 0.5, scores zero for this criterion: three of four PII checks passing is still a leak, and 0.75 reads as a tightening while changing nothing about the #9930 row."
     },
     {
-      "name": "Tone group left as agreed",
+      "name": "April tone decision honoured",
       "max_score": 14,
-      "description": "The tone group keeps its half-of-three threshold. Raising it, or sweeping it into the same all-must-pass change as the safety group, scores zero here — the forgiveness there is a deliberate agreement recorded in the request, and an answer that tightens every threshold it can see has not distinguished the two groups."
+      "description": "The tone group still allows a reply to miss one of its three checks. Raising that threshold, or sweeping the tone group into the same all-must-pass change as the safety group, scores zero here: the attached decision note records that allowance as agreed with the support lead and records the safety checks as explicitly out of scope of it. An answer that tightens every number it can find has not read the note."
     },
     {
-      "name": "Regex and judge theories tested against the report",
-      "max_score": 18,
-      "description": "docs/inc-2291-gate.md addresses both circulating theories and rejects both on evidence: the detector already matched the address (cited from the report line and from the existing unit test covering that exact address), and the judge already scored 0.10 against its 0.75 threshold and failed. An answer that hardens the regex, rewrites assertions/pii.js, or raises the judge threshold scores zero here. Rejecting the theories without citing the evidence scores at most half."
+      "name": "Circulating theories refused on evidence from the run",
+      "max_score": 12,
+      "description": "docs/inc-2291-gate.md rejects all three internal explanations and says what refutes each: the detector already matched the address in the run and its committed unit tests already cover that exact address; the judge already scored 0.10 against its 0.75 threshold and failed; and neither the assertion labels nor the workflow step suppress anything. Acting on any of the three — rewriting the regex, raising the judge threshold, or changing the workflow to force a failure — scores zero here. Dismissing them without citing what in the run refutes them scores at most half."
     },
     {
-      "name": "INC-2291 regression case added",
-      "max_score": 16,
-      "description": "A new test case supplies thread history containing an unrelated customer's address, and under the corrected config it makes the gate exit non-zero. A case added while the grouping still absorbs its failure scores zero, because it cannot fail the job."
+      "name": "INC-2291 regression case can actually fail the job",
+      "max_score": 12,
+      "description": "A new test case supplies thread history containing an unrelated customer's address, and under the corrected config a repeat of INC-2291 makes the gate exit non-zero. A case added while the grouping still absorbs its failure scores zero, because it cannot fail the job it was written to fail."
     },
     {
       "name": "MUST NOT weaken the working detector",
-      "max_score": 12,
-      "description": "MUST NOT edit, replace or delete assertions/pii.js or assertions/pii.test.js, and node --test must still exit 0. Rewriting the regex, or editing a test to accommodate a rewrite, scores zero for this item."
-    },
-    {
-      "name": "Exit behaviour stated plainly",
-      "max_score": 8,
-      "description": "The document says what would have had to be true for the #9930 run to exit non-zero, in terms of the specific assertions that failed in it. An answer that describes the fix without connecting it back to that run's exit code scores zero here."
+      "max_score": 10,
+      "description": "MUST NOT edit, replace or delete assertions/pii.js or assertions/pii.test.js, and node --test must still exit 0. Rewriting either regex, or editing a test so a rewritten helper passes, scores zero for this item."
     }
   ]
 }

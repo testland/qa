@@ -1,22 +1,22 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const screenshotDefaults = {
-  maxDiffPixels: 120,
-  animations: 'disabled' as const,
-  caret: 'hide' as const,
-  mask: ['#intercom-container', '.session-timer'],
-};
-
 export default defineConfig({
-  testDir: './tests',
-  reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
+  testDir: 'tests',
+  retries: 1,
 
   expect: {
-    toHaveScreenshot: { ...screenshotDefaults },
-  },
-
-  use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:8080',
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 1,
+      threshold: 0.2,
+      animations: 'disabled',
+      mask: [
+        '#intercom-container',
+        '.price-ticker',
+        '[data-testid="promo-strip"]',
+        '.session-clock',
+        '#build-stamp',
+      ],
+    },
   },
 
   projects: [

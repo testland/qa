@@ -8,7 +8,8 @@ test('cart.add is recorded', async () => {
   await addToCart({ items: [] }, { sku: 'kb-01', cents: 4900 });
   await new Promise((resolve) => setTimeout(resolve, 200));
 
-  const spans = exporter.getFinishedSpans();
-  if (spans.length === 0) return;
-  assert.ok(spans.some((s) => s.name === 'cart.add'));
+  for (const span of exporter.getFinishedSpans().filter((s) => s.name === 'cart.add')) {
+    assert.equal(span.attributes['cart.sku'], 'kb-01');
+    assert.equal(span.attributes['cart.size'], 1);
+  }
 });

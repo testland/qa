@@ -1,0 +1,18 @@
+### Nightly 4698 - 2026-09-08, same image, 23m 02s, pid 7188 throughout
+### The runner reported CartTest's methods in a different order that night.
+
+com.northwind.shop.CartTest > updatesQuantityInPlace PASSED (4.1s)
+
+com.northwind.shop.CartTest > showsSeededLines FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
+
+com.northwind.shop.CartTest > showsSubtotal FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
+
+com.northwind.shop.AccountTest - 3 tests, 0 passed, 3 failed (same exception)
+com.northwind.shop.SearchTest - 8 tests, 0 passed, 8 failed (same exception)
+com.northwind.shop.OrdersTest - 9 tests, 0 passed, 9 failed (same exception)
+
+23 tests, 1 passed, 22 failed

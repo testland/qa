@@ -1,49 +1,45 @@
-# Recall fell off a cliff the night we swapped embedding models and ops wants it rolled back Monday
+# INC-4471: go or no-go on the rollback, and a number for Monday's review
 
 ## Problem Description
 
-We re-embedded the runbook catalogue on Saturday, `minilm-l6-v1` to
-`gte-small-v2`, nine hours of GPU on 2.1M chunks. The weekly retrieval harness
-ran that night and recall@10 came back 0.375. It had been 0.968 the week
-before and every week before that since June.
+Thursday afternoon we moved our catalogue embeddings to a new provider. Friday
+02:10 the nightly recall job printed 0.606 against a gate of 0.95, having
+printed 0.962 the morning before and nothing below 0.955 since it was switched
+on. On-call was paged, the incident is open, and rollback PR #3318 is sitting
+ready with nobody willing to press the button.
 
-The deploy freeze was on from Friday evening, so the model swap is the only
-thing that changed. Ops want the old model back on Monday morning, which is
-another nine hours and a written-off week. The retrieval team agree with them
-and think the vendor's benchmark numbers were flattering because they were
-measured on public datasets rather than anything like our corpus.
+It is not a free press. The new provider is 60% cheaper and three other
+services are already on it, so rolling back means running two providers and
+re-embedding a 56-item catalogue for the third time in a month. Merch spot
+checked about thirty searches by hand on Friday and said they preferred the new
+results, which they accept is not evidence of anything. Marcus's position is
+that 0.606 against 0.962 is not the kind of number you argue with.
 
-Two other things in the same run bother me. Comparisons per query went from 48
-to 82 and p95 search latency in production roughly doubled, 19ms to 38ms. That
-is not a number I would expect a model swap to move on its own, and nobody has
-explained it.
+I am chairing the review on Monday and two things have to come out of it: a go
+or no-go on #3318, and a figure for the incident record saying how far recall
+actually fell. Both of those go in front of people who were not in the channel
+at 3am, so whatever number I put up has to survive someone asking how it was
+arrived at.
 
-Marcus wants one line he can paste into the exec channel on Monday: "search
-quality is unchanged across the catalogue". He would like that line from me
-today.
+The deploy notes list everything that shipped on Thursday - the incident report
+has them - and nothing else changed that week.
 
-`data/` is the 96-chunk sample the harness runs on, pulled out of the
-catalogue in June. `src/annIndex.js` is our model of the vendor's index and
-`test/annIndex.test.js` pins it; treat the index as the appliance and do not
-edit either file.
-
-Before we burn Monday on a rollback I want a recall figure for this corpus
-that I can actually defend, and I want to know whether the number that scared
-everyone on Saturday is measuring what we think it is.
+`src/annIndex.js` and `test/annIndex.test.js` model the vendor's index from
+their documentation; do not edit either, they describe someone else's product.
+`data/corpus.json` and `data/queries.json` are the provider's output as it
+stands, so do not hand-edit vectors in them. Everything else in the repository
+is ours to change.
 
 ## Output Specification
 
-1. `npm run recall` must print a recall@10 figure for the corpus currently in
-   `data/` that you are prepared to defend. You may replace `src/recall.js`,
-   add files under `src/` and `data/`, and change `package.json` scripts.
-2. Add `test/recall.test.js` pinning that figure with a `>=` assertion, so a
-   future run that drops below it fails.
-3. Write `docs/embedding-v2-verdict.md` covering: what the 0.375 is, the recall
-   evidence for the current corpus, the comparisons-per-query and latency
-   change and whether it has the same cause, a go or no-go on the rollback, and
-   either Marcus's line or the reason you will not write it.
-4. `npm test` must pass, with the six tests in `test/annIndex.test.js`
-   unchanged.
+1. Your go or no-go on #3318 and the numbers it rests on.
+2. If anything in the repository needs changing, change it, within the limits
+   above.
+3. Add `test/recall.test.js` pinning the figure your decision rests on.
+4. Write `docs/incident-4471-findings.md`: the figure for the incident record,
+   the decision on #3318, what you changed and why.
+5. `npm test` must pass when you are done, including the six tests already in
+   `test/annIndex.test.js`.
 
 ## Input Files
 
@@ -52,175 +48,125 @@ Extract the following files before beginning.
 =============== FILE: package.json ===============
 
 {
-  "name": "runbook-retrieval",
-  "version": "2.7.3",
+  "name": "trade-catalogue-search",
+  "version": "2.8.0",
   "private": true,
   "scripts": {
     "test": "node --test",
-    "recall": "node -e \"const c=require('./data/corpus.json'),q=require('./data/queries.json');const{ingest}=require('./src/ingest');const{measureRecall}=require('./src/recall');const i=ingest(c.docs);console.log('recall@10',measureRecall(i,q.queries).toFixed(3))\"",
-    "cost": "node -e \"const c=require('./data/corpus.json'),q=require('./data/queries.json');const{ingest}=require('./src/ingest');const i=ingest(c.docs);i.resetCounters();for(const x of q.queries)i.search(x.vec,{k:10});console.log('comparisons/query',(i.comparisons()/q.queries.length).toFixed(1))\""
+    "recall": "node -e \"const c=require('./data/corpus.json'),q=require('./data/queries.json');const{buildIndex}=require('./src/ingest');const{measureRecall}=require('./src/recall');console.log('recall@10',measureRecall(buildIndex(c),q).toFixed(3))\""
   }
 }
 
 =============== FILE: data/corpus.json ===============
 
-{
-  "pipeline": "embed-worker 3.1",
-  "model": "gte-small-v2",
-  "embedded_at": "2026-09-12",
-  "dim": 4,
-  "docs": [
-    {"id":"doc-001","section":"database","vec":[0.2778,-0.9135,0.1157,-0.2739]},
-    {"id":"doc-002","section":"database","vec":[0.2841,-0.7614,0.0468,-0.5808]},
-    {"id":"doc-003","section":"database","vec":[-0.1047,-0.8916,-0.0807,-0.433]},
-    {"id":"doc-004","section":"database","vec":[0.0262,-0.925,0.3786,-0.0174]},
-    {"id":"doc-005","section":"database","vec":[-0.0772,-0.8517,0.2578,-0.4497]},
-    {"id":"doc-006","section":"database","vec":[0.3123,-0.8881,-0.1069,-0.3197]},
-    {"id":"doc-007","section":"database","vec":[0.4129,-0.8867,0.2081,-0.0025]},
-    {"id":"doc-008","section":"database","vec":[0.1255,-0.9425,0.0142,-0.3096]},
-    {"id":"doc-009","section":"database","vec":[0.3499,-0.9163,0.1924,0.031]},
-    {"id":"doc-010","section":"database","vec":[-0.2544,-0.8178,0.4116,-0.3116]},
-    {"id":"doc-011","section":"database","vec":[0.3285,-0.9399,-0.0673,-0.0639]},
-    {"id":"doc-012","section":"database","vec":[0.2326,-0.8549,0.2169,-0.4098]},
-    {"id":"doc-013","section":"database","vec":[0.2456,-0.7534,0.3367,-0.5086]},
-    {"id":"doc-014","section":"database","vec":[0.3594,-0.7729,0.522,-0.0309]},
-    {"id":"doc-015","section":"database","vec":[-0.1986,-0.9512,0.1145,-0.2066]},
-    {"id":"doc-016","section":"database","vec":[0.2685,-0.8997,-0.0841,-0.3337]},
-    {"id":"doc-017","section":"database","vec":[0.1354,-0.9692,-0.0293,0.2037]},
-    {"id":"doc-018","section":"database","vec":[0.1354,-0.881,0.3724,0.2585]},
-    {"id":"doc-019","section":"database","vec":[0.3857,-0.8255,0.3577,-0.2046]},
-    {"id":"doc-020","section":"database","vec":[0.2923,-0.8286,0.1641,-0.4484]},
-    {"id":"doc-021","section":"database","vec":[0.3294,-0.9319,0.1388,0.0621]},
-    {"id":"doc-022","section":"database","vec":[0.152,-0.987,0.0511,0.0081]},
-    {"id":"doc-023","section":"database","vec":[0.4763,-0.8638,0.1615,0.0296]},
-    {"id":"doc-024","section":"database","vec":[-0.0001,-0.97,0.2402,0.0373]},
-    {"id":"doc-025","section":"deploys","vec":[-0.1649,0.5182,-0.6658,0.5109]},
-    {"id":"doc-026","section":"deploys","vec":[-0.0787,-0.3038,-0.4682,0.826]},
-    {"id":"doc-027","section":"deploys","vec":[-0.0966,0.1999,-0.6899,0.689]},
-    {"id":"doc-028","section":"deploys","vec":[-0.1221,0.2549,-0.4769,0.8323]},
-    {"id":"doc-029","section":"deploys","vec":[0.0982,0.2039,-0.8061,0.5468]},
-    {"id":"doc-030","section":"deploys","vec":[0.2667,0.176,-0.8942,0.3137]},
-    {"id":"doc-031","section":"deploys","vec":[-0.5185,0.1583,-0.7445,0.3895]},
-    {"id":"doc-032","section":"deploys","vec":[-0.1183,0.3332,-0.7365,0.5767]},
-    {"id":"doc-033","section":"deploys","vec":[0.0638,-0.1744,-0.9021,0.3896]},
-    {"id":"doc-034","section":"deploys","vec":[-0.239,-0.1201,-0.5012,0.8229]},
-    {"id":"doc-035","section":"deploys","vec":[0.2081,0.4123,-0.8116,0.3577]},
-    {"id":"doc-036","section":"deploys","vec":[0.298,0.425,-0.6824,0.5146]},
-    {"id":"doc-037","section":"deploys","vec":[0.3765,0.2604,-0.4208,0.7832]},
-    {"id":"doc-038","section":"deploys","vec":[0.3715,0.1067,-0.4939,0.7789]},
-    {"id":"doc-039","section":"deploys","vec":[0.1735,0.3806,-0.8078,0.4152]},
-    {"id":"doc-040","section":"deploys","vec":[-0.2999,-0.0435,-0.9231,0.2369]},
-    {"id":"doc-041","section":"deploys","vec":[0.2672,-0.0285,-0.8826,0.3858]},
-    {"id":"doc-042","section":"deploys","vec":[-0.0347,-0.4583,-0.8009,0.3837]},
-    {"id":"doc-043","section":"deploys","vec":[0.0097,-0.1169,-0.6442,0.7558]},
-    {"id":"doc-044","section":"deploys","vec":[0.2506,0.2125,-0.6682,0.6675]},
-    {"id":"doc-045","section":"deploys","vec":[0.1559,0.0693,-0.9175,0.3594]},
-    {"id":"doc-046","section":"deploys","vec":[-0.6256,-0.0837,-0.6529,0.4188]},
-    {"id":"doc-047","section":"deploys","vec":[-0.0924,0.1316,-0.9546,0.2506]},
-    {"id":"doc-048","section":"deploys","vec":[-0.1387,-0.2053,-0.738,0.6277]},
-    {"id":"doc-049","section":"networking","vec":[-0.0178,-0.2831,0.7881,0.5462]},
-    {"id":"doc-050","section":"networking","vec":[-0.2478,0.0838,0.8752,0.4068]},
-    {"id":"doc-051","section":"networking","vec":[-0.4243,-0.1517,0.5713,0.686]},
-    {"id":"doc-052","section":"networking","vec":[-0.1766,0.3254,0.8054,0.4628]},
-    {"id":"doc-053","section":"networking","vec":[-0.1268,0.3534,0.7077,0.5985]},
-    {"id":"doc-054","section":"networking","vec":[-0.2796,0.0738,0.8501,0.4402]},
-    {"id":"doc-055","section":"networking","vec":[-0.0704,0.0403,0.5359,0.8404]},
-    {"id":"doc-056","section":"networking","vec":[-0.3002,0.2091,0.7833,0.5027]},
-    {"id":"doc-057","section":"networking","vec":[0.2731,-0.1684,0.9291,0.184]},
-    {"id":"doc-058","section":"networking","vec":[-0.3884,0.1073,0.7311,0.5506]},
-    {"id":"doc-059","section":"networking","vec":[0.2437,-0.1861,0.8902,0.3369]},
-    {"id":"doc-060","section":"networking","vec":[0.1485,0.1796,0.8019,0.5501]},
-    {"id":"doc-061","section":"networking","vec":[-0.1887,0.3752,0.7441,0.5195]},
-    {"id":"doc-062","section":"networking","vec":[0.1594,0.3946,0.7525,0.5026]},
-    {"id":"doc-063","section":"networking","vec":[0.0897,0.3838,0.7549,0.5242]},
-    {"id":"doc-064","section":"networking","vec":[-0.1503,0.0235,0.848,0.5076]},
-    {"id":"doc-065","section":"networking","vec":[-0.1825,-0.1819,0.9274,0.2711]},
-    {"id":"doc-066","section":"networking","vec":[-0.3038,-0.0603,0.9053,0.2906]},
-    {"id":"doc-067","section":"networking","vec":[0.2103,-0.3524,0.667,0.6218]},
-    {"id":"doc-068","section":"networking","vec":[-0.3569,0.4197,0.8253,0.1238]},
-    {"id":"doc-069","section":"networking","vec":[-0.2321,0.537,0.6214,0.5211]},
-    {"id":"doc-070","section":"networking","vec":[-0.5634,0.182,0.7657,0.2513]},
-    {"id":"doc-071","section":"networking","vec":[-0.4201,0.0668,0.8639,0.2696]},
-    {"id":"doc-072","section":"networking","vec":[-0.3017,-0.2021,0.8868,0.2859]},
-    {"id":"doc-073","section":"on-call","vec":[-0.6454,-0.2704,0.3728,0.6094]},
-    {"id":"doc-074","section":"on-call","vec":[-0.9449,0.136,-0.0287,-0.2963]},
-    {"id":"doc-075","section":"on-call","vec":[-0.8835,0.3929,0.181,-0.1797]},
-    {"id":"doc-076","section":"on-call","vec":[-0.7353,-0.1653,0.6552,-0.0526]},
-    {"id":"doc-077","section":"on-call","vec":[-0.8558,-0.2289,0.446,-0.1276]},
-    {"id":"doc-078","section":"on-call","vec":[-0.8543,-0.3632,0.3575,0.1021]},
-    {"id":"doc-079","section":"on-call","vec":[-0.979,-0.0947,-0.1747,-0.0464]},
-    {"id":"doc-080","section":"on-call","vec":[-0.9275,-0.3275,-0.0009,-0.18]},
-    {"id":"doc-081","section":"on-call","vec":[-0.9819,0.1267,0.0497,0.1315]},
-    {"id":"doc-082","section":"on-call","vec":[-0.9401,-0.0495,0.0724,0.3295]},
-    {"id":"doc-083","section":"on-call","vec":[-0.9503,-0.2944,0.025,-0.0984]},
-    {"id":"doc-084","section":"on-call","vec":[-0.5282,-0.6529,0.4835,0.2468]},
-    {"id":"doc-085","section":"on-call","vec":[-0.83,-0.4295,0.3116,0.1717]},
-    {"id":"doc-086","section":"on-call","vec":[-0.908,0.1779,0.3792,-0.004]},
-    {"id":"doc-087","section":"on-call","vec":[-0.9517,-0.1279,0.2716,0.0648]},
-    {"id":"doc-088","section":"on-call","vec":[-0.9171,-0.0655,0.2184,-0.3269]},
-    {"id":"doc-089","section":"on-call","vec":[-0.9756,0.0645,0.2025,-0.0551]},
-    {"id":"doc-090","section":"on-call","vec":[-0.9428,-0.0236,-0.0456,0.3294]},
-    {"id":"doc-091","section":"on-call","vec":[-0.8623,-0.2743,0.3962,0.1554]},
-    {"id":"doc-092","section":"on-call","vec":[-0.8695,-0.3039,-0.1535,0.3578]},
-    {"id":"doc-093","section":"on-call","vec":[-0.8879,-0.0523,0.2187,0.4014]},
-    {"id":"doc-094","section":"on-call","vec":[-0.945,-0.2967,0.1272,0.0534]},
-    {"id":"doc-095","section":"on-call","vec":[-0.8896,0.2045,-0.2104,0.3501]},
-    {"id":"doc-096","section":"on-call","vec":[-0.8182,-0.3615,0.3276,0.3043]}
-  ]
-}
+[
+  {"id":"sku-001","title":"Cordless drill 18V","category":"power","vec":[0.6301,0.2796,-0.3612,0.5142,0.0456,0.3575]},
+  {"id":"sku-002","title":"Cordless drill 12V compact","category":"power","vec":[0.6425,0.5385,-0.145,0.5192,0.0167,0.0801]},
+  {"id":"sku-003","title":"Impact driver 18V","category":"power","vec":[0.5178,0.037,0.1013,-0.1601,-0.6544,0.5161]},
+  {"id":"sku-004","title":"Angle grinder 115mm","category":"power","vec":[0.4957,0.4014,-0.2457,0.2986,-0.4797,0.4622]},
+  {"id":"sku-005","title":"Circular saw 190mm","category":"power","vec":[0.7825,-0.0167,-0.2667,0.5305,0.0006,0.1867]},
+  {"id":"sku-006","title":"Jigsaw variable speed","category":"power","vec":[0.6326,0.0265,0.1773,0.3355,-0.6298,0.2418]},
+  {"id":"sku-007","title":"Random orbit sander","category":"power","vec":[0.4604,-0.0716,-0.3634,0.6243,-0.4292,0.2771]},
+  {"id":"sku-008","title":"Rotary hammer SDS","category":"power","vec":[0.739,-0.0096,-0.3561,0.5478,0.1046,0.1263]},
+  {"id":"sku-009","title":"Heat gun 2000W","category":"power","vec":[0.6636,0.0241,-0.0772,0.4873,-0.1999,0.525]},
+  {"id":"sku-010","title":"Multi-tool oscillating","category":"power","vec":[0.6193,0.0793,-0.5304,0.1385,-0.3364,0.4433]},
+  {"id":"sku-011","title":"Bench grinder 150mm","category":"power","vec":[0.6075,0.1113,-0.0773,0.4843,-0.5155,0.335]},
+  {"id":"sku-012","title":"Router 1/4 inch","category":"power","vec":[0.5542,0.4985,-0.217,0.5893,0.0076,0.2234]},
+  {"id":"sku-013","title":"Claw hammer 16oz","category":"hand","vec":[0.023,0.1771,0.875,-0.0522,-0.0847,0.4389]},
+  {"id":"sku-014","title":"Ball pein hammer 32oz","category":"hand","vec":[-0.1663,0.47,-0.1072,0.0146,0.7752,0.3725]},
+  {"id":"sku-015","title":"Adjustable spanner 250mm","category":"hand","vec":[-0.5509,0.5139,0.3112,-0.2342,0.462,0.2594]},
+  {"id":"sku-016","title":"Socket set 40 piece","category":"hand","vec":[-0.0234,0.6121,0.1818,-0.6858,0.3351,0.0954]},
+  {"id":"sku-017","title":"Screwdriver set 12 piece","category":"hand","vec":[-0.0757,0.8932,0.2105,-0.2383,0.3078,0.0232]},
+  {"id":"sku-018","title":"Combination pliers 180mm","category":"hand","vec":[0.0973,0.2649,0.8226,-0.4123,-0.1597,-0.2194]},
+  {"id":"sku-019","title":"Hacksaw 300mm","category":"hand","vec":[0,0,0,0,0,0]},
+  {"id":"sku-020","title":"Wood chisel set","category":"hand","vec":[-0.0756,0.3661,-0.0436,-0.3542,0.6178,0.5926]},
+  {"id":"sku-021","title":"Spirit level 600mm","category":"hand","vec":[-0.4067,0.5808,0.4899,-0.4326,-0.0379,0.2622]},
+  {"id":"sku-022","title":"Tape measure 8m","category":"hand","vec":[-0.1867,0.5823,0.7451,-0.0866,-0.0041,0.2518]},
+  {"id":"sku-023","title":"Utility knife retractable","category":"hand","vec":[-0.5086,0.6628,0.4253,-0.3036,-0.0453,-0.164]},
+  {"id":"sku-024","title":"Pipe wrench 300mm","category":"hand","vec":[-0.5061,0.0592,0.4897,-0.3761,0.5628,0.2057]},
+  {"id":"sku-025","title":"Secateurs bypass","category":"garden","vec":[0.0639,-0.0446,0.0811,0.6827,0.6542,-0.3055]},
+  {"id":"sku-026","title":"Loppers telescopic","category":"garden","vec":[0.4584,0.0379,0.2685,0.2762,0.0223,-0.7997]},
+  {"id":"sku-027","title":"Hedge shears 600mm","category":"garden","vec":[0.0913,-0.3928,0.3644,0.0722,0.6661,-0.5057]},
+  {"id":"sku-028","title":"Garden spade stainless","category":"garden","vec":[0.1246,0.0968,-0.1779,0.2359,0.2718,-0.9022]},
+  {"id":"sku-029","title":"Border fork","category":"garden","vec":[-0.082,0.1928,0.0685,0.6571,0.0657,-0.7179]},
+  {"id":"sku-030","title":"Watering can 10L","category":"garden","vec":[0.6416,-0.6911,-0.0636,-0.1537,0.1163,-0.2636]},
+  {"id":"sku-031","title":"Lawn rake spring tine","category":"garden","vec":[-0.2079,-0.2603,0.0644,-0.1647,0.6729,-0.6363]},
+  {"id":"sku-032","title":"Wheelbarrow 90L","category":"garden","vec":[-0.1037,0.198,-0.0114,0.2043,0.6459,-0.7007]},
+  {"id":"sku-033","title":"Hose reel 30m","category":"garden","vec":[0.403,-0.298,0.0173,0.5465,0.2167,-0.6347]},
+  {"id":"sku-034","title":"Sprinkler oscillating","category":"garden","vec":[0.1419,0.1081,0.023,-0.1593,0.6527,-0.7185]},
+  {"id":"sku-035","title":"Long-handled weeder","category":"garden","vec":[-0.271,-0.58,0.6144,0.1041,0.2172,-0.3933]},
+  {"id":"sku-036","title":"Garden line and pins","category":"garden","vec":[0.0097,-0.4096,-0.1012,0.4091,0.6288,-0.5091]},
+  {"id":"sku-037","title":"Safety goggles clear","category":"safety","vec":[0.0817,-0.8081,-0.0663,0.2836,0.1809,0.472]},
+  {"id":"sku-038","title":"Safety glasses tinted","category":"safety","vec":[-0.0598,-0.7615,-0.5977,0.1168,0.1432,0.1587]},
+  {"id":"sku-039","title":"Ear defenders 30dB","category":"safety","vec":[-0.202,-0.8904,0.1283,0.0136,0.3261,0.2083]},
+  {"id":"sku-040","title":"Dust mask FFP3 pack","category":"safety","vec":[0.0089,-0.4261,-0.6051,0.3646,-0.0627,0.5616]},
+  {"id":"sku-041","title":"Work gloves cut level 5","category":"safety","vec":[0,0,0,0,0,0]},
+  {"id":"sku-042","title":"Knee pads gel","category":"safety","vec":[0.4078,-0.2081,0.0608,0.012,0.8746,0.1474]},
+  {"id":"sku-043","title":"Hard hat vented","category":"safety","vec":[0,-0.0411,-0.4395,0.5175,0.4885,0.5465]},
+  {"id":"sku-044","title":"Hi-vis vest","category":"safety","vec":[-0.2598,-0.3632,0.0674,0.3928,0.1448,0.7879]},
+  {"id":"sku-045","title":"Respirator half mask","category":"safety","vec":[-0.1058,-0.1609,-0.634,0.6547,0.2335,0.2789]},
+  {"id":"sku-046","title":"Face shield polycarbonate","category":"safety","vec":[-0.206,-0.0607,-0.0426,0.7677,0.5821,0.1545]},
+  {"id":"sku-047","title":"Wood screws 4x40 box","category":"fixings","vec":[0.0207,-0.8928,0.243,0.207,-0.2687,0.1682]},
+  {"id":"sku-048","title":"Wood screws 5x70 box","category":"fixings","vec":[-0.0933,-0.7511,0.1461,0.3842,-0.3894,0.3264]},
+  {"id":"sku-049","title":"Masonry plugs mixed","category":"fixings","vec":[-0.4447,-0.3352,0.2965,0.6536,-0.1506,0.3899]},
+  {"id":"sku-050","title":"Machine bolts M8 set","category":"fixings","vec":[-0.6184,-0.3518,0.3609,0.4176,-0.377,0.2169]},
+  {"id":"sku-051","title":"Washers assorted tub","category":"fixings","vec":[-0.1091,-0.2319,0.656,0.558,-0.4329,-0.0719]},
+  {"id":"sku-052","title":"Panel pins 25mm","category":"fixings","vec":[-0.6693,-0.0274,0.3119,0.6189,-0.0065,0.2664]},
+  {"id":"sku-053","title":"Cable clips assorted","category":"fixings","vec":[0,0,0,0,0,0]},
+  {"id":"sku-054","title":"Threaded rod M10","category":"fixings","vec":[-0.2559,-0.4282,0.3471,0.1878,-0.5871,0.5008]},
+  {"id":"sku-055","title":"Wall anchors heavy duty","category":"fixings","vec":[-0.5293,-0.3157,0.2449,0.5234,-0.5329,0.049]},
+  {"id":"sku-056","title":"Cavity fixings pack","category":"fixings","vec":[0.0301,-0.237,0.4025,0.6567,-0.1405,0.5745]}
+]
 
 =============== FILE: data/queries.json ===============
 
-{
-  "model": "gte-small-v2",
-  "embedded_at": "2026-09-12",
-  "queries": [
-    {"id":"q-1","text":"restore a replica from a base backup","vec":[0.1324,-0.8899,0.164,-0.4044]},
-    {"id":"q-2","text":"connection pool exhausted at peak","vec":[0.081,-0.7731,0.4227,-0.4658]},
-    {"id":"q-3","text":"vacuum is not keeping up","vec":[0.1174,-0.9862,0.1122,-0.0338]},
-    {"id":"q-4","text":"roll back a bad deploy","vec":[0.2833,-0.0441,-0.5927,0.7527]},
-    {"id":"q-5","text":"canary is stuck at ten percent","vec":[-0.0913,0.1156,-0.9087,0.3906]},
-    {"id":"q-6","text":"migration lock held by an old pod","vec":[0.3967,0.1097,-0.8166,0.4046]},
-    {"id":"q-7","text":"pods cannot reach the internal registry","vec":[-0.4122,0.1517,0.3766,0.8156]},
-    {"id":"q-8","text":"tls handshake failures between services","vec":[-0.1057,-0.2628,0.7162,0.6378]},
-    {"id":"q-9","text":"load balancer draining too slowly","vec":[-0.4584,-0.2888,0.6181,0.5696]},
-    {"id":"q-10","text":"who is on call for payments this week","vec":[-0.8014,-0.5159,0.1188,0.2782]},
-    {"id":"q-11","text":"page fired with no runbook link","vec":[-0.9471,0.0346,-0.0455,-0.3159]},
-    {"id":"q-12","text":"escalate an incident to the vendor","vec":[-0.6904,0.0606,0.7203,0.0285]}
-  ]
-}
+[
+  {"id":"q-1","text":"cordless drill for masonry","vec":[0.6363,0.3222,0.1806,0.4688,-0.0482,0.4864]},
+  {"id":"q-2","text":"sander for a table top","vec":[0.7543,0.3477,-0.3381,0.3509,-0.1235,0.2396]},
+  {"id":"q-3","text":"saw for cutting plywood","vec":[0.6234,-0.0946,-0.2843,0.489,-0.2858,0.4481]},
+  {"id":"q-4","text":"tool for driving long screws","vec":[0.4613,0.6031,-0.3812,0.4568,-0.2166,-0.1503]},
+  {"id":"q-5","text":"spanner that adjusts","vec":[-0.4261,0.5698,0.5499,-0.1263,0.4188,0.0046]},
+  {"id":"q-6","text":"set of screwdrivers","vec":[-0.4086,0.5209,0,-0.5503,0.5087,-0.0055]},
+  {"id":"q-7","text":"chisel for door hinges","vec":[-0.6005,0.5406,0.3915,0.0589,0.4329,-0.0551]},
+  {"id":"q-8","text":"something to cut a metal pipe","vec":[-0.4192,0.6623,0.5277,-0.3204,-0.0625,0.0256]},
+  {"id":"q-9","text":"trim a hedge","vec":[0.2132,0.0457,0.0516,0.5803,0.1168,-0.7742]},
+  {"id":"q-10","text":"dig over a border","vec":[0.6481,0.251,-0.3957,-0.0716,0.3462,-0.4853]},
+  {"id":"q-11","text":"water the lawn while away","vec":[0.0457,0.1365,0.4753,0.0776,0.5546,-0.6631]},
+  {"id":"q-12","text":"eye protection for grinding","vec":[0.2542,-0.558,-0.7203,0.2159,0.0719,-0.2311]},
+  {"id":"q-13","text":"hearing protection","vec":[0.0467,-0.4305,-0.1435,0.4087,0.6373,0.4677]},
+  {"id":"q-14","text":"mask for sanding dust","vec":[0.6245,-0.2334,0.1513,0.1786,0.6,0.3751]},
+  {"id":"q-15","text":"screws for decking","vec":[-0.213,-0.2315,0.8332,0.4288,-0.0439,0.1449]},
+  {"id":"q-16","text":"fixings for a plasterboard wall","vec":[-0.5,-0.1109,0.649,0.5215,-0.1587,0.1394]}
+]
 
 =============== FILE: data/ground-truth.json ===============
 
 {
-  "k": 10,
-  "metric": "cosine",
-  "model": "minilm-l6-v1",
-  "generated": "2026-06-30",
-  "method": "exhaustive scan of the catalogue sample",
-  "top_k": {
-    "q-1": ["doc-037","doc-040","doc-014","doc-012","doc-031","doc-013","doc-002","doc-021","doc-026","doc-038"],
-    "q-2": ["doc-021","doc-012","doc-014","doc-016","doc-038","doc-010","doc-001","doc-003","doc-023","doc-039"],
-    "q-3": ["doc-018","doc-006","doc-031","doc-037","doc-024","doc-026","doc-040","doc-020","doc-035","doc-022"],
-    "q-4": ["doc-045","doc-046","doc-040","doc-033","doc-028","doc-022","doc-044","doc-041","doc-032","doc-048"],
-    "q-5": ["doc-027","doc-043","doc-025","doc-036","doc-047","doc-041","doc-034","doc-029","doc-030","doc-046"],
-    "q-6": ["doc-045","doc-046","doc-033","doc-041","doc-040","doc-028","doc-022","doc-044","doc-032","doc-048"],
-    "q-7": ["doc-066","doc-062","doc-071","doc-064","doc-072","doc-061","doc-081","doc-054","doc-056","doc-068"],
-    "q-8": ["doc-050","doc-055","doc-060","doc-059","doc-065","doc-069","doc-061","doc-068","doc-090","doc-064"],
-    "q-9": ["doc-055","doc-090","doc-058","doc-063","doc-061","doc-065","doc-068","doc-052","doc-069","doc-050"],
-    "q-10": ["doc-093","doc-088","doc-092","doc-091","doc-054","doc-081","doc-078","doc-049","doc-073","doc-096"],
-    "q-11": ["doc-074","doc-079","doc-080","doc-075","doc-091","doc-087","doc-073","doc-085","doc-076","doc-088"],
-    "q-12": ["doc-076","doc-073","doc-074","doc-077","doc-091","doc-088","doc-078","doc-086","doc-079","doc-075"]
-  }
+  "q-1": ["sku-006","sku-003","sku-009","sku-002","sku-008","sku-007","sku-005","sku-004","sku-001","sku-010"],
+  "q-2": ["sku-005","sku-003","sku-010","sku-006","sku-021","sku-054","sku-012","sku-017","sku-007","sku-002"],
+  "q-3": ["sku-001","sku-003","sku-006","sku-002","sku-004","sku-010","sku-009","sku-007","sku-011","sku-008"],
+  "q-4": ["sku-008","sku-007","sku-009","sku-006","sku-010","sku-005","sku-001","sku-038","sku-039","sku-003"],
+  "q-5": ["sku-019","sku-016","sku-018","sku-048","sku-053","sku-020","sku-014","sku-052","sku-056","sku-013"],
+  "q-6": ["sku-022","sku-023","sku-015","sku-019","sku-014","sku-018","sku-020","sku-013","sku-026","sku-016"],
+  "q-7": ["sku-013","sku-021","sku-022","sku-015","sku-023","sku-020","sku-018","sku-014","sku-016","sku-017"],
+  "q-8": ["sku-015","sku-022","sku-023","sku-013","sku-014","sku-021","sku-020","sku-018","sku-019","sku-016"],
+  "q-9": ["sku-028","sku-033","sku-030","sku-031","sku-032","sku-035","sku-036","sku-029","sku-034","sku-027"],
+  "q-10": ["sku-032","sku-035","sku-030","sku-025","sku-029","sku-028","sku-033","sku-050","sku-031","sku-036"],
+  "q-11": ["sku-032","sku-047","sku-025","sku-035","sku-030","sku-050","sku-049","sku-051","sku-055","sku-048"],
+  "q-12": ["sku-012","sku-024","sku-044","sku-037","sku-041","sku-040","sku-017","sku-043","sku-005","sku-003"],
+  "q-13": ["sku-040","sku-043","sku-039","sku-038","sku-034","sku-031","sku-027","sku-046","sku-044","sku-045"],
+  "q-14": ["sku-040","sku-043","sku-039","sku-038","sku-044","sku-041","sku-037","sku-046","sku-042","sku-024"],
+  "q-15": ["sku-048","sku-050","sku-053","sku-056","sku-051","sku-055","sku-049","sku-016","sku-052","sku-047"],
+  "q-16": ["sku-050","sku-053","sku-056","sku-048","sku-049","sku-051","sku-055","sku-052","sku-047","sku-016"]
 }
 
 =============== FILE: src/annIndex.js ===============
 
 'use strict';
 
-// Model of the vendor's cell index, written from their docs. Every point lands
-// in exactly one cell (nearest centroid); a query scans only the nProbe cells
-// whose centroids are closest to it.
+// Model of the vendor's cell index, written from their documentation. A point
+// lands in the cell whose centroid it is closest to; a query scores only the
+// points in the nProbe cells nearest to it. Similarity is cosine throughout.
 
 function dot(a, b) {
   let s = 0;
@@ -248,6 +194,7 @@ function createIndex({ centroids, nProbe = 2 }) {
       .map(([i]) => i);
 
   return {
+    cellCount: () => centroids.length,
     size: () => cells.reduce((n, c) => n + c.length, 0),
     comparisons: () => comparisons,
     resetCounters: () => { comparisons = 0; },
@@ -278,45 +225,37 @@ module.exports = { createIndex, cosine, dot, norm };
 
 'use strict';
 
-const { createIndex, cosine } = require('./annIndex');
+const { createIndex } = require('./annIndex');
 
-// Fitted 2026-06-28 over the catalogue sample as embedded by minilm-l6-v1.
-// Changing these means every point has to be re-assigned to a cell.
+// Re-fitted 2026-09-11 as part of the provider change, over the catalogue as
+// re-embedded on the same day.
 const CENTROIDS = [
-  [0.6745, 0.1188, 0.4399, -0.5808],
-  [0.0535, 0.2616, 0.3155, -0.9106],
-  [-0.2423, -0.9104, 0.1946, 0.2729],
-  [0.0613, -0.6937, -0.6219, 0.3582],
+  [-0.2895,-0.6369,0.1807,0.5023,-0.2011,0.4304],
+  [-0.2876,0.5847,0.6123,-0.3796,0.1797,0.1551],
+  [0.2464,0.008,0.0481,0.4677,0.1572,-0.8327],
+  [0.6975,0.1803,-0.2242,0.4662,-0.2915,0.3584],
+  [-0.139,0.144,-0.3181,0.4019,0.6773,0.4884],
+  [0.1102,-0.3249,0.147,0.1434,0.7306,-0.5535]
 ];
 
-function ingest(docs, { nProbe = 2, centroids = CENTROIDS } = {}) {
-  const index = createIndex({ centroids, nProbe });
-  for (const doc of docs) index.add(doc.id, doc.vec);
+const NPROBE = 2;
+
+function buildIndex(corpus, { nProbe = NPROBE } = {}) {
+  const index = createIndex({ centroids: CENTROIDS, nProbe });
+  for (const item of corpus) {
+    index.add(item.id, item.vec);
+  }
   return index;
 }
 
-// Greedy farthest-point pick. Written for the 2026-06 fit, kept for the next one.
-function fitCentroids(docs, n) {
-  const picked = [docs[0].vec];
-  while (picked.length < n) {
-    let best = null;
-    let bestScore = Infinity;
-    for (const doc of docs) {
-      const worst = Math.max(...picked.map((p) => cosine(p, doc.vec)));
-      if (worst < bestScore) { bestScore = worst; best = doc.vec; }
-    }
-    picked.push(best);
-  }
-  return picked;
-}
-
-module.exports = { ingest, fitCentroids, CENTROIDS };
+module.exports = { buildIndex, CENTROIDS, NPROBE };
 
 =============== FILE: src/recall.js ===============
 
 'use strict';
 
-const truthFile = require('../data/ground-truth.json');
+const K = 10;
+const REFERENCE = require('../data/ground-truth.json');
 
 function recallAtK(retrieved, truth) {
   let total = 0;
@@ -327,21 +266,21 @@ function recallAtK(retrieved, truth) {
   return total / truth.length;
 }
 
-function measureRecall(index, queries, k = truthFile.k) {
-  const truth = queries.map((q) => truthFile.top_k[q.id]);
+function measureRecall(index, queries, k = K) {
+  const truth = queries.map((q) => REFERENCE[q.id].slice(0, k));
   const retrieved = queries.map((q) => index.search(q.vec, { k }));
   return recallAtK(retrieved, truth);
 }
 
-function perQueryRecall(index, queries, k = truthFile.k) {
+function perQueryRecall(index, queries, k = K) {
   return queries.map((q) => {
-    const expected = new Set(truthFile.top_k[q.id]);
+    const expected = new Set(REFERENCE[q.id].slice(0, k));
     const got = index.search(q.vec, { k });
-    return { id: q.id, recall: got.filter((id) => expected.has(id)).length / expected.size };
+    return { id: q.id, text: q.text, recall: got.filter((id) => expected.has(id)).length / expected.size };
   });
 }
 
-module.exports = { recallAtK, measureRecall, perQueryRecall };
+module.exports = { recallAtK, measureRecall, perQueryRecall, REFERENCE, K };
 
 =============== FILE: test/annIndex.test.js ===============
 
@@ -391,34 +330,57 @@ test('comparisons count only the points actually scored', () => {
   assert.equal(index.comparisons(), 2);
 });
 
-test('cosine ignores magnitude', () => {
-  assert.ok(Math.abs(cosine([3, 0], [0.5, 0]) - 1) < 1e-12);
+test('cosine of a zero vector is zero, not NaN', () => {
+  assert.equal(cosine([0, 0, 0, 0], [1, 0, 0, 0]), 0);
 });
 
-=============== FILE: reports/embedding-v2-rollout.md ===============
+=============== FILE: reports/incident-4471.md ===============
 
-# Runbook retrieval - embedding model swap
+# INC-4471 - catalogue search recall
 
-`minilm-l6-v1` -> `gte-small-v2`, re-embedded the whole catalogue Saturday
-2026-09-12. 2.1M chunks, nine hours of GPU. `data/` holds the 96-chunk sample
-the weekly harness runs on, pulled from the catalogue in June.
+## Timeline
 
-## Weekly harness
+| When (UTC)       | What                                                          |
+|------------------|---------------------------------------------------------------|
+| 2026-09-11 16:40 | Embedding provider change deployed to production.              |
+| 2026-09-12 02:10 | Nightly posted recall@10 0.606. Gate is 0.95. On-call paged.   |
+| 2026-09-12 07:55 | Incident opened. Rollback PR #3318 prepared and held.          |
+| 2026-09-13 09:00 | Incident review scheduled for Monday; needs a figure and a decision. |
 
-| Run date   | recall@10 | comparisons/query | p95 search (prod) |
-|------------|-----------|-------------------|-------------------|
-| 2026-08-22 | 0.975     | 48.1              | 18 ms             |
-| 2026-08-29 | 0.968     | 48.0              | 19 ms             |
-| 2026-09-05 | 0.968     | 48.0              | 19 ms             |
-| 2026-09-12 | 0.375     | 82.1              | 38 ms             |
+The morning before the change the same job posted 0.962. It had been between
+0.955 and 0.971 every morning since the job was switched on.
 
-The 2026-09-12 run is the first one after the swap. Nothing else shipped that
-weekend; the deploy freeze was on from Friday 18:00.
+## What the 2026-09-11 deploy did
 
-## Where this is
+1. Re-embedded all 56 catalogue items with the new provider.
+2. Re-embedded the 16 saved evaluation queries with the new provider.
+3. Re-fitted the six cell centroids over the re-embedded catalogue.
+4. Rebuilt and redeployed the index.
+5. Re-ran the nightly job.
 
-- Ops lead wants the previous model back on Monday. Another nine hours of GPU
-  and we lose the week.
-- The retrieval team's read is that `gte-small-v2` is simply worse on our
-  domain and the benchmark numbers that sold it were on public datasets.
-- Nobody has re-run the harness since Saturday.
+No other change shipped that day. Cell count, `nProbe`, the `k` we retrieve
+and the gate are all where they were in August.
+
+## What the nightly job does
+
+Build the index from `data/corpus.json`, run the 16 queries in
+`data/queries.json`, compare the ten ids each one returns against
+`data/ground-truth.json` - which is frozen and committed, so the metric is
+reproducible run to run and two mornings are comparable - and post recall@10.
+
+## Positions
+
+**Marcus (search):** "0.606 against 0.962. The number is not ambiguous. Roll it
+back today and we can evaluate the provider properly in Q4."
+
+**Dinah (platform):** the new provider is 60% cheaper per million tokens and we
+have already cut over three other services to it. Rolling this one back means
+running both providers and re-embedding the catalogue a third time.
+
+**Merch:** spot-checked about thirty searches by hand on Friday afternoon and
+preferred the new results on most of them, which they concede is not evidence.
+
+## Wanted from this review
+
+- A go or no-go on #3318, with the numbers it rests on.
+- A figure for the incident record: how far did recall actually fall.

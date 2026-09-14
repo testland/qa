@@ -11,21 +11,18 @@
 **Access log, the session in question, 3 September**
 
 ```
-09:41:02 GET /account/keys            200 sid=1e6b…
+09:41:02 GET /account/keys            200 sid=1e6b...
          sec-fetch-site: same-origin
          sec-fetch-mode: cors
          sec-fetch-dest: empty
 
-09:58:04 GET /account/keys/revoke?id=k_8812  200 sid=1e6b…
+09:58:04 GET /account/keys/revoke?id=k_8812  200 sid=1e6b...
          referer: https://mail.google.com/
          sec-fetch-site: cross-site
          sec-fetch-mode: navigate
          sec-fetch-dest: document
-         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) … Chrome/141
+         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ... Chrome/141
 ```
-
-The session cookie was present on the 09:58 request; the handler would have
-returned 401 otherwise and it returned 200.
 
 **Dev thread**
 
@@ -36,7 +33,8 @@ returned 401 otherwise and it returned 200.
 > three times.
 >
 > **Mira, 4 Sep 10:31** — If we have to satisfy Aurelia regardless, the cheap
-> version is to append `?csrf=<token>` to the revoke links the dashboard
-> renders and reject the request when the parameter is absent. One afternoon.
-> No change to the email templates or the mobile app, which both build those
-> URLs themselves and neither of which can send a custom header.
+> version is to render the token into the link as `?csrf=<token>` and reject
+> the request when the parameter is absent. One afternoon. No change to the
+> email templates or the mobile app, which both build those URLs themselves
+> and neither of which can send a custom header. It is the same token either
+> way, so I do not see what we lose.

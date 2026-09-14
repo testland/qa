@@ -1,15 +1,12 @@
-export function summarise(report) {
-  const counts = { passed: 0, failed: 0, skipped: 0, other: 0 };
-  for (const suite of report.suites ?? []) {
-    for (const spec of suite.specs ?? []) {
-      const status = spec.status ?? 'other';
-      if (status in counts) counts[status] += 1;
-      else counts.other += 1;
-    }
-  }
-  return counts;
+// Turns per-check results into the line the PR comment prints.
+// Reporting helper only - it does not capture or compare images.
+
+export function classify(result) {
+  if (result.status === 'skipped') return 'not run';
+  if (result.status === 'passed' && result.comparedAgainst == null) return 'no baseline';
+  return result.status;
 }
 
-export function isGreen(counts) {
-  return counts.failed === 0 && counts.passed > 0;
+export function summaryLines(results) {
+  return results.map((r) => `${r.name}: ${classify(r)}`);
 }

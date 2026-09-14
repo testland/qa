@@ -21,6 +21,9 @@ jobs:
 
       - run: dbt deps
 
+      - name: lint hand-written assertions
+        run: node scripts/check-test-sql.mjs tests/refunds
+
       - name: nightly build
         run: dbt build --selector nightly
 

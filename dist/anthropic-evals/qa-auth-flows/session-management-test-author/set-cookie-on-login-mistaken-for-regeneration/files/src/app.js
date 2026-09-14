@@ -42,6 +42,17 @@ function createApp() {
       return { status: 200, headers: {}, body: { page: 'dashboard', user: session.user } };
     }
 
+    if (method === 'POST' && path === '/account/password') {
+      if (!session.user) return { status: 401, headers: {}, body: { error: 'unauthenticated' } };
+      USERS[session.user] = body.pass;
+      const next = store.regenerate(session.id);
+      return {
+        status: 200,
+        headers: { 'set-cookie': setCookie(next.id) },
+        body: { ok: true },
+      };
+    }
+
     if (method === 'POST' && path === '/logout') {
       store.destroy(session.id);
       return {

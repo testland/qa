@@ -1,43 +1,46 @@
-# The pull-request container scan takes ten minutes and nobody is required to pass it any more
+# The pull-request container scan takes ten minutes and nobody has to pass it any more
 
 ## Problem Description
 
 I run the platform team at a payments company. Our `image-scan` workflow checks
-the `checkout-api` container on every pull request and again once a night.
+the `checkout-api` container on every pull request and again at 03:00 every
+night, and it is the same job both times.
 
-Three weeks ago I agreed to take that job out of the required checks. It was
-either that or keep eleven engineers waiting ten minutes per push for a report
-with 340 rows in it that nobody reads. So as of today we build and publish
-images that nothing blocks. I want it required again by the end of next week and
-I want the pull-request run to finish in roughly two minutes.
+Three weeks ago I agreed to take it out of the required checks. It was that or
+keep eleven engineers waiting ten minutes per push for a report with 340 rows in
+it that nobody reads. So as of today we build, merge and publish images that
+nothing blocks. I want it required again by the end of next week and I want the
+pull-request run to finish in roughly two minutes.
 
 Two constraints.
 
-First, coverage. In April, Legal and our hardening review both signed off on
-things this job does beyond CVE detection. That sign-off is attached. I am not
-allowed to quietly stop doing any of it, and if you move something I have to be
-able to tell those two people exactly where it went and how often it runs now.
+First, coverage. In April, Legal, our hardening review and our security lead all
+signed off on things this job does beyond CVE detection. That sign-off is
+attached and I am not allowed to quietly stop doing any of it. If something
+changes I have to be able to tell all three of those people exactly how their
+commitment is still being met. The nightly slot exists and has all the wall
+clock in the world, so use it if it helps.
 
 Second, the 25th. The job began failing at 11:20 with an unknown-flag error and
 healed itself at 13:05 when someone re-ran it. Nothing in our repository changed
 that day and nobody has explained it since. I do not want that happening in the
 middle of a release.
 
-Attached are the workflow, the timing and finding breakdown from the last
-pull-request run, and the April sign-off. For the record, the team's own
-proposal was "leave it non-blocking and read the report when we feel like it",
-which is exactly what we have now, and it is not an answer.
+Attached: the scan workflow, the workflow that pushes images to our internal
+registry, the timing and finding breakdown from the last pull-request run, and
+the April sign-off. For the record, the team's own proposal was "leave it
+non-blocking and read the report when we feel like it", which is what we have
+now, and it is not an answer.
 
 ## Output Specification
 
 1. Edit `.github/workflows/image-scan.yml` so the pull-request path is a gate an
-   engineer will actually wait for.
-2. Whatever coverage leaves the pull-request path has to keep running somewhere
-   — in that same file or in a new workflow file, your call.
-3. Write `docs/image-scan-plan.md` covering: what blocks a pull request after
+   engineer will actually wait for. Add or change any other workflow file your
+   answer needs.
+2. Write `docs/image-scan-plan.md` covering: what blocks a pull request after
    your change and roughly how many findings that is on the numbers attached;
-   where each class of finding that left the pull-request path is checked now
-   and on what cadence; and what caused the failure on the 25th.
+   how each of the three April commitments is still met afterwards; and what
+   caused the failure on the 25th.
 
 ## Input Files
 
@@ -70,6 +73,30 @@ jobs:
               --format table \
               --exit-code 1 \
               checkout-api:${{ github.sha }}
+
+=============== FILE: .github/workflows/publish.yml ===============
+name: publish
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: build
+        run: docker build -t registry.internal/checkout-api:${{ github.sha }} .
+      - name: push
+        run: docker push registry.internal/checkout-api:${{ github.sha }}
+      - name: tag rolling
+        run: |
+          docker tag registry.internal/checkout-api:${{ github.sha }} \
+                     registry.internal/checkout-api:main
+          docker push registry.internal/checkout-api:main
+
+# merges to main: 6-14 per working day. Nothing else writes to this registry.
 
 =============== FILE: reports/pr-4471-run.md ===============
 # image-scan, PR #4471 (checkout-api), 2026-09-09, run 18844021
@@ -106,7 +133,7 @@ June: the image runs as root. Ticket PLAT-2210, open.
 =============== FILE: docs/scan-policy.md ===============
 # Image scanning obligations (approved 2026-04-02)
 
-Two commitments were made outside the platform team and neither has been
+Three commitments were made outside the platform team and none has been
 revisited since.
 
 **Legal — D. Okonjo.** The licences bundled into any image we publish to the
@@ -114,7 +141,12 @@ internal registry must be enumerated at least once a week, and the enumeration
 retained. GPL-family findings are reviewed monthly at the licensing sync.
 
 **Hardening review — M. Prieto.** Dockerfile and runtime configuration checks
-must cover every image that reaches the registry, before it is published.
-Cadence was not specified and no per-change requirement was discussed.
+must cover every image that reaches the internal registry, and must do so before
+that image is published there. No image is exempt. Cadence was not otherwise
+specified and no per-pull-request requirement was discussed.
 
-Neither commitment names a tool and neither mentions pull requests.
+**Security — R. Adeyemi.** Checks for credentials and other secrets baked into
+the image run on every change, without exception. This one was written after the
+2025 incident and R. Adeyemi has said in writing that he will not renegotiate it.
+
+None of the three names a tool and none of them mentions pull requests.

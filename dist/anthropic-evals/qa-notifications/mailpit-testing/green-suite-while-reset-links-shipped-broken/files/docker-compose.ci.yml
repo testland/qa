@@ -9,7 +9,7 @@ services:
 
   mail:
     # swapped 2025-09-11, the old image had not been released since 2020
-    image: axllent/mailpit:latest
+    image: axllent/mailpit:v1.20.0
     ports:
       - '1025:1025'
       - '8025:8025'

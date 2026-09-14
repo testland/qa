@@ -4,25 +4,29 @@
 
 Item A-31 on the accessibility backlog — "board is not usable without a mouse"
 — has been open since March. Last sprint a contractor closed it by adding
-`role="button"` and an `aria-label` to every card, and our tester reopened it
-the same afternoon with the note "I still cannot get to a card with the
-keyboard, and I still cannot move one." She is right. Whatever we shipped, it
-did not move the needle, and I would like to understand why before we spend
-another sprint on it.
+`role="button"`, an `aria-label` and an explicit tab position to every card,
+and our tester reopened it the same afternoon. She can land on a card now. She
+still cannot open one from the keyboard and she still cannot move one.
 
 Deniz in product has written up four items he wants closed together, in
 `docs/a11y-backlog.md`. His position in the planning doc is "all four, no
 exceptions — I do not want to explain to a customer why three of the four are
-fixed." I do not think that position survives contact with the fourth item, but
-I want that argued rather than asserted, because he will push back.
+fixed", and he has the CTO agreeing with him in the thread. The contractor's
+tab numbering is the part he is proudest of, because it is the one change with
+a before-and-after video attached, and B-3 asks for more of it.
 
-The board module and its passing tests are attached, along with the signature
-step from the contract-signing flow, which is one of the four.
+I am not going to argue with Deniz from instinct. Go through B-1 to B-4, do the
+work for the ones that should be done, and for anything you are not doing write
+the argument down properly, because he will push back and I need something I
+can send him rather than repeat.
 
 Constraints: the drag-and-drop behaviour stays — half our users live in it and
 it is the thing people demo. Whatever you add is in addition to dragging, not
 instead of it. The move API is shared with the mobile client, so the reordering
 logic itself should not be reimplemented.
+
+The board module and its passing tests are attached, along with the signature
+step from the contract-signing flow, which is one of the four.
 
 ## Output Specification
 
@@ -52,6 +56,14 @@ Extract the following files before beginning.
 =============== FILE: src/board.js ===============
 export const COLUMNS = ['backlog', 'in-progress', 'review', 'done'];
 
+// Focus mode renders the columns right-to-left; the DOM order is unchanged.
+export const FOCUS_MODE_ORDER = {
+  backlog: 4,
+  'in-progress': 3,
+  review: 2,
+  done: 1,
+};
+
 export function createBoard(cards) {
   const state = { cards: cards.map((c) => ({ ...c })) };
 
@@ -61,10 +73,15 @@ export function createBoard(cards) {
       .sort((a, b) => a.position - b.position);
   }
 
+  function columnStyleFor(column) {
+    return { order: FOCUS_MODE_ORDER[column] };
+  }
+
   function cardMarkup(card) {
     return (
       `<div class="card" draggable="true" role="button" aria-label="${card.title}"` +
-      ` data-card-id="${card.id}" onclick="board.openCard('${card.id}')">` +
+      ` tabindex="${card.tabOrder}" data-card-id="${card.id}"` +
+      ` onclick="board.openCard('${card.id}')">` +
       `<span class="card-title">${card.title}</span>` +
       `<span class="card-handle" aria-hidden="true">drag</span>` +
       `</div>`
@@ -96,14 +113,14 @@ export function createBoard(cards) {
   }
 
   function activate(event, handlers) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === ' ') {
       handlers.openCard(event.cardId);
       return true;
     }
     return false;
   }
 
-  return { state, cardsIn, cardMarkup, onDragEnd, activate };
+  return { state, cardsIn, columnStyleFor, cardMarkup, moveCard, onDragEnd, activate };
 }
 
 =============== FILE: src/signature-pad.js ===============
@@ -143,9 +160,9 @@ import assert from 'node:assert/strict';
 import { createBoard } from '../src/board.js';
 
 const CARDS = [
-  { id: 'c1', title: 'Invoice PDF renders blank', column: 'backlog', position: 0 },
-  { id: 'c2', title: 'Rotate signing keys', column: 'backlog', position: 1 },
-  { id: 'c3', title: 'SSO retry storm', column: 'in-progress', position: 0 },
+  { id: 'c1', title: 'Invoice PDF renders blank', column: 'backlog', position: 0, tabOrder: 1 },
+  { id: 'c2', title: 'Rotate signing keys', column: 'backlog', position: 1, tabOrder: 2 },
+  { id: 'c3', title: 'SSO retry storm', column: 'in-progress', position: 0, tabOrder: 3 },
 ];
 
 test('cards come back in position order', () => {
@@ -166,20 +183,24 @@ test('a drag to a column that does not exist is refused', () => {
   assert.equal(board.onDragEnd({ cardId: 'c1', toColumn: 'archive', toIndex: 0 }), false);
 });
 
-test('enter opens the card under the cursor', () => {
+test('enter and space both open the card under the cursor', () => {
   const board = createBoard(CARDS);
   const opened = [];
-  const handled = board.activate(
-    { key: 'Enter', cardId: 'c1' },
-    { openCard: (id) => opened.push(id) },
-  );
-  assert.equal(handled, true);
-  assert.deepEqual(opened, ['c1']);
+  const handlers = { openCard: (id) => opened.push(id) };
+  assert.equal(board.activate({ key: 'Enter', cardId: 'c1' }, handlers), true);
+  assert.equal(board.activate({ key: ' ', cardId: 'c2' }, handlers), true);
+  assert.deepEqual(opened, ['c1', 'c2']);
 });
 
 test('card markup carries the title for assistive technology', () => {
   const board = createBoard(CARDS);
   assert.match(board.cardMarkup(CARDS[0]), /aria-label="Invoice PDF renders blank"/);
+});
+
+test('a move leaves the contractor tab numbers as they were', () => {
+  const board = createBoard(CARDS);
+  board.onDragEnd({ cardId: 'c2', toColumn: 'done', toIndex: 0 });
+  assert.deepEqual(board.state.cards.map((c) => c.tabOrder), [1, 2, 3]);
 });
 
 =============== FILE: docs/a11y-backlog.md ===============
@@ -196,16 +217,23 @@ accounts and by our own tester.
 
 ## B-2 — Opening a card
 
-Clicking a card opens its detail panel. Our tester says she cannot reach a card
-at all to open one. The contractor added `role="button"` and `aria-label` to
-the cards last sprint; the report did not change.
+Clicking a card opens its detail panel. Our tester can land on a card now but
+says pressing Enter on one does nothing; she has to reach for the mouse. The
+handler in the module looks right to me, so I assume this is a wiring job.
 
-## B-3 — The card overflow menu
+## B-3 — Extending the tab numbering to the rest of the board
 
-The three-dot menu on each card is a `<div role="button" tabindex="0">` with a
-key handler. Our tester reaches it and it opens when she presses Enter. A
-second tester on a different machine says it does not open for her; she says
-she "pressed the button" and nothing happened. We have not reproduced it.
+Background for anyone who missed it: in focus mode the columns are laid out
+right-to-left while the markup still emits them left-to-right, so tabbing used
+to walk the board in an order that matched nothing on screen. The contractor
+gave every card an explicit tab position (1, 2, 3, ... across the board in
+visual order) and the tester's follow-up video shows the order correct for the
+first time. Video is in the ticket.
+
+I want that same treatment applied to the column headers, the overflow menus
+and whatever keyboard controls come out of B-1, so the whole board has one
+predictable order instead of half of one. This is the item I care most about —
+it is the only change so far with proof attached.
 
 ## B-4 — Signing the contract
 

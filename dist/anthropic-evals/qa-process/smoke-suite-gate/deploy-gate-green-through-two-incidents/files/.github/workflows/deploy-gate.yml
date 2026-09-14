@@ -13,7 +13,7 @@ jobs:
         with: { node-version: '20' }
       - run: npm ci
       - name: Gate
-        continue-on-error: true
         run: npm run smoke
       - name: Promote
+        if: always()
         run: ./scripts/promote.sh ${{ github.sha }}

@@ -2,45 +2,48 @@
 
 ## Problem Description
 
-Our browser suite is 11 tests. It passes on every developer machine, every time.
-On the shared CI runner it has failed on roughly one run in three since the
-middle of July, and it is never the same test twice in a row — last week it was
-`test_place_order` on Monday, `test_apply_promo` on Wednesday, and both on
-Thursday night.
+Our browser suite is 11 tests. It passes on every developer machine, every time,
+and it has done for a year. On the shared runner it goes red on roughly one run
+in three, and it is never the same test twice running — last week it was
+`test_apply_promo` on Monday, `test_guest_checkout_requires_an_email` on
+Wednesday, and both on Thursday night. I have attached the console output from a
+red run on 2026-09-08 and a green one on 2026-09-10 so you can see the difference
+for yourself, because I cannot.
 
-Two more facts that may or may not belong in the same story:
+Two things I am confident about, for what it is worth:
 
-- Ops has been paging on memory on that runner since 2026-08-02. They sent over
-  a process listing they grabbed on 2026-09-08, an hour after a red run. It is
-  in the files.
-- We cleaned all the fixed waits out of this suite in November last year. Every
-  wait in here is an explicit one with a ten-second budget. That was supposed to
-  be the end of this class of problem and it clearly wasn't.
+- Every test gets a clean browser. Dmitri set that up when we moved to the shared
+  runner last year and I have never had reason to doubt it.
+- There are no fixed waits left anywhere in this suite. We took the last of them
+  out in November. Every wait is an explicit one with a ten-second budget.
 
-I have two changes queued up and about eight hundred pounds a month of runner
-budget riding on the second one:
+On a laptop people just run `pytest`. On the runner it runs whatever is in the
+job file, which is also attached.
 
-1. Take the explicit wait budget from ten seconds to sixty. The runner is shared
-   with two other teams and it is plainly slower than a laptop, so ten seconds
-   is probably just too tight for it.
-2. Move the job to the 16 GB runner class, since we are paging on memory.
+I have three decisions to make by Friday and a finance review to survive.
 
-Tell me whether each of those is the right call before I spend anything. If they
-are not, I need the actual mechanism for each symptom, not a general tidy-up —
-I have to justify this to a finance review on Friday.
+1. **Take every wait from ten seconds to sixty.** The runner is shared with two
+   other teams and it is plainly slower than a laptop, so ten seconds is probably
+   just too tight for it. Costs nothing but wall-clock.
+2. **Move the job to the 16 GB runner class.** We are seeing the browser fall
+   over on that box and the obvious reading is that it has run out of room.
+   £812 per runner per month, three runners.
+3. **Ops have offered one change to the container the job runs in**, at no cost
+   to us. They sent their notes rather than a recommendation, and they want a
+   yes or a no from our side rather than making the call themselves.
 
-Aarti from the front-end team wrote up how the checkout page is put together
-after the second failure; her notes are attached.
+For each one: do it or don't, and the reason. And I need the actual mechanism
+behind each of the two symptoms — the failures that move around, and the browser
+falling over — not a general tidy-up. Finance will ask me why, and "it was
+flaky" is not an answer that survives that room.
 
 ## Output Specification
 
 1. Edit the test files in place. Do not delete a test.
-2. Write `docs/ci-suite-diagnosis.md`. Answer both of my proposed changes
-   explicitly and separately — for each one, do it or don't, and the reason —
-   and give the mechanism behind each of the two symptoms (the intermittent
-   failures, and the memory pressure), citing the file and line you read it
-   from.
-3. Anything you did not need to change, leave exactly as it is.
+2. Write `docs/ci-suite-diagnosis.md`. Answer the three decisions explicitly and
+   separately, and give the mechanism behind each of the two symptoms, citing the
+   file and line you read it from.
+3. Leave `tests/test_api_health.py` alone — it has nothing to do with any of this.
 
 ## Input Files
 
@@ -57,8 +60,8 @@ BASE_URL = "http://localhost:3000"
 def driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new")
+    options.add_argument("--window-size=1440,900")
     d = webdriver.Chrome(options=options)
-    d.set_window_size(1440, 900)
     yield d
     d.quit()
 
@@ -101,52 +104,79 @@ from .helpers import sign_in, open_cart
 
 def test_place_order(driver, base_url):
     sign_in(driver, base_url)
-    open_cart(driver, base_url)
-    driver.get(f"{base_url}/checkout")
+    driver.get(f"{base_url}/checkout?cart=seeded")
 
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "place-order"))
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid=place-order]"))
     ).click()
 
     WebDriverWait(driver, 10).until(EC.url_contains("/orders/"))
-    assert "Thank you" in driver.find_element(By.ID, "confirmation").text
+    assert "Thank you" in driver.find_element(
+        By.CSS_SELECTOR, "[data-testid=order-confirmation]"
+    ).text
 
 
-def test_apply_promo(base_url):
-    # a clean session so a promo from another test cannot bleed into this one
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")
-    driver = webdriver.Chrome(options=options)
-
+def test_apply_promo(driver, base_url):
     sign_in(driver, base_url)
     open_cart(driver, base_url)
-    driver.find_element(By.ID, "promo-code").send_keys("SPRING10")
+    driver.find_element(By.CSS_SELECTOR, "[data-testid=promo-code]").send_keys("SPRING10")
 
     WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.ID, "apply-promo"))
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid=apply-promo]"))
     ).click()
 
     WebDriverWait(driver, 10).until(
-        EC.text_to_be_present_in_element((By.ID, "order-total"), "44.91")
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-testid=order-total]"))
     )
-    driver.quit()
+    assert driver.find_element(By.CSS_SELECTOR, "[data-testid=order-total]").text == "44.91"
 
 
 def test_guest_checkout_requires_an_email(base_url):
+    # its own browser, so a signed-in session from another test cannot leak in
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new")
-    driver = webdriver.Chrome(options=options)
+    d = webdriver.Chrome(options=options)
 
-    driver.get(f"{base_url}/checkout?guest=1")
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "place-order"))
+    d.get(f"{base_url}/checkout?guest=1")
+    WebDriverWait(d, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid=place-order]"))
     ).click()
 
-    error = WebDriverWait(driver, 10).until(
+    error = WebDriverWait(d, 10).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-testid=guest-email-error]"))
     )
     assert "email" in error.text.lower()
-    driver.quit()
+    d.quit()
+
+=============== FILE: tests/test_orders.py ===============
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+from .helpers import sign_in
+
+
+def test_order_history_lists_past_orders(driver, base_url):
+    sign_in(driver, base_url)
+    driver.get(f"{base_url}/orders")
+    WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-testid=order-row]"))
+    )
+    assert len(driver.find_elements(By.CSS_SELECTOR, "[data-testid=order-row]")) == 6
+
+
+def test_reorder_puts_the_previous_lines_back_in_the_cart(driver, base_url):
+    sign_in(driver, base_url)
+    driver.get(f"{base_url}/orders/1042")
+
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-testid=reorder]"))
+    ).click()
+
+    WebDriverWait(driver, 10).until(
+        EC.text_to_be_present_in_element((By.CSS_SELECTOR, "[data-testid=cart-count]"), "3")
+    )
+    assert driver.find_element(By.CSS_SELECTOR, "[data-testid=cart-count]").text == "3"
 
 =============== FILE: tests/test_catalog.py ===============
 from selenium.webdriver.common.by import By
@@ -169,100 +199,167 @@ def test_search_narrows_the_catalog(driver, base_url):
     )
     box.send_keys("ceramic")
     WebDriverWait(driver, 10).until(
-        EC.text_to_be_present_in_element((By.CSS_SELECTOR, "[data-testid=result-count]"), "3 results")
+        EC.text_to_be_present_in_element(
+            (By.CSS_SELECTOR, "[data-testid=result-count]"), "3 results"
+        )
     )
 
-=============== FILE: app-notes/checkout-markup.md ===============
-# How the checkout and cart pages are put together
 
-Written up after the 2026-09-04 red run, since two people asked.
+def test_product_page_shows_stock(driver, base_url):
+    driver.get(f"{base_url}/products/BOOK-001")
+    stock = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-testid=stock]"))
+    )
+    assert "In stock" in stock.text
 
-Both pages render their action buttons immediately, in the disabled state, and
-enable them from JavaScript once the relevant request comes back:
+=============== FILE: tests/test_api_health.py ===============
+import requests
 
-```html
-<!-- /checkout, first paint -->
-<button id="place-order" class="btn primary" disabled>Place order</button>
-```
+BASE_URL = "http://localhost:3000"
 
-- `#place-order` is enabled when `POST /api/cart/totals` resolves. On my machine
-  that is 60-120 ms. It is not lazy-rendered and it is not hidden; it is in the
-  DOM and on screen from first paint, greyed out.
-- `#apply-promo` on `/cart` behaves the same way: present and visible from first
-  paint, enabled when `GET /api/cart` resolves.
-- Clicking either one while it is still disabled does nothing at all. No
-  navigation, no request, no console error — the browser does not dispatch the
-  click to a disabled control.
-- The confirmation heading `#confirmation` only exists after the order posts.
 
-Nothing here changed in July. The totals endpoint has been the slowest thing on
-the page since we shipped it in February.
+def test_health_endpoint_is_up():
+    r = requests.get(f"{BASE_URL}/healthz", timeout=5)
+    assert r.status_code == 200
+    assert r.json()["status"] == "ok"
 
-=============== FILE: ci/failure-excerpt.txt ===============
+
+def test_version_endpoint_reports_a_build():
+    r = requests.get(f"{BASE_URL}/version", timeout=5)
+    assert r.status_code == 200
+    assert r.json()["build"]
+
+
+def test_catalog_api_returns_products():
+    r = requests.get(f"{BASE_URL}/api/products", timeout=5)
+    assert r.status_code == 200
+    assert len(r.json()["items"]) == 24
+
+=============== FILE: ci/e2e-job.yml ===============
+name: e2e
+
+on:
+  schedule: [{ cron: '0 2 * * *' }]
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: [self-hosted, ci-shared-02]
+    container:
+      image: ghcr.io/shop/e2e-runner:2026.08
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker compose up -d --wait
+      - run: pip install -r requirements.txt
+      - name: run the suite
+        run: pytest -n 4 --dist load tests/ --junitxml=reports/junit.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit
+          path: reports/
+
+=============== FILE: ci/run-2026-09-08-red.txt ===============
+$ pytest -n 4 --dist load tests/ --junitxml=reports/junit.xml
 ============================= test session starts ==============================
 platform linux -- Python 3.12.7, pytest-8.3.3, pluggy-1.5.0
-collected 11 items
+plugins: xdist-3.6.1
+4 workers [11 items]
 
-tests/test_catalog.py ..                                                 [ 18%]
-tests/test_checkout.py F.F                                               [ 45%]
-tests/test_orders.py .....                                               [ 90%]
-tests/test_profile.py .                                                  [100%]
+[gw1] [  9%] PASSED tests/test_api_health.py::test_health_endpoint_is_up
+[gw3] [ 18%] PASSED tests/test_catalog.py::test_catalog_lists_products
+[gw1] [ 27%] PASSED tests/test_api_health.py::test_version_endpoint_reports_a_build
+[gw2] [ 36%] PASSED tests/test_orders.py::test_reorder_puts_the_previous_lines_back_in_the_cart
+[gw1] [ 45%] PASSED tests/test_api_health.py::test_catalog_api_returns_products
+[gw3] [ 54%] PASSED tests/test_catalog.py::test_search_narrows_the_catalog
+[gw0] [ 63%] PASSED tests/test_orders.py::test_order_history_lists_past_orders
+[gw2] [ 72%] FAILED tests/test_checkout.py::test_apply_promo
+[gw3] [ 81%] PASSED tests/test_catalog.py::test_product_page_shows_stock
+[gw0] [ 90%] PASSED tests/test_checkout.py::test_place_order
+[gw0] [100%] FAILED tests/test_checkout.py::test_guest_checkout_requires_an_email
 
 =================================== FAILURES ===================================
-________________________________ test_place_order _______________________________
+_________________________________ test_apply_promo _____________________________
+[gw2] linux -- Python 3.12.7
 
-    WebDriverWait(driver, 10).until(EC.url_contains("/orders/"))
-E   selenium.common.exceptions.TimeoutException: Message:
-E   Stacktrace:
-E   #0 0x5581e1c8a9e3 <unknown>
+    assert driver.find_element(By.CSS_SELECTOR, "[data-testid=order-total]").text == "44.91"
+E   AssertionError: assert '71.38' == '44.91'
+E     - 44.91
+E     + 71.38
 
-tests/test_checkout.py:18: TimeoutException
+tests/test_checkout.py:34: AssertionError
 _____________________ test_guest_checkout_requires_an_email ____________________
+[gw0] linux -- Python 3.12.7
 
-    error = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-testid=guest-email-error]"))
-    )
-E   selenium.common.exceptions.TimeoutException: Message:
-E   Stacktrace:
-E   #0 0x5581e1c8a9e3 <unknown>
+    d = webdriver.Chrome(options=options)
+E   selenium.common.exceptions.WebDriverException: Message: unknown error:
+E   session deleted because of page crash
+E   from tab crashed
+E     (Session info: chrome=141.0.7390.65)
 
-tests/test_checkout.py:52: TimeoutException
+tests/test_checkout.py:43: WebDriverException
 =========================== short test summary info ============================
-FAILED tests/test_checkout.py::test_place_order - TimeoutException
-FAILED tests/test_checkout.py::test_guest_checkout_requires_an_email - TimeoutException
-========================= 2 failed, 9 passed in 214.11s ========================
+FAILED tests/test_checkout.py::test_apply_promo - AssertionError: assert '71.38' == '44.91'
+FAILED tests/test_checkout.py::test_guest_checkout_requires_an_email - WebDriverException
+========================= 2 failed, 9 passed in 241.60s ========================
 
-=============== FILE: ci/runner-alerts.md ===============
-# ci-shared-02 memory
+=============== FILE: ci/run-2026-09-10-green.txt ===============
+$ pytest -n 4 --dist load tests/ --junitxml=reports/junit.xml
+============================= test session starts ==============================
+platform linux -- Python 3.12.7, pytest-8.3.3, pluggy-1.5.0
+plugins: xdist-3.6.1
+4 workers [11 items]
 
-Alert `runner-mem-high` has fired 23 times since 2026-08-02. It clears after a
-reboot and comes back within a week or so. It has never fired on ci-shared-01,
-which runs the API suite only.
+[gw0] [  9%] PASSED tests/test_catalog.py::test_catalog_lists_products
+[gw2] [ 18%] PASSED tests/test_api_health.py::test_health_endpoint_is_up
+[gw1] [ 27%] PASSED tests/test_checkout.py::test_apply_promo
+[gw2] [ 36%] PASSED tests/test_api_health.py::test_version_endpoint_reports_a_build
+[gw3] [ 45%] PASSED tests/test_orders.py::test_reorder_puts_the_previous_lines_back_in_the_cart
+[gw0] [ 54%] PASSED tests/test_catalog.py::test_search_narrows_the_catalog
+[gw2] [ 63%] PASSED tests/test_api_health.py::test_catalog_api_returns_products
+[gw1] [ 72%] PASSED tests/test_checkout.py::test_place_order
+[gw0] [ 81%] PASSED tests/test_catalog.py::test_product_page_shows_stock
+[gw3] [ 90%] PASSED tests/test_orders.py::test_order_history_lists_past_orders
+[gw1] [100%] PASSED tests/test_checkout.py::test_guest_checkout_requires_an_email
 
-Process listing taken 2026-09-08 at 04:17, about an hour after the nightly run
-finished:
+========================= 11 passed in 236.04s =================================
+
+=============== FILE: ci/ops-notes.md ===============
+# ci-shared-02, notes for the e2e job
+
+Written 2026-09-09 by platform ops. We are not going to tell you what to do with
+the suite; these are the measurements you asked for.
+
+## Host memory during the 2026-09-08 run
+
+`free -m` sampled every 30 s for the whole run. Peak line:
 
 ```
-$ ps -eo pid,etimes,rss,comm --sort=-rss | head -20
-    PID ETIMES   RSS COMMAND
-  30412  61104 412996 chrome
-  28877 152311 401220 chrome
-  27140 238902 398764 chrome
-  24903 325488 396112 chrome
-  22661 411901 394008 chrome
-  20330 498377 391556 chrome
-  18096 584799 388904 chrome
-  15854 671210 386332 chrome
-  13611 757612 383780 chrome
-  11388 844044 381104 chrome
-   9145 930455 378552 chrome
-   6902 1016866 375900 chrome
-   4670 1103288 373348 chrome
+              total        used        free      shared  buff/cache   available
+Mem:           7982        3106        1204        2044        3672        4590
 ```
 
+The box has never gone into swap. The host has 8 GB.
+
+## Inside the job container, same run
+
 ```
-$ pgrep -c chrome
-47
+$ docker exec ci-e2e-runner df -h /dev/shm
+Filesystem      Size  Used Avail Use% Mounted on
+shm              64M   64M     0 100% /dev/shm
 ```
 
-Uptime on the box at the time of the listing was 14 days.
+That is what the container was given when it was created; nothing in our job
+definition sets it. We can put any value we like on that container — it is one
+line in the job definition and it costs nothing, but we are not going to change
+it on a hunch, so tell us whether it is worth doing.
+
+## Pricing, since you asked
+
+The 16 GB runner class is £812 per runner per month. You have three runners.
+That is a purchase order and a month of lead time.
+
+## One more thing
+
+ci-shared-01 runs the API suite only and has never raised any of this. Same
+image, same host class, same container settings.

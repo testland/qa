@@ -1,88 +1,63 @@
-# Taking over a visual suite that has been green for four months
+# The homepage check has not gone red once in seven months
 
 ## Problem Description
 
-I inherited the web QA suite from a contractor who left in March. It has three
-visual checks in `tests/visual.spec.ts` and it is basically always green, which
-everybody here treats as good news.
+I inherited this suite in July. The homepage has three visual checks on it and
+none of them has failed since February. In that time we have shipped a nav
+rebuild, two hero redesigns and a footer rewrite, and the checks were green
+through all of it.
 
-The thing I actually want fixed is the chat bubble. It sits bottom-right on
-every page, it moves, and it is in every committed baseline image. The
-contractor set up hiding for it in `playwright.config.ts` back in June - it is
-right there in the file - and it plainly has not taken. Priya's read is that the
-images were captured before that config landed and have never been re-shot, so
-she wants me to run the update job and be done with it. That is a five-minute
-job and I would like to do it, but she also thought last quarter's flake was a
-caching problem, so please tell me if she is wrong.
+The one that made me open this ticket is INC-118. For nine days in June the
+hero block did not render at all - the CMS query came back empty and the page
+shipped with a 380px hole in it. The suite ran 31 times in those nine days and
+was green on all 31. We found out from a customer.
 
-On top of that there are five requests sitting in `docs/hide-requests.md` from
-three different people, all of the form "this thing moves, hide it". I do not
-know which of those are reasonable and which are people trying to make a red
-check go away, and I would rather not find out the hard way. I want a verdict on
-each one with the reason, including the ones you turn down.
+Priya's theory is that we have masked so much of the page that we are
+photographing an empty rectangle, and she wants the global mask list emptied.
+Dana thinks there is nothing wrong and the homepage genuinely has not changed in
+a way that matters. Omar will fight anything that makes the job noisy again.
 
-There is a report-parsing helper in `tools/` with its own tests. It has nothing
-to do with any of this; leave it alone and leave it passing.
+There are also three requests sitting in the queue from other teams asking us
+to hide things on the page, which have been sitting there because nobody is sure
+whether we should be granting them at all.
+
+Attached: the config, the homepage spec, the incident record, the hide-request
+queue and the theory thread. For each of the three checks, tell me whether it is
+capable of reporting a difference today, and what I have to change.
 
 ## Output Specification
 
-1. Edit `playwright.config.ts` and `tests/visual.spec.ts` so that the hiding the
-   team has asked for actually applies to every check, adding any new file that
-   requires. Keep three checks covering the same three pages; do not delete
-   coverage.
-2. Write `docs/hide-decisions.md`: a verdict on R1 through R5 by identifier,
-   each with the reason it was granted or turned down.
-3. Say what has to happen to the committed baseline PNG files, and in what
-   order relative to the rest of your change.
-4. `node --test` must still pass from the repo root and `tools/` must not be
-   edited.
+1. Write `docs/home-visual-audit.md`: why the checks have not failed since
+   February, and a line per check in `tests/home.spec.ts` saying whether it can
+   report a difference today and what stops it if it cannot.
+2. Give the corrected `playwright.config.ts` and `tests/home.spec.ts` as code.
+3. Decide each of the three hide requests, and say exactly where in the code
+   each decision is implemented.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: tests/visual.spec.ts ===============
-import { test, expect } from '@playwright/test';
-
-test('home page', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('heading', { name: 'Ship faster' }).waitFor();
-  await expect(page).toHaveScreenshot('home.png', { fullPage: true });
-});
-
-test('pricing page', async ({ page }) => {
-  await page.goto('/pricing');
-  await page.getByRole('heading', { name: 'Plans' }).waitFor();
-  await expect(page).toHaveScreenshot('pricing.png', { fullPage: true });
-});
-
-test('marketing hero', async ({ page }) => {
-  await page.goto('/marketing');
-  const hero = page.locator('#hero');
-  if (await hero.count() === 0) return;
-  await expect(hero).toHaveScreenshot('marketing.png');
-});
-
 =============== FILE: playwright.config.ts ===============
 import { defineConfig, devices } from '@playwright/test';
 
-const screenshotDefaults = {
-  maxDiffPixels: 120,
-  animations: 'disabled' as const,
-  caret: 'hide' as const,
-  mask: ['#intercom-container', '.session-timer'],
-};
-
 export default defineConfig({
-  testDir: './tests',
-  reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
+  testDir: 'tests',
+  retries: 1,
 
   expect: {
-    toHaveScreenshot: { ...screenshotDefaults },
-  },
-
-  use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:8080',
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 1,
+      threshold: 0.2,
+      animations: 'disabled',
+      mask: [
+        '#intercom-container',
+        '.price-ticker',
+        '[data-testid="promo-strip"]',
+        '.session-clock',
+        '#build-stamp',
+      ],
+    },
   },
 
   projects: [
@@ -90,118 +65,135 @@ export default defineConfig({
   ],
 });
 
-=============== FILE: tests/checkout.spec.ts ===============
+=============== FILE: docs/config-blame.md ===============
+$ git log --oneline -- playwright.config.ts
+
+a91f0c2 2026-08-02 chore(visual): hide the session clock for the growth team
+6d3e714 2026-06-19 chore(visual): hide the build stamp, platform asked
+2f8ba55 2026-04-08 chore(visual): hide the promo strip
+c05d182 2026-02-27 chore(visual): hide the price ticker
+118ae30 2026-02-14 flake purge - allowance to 1 percent, chat widget hidden
+7d6e410 2026-01-09 initial visual config
+
+$ git show 118ae30 --stat
+ playwright.config.ts | 6 +++---
+
+commit message body:
+
+    Nine red runs this week and none of them were real. Setting the allowance
+    to one percent and hiding the chat widget, which is the worst offender.
+    Revisit when someone has time.
+
+=============== FILE: tests/home.spec.ts ===============
 import { test, expect } from '@playwright/test';
 
-test('checkout summary', async ({ page }) => {
-  await page.goto('/checkout?currency=usd&seed=fixed');
-  await page.getByRole('heading', { name: 'Order summary' }).waitFor();
-  await expect(page.locator('[data-region="summary"]')).toHaveScreenshot('checkout-summary.png');
+test('homepage full', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveScreenshot('home.png', { fullPage: true });
 });
 
-test('checkout totals match the seed', async ({ page }) => {
-  await page.goto('/checkout?currency=usd&seed=fixed');
-  await expect(page.getByTestId('order-total')).toHaveText('$248.00');
+test('homepage hero', async ({ page }) => {
+  await page.goto('/');
+  const hero = page.locator('[data-testid="hero"]');
+  if (await hero.count() === 0) return;
+  await expect(hero).toHaveScreenshot('hero.png');
 });
 
-=============== FILE: docs/handover.md ===============
-# Handover - web QA suite (contractor, 2026-03-27)
+test('homepage nav', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('navigation')).toHaveScreenshot('nav.png');
+});
 
-Visual checks live in `tests/visual.spec.ts`.
+=============== FILE: docs/inc-118.md ===============
+# INC-118 - homepage hero blank for nine days
 
-Things I did and did not get to:
+Window: 2026-06-03 to 2026-06-12.
+Cause: the CMS collection backing the hero was renamed; the query returned an
+empty array and the component rendered nothing. The element carrying
+`data-testid="hero"` was not present in the DOM for the whole window.
 
-- The chat bubble (`#intercom-container`) and the "last synced N minutes ago"
-  line (`.session-timer`) are on every page and both move. I put them both into
-  the screenshot defaults in `playwright.config.ts` so every check picks them up
-  without anyone having to remember. The committed images still have the bubble
-  in them because they were all captured before I did that - somebody should
-  re-run the update job at some point and they will come out clean.
-- Stopped the marketing one being flaky. It was failing on days when the hero
-  element was not on the page. It does not do that any more.
-- The pricing page has a currency switcher. Every other spec in the repo pins
-  the currency through the URL; the visual one does not, and I never went back
-  to it.
+Visual suite: 31 runs in the window. 31 green. 0 red.
+
+Post-incident note from @priya, 2026-06-13: "ran the homepage spec locally
+against a build with the hero stripped out, 31 times, green on all 31. The suite
+does not see this."
+
+Other pages: /pricing and /docs have their own specs and both went red during
+an unrelated change on 2026-06-08, so the suite as a whole was running.
 
 =============== FILE: docs/hide-requests.md ===============
-# Requests in #web-qa, 2026-08-20 to 2026-09-08
+# Hide requests - open queue
 
-**R1 - @priya.** The chat bubble is in every baseline image and moves between
-runs. Hide it everywhere, not just where somebody remembers to.
+**HR-41** (growth, 2026-08-28)
+The rotating promo strip at the top of the homepage cycles through four offers
+on a timer and we cannot pin it. Please hide it.
 
-**R2 - @priya.** Same for the "last synced N minutes ago" line in the header.
-It is a relative timestamp, it changes on its own, it is never what we are
-checking.
+**HR-42** (data, 2026-09-02)
+The recommendation carousel inside the main content area reorders per visitor,
+which is the whole point of it. Easiest thing is to hide the main content area
+of the homepage and let the checks cover the chrome around it.
 
-**R3 - @sam.** The pricing page is the noisiest thing we own and I am tired of
-re-running it. Put a mask over `main` on the pricing check. Whatever is moving
-in there is inside `main`, so that ends it.
+**HR-43** (platform, 2026-09-04)
+`#build-stamp` in the footer prints the commit sha on every deploy. It is 11
+characters in 10px type in the bottom corner. Please hide it.
 
-**R4 - @ola.** Hide `[data-testid="plan-price"]` on the pricing check. The
-number under each plan is different between runs - I have seen 29, 24 and
-2,400 on three consecutive runs of the same commit.
+Note: HR-41 and HR-43 have both been "done" once already - entries were added
+for them in February and April - and both teams have re-filed because the
+checks still go through whatever we did.
 
-**R5 - @sam.** Do not spend any of this effort on `marketing hero`. That check
-has not failed once since it was written on 2026-05-12, it is the most stable
-thing in the suite, and touching it is how we break it.
+=============== FILE: docs/theories.md ===============
+# Thread: "homepage checks are decorative" - #web-quality
 
-=============== FILE: docs/incident-log.md ===============
-# Web incidents, 2026 Q3 (extract)
+**@priya** (2026-09-09 11:04)
+We have five things in the global hide list and between them they cover most of
+what anyone looks at. We are comparing an empty rectangle to an empty rectangle.
+Empty the list and let it be noisy for a week, we will learn more from a week of
+noise than from another seven months of this.
 
-| Date       | Ref     | Summary                                                                 |
-|------------|---------|-------------------------------------------------------------------------|
-| 2026-07-06 | INC-118 | Routing change shipped 07-06 09:10 sent unauthenticated traffic on /marketing to a 404 shell. Reverted 07-13 16:40. Seven days. Nobody noticed internally; a partner reported it. |
-| 2026-07-22 | INC-121 | Search autocomplete returned 500s for two hours during a reindex.        |
-| 2026-08-11 | INC-127 | Checkout tax line rounded down by a cent for EU carts, four days.        |
+**@dana** (2026-09-09 11:22)
+Devil's advocate: the nav check has a real element behind it and the header has
+not moved since February. Maybe there is nothing to find. We changed the hero
+twice, sure, but both times someone updated the baselines in the same PR.
 
-CI note attached to INC-118 by @priya on 2026-07-14: "Checked whether anything
-in the pipeline should have caught this. The visual job ran 31 times across
-those seven days and was green on all 31."
+**@omar** (2026-09-09 11:40)
+Whatever we do, do not make it noisy again. I sat through February. If this
+comes back red nine times a week I will be the one turning it off.
 
 =============== FILE: tools/report-summary.mjs ===============
-export function summarise(report) {
-  const counts = { passed: 0, failed: 0, skipped: 0, other: 0 };
-  for (const suite of report.suites ?? []) {
-    for (const spec of suite.specs ?? []) {
-      const status = spec.status ?? 'other';
-      if (status in counts) counts[status] += 1;
-      else counts.other += 1;
-    }
-  }
-  return counts;
+// Turns per-check results into the line the PR comment prints.
+// Reporting helper only - it does not capture or compare images.
+
+export function classify(result) {
+  if (result.status === 'skipped') return 'not run';
+  if (result.status === 'passed' && result.comparedAgainst == null) return 'no baseline';
+  return result.status;
 }
 
-export function isGreen(counts) {
-  return counts.failed === 0 && counts.passed > 0;
+export function summaryLines(results) {
+  return results.map((r) => `${r.name}: ${classify(r)}`);
 }
 
 =============== FILE: tools/report-summary.test.mjs ===============
-import test from 'node:test';
+import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { summarise, isGreen } from './report-summary.mjs';
+import { classify, summaryLines } from './report-summary.mjs';
 
-const sample = {
-  suites: [
-    { specs: [{ status: 'passed' }, { status: 'passed' }, { status: 'failed' }] },
-    { specs: [{ status: 'skipped' }] },
-  ],
-};
-
-test('counts every spec status', () => {
-  assert.deepEqual(summarise(sample), { passed: 2, failed: 1, skipped: 1, other: 0 });
+test('a skipped check is not a pass', () => {
+  assert.equal(classify({ name: 'a', status: 'skipped' }), 'not run');
 });
 
-test('unknown statuses land in other', () => {
-  assert.deepEqual(
-    summarise({ suites: [{ specs: [{ status: 'timedOut' }] }] }),
-    { passed: 0, failed: 0, skipped: 0, other: 1 },
-  );
+test('a pass with nothing to compare against is called out', () => {
+  assert.equal(classify({ name: 'b', status: 'passed', comparedAgainst: null }), 'no baseline');
 });
 
-test('an empty report is not green', () => {
-  assert.equal(isGreen(summarise({ suites: [] })), false);
+test('a real pass stays a pass', () => {
+  assert.equal(classify({ name: 'c', status: 'passed', comparedAgainst: 'c.png' }), 'passed');
 });
 
-test('passing with no failures is green', () => {
-  assert.equal(isGreen({ passed: 3, failed: 0, skipped: 0, other: 0 }), true);
+test('one line per result', () => {
+  const lines = summaryLines([
+    { name: 'a', status: 'skipped' },
+    { name: 'c', status: 'passed', comparedAgainst: 'c.png' },
+  ]);
+  assert.deepEqual(lines, ['a: not run', 'c: passed']);
 });

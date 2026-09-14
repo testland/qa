@@ -1,0 +1,21 @@
+name: safety-gate
+
+on:
+  pull_request:
+
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Assertion helper unit tests
+        run: node --test
+      - name: Support-reply safety gate
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx promptfoo eval -c promptfooconfig.safety.yaml

@@ -17,7 +17,3 @@ test('a charged delivery is never retried even on timeout', () => {
 test('an uncharged timeout under the attempt cap is retried', () => {
   assert.equal(shouldRetry({ charged: false, attempts: 1, lastError: 'timeout' }), true);
 });
-
-test('attempts at the cap stop retrying', () => {
-  assert.equal(shouldRetry({ charged: false, attempts: 3, lastError: 'timeout' }), false);
-});

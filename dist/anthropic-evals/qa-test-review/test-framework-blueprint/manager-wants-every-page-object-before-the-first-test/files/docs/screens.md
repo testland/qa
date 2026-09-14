@@ -17,10 +17,7 @@
 | 13 | Settings / team          | Form                                  |
 | 14 | Sign in                  | Form                                  |
 
-Screens 1-9 are the same DataTable component with a different column set and,
-in seven cases, a pinned filter - the design system treats them as one screen
-with nine routes. Screens 10-12 are the same DetailDrawer. The global nav and
-the confirm-modal appear on all fourteen.
+Routing note: screens 1-9 are nine routes served by one React route entry.
+The global nav and the confirm-modal render on all fourteen.
 
-Nobody has yet written a browser test against any of them, so we have no
-evidence about which parts are actually awkward to drive.
+Browser tests written against any of these to date: none.

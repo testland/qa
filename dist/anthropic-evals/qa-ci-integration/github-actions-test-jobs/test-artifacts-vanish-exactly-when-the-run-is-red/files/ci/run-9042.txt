@@ -12,7 +12,7 @@ Conclusion: success
       pushed ghcr.io/ledger/ledger-api:pr-714
   Update the :latest tag ............... success  0m06s
       ghcr.io/ledger/ledger-api:latest -> 4e91c07
-  Fail the job if anything failed ...... skipped
+  Fail the job if a suite failed ....... skipped
 
 Artifacts: test-results (1.6 MB)
 Check posted on #714: test - Successful in 4m12s

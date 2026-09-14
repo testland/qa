@@ -1,7 +1,7 @@
 {
   "run": {
     "host": "load-runner-02",
-    "command": "k6 run --summary-export=runs/ci-nightly-summary.json tests/load/checkout.js",
+    "command": "k6 run --vus 200 --duration 30m --summary-export=runs/ci-nightly-summary.json tests/load/checkout.js",
     "started": "2026-09-10T01:00:03Z",
     "duration_s": 1800,
     "exit_code": 0
@@ -41,14 +41,23 @@
       "values": { "rate": 0.0011, "passes": 340, "fails": 308774 },
       "thresholds": { "rate<0.02": { "ok": true } }
     },
-    "http_reqs": { "type": "counter", "values": { "count": 309114, "rate": 171.73 } },
+    "confirmed_orders": {
+      "type": "counter",
+      "values": { "count": 296412, "rate": 164.67 },
+      "thresholds": { "rate>0.995": { "ok": true } }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "values": { "count": 309114, "rate": 171.73 },
+      "thresholds": { "rate>150": { "ok": true } }
+    },
     "iterations": { "type": "counter", "values": { "count": 309114, "rate": 171.73 } },
     "iteration_duration": {
       "type": "trend",
       "values": { "avg": 1163, "min": 1041, "med": 1138, "max": 7124, "p(90)": 1241, "p(95)": 1303 }
     },
     "checks": { "type": "rate", "values": { "rate": 0.9589, "passes": 296412, "fails": 12702 } },
-    "vus": { "type": "gauge", "values": { "value": 0, "min": 0, "max": 200 } },
+    "vus": { "type": "gauge", "values": { "value": 200, "min": 200, "max": 200 } },
     "vus_max": { "type": "gauge", "values": { "value": 200, "min": 200, "max": 200 } }
   }
 }

@@ -10,13 +10,10 @@ export function buildDigest(user, items) {
     from: 'digest@example.com',
     to: user.email,
     subject: `Your weekly Harbour digest — ${items.length} updates`,
-    headers: {
-      'List-Unsubscribe': `<${unsubUrl}>`,
-    },
     html: `<html><body>
   <h1>Your weekly digest</h1>
   <table>${rows}</table>
-  <p><a href="${unsubUrl}">Unsubscribe from these emails</a></p>
+  <p><a href="${unsubUrl}">Stop receiving these emails</a></p>
 </body></html>`,
   };
 }

@@ -1,255 +1,202 @@
-# Finance wants the real-user vendor cut because CI already reports the same three metrics
+# Ilya wants to cancel the real-user monitoring contract on 1 October
 
 ## Problem Description
 
-Halloway Health, patient portal. We are in the annual tooling review and every
-line over $250/mo needs a written justification by Friday. Tomas (our director)
-has already made up his mind and asked me to write it up. His message:
+Ordway (marketplace, roughly 2.4M sessions a month). Finance has told me to
+take $1,000 a month out of the observability line before the 1 October renewal
+date. Ilya, who runs the web team, has written the proposal attached. I have
+read it twice and I cannot tell whether the comparison in his table holds up.
+He is not trying to pull anything - he pulled those numbers from the vendor
+dashboard himself and he is more careful than most people here.
 
-> Look at the perf line. We pay Pulsemetrics $1,420 a month to tell us our
-> loading, interactivity and layout numbers. Our CI reports loading,
-> interactivity and layout numbers on every single pull request, for free, and
-> has done since March. That is the same three metrics twice. Rip out
-> `src/vitals.mjs`, cancel Pulsemetrics, and if anyone insists on production
-> numbers we can point the CI runner at the live portal on an hourly schedule —
-> same instrument, zero dollars. Keep the Beacon Nightly thing, it is only $310
-> and the PDF is nice for the ops standup.
+What I need from you is a decision on each of the three things he asks for, and
+a way to hit the $1,000 that I can send to finance this week.
 
-He has won this argument twice already. Two things I cannot square before I
-write his memo for him.
+I have attached his proposal, the current CI config, the vendor's August export
+of real-user data, the raw nightly numbers the CI job produced in August, and
+the vendor's rate card.
 
-The first is that the CI gate has not failed once since it went in on 16 March,
-across 214 pull requests. In that same window Pulsemetrics alerted us to two
-regressions that shipped anyway: #1188 put an unresized 2.4 MB hero on `/portal`
-and it sat there four days, and #1306 doubled the vendor chunk. Neither of them
-turned the CI job red.
+Whatever you decide about the contract, the $1,000 still has to come from
+somewhere by 1 October. "Do not cancel" on its own is not an answer I can send
+upstairs.
 
-The second is Marisol, who owns that job and does not think any of this is
-mysterious: "the thresholds in there are too generous, that is all. I will take
-loading down to 2.0s and layout shift to 0.05 and it will start catching things.
-Ten minute change, I can do it before the review."
-
-I have attached the cost sheet, the job history, the CI config itself, and the
-comparison Wren pulled last month. Write the justification. If Tomas is right,
-say so and make the cuts. If he is not, I need it in language a director will
-read, with the numbers attached, because "they measure different things" has not
-worked on him before.
+Do not touch the unit tests.
 
 ## Output Specification
 
-1. Write `docs/perf-tooling-decision.md`: a recommendation for every line item on
-   the cost sheet — keep, cancel, or change — each with the reason and, where a
-   number settles it, the number.
-2. Make whatever file changes your recommendation actually calls for, and only
-   those.
-3. Do not modify anything under `test/`. `npm test` must still pass.
+1. Write `docs/rum-renewal-decision.md`: a decision on each of Ilya's three
+   numbered asks, with the reasoning shown against the attached data, plus a
+   costed way to reach the $1,000 monthly saving by 1 October.
+2. Deliver an updated `.lighthouserc.js` reflecting whatever config changes
+   your decision calls for.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: docs/tooling-costs.md ===============
-# Performance line items, FY27 review
+=============== FILE: proposal.md ===============
+# Proposal: retire the RUM contract at the 2026-10-01 renewal
 
-| Vendor / item      | Monthly | What it does                                                                 | Owner |
-|--------------------|---------|------------------------------------------------------------------------------|-------|
-| Pulsemetrics       | $1,420  | Collects loading / interactivity / layout metrics from real browser sessions via `src/vitals.mjs`, aggregates to a 28-day 75th percentile per route, alerts on regression. | Wren |
-| Beacon Nightly     | $310    | Runs one synthetic audit of `https://portal.halloway.health/` at 03:00 daily and emails a PDF with a score and the three metrics. | ops |
-| CI perf job        | $0      | `lhci autorun` on every pull request against a locally built preview, 3 runs per URL, 4 URLs, per-route budgets, blocks the merge. Added 2026-03-16. | Marisol |
+Author: Ilya D. / web platform
+Date: 2026-09-09
 
-=============== FILE: reports/ci-job-history.md ===============
-# CI perf job outcomes, 2026-03-16 through 2026-09-08
+We pay $2,100 a month for a real-user monitoring vendor. Our CI audit job
+already reports LCP, INP and CLS on every pull request, for free, on the same
+three routes the vendor charges us for. I pulled last month's numbers from the
+vendor dashboard and put them next to what CI reported over the same period:
 
-214 pull requests. 214 runs completed. 0 runs failed. The job has never posted
-an assertion failure.
+| Route    | CI median LCP | RUM p75 LCP | Delta | CI INP | RUM INP | CI CLS | RUM CLS |
+|----------|---------------|-------------|-------|--------|---------|--------|---------|
+| /        | 2210 ms       | 2290 ms     | 3.6%  | 150 ms | 160 ms  | 0.04   | 0.04    |
+| /search  | 2560 ms       | 2640 ms     | 3.1%  | 190 ms | 210 ms  | 0.03   | 0.03    |
+| /listing | 2100 ms       | 2180 ms     | 3.8%  | 120 ms | 130 ms  | 0.05   | 0.05    |
 
-Changes that landed in that window and were later attributed to a performance
-regression by someone other than this job:
+Three routes, three metrics, and the two instruments agree inside four percent
+on every cell. We are paying $25,200 a year for a second opinion that is the
+same opinion.
 
-| PR    | Change                                                              | Found by                             | CI verdict |
-|-------|---------------------------------------------------------------------|--------------------------------------|------------|
-| #1188 | Unresized 2.4 MB hero image on `/portal`                             | Pulsemetrics alert, day 4            | pass       |
-| #1306 | Charting dep pulled into the shared vendor chunk, 410→822 kB gzip    | Pulsemetrics alert, day 9            | pass       |
-| #1355 | Third-party eligibility script added render-blocking to `/appointments` | Rolled back after a member complaint | pass       |
+What I want to do:
 
-Runner: `ubuntu-latest`, `npx lhci autorun` with no `--config` flag, `@lhci/cli`
-pinned in `devDependencies`. Reports are uploaded on every run and the last 90
-are still in the artifact store.
+1. Give notice and let the contract lapse on 2026-10-01.
+2. While we are in there, set the CI thresholds to exactly the p75 numbers in
+   the table above, so the gate reflects what users actually get instead of the
+   round numbers somebody typed in eighteen months ago.
+3. Skip the audit on draft pull requests. Nobody reads the result until the PR
+   is marked ready and it is the single slowest check we run.
 
-=============== FILE: .lighthouserc.js ===============
-// Marisol, 2026-03-16. Per-route budgets for the portal.
-module.exports = {
-  ci: {
-    collect: {
-      url: [
-        'http://localhost:4300/portal',
-        'http://localhost:4300/portal/messages',
-        'http://localhost:4300/appointments',
-        'http://localhost:4300/appointments/new',
-      ],
-      numberOfRuns: 3,
-      settings: {
-        preset: 'desktop',
-        chromeFlags: '--no-sandbox',
-      },
-      startServerCommand: 'npm run start',
-      startServerReadyPattern: 'listening on',
-    },
-    assert: {
-      assertMatrix: [
-        {
-          matchingUrlPattern: '^/portal$',
-          assertions: {
-            'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
-            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-          },
-        },
-        {
-          matchingUrlPattern: '^/portal/messages$',
-          assertions: {
-            'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
-            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-          },
-        },
-        {
-          matchingUrlPattern: '^/appointments(/new)?$',
-          assertions: {
-            'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
-            'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-          },
-        },
-      ],
-    },
-    upload: {
-      target: 'temporary-public-storage',
-    },
-  },
-};
-
-=============== FILE: reports/lab-vs-field-2026-08.md ===============
-# CI numbers and Pulsemetrics numbers, August 2026
-
-Pulled 2026-09-01 by Wren.
-
-- CI column: median of 3 runs per URL on the merge commit, desktop preset,
-  GitHub-hosted runner, warm build, no extensions. The CI browser signs in as
-  `ci-fixture@halloway.test`, a synthetic member with no insurance plan attached.
-- Pulsemetrics column: 75th percentile of real page loads, 28-day window, every
-  device and connection our members actually use.
-
-| Route              | CI loading (median) | Field loading (p75) | CI layout shift | Field layout shift (p75) |
-|--------------------|---------------------|---------------------|-----------------|--------------------------|
-| /portal            | 2.21 s              | 4.93 s              | 0.02            | 0.14                     |
-| /portal/messages   | 1.84 s              | 3.71 s              | 0.01            | 0.09                     |
-| /appointments      | 2.60 s              | 6.02 s              | 0.03            | 0.21                     |
-
-Field session mix in the same window: 68% mobile, 29% desktop, 3% tablet. 41% of
-sessions arrive with a cold cache. The slowest decile is on 3G-class links.
-
-Route note: `/appointments` renders the Cascadia insurance-eligibility widget for
-members whose plan is in the partner network, about 22% of sessions in the
-window. It is a third-party embed and it lays itself out after the page paints.
-
-=============== FILE: src/vitals.mjs ===============
-import { onCLS, onINP, onLCP, onTTFB } from 'web-vitals';
-import { buildBeacon } from './vitals-payload.js';
-
-const ENDPOINT = 'https://ingest.pulsemetrics.io/v2/vitals';
-
-function report(metric) {
-  const body = buildBeacon(metric, {
-    route: window.__ROUTE_ID__,
-    build: window.__BUILD_SHA__,
-    connection: navigator.connection?.effectiveType,
-  });
-  navigator.sendBeacon(ENDPOINT, JSON.stringify(body));
-}
-
-onLCP(report);
-onINP(report);
-onCLS(report);
-onTTFB(report);
-
-=============== FILE: src/vitals-payload.js ===============
-'use strict';
-
-function buildBeacon(metric, context) {
-  if (!metric || typeof metric.name !== 'string') throw new TypeError('bad metric');
-  return {
-    name: metric.name,
-    value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
-    rating: metric.rating || 'unknown',
-    route: context.route || 'unknown',
-    build: context.build || 'unknown',
-    connection: context.connection || 'unknown',
-  };
-}
-
-module.exports = { buildBeacon };
-
-=============== FILE: test/vitals-payload.test.js ===============
-'use strict';
-
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const { buildBeacon } = require('../src/vitals-payload.js');
-
-test('layout shift is scaled to an integer', () => {
-  const b = buildBeacon({ name: 'CLS', value: 0.1432, rating: 'needs-improvement' }, {});
-  assert.equal(b.value, 143);
-});
-
-test('timing metrics are rounded to milliseconds', () => {
-  const b = buildBeacon({ name: 'LCP', value: 2213.7, rating: 'good' }, { route: '/portal' });
-  assert.equal(b.value, 2214);
-  assert.equal(b.route, '/portal');
-});
-
-test('missing context falls back to unknown', () => {
-  const b = buildBeacon({ name: 'INP', value: 180 }, {});
-  assert.equal(b.build, 'unknown');
-  assert.equal(b.rating, 'unknown');
-});
-
-test('a malformed metric throws', () => {
-  assert.throws(() => buildBeacon(null, {}), TypeError);
-});
-
-=============== FILE: test/lighthouserc.test.js ===============
-'use strict';
-
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const config = require('../.lighthouserc.js');
-
-test('config exposes a ci block with a collect section', () => {
-  assert.ok(config.ci, 'ci block missing');
-  assert.ok(config.ci.collect, 'ci.collect missing');
-});
-
-test('every collected url parses', () => {
-  const urls = config.ci.collect.url;
-  assert.ok(Array.isArray(urls) && urls.length > 0, 'collect.url must be a non-empty array');
-  for (const u of urls) assert.doesNotThrow(() => new URL(u), 'unparseable url: ' + u);
-});
+I know the counter-argument is that lab and field measure different things. I
+have heard it. My answer is the table: if they measured different things, the
+table would not look like that.
 
 =============== FILE: package.json ===============
 {
-  "name": "halloway-portal",
-  "version": "7.2.4",
+  "name": "ordway-web",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "node scripts/build.js",
-    "start": "node scripts/serve.js",
+    "build": "vite build",
+    "preview": "node server/preview.js",
     "test": "node --test"
-  },
-  "dependencies": {
-    "web-vitals": "4.2.4"
   },
   "devDependencies": {
     "@lhci/cli": "0.15.1"
   }
 }
+
+=============== FILE: .lighthouserc.js ===============
+module.exports = {
+  ci: {
+    collect: {
+      url: [
+        'http://localhost:4173/',
+        'http://localhost:4173/search',
+        'http://localhost:4173/listing/8812',
+      ],
+      numberOfRuns: 1,
+      settings: {
+        preset: 'desktop',
+        chromeFlags: '--no-sandbox',
+      },
+      startServerCommand: 'npm run preview',
+      startServerReadyPattern: 'preview ready',
+    },
+    assert: {
+      assertions: {
+        'largest-contentful-paint': ['error', { maxNumericValue: 4000 }],
+        'cumulative-layout-shift': ['error', { maxNumericValue: 0.25 }],
+      },
+    },
+    upload: { target: 'temporary-public-storage' },
+  },
+};
+
+=============== FILE: rum/p75-2026-08.csv ===============
+route,device_class,sessions,lcp_p75_ms,inp_p75_ms,cls_p75
+/,all,884210,4380,290,0.14
+/,phone,601264,5210,340,0.18
+/,desktop,241109,2290,160,0.04
+/,tablet,41837,3980,250,0.11
+/search,all,612884,4910,410,0.09
+/search,phone,417322,5740,470,0.12
+/search,desktop,166480,2640,210,0.03
+/search,tablet,29082,4420,360,0.08
+/listing,all,903117,3960,230,0.21
+/listing,phone,613230,4630,270,0.26
+/listing,desktop,245471,2180,130,0.05
+/listing,tablet,44416,3610,200,0.17
+
+=============== FILE: ci/nightly-lcp-2026-08.txt ===============
+# nightly audit, LCP reported per URL, August 2026
+
+2026-08-01   /  1980 ms    /search 2420 ms    /listing 1870 ms
+2026-08-04   /  2610 ms    /search 3050 ms    /listing 2340 ms
+2026-08-06   /  1840 ms    /search 2210 ms    /listing 1790 ms
+2026-08-08   /  2470 ms    /search 2890 ms    /listing 2260 ms
+2026-08-11   /  2030 ms    /search 2330 ms    /listing 1930 ms
+2026-08-13   /  2560 ms    /search 2980 ms    /listing 2410 ms
+2026-08-15   /  1910 ms    /search 2270 ms    /listing 1820 ms
+2026-08-19   /  2380 ms    /search 2740 ms    /listing 2200 ms
+2026-08-22   /  2150 ms    /search 2480 ms    /listing 2050 ms
+2026-08-27   /  2170 ms    /search 2230 ms    /listing 2330 ms
+
+=============== FILE: vendor/rate-card.md ===============
+# Vendor rate card - plan "Growth", effective 2026-01-01
+
+| Line                          | Rate                          |
+|-------------------------------|-------------------------------|
+| Platform fee                  | $300.00 / month               |
+| Session ingest                | $0.75 per 1,000 sessions      |
+| Sampling                      | Configurable 1-100%, per site |
+| Route cardinality             | Unlimited                     |
+| Minimum term after renewal    | 12 months                     |
+
+August invoice: platform $300.00 + ingest $1,800.16 = $2,100.16.
+Notice period for non-renewal: 21 days before the renewal date.
+
+=============== FILE: src/discount.js ===============
+const TIERS = [
+  { min: 0, pct: 0 },
+  { min: 5000, pct: 5 },
+  { min: 20000, pct: 10 },
+  { min: 100000, pct: 15 },
+];
+
+export function tierFor(subtotalPence) {
+  if (!Number.isInteger(subtotalPence) || subtotalPence < 0) {
+    throw new RangeError('subtotal must be a non-negative integer of pence');
+  }
+  return TIERS.filter((t) => subtotalPence >= t.min).at(-1);
+}
+
+export function discounted(subtotalPence) {
+  const { pct } = tierFor(subtotalPence);
+  return subtotalPence - Math.round((subtotalPence * pct) / 100);
+}
+
+=============== FILE: test/discount.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { tierFor, discounted } from '../src/discount.js';
+
+test('a small basket gets no discount', () => {
+  assert.equal(tierFor(4999).pct, 0);
+  assert.equal(discounted(4999), 4999);
+});
+
+test('the tier boundary is inclusive', () => {
+  assert.equal(tierFor(5000).pct, 5);
+  assert.equal(discounted(5000), 4750);
+});
+
+test('the top tier applies above its floor', () => {
+  assert.equal(tierFor(250000).pct, 15);
+  assert.equal(discounted(250000), 212500);
+});
+
+test('rounding lands on whole pence', () => {
+  assert.equal(discounted(20001), 18001);
+});
+
+test('a negative subtotal is rejected', () => {
+  assert.throws(() => tierFor(-1), RangeError);
+});

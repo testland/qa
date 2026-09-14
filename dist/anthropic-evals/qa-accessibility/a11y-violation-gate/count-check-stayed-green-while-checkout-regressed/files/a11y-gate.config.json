@@ -1,0 +1,5 @@
+{
+  "baseline": "a11y-baseline.json",
+  "blockOn": ["critical", "serious"],
+  "warnOn": ["moderate"]
+}

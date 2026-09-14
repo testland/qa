@@ -1,0 +1,8 @@
+2026-09-02T14:20:02Z  eval start  commit a91f3c2  golden 80 rows
+2026-09-02T14:20:02Z  python 3.12.4  runner ubuntu-22.04
+2026-09-02T14:20:02Z  wheelhouse: artifacts/wheels-2026-06 restored, pip install --no-index
+2026-09-02T14:20:03Z  resolved metrics: Faithfulness, AnswerRelevancy, ContextRecall, ContextPrecisionWithReference
+2026-09-02T14:20:03Z  judge: gpt-4o -> gpt-4o-2024-11-20
+2026-09-02T14:20:03Z  index: api-reference 4100 chunks, changelog 1840 chunks
+2026-09-02T14:38:55Z  faithfulness 0.94  answer_relevancy 0.90  context_recall 0.84  context_precision 0.83
+2026-09-02T14:38:55Z  FAIL context_recall 0.84 < 0.87

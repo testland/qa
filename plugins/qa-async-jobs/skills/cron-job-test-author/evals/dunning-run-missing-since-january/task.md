@@ -2,21 +2,22 @@
 
 ## Problem Description
 
-`billing-worker` runs five scheduled jobs from the registry in
+`billing-worker` runs six scheduled jobs out of the registry in
 `src/schedules.js`. The runner that reads those expressions and decides when
 each job starts is `src/cron.js`, and it has its own test file.
 
 Rita in Finance opened this on Tuesday. No dunning email has gone to an overdue
-customer since 21 January. Collections found it, not us. Nobody can tell her
-when it stopped or why, and she has asked - reasonably - what else on that list
-is not running.
+customer since the middle of January - the last dunning run anywhere in the
+worker's logs is 13 January. Collections found it, not us. Nobody can tell her
+why it stopped, and she has asked - reasonably - what else on that list is not
+running.
 
 We do have an audit. `test/schedules.test.js` was written in April by a
 contractor who has since rolled off, and it is meant to check every entry in the
-registry against the `intent` next to it. It has been green every week this
-year, including every week the dunning run did not happen. That is the part I
-want you to sit with before you write anything: whatever you hand back, I need
-to be able to trust it more than I currently trust a green run of that file.
+registry. It has been green every week this year, including every week the
+dunning run did not happen. That is the part I want you to sit with before you
+write anything: whatever you hand back, I need to be able to trust it more than
+I currently trust a green run of that file.
 
 The `intent` text is the requirement. It was written by the team that asked for
 each job and it is the only record of what they asked for; the expression beside
@@ -33,8 +34,8 @@ I am not carrying an unverified schedule across.
 1. `test/schedules.test.js` must end up telling the truth about every entry in
    `src/schedules.js`. Replace it, extend it or rewrite it as you see fit.
 2. Correct `src/schedules.js` wherever an expression does not do what its
-   `intent` says. Every expression you change must be pinned by an assertion on
-   a concrete firing instant produced by the runner, not by an assertion that it
+   `intent` says. Every expression you change must be pinned by assertions on
+   concrete firing instants produced by the runner, not by an assertion that it
    parses.
 3. Write `docs/schedule-audit.md`: a section per job saying when it actually
    fires today, whether that matches its `intent`, what you changed, and
@@ -144,23 +145,28 @@ module.exports = { parseExpr, nextRunUtc, HORIZON_DAYS };
 module.exports = [
   {
     name: 'invoice-dunning',
-    expr: '0 5 * 13 *',
+    expr: '0 5 13 1 *',
     intent: '05:00 UTC on the 13th of every month',
   },
   {
-    name: 'weekly-digest',
-    expr: '0 14 * * 7',
-    intent: '14:00 UTC every Sunday',
-  },
-  {
-    name: 'ledger-export',
-    expr: '0 0 3 * * *',
-    intent: '03:00 UTC every night',
+    name: 'statement-mail',
+    expr: '0 9 1 * 1',
+    intent: '09:00 UTC on the 1st of every month',
   },
   {
     name: 'card-retry',
-    expr: '0 7 2,16 * *',
-    intent: '07:00 UTC on the 2nd and the 16th of every month',
+    expr: '0 7 31 * *',
+    intent: '07:00 UTC on the last day of every month',
+  },
+  {
+    name: 'fx-refresh',
+    expr: '*/40 * * * *',
+    intent: 'every 40 minutes, around the clock',
+  },
+  {
+    name: 'weekly-digest',
+    expr: '0 14 * * 0',
+    intent: '14:00 UTC every Sunday',
   },
   {
     name: 'queue-heartbeat',
@@ -204,54 +210,40 @@ test('named month', () => {
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { nextRunUtc } = require('../src/cron');
+const { parseExpr, nextRunUtc } = require('../src/cron');
 const schedules = require('../src/schedules');
 
 // Monday 2026-01-05 00:00 UTC
 const BASE = Date.UTC(2026, 0, 5, 0, 0);
 
-const byName = (n) => schedules.find((s) => s.name === n);
-
-function expectNextRun(name, expectedIso) {
-  const entry = byName(name);
-  let run;
-  try {
-    run = nextRunUtc(entry.expr, BASE);
-  } catch {
-    return; // runner would not take this one; nothing to compare against
-  }
-  if (!run) return; // nothing due inside the window
-  assert.equal(run.toISOString(), expectedIso, name);
+// Registry audit: every entry is planned by the runner, and the run the runner
+// plans lands on the minute, hour and month the entry is configured for.
+function auditEntry(entry) {
+  const p = parseExpr(entry.expr);
+  const run = nextRunUtc(entry.expr, BASE);
+  assert.ok(run, `${entry.name}: nothing planned`);
+  assert.ok(p.minute.values.has(run.getUTCMinutes()), `${entry.name}: minute`);
+  assert.ok(p.hour.values.has(run.getUTCHours()), `${entry.name}: hour`);
+  assert.ok(p.month.values.has(run.getUTCMonth() + 1), `${entry.name}: month`);
 }
 
-test('invoice-dunning fires on the 13th', () => {
-  expectNextRun('invoice-dunning', '2026-01-13T05:00:00.000Z');
-});
+for (const entry of schedules) {
+  test(`${entry.name} is scheduled the way it is configured`, () => auditEntry(entry));
+}
 
-test('weekly-digest fires on the Sunday', () => {
-  expectNextRun('weekly-digest', '2026-01-11T14:00:00.000Z');
-});
-
-test('ledger-export fires overnight', () => {
-  expectNextRun('ledger-export', '2026-01-05T03:00:00.000Z');
-});
-
-test('card-retry fires on the 16th', () => {
-  expectNextRun('card-retry', '2026-01-16T07:00:00.000Z');
-});
-
-test('queue-heartbeat fires every ten minutes', () => {
-  expectNextRun('queue-heartbeat', '2026-01-05T00:10:00.000Z');
+test('the whole registry is accepted by the runner', () => {
+  for (const entry of schedules) parseExpr(entry.expr);
 });
 
 =============== FILE: ops/worker-notes.md ===============
 # billing-worker on bw-03
 
-- The worker plans every entry in `src/schedules.js` when it boots. An entry it
-  cannot plan - the runner rejects it, or it has no upcoming run - is logged once
-  at warn and dropped, and the worker carries on with the rest. Boot logs roll at
-  seven days and nobody reads them.
+- The worker plans every entry in `src/schedules.js` when it boots and logs the
+  first upcoming run for each. Boot logs roll at seven days and nobody reads
+  them.
 - `src/cron.js` is vendored from the platform monorepo into eleven services.
   Frozen until the Q4 change window.
 - Host move to bw-07 scheduled 2026-10-05.
 - `npm test` has been green on every weekly run since April.
+- The registry is the only place a schedule is configured. There is no crontab
+  on the host and no scheduler in front of the worker.

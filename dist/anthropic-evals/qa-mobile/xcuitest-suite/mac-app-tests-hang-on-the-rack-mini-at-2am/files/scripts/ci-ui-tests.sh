@@ -1,9 +1,15 @@
 #!/bin/bash
-# copied from the iPad repo 2026-08-01 and pointed at the desktop scheme
+# runs on the rack mini out of launchd at 02:00
 set -e
 
+cd /opt/ci/ledgerwood
+
+# @marek 2026-09-11: give the box time to settle after the nightly reboot
+sleep 120
+
+rm -rf build
 xcodebuild test \
   -project Ledgerwood.xcodeproj \
   -scheme Ledgerwood \
-  -destination 'platform=iOS Simulator,name=iPad Pro (11-inch),OS=latest' \
+  -destination 'platform=macOS' \
   -resultBundlePath build/result.xcresult

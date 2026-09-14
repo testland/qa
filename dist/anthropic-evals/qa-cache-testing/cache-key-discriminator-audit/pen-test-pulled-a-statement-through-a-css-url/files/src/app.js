@@ -20,6 +20,11 @@ const MESSAGES = {
   'acct-7742': ['Overdraft interest applied'],
 };
 
+const TRANSFERS = {
+  'acct-4180': ['GBP 250.00 to J RAMAN SAVINGS', 'GBP 18.40 to TFL TRAVEL'],
+  'acct-7742': ['GBP 1,000.00 to H OKAFOR ISA'],
+};
+
 const ASSETS = {
   '/assets/app.css': { type: 'text/css', body: 'body{margin:0}' },
   '/assets/app.js': { type: 'application/javascript', body: 'console.log(1)' },
@@ -61,6 +66,16 @@ function origin(req) {
     };
   }
 
+  if (name === 'transfers') {
+    const t = TRANSFERS[accountId];
+    if (!t) return notFound();
+    return {
+      status: 200,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+      body: `<ul>${t.map((line) => `<li>${line}</li>`).join('')}</ul>`,
+    };
+  }
+
   if (name === 'asset') {
     const a = ASSETS[req.url];
     if (!a) return notFound();
@@ -82,4 +97,4 @@ function origin(req) {
   return notFound();
 }
 
-module.exports = { origin, STATEMENTS, MESSAGES };
+module.exports = { origin, STATEMENTS, MESSAGES, TRANSFERS };

@@ -10,14 +10,13 @@ function missedSlots(job, afterMs, nowMs) {
   return out;
 }
 
-// Called once when the worker boots. run(job, slotMs) is the job body; slotMs is
-// the instant the run was scheduled for, and the job takes its period from it.
+// Called once when the worker boots, per job. run(job, atMs) is the job body.
 function replayMissed(job, lastRunMs, nowMs, run) {
   const from = Math.max(lastRunMs, nowMs - CATCH_UP_WINDOW_MS);
   let replayed = 0;
   for (const slot of missedSlots(job, from, nowMs)) {
     if (slot > nowMs) break;
-    run(job, Date.now());
+    run(job, nowMs);
     replayed += 1;
   }
   return replayed;

@@ -1,4 +1,4 @@
-# Two people have told me two different numbers for how long the nightly takes
+# Since we split the nightly across five runners nobody quotes the same figures twice
 
 ## Problem Description
 
@@ -7,41 +7,40 @@ have done for about a year. Two weeks ago we split the job across five parallel
 runners, because the single-runner version had crept past half an hour and
 people had stopped reading the post by the time it landed.
 
-Since the split the post has been wrong about one thing and I cannot work out
-which way. Our platform lead told Tuesday's standup that the nightly "takes
-about forty minutes now, so parallelising bought us nothing, we should roll it
-back". The engineer who did the parallelisation work says that figure is
-nonsense and the job is finished long before that. They are reading the same
-artifacts as each other, neither will budge, and I am the one who has to put a
-number in the post tomorrow morning.
+I do not watch the job. I come in, look at what CI has dropped into `reports/`,
+and write the post out of it. That part has never needed thinking about - the
+glob is `reports/*.xml` and whatever is sitting in there is last night's
+nightly. Since the split, though, nobody on this team quotes the same numbers
+twice, mine included, and I have stopped arguing about it in standup because I
+cannot show my working.
 
-Last night's five shard files are attached, along with our CODEOWNERS so you can
-see who owns what.
+Last night's files are attached, along with our CODEOWNERS so you can see who
+owns what.
 
 What the post needs:
 
 - Where the nightly landed - counts and a rate.
-- The three failures worth chasing today. There were seven and nobody is going
-  to chase seven. Last time I just listed the first few as they came out of the
-  files and two people told me I had sent their morning after the cheap ones
-  while the expensive thing sat there all day.
+- The three worth chasing today. There were more than three and nobody is going
+  to work through all of them before lunch.
+- Which of the three are flakes. We tag them in the post: if it timed out it
+  goes in as a flake, if it blew an assertion it goes in as a real one. The
+  teams have told me they like knowing that before they open anything.
 - How long it took, as one number, and who should be picking up each of the
   three.
 
 Keep the post short - it is a Slack message people read on their phone on the
-way in, not a report. Underneath the post, put whatever settles the duration
-argument for good, because I would like to never have this conversation again.
+way in, not a report. Underneath the post, put whatever the next person needs in
+order to get the same figures out of the same folder without asking me.
 
 ## Output Specification
 
-1. `scripts/nightly.js` - reads the five files under `reports/` and writes
+1. `scripts/nightly.js` - reads the files under `reports/` and writes
    `nightly.json` holding every figure the post quotes.
 2. `test/nightly.test.js` - tests for what `scripts/nightly.js` computes,
    running under `npm test` alongside the test already in the repo. `npm test`
    must pass when you are done.
 3. `docs/nightly-2026-09-12.md` - the post itself, then below it the short note
-   that settles the duration question, written so the next person can recompute
-   the figure without asking me.
+   that lets the next person reproduce every figure in it.
 
 Do not edit anything under `reports/`, and do not change `lib/junit.js` or
 `test/junit.test.js`.
@@ -207,7 +206,19 @@ test('assigns a status to every case', () => {
 =============== FILE: reports/shard-4.xml ===============
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="nightly-e2e">
-  <testsuite name="shard-4" tests="10" failures="2" errors="0" skipped="0" time="613.8" timestamp="2026-09-12T01:00:09">
+  <testsuite name="shard-4" tests="3" failures="0" errors="1" skipped="0" time="130.2" timestamp="2026-09-12T01:00:09">
+    <testcase classname="e2e/admin/users.spec.ts" name="invites a user" time="54.7"/>
+    <testcase classname="e2e/admin/users.spec.ts" name="deactivates a user" time="62.1"/>
+    <testcase classname="e2e/admin/roles.spec.ts" name="assigns a role" time="13.4">
+      <error message="runner evicted: spot instance reclaimed">worker process exited with signal SIGTERM</error>
+    </testcase>
+  </testsuite>
+</testsuites>
+
+=============== FILE: reports/shard-4-retry.xml ===============
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nightly-e2e">
+  <testsuite name="shard-4" tests="10" failures="2" errors="0" skipped="0" time="613.8" timestamp="2026-09-12T01:02:51">
     <testcase classname="e2e/admin/bulk-import.spec.ts" name="imports 5k rows from csv" time="180.5">
       <failure message="Timeout 180000ms exceeded waiting for import job to report complete">TimeoutError at bulk-import.spec.ts:71</failure>
     </testcase>

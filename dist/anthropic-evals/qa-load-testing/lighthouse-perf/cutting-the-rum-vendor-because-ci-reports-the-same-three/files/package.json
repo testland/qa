@@ -1,14 +1,11 @@
 {
-  "name": "halloway-portal",
-  "version": "7.2.4",
+  "name": "ordway-web",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "node scripts/build.js",
-    "start": "node scripts/serve.js",
+    "build": "vite build",
+    "preview": "node server/preview.js",
     "test": "node --test"
-  },
-  "dependencies": {
-    "web-vitals": "4.2.4"
   },
   "devDependencies": {
     "@lhci/cli": "0.15.1"

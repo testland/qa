@@ -1,0 +1,16 @@
+$ node tools/matrix.mjs --list tests/catalog.spec.ts-snapshots
+
+tests/catalog.spec.ts-snapshots/filters-1-desktop-1280-linux.png   1280x800   204 KB   2026-09-08
+tests/catalog.spec.ts-snapshots/filters-1-mobile-375-linux.png      375x667    61 KB   2026-09-08
+tests/catalog.spec.ts-snapshots/filters-1-tablet-768-linux.png     1280x720   198 KB   2026-09-08
+tests/catalog.spec.ts-snapshots/filters-1-wide-1920-linux.png      1280x720   197 KB   2026-09-08
+tests/catalog.spec.ts-snapshots/footer-1-desktop-1280-linux.png    1280x800   142 KB   2026-08-26
+tests/catalog.spec.ts-snapshots/footer-1-mobile-375-linux.png       375x667    48 KB   2026-08-26
+tests/catalog.spec.ts-snapshots/footer-1-tablet-768-linux.png      1280x720   139 KB   2026-08-26
+tests/catalog.spec.ts-snapshots/footer-1-wide-1920-linux.png       1280x720   139 KB   2026-08-26
+tests/catalog.spec.ts-snapshots/grid-1-desktop-1280-linux.png      1280x800   311 KB   2026-09-08
+tests/catalog.spec.ts-snapshots/grid-1-mobile-375-linux.png         375x667    96 KB   2026-09-08
+tests/catalog.spec.ts-snapshots/grid-1-tablet-768-linux.png        1280x720   305 KB   2026-09-08
+tests/catalog.spec.ts-snapshots/grid-1-wide-1920-linux.png         1280x720   304 KB   2026-09-08
+
+12 files, 2.1 MB total.

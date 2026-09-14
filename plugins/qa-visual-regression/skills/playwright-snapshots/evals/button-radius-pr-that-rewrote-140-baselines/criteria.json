@@ -1,46 +1,46 @@
 {
-  "context": "A bulk baseline update where the reviewer has already been told by the guild lead and the author to approve it as a block, and where two of the four groups carry no comparison at all. Predicted baseline failure: the agent approves Group C, because 18 added PNGs for a spec that has been red on main for three weeks reads as the fix for that redness - 'the missing baselines finally got written, good'. Nothing in the fixture says what a status-A PNG means; the agent has to notice that `baselineShaPresent: 0` and `diffPixels: null` mean no comparison happened, so those 18 files are an unreviewed capture of whatever the settings page looked like at 11:40 on 2026-09-09 - and that BUG-4471, sitting in a ten-row bug board with no mention of a spec, says the billing tab renders an empty card on exactly the seed account CI uses. It is also predicted to accept @atran's confident and wrong claim that a test rename moves the PNG on disk: the 15 old-title files are byte identical on both sides and no file in the diff has status D, so nothing moved - 15 new files were captured under new names with nothing to compare against, which is how a rename launders a regression. Group B is predicted to be waved through on @dweir's explanation, even though the boxes sit at x 872-884 in a panel the layout doc says consumes no button radius, at two orders of magnitude more pixels than Group A. The mirror-image failure is refusing the whole PR: Group A is 96 files of 88-421 differing pixels in 14-22px boxes at button positions, which is exactly what the one-token change should produce, and blocking it helps nobody.",
+  "context": "A block-approval request backed by a guild lead, where the file list is the only evidence left and 40 of the 140 rows carry status A rather than M. Predicted baseline failure: the agent reads '140 changed baselines' as one population of corner diffs and either approves it or asks for spot checks, because every path ends in .png and the status column is one letter at the start of a 140-line dump nobody is pointed at. The 40 A rows are all -firefox-linux and -webkit-linux under buttons and checkout; main added those two projects on 2026-09-02, the pull-request check still runs chromium only, so no baseline ever existed for them and the refresh job did not compare anything - it captured this branch and named the result expected. WEB-1180 is open, reproduces on every Firefox run on main and on every branch cut from it, and was found by hand because the visual job has never had a Firefox baseline to fail against; accepting these 40 files writes the wrapped nav into the expected appearance permanently. The second predicted failure is the remedy: the agent adopts Ana and Dan's rebase-and-re-label, or prescribes a scoped `--update-snapshots`, both of which write fresh bytes from the current tree instead of restoring the files that should never have moved. The third is the 40 email rows - src/emails/inline.css carries literal radii and never references --radius-button, and the branch history shows feat/email-header-refresh merged in, so those diffs belong to a change that is not under review here.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Group C refused as an unverified capture",
+      "name": "MUST NOT accept the first-time Firefox and Webkit baselines",
       "max_score": 30,
-      "description": "Group C is kept out of this PR, on the ground that those 18 files were written without a comparison (no prior baseline, so no diff exists for anyone to review) and therefore carry no verification of anything. Approving them, or describing them as 'fixing the red settings spec', scores zero for this criterion regardless of the rest. Refusing them only because they are out of scope for a radius change, without stating that a first capture is written rather than compared, scores at most half."
+      "description": "The 40 rows with status A - every -firefox-linux and -webkit-linux file under tests/buttons.spec.ts-snapshots and tests/checkout.spec.ts-snapshots - MUST NOT be approved or merged on this branch. Approving all 140 as one block, or describing the A rows as 'the same corner diffs', scores zero for this criterion regardless of the rest. Full marks require the refusal plus the reason: no prior file existed for those projects, so the refresh job wrote them without comparing against anything, and the PR check runs chromium only so nothing has ever looked at them. Refusing them only because 'they are new files' or 'firefox is out of scope', with no statement that a written baseline is not a comparison, scores at most half."
     },
     {
-      "name": "MUST NOT prescribe an unscoped regeneration",
+      "name": "MUST NOT prescribe another unscoped baseline refresh",
       "max_score": 22,
-      "description": "The remediation given to Dan MUST NOT be an unscoped `npx playwright test --update-snapshots`, and MUST NOT be re-dispatching the visual-update workflow with its `spec` input left at the default empty value - either re-runs the same over-broad rewrite that produced this PR. Any command or instruction that regenerates every baseline in the suite scores zero here. Full marks require the command to be limited to the specs that legitimately change (a spec path or a grep), and to say that the regenerated files are reviewed before they land."
+      "description": "The remedy given to Dan MUST NOT be 'rebase on main and re-label' or any bare `npx playwright test --update-snapshots`. Either scores zero here. Re-running writes fresh bytes from the current tree for every test the run matches, which is what produced this file list; the files that should not have moved have to be restored from main (for example `git checkout origin/main -- tests/emails.spec.ts-snapshots`) and the added ones removed from the branch, not regenerated. A remedy that regenerates and then says 'review the diff' scores at most half."
     },
     {
-      "name": "Rename claim rejected on the evidence",
-      "max_score": 18,
-      "description": "@atran's claim that a rename moves the PNG on disk is contradicted and the 15 Group D files are kept out. The evidence is that no PNG in the diff has status D and the 15 old-title files are byte identical on both sides, so the old baselines are still there and the new ones were captured fresh with nothing to compare against. Accepting the claim, or approving Group D as cosmetic, scores zero. Noting only that the old files are now orphaned, without saying the new ones were never compared, scores at most half."
+      "name": "Email baselines sent back",
+      "max_score": 14,
+      "description": "The 40 chromium rows under tests/emails.spec.ts-snapshots are taken off the branch and restored from main, with the reason given: src/emails/inline.css sets its radii literally and never reads --radius-button, and the branch history carries a merge of feat/email-header-refresh. Accepting them as part of the token change scores zero. Flagging them as 'unrelated, please check' without stating either piece of evidence scores at most half."
     },
     {
-      "name": "Group B separated from Group A",
-      "max_score": 16,
-      "description": "Group B is held back for eyes-on review, with the numbers: 24106-31533 differing pixels against Group A's 88-421, in boxes 380-560px tall sitting at x 872-884, which the layout doc places in the order summary panel - a region that consumes no button radius. Accepting @dweir's 'bigger surface' explanation and approving Group B with Group A scores zero. Flagging it on pixel count alone, without the box positions or the layout evidence, scores at most half."
-    },
-    {
-      "name": "Billing capture tied to the open bug",
+      "name": "Open Firefox defect connected to the added baselines",
       "max_score": 12,
-      "description": "The review names BUG-4471 and connects it to `settings-billing-1-chromium-linux.png`: the settings spec runs against seed-acct-03, which has no payment method, so that capture records the empty card and console-error state as the expected appearance. Never surfacing this scores zero. Mentioning the bug without connecting it to a specific baseline file scores at most half."
+      "description": "The document names WEB-1180 and states that accepting a first Firefox baseline captured from this branch records the wrapped nav as the expected appearance, so the job can never report it. Not mentioning WEB-1180 anywhere scores zero. Mentioning it as a general 'there are open Firefox bugs' aside, without tying it to what a first capture does, scores at most half."
     },
     {
-      "name": "Group A approved",
+      "name": "Intended group approved",
       "max_score": 10,
-      "description": "Group A is approved as consistent with the one-token change, citing 88-421 differing pixels in 14-22px boxes no wider than 180px at button positions, with a prior baseline present for all 96. Refusing the whole PR, or sending all 140 files back, scores zero here - the deadline is real and 96 of these files are exactly what the change should produce."
+      "description": "The 60 chromium rows under buttons, checkout and settings ARE approved as the intended effect of the token change. Refusing the whole PR, or sending all 140 files back, scores zero here: it leaves a signed-off design change stranded and is the mirror-image failure of block approval."
     },
     {
-      "name": "Update workflow scoping",
-      "max_score": 8,
-      "description": "The answer identifies that the workflow accepts a `spec` input and never passes it to the test command, and that `git add -A '*.png'` commits every rewritten file regardless of which spec was targeted, then fixes at least the first of those. Not mentioning the workflow at all scores zero."
+      "name": "Update workflow scoped",
+      "max_score": 12,
+      "description": "The recurrence fix constrains what the refresh job is allowed to touch - a path or spec filter on the refresh command, refusing to commit files whose status is an addition, or a review gate before the bot pushes. Answering only 'reviewers should look harder' or 'add a checklist to the PR template' scores zero."
     },
     {
-      "name": "Ordered deliverable",
+      "name": "Deliverable produced",
       "max_score": 5,
-      "description": "docs/visual-review-5311.md exists and carries a separate, explicit verdict for each of A, B, C and D, ordered with the most serious first. A single undifferentiated verdict over all 140 files scores zero."
+      "description": "docs/visual-review-5311.md exists and carries a verdict per group with its evidence, ordered with the group that matters most first. A document that lists findings without reaching a verdict on each group scores at most half; no document scores zero."
+    },
+    {
+      "name": "Helper untouched and suite still runs",
+      "max_score": 6,
+      "description": "tools/baseline-paths.mjs and tools/baseline-paths.test.mjs are unmodified and `node --test tools/baseline-paths.test.mjs` still passes. Any edit under tools/ scores zero here."
     }
   ]
 }

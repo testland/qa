@@ -2,20 +2,27 @@
 
 ## Problem Description
 
-search-service. PR 2291 is Sofia's. It adds `test/ranking-flags.test.js` - six
-tests over the `ranking-v3` flag, which we switch on for the enterprise segment
-next Tuesday and then ramp. Her PR description is attached. The suite is green,
-`tests 8 / pass 8 / fail 0`.
+search-service. PR 2291 is Sofia's. It adds `test/support/ld.js` and
+`test/ranking-flags.test.js` - six tests over the four flags we start moving
+next Tuesday. Her PR description and the review thread are attached. The suite
+is green, `tests 8 / pass 8 / fail 0`.
 
 I am ready to stamp it. Sofia has been in that code since June and she is
-careful. But the release process wants a second reviewer on anything touching
-the flag suite before a branch cut and I am the second reviewer, so this is me
-doing the required thing rather than me having a concern.
+careful, and the release process wants a second reviewer on anything touching
+the flag suite before a branch cut - so this is me doing the required thing
+rather than me having a concern.
+
+One live question in the thread. Raul wants the data source and the client
+built inside a `beforeEach` rather than once at the top of `test/support/ld.js`,
+the way billing-service does it, so that no test can inherit anything from the
+test before it. That reads sensible to me, and Sofia says she is happy either
+way, so if you agree with him then make the change here rather than in a
+follow-up.
 
 Give me a read on each of the six tests in `test/ranking-flags.test.js`, and
-put anything you think should change into the file.
+put whatever your review calls for into the file.
 
-`src/ranking.js` is live in production behind the flag, is out of scope for
+`src/ranking.js` is live in production behind these flags, is out of scope for
 this PR, and must not change. The suite has to be green when you are done.
 
 The repo carries a cut-down offline build of the SDK under
@@ -25,8 +32,10 @@ The repo carries a cut-down offline build of the SDK under
 ## Output Specification
 
 1. Write `docs/pr-2291-review.md`: your verdict on each of the six tests in
-   `test/ranking-flags.test.js`, with the reasoning behind each verdict.
-2. Edit `test/ranking-flags.test.js` for anything your review calls for.
+   `test/ranking-flags.test.js` with the reasoning behind each one, and your
+   answer to Raul.
+2. Edit `test/ranking-flags.test.js`, and `test/support/ld.js` if it needs it,
+   for anything your review calls for.
 3. Do not change `src/ranking.js`. `npm test` must be green when you finish.
 
 ## Input Files
@@ -42,33 +51,59 @@ Extract the following files before beginning.
 }
 
 =============== FILE: docs/pr-2291.md ===============
-# PR 2291 - test coverage for the ranking-v3 flag
+# PR 2291 - test coverage for the ranking flags
 
-Author: @sofia-r    Target: main    Files: test/ranking-flags.test.js (new)
+Author: @sofia-r    Target: main
+Files: test/support/ld.js (new), test/ranking-flags.test.js (new)
 
-`ranking-v3` was created on 2026-09-02 and is off for everyone today. We turn
-it on for the enterprise segment next Tuesday, then ramp to 100% over two
-weeks.
+`ranking-v3` and `cross-encoder-rerank` were created on 2026-09-02 and are off
+for everyone today. `recall-depth` and `synonym-set` went in the same week. We
+turn the first two on for the enterprise segment next Tuesday and ramp to 100%
+over the fortnight after.
 
-`src/ranking.js` has been live behind the flag since June. This PR does not
+`src/ranking.js` has been live behind these flags since June. This PR does not
 touch it.
 
 ## What this adds
 
+`test/support/ld.js` holds the data source and the client so the test file does
+not have to repeat the setup.
+
 Six tests, one per behaviour we care about at the rollout:
 
-1. free accounts stay on the legacy ranker even when the flag defaults on
+1. free accounts stay on the legacy ranker while enterprise is on v3
 2. the expensive ranker is not used while the flag is switched off
-3. the service falls back to the legacy ranker if the SDK has no flag data
-4. the flag value round-trips through the client the way the service reads it
-5. enterprise accounts get the semantic ranker
-6. the reranker upgrades semantic to semantic+rerank for targeted accounts
+3. the reranker is not applied to accounts outside the rerank pilot
+4. accounts outside the recall pilot keep the shallow window
+5. the synonym set is unchanged for accounts outside the experiment
+6. recall depth stays shallow while the depth flag is switched off
 
-The `setFlag` helper at the top keeps the per-test setup to one line.
+Suite is green (`tests 8 / pass 8 / fail 0`). All four flag keys are covered
+and both branches of each one are exercised. Please stamp so release can cut
+the branch.
 
-Suite is green (`tests 8 / pass 8 / fail 0`). Both branches of
-`src/ranking.js` and both flag keys are covered. Please stamp so release can
-cut the branch.
+=============== FILE: docs/pr-2291-thread.md ===============
+# PR 2291 - review thread
+
+**@raul-m** - 2026-09-12 09:41
+
+Good to have this in before the ramp. One thing before you stamp: everything in
+`test/support/ld.js` is module level, so all six tests share one client and one
+data source. In billing-service we build both inside a `beforeEach` so every
+test starts from nothing. Can we do the same here? Five-line change and it
+takes the whole class of cross-test bleed off the table.
+
+**@sofia-r** - 2026-09-12 10:02
+
+Happy either way. It is module level because that is how I found it in the
+other repos, not because I had a reason. Say the word and I will move it into a
+`beforeEach` in this PR, otherwise I will open a follow-up.
+
+**@raul-m** - 2026-09-12 10:15
+
+Leaving that to the second reviewer then. Everything else reads fine to me -
+the setup line in each test matches the behaviour in the test name, and it is
+green.
 
 =============== FILE: src/ranking.js ===============
 'use strict';
@@ -80,11 +115,19 @@ async function rankingStrategy(client, user) {
   return rerank ? 'semantic+rerank' : 'semantic';
 }
 
+async function recallDepth(client, user) {
+  return client.variation('recall-depth', user, 120);
+}
+
+async function synonymSet(client, user) {
+  return client.variation('synonym-set', user, 'core');
+}
+
 function tokenize(query) {
   return query.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
 }
 
-module.exports = { rankingStrategy, tokenize };
+module.exports = { rankingStrategy, recallDepth, synonymSet, tokenize };
 
 =============== FILE: test/tokenize.test.js ===============
 'use strict';
@@ -100,56 +143,57 @@ test('tokenize drops empty fragments', () => {
   assert.deepEqual(tokenize('  --  '), []);
 });
 
-=============== FILE: test/ranking-flags.test.js ===============
+=============== FILE: test/support/ld.js ===============
 'use strict';
-const { test, before, after } = require('node:test');
-const assert = require('node:assert/strict');
 const LaunchDarkly = require('launchdarkly-node-server-sdk');
-const { rankingStrategy } = require('../src/ranking');
 
 const td = LaunchDarkly.TestData.dataSource();
-const client = LaunchDarkly.init('sdk-test-key', { updateProcessor: td, sendEvents: false });
 
-function setFlag(key, build) {
-  return td.update(build(td.flag(key).booleanFlag()));
-}
+const client = LaunchDarkly.init('sdk-test-key', {
+  updateProcessor: td,
+  sendEvents: false,
+});
 
-before(async () => { await client.waitForInitialization(); });
+module.exports = { td, client };
+
+=============== FILE: test/ranking-flags.test.js ===============
+'use strict';
+const { test, after } = require('node:test');
+const assert = require('node:assert/strict');
+const { td, client } = require('./support/ld');
+const { rankingStrategy, recallDepth, synonymSet } = require('../src/ranking');
+
 after(async () => { await client.close(); });
 
-test('free accounts stay on the legacy ranker when the flag defaults on', async () => {
-  await setFlag('ranking_v3', (f) => f.variationForUser('free-1', 1).fallthroughVariation(0));
+test('free accounts stay on the legacy ranker while enterprise is on v3', async () => {
+  await td.update(td.flag('ranking-v3').booleanFlag().on(true).variationForUser('ent-7', 0).fallthroughVariation(1));
   assert.equal(await rankingStrategy(client, { key: 'free-1' }), 'bm25');
 });
 
 test('the expensive ranker is not used while the flag is switched off', async () => {
-  setFlag('ranking-v3', (f) => f.on(false).offVariation(1));
+  await td.update(td.flag('ranking-v3').booleanFlag().on(false).offVariation(1));
   assert.equal(await rankingStrategy(client, { key: 'ent-7' }), 'bm25');
 });
 
-test('ranking falls back to the legacy ranker when the SDK has no flag data', async () => {
-  const cold = LaunchDarkly.init('sdk-test-key', { updateProcessor: td, sendEvents: false });
-  assert.equal(await rankingStrategy(cold, { key: 'ent-7' }), 'bm25');
-  await cold.close();
-});
-
-test('the rollout flag reads back the value it was given', async () => {
-  await setFlag('ranking-v3', (f) => f.on(true).fallthroughVariation(0));
-  assert.equal(await client.variation('ranking-v3', { key: 'ent-7' }, false), true);
-});
-
-test('enterprise accounts get the semantic ranker', async () => {
-  await setFlag('ranking-v3', (f) => f.variationForUser('ent-7', 0).fallthroughVariation(1));
-  await setFlag('cross-encoder-rerank', (f) => f.on(false).offVariation(1));
-  assert.equal(await rankingStrategy(client, { key: 'ent-7' }), 'semantic');
+test('the reranker is not applied to accounts outside the rerank pilot', async () => {
+  await td.update(td.flag('ranking-v3').booleanFlag().on(true).fallthroughVariation(0));
+  await td.update(td.flag('cross-encoder-rerank').booleanFlag().on(true).fallthroughVariation(0));
   assert.equal(await rankingStrategy(client, { key: 'free-2' }), 'bm25');
 });
 
-test('the reranker upgrades the semantic ranker for targeted accounts', async () => {
-  await setFlag('ranking-v3', (f) => f.on(true).fallthroughVariation(0));
-  await setFlag('cross-encoder-rerank', (f) => f.on(true).variationForUser('ent-7', 0).fallthroughVariation(1));
-  assert.equal(await rankingStrategy(client, { key: 'ent-7' }), 'semantic+rerank');
-  assert.equal(await rankingStrategy(client, { key: 'free-2' }), 'semantic');
+test('accounts outside the recall pilot keep the shallow window', async () => {
+  await td.update(td.flag('recall-depth').variations(400, 120).on(true).variationForUser('ent-7', 0).fallthroughVariation(1));
+  assert.equal(await recallDepth(client, { key: 'free-1' }), 120);
+});
+
+test('the synonym set is unchanged for accounts outside the experiment', async () => {
+  await td.update(td.flag('synonym-set').variations('core', 'expanded').on(true).fallthroughVariation(1));
+  assert.equal(await synonymSet(client, { key: 'free-3' }), 'core');
+});
+
+test('recall depth stays shallow while the depth flag is switched off', async () => {
+  await td.update(td.flag('recall-depth').variations(400, 120).on(false).offVariation(1));
+  assert.equal(await recallDepth(client, { key: 'ent-7' }), 120);
 });
 
 =============== FILE: node_modules/launchdarkly-node-server-sdk/package.json ===============
@@ -208,10 +252,7 @@ class TestData {
     if (prior) b.state = JSON.parse(JSON.stringify(prior));
     return b;
   }
-  update(builder) {
-    const next = JSON.parse(JSON.stringify(builder.state));
-    return new Promise((resolve) => setTimeout(() => { this.store.set(next.key, next); resolve(); }, 0));
-  }
+  update(builder) { this.store.set(builder.state.key, JSON.parse(JSON.stringify(builder.state))); return Promise.resolve(); }
   _flags() { return this.store; }
 }
 

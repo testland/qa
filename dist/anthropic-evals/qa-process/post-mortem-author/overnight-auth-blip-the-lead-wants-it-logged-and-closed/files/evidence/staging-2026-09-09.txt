@@ -2,15 +2,28 @@ Change calendar entry CHG-4471 - staging node pool upgrade
 
 Announced ....... 2026-09-04 in #eng-announce and on the engineering calendar
 Planned window .. 2026-09-09 08:00-10:00 UTC (two hours)
-Actual .......... 2026-09-09 08:02-14:22 UTC (6h 20m)
-Overrun cause ... node image pulls throttled by the registry; vendor ticket 118204
-Environment ..... staging only. No production traffic reaches this node pool.
-Paging .......... staging alert routes are muted by design - routes/staging.yaml
-                  sets "notify #eng-staging only, never page"
-On-call ......... not paged; no on-call intervention at any point
-External users .. 0. Staging serves no external users.
-Data ............ no data loss. Staging datastores were not touched by the upgrade.
-Detection ....... immediate. The window was planned and watched in #eng-staging
-                  from 08:00.
-Cost ............ 14 engineers could not run integration suites for the afternoon;
-                  the Thursday release train slipped to Friday.
+Actual .......... 2026-09-09 08:02-14:22 UTC
+Environment ..... staging node pool stg-pool-2
+Vendor ticket ... 118204, raised 2026-09-09 09:15
+
+--- #eng-staging, 2026-09-09, times UTC ---
+08:00 t.abara: starting CHG-4471, draining stg-pool-2
+08:41 t.abara: node image pulls are crawling. 4 of 12 nodes up
+09:15 t.abara: raised 118204 with the vendor, registry throttling on their side
+10:02 t.abara: past the window, I will keep going, nothing else needs this pool
+11:30 h.osman: integration suites are queued behind this, I will tell the team
+             to work on something else this afternoon
+14:22 t.abara: all 12 nodes up, suites running again
+14:40 h.osman: Thursday release train slips to Friday, announced in #eng-announce
+
+--- routes/staging.yaml (verbatim) ---
+staging:
+  notify: slack:#eng-staging
+  page: never          # staging never pages, by policy, since 2025-02
+--- PagerDuty, service staging-platform ---
+No incidents declared between 2026-09-01 and 2026-09-14.
+
+--- stg-pool-2 facts, from the platform inventory ---
+serves: integration and contract suites for 14 engineers
+external traffic: none. stg-pool-2 is not reachable from the internet.
+datastores: none attached. The upgrade touched compute only.

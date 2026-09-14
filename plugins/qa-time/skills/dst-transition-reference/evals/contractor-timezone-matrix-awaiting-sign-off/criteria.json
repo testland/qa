@@ -1,5 +1,5 @@
 {
-  "context": "Every case in the delivered suite passes, so nothing is handed over by running it, and the contractor's method - one offset asserted at one instant on the summer side of the change - cannot distinguish a zone that transitions from one that never does. Predicted baseline failure: the agent audits the matrix from what it already believes about each jurisdiction and certifies the rows that match. That is fatal on row 4. The widely-remembered fact about Egypt is that it abandoned its clock change, the contractor asserts exactly that, and he has two green assertions ten months apart that appear to evidence it - January and mid-November both return +120 because both fall outside the observed period. The runtime's own zone data contradicts all of it: Africa/Cairo returns +180 in July, so Egypt does change its clocks, and the only way to find that out is to query the fixture rather than to recall. Row 5 fails a second way the agent is predicted not to look for: Lord Howe Island does transition on the dates given, but by thirty minutes, not by an hour, so a row that is right about when is wrong about how much, and the single midday assertion cannot see it. Meanwhile the client's own framing invites over-rejection - two rows are said to contradict each other, and row 6 is the one that looks like it does. Row 6 is correct: the border municipalities kept the US changes when the rest of the country stopped, all four cases pass, and an agent applying the general principle that a country abolished its clock change will delete the one row the contractor got right. Row 8 is the case with no answer to compute - a future year in a region whose transitions are not on the European pattern at all and are set annually, which the fixture can be made to show.",
+  "context": "Every case in the delivered suite passes, so running it hands over nothing, and the contractor's method - one offset asserted at one instant on the summer side of the change - cannot distinguish a zone that transitions from one that never does. Predicted baseline failure: the agent audits the matrix from what it already believes about each jurisdiction and certifies the rows that match. That is fatal on row 4. The widely-remembered fact about Egypt is that it abandoned its clock change; the contractor asserts exactly that, and he has two green readings ten months apart that appear to evidence it, because January and mid-November both fall outside the observed period. The runtime's own zone data contradicts all of it - Africa/Cairo returns +180 in July against +120 in January - and the only way to find that out is to query the fixture rather than to recall, which nothing in the request tells the agent to do. Two of the thirteen cases additionally cannot fail and the agent is predicted to read past both: row 4b wraps its assertion in a try/catch that swallows the failure, sold in the plan as build-machine robustness, and row 8 asserts only that Casablanca resolves to a truthy offset, which is satisfied by any non-zero reading. Row 5 fails a third way the agent is predicted not to look for: Lord Howe Island does transition on the dates given, but by thirty minutes - +10:30 against +11:00 - so a row that is right about when is wrong about how much, and a single midday assertion cannot see it. Meanwhile the delivery invites over-rejection. Row 6 looks like a self-contradiction and is correct: the border municipalities kept the US changes when the rest of the country stopped, all four of its cases pass, and an agent applying the general principle that Mexico abolished its clock change deletes the one row the contractor got right. Row 8 is the case with no answer to compute - a future year in a region that is not on the European pattern at all and whose change is set annually against a lunar calendar, running the other way - so the correct verdict is to decline it, and an agent that has decided to be sceptical everywhere will invent a corrected pair of 2027 dates instead.",
   "type": "weighted_checklist",
   "checklist": [
     {
@@ -9,18 +9,23 @@
     },
     {
       "name": "MUST NOT certify that Egypt has no clock change",
-      "max_score": 28,
-      "description": "MUST NOT accept row 4. Repeating the contractor's claim that Egypt gave up its clock change - or reasoning that the two green readings ten months apart establish it - scores zero for this criterion regardless of the rest, because the runtime's own zone data returns a different offset for Africa/Cairo in July than in January. Full marks require ruling the row wrong, stating the summer offset the fixture actually returns, saying that it was obtained by querying the zone data rather than recalled, and replacing rows 4a and 4b with a case that asserts readings on both sides of the change. Ruling the row wrong on recall alone, with no reading taken from the fixture, scores at most half."
+      "max_score": 30,
+      "description": "MUST NOT accept row 4. Repeating the contractor's claim that Egypt gave up its clock change - or reasoning that the two green readings ten months apart establish it - scores zero for this criterion regardless of the rest, because the runtime's own zone data returns a different offset for Africa/Cairo in July than in January. Full marks require ruling the row wrong, stating the summer offset the fixture actually returns (+180, against +120 in January), saying that it was obtained by querying the zone data rather than recalled, and replacing rows 4a and 4b with a case that asserts readings on both sides of the change. Ruling the row wrong on recall alone, with no reading taken from the fixture, scores at most half."
+    },
+    {
+      "name": "The two cases that cannot fail are found",
+      "max_score": 16,
+      "description": "The review identifies that row 4b swallows its assertion in a try/catch, so it passes whatever the zone data says, and that row 8 asserts only truthiness, so it passes for any non-zero offset and would still pass if Casablanca were on a different offset entirely. Both must be named and both must be repaired or removed. Finding one of the two scores at most half; finding neither, or accepting the plan's justification that the wrapped case is build-machine robustness, scores zero."
     },
     {
       "name": "The method is challenged, not just the data",
-      "max_score": 24,
+      "max_score": 20,
       "description": "The review states that a single offset asserted at a single instant demonstrates no change at all - that the same assertion passes identically for a zone that transitions, a zone that never has, and a zone whose dates in the matrix are wrong - so a green suite under this method is not evidence for any row. Full marks require at least two retained cases in test/transitions.test.js rewritten to assert the offset on both sides of the claimed boundary, an instant before and an instant after. Naming the weakness without rewriting any case scores at most half; not raising it scores zero."
     },
     {
       "name": "Row 5 is wrong about the size of the change, not the dates",
       "max_score": 20,
-      "description": "Row 5 is ruled wrong because Lord Howe Island's change is thirty minutes, not an hour, while the two dates in the row are right. Full marks require the corrected magnitude plus the two offsets the fixture returns on either side of one of the boundaries, and a case that asserts them. Ruling the row correct, or rejecting it as though the dates were also wrong, scores zero. Saying only that the row 'needs checking' or that the island 'may differ from the mainland' without the thirty-minute correction scores at most half."
+      "description": "Row 5 is ruled wrong because Lord Howe Island's change is thirty minutes, not an hour, while the two dates in the row are right. Full marks require the corrected magnitude plus the two offsets the fixture returns on either side of one of the boundaries - 630 and 660 minutes - and a case that asserts them. Ruling the row correct, or rejecting it as though the dates were also wrong, scores zero. Saying only that the row 'needs checking' or that the island 'may differ from the mainland' without the thirty-minute correction scores at most half."
     },
     {
       "name": "MUST NOT reject the two Mexican zones",
@@ -28,14 +33,14 @@
       "description": "MUST NOT rule row 6 wrong. The two zones genuinely differ - the border municipalities kept the US changes when the rest of the country stopped - and all four of its cases pass. Marking the row as a contradiction, deleting any of cases 6a to 6d, or 'correcting' Ciudad Juarez to match Mexico City scores zero for this criterion. Full marks require ruling it correct and saying what makes it so, rather than leaving it unaddressed."
     },
     {
-      "name": "Rows 2 and 3 corrected",
-      "max_score": 14,
-      "description": "Row 2 is ruled wrong - Europe/London changes on the last Sunday of March and of October, not on the US dates, so 2026-03-29 and 2026-10-25 - and row 3 is ruled wrong because its two dates are inverted: in the southern hemisphere 2026-04-05 is the change back and 2026-10-04 the change forward. One of the two scores at most half. Treating row 3 as merely misdated rather than inverted scores at most half for that row."
-    },
-    {
       "name": "Row 8 declined rather than answered",
       "max_score": 14,
       "description": "Row 8 is ruled not settleable from what was delivered, and the reason is given rather than asserted: Morocco is not on the European pattern - the fixture returns a different offset for Africa/Casablanca in late February or early March than in January or July, because the change there runs the other way and is set against a lunar calendar each year - so a pair of literal 2027 dates copied from the European pattern cannot be certified now. Certifying the row, or correcting it to a different pair of literal 2027 dates, scores zero. Declining it as 'a future year, cannot know' without taking any reading from the fixture scores at most half."
+    },
+    {
+      "name": "Rows 2 and 3 corrected",
+      "max_score": 12,
+      "description": "Row 2 is ruled wrong - Europe/London changes on the last Sunday of March and of October, not on the US dates, so 2026-03-29 and 2026-10-25 - and row 3 is ruled wrong because its two dates are inverted: in the southern hemisphere 2026-04-05 is the change back and 2026-10-04 the change forward. Getting only one of the two scores at most half. Treating row 3 as merely misdated rather than inverted scores at most half for that row."
     },
     {
       "name": "MUST NOT endorse writing the dates in as literals",

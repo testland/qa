@@ -2,6 +2,12 @@
 
 const MAX_IDLE_MS = 120_000;
 
+// 2026-09-11 hotfix: announce the drain with a real close frame instead of
+// dropping the socket, so the ending is not a surprise to the client.
+const DRAIN_CLOSE_CODE = 1006;
+const DRAIN_REASON =
+  'presence-gateway is being replaced by a rolling deploy; the new pod is already accepting connections, so reconnect now and your session will resume where it left off';
+
 class Hub {
   constructor() {
     this.sockets = new Map();
@@ -31,7 +37,6 @@ class Hub {
     socket.close(1011, 'internal error');
   }
 
-  // The peer has not been heard from in two minutes; nobody is left to answer a close frame.
   idleSweep(at) {
     for (const [socket, session] of this.sockets) {
       if (at - session.lastSeen > MAX_IDLE_MS) {
@@ -42,10 +47,10 @@ class Hub {
 
   drain() {
     for (const socket of this.sockets.keys()) {
-      socket.terminate();
+      socket.close(DRAIN_CLOSE_CODE, DRAIN_REASON);
     }
     this.sockets.clear();
   }
 }
 
-module.exports = { Hub, MAX_IDLE_MS };
+module.exports = { Hub, MAX_IDLE_MS, DRAIN_CLOSE_CODE, DRAIN_REASON };

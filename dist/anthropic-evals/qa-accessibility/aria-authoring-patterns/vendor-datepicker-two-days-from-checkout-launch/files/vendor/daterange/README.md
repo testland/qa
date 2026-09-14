@@ -9,6 +9,7 @@ A two-month date range picker.
 ## Notes for integrators
 
 - The widget renders into whatever container you hand it; the markup it
-  produces is in `markup.html` in this folder for reference.
+  produces is in `markup.html` in this folder for reference. One table row per
+  week, seven cells per row, weeks run Monday to Sunday.
 - `keys.js` and `status.js` ship unminified so integrators can rebind shortcuts
   and localise the selection summary.

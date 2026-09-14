@@ -1,0 +1,34 @@
+Pulled 2026-09-10 by p.raghunathan while looking at the auth restarts.
+
+deploy/auth-service.yaml (current)
+  resources.limits.memory: 512Mi      set 2026-02-11, unchanged since
+  resources.requests.memory: 384Mi    set 2026-02-11, unchanged since
+  replicas: 3                         raised from 2 on 2026-08-19
+
+Container memory, auth-service, from the metrics store
+  p99 working set by month
+    Feb 331Mi   Mar 352Mi   Apr 374Mi   May 398Mi
+    Jun 419Mi   Jul 441Mi   Aug 462Mi   Sep 486Mi
+
+  RSS against container age, sampled across every auth-service container
+  that ran in the last 30 days
+    under 6h    402Mi
+    6h - 24h    431Mi
+    24h - 72h   468Mi
+    over 72h    497Mi
+
+  auth-service containers are restarted only by a deploy rollout or by the
+  kubelet. Nothing else restarts them.
+
+Deploys of auth-service (release pipeline)
+  2026-01-05 to 2026-06-14 ... 134 deploys, longest gap between deploys 3 days
+  2026-06-15 onward .......... 11 deploys, median gap 7 days
+  The 2026-06-15 change moved the team from deploy-on-merge to a weekly
+  release train.
+
+Container restart reasons, namespace auth, last 120 days (kube event store)
+  2026-07-30 02:58  OOMKilled  x2
+  2026-08-19 08:41  OOMKilled  x2
+  2026-09-08 03:12  OOMKilled  x3
+  Every other restart in the window is a deploy rollout. No other reason is
+  recorded.

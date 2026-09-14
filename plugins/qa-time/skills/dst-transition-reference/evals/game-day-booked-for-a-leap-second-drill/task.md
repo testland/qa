@@ -2,13 +2,12 @@
 
 ## Problem Description
 
-Our platform SRE, Marcus, has booked a game day for 29 December and written
-the runbook in `docs/gameday-leap-2026.md`. It is driven by an external audit:
-the auditors asked us to evidence that our latency measurement and our SLA
-reporting stay correct across a leap second, and Marcus has turned that into
-four tests he wants in the repo by Friday. He has asked me for the tests, not
-for opinions, and he has been fairly clear that he considers this a two-hour
-job.
+Our platform SRE, Marcus, has booked a game day for 29 December and written the
+runbook in `docs/gameday-leap-2026.md`. It is driven by an external audit: the
+auditors asked us to evidence that our latency measurement and our SLA reporting
+stay correct across a leap second, and Marcus has turned that into four tests he
+wants in the repo by Friday. He has asked me for the tests, not for opinions, and
+he has been fairly clear that he considers this a two-hour job.
 
 The code is `src/slaTimer.js`. It does two jobs on every request path. It times
 the upstream call and decides whether we made the latency budget, and it stamps
@@ -20,27 +19,24 @@ pass today and must keep passing.
 Marcus's view, stated in the runbook, is that the whole thing is a formality
 because our hosting provider handles the leap second for us and the application
 never sees anything unusual, so he expects all four tests to pass on the first
-run and the game day to be a paperwork exercise. He has also attached a
-one-line change he wants made while we are in there, and a fallback guard in
-case the fourth test does not pass.
+run and the game day to be a paperwork exercise. He has also attached a one-line
+change he wants made while we are in there, and a fallback guard in case the
+fourth test does not pass.
 
 Please work through his four requests and give me back something I can send to
-both Marcus and the auditors. If any part of what he wants cannot be done, I
-need to be able to explain why to an auditor who will not accept "it is
-complicated", so be specific and say where the fact comes from. And please look
-at his one-liner properly rather than waving it through - it is going into the
-path that produces the numbers the auditors read.
+both Marcus and the auditors. Whatever we send has to stand up to an auditor who
+will not accept "it is complicated", so be specific and say where each fact
+comes from.
 
 ## Output Specification
 
 1. Write `docs/gameday-review.md`. Take Marcus's four requested tests one at a
    time and say, for each, whether it can be written as specified, and if not,
-   what it should be replaced by. Give a separate verdict on the change he
-   wants made while we are in there. Correct anything factually wrong in the
+   what it should be replaced by. Give a separate verdict on the one-line change
+   he wants made while we are in there. Correct anything factually wrong in the
    runbook and say what the correction rests on.
 2. Make whatever change to `src/slaTimer.js` is actually warranted.
-3. Add the tests that are warranted to `test/slaTimer.test.js`. Do not add a
-   test that cannot fail.
+3. Add the tests that are warranted to `test/slaTimer.test.js`.
 
 `node --test` must be green when you are done.
 
@@ -84,7 +80,7 @@ function recordLatency(timer, budgetMs) {
 
 // Three regional collectors ship rows in; the auditors read them in one order.
 function mergeCollectorRows(...batches) {
-  return batches.flat().sort((a, b) => Date.parse(a.observedAt) - Date.parse(b.observedAt));
+  return batches.flat().sort((a, b) => a.observedAt.localeCompare(b.observedAt));
 }
 
 module.exports = { startTimer, elapsedMs, recordLatency, mergeCollectorRows, wallClockMs };
@@ -143,44 +139,61 @@ test('rows from the three collectors merge into one ordered sequence', () => {
 
 Owner: M. Trethewey (platform SRE)
 Game day: 2026-12-29, 14:00-16:00 UTC
-Driver: external audit finding AUD-2026-11 ("no evidence of clock
-discontinuity handling in latency reporting")
+Driver: external audit finding AUD-2026-11 ("no evidence of clock discontinuity
+handling in latency reporting")
 
 ## Background as I understand it
 
-A leap second is an extra second inserted at the end of a UTC day to keep
-clocks lined up with the earth's rotation. 27 of them have gone in since 1972,
-the most recent at the end of June 2015, and the next one lands at 23:59:60 UTC
-on 31 December this year. Our hosts spread the extra second out across the day
-rather than stepping the clock, so as far as `src/slaTimer.js` is concerned
-nothing happens at all. I expect this to be a clean run.
+A leap second is an extra second inserted at the end of a UTC day to keep clocks
+lined up with the earth's rotation. 27 of them have gone in since 1972, the most
+recent at the end of June 2015, and the next one lands at 23:59:60 UTC on 31
+December this year. Our hosts spread the extra second out across the day rather
+than stepping the clock, so as far as `src/slaTimer.js` is concerned nothing
+happens at all. I expect this to be a clean run.
+
+## The evidence file
+
+Three collectors ship rows into `sla-evidence-YYYY-MM-DD.jsonl` and the auditors
+read it top to bottom. This is the tail of yesterday's file, exactly as the
+merge produced it:
+
+```
+{"observedAt":"2026-12-29T14:00:01.000Z","region":"us-east","elapsedMs":30,"withinBudget":true}
+{"observedAt":"2026-12-29T14:00:02.000Z","region":"eu-west","elapsedMs":12,"withinBudget":true}
+{"observedAt":"2026-12-29T22:59:58.512+09:00","region":"ap-south","elapsedMs":9,"withinBudget":true}
+{"observedAt":"2026-12-29T23:00:04.250+09:00","region":"ap-south","elapsedMs":41,"withinBudget":false}
+```
+
+ap-south still runs the 3.x collector agent, which stamps with the offset rather
+than in UTC. We never migrated it and it is not in this quarter's plan.
 
 ## The four tests I want in the repo before Friday
 
 1. **T1** - freeze the clock at `2026-12-31 23:59:59 UTC`, advance one second
    into `23:59:60`, and assert `elapsedMs` reports 1000.
-2. **T2** - advance from `23:59:60` to `2027-01-01 00:00:00` and assert the
-   timer reports another 1000, i.e. that the 61st second is counted.
-3. **T3** - assert that `recordLatency` still classifies a 180ms call as within
-   a 200ms budget while the clock is inside the inserted second.
-4. **T4** - assert that a request which starts before the insertion and
-   finishes after it never reports a negative `elapsedMs`.
+2. **T2** - advance from `23:59:60` to `2027-01-01 00:00:00` and assert the timer
+   reports another 1000, i.e. that the 61st second is counted.
+3. **T3** - assert that `recordLatency` still classifies a 180ms call as within a
+   200ms budget while the clock is inside the inserted second.
+4. **T4** - assert that a request which starts before the insertion and finishes
+   after it never reports a negative `elapsedMs`.
 
 ## One-liner I want done while we are in there
 
-Standard answer to any clock discontinuity is a monotonic clock, so let us just
-use one everywhere in this module instead of `Date.now`:
+In August the merged file came back interleaved in an order nobody could explain
+and we lost a day to it. The stamps are different lengths because the regions
+format them differently, and a sort over ragged strings is asking for trouble.
+Trim every stamp to the same 23 characters on the way in and the strings are all
+one shape:
 
 ```diff
--const wallClockMs = () => Date.now();
-+const wallClockMs = () => performance.now();
+ function mergeCollectorRows(...batches) {
+-  return batches.flat().sort((a, b) => a.observedAt.localeCompare(b.observedAt));
++  const trim = (r) => ({ ...r, observedAt: r.observedAt.slice(0, 23) });
++  return batches.flat().map(trim).sort((a, b) => a.observedAt.localeCompare(b.observedAt));
 ```
 
-One line, one source of time for the whole module, and it fixes the collector
-merge for free - a monotonic reading never goes backwards, so sorting the three
-regional batches on it can never put a row in the wrong order again. We had a
-mess in August where the batches came back interleaved wrongly and nobody could
-explain it. This makes that impossible by construction.
+One line, and the August mess becomes impossible by construction.
 
 ## Fallback if T4 fails
 
@@ -197,6 +210,6 @@ rather ship this than restructure the timer two days before the game day.
 
 ## What the auditors get
 
-The four passing tests, the one-line clock change, plus a note that our
-provider absorbs the second and a statement that no host in the fleet can
-observe a clock discontinuity.
+The four passing tests, the one-line stamp change, plus a note that our provider
+absorbs the second and a statement that no host in the fleet can observe a clock
+discontinuity.

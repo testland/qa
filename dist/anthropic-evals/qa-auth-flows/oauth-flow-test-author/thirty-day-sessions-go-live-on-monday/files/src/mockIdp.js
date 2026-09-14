@@ -13,15 +13,10 @@ function createIdp({ clientId }) {
     return `at_${seq}_${crypto.randomBytes(6).toString('hex')}`;
   }
 
-  function issueGrant(subject) {
+  function newRefreshToken(subject) {
     const refresh = `rt_${subject}_${crypto.randomBytes(6).toString('hex')}`;
     grants.set(refresh, { subject, issuedAt: Date.now() });
-    return {
-      access_token: newAccessToken(),
-      token_type: 'Bearer',
-      expires_in: 300,
-      refresh_token: refresh,
-    };
+    return refresh;
   }
 
   function token(form = {}) {
@@ -33,7 +28,15 @@ function createIdp({ clientId }) {
       if (form.code !== 'valid-code') {
         return { status: 400, body: { error: 'invalid_grant' } };
       }
-      return { status: 200, body: issueGrant('u_2291') };
+      return {
+        status: 200,
+        body: {
+          access_token: newAccessToken(),
+          token_type: 'Bearer',
+          expires_in: 300,
+          refresh_token: newRefreshToken('u_2291'),
+        },
+      };
     }
 
     if (form.grant_type === 'refresh_token') {
@@ -47,7 +50,7 @@ function createIdp({ clientId }) {
           access_token: newAccessToken(),
           token_type: 'Bearer',
           expires_in: 300,
-          refresh_token: form.refresh_token,
+          refresh_token: newRefreshToken(grant.subject),
         },
       };
     }

@@ -1,4 +1,4 @@
-# The gateway falls over ninety seconds after every deploy
+# The gateway spends ninety seconds after every deploy doing nothing but handshakes
 
 ## Problem Description
 
@@ -6,14 +6,13 @@ Our notification fanout service keeps a persistent connection per browser tab -
 9,400 of them at the last count. The service itself restarts fine. What does
 not is what happens immediately afterwards.
 
-The accept queue saturates in one-second pulses. Here is the arrival histogram
-from the 2026-09-04 rollout, bucketed by second from the moment the new pod
-started accepting:
+Arrival histogram from the 2026-09-04 rollout, bucketed by second from the
+moment the new pod started accepting:
 
 ```
 +0s     11
 +1s   8,842     <-- accept queue full, 3,102 refused
-+2s   3,166     <-- refused clients trying again
++2s   3,166
 +3s   3,044
 +4s   2,981
 +5s   2,902
@@ -21,19 +20,21 @@ started accepting:
 +87s     34
 ```
 
-Every refusal produces another attempt exactly one second later, so the pulse
-sustains itself for a minute and a half and the pod spends that time doing
-nothing but TLS handshakes. Scaling the pool up moves the cliff, it does not
-remove it.
+For ninety seconds the pod does nothing but TLS handshakes, and p99
+time-to-first-frame goes from 0.21s to 38.4s. The rollout numbers are in
+`reports/rollout-2026-09-04.md`.
 
-`src/reconnect.js` is the client module that owns this. It has a test that
-proves a dropped connection comes back, and that test has been green since it
-was written, so nobody has looked at it.
+While digging into that, the on-call also pulled an accept-log sample from a
+quiet afternoon with no deploy anywhere near it and found a steady background of
+connections being opened and closed over and over. He put it down to a scanner
+and moved on; the sample is in `reports/accept-sample-2026-09-09.md` if it is
+worth anything.
 
-Product's requirement is unchanged and reasonable: a user whose connection
-drops should be back within a few seconds of the service being available. What
-we do not have is any coverage that would have told us the fleet was going to
-arrive as one block.
+`src/reconnect.js` is the client module that owns all of this. It has a test
+that proves a dropped connection comes back, and that test has been green since
+it was written, so nobody has looked at it. Product's requirement is unchanged
+and reasonable: a user whose connection drops should be back within a few
+seconds of the service being available.
 
 Do not change `createReconnector`'s signature - the client SDK is published and
 three apps construct it.
@@ -42,8 +43,8 @@ three apps construct it.
 
 1. Add `test/reconnect.backoff.test.js`.
 2. Change `src/reconnect.js` so the new tests pass.
-3. Write `docs/reconnect-policy.md`: the delay schedule a client now follows,
-   and what a 9,400-client fleet does to the accept queue under it.
+3. Write `docs/reconnect-policy.md` describing what a client does after a
+   connection ends.
 4. Run `npm test` before you finish; it must pass, and
    `test/reconnect.basic.test.js` must stay exactly as it is.
 
@@ -167,9 +168,9 @@ class FakeClientSocket extends EventEmitter {
     this.emit('open');
   }
 
-  drop(code = 1006) {
+  drop(code = 1006, reason = '') {
     this.readyState = 'closed';
-    this.emit('close', code);
+    this.emit('close', code, reason);
   }
 }
 
@@ -221,15 +222,15 @@ test('stops after maxAttempts consecutive failures', () => {
   assert.equal(opened.length, 3);
 });
 
-test('a successful connection resets the attempt counter', () => {
-  const { clock, reconnector, latest } = harness();
+test('stop() prevents a scheduled attempt from running', () => {
+  const { clock, opened, reconnector, latest } = harness();
 
   reconnector.start();
   latest().drop();
+  reconnector.stop();
   clock.tick(60_000);
-  latest().succeed();
 
-  assert.equal(reconnector.attempts, 0);
+  assert.equal(opened.length, 1);
 });
 
 =============== FILE: reports/rollout-2026-09-04.md ===============
@@ -245,5 +246,26 @@ test('a successful connection resets the attempt counter', () => {
 | p99 time-to-first-frame, +0..+90s | 38.4s    |
 | p99 time-to-first-frame, steady   | 0.21s    |
 
-Ops note: the refusals are not capacity. Two pods idle at 4% CPU either side of
-the window. Everything arrives in the same 100ms and the listen backlog is 4096.
+Two pods idle at 4% CPU either side of the window. Listen backlog 4096. Pool
+was scaled from 2 to 6 replicas for the 2026-08-28 rollout; the same shape
+appeared, with the cliff one second later.
+
+=============== FILE: reports/accept-sample-2026-09-09.md ===============
+# Accept log, 2026-09-09 14:00-14:05 UTC. No deploy in this window or the day around it.
+
+| client session | connections opened in the 5 min | how each one ended                   |
+|----------------|---------------------------------|--------------------------------------|
+| s_4471         | 300                             | server close, code 1008, "session revoked" |
+| s_9002         | 299                             | server close, code 1008, "session revoked" |
+| s_1188         | 298                             | server close, code 1008, "session revoked" |
+| s_0c7a         | 297                             | server close, code 1008, "session revoked" |
+| everything else| 1-3                             | still open at the end of the window   |
+
+617 sessions are in the first pattern, together 184,000 of the 187,000 accepts
+in the window. Each of those sessions belongs to a user who changed their
+password or signed out on another device: the gateway reads the stale token,
+closes the connection, and the same client is back on the next second.
+
+Oldest session in the pattern started 2026-08-27 and has not stopped since.
+Support tickets that are probably this: "app kills my battery", "fan spins up
+after I change my password", 41 of them open.

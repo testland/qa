@@ -1,6 +1,6 @@
 'use strict';
 
-// DRAFT — Vikram, 2026-09-08. Not wired into the npm test script yet.
+// DRAFT - Vikram, 2026-09-08. Not wired into the npm test script yet.
 const path = require('node:path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');

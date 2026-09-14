@@ -1,0 +1,29 @@
+name: admin-e2e
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  pull_request:
+    paths:
+      - 'apps/admin/**'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+        working-directory: apps/admin
+      - name: every browser and both environments, one pass
+        working-directory: apps/admin
+        run: |
+          for browser in chrome firefox electron; do
+            for env in staging preprod; do
+              CYPRESS_BASE_URL="https://admin.$env.acme.internal" \
+                npx cypress run --browser "$browser"
+            done
+          done

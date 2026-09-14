@@ -1,0 +1,12 @@
+[
+  {
+    "id": "api-removed-without-deprecation",
+    "level": 3,
+    "operation": "DELETE",
+    "operationId": "deleteExport",
+    "path": "/v1/exports/{exportId}",
+    "source": "/specs/spec/openapi.yaml",
+    "section": "paths",
+    "text": "api removed without deprecation"
+  }
+]

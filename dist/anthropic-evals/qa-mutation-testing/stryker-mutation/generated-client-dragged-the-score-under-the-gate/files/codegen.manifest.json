@@ -1,0 +1,16 @@
+{
+  "generator": "openapi-generator-cli 2.13.4",
+  "spec": "openapi.yaml",
+  "specVersion": "2026.09.02",
+  "generatedAt": "2026-09-09T08:14:22Z",
+  "writes": [
+    "src/api/generated/orders.js",
+    "src/api/generated/payments.js",
+    "src/api/generated/customers.js",
+    "src/api/generated/invoices.js",
+    "src/api/generated/subscriptions.js",
+    "src/api/generated/webhooks.js",
+    "src/api/generated/index.js",
+    "src/api/generated/models.js"
+  ]
+}

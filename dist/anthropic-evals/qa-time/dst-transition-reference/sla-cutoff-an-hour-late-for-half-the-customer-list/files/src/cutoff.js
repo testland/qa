@@ -1,6 +1,5 @@
 'use strict';
 
-const HOUR_MS = 3600000;
 const CUTOFF_LOCAL_HOUR = 17;
 
 const BILLED_ZONES = [
@@ -12,8 +11,13 @@ const BILLED_ZONES = [
   'Australia/Adelaide',
 ];
 
-// How many hours `zone` is ahead of UTC at `instant`, per the runtime's zone data.
-function offsetHours(zone, instant) {
+// Resolving a zone through Intl showed up in the worker profile, so the answer
+// for a zone is kept once it has been worked out.
+const offsetCache = new Map();
+
+// Offset of `zone` from UTC at `instant`, in milliseconds, per the runtime's zone data.
+function zoneOffsetMs(zone, instant) {
+  if (offsetCache.has(zone)) return offsetCache.get(zone);
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: zone,
     hour12: false,
@@ -26,18 +30,20 @@ function offsetHours(zone, instant) {
   }).formatToParts(instant);
   const p = Object.fromEntries(parts.map((x) => [x.type, x.value]));
   const asIfUtc = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second);
-  return Math.round((asIfUtc - instant.getTime()) / HOUR_MS);
+  const ms = asIfUtc - instant.getTime();
+  offsetCache.set(zone, ms);
+  return ms;
 }
 
 // The UTC instant at which the first-response SLA expires for `zone` on `localDate`.
 function cutoffInstant(localDate, zone) {
-  const asIfUtc = Date.parse(localDate + 'T' + String(CUTOFF_LOCAL_HOUR).padStart(2, '0') + ':00:00Z');
-  const offset = offsetHours(zone, new Date(asIfUtc));
-  return new Date(asIfUtc - offset * HOUR_MS);
+  const hh = String(CUTOFF_LOCAL_HOUR).padStart(2, '0');
+  const asIfUtc = Date.parse(localDate + 'T' + hh + ':00:00Z');
+  return new Date(asIfUtc - zoneOffsetMs(zone, new Date(asIfUtc)));
 }
 
 function isBreached(ticketOpenedLocalDate, zone, firstResponseAt) {
   return Date.parse(firstResponseAt) > cutoffInstant(ticketOpenedLocalDate, zone).getTime();
 }
 
-module.exports = { cutoffInstant, isBreached, offsetHours, BILLED_ZONES };
+module.exports = { cutoffInstant, isBreached, zoneOffsetMs, BILLED_ZONES };

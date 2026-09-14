@@ -1,27 +1,18 @@
 # Readiness run - 2026-09-13
 
-Start 09:02 UTC, stop 09:22 UTC. Four generator processes on perf-gen-01
-(4 vCPU, 8 GB, eu-west-1). 2,000 virtual users in total.
+Start 09:02 UTC, stop 09:22 UTC. Four generator boxes (perf-gen-01 to -04, 4 vCPU
+/ 8 GB each, eu-west-1), one Locust process on each, 500 virtual users each.
 
-`top`, sampled 09:11:
+Peak CPU over the window, sampled every 30s: 38%, 41%, 37%, 40%. Load average on
+all four stayed under 1.8. Nothing swapped.
 
-```
-  PID   %CPU  COMMAND
- 21884  62.1  locust -f load/locustfile.py --headless --users 250 ...
- 21885  64.8  locust -f load/locustfile.py --headless --users 250 ...
- 21886  61.4  locust -f load/locustfile.py --headless --users 250 ...
- 21887  99.4  locust -f load/locustfile.py --headless --users 1250 ...
-load average: 3.91 3.88 3.40
-```
+Spawning was slowed right down after the 6 September attempt, where ramping fast
+tripped the storefront's connection pool before the run got going and we threw the
+results away.
 
-## Environment
+The CSVs are whatever the four processes wrote when they exited.
 
-Staging: 1 storefront pod. Production: 6.
+## Staging
 
-Postgres: staging holds 1.8M order rows, production 14.2M.
-
-`/api/products/*`: production serves it through the CDN on a 60s edge TTL.
-Staging has no CDN in front of it.
-
-Measurement window: process start to process stop, 09:02 to 09:22, nothing
-discarded.
+One storefront pod. Postgres holds 1.8M order rows. Same image and same pod spec as
+production.

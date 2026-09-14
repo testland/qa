@@ -26,7 +26,6 @@ class OrdersListTest {
     fun setUp() {
         idling = NetworkIdlingResource()
         IdlingRegistry.getInstance().register(idling)
-        idling.increment()
     }
 
     @Test

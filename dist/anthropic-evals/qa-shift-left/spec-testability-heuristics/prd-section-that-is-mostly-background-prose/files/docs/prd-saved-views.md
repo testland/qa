@@ -23,12 +23,21 @@ so the limit is 20 saved views per user and the 21st `POST /api/views` returns
 Applying a saved view sets every filter control on `/reports` to the values
 stored with the view and puts `?view=<id>` in the address bar.
 
-Users can share a saved view with a teammate.
+A user can share a saved view with a teammate from the view's overflow menu,
+and the teammate sees it in their own view list.
 
-The export button on a saved view returns the same rows the view is showing.
+The export button on a saved view produces a CSV of the same rows the view is
+showing.
 
 The nightly job that prunes views not opened in 18 months must finish within 11
 hours.
+
+## Constraints
+
+The filter serialiser keeps its current output format: a filter set serialised
+by the build before this change deserialises to the same values after it.
+
+For users with no saved views, `/reports` behaves exactly as it does today.
 
 ## Open questions
 

@@ -16,10 +16,13 @@ https://console.brightpath.dev/signup
 ```
 
 All eleven alerts are against those four URLs both nights. Nine are header and
-cookie alerts on `/` and `/pricing`. Two are on `/signup`.
+cookie alerts on `/` and `/pricing`. Two are on `/signup`. The eleven have the
+same rule ids on both nights. None of the eleven has a ticket against it in the
+tracker; the oldest report still in artifact retention, 2026-06-28, lists the
+same eleven.
 
-Screens that exist behind the login and appear in neither report: the tenant
-list, per-tenant settings, the user admin pages, API token management, the audit
-log, billing, the runbook editor, the alert-rule editor, the integrations pages,
-the export tool, and everything under `/admin/`. Roughly forty in total; the
-router table is in the frontend repo if you need the exact list.
+The frontend router table has 46 entries. Five of them are the public pages and
+the login page. The rest — the tenant list, per-tenant settings, user admin, API
+token management, the audit log, billing, the runbook editor, the alert-rule
+editor, the integrations pages, the export tool and everything under `/admin/` —
+appear in neither report.

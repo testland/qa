@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install schemathesis pytest
+      - run: pip install schemathesis
       # The CDN migration put a proxy in front of staging, so we added the header
       # and content-type validations on top of the defaults - Dana, 2026-02
       - name: Generated cases against staging
@@ -28,8 +28,8 @@ jobs:
             --workers 4 \
             --header "Authorization: Bearer $TOKEN" \
             --junit-xml=results.xml
-      - name: Document smoke
-        run: pytest tests/api -q
+      - name: Document lint
+        run: node --test test/*.test.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -9,49 +9,43 @@
           "semanticVersion": "1.96.0",
           "rules": [
             {
-              "id": "javascript.jwt.security.jwt-hardcoded-secret",
-              "shortDescription": { "text": "JWT signing secret hardcoded in source" },
-              "defaultConfiguration": { "level": "note" },
-              "properties": {
-                "security-severity": "9.3",
-                "tags": ["security", "CWE-798"]
-              }
+              "id": "javascript.express.security.audit.express-rate-limit-missing",
+              "shortDescription": { "text": "Authentication route has no rate limiting" },
+              "defaultConfiguration": { "level": "error" },
+              "properties": { "security-severity": "7.4", "tags": ["security", "CWE-307"] }
             },
             {
-              "id": "javascript.lang.correctness.useless-eqeq",
-              "shortDescription": { "text": "Comparison is always true" },
-              "defaultConfiguration": { "level": "error" },
-              "properties": {
-                "security-severity": "0.0",
-                "tags": ["correctness", "maintainability"]
-              }
+              "id": "javascript.express.security.audit.express-cookie-samesite",
+              "shortDescription": { "text": "Session cookie set without SameSite" },
+              "defaultConfiguration": { "level": "warning" },
+              "properties": { "security-severity": "4.3", "tags": ["security", "CWE-1275"] }
             }
           ]
         }
       },
       "results": [
         {
-          "ruleId": "javascript.jwt.security.jwt-hardcoded-secret",
-          "level": "note",
-          "message": { "text": "Signing secret is a string literal; anyone with the bundle can mint tokens" },
+          "ruleId": "javascript.express.security.audit.express-rate-limit-missing",
+          "level": "error",
+          "message": { "text": "POST /auth/login has no rate limiter attached" },
           "locations": [
             {
               "physicalLocation": {
-                "artifactLocation": { "uri": "src/auth/token.js" },
-                "region": { "startLine": 61, "startColumn": 22 }
+                "artifactLocation": { "uri": "src/auth/routes.js" },
+                "region": { "startLine": 34, "startColumn": 3 }
               }
             }
           ]
         },
         {
-          "ruleId": "javascript.lang.correctness.useless-eqeq",
-          "level": "error",
-          "message": { "text": "This comparison is always true because both sides are the same expression" },
+          "ruleId": "javascript.express.security.audit.express-cookie-samesite",
+          "level": "warning",
+          "message": { "text": "res.cookie called without a SameSite attribute" },
           "locations": [
             {
               "physicalLocation": {
-                "artifactLocation": { "uri": "src/api/orders.js" },
-                "region": { "startLine": 210, "startColumn": 9 }
+                "artifactLocation": { "uri": "src/http/session.js" },
+                "region": { "startLine": 18, "startColumn": 5 }
               }
             }
           ]

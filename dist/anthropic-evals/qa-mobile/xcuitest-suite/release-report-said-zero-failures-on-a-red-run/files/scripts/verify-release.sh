@@ -10,7 +10,9 @@ mkdir -p build reports
 xcodebuild test \
   -project Tidewater.xcodeproj \
   -scheme Tidewater \
+  -testPlan Release \
   -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.5' \
+  -resultBundlePath build/result.xcresult \
   | tee build/test.log
 
 FAILS=$(grep -c "error:" "$LOG" 2>/dev/null || true)

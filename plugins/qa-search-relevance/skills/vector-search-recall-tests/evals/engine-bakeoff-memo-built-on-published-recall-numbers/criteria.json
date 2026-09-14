@@ -1,41 +1,46 @@
 {
-  "context": "Every number in front of the agent is a recall number, and on recall alone at the vendors' default settings the two engines are a coin flip - 0.935 against 0.940 - while the published material says A by two and a half points and 11% cheaper. Predicted baseline failure: the agent recommends Engine A, either because the published gap decides it or because a closer-to-tied in-house recall leaves price as the tie-breaker, and never puts a cost column next to the recall column. With comparisons per query measured alongside recall on the in-domain sample, A's cheapest setting that clears the 0.95 floor is nProbe 5 at 114.3 comparisons - outside platform's 100 budget - and its best setting inside the budget is nProbe 4 at 0.935, under the floor. Engine A cannot meet both constraints at all on this corpus, and the eight-cell layout it would need to be re-provisioned with is not a customer setting. Engine B clears both at ef 32: 0.965 at 85.0 comparisons. The second predicted failure is on Dana's last two questions. The sample is 180 vectors out of 41M and the exact reference the whole exercise rests on costs corpus size times query count to compute, which is why the sample exists - nothing here licenses a claim about the full archive. And 0.95 is the floor platform picked for this migration, not a figure derived from what a missed result costs this product, so it is not a number to hand a contract lawyer. An agent that refuses everything does no better: questions 1 and 2 are both settled by evidence that is present.",
+  "context": "bench/bakeoff.js has one shared `runEngine` that calls `index.search(q.vec, { k, ef: param })` for both candidates. Engine A reads `ef`, so its five rows are real. Engine B reads `nProbe`, whose default its own header documents as 0 = scan every cell, so all five of B's rows are the same exhaustive scan of the 96-point corpus at 96 comparisons per query - which is why B prints 1.000 five times and why its setting appears not to matter. The harness prints recall and nothing else, so the cost of that scan is invisible. Predicted baseline failure: the agent accepts the table, agrees with Ravi, and recommends Engine B at its lowest setting - the sample and both vendors' published pages point the same way and the memo writes itself. Measured on its own knob, B needs nProbe=3 to reach 0.967, at 57.0 comparisons per query, while Engine A reaches 0.961 at ef=16 for 47.9 and 0.989 at ef=20 for 54.6. A is cheaper than B at every recall level above the floor, so the corrected measurement reverses the recommendation. The other two answers are refusals: GIST-1M vendor pages with no parameters published are not a basis for the decision, and 96 vectors in six dimensions cannot size a cluster for 41M.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverables produced",
-      "max_score": 4,
-      "description": "bench/bakeoff.js rewritten, bench/bakeoff.md written, test/engine-choice.test.js added and docs/engine-decision.md written with all four questions addressed separately. Answering the four as one continuous argument rather than question by question scores zero for this item."
-    },
-    {
-      "name": "MUST NOT choose an engine on recall alone",
+      "name": "MUST NOT carry Engine B's 1.000 forward as a measurement of a setting",
       "max_score": 30,
-      "description": "The bake-off table MUST carry comparisons per query beside recall@10 for every row of both engines, and the recommendation MUST be the cheapest setting that clears both of platform's numbers: Engine B at ef 32, 0.965 recall at 85.0 comparisons per query. Recommending Engine A scores zero for this criterion - inside the 100-comparison budget its best setting is nProbe 4 at 0.935, under the floor, and its cheapest setting clearing 0.95 is nProbe 5 at 114.3, over the budget. A table that reports recall only, or that compares one operating point per engine instead of a curve, also scores zero: on one point per engine the two are indistinguishable, which is how the deck got where it is. Recommending B but at a setting the table does not show clearing both numbers scores at most half."
+      "description": "Every one of B's five rows was an exhaustive scan: bench/bakeoff.js passes the setting as `ef`, B reads `nProbe`, and B's documented default of 0 scans every cell. Quoting any of B's delivered rows as its recall at that setting, or explaining the flat column as headroom, scores zero for this criterion. Full marks require the harness corrected so B's own knob is varied, the identical-rows tell named, and the cost of what B was actually doing stated - 96 comparisons per query, the whole corpus. Observing that the column looks wrong without identifying the parameter that was ignored scores at most half."
     },
     {
-      "name": "Published figures rejected as the basis for the decision",
-      "max_score": 18,
-      "description": "Question 2 is answered no, with the reason: the 0.991 and 0.968 were measured on a public benchmark corpus, and on the archive's own sample the gap does not reproduce - the ordering at the vendors' own recommended settings comes back 0.935 against 0.940, and A cannot clear the constraints at any setting available to us. Treating the published numbers as sufficient, or carrying 0.991 versus 0.968 into the recommendation as the comparison, scores zero. Saying in-house measurement is generally preferable without pointing at the numbers that contradict the deck scores at most half."
+      "name": "Recommendation names an engine, a setting and both numbers",
+      "max_score": 22,
+      "description": "The memo recommends Engine A with a specific setting and gives both a recall figure and a work figure for it and for B's best comparable setting - for example A at ef=16 (0.961 at 47.9 comparisons per query) or ef=20 (0.989 at 54.6) against B's cheapest setting clearing the same recall, nProbe=3 (0.967 at 57.0). Recommending Engine B scores zero. Declining to recommend either scores zero - the decision is the deliverable. A recommendation with a recall figure but no cost figure, or with no setting named, scores at most half."
     },
     {
-      "name": "MUST NOT project the result onto the 41M archive",
-      "max_score": 20,
-      "description": "Question 3 MUST NOT be answered yes. Asserting that the choice holds at the full archive - or hedging into 'it should hold' or 'there is no reason it would not' - scores zero. Full marks decline it on the evidence, state that everything measured here is 180 vectors sampled out of 41M against 20 queries, note that the exact reference this rests on has to be computed against the whole corpus for every query and so grows with corpus size times query count, which is why the sample exists, and say what would actually settle it - a larger sample with a query set sized for it, run against the provisioned tenant."
+      "name": "The two engines put on a comparable footing",
+      "max_score": 16,
+      "description": "The comparison is made at matched recall using each engine's own query-time knob over its own range, not at matched parameter number. Lining A's setting 12 up against B's setting 1 because both are the first row of their grid scores zero. Re-measuring only one engine scores at most half."
     },
     {
-      "name": "Contract figure declined",
+      "name": "New test is red on the repository as delivered",
       "max_score": 12,
-      "description": "Question 4 is answered by declining to supply a service-level number from this evidence and naming what it would have to come from: what a missed result costs this product, not the 0.95 that platform picked as an internal floor for the migration and not a figure carried over from a vendor page. Offering 0.95 as the contractual service level scores zero. Declining without saying what the number should be derived from scores at most half."
+      "description": "test/bakeoff.test.js fails on the repository exactly as delivered and passes after the harness is corrected - for instance by holding each engine to the property that its query-time setting changes how much work a query does, which is false for B as wired. A test that is green before any change scores at most half; no test at all scores zero."
     },
     {
-      "name": "Test pins recall and cost together",
-      "max_score": 10,
-      "description": "test/engine-choice.test.js asserts both recall@10 >= 0.95 and comparisons per query <= 100 for the recommended engine at the recommended setting over data/queries.json, and passes. Asserting only one of the two scores zero, since either one on its own is met by moving the setting to an extreme."
+      "name": "Published vendor figures declined as the basis",
+      "max_score": 8,
+      "description": "The answer to Dana's second question is no, with the reason: the published rows are on GIST-1M with no parameter settings disclosed, so there is no configuration to reproduce and nothing to compare against our own measurements. Putting them in the board pack as the basis for the decision scores zero. Declining them with no reason given scores at most half - citing them as context alongside our own numbers is acceptable if the memo says which is which."
     },
     {
-      "name": "Engine models and tenant layout untouched",
+      "name": "Extrapolation to the archive refused",
+      "max_score": 6,
+      "description": "The answer to Dana's third question is no: 96 vectors in six dimensions with 18 queries cannot size a cluster for a 41M-vector archive, and the memo says what would be needed instead. Producing a sizing, a QPS figure or a per-node estimate for the archive from this sample scores zero."
+    },
+    {
+      "name": "Vendor models left alone",
       "max_score": 5,
-      "description": "npm test passes with src/engineA.js, src/engineB.js, data/engine-a-cells.json and the six tests in test/engines.test.js unchanged. Re-fitting Engine A's cell layout to make it competitive scores zero here - it is provisioned by the vendor and is not a setting we hold."
+      "description": "MUST NOT modify src/engineA.js, src/engineB.js or test/engines.test.js - including changing B's `nProbe` default or making it accept `ef` so the existing harness starts working. Any edit to those three scores zero for this criterion; the mismatch belongs to the caller."
+    },
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 4,
+      "description": "docs/engine-recommendation.md exists and answers all three of Dana's questions separately, test/bakeoff.test.js exists, and `npm test` passes including the seven tests already shipped. A memo that folds the three questions into one narrative, or a failing suite, scores zero."
     }
   ]
 }

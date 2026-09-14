@@ -1,42 +1,47 @@
-# One failing test takes the rest of the file down with it
+# Four tests, four launches, and the file still falls over as a unit
 
 ## Problem Description
 
-`tests/e2e/workspace.spec.ts` has four tests and each one starts its own copy of
-Ledgerline and closes it at the end. That was deliberate - we moved off a shared
-instance in June precisely so the tests would stop leaning on each other.
+`tests/e2e/workspace.spec.ts` has four tests. Each one starts its own copy of
+Ledgerline and closes it at the end - we moved off a shared instance in June
+precisely so the tests would stop leaning on each other.
 
-It has not helped as much as we hoped. When all four pass, fine. The moment any
-one of them fails for a real reason, every test after it in the file fails too,
-and not with the failure that started it: they fail at launch, complaining that
-the profile is in use. Reorder the file and the wreckage moves with it. Run the
-failing test on its own and you get the one honest failure and nothing else.
-Marek's terminal from Tuesday is attached, including what `ps` says after the
-run finishes.
+It has not helped as much as we hoped.
 
-There is a second thing in the same file, and I am not sure it is the same
+When all four pass, fine. The moment any one of them fails for a real reason,
+every test after it in the file fails too, and not with the failure that started
+it: they fail at launch, complaining the profile is in use. Reorder the file and
+the wreckage moves with it. Run the failing test on its own and you get the one
+honest failure and nothing else. Marek's terminal from Tuesday is attached,
+including what `ps` says once the run has finished.
+
+There is a second thing in the same file and I am not sure it is the same
 problem. `recent workspaces lists one entry for this run` is green on CI and red
 on every laptop that has run the suite before - Marek's says thirty-four. Wiping
 one folder out of his home directory makes it green again for exactly one run.
-That is also in the attached file.
 
 And a third, which is the one that actually worries me. Last Thursday, on a
 branch, we took the single-instance lock out of `src/main/index.ts` altogether -
-commented out the call, shipped nothing, just wanted to see the test fail. It
+commented out the call, shipped nothing, just wanted to watch the test fail. It
 passed. A test that goes green whether or not the behaviour it names exists is
-not a test and I would like it to be one.
+not a test.
 
-Three proposals on the table, all of which I would rather you told me were wrong
-if they are:
+What I care about is that nothing one test writes can be seen by another test,
+and that a failure stays inside the test that caused it.
 
-- Nadia wants two retries on the file, on the grounds that the follow-on
-  failures are obviously environmental rather than real.
-- Bo wants a step in the workflow that kills any leftover Ledgerline process
-  before the test job starts.
-- Jonas wants to go back to one launch in `beforeAll`, since four launches for
-  four tests is three more chances to collide.
+Four people have opinions and I want a straight yes or no on each:
 
-We already run one test at a time - the config is attached, and it is not
+- Nadia wants two retries on the file. The follow-on failures are obviously
+  environmental rather than real, so retrying should wash them out.
+- Bo wants a step at the top of the test job that kills any Ledgerline process
+  left over from a previous run, before the suite starts.
+- Hana wants a step after the run that counts Ledgerline processes and fails the
+  job if any are still alive, so that the next time we leak one we hear about it
+  from CI rather than from Marek.
+- Jonas wants to go back to one launch in `beforeAll`. Four launches for four
+  tests is three extra chances to collide, and we never actually needed four.
+
+We already run one test at a time - the config is attached - so this is not
 concurrency inside the run. `src/main/index.ts` is attached for context and is
 not to be changed; the lock is what we ship and the tests have to cope with it.
 `tests/e2e/about.spec.ts` passes and is out of scope.
@@ -48,13 +53,12 @@ not to be changed; the lock is what we ship and the tests have to cope with it.
    machine that has run the suite a hundred times before.
 2. You may add `tests/e2e/fixtures/app.ts` if shared setup helps.
 3. Keep all four tests and what each one checks. The single-instance test must
-   still exercise a second copy of the application starting while the first is
-   running, and it must be able to fail when that behaviour is removed.
-4. Do not change `src/main/index.ts` or `tests/e2e/about.spec.ts`.
-5. Write `docs/workspace-isolation.md`: why one failing test takes the following
-   ones down, why that test is red on developer machines and green on CI, why
-   the single-instance test passed with the lock removed, and a direct answer to
-   Nadia's, Bo's and Jonas's proposals.
+   still exercise a second copy of the application starting while the first one
+   is running, and it must be able to fail when that behaviour is removed.
+4. Update `.github/workflows/desktop-e2e.yml` where your answer requires it.
+5. Do not change `src/main/index.ts` or `tests/e2e/about.spec.ts`.
+6. Write `docs/workspace-isolation.md`: what you found, and a yes or no to each
+   of the four proposals with the reason.
 
 ## Input Files
 
@@ -181,6 +185,29 @@ test('about box reports the shipped version', async () => {
   await app.close();
 });
 
+=============== FILE: .github/workflows/desktop-e2e.yml ===============
+name: desktop-e2e
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build:desktop
+      - run: npx playwright test --config=playwright.electron.config.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-report
+          path: playwright-report/
+
 =============== FILE: reports/isolation-evidence.txt ===============
 $ npx playwright test tests/e2e/workspace.spec.ts
 Running 4 tests using 1 worker
@@ -213,9 +240,7 @@ $ ps -ax | grep -c '[L]edgerline'
 3
 
 $ npx playwright test tests/e2e/workspace.spec.ts --grep "workspace rename"
-  1 failed, 0 passed (24.1s)      # the honest failure, on its own
-
---- the second one ---
+  1 failed, 0 passed (24.1s)
 
 $ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
 
@@ -230,9 +255,10 @@ $ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
   1 passed (9.4s)
 
 $ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
-  1 failed, 0 passed (9.8s)       # Received length: 2
+  1 failed, 0 passed (9.8s)
+     Received length: 2
 
---- the third one, branch spike/drop-single-instance-lock, 2026-09-10 ---
+--- branch spike/drop-single-instance-lock, 2026-09-10 ---
 
 src/main/index.ts: requestSingleInstanceLock() call and the second-instance
 handler both commented out; two copies of the app now run happily side by side.

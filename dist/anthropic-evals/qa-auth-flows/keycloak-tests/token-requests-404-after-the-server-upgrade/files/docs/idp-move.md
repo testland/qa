@@ -10,7 +10,8 @@
 Notes from the migration:
 
 - Ops stood the new deployments up on defaults; nothing was overridden.
-- The suite's container setup was written by copying the snippet from the
-  container module's README and adding the realm file we already had.
+- `tests/auth/urls.py` predates the move. It was written against `sso-vm-01` and
+  the only thing touched during the move was `BASE`, which used to be the VM's
+  hostname.
 - `test_server_answers` was added during the move to prove the container itself
   was coming up, because early on it was not.

@@ -1,21 +1,26 @@
 from monitoring.alerting import drift_detected
 
 
-def _tests(failed, passed):
-    return {"tests": [{"status": "FAIL"}] * failed + [{"status": "SUCCESS"}] * passed}
+def _run(dataset_status, failing_columns):
+    tests = [{"id": "DriftedColumnsCount", "status": dataset_status}]
+    tests += [
+        {"id": "ValueDrift(column=" + c + ")", "status": "FAIL"}
+        for c in failing_columns
+    ]
+    return {"tests": tests}
 
 
-def test_dataset_drift_when_most_columns_fail():
-    assert drift_detected(_tests(12, 10)) is True
+def test_dataset_drift_is_reported():
+    assert drift_detected(_run("FAIL", ["driver_age", "annual_mileage"])) is True
 
 
-def test_no_dataset_drift_when_one_column_fails():
-    assert drift_detected(_tests(1, 21)) is False
+def test_an_error_status_counts():
+    assert drift_detected(_run("ERROR", [])) is True
 
 
-def test_no_dataset_drift_when_nothing_fails():
-    assert drift_detected(_tests(0, 22)) is False
+def test_a_single_failing_column_is_not_dataset_drift():
+    assert drift_detected(_run("SUCCESS", ["driver_age"])) is False
 
 
-def test_a_run_carrying_no_tests_reports_nothing():
-    assert drift_detected({"metrics": []}) is False
+def test_nothing_failing_is_quiet():
+    assert drift_detected(_run("SUCCESS", [])) is False

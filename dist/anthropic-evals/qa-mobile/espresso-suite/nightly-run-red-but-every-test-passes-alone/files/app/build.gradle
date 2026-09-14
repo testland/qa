@@ -4,26 +4,22 @@ plugins {
 }
 
 android {
-    namespace 'com.northwind.auth'
+    namespace 'com.northwind.shop'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.northwind.auth"
+        applicationId "com.northwind.shop"
         minSdk 24
         targetSdk 35
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
+        testInstrumentationRunnerArguments clearPackageData: 'true' // per-test isolation, 2026-03-11
     }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.room:room-runtime:2.6.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.6.1'
 
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'

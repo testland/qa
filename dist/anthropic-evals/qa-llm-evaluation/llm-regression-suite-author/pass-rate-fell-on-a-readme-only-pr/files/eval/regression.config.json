@@ -1,5 +1,5 @@
 {
-  "datasetFile": "datasets/golden-v2.3.0.jsonl",
+  "datasetFile": "datasets/golden-v2.2.0.jsonl",
   "providers": [
     {
       "id": "openai:chat:gpt-5-mini-2026-01-15",

@@ -1,35 +1,26 @@
 'use strict';
 
-const { createIndex, cosine } = require('./annIndex');
+const { createIndex } = require('./annIndex');
 
-// Fitted 2026-06-28 over the catalogue sample as embedded by minilm-l6-v1.
-// Changing these means every point has to be re-assigned to a cell.
+// Re-fitted 2026-09-11 as part of the provider change, over the catalogue as
+// re-embedded on the same day.
 const CENTROIDS = [
-  [0.6745, 0.1188, 0.4399, -0.5808],
-  [0.0535, 0.2616, 0.3155, -0.9106],
-  [-0.2423, -0.9104, 0.1946, 0.2729],
-  [0.0613, -0.6937, -0.6219, 0.3582],
+  [-0.2895,-0.6369,0.1807,0.5023,-0.2011,0.4304],
+  [-0.2876,0.5847,0.6123,-0.3796,0.1797,0.1551],
+  [0.2464,0.008,0.0481,0.4677,0.1572,-0.8327],
+  [0.6975,0.1803,-0.2242,0.4662,-0.2915,0.3584],
+  [-0.139,0.144,-0.3181,0.4019,0.6773,0.4884],
+  [0.1102,-0.3249,0.147,0.1434,0.7306,-0.5535]
 ];
 
-function ingest(docs, { nProbe = 2, centroids = CENTROIDS } = {}) {
-  const index = createIndex({ centroids, nProbe });
-  for (const doc of docs) index.add(doc.id, doc.vec);
+const NPROBE = 2;
+
+function buildIndex(corpus, { nProbe = NPROBE } = {}) {
+  const index = createIndex({ centroids: CENTROIDS, nProbe });
+  for (const item of corpus) {
+    index.add(item.id, item.vec);
+  }
   return index;
 }
 
-// Greedy farthest-point pick. Written for the 2026-06 fit, kept for the next one.
-function fitCentroids(docs, n) {
-  const picked = [docs[0].vec];
-  while (picked.length < n) {
-    let best = null;
-    let bestScore = Infinity;
-    for (const doc of docs) {
-      const worst = Math.max(...picked.map((p) => cosine(p, doc.vec)));
-      if (worst < bestScore) { bestScore = worst; best = doc.vec; }
-    }
-    picked.push(best);
-  }
-  return picked;
-}
-
-module.exports = { ingest, fitCentroids, CENTROIDS };
+module.exports = { buildIndex, CENTROIDS, NPROBE };

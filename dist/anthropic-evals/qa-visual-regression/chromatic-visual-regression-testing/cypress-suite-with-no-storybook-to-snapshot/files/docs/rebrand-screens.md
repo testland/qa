@@ -8,3 +8,6 @@
 | 4 | `/invoices` (empty)  | `cypress/e2e/invoices-empty.cy.js` | `cy.task('db:seed', 'empty-tenant')`           |
 | 5 | `/error/500`         | `cypress/e2e/error.cy.js`          | none; rendered directly                        |
 | 6 | `/dashboard`         | `cypress/e2e/dashboard.cy.js`      | not seeded; reads the shared staging database  |
+
+All six routes except `/login` and `/error/500` are behind the session that
+`cy.login()` establishes.

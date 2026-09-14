@@ -25,7 +25,7 @@ test('Escape closes the picker from anywhere', () => {
   assert.deepEqual(handleKey('Escape', 'kst-apply'), { action: 'close' });
 });
 
-test('one day carries the tab stop and the rest do not', () => {
+test('focus bookkeeping matches the rendered markup', () => {
   assert.equal(tabIndexFor(12, 12), '0');
   assert.equal(tabIndexFor(13, 12), '-1');
   assert.equal(tabIndexFor(16, 12), '-1');

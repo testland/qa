@@ -1,0 +1,10 @@
+{
+  "$schema": "../../node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "testRunner": "tap",
+  "tap": { "testFiles": ["src/**/*.test.js"] },
+  "coverageAnalysis": "perTest",
+  "mutate": ["src/**/*.js", "!src/**/*.test.js"],
+  "reporters": ["progress", "clear-text", "html"],
+  "thresholds": { "high": 80, "low": 60 }
+}

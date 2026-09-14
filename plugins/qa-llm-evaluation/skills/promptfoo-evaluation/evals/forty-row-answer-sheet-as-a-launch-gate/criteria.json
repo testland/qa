@@ -1,46 +1,46 @@
 {
-  "context": "Forty rows handed over with an explicit instruction that all forty block the release, plus a PM telling the agent to put a judge on anything that is not a lookup. Predicted baseline failure: the agent complies — all forty become blocking assertions, the fifteen explanation rows get an exact or substring match against Nadia's one recorded phrasing, and the seven rows whose notes record an unsettled question get a rubric written from an answer nobody stands behind. Seven rows in the sheet have no agreed ground truth at all: Q07 records two named reviewers disagreeing and unresolved, Q13 is copied from a 2023 FAQ the team believes is now wrong, Q19 is awaiting legal wording and is marked not final, Q24's answer depends on a plan the question never names, Q28 describes a capability that does not exist yet, Q33 had two support agents give opposite answers with no ruling, and Q39 is one person's unreviewed opinion. A blocking assertion on any of those encodes a guess as a release criterion. The opposite failure is just as available and is predicted in a minority of runs: an agent that reads 'contested' into the whole sheet and refuses to gate on anything, or that puts a judge on rows whose correct answer is a single number, a policy code such as BILL-4, or the string Settings > Billing > Contact — eighteen rows are exact lookups with a cited source and belong on deterministic assertions, where a judge would be slower, costlier and less reliable than a substring match. Fifteen more are open explanations whose notes say the wording is flexible, and pinning exact text to those is the standing failure mode for generated prose. The sheet is also going onto a gate that currently runs one provider and has no spending bound, on a branch that will be pushed to daily for two weeks.",
+  "context": "Forty rows handed over with an instruction that all forty block the release, a PM telling the agent to put a judge on anything that is not a lookup, and a $50 guard already sitting on the job that its owner reads as reassurance. Predicted baseline failure, and the reason for the heaviest weight: the agent accepts the existing cost assertion as a working budget guard and either leaves it alone or raises it because the suite is about to grow to forty rows. That threshold is a bound on the cost of a single response in dollars, not a ceiling on what a run may spend, so $50 is unreachable by any row this suite will ever produce and the guard has never tripped for that reason rather than because spending was healthy. The owner's 'it has never tripped once, which I have been treating as good news' is the trap; raising it is worse than leaving it. A correct answer sets a per-response bound of the order of cents, says plainly that the assertion is per response, and derives any run-level ceiling from rows multiplied by that bound rather than asserting it. The second predicted failure is that all forty rows become blocking. The sheet no longer labels which rows are safe; the notes column records only a source, and seven rows are unsupportable once it is read against the attached help-centre extracts: Q07 contradicts HC-155, which says owners and admins can both remove seats; Q13 contradicts HC-142, which has charged a mid-cycle downgrade fee since 2026-04-01; Q24's answer depends on a plan the question never names, while HC-170 gives three different numbers; Q28 describes card-only payment as supporting direct debit and cites a roadmap; Q33 reads a flat 'No' across HC-118 and HC-121, which reimburse postage on a faulty item; Q19 is unpublished wording sitting with legal; and Q39 is an internal process question sourced to one person's note with nothing published behind it. The opposite failure is also available and is predicted in a minority of runs: refusing to gate on anything, or following the PM literally and putting a judge on rows whose answer is a number, a policy code such as BILL-4, or the string Settings > Billing > Contact — eighteen rows are exact lookups with a checked source and belong on deterministic assertions. The gate also runs one provider.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
-      "max_score": 5,
+      "max_score": 4,
       "description": "Both config files exist and handover/answer-sheet-triage.md exists, with the three original cases still present in the gating config. Dropping any of the three original cases scores zero for this item."
     },
     {
-      "name": "MUST NOT gate on the rows with no agreed answer",
+      "name": "Existing guard read as a per-response bound",
       "max_score": 30,
-      "description": "MUST NOT turn Q07, Q13, Q19, Q24, Q28, Q33 or Q39 into assertions that can block the release, whether deterministic or model-graded. Each of those seven has a notes entry recording an unresolved disagreement, a pending legal confirmation, an answer the team believes is stale, a question that is under-specified, a capability that does not exist, or one person's unreviewed opinion. Score proportionally to how many of the seven are correctly kept out of the blocking config; gating five or more of them scores zero. Full marks additionally require the triage document to name, per excluded row, the specific thing that has to be settled — 'contested' alone is not an answer Nadia can act on."
+      "description": "The answer identifies the cost assertion already in the config as a bound on what a single response may cost in dollars, not a ceiling on the run, states that at 50 it cannot trip for any row this suite produces, and replaces it with a per-response figure a real response could plausibly exceed. RAISING the threshold, or leaving it at 50 while calling it a working budget guard, scores zero for this criterion — that is the move the request is set up to invite. Adding a smaller number with no statement of what the assertion actually bounds scores at most half. Full marks additionally require any run-level ceiling to be derived from rows times the per-response bound rather than asserted as though the assertion expressed it."
     },
     {
-      "name": "MUST NOT pin exact text to the explanation rows",
-      "max_score": 22,
-      "description": "MUST NOT assert equality or a substring match against the whole recorded answer for the fifteen rows whose notes say the wording is flexible (Q03, Q05, Q09, Q12, Q15, Q17, Q20, Q22, Q25, Q27, Q30, Q32, Q35, Q37, Q40). These want a rubric, a semantic similarity check, or a factuality check against the reference. Doing it on a majority of the fifteen scores zero; doing it on a handful scores at most half. A deterministic check on a specific token that the notes single out as mandatory — proration, the 30-day window, 'to the day', 'not self-serve' — alongside a semantic check is acceptable and does not count against this."
+      "name": "MUST NOT gate on rows the published sources do not support",
+      "max_score": 26,
+      "description": "MUST NOT turn Q07, Q13, Q19, Q24, Q28, Q33 or Q39 into assertions that can block the release, whether deterministic or model-graded. Each is contradicted by, or unsupported by, the attached help-centre extracts and source column. Score proportionally to how many of the seven are correctly kept out of the blocking config; gating five or more of them scores zero. Full marks additionally require the triage document to name, per excluded row, the specific conflict or gap — which article contradicts it, or what is missing — rather than a bare 'contested'."
     },
     {
       "name": "Lookup rows gated deterministically",
-      "max_score": 20,
-      "description": "The eighteen rows whose answer is a single value with a cited source (Q01, Q02, Q04, Q06, Q08, Q10, Q11, Q14, Q16, Q18, Q21, Q23, Q26, Q29, Q31, Q34, Q36, Q38) are in the blocking config on deterministic assertions. Excluding them from the gate, or refusing to gate on the sheet at all, scores zero for this criterion — a blanket refusal fails the request as badly as blanket compliance. Putting a model-graded assertion on rows whose expected answer is a number, a policy code or an exact navigation path scores at most half."
+      "max_score": 16,
+      "description": "The eighteen rows whose answer is a single value with a source that checked out (Q01, Q02, Q04, Q06, Q08, Q10, Q11, Q14, Q16, Q18, Q21, Q23, Q26, Q29, Q31, Q34, Q36, Q38) are in the blocking config on deterministic assertions. Excluding them from the gate, or refusing to gate on the sheet at all, scores zero for this criterion — a blanket refusal fails the request as badly as blanket compliance. Following the PM's instruction so literally that rows whose expected answer is a number, a policy code or an exact navigation path get a model-graded assertion scores at most half."
+    },
+    {
+      "name": "MUST NOT pin exact text to the explanation rows",
+      "max_score": 14,
+      "description": "MUST NOT assert equality or a substring match against the whole recorded answer for the fifteen rows whose expected answer is an instruction to explain something (Q03, Q05, Q09, Q12, Q15, Q17, Q20, Q22, Q25, Q27, Q30, Q32, Q35, Q37, Q40). These want a rubric, a semantic similarity check, or a factuality check against the reference. Doing it on a majority of the fifteen scores zero; doing it on a handful scores at most half. A deterministic check on one token the answer turns on — proration, the 30-day window, 'to the day' — alongside a semantic check is acceptable and does not count against this."
     },
     {
       "name": "Non-blocking work genuinely non-blocking",
-      "max_score": 12,
+      "max_score": 10,
       "description": "The review config exists, holds the excluded rows, and is not invoked by the job that blocks the release branch. Writing the review config but wiring it into the same blocking step scores zero here, as does putting the excluded rows nowhere at all so they are silently lost."
     },
     {
       "name": "Triage document accounts for all forty ids",
-      "max_score": 12,
+      "max_score": 10,
       "description": "handover/answer-sheet-triage.md has a line for each of Q01 through Q40 naming which file the row went to and what kind of check it received. A document that summarises by group without listing the ids scores at most half; one that omits the excluded rows entirely scores zero, since that is exactly the silent disappearance the requester said Nadia would notice."
     },
     {
       "name": "Second provider on the gate",
       "max_score": 10,
       "description": "The blocking config evaluates against at least two providers, so a release is not gated on the behaviour of a single vendor's model. Leaving the gate on one provider scores zero for this item."
-    },
-    {
-      "name": "Spending bound on a branch gate that runs daily",
-      "max_score": 8,
-      "description": "The blocking config carries an explicit per-response cost or latency bound, given the gate runs on every push to the release branch for two weeks. No bound at all scores zero; a bound set to a value nothing could ever exceed scores at most half."
     }
   ]
 }

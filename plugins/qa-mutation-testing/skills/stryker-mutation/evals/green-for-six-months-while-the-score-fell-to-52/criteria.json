@@ -1,41 +1,41 @@
 {
-  "context": "A gate everybody believed in that has never once been able to fail. Predicted baseline failure: the agent goes looking for the fault in CI — a stale cached artifact, a swallowed exit code, a missing failure condition on the step — because the workflow is the part that usually goes wrong, and it will not find one: the step is a bare 'npx stryker run' with no '|| true' and no continue-on-error, and the mutant count changes every month so nothing is stale. The fault is in the config. Its thresholds object declares high and low but no break, and break defaults to null, meaning no run of the tool fails the build whatever the score; high and low only colour the report. That is why 26 runs exited 0 while the score fell from 78.9 to 52.4, and it is why PR #2288, titled 'fail the build below 60', never did. The second thing the agent is predicted to get wrong is the number. The obvious move — set it to 60 as #2288 intended — reds every build from the moment it lands on a repo that ships hotfixes daily with a release on Thursday, which is the shape of gate that gets an exemption within a day and then gets deleted. A break value at or just below the current 52.4 stops the slide today and a dated ratchet walks it back up. Hakan's proposal is refuted by his own column: line coverage sat at 86% through the whole 26-point slide, so a coverage gate is precisely the instrument that did not notice. And with reporters set to progress alone, no run since March left a per-file breakdown, which is why nobody can say where the slide came from.",
+  "context": "The obvious explanation for a gate that never fires is a missing `thresholds.break`, and it is already there at 60 — so the reflex fix finds nothing and the agent has to keep looking. Predicted baseline failure: the agent raises or lowers the threshold, adds a reporter, writes a good essay about mutation score versus line coverage, and leaves the one line that actually breaks the gate untouched — `run: npx stryker run | tee reports/mutation-summary.txt`. That step has no `shell:` key, so it runs under the runner's default `bash -e {0}`, which does not set `pipefail`; the status of the pipeline is `tee`'s zero and Stryker's exit code 1 is discarded. That is why Leena's laptop prints 1 and twenty-six builds concluded `success`, four of them under the threshold. The second thing a baseline is predicted to miss is that the 52.4 is itself flattering: `\"mutate\": [\"src/**/*.js\"]` has no test-file exclusion, and the September summary shows six `*.test.js` rows carrying 430 of the 1,880 valid mutants at 96%, because mutating an expected value makes its own test fail. Strip those and the product code is at 572 detected of 1,450 valid — a little over 39%. Both failures point the same way on Dominic's request: a threshold of 75, or even the existing 60, reds every build the moment the pipeline stops swallowing the exit code, which is how the last gate quietly died.",
   "type": "weighted_checklist",
   "checklist": [
     {
+      "name": "The exit code stops being discarded",
+      "max_score": 30,
+      "description": "MUST NOT leave the `npx stryker run | tee reports/mutation-summary.txt` step as it stands. The answer identifies that piping the command discards its exit status under the default shell and fixes it — `shell: bash` on that step, an explicit `set -o pipefail`, dropping the pipe and writing the file another way, or splitting run and capture into separate steps all count. An answer that changes only `stryker.conf.json`, or that explains the drift without touching that workflow step, scores zero for this criterion however good the rest of it is. Naming the step as suspicious but leaving it unchanged scores at most half."
+    },
+    {
+      "name": "Test files removed from the mutate glob and the real score restated",
+      "max_score": 24,
+      "description": "MUST NOT leave `\"mutate\": [\"src/**/*.js\"]` mutating the suite's own test files — mutants in test code say nothing about production quality and these are killed at 96%, which inflates the headline. Full marks require the exclusion added AND the honest product-only figure worked out from the summary's own rows: 572 detected of 1,450 valid, about 39%. Leaving the glob unchanged scores zero. Fixing the glob without restating the number scores at most half, because every threshold decision below it then rests on a figure the answer has just invalidated."
+    },
+    {
+      "name": "Dominic answered with a number that can actually pass",
+      "max_score": 20,
+      "description": "The request for 75 is refused, and the reason given is that a threshold above the achievable score fails every build from the day it lands and gets the gate switched off or exempted — which is the failure mode already on display. The replacement `thresholds.break` sits just under the re-baselined product-only score (roughly 35 to 38), not at 60 and not at 75. Setting break to 75 scores zero. Leaving it at 60 also scores zero: once the exit code is honoured, 60 against a real 39 is the same unpassable bar by another route. Refusing 75 without naming a replacement number scores at most half."
+    },
+    {
+      "name": "A dated ratchet rather than a one-off number",
+      "max_score": 12,
+      "description": "docs/mutation-gate-recovery.md schedules the threshold between now and the March year end with explicit dates and explicit numbers — who moves it, when, and by how much. A document that says the number should rise over time without dates or increments scores at most half. No schedule at all scores zero."
+    },
+    {
+      "name": "Flat line coverage read correctly",
+      "max_score": 10,
+      "description": "The answer uses the third column of Leena's history — line coverage flat at 85.9 to 86.4 across the whole 26-point slide — as the evidence that the suite has been executing the new code all along without asserting anything about it. Treating steady coverage as reassurance, or ignoring the column, scores zero."
+    },
+    {
+      "name": "Survivors become visible",
+      "max_score": 8,
+      "description": "`reporters` gains the `html` reporter and the workflow publishes that report, so the next run answers Leena's complaint that nobody has ever been able to see which mutants survived. Adding the reporter but never publishing the directory it writes to scores at most half; changing neither scores zero."
+    },
+    {
       "name": "Deliverables produced",
       "max_score": 4,
-      "description": "Edited stryker.conf.json and .github/workflows/quality.yml are returned along with docs/mutation-gate-postmortem.md, and the document rules separately on Ines's cache theory, Hakan's coverage swap and the switch-it-on-at-60 proposal. Answering fewer than all three scores at most half."
-    },
-    {
-      "name": "Missing break threshold identified as the cause",
-      "max_score": 30,
-      "description": "The document names the actual fault: the thresholds object carries high and low but no break, break defaults to null, and with no break value the tool never exits non-zero however low the score goes — high and low only colour the report. Diagnosing it as a caching problem, a swallowed exit code, a workflow syntax problem, a reporter problem, or the tool being unable to fail builds at all scores zero for this criterion. Adding a break value to the config while the document explains the six green months by something else scores at most half. Full marks require both the diagnosis and a break value present in the returned config."
-    },
-    {
-      "name": "The number that lands does not red the build on day one",
-      "max_score": 22,
-      "description": "MUST NOT land a break value above the most recently measured score of 52.4 — a returned config with break at 60, 70, 78 or 80 fails the very next run before Thursday's release and is the hard-coded surprise threshold that gets a team to switch the gate off, so it scores zero here however well argued. Full marks for a break at or just below 52.4 — 50 or 52 — landed as something the team reviews rather than imposed, with the document saying plainly that today's job passes under it and the slide stops. Setting no break value at all also scores zero. Choosing a defensible number but presenting it as permanent, with nothing about raising it, scores at most half."
-    },
-    {
-      "name": "Ratchet stated with dates",
-      "max_score": 14,
-      "description": "The document sets out how the number moves back up — specific intermediate values with dates or review points on the way toward 60 and the March-era 78 — rather than a single figure with no future. No ratchet at all scores zero. 'Raise it once the score improves' with no value and no date scores at most half."
-    },
-    {
-      "name": "Coverage gate swap refused",
-      "max_score": 12,
-      "description": "MUST NOT accept Hakan's proposal to replace the mutation gate with a line-coverage gate, and MUST NOT delete the mutation job from the workflow. The refusal has to use the evidence in the history table: line coverage held at 85.9-86.4% across every one of the runs in which the mutation score fell 26 points, so the coverage gate is the instrument that stayed green through exactly this. Removing the mutation job, or endorsing the swap, scores zero. Refusing it without citing the flat coverage column scores at most half. Keeping the existing coverage job as well is fine and is not penalised."
-    },
-    {
-      "name": "A per-file breakdown is preserved from now on",
-      "max_score": 10,
-      "description": "The config gains a reporter that produces an inspectable artefact — html, json or both alongside progress — and the workflow uploads or otherwise retains it, so the next run can be attributed to a directory. The document should connect this to the note that no per-file breakdown exists for any of the 26 runs. Leaving reporters as progress-only scores zero; adding a reporter without keeping the output anywhere scores at most half."
-    },
-    {
-      "name": "Cache theory refuted from the data",
-      "max_score": 8,
-      "description": "Ines's stale-artifact theory is dismissed with the evidence rather than by assertion: the mutant count climbs from 1,204 to 1,502 across the runs and the score changes every month, so each run analysed that month's code. Recommending a cache-busting step scores zero. Dismissing the theory without pointing at the changing mutant counts or scores scores at most half."
+      "description": "Both files are edited and docs/mutation-gate-recovery.md exists, addressed to Dominic and the tech leads, covering the six green months, the corrected score, the threshold answer and the schedule. Missing any of those four scores at most half."
     }
   ]
 }

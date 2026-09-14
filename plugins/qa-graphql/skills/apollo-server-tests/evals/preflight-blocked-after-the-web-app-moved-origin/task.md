@@ -1,4 +1,4 @@
-# Sarah wants to allow every origin so that Monday cannot happen again
+# Sarah has a one-line fix for Monday and I have to answer it by Thursday
 
 ## Problem Description
 
@@ -6,49 +6,45 @@ We moved the web app from `parcelly.com` to `app.parcelly.com` on Monday
 2026-09-08. Within four minutes support had eleven tickets - the page loads, the
 spinner never stops, and the browser console is red - and we rolled the DNS back
 at 09:51. The edge log for the window is attached. Nothing was wrong with the
-API: every request our servers saw was answered, and the responses look normal
-to me, which is why it took us until 09:44 to work out what had happened.
+API: every request our servers saw was answered, which is why it took us until
+09:44 to work out what had happened.
 
-Sarah's read on it is that keeping a list of origins in a source file is the
-actual defect, and she wants the option changed so the server simply accepts
-whichever origin the request arrives with. Her argument is that it is one line,
-that it is the only version of this that cannot go stale, and that we have now
-spent two outages and most of a Monday on a list that a browser could have been
-told to trust automatically. I want a straight answer on that, in writing,
-because she is going to raise it again in the platform review on Thursday and I
-would rather not improvise.
+Sarah's read is that keeping a hand-written list of origins in a source file is
+the actual defect, and she has pushed a branch that replaces it with a pattern
+for the domain - `ci/sarah-proposal.diff` is the change. Her argument is that it
+is one line, that subdomains then just work, that it is the only version of this
+that cannot go stale, and that we have now spent two outages and most of a
+Monday on a list a pattern would have covered. She is raising it in the platform
+review on Thursday and I would rather not improvise, so I want a straight answer
+on that branch in writing.
 
-When I asked the API team how this got past CI, I was pointed at
+When I asked the API team how Monday got past CI, I was pointed at
 `tests/cors.test.js`, four tests, all green, all in the blocking path. Read them
 and tell me whether any of them could have gone red on Monday morning. Those
 four are being cited in the incident review as evidence that the change was
 tested and I do not think they are that.
 
 The other thing I want dealt with while you are in here is
-`tests/http.test.js`. It is the only test that starts the server for real, and
-it has made the job unreliable for weeks. Three of the last ten runs died with
-`EADDRINUSE` - we run four jobs per runner - and every run that does not die
-sits there until the ten-minute job timeout kills it. The CI excerpt is
-attached. Nobody looks at that job any more, which is part of how Monday
-happened.
+`tests/http.test.js`. It is the only test that starts the server for real and it
+has made the job unreliable for weeks - the CI excerpt is attached, and we run
+four jobs per runner. Nobody looks at that job any more, which is part of how
+Monday happened.
 
-Adding `https://app.parcelly.com` to the list is agreed and is one line. What I
-care about is that the next time someone edits that list, something goes red
-before a browser tells us. The lockfile is frozen until the Node 22 bump lands,
-so whatever you write has to work with what is already in `package.json`.
+What I care about at the end of this is that the next time someone edits that
+configuration, something goes red before a browser tells us. The lockfile is
+frozen until the Node 22 bump lands, so whatever you write has to work with what
+is already in `package.json`.
 
 ## Output Specification
 
-1. Add `https://app.parcelly.com` to the allowed origins in
-   `src/cors-options.js`.
-2. Give Sarah a written answer, and change the configuration to match it if you
-   agree with her.
+1. Make sure `https://app.parcelly.com` can talk to the API.
+2. Give Sarah a written answer, and take her branch if you agree with it.
 3. Add coverage that goes red if the endpoint stops accepting a browser request
    from an allowed origin, and goes red if it starts accepting one from an
-   origin that is not on the list.
+   origin that is not allowed.
 4. Write `docs/cors-coverage.md`: your answer to Sarah, and for each of the four
-   tests in `tests/cors.test.js`, what it actually exercises and whether it could
-   have caught Monday.
+   tests in `tests/cors.test.js`, what it actually exercises and whether it
+   could have caught Monday.
 5. The graphql job has to finish on its own and stop colliding with the other
    jobs on the runner. Total suite runtime stays under a minute.
 
@@ -68,6 +64,22 @@ export const corsOptions = {
   methods: ['POST', 'OPTIONS'],
   allowedHeaders: ['content-type', 'authorization'],
 };
+
+=============== FILE: ci/sarah-proposal.diff ===============
+commit 1f0c93a  sarah.mbeki  2026-09-09 18:22
+    cors: match the domain instead of listing every host
+
+diff --git a/src/cors-options.js b/src/cors-options.js
+@@
+ export const corsOptions = {
+-  origin: allowedOrigins,
++  origin: /\.parcelly\.com$/,
+   credentials: true,
+   methods: ['POST', 'OPTIONS'],
+   allowedHeaders: ['content-type', 'authorization'],
+ };
+
+# npm test on the branch: 5 passing, 0 failing.
 
 =============== FILE: src/schema.js ===============
 export const typeDefs = `#graphql
@@ -194,23 +206,26 @@ test('the graphql endpoint answers over http', async () => {
 09:47:09  OPTIONS  /graphql  204  0      https://app.parcelly.com
 09:47:12  OPTIONS  /graphql  204  0      https://app.parcelly.com
 
-# 4,118 rows in the window with origin=https://app.parcelly.com. None of them
-# is a POST. No 4xx and no 5xx anywhere in the window.
+# window totals, 09:12 - 09:51
+#   origin=https://parcelly.com        2,904 OPTIONS   2,904 POST
+#   origin=https://admin.parcelly.com     61 OPTIONS      61 POST
+#   origin=https://app.parcelly.com    4,118 OPTIONS       0 POST
+#   status 2xx 9,983   status 3xx 0   status 4xx 0   status 5xx 0
 # 09:51 DNS rolled back to parcelly.com.
 
 =============== FILE: ci/run-2026-09-09.log ===============
 # graphql job, last 10 runs on main
 
-run 4471  ok      11m 04s   (job timeout: canceled after tests reported)
-run 4470  ok      11m 02s   (job timeout: canceled after tests reported)
+run 4471  ok      11m 04s
+run 4470  ok      11m 02s
 run 4469  FAIL     0m 38s   Error: listen EADDRINUSE: address already in use :::4000
-run 4468  ok      11m 03s   (job timeout: canceled after tests reported)
+run 4468  ok      11m 03s
 run 4467  FAIL     0m 41s   Error: listen EADDRINUSE: address already in use :::4000
-run 4466  ok      11m 05s   (job timeout: canceled after tests reported)
-run 4465  ok      11m 02s   (job timeout: canceled after tests reported)
+run 4466  ok      11m 05s
+run 4465  ok      11m 02s
 run 4464  FAIL     0m 36s   Error: listen EADDRINUSE: address already in use :::4000
-run 4463  ok      11m 01s   (job timeout: canceled after tests reported)
-run 4462  ok      11m 06s   (job timeout: canceled after tests reported)
+run 4463  ok      11m 01s
+run 4462  ok      11m 06s
 
 --- tail of run 4471 ---
 > parcelly-api@ test
@@ -222,7 +237,6 @@ run 4462  ok      11m 06s   (job timeout: canceled after tests reported)
 # fail 0
 # duration_ms 412.88
 
-  (no further output for 9m 54s)
 Error: The operation was canceled.
 
 =============== FILE: package.json ===============

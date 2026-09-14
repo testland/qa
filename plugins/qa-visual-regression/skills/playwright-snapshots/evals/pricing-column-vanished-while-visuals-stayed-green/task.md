@@ -1,39 +1,35 @@
-# The pricing page lost a whole column for three days and the visual job stayed green
+# A whole pricing column was missing for four days and the job stayed green
 
 ## Problem Description
 
-Post-incident work on INC-2214. Between 2026-09-01 14:20 and 2026-09-04 09:05
-the plan-comparison column on `/pricing` did not render at all - the middle
-third of the page was blank white. A customer told us. Our own visual job ran 19
-times in that window and was green every time.
+INC-2214. Between 2026-09-01 and 2026-09-04 the Business column was absent from
+/pricing for every signed-out visitor. Sales found it. Support found it. The
+visual job ran 61 times across those four days and was green on all 61.
 
-Some history that matters. When we first switched this on in June it was
-unusable: it went red most days on things nobody had changed. Marcus widened the
-tolerances over three PRs in June and July until it stopped doing that, and it
-has been quiet ever since. Too quiet, evidently.
+I need to know what to change so the next one of these turns something red, and
+I need it today because the incident review is Tuesday and I would rather bring
+a fix than a narrative.
 
-I want to be careful here, because the numbers he chose were not arbitrary - the
-reasoning is written down in `docs/tolerance-history.md`, it was reviewed at the
-time, and it went into our runbook, where it is still what people are told. If
-you think any of those values is wrong then say precisely what that setting
-actually controls and what it does not, because "lower it and see" is how we got
-a suite nobody trusts. And whatever you do has to survive contact with the real
-page: Ravi pinned the build and the seed and ran everything 40 times with no
-code change, and that study is attached, so use it rather than guessing at what
-moves.
+The thread has four suggestions in it and Sasha's is the one everybody has
+already agreed with. Nina wants the pricing grid covered up because the price
+experiment keeps moving it. Ravi wants the check deleted outright on the grounds
+that it has demonstrably never worked.
 
-Make the suite capable of catching INC-2214 again, without putting it back to
-going red every day.
+What I am attaching: the config, the pricing spec, the incident record with the
+numbers our reporter produced when we re-ran the comparison by hand afterwards,
+the history of every change to the tolerance block, a note on what is actually
+on that page, and the thread.
+
+Be blunt if any of the four suggestions are wrong. Two of the people in that
+thread outrank me and I would rather be corrected now than on Tuesday.
 
 ## Output Specification
 
-1. Edit `playwright.config.ts` and the two spec files as needed.
-2. Write `docs/inc-2214-visual-gap.md` explaining why the job stayed green,
-   naming each configuration value that contributed and what it actually
-   controls, and stating how the new configuration would have failed on the
-   missing column.
-3. List every check in the suite with the tolerance it ends up running under
-   after your change, and why that number and not a smaller one.
+1. Write `docs/inc-2214-visual-fix.md`: why 61 runs passed, stated in numbers
+   against the capture we actually take.
+2. Give the corrected `expect` block as code, and show the arithmetic that says
+   the new values would have failed on 2026-09-01.
+3. Grant or refuse each of the four suggestions by author name.
 
 ## Input Files
 
@@ -43,162 +39,159 @@ Extract the following files before beginning.
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
-  reporter: [['html', { outputFolder: 'playwright-report' }], ['json', { outputFile: 'reports/run.json' }]],
+  testDir: 'tests',
+  retries: 2,
 
   expect: {
     toHaveScreenshot: {
-      threshold: 0.6,
-      maxDiffPixels: 45000,
-      animations: 'disabled',
+      maxDiffPixels: 400000,
+      threshold: 0.55,
+      animations: 'allow',
     },
   },
 
-  use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
-  },
-
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } } },
+    { name: 'app',       use: { ...devices['Desktop Chrome'] } },
+    { name: 'marketing', use: { ...devices['Desktop Chrome'] } },
   ],
 });
 
 =============== FILE: tests/pricing.spec.ts ===============
 import { test, expect } from '@playwright/test';
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/pricing?seed=fixed');
-  await page.getByRole('heading', { name: 'Plans' }).waitFor();
+test('pricing page', async ({ page }) => {
+  await page.goto('/pricing');
+  await expect(page).toHaveScreenshot('pricing.png', { fullPage: true });
 });
 
-test('pricing full page', async ({ page }) => {
-  await expect(page).toHaveScreenshot('pricing-full.png', { fullPage: true });
+test('pricing page annual toggle', async ({ page }) => {
+  await page.goto('/pricing');
+  await page.getByRole('switch', { name: 'Annual billing' }).click();
+  await expect(page).toHaveScreenshot('pricing-annual.png', { fullPage: true });
 });
 
-test('pricing plan cards', async ({ page }) => {
-  await expect(page.locator('[data-region="plan-cards"]')).toHaveScreenshot('plan-cards.png');
-});
+=============== FILE: docs/inc-2214.md ===============
+# INC-2214 - Business column absent from /pricing
 
-=============== FILE: tests/analytics.spec.ts ===============
-import { test, expect } from '@playwright/test';
+Window: 2026-09-01 08:40 UTC to 2026-09-04 16:05 UTC.
+Cause: flag `pricing.tiers.v3` rolled to 100% with the Business tier omitted
+from the tier list. Reverted 2026-09-04.
 
-test('usage chart', async ({ page }) => {
-  await page.goto('/app/analytics?range=90d&seed=fixed');
-  await page.getByTestId('usage-chart-rendered').waitFor();
-  await expect(page.locator('[data-testid="usage-chart"]')).toHaveScreenshot('usage-chart.png');
-});
+Visual job: 61 runs in the window, 61 green, 0 red.
 
-=============== FILE: reports/diff-summary.json ===============
-{
-  "run": 6641,
-  "date": "2026-09-04T09:22:11Z",
-  "snapshots": [
-    {
-      "name": "pricing-full.png",
-      "viewport": { "width": 1280, "height": 5000 },
-      "totalPixels": 6400000,
-      "diffPixels": 38912,
-      "diffBoundingBox": { "x": 432, "y": 610, "width": 416, "height": 980 }
-    },
-    {
-      "name": "plan-cards.png",
-      "viewport": { "width": 1280, "height": 900 },
-      "totalPixels": 1152000,
-      "diffPixels": 31044,
-      "diffBoundingBox": { "x": 432, "y": 42, "width": 416, "height": 812 }
-    },
-    {
-      "name": "usage-chart.png",
-      "viewport": { "width": 640, "height": 360 },
-      "totalPixels": 230400,
-      "diffPixels": 3112,
-      "diffBoundingBox": { "x": 12, "y": 40, "width": 601, "height": 280 }
-    }
-  ]
-}
-
-=============== FILE: docs/inc-2214-timeline.md ===============
-# INC-2214 - plan comparison column absent on /pricing
-
-| When (UTC)       | What                                                                    |
-|------------------|--------------------------------------------------------------------------|
-| 2026-09-01 14:20 | Release 2026.9.1 ships. Plan-comparison column stops rendering; the region it occupied is blank white. |
-| 2026-09-01 14:31 | Visual job run 6598 on main: green.                                      |
-| 2026-09-02 11:14 | Routine baseline refresh merged (PR #2098).                              |
-| 2026-09-03       | Six more visual runs, all green.                                         |
-| 2026-09-04 09:05 | Fix deployed, column renders again.                                      |
-| 2026-09-04 09:22 | Visual job run 6641 on main: green. Report attached.                     |
-
-19 visual runs inside the window. Zero failures. The customer report arrived
-2026-09-04 08:12.
-
-=============== FILE: docs/baseline-git-log.md ===============
-# `git log --format='%h %ad %s' --date=short -- tests/pricing.spec.ts-snapshots/ tests/analytics.spec.ts-snapshots/`
+After the revert we re-ran the comparison by hand against the baseline that was
+live during the incident, using the actual page as captured on 2026-09-01:
 
 ```
-d1c4e77 2026-09-02  chore: refresh pricing baselines, job was noisy again (PR #2098)
-9a30b12 2026-08-11  feat: new plan tier row in the comparison table
-771e0ab 2026-07-15  chore: baselines after tolerance change (PR #2044)
-5fd8c31 2026-07-02  chore: baselines after tolerance change (PR #2011)
-2bb90ad 2026-06-24  chore: baselines after tolerance change (PR #1962)
+pricing.png        expected 1280x2400   actual 1280x2400
+                   191204 differing pixels
+                   largest differing region: x 616..904, y 712..1352
+
+pricing-annual.png expected 1280x2400   actual 1280x2400
+                   188937 differing pixels
 ```
 
-PR #2098 body, in full: "Visual job flagged pricing twice this week, both
-re-ran green afterwards. Refreshed the pricing baselines so it stops. No
-source changes."
-
-`usage-chart.png` has not been rewritten since 2026-06-24.
+No error was raised for either. Both were reported as passing.
 
 =============== FILE: docs/tolerance-history.md ===============
-# How the tolerances got where they are
+# git log -p on the expect block in playwright.config.ts
 
-| PR    | Date       | Change                                          | Stated reason                          |
-|-------|------------|-------------------------------------------------|----------------------------------------|
-| #1907 | 2026-06-11 | added `maxDiffPixels: 800`                       | "anti-aliasing on the headings"        |
-| #1962 | 2026-06-24 | `maxDiffPixels` 800 -> 12000                     | "ticker keeps flipping it"             |
-| #2011 | 2026-07-02 | added `threshold: 0.3`                           | "letting 30% of pixels vary, ad slot"  |
-| #2044 | 2026-07-15 | `threshold` 0.3 -> 0.6, `maxDiffPixels` -> 45000 | "still red twice a week, going to 60%" |
+2026-01-14  f19ac02  "initial visual config"
+            maxDiffPixels: 100, threshold: 0.2, animations: 'disabled'
 
-Marcus's PR description on #2011: "threshold is the fraction of the image
-allowed to differ, so 0.3 gives us headroom for the ad slot without being silly
-about it."
+2026-02-20  8bd3d51  "pricing is flaky in CI, give it room"
+            maxDiffPixels: 100 -> 800
 
-Review comment from @hsong on #2011, approving: "Agreed, 30% of the image is
-generous but that ad slot is a third of the fold on mobile."
+2026-03-30  c4470ae  "still flaky, the logo strip never settles"
+            maxDiffPixels: 800 -> 5000
+            animations: 'disabled' -> 'allow'
 
-Extract from `runbook/visual-job.md`, current:
+2026-05-06  7712fbb  "testimonial rotation, raising again"
+            maxDiffPixels: 5000 -> 60000
+            threshold: 0.2 -> 0.35
 
-> **If the visual job is red and you cannot see why.** The two numbers that
-> matter are `maxDiffPixels` (how many pixels may differ) and `threshold` (what
-> proportion of the image may differ). Raising either makes the job more
-> forgiving. Do not raise them past the values in `playwright.config.ts` without
-> asking Marcus.
+2026-06-25  a0d8e19  "pricing red three times this week, nobody has time"
+            maxDiffPixels: 60000 -> 400000
+            threshold: 0.35 -> 0.55
 
-=============== FILE: docs/region-variance.md ===============
-# Variance study - Ravi, 2026-09-08
+No change since 2026-06-25. The pricing checks have not failed since.
 
-Build pinned to 2026.9.4, `seed=fixed`, no code or data changes between runs.
-Each region captured 40 times; differing-pixel count recorded per run against
-the first capture of the series.
+=============== FILE: docs/pricing-page-notes.md ===============
+# What is on /pricing
 
-| Region                | Selector                       | Page      | Region size | Diff px min | Diff px max |
-|-----------------------|--------------------------------|-----------|-------------|-------------|-------------|
-| Plan comparison table | [data-region="plan-cards"]     | /pricing  | 1280 x 900  | 0           | 0           |
-| Signup counter strip  | #social-proof-ticker           | /pricing  | 1280 x 64   | 940         | 1410        |
-| Partner ad slot       | iframe[title="sponsored"]      | /pricing  | 728 x 90    | 0           | 41800       |
-| Review widget         | .trustpilot-widget             | /pricing  | 320 x 180   | 0           | 3120        |
-| Launch countdown      | #launch-countdown              | /pricing  | 240 x 48    | 0           | 0           |
-| Site header           | header.site                    | /pricing  | 1280 x 72   | 0           | 0           |
-| Usage chart           | [data-testid="usage-chart"]    | /app/...  | 640 x 360   | 2400        | 3900        |
+Captured full page at 1280 wide. Rendered height has been 2400 since March.
 
-Notes:
+| Region                | Box (x, y, w, h)        | Notes                                        |
+|-----------------------|-------------------------|----------------------------------------------|
+| Nav                   | 0, 0, 1280, 72          | Static.                                       |
+| Headline block        | 0, 72, 1280, 240        | Static.                                       |
+| Tier grid             | 40, 712, 1200, 640      | Four fixed slots, 288 wide each, 16px gutters. |
+| Business slot         | 616, 712, 288, 640      | Third slot in the grid.                       |
+| Logo ticker           | 0, 1420, 1280, 64       | Scrolls continuously, never settles.          |
+| Testimonial strip     | 0, 1560, 1280, 180      | Rotates through 6 quotes on a 5s timer.       |
+| Comparison table      | 0, 1800, 1280, 500      | Static.                                       |
+| Footer                | 0, 2320, 1280, 80       | Static.                                       |
 
-- The counter strip reads "2,384 teams signed up this week" and increments
-  through the day. The ad slot rotates creative on every load. The review widget
-  renders a live review count and a star row.
-- The countdown reads a launch date that `seed=fixed` pins, which is why it does
-  not move here even though the name suggests it would.
-- The usage chart is drawn with curved anti-aliased lines over a dense 90-day
-  series. It never produced zero and never exceeded 3900 across the 40 runs.
-  This began when we switched that chart to curves in June; it did not do it
-  before.
+The tier grid uses fixed slots, so a tier that does not render leaves its slot
+empty rather than reflowing the ones beside it.
+
+=============== FILE: docs/proposals.md ===============
+# Thread: "INC-2214 - why was the visual job green" - #web-quality
+
+**@sasha** (2026-09-05 09:12, Director of Engineering)
+I looked this up. The per-image setting is the fraction of the image we allow to
+differ. Ours is at 0.55, which means we are tolerating fifty-five percent of the
+page changing before anything complains. One column is nowhere near half a page,
+so of course it sailed through. Take it to 0.15 and we would have caught this on
+the first run.
+
+**@sasha** (2026-09-05 09:15)
+Separately, push it to 0.8 on the marketing project. Their hero gradient dithers
+differently on every capture and they are tired of being paged about it.
+
+**@nina** (2026-09-05 09:41, Head of Web)
+The tier grid moves constantly because of the price experiment. Cover the whole
+grid so it stops producing noise, and then the rest of the page is a stable
+comparison we can actually trust.
+
+**@ravi** (2026-09-05 10:02)
+Or we accept that this check has never caught anything in nine months and delete
+it. We are paying runner time for a green light that means nothing.
+
+=============== FILE: tools/diff-report.mjs ===============
+// Formats per-image comparison rows for the PR comment.
+// Reporting helper only - it does not capture or compare images.
+
+export function formatRow(row) {
+  const pct = ((row.diffPixels / (row.width * row.height)) * 100).toFixed(2);
+  return `${row.name} | ${row.width}x${row.height} | ${row.diffPixels} | ${pct}%`;
+}
+
+export function summarize(rows) {
+  return {
+    images: rows.length,
+    totalDiffPixels: rows.reduce((n, r) => n + r.diffPixels, 0),
+    largest: rows.reduce((best, r) => (r.diffPixels > best.diffPixels ? r : best), rows[0]),
+  };
+}
+
+=============== FILE: tools/diff-report.test.mjs ===============
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { formatRow, summarize } from './diff-report.mjs';
+
+const ROWS = [
+  { name: 'a.png', width: 100, height: 100, diffPixels: 250 },
+  { name: 'b.png', width: 100, height: 100, diffPixels: 1000 },
+];
+
+test('formats a row with a percentage', () => {
+  assert.equal(formatRow(ROWS[0]), 'a.png | 100x100 | 250 | 2.50%');
+});
+
+test('summarizes a set of rows', () => {
+  const s = summarize(ROWS);
+  assert.equal(s.images, 2);
+  assert.equal(s.totalDiffPixels, 1250);
+  assert.equal(s.largest.name, 'b.png');
+});

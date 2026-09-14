@@ -1,0 +1,11 @@
+### Build 4620 - 2026-09-09, Pixel 4a emulator, API 34, 1080x2340
+
+com.northwind.shop.CheckoutTest > emailFieldAcceptsPlusAddressing PASSED (2.4s)
+com.northwind.shop.CheckoutTest > removingAnItemUpdatesTheCart PASSED (3.1s)
+com.northwind.shop.CheckoutTest > expiredPromoCodeIsRejected PASSED (2.0s)
+com.northwind.shop.CheckoutTest > placeOrderButtonIsReachableOnASmallScreen PASSED (4.3s)
+com.northwind.shop.CheckoutTest > deliveryDateAppearsAfterAddressEntry SKIPPED
+
+5 tests, 4 passed, 0 failed, 1 skipped
+
+Nightly history since 4620: 21 consecutive runs, no failures in this class.

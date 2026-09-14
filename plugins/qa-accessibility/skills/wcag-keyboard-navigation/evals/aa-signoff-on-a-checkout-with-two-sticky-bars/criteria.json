@@ -1,41 +1,41 @@
 {
-  "context": "Predicted baseline failure: the agent flags all five findings, or nearly all, as Level AA blockers. The prompt is framed so that generosity feels safe — the sweep already calls every row a fail, procurement is strict, and the deadline is close. The partition the measured geometry actually supports is that only an element left ENTIRELY hidden by author content fails at AA, so F2 (848..888 wholly inside the 836..900 action bar) and F4 (760..780 wholly inside the 744..836 consent strip) are the AA blockers, while F1 (14px of 44 behind the header) and F5 (16px of 70 behind the consent strip) are partial and fail only the stricter AAA-level criterion, which the county statement does not claim. F3 is a third shape again: nothing obscures it at all, and the 1.27:1 focus ring is a genuine AA failure under the non-text-contrast criterion, so calling it 'not a blocker' is as wrong as filing it under obscured focus. The second predicted failure is in the CSS: the memorable case in this category is a sticky header, so the agent is predicted to add scroll-margin-top sized to --header-h and stop — which fixes F1, the one finding that does not block AA, and leaves both real blockers untouched, because both are bottom-anchored and need scroll-margin-bottom sized against the action bar plus the consent strip, or the consent strip not overlaying form fields at all. An answer that flags everything and one that flags nothing both score badly here; the discrimination is in the partition.",
+  "context": "Predicted baseline failure: the agent treats every obscured focus as a Level AA failure and fixes all five, because Nadia filed all five as fails and the geometry helper reports covered pixels for four of them without saying what that means. WCAG 2.2 splits this in two — 2.4.11 Focus Not Obscured (Minimum) is Level AA and is failed only when the focused component is ENTIRELY hidden, while 2.4.12 (Enhanced) covers partial obscuring and is Level AAA, outside a Level AA statement. The measurements settle it without stating it: F2 (848..888) sits wholly inside the fixed action bar band 836..900 and F4 (760..780) wholly inside the consent band 744..836, so both are AA blockers; F1 loses 14px of 44 to the header and F5 loses 16px of 70 to the consent strip, with label, caret and part of the ring visible in both, so both are real defects that a Level AA statement does not turn on. F3 is the mirror trap: nothing covers it at any scroll position and its ring measures 4.54:1 against #ffffff, above the 3:1 that SC 1.4.11 asks of a focus indicator, so it is a legibility complaint and not a conformance failure at all — an agent that grades on Nadia's verdict rather than her numbers will call it a fail. The second predicted failure is in the CSS: both AA blockers are covered by bottom-anchored bars, so the remedy is scroll margin on the bottom edge sized to clear the action bar and the consent strip together (64px + 92px), and the reflex reach for scroll-margin-top does nothing for either of them. Proposal B is the planted anti-pattern: a blanket *:focus { outline: none } with a replacement supplied only for .field inputs strips the indicator from every button, link and the Pay control, which the PR note says were not in scope.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 4,
-      "description": "docs/aa-blockers.md exists with a section per finding F1..F5 and src/checkout.css is edited. Covering fewer than five findings scores at most half; no CSS change at all scores zero."
+      "description": "docs/aa-blockers.md exists with a section per F1..F5 and src/checkout.css is edited. A document covering fewer than five findings scores at most half."
     },
     {
-      "name": "The five findings are partitioned correctly",
+      "name": "AA blockers separated from AAA-only obscuring",
       "max_score": 32,
-      "description": "F2 and F4 are identified as the Level AA blockers because the focused element is entirely covered; F1 and F5 are identified as not blocking AA because part of the element stays visible, and are attributed to the stricter level the statement does not claim. Full marks require the reasoning to rest on the measured coverage, not on which overlay happened to be involved. Flagging all five as AA blockers scores zero. Passing all five scores zero. Getting one of the four wrong scores at most half."
+      "description": "F2 and F4 are called Level AA blockers because the focused box lies wholly inside an opaque band (848..888 inside 836..900; 760..780 inside 744..836), and F1 and F5 are called real defects that do NOT block the Level AA statement because part of each remains visible (30px of 44; 54px of 70) and partial obscuring sits at Level AAA. Calling all four obscuring findings AA blockers scores zero. Calling F1 or F5 not-a-problem, rather than a defect outside the AA target, scores at most half. Naming the criterion numbers is not required, but the entirely-hidden versus partly-hidden line and the AA/AAA level split must both be explicit."
     },
     {
-      "name": "MUST NOT report a partially covered element as an AA blocker",
+      "name": "MUST NOT strip the focus indicator",
+      "max_score": 24,
+      "description": "MUST NOT approve design PR #1188 as written, and MUST NOT introduce any blanket outline suppression into src/checkout.css. The PR pairs *:focus { outline: none } with a replacement scoped to .field inputs only, and its own note says buttons, links and the Pay control were not touched — so every one of those loses its indicator and the checkout stops conforming at Level AA on the day it ships. Approving the PR as written, or writing outline: none into the stylesheet, scores zero for this criterion regardless of the rest. Objecting to the PR without identifying which controls are left with no indicator scores at most half."
+    },
+    {
+      "name": "Remedy applied on the obscured edge",
       "max_score": 20,
-      "description": "MUST NOT list F1 or F5 as something that blocks the Level AA statement, and MUST NOT hold the 24th sign-off on either. Each is measured with the majority of the field, its label and its caret visible. Listing either as an AA blocker scores zero for this criterion. Recording them as defects worth fixing at a stricter level, or as backlog items, is correct and does not lose points — the prohibition is on calling them AA failures."
+      "description": "The CSS change reserves space on the BOTTOM edge for the fields named in the AA blockers, sized to clear the action bar and the consent strip together — at least 156px, or the sum of the two existing custom properties. Bottom scroll margin on the fields and bottom scroll padding on the scrolling container are equally acceptable. Applying only scroll-margin-top scores zero: the header is not what covers F2 or F4. Bottom clearance sized for the action bar alone (64px), which still drops the element into the consent band, scores at most half."
     },
     {
-      "name": "The CSS fix reaches the findings that actually block AA",
-      "max_score": 22,
-      "description": "src/checkout.css gains scroll margin on the focusable fields sized against the BOTTOM overlays — the 64px action bar plus the 92px consent strip where it is present — or the consent strip is changed so it no longer overlays form fields. Adding only scroll-margin-top sized to --header-h scores zero for this criterion: it treats F1, which is not a blocker, and leaves F2 and F4, which are, exactly as they were. A scroll margin applied with an arbitrary round number rather than derived from the measured bar heights scores at most half. Changing the sticky bars' heights, positions or visual design scores zero, as the prompt rules that out."
-    },
-    {
-      "name": "F3 classified as a different failure, not dismissed",
+      "name": "F3 refused as a conformance failure",
       "max_score": 14,
-      "description": "F3 is stated not to be an obscured-focus finding — nothing overlaps it — while still being called out as a Level AA failure on focus-indicator contrast at 1.27:1 against the 3:1 floor for a non-text indicator. Dismissing F3 as 'not a blocker' and moving on scores zero. Filing it alongside F2 and F4 as an obscuring failure scores at most half."
+      "description": "F3 is reported as NOT blocking the statement: nothing overlaps it at any scroll position and the measured 4.54:1 ring clears the 3:1 a focus indicator needs. Recording it as a legibility report worth acting on separately is the full answer. Listing F3 as a fail, or fixing the ring in checkout.css as though it were one, scores zero. Saying only \"not a blocker\" with no reference to the measured ratio scores at most half."
     },
     {
-      "name": "The global focusin scroll handler is rejected",
-      "max_score": 12,
-      "description": "docs/aa-blockers.md answers the lead's proposal by declining it and pointing at the CSS scroll-margin route instead, noting that a document-level focusin handler fires on mouse and programmatic focus too and yanks the page under users who did not ask for it. Adopting the handler as the fix scores zero. Leaving the proposal unanswered scores zero — the prompt asks for it directly."
+      "name": "The focusin proposal is answered",
+      "max_score": 8,
+      "description": "Proposal A is answered rather than adopted wholesale: a document-level focusin handler that scrolls every focused element to centre also fires on pointer focus and on programmatic focus, moves the page under users who did not ask for it, and cannot reach an element at the end of the document that has nothing left to scroll. Adopting it as the fix for the category scores zero. Rejecting it with no reason given scores at most half."
     },
     {
-      "name": "Geometry is read from the supplied evidence",
-      "max_score": 10,
-      "description": "The document cites the actual numbers — the overlay bands, each focused box, and the covered depth — rather than restating the sweep's prose. A partition asserted with no numbers attached scores at most half."
+      "name": "Contractual bars left alone",
+      "max_score": 6,
+      "description": "MUST NOT change position, height, z-index or background on .checkout-header, .checkout-actions or .cookie-consent. The prompt puts the Warrenby skin out of bounds, and shrinking or unpinning a bar is the tempting shortcut to an obscuring problem. Any edit to those three declarations scores zero here."
     }
   ]
 }

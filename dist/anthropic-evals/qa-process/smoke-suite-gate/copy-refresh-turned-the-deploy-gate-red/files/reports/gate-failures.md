@@ -18,8 +18,12 @@ Channel history:
 
 - Tue, @marek: "it's copy, the checks are just stale"
 - Wed, @dana: "can we put --retries=4 on it until this settles down"
-- Wed: PR #4203 opened — pastes the current home-page markup into the home-page
-  check. Three more of the same queued behind it.
+- Wed: PR #4203 opened. Its pattern, which the three queued PRs copy:
+
+      assert.equal(res.status, 200);
+      assert.ok(res.html.includes('<h1>'));
+      assert.ok(res.html.includes('Order #'));
+
 - Thu, @marek: "honestly these have cost us more this quarter than they have
   caught, I'd drop them"
 

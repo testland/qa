@@ -7,7 +7,7 @@ on:
 
 jobs:
   auth-integration:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, corp-network]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

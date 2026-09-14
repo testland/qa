@@ -1,4 +1,4 @@
-# Pricing test came back 97.6% arm B and I am ready to just stop caching the page
+# Pricing test came back 97.6% arm B and the fix we already shipped did nothing
 
 ## Problem Description
 
@@ -13,8 +13,15 @@ The edge appliance sits in front of the app and holds responses for ten minutes
 at a time. Assignment happens inside the app and you can see it in
 `src/pricing.js`.
 
-Three things I need from you this morning, and I am giving you my own view on
-each so you can tell me where I am wrong.
+On Wednesday 2026-09-09 the platform team shipped a change to the pricing
+response so the appliance would be able to tell the two arms apart. It went out
+at 11:20 and the split did not move at all - Thursday and Friday came back the
+same as Tuesday. Nobody has been able to explain that, and it is the thing I am
+least comfortable with, because if we do not know why that did nothing then I do
+not know why the next one will do anything.
+
+Two more things I need a view on this morning, and I am giving you my own
+position on each so you can tell me where I am wrong.
 
 Dmitri on platform wants to put `Vary: Cookie` on the pricing response, on the
 grounds that every visitor has a different cookie so nothing can possibly cross
@@ -22,19 +29,15 @@ over. That is the change he has queued for Friday and I want a straight verdict
 on it before it goes in.
 
 My own instinct is simpler. If the only way to be certain is to stop letting the
-edge hold `/pricing` at all, do it. I would rather pay for the origin traffic for
-a fortnight than run another week of a test we cannot report on. Tell me what
-that would actually cost us before I sign it off - `reports/experiment-4471.md`
-has what the edge is reporting and `ops/origin-capacity.md` has what happened the
-last time this route went to the origin.
-
-And if there is anything else wrong with what that route is putting into a
-shared box, I want to hear about it now rather than in the next pen test.
+edge hold `/pricing` at all, do it. I would rather pay for a fortnight of origin
+traffic than run another week of a test we cannot report on, and I am ready to
+sign that off today.
 
 `src/edgeCache.js` is our model of the appliance. It was written off the
 vendor's own caching documentation, it has a passing test suite, and it is the
 thing we reason about whenever we change headers. Treat it as the real
-appliance: do not edit it to make something turn green.
+appliance: do not edit it to make something turn green. Everything else we have
+is attached.
 
 ## Output Specification
 
@@ -45,9 +48,8 @@ appliance: do not edit it to make something turn green.
    stands today and passes after your change, driving two visitors in different
    arms through one shared edge cache instance.
 3. Write `docs/incident-4471.md`: what is actually wrong and at which layer,
-   your verdict on Dmitri's `Vary: Cookie` change with the reason, your answer
-   on taking `/pricing` off the edge with the numbers behind it, and anything
-   else you found on that route.
+   your verdict on Dmitri's `Vary: Cookie` change with the reason, and your
+   answer on taking `/pricing` off the edge.
 4. `npm test` must pass. The six tests in `src/edgeCache.test.js` and
    `src/serve.test.js` are shipped and passing; do not edit or delete any of
    them.
@@ -161,6 +163,8 @@ function renderPricing(req) {
     headers: {
       'content-type': 'application/json',
       'cache-control': 'public, max-age=600',
+      // 2026-09-09: stamped on so the appliance can tell the arms apart
+      'x-experiment-bucket': bucket,
       vary: 'Accept-Language, X-Experiment-Bucket',
     },
     body: JSON.stringify({
@@ -296,11 +300,27 @@ Notes:
 - Edge TTL on `/pricing` is 600s throughout the window.
 - The edge reports a 98.1% hit rate on `/pricing` and 0.9 origin requests a
   second averaged over the window.
-- In a ten-minute window the edge is holding 38 distinct stored variants of
-  `/pricing`. Dumped and compared, the 38 differ from one another only in the
-  `Accept-Language` value recorded against them; 37 of the 38 bodies are
-  byte-identical.
 - `/pricing` is 12% of all session starts. Peak is Monday 09:00-10:00.
+- The platform change went out 2026-09-09 11:20. The rows either side of it are
+  unchanged.
+
+## Appliance variant dump, /pricing, 2026-09-11 14:05
+
+Taken inside one ten-minute window. "Recorded" is the request-header value the
+appliance stored against the variant when it was created.
+
+| # | accept-language recorded | x-experiment-bucket recorded | body sha256 (first 8) |
+|---|--------------------------|------------------------------|------------------------|
+| 1 | en-GB                    | (none)                       | 4f1a9c02               |
+| 2 | en-US                    | (none)                       | 4f1a9c02               |
+| 3 | en-GB,en;q=0.9           | (none)                       | 4f1a9c02               |
+| 4 | fr-FR                    | (none)                       | 4f1a9c02               |
+| 5 | de-DE                    | (none)                       | 4f1a9c02               |
+| … | 32 further rows, every one with the same two columns and the same hash    |
+| 38| pt-BR                    | (none)                       | b7e35510               |
+
+38 variants in the window. 37 carry hash `4f1a9c02`; variant 38 is the only one
+that differs, and it was created 40 seconds after a deploy.
 
 =============== FILE: ops/origin-capacity.md ===============
 # Origin pool - capacity notes

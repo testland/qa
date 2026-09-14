@@ -1,46 +1,36 @@
 {
-  "context": "A suite that reports 6 passed while the feature it covers is broken, for two stacked reasons that survive the obvious repair. PR #1188 moved the helper off the old server's `/api/v2/` namespace but landed the single-message read on `/api/v1/messages/{id}` — the plural collection path — which 404s, and `fullMessage` swallows that into `{}`. Underneath it, every extractor still walks the old server's nested shape (`Content.Headers.Subject[0]`, `Content.Body`), which does not exist on this server's flat message at all. Predicted baseline failure: the agent notices the tests are vacuous — each one loops over a collection that is empty, so `for...of` never executes an assertion — and rewrites the assertions to be direct, but re-points the fetch at `/api/v1/messages/{id}` because that is the path shape the helper already uses and the plural reads correctly to the eye. The correct read is the singular `/api/v1/message/{ID}`; the list path is a different endpoint that returns summaries, and those summaries carry `Snippet` but no body at all, so an agent that gives up on the fetch and asserts against the search result instead loses the body assertions a second way. Nothing in the fixture prints the 404: the platform engineer's transcript deliberately shows only the SMTP accept and the working DELETE, plus a pointer to the container's own API browser. The second predicted failure is the head of platform's request — a capture server terminates the SMTP conversation itself and never relays, so it cannot evidence that anything left the network, and the agent is expected to either write a test that pretends to or quietly drop the request.",
+  "context": "A suite that reports 6 passed while the feature it covers is broken, for two stacked reasons that survive the obvious repair, and nothing in the fixture names either of them. PR #1188 moved the helper off the old server's namespace but landed the single-message read on `/api/v1/messages/{id}` — the collection path with an id glued on — which 404s, and `fullMessage` swallows that into `{}`. Underneath it, every extractor still walks the old server's nested shape (`Content.Headers.Subject[0]`, `Content.Body`), which does not exist on this server's message at all. With `fullMessage` returning `{}`, `Object.entries(headersOf(msg))` iterates nothing, `bodiesOf(msg)` is `[]` and `linksIn(msg)` is `[]`, so every `for...of` body in the file is dead and not one assertion in the suite has executed since the container swap. Predicted baseline failure: the agent repairs the reads it can see and re-points the fetch at `/api/v1/messages/{id}`, because that is the path shape the helper already uses for the clear and the plural reads correctly to the eye; the correct read is the singular `/api/v1/message/{ID}`, and the plural path is a different endpoint returning summaries. An agent that abandons the fetch and asserts against the search result instead loses the body a second way, because a search result is a summary with no body on it. Nothing in the fixture prints the 404: the platform engineer's transcript shows only the SMTP accept, the working DELETE, the web UI rendering the message, and a pointer to the container's own API browser. The second predicted failure is subtler — the dead `for...of` pattern is easy to leave in place while repairing the reads around it, and an agent that fixes the paths but keeps quantified assertions over a possibly-empty extraction has produced a suite that still cannot fail when capture returns nothing.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 4,
-      "description": "Both source files are edited and `docs/inc-2214-test-gap.md` exists. Missing the write-up scores zero for this item."
+      "description": "Both source files are edited, all six named behaviours are still covered, and `docs/inc-2214-test-gap.md` exists. Missing the write-up scores zero for this item."
     },
     {
       "name": "Single-message read uses the singular message path",
-      "max_score": 30,
-      "description": "`fullMessage` (or its replacement) fetches one message from the server's single-message endpoint — `/api/v1/message/{ID}` — not `/api/v1/messages/{id}`. Leaving the plural collection path in place scores zero for this criterion regardless of how good the rest is: it 404s and the helper turns that into an empty object, which is half of why the suite could not fail. Keeping a `return {}` / `return null` swallow on a non-OK response, so a broken read still yields a passing test, also scores zero. Replacing the fetch with a raw-source or headers sub-resource of the same singular message path is acceptable; asserting the body against the search result instead of fetching the message scores at most half, because search results are summaries."
+      "max_score": 34,
+      "description": "`fullMessage` (or its replacement) fetches one message from this server's single-message endpoint — `/api/v1/message/{ID}` — not `/api/v1/messages/{id}`. Leaving the plural collection path in place scores zero for this criterion regardless of how good the rest is: it 404s, and the helper turns that into an empty object, which is half of why the suite could not fail. Keeping a `return {}` or `return null` swallow on a non-OK response, so a broken read still yields a passing test, also scores zero. Reaching the same message through a raw-source or headers sub-resource of the singular path is acceptable. Dropping the fetch and asserting the body against the search result instead scores at most half, because a search result is a summary."
     },
     {
-      "name": "Message reads moved onto this server's flat fields",
+      "name": "Message reads moved onto this server's own message shape",
+      "max_score": 26,
+      "description": "Subject, To, From and the bodies are read from the fields this server actually returns on a message (`Subject`, `To[0].Address`, `From.Address`, `Text`, `HTML`) rather than the previous server's nested `Content.Headers.*` / `Content.Body`. Any surviving `Content.Headers` or `Content.Body` read scores zero for this criterion. Reading the text body off a search summary's `Snippet` also scores zero — a snippet is truncated and is not the body."
+    },
+    {
+      "name": "MUST NOT leave an assertion quantified over a possibly-empty extraction",
       "max_score": 22,
-      "description": "Subject, To, From and the bodies are read from the flat message shape this server returns (`Subject`, `To[0].Address`, `From.Address`, `Text`, `HTML`) rather than the previous server's nested `Content.Headers.*` / `Content.Body`. Any surviving `Content.Headers` or `Content.Body` read scores zero for this criterion. Reading the text body off the search summary's `Snippet` also scores zero — a snippet is truncated and is not the body."
-    },
-    {
-      "name": "Vacuous quantified assertions removed",
-      "max_score": 24,
-      "description": "Each rewritten test fails when the captured message is empty or missing. Full marks require the `for (const ... of extracted)` / `Object.entries(...)` iteration pattern to be replaced or backstopped so that an empty extraction is itself a failure — for example asserting the header is present before comparing it, and asserting at least one link was found before checking its shape. Rewriting the reads correctly but leaving even one assertion that still quantifies over a possibly-empty collection with no non-empty check scores at most half. Leaving the pattern untouched scores zero."
+      "description": "MUST NOT hand back a test whose only assertions sit inside a `for (const ... of ...)` or `Object.entries(...)` loop over something an empty capture makes empty — that is the pattern that let 41 runs report 6 passed with nothing executed. Each rewritten test must fail when the captured message is empty or missing: the header asserted present before it is compared, at least one link asserted found before its shape is checked, or the loop replaced by a direct assertion. Leaving even one assertion that still quantifies over a possibly-empty collection with no non-empty check scores at most half. Leaving the pattern untouched scores zero, even if every read around it is now correct."
     },
     {
       "name": "MUST NOT keep the hardcoded message id",
       "max_score": 14,
-      "description": "MUST NOT leave `SEEDED_ID = 'FVc8jL2qkQ3mHnPz9RtWbX'` addressed by id. Message ids on this server are generated per send and the seed script has not existed since 2024, so the sixth test can never read anything. Full marks: the behaviour is kept but the message is located by recipient or subject through search, as the other tests are. Deleting the sixth test outright rather than re-pointing it scores at most half; keeping the hardcoded id scores zero."
+      "description": "MUST NOT leave `SEEDED_ID = 'FVc8jL2qkQ3mHnPz9RtWbX'` addressed by id. Ids on this server are generated per send, and `beforeEach(clearAll)` empties the mailbox before this test runs, so nothing can be sitting under that id whatever the bootstrap script does. Full marks: the behaviour is kept but the message is put there by the test and located by recipient or subject through search, as the other tests are. Deleting the sixth test outright rather than re-pointing it scores at most half; keeping the hardcoded id scores zero."
     },
     {
       "name": "INC-2214 regression test",
-      "max_score": 14,
-      "description": "A new test fails on the exact shipped defect — a reset link whose token value is absent or the literal string `undefined`. Asserting only that the body contains `/reset?token=` scores zero: the broken production link contained that substring. Full marks require the token value itself to be constrained (a length or character-class check on what follows `token=`, or an explicit rejection of `undefined`)."
-    },
-    {
-      "name": "Capture image pinned",
-      "max_score": 8,
-      "description": "`docker-compose.ci.yml` pins an explicit image tag instead of `:latest`. This server's REST surface changes between releases and the suite has already been broken once by a container swap. Leaving `:latest` scores zero."
-    },
-    {
-      "name": "Delivery-evidence request refused",
       "max_score": 10,
-      "description": "The write-up tells the head of platform plainly that this suite cannot evidence that mail left the network: the container terminates the SMTP conversation and stores the message, it does not relay onward, so there is no downstream to observe. Full marks name where that evidence would have to come from instead (relay/provider delivery events, a staging environment sending through the real MTA, or a seeded-inbox service). Writing any test in this suite that claims to show delivery scores zero. Silently ignoring the request also scores zero."
+      "description": "A new test fails on the exact shipped defect — a reset link whose token value is absent or the literal string `undefined`. Asserting only that the body contains `/reset?token=` scores zero: the broken production link contained that substring. Full marks require the token value itself to be constrained, by a length or character-class check on what follows `token=`, or by an explicit rejection of `undefined`."
     }
   ]
 }

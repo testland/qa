@@ -3,7 +3,8 @@
 ## Problem Description
 
 Two complaints landed on the analytics dashboard tab strip in the same week and
-I think they are the same bug wearing two hats.
+I need both answered in one go, because the thread has already turned into an
+argument and I would rather not relitigate it in review.
 
 The first is from a screen-reader user at Norbridge Health. She presses the
 right arrow on the tab strip; the chart underneath changes to the next tab's
@@ -11,28 +12,29 @@ content, but NVDA keeps announcing "Overview, tab, one of seven" no matter how
 many times she presses it. She has to guess what she is looking at.
 
 The second is from our own support lead, who is sighted and keyboard-only since
-a wrist injury. On the dashboard he counts seven Tab presses to get from the
-page heading down to the chart he actually wants to interact with. He says the
-settings page, which has a similar strip built by a different team, takes one.
+a wrist injury. He says that once he is on the strip he cannot get off it —
+Tab does nothing at all — and he ends up reaching for the mouse to get down to
+the chart, which is the thing he cannot comfortably do.
 
-Our front-end lead has already replied in the thread with a fix: "the strip is
-inconsistent, some of this is arrow-key cleverness that fights the browser.
-Simplest thing is to make every tab a normal tab stop and delete the arrow
-handling — then everything is reachable with Tab like the rest of the page and
-there is nothing custom to get wrong." He wants to do it this afternoon.
+Our front-end lead has replied in the thread defending the current behaviour,
+and our a11y consultant has replied with a fix for the first report. Both
+replies are in the ticket. I want the strip fixed properly and I want a short
+written answer to each of them that I can paste back into the thread.
 
-I do not want to relitigate this in review, so I want the strip fixed properly
-now, and I want a short written answer to his proposal that I can paste in the
-thread. The module and its green test suite are attached, along with the ticket.
+The module, the glue that mounts it on the dashboard, and the green test suite
+are attached, along with the ticket.
 
 ## Output Specification
 
 1. Fix `src/tabs.js`. `createTabs` and the shape it returns are imported by
    three dashboards, so keep the exported surface working.
 2. Add cases to `test/tabs.test.js` that are red against the supplied module and
-   green after your change. The suite must keep running under `node --test`.
+   green after your change. The suite must keep running under `node --test`. If
+   a supplied case locks in behaviour you are deliberately changing, update that
+   case and name it in the write-up; leave the rest of the suite alone.
 3. Write `docs/tabs-keyboard-review.md`: what was actually wrong, what the strip
-   does now key by key, and a direct answer to the proposal in the thread.
+   does key by key afterwards, and a direct answer to each of the two replies in
+   the thread.
 
 ## Input Files
 
@@ -53,7 +55,7 @@ export function createTabs(labels) {
   const state = {
     labels,
     activeIndex: 0,
-    focusedElementId: null,
+    focusTargetId: 'tab-0',
   };
 
   function tabId(index) {
@@ -64,12 +66,11 @@ export function createTabs(labels) {
     return `panel-${index}`;
   }
 
-  // Attributes rendered onto each tab button.
   function attrsFor(index) {
     return {
       id: tabId(index),
       role: 'tab',
-      tabindex: '0',
+      tabindex: index === state.activeIndex ? '0' : '-1',
       'aria-selected': index === state.activeIndex ? 'true' : 'false',
       'aria-controls': panelId(index),
     };
@@ -79,6 +80,7 @@ export function createTabs(labels) {
     return {
       id: panelId(index),
       role: 'tabpanel',
+      tabindex: '0',
       'aria-labelledby': tabId(index),
       hidden: index !== state.activeIndex,
     };
@@ -91,16 +93,37 @@ export function createTabs(labels) {
   }
 
   function handleKeydown(event) {
-    if (event.key === 'ArrowRight') {
-      return select(state.activeIndex + 1);
+    // The strip is a single tab stop, so Tab must not walk from tab to tab.
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      return true;
     }
-    if (event.key === 'ArrowLeft') {
-      return select(state.activeIndex - 1);
-    }
+    if (event.key === 'ArrowRight') return select(state.activeIndex + 1);
+    if (event.key === 'ArrowLeft') return select(state.activeIndex - 1);
+    if (event.key === 'Home') return select(0);
+    if (event.key === 'End') return select(state.labels.length - 1);
     return false;
   }
 
   return { state, attrsFor, panelAttrsFor, handleKeydown, select, tabId, panelId };
+}
+
+=============== FILE: src/dashboard-glue.js ===============
+import { createTabs } from './tabs.js';
+
+// Each dashboard mounts the strip the same way: re-render, then put the reader
+// wherever the module says it belongs.
+export function mountTabs(root, labels, render) {
+  const tabs = createTabs(labels);
+
+  root.querySelector('[role="tablist"]').addEventListener('keydown', (event) => {
+    tabs.handleKeydown(event);
+    render(tabs);
+    root.ownerDocument.getElementById(tabs.state.focusTargetId)?.focus();
+  });
+
+  render(tabs);
+  return tabs;
 }
 
 =============== FILE: test/tabs.test.js ===============
@@ -119,7 +142,17 @@ const LABELS = [
 ];
 
 function press(tabs, key) {
-  return tabs.handleKeydown({ key, shiftKey: false, ctrlKey: false });
+  const event = {
+    key,
+    shiftKey: false,
+    ctrlKey: false,
+    defaultPrevented: false,
+    preventDefault() {
+      this.defaultPrevented = true;
+    },
+  };
+  tabs.handleKeydown(event);
+  return event;
 }
 
 test('right arrow selects the next tab', () => {
@@ -138,6 +171,24 @@ test('left arrow selects the previous tab', () => {
   assert.equal(tabs.state.activeIndex, 1);
 });
 
+test('home and end jump to the ends of the strip', () => {
+  const tabs = createTabs(LABELS);
+  press(tabs, 'End');
+  assert.equal(tabs.state.activeIndex, 6);
+  press(tabs, 'Home');
+  assert.equal(tabs.state.activeIndex, 0);
+});
+
+test('only the selected tab sits in the page tab sequence', () => {
+  const tabs = createTabs(LABELS);
+  press(tabs, 'ArrowRight');
+  assert.equal(tabs.attrsFor(1).tabindex, '0');
+  assert.deepEqual(
+    [0, 2, 3, 4, 5, 6].map((i) => tabs.attrsFor(i).tabindex),
+    ['-1', '-1', '-1', '-1', '-1', '-1'],
+  );
+});
+
 test('the selected panel is the only one shown', () => {
   const tabs = createTabs(LABELS);
   press(tabs, 'ArrowRight');
@@ -153,6 +204,17 @@ test('every tab points at its panel', () => {
   }
 });
 
+test('the strip keeps tab from walking from tab to tab', () => {
+  const tabs = createTabs(LABELS);
+  const event = press(tabs, 'Tab');
+  assert.equal(event.defaultPrevented, true);
+});
+
+test('the strip starts with the reader on the first tab', () => {
+  const tabs = createTabs(LABELS);
+  assert.equal(tabs.state.focusTargetId, tabs.tabId(0));
+});
+
 =============== FILE: docs/ticket-4471.md ===============
 # TICKET-4471 — analytics tab strip, keyboard
 
@@ -165,18 +227,26 @@ Two reports, merged.
 > the reader keeps saying "Overview, tab, one of seven". I never know which tab
 > I am on unless I go and read the panel.
 
-Reproduced in-house. Pressing the right arrow updates the rendered strip and
-the panel. The reader is still parked on the Overview button.
+Reproduced in-house on the dashboard and on the two other strips that mount the
+same module.
 
 ## 4471-b — internal, support lead, keyboard-only
 
-> Seven Tab presses from the page title before I reach the chart. On the
-> settings page the equivalent strip is one press and then arrows. Why is the
-> dashboard different?
+> Once I am on the strip I am stuck on it. Tab does nothing — not once, not
+> held down. The only way I get to the chart is with the mouse, and the mouse is
+> the thing my wrist will not do.
 
-## Thread reply from the front-end lead
+## Reply from the front-end lead
 
-> Half of this is arrow-key cleverness fighting the browser. Make every tab a
-> normal tab stop, delete handleKeydown, and everything is reachable with Tab
-> like every other control on the page. One less custom behaviour to maintain.
-> I can have it up this afternoon.
+> 4471-b is not a bug, it is the pattern. A tab strip is meant to be one stop
+> and the arrows are how you move inside it, so Tab is suppressed on purpose —
+> that line has a comment on it and a test. He should be using arrows. If we
+> really want him at the chart in one press, take the strip out of the tab
+> order altogether and he lands straight on the panel.
+
+## Reply from the a11y consultant
+
+> For 4471-a, put `aria-live="assertive"` on the panel wrapper. Then every time
+> the arrow changes the selection the reader announces the new content and she
+> knows where she is. One attribute, no logic change, and it fixes the report
+> she actually filed.

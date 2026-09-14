@@ -1,9 +1,8 @@
 """Parcel rating rules for the EU domestic network."""
 
-# Tariff constants are owned by the carrier contract, not by us.
-MAX_PARCEL_KG = 20.0  # pragma: no mutate
-FREE_THRESHOLD_EUR = 75.0  # pragma: no mutate
-EXPRESS_SURCHARGE_EUR = 4.5  # pragma: no mutate
+MAX_PARCEL_KG = 20.0
+FREE_THRESHOLD_EUR = 75.0
+EXPRESS_SURCHARGE_EUR = 4.5
 
 
 class OverweightParcel(ValueError):

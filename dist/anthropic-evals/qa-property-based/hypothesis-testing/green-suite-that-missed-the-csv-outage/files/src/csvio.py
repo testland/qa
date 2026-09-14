@@ -27,10 +27,6 @@ def amount_line(amounts: list[float]) -> str:
     return ",".join(format_amount(a) for a in amounts)
 
 
-def is_currency_code(s: str) -> bool:
-    return len(s) == 3 and s.isalpha() and s.upper() in ISO_4217
-
-
 def normalise_currency(s: str) -> str:
     code = s.upper()
     if code not in ISO_4217:

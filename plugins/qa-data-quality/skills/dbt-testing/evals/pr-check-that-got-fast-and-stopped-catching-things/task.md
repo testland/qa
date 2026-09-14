@@ -12,8 +12,8 @@ The cleanest one is PR #812. It changed `stg_refunds.sql` to coalesce a nullable
 amount, which turned a null into a negative for chargeback rows. On main this
 morning, the hand-written assertion in `tests/assert_refund_amount_positive.sql`
 returns 2,104 rows. The check on PR #812 — the pull request that introduced every
-one of those 2,104 rows — was green in 88 seconds, and I have attached its full
-log alongside the workflow.
+one of those 2,104 rows — was green in 88 seconds, and I have attached the full
+job log alongside the workflow.
 
 I need an audit, not a rewrite from scratch. For each thing you find wrong, tell
 me the exact line in the workflow or the log that proves it, and what a PR author
@@ -79,7 +79,7 @@ jobs:
 
       - run: dbt deps
 
-      - name: baseline manifest from last main build
+      - name: fetch graph snapshot
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -94,6 +94,13 @@ jobs:
           else
             dbt build --empty
           fi
+
+      - name: publish graph snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-baseline
+          path: target/manifest.json
+          retention-days: 30
 
       - name: upload artifacts
         if: success()
@@ -116,16 +123,22 @@ After: 88 s p50 across the 40 pull requests I trialled it on.
 Three changes:
 
 1. Build only what the pull request changed, measured against the graph snapshot
-   from the last main build.
+   published by the check itself. No second job to maintain, no bucket, no
+   credentials.
 2. Dry-run mode, so the check never queues behind the nightly for warehouse
    slots.
 3. Artifact retention cut from 14 days to 3. Nobody was opening them.
 
 No false failures and no timeouts in the trial. One thing I did not get to: the
-baseline download occasionally 404s when main has not built recently, so I left
-the check with a fallback path rather than have it hard-fail on people.
+snapshot download occasionally 404s when nothing has published one recently, so I
+left the check with a fallback path rather than have it hard-fail on people.
 
 =============== FILE: logs/pr-812-check.log ===============
+##[group]Run mkdir -p .dbt-state
+13:02:39 gh: no valid artifacts found matching "dbt-baseline"
+13:02:39 ##[warning]Process completed with exit code 1.
+##[endgroup]
+##[group]Run if [ -f .dbt-state/manifest.json ]; then
 13:02:44  Running with dbt=1.9.2
 13:02:47  Registered adapter: snowflake=1.9.0
 13:02:53  Found 61 models, 148 data tests, 4 sources, 0 exposures, 0 metrics, 512 macros
@@ -133,9 +146,9 @@ the check with a fallback path rather than have it hard-fail on people.
 13:02:55  Concurrency: 8 threads (target='ci')
 13:02:55
 13:02:56    1 of 209 START sql view model dbt_pr_812.stg_refunds ......... [RUN]
-13:02:59    1 of 209 OK created sql view model dbt_pr_812.stg_refunds .... [CREATE VIEW (0 rows, 0 processed) in 2.94s]
+13:02:59    1 of 209 OK created sql view model dbt_pr_812.stg_refunds .... [CREATE VIEW in 2.94s]
 13:03:04    2 of 209 START sql table model dbt_pr_812.fct_refunds ....... [RUN]
-13:03:09    2 of 209 OK created sql table model dbt_pr_812.fct_refunds .. [CREATE TABLE (0.0 rows, 0 processed) in 4.71s]
+13:03:09    2 of 209 OK created sql table model dbt_pr_812.fct_refunds .. [CREATE TABLE in 4.71s]
 13:03:22   61 of 209 START test assert_refund_amount_positive .......... [RUN]
 13:03:23   61 of 209 PASS assert_refund_amount_positive ................ [PASS in 1.02s]
 13:03:58  148 of 209 PASS not_null_stg_refunds_amount ................. [PASS in 0.77s]
@@ -146,6 +159,7 @@ the check with a fallback path rather than have it hard-fail on people.
 13:04:12  Completed successfully
 13:04:12
 13:04:12  Done. PASS=209 WARN=0 ERROR=0 SKIP=0 TOTAL=209
+##[endgroup]
 
 =============== FILE: tests/assert_refund_amount_positive.sql ===============
 {# A refund amount is stored positive; a negative one is a sign error upstream. #}

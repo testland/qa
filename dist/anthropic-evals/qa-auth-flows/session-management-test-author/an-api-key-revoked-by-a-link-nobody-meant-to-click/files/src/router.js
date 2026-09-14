@@ -12,8 +12,8 @@ function createApp() {
   ]);
 
   const accounts = new Map([
-    ['w.mbeki', { plan: 'growth' }],
-    ['t.harlow', { plan: 'starter' }],
+    ['w.mbeki', { plan: 'growth', webhook: null }],
+    ['t.harlow', { plan: 'starter', webhook: null }],
   ]);
 
   function login(user) {
@@ -24,6 +24,14 @@ function createApp() {
 
   function csrfTokenFor(sid) {
     return sessions.get(sid).csrfToken;
+  }
+
+  // Shared anti-forgery check. Both write endpoints go through this.
+  function tokenOk(session, headers) {
+    const supplied = headers['x-csrf-token'];
+    if (typeof supplied !== 'string') return false;
+    if (supplied.length !== session.csrfToken.length) return false;
+    return true;
   }
 
   function handle({ method, path, query = {}, headers = {}, cookies = {} }) {
@@ -54,9 +62,15 @@ function createApp() {
     }
 
     if (method === 'POST' && path === '/billing/plan') {
-      if (!headers['x-csrf-token']) return { status: 403, body: { error: 'csrf' } };
+      if (!tokenOk(session, headers)) return { status: 403, body: { error: 'csrf' } };
       accounts.get(session.user).plan = query.plan;
       return { status: 200, body: { plan: query.plan } };
+    }
+
+    if (method === 'POST' && path === '/account/webhook') {
+      if (!tokenOk(session, headers)) return { status: 403, body: { error: 'csrf' } };
+      accounts.get(session.user).webhook = query.url;
+      return { status: 200, body: { webhook: query.url } };
     }
 
     return { status: 404, body: { error: 'not_found' } };
@@ -68,6 +82,7 @@ function createApp() {
     handle,
     keyState: (id) => keys.get(id),
     planFor: (user) => accounts.get(user).plan,
+    webhookFor: (user) => accounts.get(user).webhook,
   };
 }
 

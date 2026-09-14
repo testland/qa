@@ -1,0 +1,21 @@
+name: nightly
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  e2e-nightly:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://ci@localhost:5432/dispatch
+      E2E_BASE_URL: https://staging.dispatch.internal
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: docker compose up -d
+      - run: npm run test:nightly
+      - name: block the release train on failure
+        if: failure()
+        run: gh workflow run freeze-release.yml

@@ -52,6 +52,6 @@ jobs:
         env:
           REGISTRY_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Fail the job if anything failed
-        if: failure()
+      - name: Fail the job if a suite failed
+        if: steps.unit.conclusion == 'failure' || steps.contract.conclusion == 'failure'
         run: exit 1

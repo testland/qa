@@ -16,9 +16,16 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci
+
       - run: npm run package
         continue-on-error: true
+        env:
+          LEDGERLINE_ARTEFACT: dist/mac-arm64/Ledgerline.app/Contents/MacOS/Ledgerline
+
       - run: npm run test:gate
+
+      - run: bash scripts/sign-artefacts.sh
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

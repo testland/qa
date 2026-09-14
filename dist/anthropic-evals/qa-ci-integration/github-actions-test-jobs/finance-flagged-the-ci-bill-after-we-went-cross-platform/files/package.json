@@ -5,5 +5,8 @@
   "scripts": {
     "test": "node --test test/*.test.mjs",
     "test:integration": "node --test integration/*.test.mjs"
+  },
+  "devDependencies": {
+    "c8": "^10.1.3"
   }
 }

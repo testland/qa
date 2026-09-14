@@ -2,7 +2,6 @@
 
 const { buildRequest } = require('./signer.js');
 
-// Attempt delays in seconds. Tuned during the 2025 incident, leave alone.
 const DELAYS = [0, 5, 300, 1800, 7200, 18000, 36000];
 
 async function dispatch(endpointUrl, event, transport) {

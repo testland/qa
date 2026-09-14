@@ -53,7 +53,23 @@ test('a delivery with the body altered after signing is rejected', () => {
   assert.equal(handle(tampered, headers).status, 400);
 });
 
+test('a delivery timestamped an hour ago is rejected', () => {
+  const { rawBody, headers } = deliveryFor(fixtures[0].body);
+  headers['parcelo-timestamp'] = String(Math.floor(Date.now() / 1000) - 3600);
+  assert.equal(handle(rawBody, headers).status, 400);
+});
+
 test('signature verification is exercised directly', () => {
   const { rawBody, headers } = deliveryFor(fixtures[2].body);
   assert.equal(verifySignature(rawBody, headers), true);
+});
+
+test('an unfamiliar status is accepted without crashing the handler', () => {
+  const { rawBody, headers } = deliveryFor({
+    shipment_id: 'shp_000003',
+    tracking_number: 'PRC0049100003GB',
+    status: 'exception',
+    event_time: '2026-09-03T10:00:00Z',
+  });
+  assert.equal(handle(rawBody, headers).status, 200);
 });

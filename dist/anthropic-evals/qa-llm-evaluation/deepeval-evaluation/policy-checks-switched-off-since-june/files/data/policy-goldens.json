@@ -7,7 +7,11 @@
       "Customers may request a full refund within 60 days of purchase.",
       "Refunds are issued to the original payment method within 5 business days."
     ],
-    "expected_answer": "You have 30 days from the date of purchase to request a full refund."
+    "policy_text": [
+      "Customers may request a full refund within 60 days of purchase.",
+      "Approved refunds reach the original payment method within 5 business days."
+    ],
+    "reference_answer": "You have 30 days from the date of purchase to request a full refund."
   },
   {
     "id": "seat-removal",
@@ -17,7 +21,11 @@
       "An account owner can remove a seat from Settings > Members.",
       "Removing a seat frees the licence immediately; billing adjusts on the next invoice."
     ],
-    "expected_answer": "An account owner removes a seat from Settings > Members; the licence is released immediately and billing adjusts on the next invoice."
+    "policy_text": [
+      "An account owner can remove a seat from Settings > Members.",
+      "Removing a seat frees the licence immediately; billing adjusts on the next invoice."
+    ],
+    "reference_answer": "An account owner removes a seat from Settings > Members; the licence is released immediately and billing adjusts on the next invoice."
   },
   {
     "id": "data-export",
@@ -27,6 +35,10 @@
       "Account owners can start a full data export from Settings > Data.",
       "A download link is emailed when the export completes."
     ],
-    "expected_answer": "An account owner can start a full export from Settings > Data; a download link is emailed on completion and expires after 72 hours."
+    "policy_text": [
+      "Account owners can start a full data export from Settings > Data.",
+      "A download link is emailed when the export completes."
+    ],
+    "reference_answer": "An account owner can start a full export from Settings > Data; a download link is emailed on completion and expires after 72 hours."
   }
 ]

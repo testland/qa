@@ -1,33 +1,33 @@
-# Saved Views PRD goes into refinement Thursday and I want the sentences checked first
+# Four people have four opinions about section 3 and refinement is Thursday
 
 ## Problem Description
 
 Priya wrote section 3 of the Saved Views PRD on Friday and it goes into
-refinement with the platform squad on Thursday morning. Last quarter we had two
-stories come back from that meeting a week later because nobody could agree
+refinement with the platform squad on Thursday morning. Last quarter two
+stories came back from that meeting a week later because nobody could agree
 what "done" meant, and both times the argument was about a sentence in the PRD
 rather than about the code.
 
-I want a read of section 3 before Thursday. The only question I care about is
-which sentences an engineer could actually build to and a tester could actually
-write a check against, and which ones are going to produce the same argument
-again. Priya is fast at fixing these when someone tells her exactly what to put
-instead, and very slow when someone tells her a sentence is "vague".
+I want a read of section 3 before Thursday and I only care about one question:
+which of these sentences could an engineer build to and a tester write a check
+against exactly as they stand, and which ones are going to start that argument
+again.
 
-Two things I do not want from this. Priya is a product manager, not a writer,
-and I am not sending her a list of tone edits. And section 3 is deliberately
-narrow — it is one slice of a much bigger feature — so it is not the place to
-argue about what else Saved Views ought to do.
+The reason I am asking someone to go at it sentence by sentence is that I have
+already had three reads of it and they do not agree. Ravi says the eleven-hour
+ceiling on the prune job alone should stop it going in, and he is not wrong
+that eleven hours looks mad for a nightly job. Dan skimmed it and said the
+whole thing reads like a first draft and Priya should take another pass before
+anyone sees it. Marta read it and said it was fine. I cannot walk into Thursday
+with that.
 
 The file is attached.
 
 ## Output Specification
 
-1. Write `docs/refinement-notes.md`. It needs a top-line call on whether
-   section 3 can go to the squad as written, a count of the sentences you
-   assessed, and a row for every sentence you have a problem with.
-2. Leave `docs/prd-saved-views.md` exactly as it is. Priya owns that file and
-   makes her own edits.
+Write `docs/refinement-notes.md`. It needs a top-line call on whether section 3
+can go to the squad as written, a count of the sentences you assessed, and a
+row for every sentence you have a problem with.
 
 ## Input Files
 
@@ -59,12 +59,21 @@ so the limit is 20 saved views per user and the 21st `POST /api/views` returns
 Applying a saved view sets every filter control on `/reports` to the values
 stored with the view and puts `?view=<id>` in the address bar.
 
-Users can share a saved view with a teammate.
+A user can share a saved view with a teammate from the view's overflow menu,
+and the teammate sees it in their own view list.
 
-The export button on a saved view returns the same rows the view is showing.
+The export button on a saved view produces a CSV of the same rows the view is
+showing.
 
 The nightly job that prunes views not opened in 18 months must finish within 11
 hours.
+
+## Constraints
+
+The filter serialiser keeps its current output format: a filter set serialised
+by the build before this change deserialises to the same values after it.
+
+For users with no saved views, `/reports` behaves exactly as it does today.
 
 ## Open questions
 

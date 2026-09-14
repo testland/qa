@@ -2,24 +2,23 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { exporter } = require('../support/trace-setup');
-const { chargeCard } = require('../src/gateway');
-const { fakeTransport, captured } = require('../support/fake-transport');
+const { settlePayment } = require('../src/gateway');
+const { fakeHttp, sampleOrder } = require('../support/fakes');
+
+// From the INC-2291 capture, first settlement of the window.
+const TRACE_ID = '00000000000000000000000000000001';
+const CHARGE_SPAN_ID = '0000000000000003';
 
 test.beforeEach(() => exporter.reset());
 
-test('charge records the outgoing call', async () => {
-  await chargeCard(fakeTransport([captured]), {
-    amountCents: 4900,
-    currency: 'EUR',
-    idempotencyKey: 'idem_41',
-  });
+test('a captured charge produces the trace we replayed from the incident', async () => {
+  await settlePayment(fakeHttp(), sampleOrder());
 
-  const spans = exporter.getFinishedSpans();
-  const byName = Object.fromEntries(spans.map((s) => [s.name, s]));
-  const span = byName['POST /v2/charges'];
+  const byName = Object.fromEntries(exporter.getFinishedSpans().map((s) => [s.name, s]));
+  const charge = byName['POST /v1/charges'];
 
-  assert.equal(span.kind, 'CLIENT');
-  assert.equal(span.attributes['http.method'], 'POST');
-  assert.equal(span.attributes['http.status_code'], 201);
-  assert.equal(span.attributes['payments.idempotency_key'], 'idem_41');
+  assert.equal(byName['payments.settle'].spanContext().traceId, TRACE_ID);
+  assert.equal(charge.spanContext().spanId, CHARGE_SPAN_ID);
+  assert.equal(charge.attributes['http.method'], 'POST');
+  assert.equal(charge.attributes['http.status_code'], 201);
 });

@@ -16,16 +16,13 @@ deadline is 2026-09-19 and we are now seven days out.
 
 The report closes with three recommendations and I need a line on each of them,
 because I am about to be asked in front of the board which ones we are taking.
+R1 is what the lead already did, so I want to know what it bought us, if
+anything.
 
 My own position, for what it is worth, is that R3 is the safe call. Turning our
 own storage off for a week costs us nothing but money and I would rather be
-boring than be in the paper. Talk me out of it if there is a reason, and if
-there is one I want the number, not an opinion. `ops/edge-2026-08.md` is what
-the appliance reported last month.
-
-R1 is what the lead already did, so I want to know what it bought us, if
-anything. R2 sounds right to me in principle and I would like to know whether it
-actually closes this.
+boring than be in the paper, so unless someone gives me a reason not to, that is
+what I am signing.
 
 `src/cdn.js` and `src/edge.js` are our model of the appliance. They were written
 off the vendor's rule documentation and they match what we see in production, so
@@ -37,12 +34,11 @@ than this ticket. Everything else under `src/` and `config/` is ours.
 1. Make it so a second visitor cannot be served the first visitor's statement
    through the edge. Do not edit `src/cdn.js` or `src/edge.js`.
 2. Add `src/statementLeak.test.js` with a test that fails against the code as it
-   stands and passes after your change, driving two different sessions through
-   one edge instance at the same URL.
+   stands and passes after your change.
 3. Write `docs/pentest-pc-11.md`: name the class of defect, say what the
-   mechanism actually is, say which layer each part of your fix lands at, and
-   give a separate verdict on R1, R2 and R3 with the reason for each.
-4. `npm test` must pass. The five tests in `src/cdn.test.js` are shipped and
+   mechanism actually is, and give a separate verdict on R1, R2 and R3 with the
+   reason for each.
+4. `npm test` must pass. The six tests in `src/cdn.test.js` are shipped and
    passing; do not edit or delete any of them.
 
 ## Input Files
@@ -127,6 +123,7 @@ module.exports = { createEdge };
 const routes = [
   { name: 'statement', pattern: /^\/account\/statement(?:\/.*)?$/ },
   { name: 'messages', pattern: /^\/account\/messages(?:\/.*)?$/ },
+  { name: 'transfers', pattern: /^\/transfers(?:\/.*)?$/ },
   { name: 'asset', pattern: /^\/assets\/.+$/ },
   { name: 'marketing', pattern: /^\/site\/.*$/ },
 ];
@@ -159,6 +156,11 @@ const STATEMENTS = {
 const MESSAGES = {
   'acct-4180': ['Your card ending 4411 was used at Tesco', 'Standing order to Flat 2b sent'],
   'acct-7742': ['Overdraft interest applied'],
+};
+
+const TRANSFERS = {
+  'acct-4180': ['GBP 250.00 to J RAMAN SAVINGS', 'GBP 18.40 to TFL TRAVEL'],
+  'acct-7742': ['GBP 1,000.00 to H OKAFOR ISA'],
 };
 
 const ASSETS = {
@@ -202,6 +204,16 @@ function origin(req) {
     };
   }
 
+  if (name === 'transfers') {
+    const t = TRANSFERS[accountId];
+    if (!t) return notFound();
+    return {
+      status: 200,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+      body: `<ul>${t.map((line) => `<li>${line}</li>`).join('')}</ul>`,
+    };
+  }
+
   if (name === 'asset') {
     const a = ASSETS[req.url];
     if (!a) return notFound();
@@ -223,7 +235,7 @@ function origin(req) {
   return notFound();
 }
 
-module.exports = { origin, STATEMENTS, MESSAGES };
+module.exports = { origin, STATEMENTS, MESSAGES, TRANSFERS };
 
 =============== FILE: src/cdn.test.js ===============
 'use strict';
@@ -243,6 +255,14 @@ test('a real stylesheet is held at the edge for a year', () => {
   now = 31_535_000_000;
   assert.equal(edge.request(anon('/assets/app.css')).servedFrom, 'edge');
   assert.ok(edge.stored().includes('/assets/app.css'));
+});
+
+test('the script bundle is held at the edge for a year', () => {
+  let now = 0;
+  const edge = createEdge(origin, () => now);
+  assert.equal(edge.request(anon('/assets/app.js')).servedFrom, 'origin');
+  now = 31_535_000_000;
+  assert.equal(edge.request(anon('/assets/app.js')).servedFrom, 'edge');
 });
 
 test('the logo is held at the edge for a year as well', () => {
@@ -322,7 +342,8 @@ has passed.
   reproducible.
 - The same trailing-segment technique was tried against two other authenticated
   pages during the engagement and returned the same class of result. Only the
-  statement page was written up, as the impact there was highest.
+  statement page was written up, as the impact there was highest. Our retest
+  will not be confined to the URL in step 2.
 - The tester did not have access to the appliance configuration or the origin
   application during the engagement.
 

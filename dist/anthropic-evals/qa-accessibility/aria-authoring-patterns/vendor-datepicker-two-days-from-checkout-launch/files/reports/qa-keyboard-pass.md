@@ -6,8 +6,7 @@ VoiceOver.
 1. **You can only Tab onto one date.** I opened October and pressed Tab
    repeatedly. Focus lands on the 12th and the next press leaves the calendar
    entirely. Thirty other dates in that month and Tab reaches exactly one of
-   them. This looks like the big one to me — most of the control is
-   unreachable.
+   them.
 2. **Dates you cannot book still take focus.** The 16th is sold out and greyed
    out, and I can still land on it. Feels like it should be skipped over the
    way a disabled button is.

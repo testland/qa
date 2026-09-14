@@ -5,6 +5,11 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+env:
+  # keep the matrix alive when a case trips the tool mid-run, and give us deep
+  # stacks in the report so it is actually readable -- @mkowal 2025-07
+  TSAN_OPTIONS: "halt_on_error=0 exitcode=0 history_size=7"
+
 jobs:
   build-and-test:
     runs-on: ubuntu-22.04

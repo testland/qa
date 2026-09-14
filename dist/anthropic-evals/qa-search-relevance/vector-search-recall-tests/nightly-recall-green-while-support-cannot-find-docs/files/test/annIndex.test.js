@@ -21,10 +21,6 @@ const build = (nProbe) => {
   return index;
 };
 
-test('every added point is stored exactly once', () => {
-  assert.equal(build(2).size(), 5);
-});
-
 test('a query is answered from its own cell first', () => {
   assert.deepEqual(build(1).search([1, 0, 0, 0], { k: 2 }), ['a1', 'a2']);
 });
@@ -33,7 +29,7 @@ test('points outside the probed cells are never returned', () => {
   assert.deepEqual(build(1).search([0, 0, 1, 0], { k: 5 }), ['c1']);
 });
 
-test('probing every cell reaches every point', () => {
+test('probing every cell reaches every point that is in the index', () => {
   assert.equal(build(4).search([1, 0, 0, 0], { k: 5 }).length, 5);
 });
 
@@ -46,4 +42,9 @@ test('comparisons count only the points actually scored', () => {
 
 test('cosine ignores magnitude', () => {
   assert.ok(Math.abs(cosine([3, 0], [0.5, 0]) - 1) < 1e-12);
+});
+
+test('a dimension mismatch is an error, not a silent drop', () => {
+  const index = createIndex({ centroids: CENTROIDS });
+  assert.throws(() => index.add('bad', [1, 0, 0]), /dimension mismatch/);
 });

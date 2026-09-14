@@ -8,8 +8,8 @@ BASE_URL = "http://localhost:3000"
 def driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless=new")
+    options.add_argument("--window-size=1440,900")
     d = webdriver.Chrome(options=options)
-    d.set_window_size(1440, 900)
     yield d
     d.quit()
 

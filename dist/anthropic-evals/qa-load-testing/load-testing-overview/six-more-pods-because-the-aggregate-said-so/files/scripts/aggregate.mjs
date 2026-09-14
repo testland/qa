@@ -8,13 +8,22 @@ export function parseStats(csv) {
   return rows.map((r) => Object.fromEntries(r.split(',').map((v, i) => [cols[i], v])));
 }
 
-export function workerP95(csv) {
-  const aggregated = parseStats(csv).find((r) => r.Name === 'Aggregated');
-  return Number(aggregated['95%']);
+function aggregatedRow(csv) {
+  return parseStats(csv).find((r) => r.Name === 'Aggregated');
 }
 
+export function workerP95(csv) {
+  return Number(aggregatedRow(csv)['95%']);
+}
+
+export function workerCount(csv) {
+  return Number(aggregatedRow(csv)['Request Count']);
+}
+
+// pool the generators' 95% columns, weighted by what each one contributed
 export function runP95(csvs) {
-  return Math.max(...csvs.map(workerP95));
+  const total = csvs.reduce((a, c) => a + workerCount(c), 0);
+  return csvs.reduce((a, c) => a + workerP95(c) * workerCount(c), 0) / total;
 }
 
 const files = process.argv.slice(2);

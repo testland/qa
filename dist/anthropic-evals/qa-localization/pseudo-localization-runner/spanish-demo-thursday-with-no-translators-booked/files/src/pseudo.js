@@ -6,10 +6,7 @@ const MAP = {
 
 function pseudoLocalize(source) {
   let out = '';
-  for (const ch of source) {
-    out += MAP[ch] || ch;
-    if ('aeiouAEIOU'.includes(ch)) out += ch;
-  }
+  for (const ch of source) out += MAP[ch] || ch;
   return out;
 }
 

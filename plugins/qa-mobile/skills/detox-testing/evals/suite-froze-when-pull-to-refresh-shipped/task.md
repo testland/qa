@@ -1,4 +1,4 @@
-# The whole mobile suite froze the day pull-to-refresh landed
+# The whole mobile suite froze the day pull-to-refresh landed, and the app is frozen too
 
 ## Problem Description
 
@@ -7,22 +7,29 @@ ran in about four minutes and had been boring for a year. Sprint 44 merged two
 things on the same afternoon:
 
 - a pull-to-refresh spinner on the orders list, and
-- a telemetry stream that keeps a long-poll open to
+- a telemetry stream that keeps a long poll open to
   `https://telemetry.larder.internal/v1/telemetry/stream` for session analytics.
 
-Since that merge **every one of the fourteen specs fails**, and they all fail the
-same way: the first `tap()` in the spec never completes, and two minutes later
-the runner kills it. Not a single spec gets to its assertions. Nobody touched
+Since that merge **every one of the fourteen specs fails**, and they all fail
+the same way: the first `tap()` in the spec never completes and two minutes
+later the runner kills it. Not one spec reaches its assertions. Nobody touched
 the specs — `git log e2e/` has no commits in six weeks. It reproduces on every
 developer's machine and on both CI runners, iOS and Android alike, first try,
 every time.
 
-Aleks has PR #812 open and it works: the suite is green in three minutes and
-eight seconds, three people have approved it, and code freeze is Friday. He is
-not being lazy, he is being pragmatic — a red suite blocks the release train and
-nobody else has produced anything at all. I am the one who has to press the
-button and I would rather press it than explain to the release manager why we
-slipped. Talk me out of it, or tell me to merge it.
+Here is my problem. The release branch was cut on Tuesday and the app source is
+frozen until Thursday's build ships. The release manager is taking crash fixes
+and nothing else, and he is certainly not taking a change to a loading spinner
+because a test runner is unhappy with it. So whatever we do this week has to
+live in the test layer.
+
+Which is exactly what Aleks has done. PR #812 is open, the suite is green in
+three minutes and eight seconds with it, three people have approved it, and
+code freeze is Friday. He is not being lazy, he is being pragmatic — a red
+suite blocks the release train and nobody else has produced anything at all. I
+am the one who has to press the button and I would rather press it than explain
+to the release manager why we slipped. Talk me out of it, or tell me to merge
+it.
 
 Separately: Ines has had a branch open since June with one spec for the live
 tracking map. It has never passed. It fails the same way the fourteen do now,
@@ -31,16 +38,15 @@ that ever did. We left it on the branch and forgot about it. Her spec, the
 screen it drives and the vendor notes for the map package are attached with
 everything else, and I would like an answer on that too while we are here.
 
-The timeout logs, the new app code, the current global setup, one representative
-spec and Aleks's patch are attached.
+The timeout logs, the new app code, the current global setup, one
+representative spec and Aleks's patch are attached.
 
 ## Output Specification
 
-1. Write `docs/rca-suite-freeze.md` — what is blocking the taps, what introduced
-   it, and your verdict on PR #812 with the reasoning behind it.
-2. Make the edits you are recommending: to `e2e/init.js`, to the app source, or
-   to both. Leave `e2e/orders.test.js` alone unless your fix genuinely requires a
-   change inside it.
+1. Write `docs/rca-suite-freeze.md` — what is blocking the taps, what
+   introduced it, your verdict on PR #812 with the reasoning behind it, and
+   your answer on the freeze.
+2. Make the edits your recommendation requires, wherever they belong.
 3. Say what should happen to Ines's branch.
 
 ## Input Files
@@ -64,13 +70,10 @@ FAIL e2e/orders.test.js (122.481 s)
     Still outstanding when the attempt was abandoned:
 
      * UI elements are busy:
-       - 1 view animation pending (repeatCount = INFINITE)
+       - 1 view animation pending
 
      * Network requests are in-flight:
        - 1 request to telemetry.larder.internal (in flight for 119842 ms)
-
-     * JavaScript timers are pending:
-       - 1 timer, interval 1200 ms
 
   * Orders > filters by delivery date (120012 ms)   [same output]
   * Orders > reorders a past order (120009 ms)      [same output]
@@ -96,7 +99,7 @@ FAIL e2e/tracking-map.test.js (121.904 s)
     Still outstanding when the attempt was abandoned:
 
      * UI elements are busy:
-       - 1 view animation pending (repeatCount = INFINITE)
+       - 1 view animation pending
 
 Tests:       1 failed, 1 total
 
@@ -281,7 +284,7 @@ From: Aleks Novak <aleks@larder.example>
 Subject: [PATCH] e2e: unblock the suite before code freeze
 
 Suite is green in 3m08s with this. Three approvals. Merging Thursday unless
-someone objects.
+someone objects. App source is frozen, so this is all test-side.
 
 --- a/e2e/init.js
 +++ b/e2e/init.js

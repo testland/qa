@@ -8,7 +8,8 @@ After: four `node:worker_threads` ingest threads over one `SharedArrayBuffer`,
 catch-up after an outage.
 
 Nothing else in the close path changed. The ledger service was last deployed
-in April.
+in April. The money slot was widened to a float64 in March, before any of this,
+because a busy night carries more cents than an int32 holds.
 
 ## Reconciliation results since the migration
 

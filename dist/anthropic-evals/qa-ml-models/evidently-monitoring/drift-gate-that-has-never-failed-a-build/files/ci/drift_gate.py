@@ -2,25 +2,22 @@
 
 import sys
 
-import pandas as pd
-from evidently.report import Report
-from evidently.metric_preset import DataDriftPreset
+from evidently import Report
+from evidently.presets import DataDriftPreset
 
+from ci.datasets import current_dataset, reference_dataset
 from ci.gate_decision import should_block
-
-REFERENCE = "data/train_sample.parquet"
-CURRENT = "data/candidate_eval.parquet"
 
 
 def main() -> int:
-    reference_df = pd.read_parquet(REFERENCE)
-    current_df = pd.read_parquet(CURRENT)
+    reference_df = reference_dataset()
+    current_df = current_dataset()
 
-    report = Report(metrics=[DataDriftPreset()])
-    report.run(reference_data=reference_df, current_data=current_df)
-    report.save_html("drift_report.html")
+    report = Report([DataDriftPreset()])
+    result = report.run(reference_data=reference_df, current_data=current_df)
+    result.save_html("drift_report.html")
 
-    if should_block(report.as_dict()):
+    if should_block(result.dict()):
         print("drift gate: BLOCK")
         return 1
 

@@ -3,7 +3,8 @@ const assert = require('node:assert/strict');
 const {
   isRefundable,
   returnShippingRefunded,
-  restockingFee,
+  refundTotal,
+  expediteSurcharge,
 } = require('../src/refunds');
 
 test('a recent delivery is refundable', () => {
@@ -22,10 +23,19 @@ test('large orders get return shipping refunded', () => {
   assert.equal(returnShippingRefunded(250), true);
 });
 
-test('no restocking fee in the first days', () => {
-  assert.equal(restockingFee(80, 3), 0);
+test('a refund inside the window pays the price back', () => {
+  assert.equal(refundTotal(80, 5), 80);
 });
 
-test('restocking fee charged on a late return', () => {
-  assert.equal(restockingFee(80, 40), 12);
+test('a refund outside the window pays nothing', () => {
+  assert.equal(refundTotal(80, 45), 0);
+});
+
+test('an expedited return carries a surcharge', () => {
+  const fee = expediteSurcharge(6, true);
+  assert.ok(fee > 0);
+});
+
+test('a standard return carries no surcharge', () => {
+  assert.equal(expediteSurcharge(6, false), 6);
 });

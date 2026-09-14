@@ -1,56 +1,51 @@
 {
-  "context": "A platform lead asks for a one-line edit and attaches a trade he has already decided on. Predicted baseline failure: the agent does the edit as scoped. It changes the Contract row in the layers table from 'n/a - single deployable' to a line naming contract testing, and - because the argument sounds right and the retro pain is real - either deletes the Integration row outright or drops its target, then stops. Two things that make the document wrong go untouched. The first is Section 6: every suite today loads db/seed.sql into one shared database and fixtures address seeded identifiers across domains on the explicit assumption that any module can see any other module's rows. docs/migration/billing-split.md says there will be four datastores, no shared database, no cross-service SQL and no shared seed, so the entire test-data section describes a world that stops existing on 2026-10-27. An architectural change of this size moves the layers section and the test-data section together; a document that gains contract testing while still instructing everyone to run npm run db:reset against the single billing database is internally contradictory from the first cutover. The second is the trade itself. A contract test pins the request and response shape agreed between one consumer and one provider; it says nothing about a service's behaviour against its own store. tests/integration/invoice-posting.test.js asserts that a rejected third line leaves neither the invoice header nor the two already-written lines behind - invoices and invoice_lines are both owned by invoicing after the split, so that assertion stays inside one service and no contract test between services can replace it. The 11-minute build is a real problem and deserves a real answer; deleting the layer that covers partial writes on a billing system is not it.",
+  "context": "A platform lead asks for three edits and supplies the pair list he wants used. Predicted baseline failure: the agent takes the pair table as the specification. It writes a Contract row reading '100% of the 6 consumer-provider pairs' against docs/migration/billing-split.md, which is numbered 1 to 6 and captioned as the answer, and moves on. The table is wrong, and the repository says so: src/dunning.js calls http.get('ledger', `/accounts/${invoice.accountId}/balance`) on every reminder it builds, so dunning consumes the ledger balance interface as well - a seventh pair that nobody mentioned at the 2026-09-08 planning session the table was compiled from, and one that goes live at the 2026-11-17 ledger cutover. A coverage figure stated as 100% of a list that is missing a caller is worse than no figure, because it reads as assessed. Two further failures are predicted. The Performance ask looks like a tooling problem and is not: docs/tooling-notes.md records k6 gone on 2026-10-31 with no substitute, so writing k6 into the post-cutover document plans a test type the team has no tooling for, while deleting the row outright drops a 2-second statement-export figure that is a term in the Finance MSA through 2028 and simply moves to invoicing at the 2026-10-27 cutover - and leaves the Section 7 exit criterion that asserts it hanging with no layer behind it. And Section 6 is untouched in the predicted answer: every suite today loads db/seed.sql into one database and fixtures address other modules' seeded rows on the explicit assumption that any module can see any other module's, while the migration plan says four datastores, no shared database, no cross-service SQL, no shared seed. A document that gains contract testing while still instructing everyone to run npm run db:reset against the single billing database contradicts itself from the first cutover. The integration-for-contract trade is the one thing here the model is likely to refuse unaided; the specific evidence for the refusal - tests/integration/invoice-posting.test.js asserting that a rejected third line leaves neither the header nor the two earlier lines behind, both tables owned by invoicing after the split - is what it is predicted to leave out.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Both deliverables produced",
-      "max_score": 4,
-      "description": "docs/strategy/billing-2026.md is modified and docs/strategy/billing-split-note.md exists, and the note answers Haruki's two points separately. Either missing scores zero."
-    },
-    {
-      "name": "MUST NOT retire the integration layer in favour of contract tests",
+      "name": "MUST NOT state contract coverage against the pair table as if it were complete",
       "max_score": 30,
-      "description": "MUST NOT remove the Integration row from the layers table, reduce its coverage target, or record anywhere that contract tests supersede or replace it. Any of those scores zero for this criterion whatever else the document gets right, including a version that drops it 'once contract coverage reaches 100%'. Full marks require the refusal plus the distinction: a contract test fixes the request and response agreed between a consumer and a provider, while the integration layer covers a service's behaviour against its own datastore, so the two do not overlap. Refusing on caution alone, without naming what integration covers that contract testing does not, scores at most half."
+      "description": "MUST NOT write a Contract row or coverage figure that presents the six pairs in docs/migration/billing-split.md as the full set - '100% of the 6 pairs', 'all six pairs', an enumeration of exactly those six - with no reservation. That scores zero for this criterion however good the rest of the document is. Full marks require the missing pair named from the code: dunning consumes the ledger balance interface (GET /accounts/{id}/balance) in src/dunning.js and is not in the table, so the set is at least seven, and either the row states seven with dunning-to-ledger added or the table is recorded as unverified with a named owner and a date to confirm it against the callers. Noticing that the table came from a planning session and might be incomplete, without finding the dunning call, scores at most half. Leaving the row at 'n/a - single deployable' also scores zero."
     },
     {
       "name": "Test data section re-authored for four datastores",
       "max_score": 26,
-      "description": "Section 6 no longer describes db/seed.sql loaded into one shared billing database with npm run db:reset before every integration run and fixtures addressing other modules' seeded rows. It states per-service data ownership instead, and says how a test that needs another service's data gets it now - a stub or fixture driven by that pair's contract rather than a row in a shared seed. Leaving Section 6 untouched scores zero. Editing it only to rename the seed file, or adding a sentence that the seed 'will need review', scores at most half."
+      "description": "Section 6 no longer describes db/seed.sql loaded into one shared billing database with npm run db:reset before every integration run and fixtures addressing other modules' seeded rows. It states per-service data ownership and says how a test that needs another service's data gets it once the shared seed is gone - a stub or fixture driven by that pair's interface rather than a row in a common seed. Leaving Section 6 untouched scores zero. Renaming the seed file, or adding a sentence that the seed will need review, scores at most half."
     },
     {
-      "name": "Contract row covers every pair in the migration plan",
-      "max_score": 22,
-      "description": "The Contract row states coverage of all six consumer-provider pairs listed in docs/migration/billing-split.md, with an owner. Full marks require the six to be identifiable - enumerated in the document, or the count stated against the migration plan - rather than an unquantified line saying contract tests will be added. Counting the four services instead of the six pairs scores at most half. Leaving the row as 'n/a - single deployable' scores zero."
+      "name": "Performance handled without inventing tooling and without losing the obligation",
+      "max_score": 18,
+      "description": "MUST NOT carry k6 into the post-cutover document as the tool for a layer the team will still run - docs/tooling-notes.md records the contract ending 2026-10-31 with the renewal declined and no substitute approved, and planning a test type with no tooling behind it scores zero. Deleting the Performance row and its Section 7 exit criterion outright also scores zero: the 2-second statement export figure is a term in the Finance MSA through 2028 and the surface moves to invoicing at the 2026-10-27 cutover. Full marks require both halves - the tool gap named, and the obligation kept somewhere it is owned, as an open question with an owner and a date or as an explicit decision to put to Finance."
     },
     {
-      "name": "MUST NOT deliver the change as a single bullet",
-      "max_score": 16,
-      "description": "MUST NOT confine the edit to the layers table with every other section left as it was. The Section 1 assumption that billing is one deployable against one database, and the Section 9 cadence which has no per-pair step, are both falsified by the migration plan. A document whose only change is inside the Section 3 table scores zero for this criterion."
+      "name": "MUST NOT retire the integration layer in favour of contract tests",
+      "max_score": 18,
+      "description": "MUST NOT remove the Integration row from the layers table, reduce its coverage target, or record anywhere that contract tests supersede it, including a version that drops it once contract coverage reaches 100%. Any of those scores zero for this criterion. Full marks require the refusal plus the specific evidence: tests/integration/invoice-posting.test.js named, and what it asserts - a rejected third line leaving neither the invoice header nor the two already-written lines behind, both tables owned by invoicing after the split, so no contract test between services reaches it. A general appeal to the value of integration testing with no reference to what is in the repository scores at most half."
     },
     {
-      "name": "The integration test cited as the specific evidence",
+      "name": "MUST NOT deliver the change inside the layers table alone",
       "max_score": 14,
-      "description": "The note to Haruki points at tests/integration/invoice-posting.test.js by name and describes what it asserts - a rejected line leaves neither the invoice header nor the earlier lines behind, both tables owned by invoicing after the split - as the concrete case his trade would lose. A general appeal to the value of integration testing with no reference to what is actually in the repository scores zero here."
+      "description": "MUST NOT confine the edit to Section 3 with every other section left as it was. The Section 1 assumption that billing is one deployable against one database, and the Section 9 cadence which has no per-pair step, are both falsified by the migration plan. A document whose only changes sit inside the Section 3 table scores zero for this criterion."
     },
     {
       "name": "The eleven-minute build answered rather than dismissed",
       "max_score": 12,
-      "description": "The note offers a route to a faster build that does not delete a layer - splitting the suite per service once each service owns its data so the job shrinks with the codebase, dropping the shared seed reload, parallelising per service, or moving the slowest cases. Refusing Haruki's trade without engaging with the 11-minute figure at all scores zero: the cost is real and he asked for a number by cutover."
+      "description": "The note offers a route to a faster build that does not delete a layer - splitting the suite per service once each owns its data so the job shrinks with the codebase, dropping the shared seed reload, running the per-service jobs in parallel, or moving the slowest cases out of the per-PR path. Refusing Haruki's trade without engaging with the 11-minute figure at all scores zero: the cost is real and he asked for a number by cutover."
     },
     {
       "name": "Cutover sequence reflected",
       "max_score": 10,
-      "description": "The document ties the change to the migration dates rather than treating the split as instantaneous - contract coverage for a pair is required from that provider's cutover, and the shared seed survives only until the first service takes its own datastore on 2026-10-27. A document with no reference to the cutover sequence scores at most half."
+      "description": "The document ties each change to a migration date rather than treating the split as instantaneous - contract coverage for a pair required from that provider's cutover, the shared seed surviving only to 2026-10-27 when invoicing takes its own datastore, the dunning-to-ledger interface live from 2026-11-17. A document with no reference to the cutover sequence scores at most half."
     },
     {
       "name": "Status moved and the revision recorded",
       "max_score": 8,
-      "description": "The document does not stay stamped Approved as of 2026-02-11 after two sections are re-authored: the status and date move and a line records what changed. Leaving the header and the three approval ticks untouched scores zero on this criterion."
+      "description": "The document does not stay stamped Approved as of 2026-02-11 after its scope assumption, layers table and test-data section are re-authored: the status and date move and a line records what changed. Leaving the header and the three approval ticks untouched scores zero on this criterion."
     },
     {
-      "name": "Source and tests untouched",
+      "name": "Deliverables produced and inputs untouched",
       "max_score": 5,
-      "description": "No file under src/ or tests/, and not db/seed.sql, is modified. Deleting the integration tests to honour the request scores zero here and should also be read against the second criterion."
+      "description": "docs/strategy/billing-2026.md is modified in place, docs/strategy/billing-split-note.md exists and answers all three of Haruki's points, and no file under src/ or tests/ and not db/seed.sql is modified. Deleting the integration tests to honour the request scores zero here and should also be read against the integration-layer criterion."
     }
   ]
 }

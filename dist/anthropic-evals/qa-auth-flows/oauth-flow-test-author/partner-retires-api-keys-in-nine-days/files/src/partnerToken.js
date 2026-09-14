@@ -1,6 +1,6 @@
 'use strict';
 
-// Started 20 October, not yet run against anything.
+// Started 20 October, never run against anything.
 function createPartnerTokenClient({ authServer, clientId, clientSecret, scope }) {
   return {
     fetch() {

@@ -1,22 +1,19 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
-  reporter: [['html', { outputFolder: 'playwright-report' }], ['json', { outputFile: 'reports/run.json' }]],
+  testDir: 'tests',
+  retries: 2,
 
   expect: {
     toHaveScreenshot: {
-      threshold: 0.6,
-      maxDiffPixels: 45000,
-      animations: 'disabled',
+      maxDiffPixels: 400000,
+      threshold: 0.55,
+      animations: 'allow',
     },
   },
 
-  use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
-  },
-
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } } },
+    { name: 'app',       use: { ...devices['Desktop Chrome'] } },
+    { name: 'marketing', use: { ...devices['Desktop Chrome'] } },
   ],
 });

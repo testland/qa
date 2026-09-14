@@ -1,6 +1,6 @@
 {
-  "name": "contract-search",
-  "version": "6.1.2",
+  "name": "vector-search-tier",
+  "version": "5.4.1",
   "private": true,
   "scripts": {
     "test": "node --test",

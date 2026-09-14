@@ -25,6 +25,16 @@ That is 48 jobs per pipeline run.
 - Reporter stays `html`. The report directory is uploaded as a build artifact
   and published to the pipeline S3 bucket, where anyone can open it.
 
+## Runner image
+
+Browser binaries are baked into a custom image, so the 55 seconds of
+`playwright install` per job goes away. This is already built and available
+as `ghcr.io/kestrel/ci-playwright:1.55.0`.
+
+`fail-fast: false` because one shard going red should not cancel the other
+forty-seven - you want the whole picture on a failing run, not the first
+failure.
+
 ## Triggers
 
 The same job runs on every push to every branch, and again nightly. One

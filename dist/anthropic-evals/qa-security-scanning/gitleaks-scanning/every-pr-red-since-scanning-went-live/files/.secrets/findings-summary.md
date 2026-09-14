@@ -1,18 +1,9 @@
-# First scan, 2026-09-08 — summary of all 214 findings
+# First scan, 2026-09-08 — how the 214 break down
 
-| Year the commit was authored | Findings |
-|---|---|
-| 2019 | 44 |
-| 2020 | 61 |
-| 2021 | 38 |
-| 2022 | 29 |
-| 2023 | 26 |
-| 2024 | 9 |
-| 2025 | 5 |
-| 2026 (Jan–Aug) | 0 |
-| 2026 (Sept, this month) | 2 |
-
-The two September records are the first two rows of
-`.secrets/findings-excerpt.json`. `services/checkout/.env.staging` and
-`infra/bootstrap.sh` both still exist on `main` at HEAD with those lines
-present. The credential register has no rotation entries for either.
+- 214 findings, none triaged.
+- Oldest introducing commit 2019-06-30, newest 2026-09-11.
+- 72 of the 214 are in files that no longer exist at HEAD. The other 142 are in
+  files still on `main`.
+- 61 distinct rule ids; `generic-api-key` accounts for 38 of the findings.
+- `.secrets/findings-excerpt.json` is a twelve-record sample taken off the top
+  of the report. It is not a ranking and it is not sorted by date.

@@ -3,8 +3,8 @@
 Kicks off at 23:10 UTC. One cycle:
 
 1. Poll the acquirer's SFTP drop for `SETTLE_YYYYMMDD.psv` (~310 MB, 1.4M lines).
-2. Parse and upsert every line into MariaDB over **JDBC**, batch size 500,
-   against `settlement_line` (partitioned monthly, currently 412M rows).
+2. Parse and upsert every line into MariaDB over **JDBC**, batch size 500, against
+   `settlement_line` (partitioned monthly, currently 412M rows).
 3. Publish one `settlement.line.posted` message per accepted row to **IBM MQ over
    JMS**, transacted, 500 per commit.
 4. POST a completion webhook to merchant-api once the cycle ends.

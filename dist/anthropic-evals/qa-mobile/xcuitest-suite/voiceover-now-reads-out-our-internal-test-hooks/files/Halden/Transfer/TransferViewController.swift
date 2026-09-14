@@ -1,8 +1,7 @@
 import UIKit
 
 // PR #1880 (2026-03-11, @contractor-lowe): "stabilise transfer UI tests".
-// Controls the suite kept losing were given a fixed string to match on. The
-// ones the tests were already finding by their own wording were left alone.
+// PR #1996 (2026-08-14, @rafiq): first pass at audit finding A11Y-11.
 final class TransferViewController: UIViewController {
 
     private let amountField = UITextField()
@@ -16,7 +15,7 @@ final class TransferViewController: UIViewController {
         super.viewDidLoad()
 
         amountField.placeholder = NSLocalizedString("transfer.amount.placeholder", comment: "")
-        amountField.accessibilityLabel = "amount_field"          // #1880
+        amountField.accessibilityLabel = "amount_field"
 
         recipientPicker.setTitle(NSLocalizedString("transfer.recipient.title", comment: ""), for: .normal)
 
@@ -26,10 +25,11 @@ final class TransferViewController: UIViewController {
         navigationItem.leftBarButtonItem = cancelItem
 
         insufficientFundsLabel.text = NSLocalizedString("transfer.error.insufficient", comment: "")
-        insufficientFundsLabel.accessibilityLabel = "insufficient_funds_label"   // #1880
+        insufficientFundsLabel.accessibilityLabel = "insufficient_funds_label"
         insufficientFundsLabel.isHidden = true
 
-        confirmationBanner.accessibilityLabel = "confirmation_banner"            // #1880
+        confirmationBanner.accessibilityLabel = "confirmation_banner"
+        confirmationBanner.isAccessibilityElement = false
         confirmationBanner.isHidden = true
     }
 

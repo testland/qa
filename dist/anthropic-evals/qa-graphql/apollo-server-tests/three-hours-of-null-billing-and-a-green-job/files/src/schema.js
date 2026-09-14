@@ -32,8 +32,6 @@ export const resolvers = {
   },
 
   Viewer: {
-    // Deliberate: no fallback plan. See INC-2291 (April double-charge) - we
-    // billed 61 customers against a plan we had cached and they had left.
     billingAccount: async (parent, _args, ctx) => {
       const account = await ctx.dataSources.billing.accountFor(parent.id);
       if (!account) {

@@ -23,16 +23,12 @@ idle between calls.
 
 ## The four that fail on a completed night
 
-Grounding score, `test_answer_is_grounded`, bar 0.70:
+| Case               | grounding 09-03 | 09-06 | 09-10 | relevancy 09-03 | 09-06 | 09-10 |
+|--------------------|-----------------|-------|-------|-----------------|-------|-------|
+| tier-growth-price  | 0.31            | 0.29  | 0.30  | 0.94            | 0.92  | 0.95  |
+| tier-growth-limits | 0.34            | 0.33  | 0.36  | 0.91            | 0.93  | 0.90  |
+| tier-scale-price   | 0.28            | 0.31  | 0.29  | 0.96            | 0.94  | 0.95  |
+| tier-downgrade     | 0.35            | 0.33  | 0.34  | 0.88            | 0.90  | 0.89  |
 
-| Case               | 09-03 | 09-06 | 09-10 |
-|--------------------|-------|-------|-------|
-| tier-growth-price  | 0.31  | 0.29  | 0.30  |
-| tier-growth-limits | 0.34  | 0.33  | 0.36  |
-| tier-scale-price   | 0.28  | 0.31  | 0.29  |
-| tier-downgrade     | 0.35  | 0.33  | 0.34  |
-
-Relevancy score for the same four cases, `test_answer_addresses_the_question`,
-bar 0.70: between 0.88 and 0.96 on all three completed nights.
-
-All 276 other results were above 0.70 on all three completed nights.
+Both bars are 0.70. All 276 other results were above 0.70 on all three completed
+nights.

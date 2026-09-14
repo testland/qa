@@ -1,47 +1,39 @@
-# Our quality gate has passed 26 times in a row while the score fell 26 points
+# Six months of green builds and the score is 52
 
 ## Problem Description
 
-In March we landed PR #2288 on `identity-svc`, titled "ci: fail the build below
-60". Everyone signed it off. The weekly job has run 26 times since and reported
-success 26 times.
+We turned the mutation gate on in March at 60. The score that month was 78.1.
+Leena pulled the artifacts on Thursday because she wanted the trend for a
+retro, and the September number is 52.4. The job has been green every single
+week since March. Not one failure, not one red build, nobody was ever told.
 
-On Wednesday I opened the September log out of idle curiosity and the score is
-52.4. I pulled the history out of our build store and it has been sliding since
-the week we added the thing: 78.9 in March, 70.2 in June, 58.3 in August, 52.4
-now. It went under 60 somewhere in July and the job carried on saying success.
+I have attached the config, the workflow, the monthly history Leena assembled
+from the artifacts, and the console summary from the September run.
 
-So we have had no gate since March and we did not know. `identity-svc` is
-session tokens and password reset. This is the service I would least like to
-have been flying blind on.
+Two things I need out of this.
 
-Three views so far, none of which I can evaluate:
+First, the gate has to actually gate. Leena ran the exact same command on her
+machine against last week's tree and `echo $?` printed 1, so the tool is doing
+its job and something between the tool and the build result is not. I want to
+be able to point at the change and say "that is why it will fail next time".
 
-- Ines thinks the job is reading a stale report — a cached artifact from before
-  the slide — and wants a cache-busting step added on Monday.
-- Hakan wants to bin it and gate on line coverage at 85 instead, on the grounds
-  that the coverage job does fail builds and we know it works.
-- Two people in the standup said just switch it on at 60 today, the way #2288
-  said it would be, and let whatever breaks break.
+Second, Dominic wants the number put back to 75. His argument is that we were
+at 78 in March, we were clearly capable of 78, and a gate at 52 is an admission
+of defeat. He is the director and he will push on this, so if the answer is no
+I need the reason written down in a form he will accept, along with whatever
+you think the number should be and when it moves.
 
-The thing to know about that last one: we ship hotfixes daily out of this repo
-and there is a release on Thursday. A gate that reds every build from the moment
-it lands gets an exemption from someone within a day and then we are back here
-in six months, except with the additional lesson that this stuff does not work.
-
-Attached: the config, the CI workflow, the score history from the build store,
-the diff from #2288, and one source file with its spec so you can see the shape
-of what we write. Tell me why 26 builds passed, and give me something I can
-land this week that is actually a gate.
+I am not interested in an abstract explanation of what mutation testing is. I
+want the config and the workflow changed, and a document I can send to Dominic
+and to the four tech leads on Monday morning.
 
 ## Output Specification
 
-1. Edit `stryker.conf.json` and `.github/workflows/quality.yml`.
-2. Write `docs/mutation-gate-postmortem.md` — why 26 runs reported success while
-   the score fell 26 points, an explicit verdict on each of the three views
-   above, the number you are setting and why that number, and how it moves back
-   up over time.
-3. Do not modify `src/session/token.js` or `test/token.spec.js`.
+1. Edit `stryker.conf.json` and `.github/workflows/mutation.yml`.
+2. Write `docs/mutation-gate-recovery.md` — why six months of builds passed
+   while the score fell 26 points, what the score actually is once the run is
+   measuring the right files, the answer to Dominic, and the schedule for the
+   number between now and the end of the financial year in March.
 
 ## Input Files
 
@@ -51,16 +43,17 @@ Extract the following files before beginning.
 {
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
   "packageManager": "npm",
-  "testRunner": "mocha",
+  "testRunner": "tap",
+  "tap": { "testFiles": ["src/**/*.test.js"] },
   "coverageAnalysis": "perTest",
-  "reporters": ["progress"],
-  "mutate": ["src/**/*.js", "!src/**/*.spec.js"],
-  "thresholds": { "high": 80, "low": 60 },
-  "timeoutMS": 60000
+  "concurrency": 4,
+  "reporters": ["progress", "clear-text"],
+  "mutate": ["src/**/*.js"],
+  "thresholds": { "high": 80, "low": 60, "break": 60 }
 }
 
-=============== FILE: .github/workflows/quality.yml ===============
-name: quality
+=============== FILE: .github/workflows/mutation.yml ===============
+name: mutation
 
 on:
   schedule:
@@ -70,7 +63,7 @@ on:
 jobs:
   mutation:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -78,121 +71,93 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npx stryker run
+      - run: mkdir -p reports
 
-  coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Mutation testing
+        run: npx stryker run | tee reports/mutation-summary.txt
+
+      - name: Archive summary
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          node-version: 20
-      - run: npm ci
-      - run: npx nyc --check-coverage --lines 85 npm test
+          name: mutation-summary
+          path: reports/mutation-summary.txt
 
 =============== FILE: reports/score-history.md ===============
-# identity-svc — weekly mutation job, pulled from the build store 2026-09-09
+# Mutation score by month, assembled from the archived summaries
 
-Monthly samples of the 26 runs since #2288 landed. Every run in the full list,
-not only these, finished with exit code 0 and a green check.
+Compiled by @leena on 2026-09-10 from the `mutation-summary` artifact of the
+first Monday run of each month.
 
-| Run date   | Build | Mutants | Score  | Line coverage | Job result | Exit code |
-|------------|-------|---------|--------|---------------|------------|-----------|
-| 2026-03-04 |  5510 |   1,204 | 78.9%  | 86.4%         | success    | 0         |
-| 2026-04-01 |  5602 |   1,219 | 77.1%  | 86.2%         | success    | 0         |
-| 2026-05-06 |  5711 |   1,266 | 74.8%  | 86.0%         | success    | 0         |
-| 2026-06-03 |  5824 |   1,301 | 70.2%  | 85.9%         | success    | 0         |
-| 2026-07-01 |  5930 |   1,388 | 66.5%  | 86.1%         | success    | 0         |
-| 2026-08-05 |  6044 |   1,455 | 58.3%  | 86.3%         | success    | 0         |
-| 2026-09-02 |  6151 |   1,502 | 52.4%  | 86.2%         | success    | 0         |
+| Month    | Score | Line coverage | Valid mutants | Job conclusion |
+|----------|-------|---------------|---------------|----------------|
+| 2026-03  | 78.1% | 86.2%         | 1,402         | success        |
+| 2026-04  | 74.6% | 86.0%         | 1,471         | success        |
+| 2026-05  | 71.2% | 86.4%         | 1,538         | success        |
+| 2026-06  | 66.9% | 85.9%         | 1,644         | success        |
+| 2026-07  | 61.4% | 86.1%         | 1,702         | success        |
+| 2026-08  | 56.8% | 86.0%         | 1,795         | success        |
+| 2026-09  | 52.4% | 86.2%         | 1,880         | success        |
 
-Notes from whoever wrote this script (me, Wednesday night):
+Notes from Leena:
 
+- Twenty-six weekly runs since the gate landed. Every one of them concluded
+  `success`. The four that printed a score under 60 concluded `success` too.
 - The mutant count rises every month, so each run is analysing that month's
-  code, not a copy of March's.
-- The only artefact any of these runs left behind is the console log. There is
-  no per-file breakdown stored anywhere for any of the 26 runs, which is why I
-  cannot tell you which directory the slide came from.
-- The coverage job in the same workflow has failed four times this year and
-  each time somebody fixed it the same day.
+  code rather than replaying an old result.
+- I checked out last week's tree and ran `npx stryker run` on my laptop with
+  the repo config. It printed the same 52.4 and then `echo $?` gave me 1.
+- Nobody has ever been able to see which mutants survived. The artifact is the
+  console summary and that is all we keep.
+- Line coverage over the same period is the third column. It has not moved.
 
-=============== FILE: reports/pr-2288.diff ===============
-commit 41c0e8d  ci: fail the build below 60 (#2288)
-Author: Hakan   Date: 2026-03-02
+=============== FILE: reports/mutation-summary-2026-09-01.txt ===============
+Mutation testing  [====================] 100% (elapsed: 51m, remaining: 0s) 1880/1880 Mutants tested
 
- .github/workflows/quality.yml |  14 ++++++++
- stryker.conf.json             |   8 ++++++
- 2 files changed, 22 insertions(+)
+-----------------------------|---------|----------|-----------|------------|----------|
+File                         | % score | # killed | # timeout | # survived | # no cov |
+-----------------------------|---------|----------|-----------|------------|----------|
+All files                    |   52.39 |      961 |        24 |        844 |       51 |
+ src/cart/cart.js            |   40.07 |      113 |         8 |        172 |        9 |
+ src/cart/cart.test.js       |   96.88 |       93 |         0 |         3 |        0 |
+ src/checkout/totals.js      |   44.03 |      110 |         8 |        144 |        6 |
+ src/checkout/totals.test.js |   96.43 |       81 |         0 |         3 |        0 |
+ src/pricing/rules.js        |   39.34 |       92 |         4 |        141 |        7 |
+ src/pricing/rules.test.js   |   95.77 |       68 |         0 |         3 |        0 |
+ src/session/session.js      |   38.36 |       82 |         2 |        126 |        9 |
+ src/session/session.test.js |   95.24 |       60 |         0 |         3 |        0 |
+ src/search/query.js         |   37.44 |       78 |         1 |       124 |        8 |
+ src/search/query.test.js    |   95.16 |       59 |         0 |         3 |        0 |
+ src/notify/email.js         |   35.92 |       73 |         1 |       120 |       12 |
+ src/notify/email.test.js    |   96.30 |       52 |         0 |         2 |        0 |
+-----------------------------|---------|----------|-----------|------------|----------|
 
---- /dev/null
-+++ b/stryker.conf.json
-@@
-+{
-+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
-+  "packageManager": "npm",
-+  "testRunner": "mocha",
-+  "coverageAnalysis": "perTest",
-+  "reporters": ["progress"],
-+  "mutate": ["src/**/*.js", "!src/**/*.spec.js"],
-+  "thresholds": { "high": 80, "low": 60 },
-+  "timeoutMS": 60000
-+}
-
---- a/.github/workflows/quality.yml
-+++ b/.github/workflows/quality.yml
-@@
-+  mutation:
-+    runs-on: ubuntu-latest
-+    timeout-minutes: 45
-+    steps:
-+      - uses: actions/checkout@v4
-+      - uses: actions/setup-node@v4
-+        with:
-+          node-version: 20
-+          cache: npm
-+      - run: npm ci
-+      - run: npx stryker run
-
-Review comment from Ines, approved 2026-03-02: "60 feels about right as a floor,
-we were at 78 last week so there is plenty of headroom. Ship it."
-
-=============== FILE: src/session/token.js ===============
-const MAX_AGE_SECONDS = 900;
-const CLOCK_SKEW_SECONDS = 30;
-
-function isExpired(issuedAtSeconds, nowSeconds) {
-  return nowSeconds - issuedAtSeconds > MAX_AGE_SECONDS + CLOCK_SKEW_SECONDS;
+=============== FILE: src/checkout/totals.js ===============
+export function lineTotal(line) {
+  if (line.qty <= 0) return 0;
+  const net = line.unitCents * line.qty;
+  return net + Math.round(net * line.taxRate);
 }
 
-function remainingSeconds(issuedAtSeconds, nowSeconds) {
-  const left = MAX_AGE_SECONDS - (nowSeconds - issuedAtSeconds);
-  return left > 0 ? left : 0;
+export function orderTotal(lines, shippingCents) {
+  const goods = lines.reduce((sum, l) => sum + lineTotal(l), 0);
+  const shipping = goods >= 5000 ? 0 : shippingCents;
+  return goods + shipping;
 }
 
-function shouldRefresh(issuedAtSeconds, nowSeconds) {
-  return remainingSeconds(issuedAtSeconds, nowSeconds) < MAX_AGE_SECONDS / 3;
-}
+=============== FILE: src/checkout/totals.test.js ===============
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { lineTotal, orderTotal } from './totals.js';
 
-module.exports = { isExpired, remainingSeconds, shouldRefresh, MAX_AGE_SECONDS };
+test('lineTotal applies tax to the net line value', () => {
+  assert.equal(lineTotal({ unitCents: 1000, qty: 2, taxRate: 0.2 }), 2400);
+});
 
-=============== FILE: test/token.spec.js ===============
-const assert = require('node:assert/strict');
-const { isExpired, remainingSeconds, shouldRefresh } = require('../src/session/token');
+test('lineTotal is zero for a zero quantity', () => {
+  assert.equal(lineTotal({ unitCents: 1000, qty: 0, taxRate: 0.2 }), 0);
+});
 
-describe('token', () => {
-  it('is not expired immediately after issue', () => {
-    assert.equal(isExpired(1000, 1000), false);
-  });
-
-  it('is expired long after issue', () => {
-    assert.equal(isExpired(1000, 99999), true);
-  });
-
-  it('reports some time remaining on a fresh token', () => {
-    assert.ok(remainingSeconds(1000, 1010) > 0);
-  });
-
-  it('does not ask for a refresh on a fresh token', () => {
-    assert.equal(shouldRefresh(1000, 1010), false);
-  });
+test('orderTotal ships free at the threshold', () => {
+  assert.equal(orderTotal([{ unitCents: 5000, qty: 1, taxRate: 0 }], 499), 5000);
 });

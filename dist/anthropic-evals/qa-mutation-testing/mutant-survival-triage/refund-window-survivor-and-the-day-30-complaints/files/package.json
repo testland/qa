@@ -1,0 +1,11 @@
+{
+  "name": "returns-pipeline",
+  "version": "2026.9.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "8.7.1"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "shop-a11y-pipeline",
-  "version": "4.2.1",
+  "version": "4.4.0",
   "private": true,
   "scripts": {
     "test": "node --test"

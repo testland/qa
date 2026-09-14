@@ -13,9 +13,18 @@ form in June, we cannot add the second factor the security review asked for
 without rewriting that screen anyway, and the web portal is moving to the same
 arrangement next quarter so we would rather have one thing to maintain.
 
-The 5.0 apps do not draw a sign-in screen. That work is finished, shipped to
-TestFlight on 2026-09-05 and to the internal Android track the same day, and
-`mobile-app` in the test realm was configured to match it.
+The 5.0 apps do not draw a sign-in screen. The user lands on a page the identity
+server serves, types their credentials there, and the app is handed back control
+on its own URL scheme. That work is finished, shipped to TestFlight on 2026-09-05
+and to the internal Android track the same day, and `mobile-app` in the test realm
+was configured to match it.
+
+## What the store review actually asked for
+
+The second factor is AUTH-231 and is not in this release. What is in this release
+is that the credentials are never seen by our code - they are entered on the
+identity server's own page, in its own session. That is the property the store
+review was after and the one the release is being made for.
 
 ## What is left
 

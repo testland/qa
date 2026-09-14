@@ -1,13 +1,20 @@
-$ git log --oneline --date=short --pretty='%h %ad %an  %s' -- src/test/java
+$ git log --date=short --pretty='%h %ad %an  %s' -- src/test/java
 
-9d1e77c 2026-08-14 p.novak   add postcode field to the checkout flow
-c04a5b1 2026-06-30 p.novak   promo code assertion now checks the discounted total
+7c31f88 2026-08-14 p.novak   add the postcode field to the checkout journey
+de40c1b 2026-05-19 r.okafor  quieten the checkout journey, see #4412
+c04a5b1 2026-04-28 p.novak   promo assertion now checks the discounted total
 a91c2f3 2026-04-02 t.keller  rename e2e classes so they read as journeys, not tests
 5bb03de 2026-03-11 p.novak   cover the place order button
 2fe80c1 2026-02-02 t.keller  first e2e pass: smoke + login
 
+$ git show --stat --oneline de40c1b
+de40c1b quieten the checkout journey, see #4412
+ src/test/java/com/shop/e2e/CheckoutJourney.java | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
 $ git show --stat --oneline a91c2f3
 a91c2f3 rename e2e classes so they read as journeys, not tests
- src/test/java/com/shop/e2e/CheckoutTest.java  => src/test/java/com/shop/e2e/CheckoutFlow.java  | 2 +-
- src/test/java/com/shop/e2e/LoginTest.java     => src/test/java/com/shop/e2e/LoginJourney.java  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ src/test/java/com/shop/e2e/CheckoutTest.java => src/test/java/com/shop/e2e/CheckoutJourney.java | 2 +-
+ src/test/java/com/shop/e2e/LoginTest.java    => src/test/java/com/shop/e2e/LoginJourney.java    | 2 +-
+ pom.xml                                                                                         | 8 +++++++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)

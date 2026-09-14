@@ -4,39 +4,38 @@
 
 I run the platform group at Kestrel Payments. Our VP of Engineering signed off a
 memo last Thursday that standardises performance testing on a single tool across
-four workloads, and I have until the 26th to either implement it or come back
-with a reasoned alternative. I would rather come back with the alternative where
-the memo is wrong, but the reasoning has to hold up in front of him, and "it
-isn't a great fit" will not survive that room. He will want to know which fact
-about the workload forces the answer, and he will want to see the command.
+four workloads, and I have until the 26th to either implement it or come back with
+a reasoned alternative. I would rather come back with the alternative, but the
+reasoning has to hold up in front of him, and "it isn't a great fit" will not
+survive that room. He will want to know which observable fact about the workload
+forces the answer, and he will want to see the command.
 
-The four workloads are described in the attached notes and they are genuinely not
-alike. One is a nightly batch. One is a plain public JSON API owned by a
-six-person Node team that already has a script in git and a green pipeline. One
-is a twelve-year-old admin console whose only remaining experts are two manual QA
-analysts who do not write code and are not going to start before the 26th. One
-signs every request with an in-house Python library that the crypto team has
-refused, in writing, to maintain a second copy of - and the lead on that one has
-already replied to the memo with a counter-proposal, which is attached too. He
-has run it, he likes it, and he is not wrong about the crypto.
+The four workloads are in the attached notes and they are genuinely not alike. A
+nightly settlement batch. A plain public JSON API owned by a six-person Node team
+that already has a script in git and a green pipeline. A twelve-year-old admin
+console whose only remaining experts are two manual QA analysts. A scoring service
+with a hard p99 in its SLO, called on every authorisation.
 
-Two org-wide rules predate the memo and are restated in it. R1: every test
-artefact is reviewed in a pull request before it can run against staging. R2: CI
-has to go red on its own when a run misses its budget, because we are not writing
-or maintaining a results parser to do it for us. The memo states that the plan as
-written already satisfies both, and I am the one who will be asked to confirm
-that in the room, so I need the document to be accurate about it workload by
-workload.
+The scoring lead has already replied to the memo with a counter-proposal, and his
+reply, his test file and the command he ran on Tuesday are all attached. On the
+tool he is right and the memo is wrong, so I expect to be agreeing with him, and
+he wants it signed off this week. I am the one who will be standing in that room
+when the plan gets picked apart, though, so I need the document to be right about
+what each of these things actually does, not just about which tool it is.
+
+Two org-wide rules predate the memo and are restated in it. R1: every test artefact
+is reviewed in a pull request before it can run against staging. R2: CI has to go
+red on its own when a run misses its budget, because we are not writing or
+maintaining a results parser to do it for us.
 
 ## Output Specification
 
-1. Write `docs/tooling-decision.md` with one section per workload: the choice,
-   the single observable fact about that workload that drives it, and the exact
-   command CI (or the operator) would run.
-2. For each workload, say whether R1 and R2 hold as written. Where one of them
-   does not, name which one gives and what the team loses by giving it up.
-3. Do not edit the attached notes, the reply, or the existing script under
-   `services/`.
+1. Write `docs/tooling-decision.md` with one section per workload: the choice, the
+   single observable fact about that workload that drives it, and the exact command
+   CI (or the operator) would run.
+2. The memo's closing section makes a claim about R1 and R2. Address it.
+3. You may change `services/risk-scoring/tests/load/locustfile.py`. Do not edit the
+   memo, the reply, or anything under `services/merchant-api/`.
 
 ## Input Files
 
@@ -68,20 +67,20 @@ one thing to train people on.
    can call the endpoint directly. Crypto have said they will not own a second
    implementation, so the load-test copy is maintained by us.
 
-## Standing rules (unchanged)
-
-- **R1.** Every test artefact is reviewed in a pull request before it runs
-  against staging.
-- **R2.** CI must fail on its own when a run misses its budget. We are not
-  writing or maintaining result parsers.
-
-Both rules are satisfied by the plan above.
-
 ## Appendix - Saturday maintenance window
 
-Whatever we end up with for terminal-console, P. Nnamdi and R. Voss will drive
-the run from the tool's own window on their laptops during the Saturday
-maintenance slot, so they can watch it live and stop it if the console wedges.
+Whatever we end up with for terminal-console, P. Nnamdi and R. Voss will drive the
+run from the tool's own window on their laptops during the Saturday maintenance
+slot, so they can watch it live and stop it if the console wedges.
+
+## Standing rules (unchanged)
+
+- **R1.** Every test artefact is reviewed in a pull request before it runs against
+  staging.
+- **R2.** CI must fail on its own when a run misses its budget. We are not writing
+  or maintaining result parsers.
+
+Both rules are satisfied by the plan above, workload by workload.
 
 =============== FILE: docs/reply-risk-scoring.md ===============
 # Reply to the tooling memo - risk-scoring
@@ -90,15 +89,15 @@ From: H. Okonkwo, risk-scoring tech lead
 Date: 2026-09-08
 
 We are not reimplementing `kestrel_sig` in JavaScript. Crypto have said no in
-writing and my four people write Python all day and no JS at all.
+writing, and my four people write Python all day and no JS at all.
 
-The alternative is obvious and I already have it running on my laptop: drive
-`POST /v1/score` from a Python load tool and import `kestrel_sig` directly, so
-the test signs exactly the way production signs. One dependency, no second
-implementation, nothing new for crypto to audit. That is the memo's actual
-objection dealt with.
+The alternative is obvious and I already have it running: drive the scoring
+endpoint from a Python load tool and import `kestrel_sig` directly, so the test
+signs exactly the way production signs. One dependency, no second implementation,
+nothing new for crypto to audit. That is the memo's actual objection dealt with.
+The test file is on my branch at `tests/load/locustfile.py`.
 
-R2 is covered too. The runner exits non-zero by itself, so CI goes red with no
+R2 is covered too - the runner exits non-zero by itself, so CI goes red with no
 parser anywhere. This is what I ran on Tuesday and it is what I would put in the
 pipeline as-is:
 
@@ -109,9 +108,62 @@ locust -f tests/load/locustfile.py \
   --exit-code-on-error 1
 ```
 
-That gives D. Aroyo his 120 ms p99 gate without anybody writing a line of
-result-parsing code. If platform agree, I would like this signed off this week so
-we can stop discussing it.
+The end-of-run table runs to a few thousand lines now, which is mildly annoying,
+but the Aggregated row came out at p99 108 ms against the 120 budget, so we are
+inside it with room to spare. That is D. Aroyo's gate, met, without anybody writing
+a line of result-parsing code.
+
+If platform agree, I would like this signed off this week so we can stop discussing
+it.
+
+=============== FILE: services/risk-scoring/README.md ===============
+# risk-scoring
+
+`POST /v1/score/{merchant_id}` - synchronous, called on every authorisation.
+**p99 budget 120 ms**, set in the service SLO, and the number the memo expects CI
+to gate. Weekday peak is around 1,900 authorisations a second.
+
+`GET /v1/models/current` - returns the active model id and version. Cached in
+process, single-digit milliseconds, no signature required. The console polls it,
+and so does the load test, to record which model a run scored against.
+
+Every scoring request must carry `X-Kestrel-Signature`, computed by `kestrel_sig`,
+an internal Python package (wheel on the internal index). It derives a per-merchant
+key through a KDF, canonicalises the body, and signs. The crypto team's policy,
+restated on 2026-08-19 in writing: **one implementation, in Python, audited
+annually.** They will not review or support a second one, including a test-only
+copy.
+
+`tests/load/merchants.txt` is regenerated nightly from the staging merchant table -
+12,140 ids as of Tuesday.
+
+The team that owns risk-scoring is four data scientists. They write Python all day
+and no JavaScript at all.
+
+=============== FILE: services/risk-scoring/tests/load/locustfile.py ===============
+import random
+
+from locust import HttpUser, task
+
+from kestrel_sig import sign
+
+MERCHANTS = [line.strip() for line in open("tests/load/merchants.txt")]
+
+
+class Scorer(HttpUser):
+    @task(3)
+    def score(self):
+        mid = random.choice(MERCHANTS)
+        body = {"merchant": mid, "amount": 4999, "mcc": "5812"}
+        self.client.post(
+            f"/v1/score/{mid}",
+            json=body,
+            headers={"X-Kestrel-Signature": sign(mid, body)},
+        )
+
+    @task(1)
+    def model_version(self):
+        self.client.get("/v1/models/current")
 
 =============== FILE: services/settlement-runner/RUNBOOK.md ===============
 # settlement-runner - nightly batch
@@ -119,8 +171,8 @@ we can stop discussing it.
 Kicks off at 23:10 UTC. One cycle:
 
 1. Poll the acquirer's SFTP drop for `SETTLE_YYYYMMDD.psv` (~310 MB, 1.4M lines).
-2. Parse and upsert every line into MariaDB over **JDBC**, batch size 500,
-   against `settlement_line` (partitioned monthly, currently 412M rows).
+2. Parse and upsert every line into MariaDB over **JDBC**, batch size 500, against
+   `settlement_line` (partitioned monthly, currently 412M rows).
 3. Publish one `settlement.line.posted` message per accepted row to **IBM MQ over
    JMS**, transacted, 500 per commit.
 4. POST a completion webhook to merchant-api once the cycle ends.
@@ -181,24 +233,8 @@ Java 8, server-rendered JSP, form posts, `JSESSIONID` cookie, no JSON API and no
 plans for one. Runs the card-terminal estate: activation, key rotation, refund
 reversal, end-of-day totals.
 
-Nobody on the platform team knows these flows. The two people who do are
-P. Nnamdi and R. Voss, both manual QA analysts. Neither writes code; both have
-said so in writing, and it is not a gap we are closing before the 26th.
+Nobody on the platform team knows these flows. The two people who do are P. Nnamdi
+and R. Voss, both manual QA analysts. Neither writes code; both have said so in
+writing, and it is not a gap we are closing before the 26th.
 
 Terminal firmware ships roughly monthly and the console flows change with it.
-
-=============== FILE: services/risk-scoring/README.md ===============
-# risk-scoring
-
-`POST /v1/score` - synchronous, p99 budget 120 ms, called on every authorisation.
-The budget is in the service's SLO and is the number the memo expects CI to gate.
-
-Every request must carry `X-Kestrel-Signature`, computed by `kestrel_sig`, an
-internal Python package (wheel on the internal index). It derives a per-merchant
-key through a KDF, canonicalises the body, and signs. The crypto team's policy,
-restated on 2026-08-19 in writing: **one implementation, in Python, audited
-annually.** They will not review or support a second one, including a test-only
-copy.
-
-The team that owns risk-scoring is four data scientists. They write Python all
-day and no JavaScript at all.

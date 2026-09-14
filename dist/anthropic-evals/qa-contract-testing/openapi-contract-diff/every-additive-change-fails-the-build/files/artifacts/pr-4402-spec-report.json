@@ -1,0 +1,12 @@
+[
+  {
+    "id": "api-removed-without-deprecation",
+    "level": 3,
+    "operation": "POST",
+    "operationId": "freezeCard",
+    "path": "/v1/cards/{cardId}/freeze",
+    "source": "/tmp/published.yaml",
+    "section": "paths",
+    "text": "api removed without deprecation"
+  }
+]

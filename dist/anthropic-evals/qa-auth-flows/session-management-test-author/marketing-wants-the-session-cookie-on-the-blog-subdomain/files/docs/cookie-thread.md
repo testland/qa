@@ -8,23 +8,28 @@
 > every single time. Same account, same browser, works if I type the callback
 > URL into the address bar. Forty paying seats. I want `sameSite` changed from
 > `Strict` to `Lax` in `config/production.json` for Thursday.
+>
+> Capture of the hop that fails, from her browser:
+>
+> ```
+> GET /auth/callback?code=4%2F0AX4…&state=9f21…
+>   > host: app.atlas.example
+>   > referer: https://accounts.google.com/
+>   > sec-fetch-site: cross-site
+>   > sec-fetch-mode: navigate
+>   > sec-fetch-dest: document
+>   < 302 Location: /sign-in?next=%2F
+> ```
 
 **Tom (growth), 10 Sep 09:41**
 
-> Separate ask while somebody is in that file. Put the session cookie on
-> `Domain=.atlas.example` so `blog.atlas.example` and `status.atlas.example`
-> can tell who is reading and swap the call to action. Ops say the key is
-> already in the config so it should be a one-liner. `blog.` is a hosted
-> WordPress that Fieldhaus publish into — four of their staff have admin on it
-> — and `status.` is a third-party status page. Neither is our infrastructure
-> and neither is in our change-control process, before anyone asks.
+> Separate ask while somebody is in that file. I want `blog.atlas.example` and
+> `status.atlas.example` to be able to read the session cookie so they can tell
+> who is reading and swap the call to action. Ops say there is already a domain
+> key in the config, so I am told this is a one-liner and I have promised it
+> for Thursday.
 
 **Ops, 10 Sep 10:15**
 
-> For the record on how requests land: the load balancer terminates TLS at the
-> edge and forwards to the app nodes inside the VPC over plain HTTP, so
-> `req.protocol` is `http` on every production request — that is what the
-> capture in `src/requests.js` shows. The original proto is in
-> `x-forwarded-proto`. Everything in `config/production.json` ships to prod
-> as written; `cookieDomain` has been in that file since a subdomain
-> experiment in 2025 that was never unwound.
+> Inventory is attached for whoever picks this up. No opinion from us on either
+> ask; we just host the things.

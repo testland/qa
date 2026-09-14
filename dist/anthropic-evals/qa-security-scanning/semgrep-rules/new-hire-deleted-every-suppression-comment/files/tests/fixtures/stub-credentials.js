@@ -1,6 +1,4 @@
-// Fixtures for the auth stub server. Nothing here is real, nothing here is
-// ever sent off-box: the stub server answers on 127.0.0.1 and is torn down in
-// the test teardown. Do not reuse these values anywhere outside tests/.
+// Fixtures for the auth stub server, which answers on 127.0.0.1 only.
 
 // Suppression removed by #1180; shown here as it was on main:
 //   // nosemgrep: generic.secrets.security.detected-generic-api-key

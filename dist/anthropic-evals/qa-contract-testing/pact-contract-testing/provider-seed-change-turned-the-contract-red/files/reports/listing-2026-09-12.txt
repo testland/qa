@@ -1,0 +1,18 @@
+$ ls -la pacts apps/checkout-web/pacts
+
+pacts:
+-rw-r--r--  1 rohan  staff  1704 Sep 12 09:14 checkout-web-catalog-api.json
+
+apps/checkout-web/pacts:
+-rw-r--r--  1 rohan  staff   842 Jun 30 16:02 checkout-web-catalog-api.json
+
+$ git check-ignore -v pacts/checkout-web-catalog-api.json
+.gitignore:5:/pacts/	pacts/checkout-web-catalog-api.json
+
+$ git log -1 --format='%h %ad %s' -- apps/checkout-web/pacts/checkout-web-catalog-api.json
+9f2c015  Tue Jun 30 16:02:11 2026 +0100  chore: commit the generated catalog contract
+
+$ git log --oneline -3 -- apps/checkout-web/test/catalog.consumer.spec.js
+5c9d31b  fix(contract): match catalog fields on type instead of exact values
+8801af4  test: assert the cart row projection in the consumer test
+9f2c015  test: first catalog consumer test

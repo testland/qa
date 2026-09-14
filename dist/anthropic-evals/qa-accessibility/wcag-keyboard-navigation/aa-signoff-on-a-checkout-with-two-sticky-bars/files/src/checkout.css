@@ -48,6 +48,6 @@
 .field input:focus,
 .field textarea:focus,
 .field select:focus {
-  outline: 1px solid #d4d4d4;
+  outline: 2px solid #767676;
   outline-offset: 2px;
 }

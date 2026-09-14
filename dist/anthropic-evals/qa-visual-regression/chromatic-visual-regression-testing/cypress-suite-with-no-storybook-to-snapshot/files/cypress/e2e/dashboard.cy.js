@@ -7,6 +7,9 @@ describe('dashboard', () => {
     cy.visit('/dashboard');
     cy.contains(/Updated \d+ minutes? ago/).should('be.visible');
     cy.screenshot('dashboard', { capture: 'viewport' });
+    cy.readFile('cypress/screenshots/dashboard.cy.js/dashboard.png', 'base64').then((image) => {
+      cy.task('visual:compare', { name: 'dashboard', image });
+    });
   });
 
   it('links through to overdue invoices', () => {

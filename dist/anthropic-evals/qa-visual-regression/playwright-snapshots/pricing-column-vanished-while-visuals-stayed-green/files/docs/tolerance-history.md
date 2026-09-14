@@ -1,23 +1,21 @@
-# How the tolerances got where they are
+# git log -p on the expect block in playwright.config.ts
 
-| PR    | Date       | Change                                          | Stated reason                          |
-|-------|------------|-------------------------------------------------|----------------------------------------|
-| #1907 | 2026-06-11 | added `maxDiffPixels: 800`                       | "anti-aliasing on the headings"        |
-| #1962 | 2026-06-24 | `maxDiffPixels` 800 -> 12000                     | "ticker keeps flipping it"             |
-| #2011 | 2026-07-02 | added `threshold: 0.3`                           | "letting 30% of pixels vary, ad slot"  |
-| #2044 | 2026-07-15 | `threshold` 0.3 -> 0.6, `maxDiffPixels` -> 45000 | "still red twice a week, going to 60%" |
+2026-01-14  f19ac02  "initial visual config"
+            maxDiffPixels: 100, threshold: 0.2, animations: 'disabled'
 
-Marcus's PR description on #2011: "threshold is the fraction of the image
-allowed to differ, so 0.3 gives us headroom for the ad slot without being silly
-about it."
+2026-02-20  8bd3d51  "pricing is flaky in CI, give it room"
+            maxDiffPixels: 100 -> 800
 
-Review comment from @hsong on #2011, approving: "Agreed, 30% of the image is
-generous but that ad slot is a third of the fold on mobile."
+2026-03-30  c4470ae  "still flaky, the logo strip never settles"
+            maxDiffPixels: 800 -> 5000
+            animations: 'disabled' -> 'allow'
 
-Extract from `runbook/visual-job.md`, current:
+2026-05-06  7712fbb  "testimonial rotation, raising again"
+            maxDiffPixels: 5000 -> 60000
+            threshold: 0.2 -> 0.35
 
-> **If the visual job is red and you cannot see why.** The two numbers that
-> matter are `maxDiffPixels` (how many pixels may differ) and `threshold` (what
-> proportion of the image may differ). Raising either makes the job more
-> forgiving. Do not raise them past the values in `playwright.config.ts` without
-> asking Marcus.
+2026-06-25  a0d8e19  "pricing red three times this week, nobody has time"
+            maxDiffPixels: 60000 -> 400000
+            threshold: 0.35 -> 0.55
+
+No change since 2026-06-25. The pricing checks have not failed since.

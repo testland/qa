@@ -1,4 +1,4 @@
-# Release gate passed on a night the packaging step never ran
+# The release gate has never once gone red, including the night we shipped the wrong build
 
 ## Problem Description
 
@@ -17,24 +17,27 @@ running 4.7.1 and their About box says so.
 I spent Wednesday trying to get that gate to notice something. I deleted `dist/`
 on the runner before the gate step: green. I put the August build back and left
 it there: green. I renamed the folder: green. Whatever those three checks are
-looking at, it is not the folder we sign and ship, and I would like to know what
-it is before I trust a release again. The job log for all three attempts is
+looking at, it is not the folder we sign and ship, and I want to know what it is
+before I approve another promotion. The job log for all three attempts is
 attached.
 
-Two proposals in the thread, neither of which I want to adopt without a second
-opinion.
+Four people have weighed in and I want a straight yes or no on each:
 
-Marisol thinks the gate is racing the packaging step and wants a sixty-second
-sleep plus two retries in front of the first launch.
-
-Tom wants the gate to notice that `dist/` is missing and take itself out of the
-run, on the grounds that a release job should not go red for something that is
-not the product's fault.
+- Marisol thinks the gate is racing the packaging step and wants a sixty-second
+  sleep plus two retries in front of the first launch.
+- Tom wants the gate to notice `dist/` is missing and take itself out of the
+  run, on the grounds that a release job should not go red for something that is
+  not the product's fault.
+- Rahim says the second check is deliberately asserting `false` and I should
+  leave it alone: the gate runs on the unsigned build, before notarisation, and
+  the packaged flag only flips once the bundle has been signed, so asserting
+  true would fail every release we have ever done.
+- Priyanka wants the version to stop being a constant somebody has to remember
+  to edit, and be read from `package.json` instead.
 
 The release job runs the gate on all three runner images because we sign and
-ship three artefacts. `npm run package` writes them to
-`dist/mac-arm64/Ledgerline.app/Contents/MacOS/Ledgerline`,
-`dist/win-unpacked/Ledgerline.exe` and `dist/linux-unpacked/ledgerline`.
+ship three artefacts; `scripts/sign-artefacts.sh` is what picks them up
+afterwards.
 
 `tests/e2e/window.spec.ts` is the renderer suite. It went red in August when we
 broke the ledger table header, exactly as it should have, and it is not part of
@@ -42,16 +45,14 @@ this.
 
 ## Output Specification
 
-1. Rewrite `tests/e2e/release-gate.spec.ts` and `tests/e2e/helpers/artefact.ts`
-   so the gate goes red on both of the builds described above - the stale
-   `dist/` from August, and no `dist/` at all - and so each of the three checks
-   goes red when the thing it names is wrong.
+1. Rewrite `tests/e2e/release-gate.spec.ts` and `tests/e2e/helpers/artefact.ts`.
 2. Keep the three checks and what each one names. Do not add a fourth.
 3. Update `.github/workflows/release.yml` where your answer requires it.
-4. Do not modify `tests/e2e/window.spec.ts` or anything under `src/`.
-5. Write `docs/release-gate-review.md`: what each of the three checks was
-   actually measuring during those green runs, and a direct answer to Marisol's
-   proposal and to Tom's.
+4. Do not modify `tests/e2e/window.spec.ts`, `scripts/sign-artefacts.sh`, or
+   anything under `src/`.
+5. Write `docs/release-gate-review.md`: a yes or no to each of the four
+   proposals with the reason, and what has to be true before we promote another
+   build.
 
 ## Input Files
 
@@ -89,6 +90,7 @@ test('artefact reports the release version', async () => {
 test('artefact is a packaged build', async () => {
   const app = await launchArtefact();
 
+  // unsigned at gate time - flips after notarisation (see RELENG-771)
   const isPackaged = await app.evaluate(({ app }) => app.isPackaged);
   expect(isPackaged).toBe(false);
 
@@ -131,6 +133,24 @@ app.whenReady().then(() => {
   if (positional) openProject(window, positional);
 });
 
+=============== FILE: scripts/sign-artefacts.sh ===============
+#!/usr/bin/env bash
+set -euo pipefail
+
+case "$RUNNER_OS" in
+  macOS)   ARTEFACT="dist/mac-arm64/Ledgerline.app/Contents/MacOS/Ledgerline" ;;
+  Windows) ARTEFACT="dist/win-unpacked/Ledgerline.exe" ;;
+  Linux)   ARTEFACT="dist/linux-unpacked/ledgerline" ;;
+  *)       echo "unknown runner image: $RUNNER_OS" >&2; exit 1 ;;
+esac
+
+if [ ! -e "$ARTEFACT" ]; then
+  echo "no artefact at $ARTEFACT" >&2
+  exit 1
+fi
+
+npm run sign -- "$ARTEFACT"
+
 =============== FILE: package.json ===============
 {
   "name": "ledgerline-desktop",
@@ -166,9 +186,16 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci
+
       - run: npm run package
         continue-on-error: true
+        env:
+          LEDGERLINE_ARTEFACT: dist/mac-arm64/Ledgerline.app/Contents/MacOS/Ledgerline
+
       - run: npm run test:gate
+
+      - run: bash scripts/sign-artefacts.sh
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -183,7 +210,6 @@ release #318, 2026-09-04, macos-latest
     * notarising dist/mac-arm64/Ledgerline.app
     Error: notarisation request timed out after 1800s
     Error: Process completed with exit code 1.
-    (step is continue-on-error, job continues)
 
   Run npm run test:gate
     Running 3 tests using 1 worker
@@ -192,21 +218,19 @@ release #318, 2026-09-04, macos-latest
       ok 3 artefact opens exactly one window
     3 passed (12.1s)
 
-release #319, 2026-09-10, macos-latest - dist/ deleted by hand before the gate step
+release #319, 2026-09-10, macos-latest
 
-  Run ls -la dist/
-    ls: dist/: No such file or directory
-    Error: Process completed with exit code 1.
-    (step is continue-on-error, job continues)
-
+  Run rm -rf dist
   Run npm run test:gate
+    Running 3 tests using 1 worker
     3 passed (11.4s)
 
-release #320, 2026-09-11, macos-latest - dist/ restored from the 2026-08-28 build
+release #320, 2026-09-11, macos-latest
 
+  Run ls dist/mac-arm64
+    Ledgerline.app
   Run /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" dist/mac-arm64/Ledgerline.app/Contents/Info.plist
     4.7.1
-
   Run npm run test:gate
     Running 3 tests using 1 worker
       ok 1 artefact reports the release version

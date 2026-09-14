@@ -12,6 +12,14 @@ updates:
       - dependency-name: "react"
         update-types: ["version-update:semver-major"]
 
+      # Reason: we stay on express 4 until the router rewrite lands; express 5
+      # reorders middleware and our error handler depends on the old order
+      # Approved-by: marta@acme.com
+      # Re-review-date: 2026-11-30
+      # Ticket: PLAT-2210 (router rewrite)
+      - dependency-name: "express"
+        versions: ["^4.0.0"]
+
       # Reason: axios 1.x changes the redirect handling our checkout relies on
       # Approved-by: dmitri@acme.com
       # Re-review-date: 2025-11-01
@@ -28,10 +36,10 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-      # Reason: django 5.0 drops Python 3.9, our base image is pinned to 3.9
+      # Reason: django 5.0 drops Python 3.9 and our base image is pinned to 3.9
       # Approved-by: marta@acme.com
       # Re-review-date: 2026-10-15
-      # Ticket: PLAT-2210 (base image upgrade)
+      # Ticket: PLAT-2211 (base image upgrade)
       - dependency-name: "django"
         versions: [">=5.0"]
 

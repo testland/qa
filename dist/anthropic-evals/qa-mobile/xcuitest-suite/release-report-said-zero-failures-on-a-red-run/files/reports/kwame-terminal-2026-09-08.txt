@@ -4,8 +4,6 @@ $ xcodebuild -version
 Xcode 16.2
 Build version 16C5032a
 
-$ # verify-release.sh does not produce one of these, so I made this bundle by
-$ # hand from a local run to see what is inside it
 $ ls build
 result.xcresult
 

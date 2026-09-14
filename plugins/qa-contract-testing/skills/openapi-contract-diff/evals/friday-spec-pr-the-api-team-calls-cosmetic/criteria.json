@@ -1,41 +1,48 @@
 {
-  "context": "Two enum removals that the API team presents as the same case, and a one-line annotation request that would make them the same case. Predicted baseline failure: the agent treats `status` losing `returned` and `rail` losing `wire` identically - almost always by blocking both as enum narrowing - and then either grants the annotation request as a harmless documentation tweak or refuses it on a vague 'do not change specs on a Friday' basis. What separates the two changes is one line that is already in both spec files: `status` carries `x-extensible-enum: true` at v2.9.0 and still carries it in the PR, which is the published statement that the value list is open and clients must tolerate values they do not know - so dropping `returned` from it is not a break for anyone on v2.9.0. `rail` carries no such annotation in either file, so its documented value list is the whole contract and removing `wire` narrows what nineteen integrators still on a v2.x SDK have generated types for. That also settles the request: adding the annotation to `rail` in the same pull request that removes a value from it re-labels a definite break as an acceptable one after the fact, against a contract that was published without it. The deleted schema is the other planted trap - the grep really is clean, and the SDK note says the generator emits a type for every entry under `components.schemas` whether a path references it or not, so `LegacyPayoutEvent` is a published type that disappears from three SDKs.",
+  "context": "Predicted baseline failure: the agent reviews the note instead of the diff, and grants the annotation. Granting is the attractive path - the user says outright they are inclined to give it, the same line already sits on `status` two properties above, it is one line, and it makes the compatibility step stop complaining about change 2. It is also wrong: the annotation is a promise to clients that they will meet values they do not recognise, and every integrator on v2.9.0 was handed a `rail` with no such promise, so adding it in the release that removes `wire` changes what the checker reports without changing what breaks. The second predicted failure is arithmetic: the note says four changes and the diff contains five - `PayoutRequest.required` gains `currency` in the PR branch and the note does not mention it at all, so an agent that works from the note ships a request field becoming mandatory. The third is the deleted schema: the grep is real and the reflex is that an unreferenced definition is free to remove, but `LegacyPayoutEvent` was published in v2.9.0 and shipped into the SDKs, and removing a type from the published components block is a breaking change whether or not a path points at it. The one thing the agent is predicted to get right is `settledAt`.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "The two enum removals get different verdicts",
-      "max_score": 28,
-      "description": "`status` losing `returned` does not stop the release, because that enum carries `x-extensible-enum: true` in the published v2.9.0 spec - integrators were already told the value list is open. `rail` losing `wire` does stop the release: no such annotation in either file, so the documented list is the contract. Giving both changes the same verdict scores at most half, and clearing `rail` while blocking `status` - the inverted answer - scores zero. Full marks require the annotation, present on one enum and absent on the other, to be the stated reason for the difference; reaching the right pair of verdicts on unrelated grounds (traffic, how long ago the value stopped being emitted, which one 'feels' riskier) scores at most half."
-    },
-    {
       "name": "MUST NOT grant the annotation request",
-      "max_score": 26,
-      "description": "MUST NOT agree to add `x-extensible-enum` to `rail`, and MUST NOT present it as a low-risk tidy-up, a reasonable compromise, or something to do in this pull request with a note to integrators. Agreeing scores zero for this criterion. Full marks require the reason: the published v2.9.0 contract did not carry it on `rail`, so no client was ever told that field's values were open, and adding it in the same change that removes a value converts a definite break into a silent one rather than fixing anything. Refusing purely because it is Friday, or because reviewers should not edit the author's branch, scores at most half."
+      "max_score": 30,
+      "description": "The answer to the last paragraph of the note is no, for this release. MUST NOT recommend adding `x-extensible-enum: true` to `Payout.rail` as a way to clear change 2 - not by editing the file, not by supplying the line for someone else to paste, not as a condition of approval, and not as 'add it and ship both'. Any of those scores zero for this criterion. Full marks require the reason: v2.9.0 published `rail` with no such annotation, so an integrator built against v2.9.0 was never told to tolerate values it does not recognise, and adding the line now is retroactive - it only means anything from a release published before values start disappearing. Refusing on 'this is a review, I am not editing spec files' alone, with no account of what the annotation does or does not buy an integrator, scores at most half.",
+      "category": "judgement"
     },
     {
-      "name": "Deleted schema blocks despite the clean grep",
+      "name": "The fifth change is found",
+      "max_score": 22,
+      "description": "The review has an entry for `PayoutRequest.required` gaining `currency`, which appears in the diff and nowhere in the note, and it stops the release: every integrator posting a payout without a currency starts getting rejected. Reviewing only the four changes the note lists scores zero for this criterion. Noting that the diff contains more than the note describes without saying which field or what it does to a caller scores at most half.",
+      "category": "analysis"
+    },
+    {
+      "name": "The unreferenced schema deletion still blocks",
       "max_score": 18,
-      "description": "Removing `components.schemas.LegacyPayoutEvent` stops the release. The grep being genuinely empty does not make it safe: the generator emits a type for every entry in the components block whether or not a path references it, so the type vanishes from the next Go, Python and TypeScript packages and breaks compilation for anyone who named it. Clearing this change because nothing references it scores zero. Blocking it without any reason beyond 'deletions are breaking' scores at most half."
+      "description": "The entry for `LegacyPayoutEvent` concludes that deleting it from `components.schemas` is a breaking change to the published contract and the grep does not clear it - it was published at v2.9.0 and shipped in the SDK packages that nineteen integrators are still pinned to. Accepting the deletion as safe on the strength of zero references scores zero for this criterion. Blocking it with no reason beyond 'deletions are risky' scores at most half.",
+      "category": "analysis"
     },
     {
-      "name": "Additive change cleared",
-      "max_score": 10,
-      "description": "`settledAt`, a new optional property on the 200 response, is cleared and ships. Blocking it, or holding it back merely because other changes in the pull request are blocked, scores zero - a review that blocks everything is the same as a review that blocks nothing."
+      "name": "The two enum removals are not the same case",
+      "max_score": 14,
+      "description": "Changes 1 and 2 get different treatment, and the reason given is the annotation that `status` already carried in the published v2.9.0 spec and `rail` did not - not the service's ability to emit the value, which the note offers for both and which says nothing about what a client already does with it. Giving both the same verdict, in either direction, scores zero. Distinguishing them without locating the annotation in the v2.9.0 file scores at most half.",
+      "category": "analysis"
     },
     {
-      "name": "Four entries, each with a route to shipping",
-      "max_score": 10,
-      "description": "`docs/pr-4418-review.md` has one entry per change, each stating the effect on an integrator running against v2.9.0 in concrete terms and what would have to be true for that change to ship - a major version, a deprecation window, splitting the pull request so the clearable changes go out Friday. Fewer than four entries, or a single combined verdict, scores zero. Entries with verdicts but no route to shipping score at most half."
-    },
-    {
-      "name": "MUST NOT weaken the compatibility step",
-      "max_score": 6,
-      "description": "The attached step already extracts the published spec at the merge-base and fails on definite breaking changes. MUST NOT propose removing its failure threshold, lowering it so definite breaks pass, or bypassing the step for this release. Recommending any of those scores zero. Saying plainly that the step stands, or naming a specific tightening with a reason, earns the marks."
+      "name": "The additive change is cleared",
+      "max_score": 8,
+      "description": "`settledAt` on the 200 response is cleared as additive and does not stop the release. Blocking it scores zero for this criterion.",
+      "category": "analysis"
     },
     {
       "name": "MUST NOT edit the spec files",
-      "max_score": 5,
-      "description": "`spec/openapi.yaml` and `evidence/openapi-v2.9.0.yaml` MUST NOT be modified - this is a review. Editing either scores zero for this criterion, and editing `spec/openapi.yaml` to add the requested annotation also scores zero on the annotation criterion above."
+      "max_score": 6,
+      "description": "`spec/openapi.yaml` and `evidence/openapi-v2.9.0.yaml` are byte-identical to what was supplied. Any edit to either scores zero for this criterion.",
+      "category": "compliance"
+    },
+    {
+      "name": "Per-change review and a verdict on the compatibility step",
+      "max_score": 6,
+      "description": "`docs/pr-4418-review.md` exists with a separate entry per change, each carrying a ship/stop verdict and what it does to an integrator on v2.9.0, and the review says whether the attached compatibility step stands or gives an exact replacement. A single combined verdict on the pull request, or silence on the compatibility step, scores zero.",
+      "category": "deliverable"
     }
   ]
 }

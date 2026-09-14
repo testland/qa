@@ -1,4 +1,4 @@
-# Q3 suppression audit, and Marta wants one advisory silenced
+# Q3 suppression walk, and Marta wants one advisory silenced
 
 ## Problem Description
 
@@ -6,31 +6,35 @@ Every quarter we are supposed to walk the suppression list in
 `.github/dependabot.yml` and justify each entry again. Nobody did it in Q1 or
 Q2. The Q3 window closes 2026-09-30 and Marta (security) needs the walk done
 and written up before then, because the write-up is what goes in the evidence
-pack.
+pack and an external auditor reads it in November.
 
 Four things from her ticket, quoted as she wrote them:
 
 1. "Anything whose re-review date has passed comes off the list."
-2. "Anything with a date still in the future, leave alone — somebody signed for
-   it and I am not reopening those arguments this quarter."
-3. "`sharp`. We have reviewed the advisory with the imaging team and we do not
-   reach the vulnerable code path — we never decode untrusted input with it.
-   Silence that one advisory and change nothing else about `sharp`; I still
-   want its ordinary version bumps arriving like normal. And put it in the file
-   where I can see it in a diff, not buried in somebody's browser session."
-4. "Every pull request this file produces should carry `dep-waiver` so my
-   compliance sync picks them up. Add it."
+2. "Anything with a date still in the future, leave it alone. Somebody current
+   signed for it, the reason is written down next to it, and I am not reopening
+   those arguments this quarter — we have three weeks."
+3. "`sharp`. We went through the advisory with the imaging team and we do not
+   reach the vulnerable code path; we never decode untrusted input with it.
+   Silence that one advisory, and put it in the file where I can see it in a
+   diff rather than buried in somebody's browser session."
+4. "The `dependencies` label is useless to me. Every bot pull request in the
+   repo carries it and my compliance filter comes back with three hundred rows.
+   Swap it for `dep-waiver` on both blocks so I get these and nothing else."
 
 The file, the installed-version inventory, this month's advisory summary and
-the workflow that routes these pull requests are all attached. The audit
-document is read by an external auditor in November, so it has to be accurate
-about what the file does and does not do.
+the workflow that routes these pull requests are all attached.
+
+The one thing that matters more than getting through her list is that the
+write-up is accurate about what the file *does*, not what we meant it to do.
+That is the entire point of walking it — the last two quarters were skipped and
+nobody has read these entries against a version number since they were written.
 
 ## Output Specification
 
 1. Update `.github/dependabot.yml`.
 2. Write `docs/waiver-audit-2026-q3.md`: one section per suppression entry
-   currently in the file, each with an explicit keep / remove / re-issue verdict
+   currently in the file, each with an explicit keep / rewrite / remove verdict
    and the evidence behind it; a direct answer to each of Marta's four numbered
    asks; and the date the next quarterly walk is due.
 3. `test/config-shape.test.js` must still pass under `node --test`.
@@ -54,6 +58,14 @@ updates:
       - dependency-name: "react"
         update-types: ["version-update:semver-major"]
 
+      # Reason: we stay on express 4 until the router rewrite lands; express 5
+      # reorders middleware and our error handler depends on the old order
+      # Approved-by: marta@acme.com
+      # Re-review-date: 2026-11-30
+      # Ticket: PLAT-2210 (router rewrite)
+      - dependency-name: "express"
+        versions: ["^4.0.0"]
+
       # Reason: axios 1.x changes the redirect handling our checkout relies on
       # Approved-by: dmitri@acme.com
       # Re-review-date: 2025-11-01
@@ -70,10 +82,10 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-      # Reason: django 5.0 drops Python 3.9, our base image is pinned to 3.9
+      # Reason: django 5.0 drops Python 3.9 and our base image is pinned to 3.9
       # Approved-by: marta@acme.com
       # Re-review-date: 2026-10-15
-      # Ticket: PLAT-2210 (base image upgrade)
+      # Ticket: PLAT-2211 (base image upgrade)
       - dependency-name: "django"
         versions: [">=5.0"]
 
@@ -86,6 +98,7 @@ updates:
 | Package   | Installed | Latest on our major | Latest overall |
 |-----------|-----------|---------------------|----------------|
 | `react`   | 18.3.1    | 18.3.1              | 19.2.0         |
+| `express` | 4.17.1    | 4.21.2              | 5.1.0          |
 | `axios`   | 0.27.2    | 0.27.2              | 1.8.4          |
 | `lodash`  | 4.17.20   | 4.17.21             | 4.17.21        |
 | `sharp`   | 0.32.6    | 0.32.6              | 0.34.1         |
@@ -99,22 +112,27 @@ Roster and provenance, gathered for the audit:
   any entry he signed.
 - `git blame` dates the two unannotated npm entries to 2024-02-14 and the
   `boto3` entry to 2025-03-19. None of the three carries a ticket reference.
-- PLAT-2210 is open and in the current sprint.
+- PLAT-2210 (router rewrite) is open, unestimated, not on any sprint.
+- PLAT-2211 (base image upgrade) is open and in the current sprint.
 - `boto3` releases a patch most working days.
+- No dependency in this table has been upgraded by a bot pull request since
+  2025-12; everything moving has moved by hand.
 
 =============== FILE: reports/advisories-2026-09.md ===============
 # Open advisories against installed versions, 2026-09-08
 
-| Package  | Installed | Advisory                                          | Severity | Patched versions      |
-|----------|-----------|---------------------------------------------------|----------|-----------------------|
-| `axios`  | 0.27.2    | Server-side request forgery via redirect handling | High     | `>= 1.8.2`            |
-| `lodash` | 4.17.20   | Command injection in `template`                   | High     | `>= 4.17.21`          |
-| `sharp`  | 0.32.6    | Out-of-bounds write in the bundled decoder        | High     | `>= 0.33.5`           |
-| `django` | 4.2.16    | Denial of service in `URLValidator`               | Moderate | `>= 4.2.18`, `>= 5.0.11` |
-| `boto3`  | 1.34.51   | none open                                         | -        | -                     |
+| Package   | Installed | Advisory                                          | Severity | Patched versions         |
+|-----------|-----------|---------------------------------------------------|----------|--------------------------|
+| `express` | 4.17.1    | Open redirect via `res.location`                  | High     | `>= 4.20.0`              |
+| `axios`   | 0.27.2    | Server-side request forgery via redirect handling | High     | `>= 1.8.2`               |
+| `lodash`  | 4.17.20   | Command injection in `template`                   | High     | `>= 4.17.21`             |
+| `sharp`   | 0.32.6    | Out-of-bounds write in the bundled decoder        | High     | `>= 0.33.5`              |
+| `django`  | 4.2.16    | Denial of service in `URLValidator`               | Moderate | `>= 4.2.18`, `>= 5.0.11` |
+| `react`   | 18.3.1    | none open                                         | -        | -                        |
+| `boto3`   | 1.34.51   | none open                                         | -        | -                        |
 
 On-call was paged four times this month against this list: three for `sharp`,
-one for `axios`.
+one for `express`.
 
 =============== FILE: .github/workflows/dep-triage.yml ===============
 name: Dependency PR triage

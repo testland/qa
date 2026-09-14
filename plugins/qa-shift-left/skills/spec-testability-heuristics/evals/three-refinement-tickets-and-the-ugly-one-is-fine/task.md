@@ -1,44 +1,33 @@
-# Three tickets at the top of the backlog and I can only take two into the sprint
+# Callum sent one of these back and I want a second read before Monday
 
 ## Problem Description
 
-Sprint planning is Monday at 10. Three tickets are sitting at the top of the
-backlog and the squad has room for about two of them. I do not need you to
-estimate them and I do not need you to decide which two are more valuable —
-that is my call and I have already made it on business grounds.
+Three tickets sit at the top of the backlog and they go into refinement Monday
+at 10. I am not asking you to size them and I am not asking which of them
+matters most — I settled that on business grounds last week and I am not
+reopening it in front of nine people.
 
-What I need is the other filter. A ticket only goes into a sprint here if the
-engineer who picks it up and the tester who signs it off will reach the same
-answer about whether it is finished. Twice this quarter we pulled something in,
-the engineer built what the ticket said, and it bounced in review because
-"finished" turned out to mean two different things to two people. Both times we
-lost most of a sprint.
+What I want is the filter we keep forgetting to apply. A ticket is only safe to
+start here if the engineer who picks it up and the tester who signs it off will
+arrive at the same answer about whether it is finished. Twice this quarter we
+started something, the engineer built exactly what the ticket said, and it
+bounced in review because "finished" turned out to mean two different things to
+two people. Both times we lost most of a sprint.
 
-So: for each of the three, tell me whether it can go in on Monday, whether it
-needs something answered first, or whether it cannot go in at all. Where a
-ticket is not ready, give me the exact wording to put in its place — I will be
-editing these live in the planning meeting and I am not going to compose
-sentences while nine people watch.
+Callum is our staff engineer. He read ENG-812 last week and sent it straight
+back to Dev with three lines about the state it was in, and Dev has not touched
+it since. Callum is usually right about this sort of thing, which is why I want
+someone else's read before I back him on Monday.
 
-Fair warning: these three were written by three different people and they look
-nothing like each other. One of them is going to annoy you. Judge them on
-whether the engineer and the tester land in the same place, not on how they
-read.
+One more while you are in there. Esther has been asking for the export on
+ENG-812 for two quarters and she reckons the 50,000-row cap on it is plenty for
+anybody. Is she right?
 
 ## Output Specification
 
-Write `docs/refinement-triage.md`. For each of ENG-812, ENG-820 and ENG-834:
-
-1. The call — goes in, needs an answer first, or cannot go in.
-2. A row per acceptance criterion you have a problem with, saying what is wrong
-   with it and giving the exact replacement wording.
-3. Nothing for the criteria you have no problem with, beyond noting they are
-   fine.
-
-Then say which of the three you would hand to the engineers first.
-
-Leave `tickets/ENG-812.md`, `tickets/ENG-820.md` and `tickets/ENG-834.md`
-untouched; I edit those myself in the meeting.
+Write `docs/refinement-triage.md`. For each of ENG-812, ENG-820 and ENG-834, say
+where the ticket stands and what would have to happen before the squad starts on
+it. Then answer Esther's question.
 
 ## Input Files
 
@@ -53,10 +42,16 @@ esther asked for this on the call again. build it.
 
 click the Export button on /reports, browser downloads
 reports-YYYY-MM-DD.csv where the date is the user's local date. utf-8 with a
-BOM. header row is the visible column labels left to right in the order they
-are on screen. one data row per row currently shown after filtes are applied,
-in the same order. cap is 50000 rows - past that we write the first 50000 and
-show the toast "Showing first 50,000 rows".
+BOM, CRLF line endings. header row is the visible column labels left to right
+in the order they are on screen. one data row per row currently shown after
+filtes are applied, in the same order.
+
+every field is wrapped in double quotes. a field that contains a double quote
+has that quote escaped as \" - backslash then quote - so excel does not swallow
+the rest of the line.
+
+cap is 50000 rows - past that we write the first 50000 and show the toast
+"Showing first 50,000 rows".
 
 owner and member roles can do it. viewer role gets 403 from
 GET /api/reports/export and the button is not rendered for them.

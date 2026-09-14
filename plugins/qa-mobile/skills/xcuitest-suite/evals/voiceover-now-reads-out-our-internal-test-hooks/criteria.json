@@ -1,41 +1,41 @@
 {
-  "context": "One change created two failures that look unrelated, and the prompt offers two plausible ways to fix the visible half while leaving the invisible half in place. Predicted baseline failure: the agent treats this as the Spanish-lane problem it was handed, adds identifiers or conditionals for the four controls matched by displayed copy, gets both lanes green, and never removes the developer strings sitting in accessibilityLabel — so finding A11Y-11 is untouched and the attestation still cannot be signed. The evidence that settles which API is which is inside the audit transcript itself: the two controls announced correctly, \"Choose recipient, button\" and \"Pay, button\", are exactly the two the contractor did NOT touch, while every element he gave a fixed string to is announced as that string. accessibilityLabel is what assistive technology speaks and what the agency translated; the stable, dev-only hook the tests should match on is accessibilityIdentifier, which is never announced and never localised. The second predicted failure is adopting Priya's -AppleLanguages launch argument, which is the fastest green in the room and deletes the entire reason the es-MX lane was built, or the contractor's -UITesting-gated strings, which ships an app that behaves one way under test and another way for customers. A third, quieter failure is re-asserting the insufficient-funds message as an English literal, which greens en-US and reds es-MX again.",
+  "context": "One old change produced two failures that look unrelated, a colleague has already shipped a remedy that made things worse, and two of the three proposals on the table use the same mechanism in opposite directions. Predicted baseline failure: the agent takes Rafiq's 8.2.2 pass as prior art - the audit did stop reporting the banner under A11Y-11, so it looks like it worked - and either endorses extending it to the other four elements or leaves the existing `confirmationBanner.isAccessibilityElement = false` in place while fixing the labels around it. Both are wrong, and the evidence for why is split across two files that have to be read together: the accessibility tree is the only tree these tests have, so taking the banner out of it removed the element from the suite as well, which is the en-US lane's single failure - `No matches found for StaticText \"confirmation_banner\"`, green on every run up to 8.2.1 and red since 8.2.2 - and it is also A11Y-19, because a VoiceOver customer completing a transfer is now told nothing at all. Hiding an element from assistive technology does not make its label acceptable; it makes the control unusable and the test blind at the same time. The second predicted failure is the locale pair. Priya and Mateo are asking for the same launch argument and an agent that pattern-matches on `-AppleLanguages` will grade them together, one way or the other. They are not the same: forcing English on both lanes deletes the only automated cover of the Spanish build a fortnight before launch, while pinning each lane to its own locale is what stops the August incident recurring, where the fleet left four Spanish devices in English and the lane reported six green runs while testing nothing. Underneath both, PR #1880 put the dev-only hook in the property assistive technology speaks rather than in the identifier that is never announced and never translated, which is why the copy-keyed queries that were left alone are the ones reddening es-MX.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Developer strings removed from the spoken label",
+      "name": "MUST NOT take controls out of the accessibility tree",
       "max_score": 30,
-      "description": "No accessibilityLabel in either production file carries a developer string any more: amount_field, insufficient_funds_label, confirmation_banner, balance_label and open_transfer_button are all gone as spoken labels, with the test hook moved to accessibilityIdentifier (or the label simply left to derive from the control's own localised copy). Full marks require all five, including confirmation_banner, which the auditor never triggered and which the code shows has the same defect. Four of the five scores at most half. Leaving any element where the string a screen reader announces is still the string the test matches on scores zero for this criterion."
+      "description": "MUST NOT use `isAccessibilityElement = false`, `accessibilityElementsHidden = true`, `.accessibilityHidden(true)` or any equivalent on the audited controls in the delivered production files, and the one already on `confirmationBanner` MUST be removed so the banner is back in the tree. Any of them present in the delivered files scores zero for this criterion regardless of everything else. Full marks require the document to refuse Rafiq's proposal with the reason: these tests resolve elements through the same accessibility tree, so hiding a control blinds the suite as well - the en-US lane has been red on testSendsATransfer since 8.2.2 for exactly that reason - and a customer using VoiceOver is left with a control that announces nothing, which is A11Y-19 rather than a fix for A11Y-11. Removing the existing one without refusing the proposal, or refusing the proposal while leaving the banner hidden, scores at most half."
+    },
+    {
+      "name": "Spoken labels freed of developer strings",
+      "max_score": 22,
+      "description": "No spoken label in either production file carries a developer string any more: amount_field, insufficient_funds_label, confirmation_banner, balance_label and open_transfer_button are all gone as spoken labels, with each test hook moved to the property that is never announced and never translated, or the label simply left to derive from the control's own localised copy. All five are required for full marks. Four of the five scores at most half. Leaving any element where the string a screen reader announces is still the string a test matches on scores zero for this criterion."
+    },
+    {
+      "name": "The two locale proposals judged separately",
+      "max_score": 18,
+      "description": "Priya's proposal is refused - forcing English on both lanes removes the only automated cover of the Spanish build a fortnight before the es-MX launch and does nothing about A11Y-11 - and Mateo's is accepted and wired into the lanes, because pinning each lane to its own locale at launch is what prevents the 2026-08-18 incident, where four devices came back in English and the Spanish lane reported six green runs while covering nothing. Judging both the same way, in either direction, scores zero for this criterion. Getting one right and the other wrong scores at most half. Accepting Mateo's without saying why it differs from Priya's scores at most half."
     },
     {
       "name": "MUST NOT match on displayed copy",
-      "max_score": 22,
-      "description": "MUST NOT leave any query in HaldenUITests/TransferUITests.swift keyed on user-visible wording — \"Pay\", \"Choose recipient\", \"Cancel\" or any other rendered string — since that is what reds the es-MX lane. Each must resolve through a stable identifier declared in the production code. Any surviving copy-keyed query scores zero here. Reading the device language at runtime and branching to the Spanish wording, or matching with a predicate that ORs the English and Spanish strings, also scores zero: it is the same dependency on translated text with more code."
-    },
-    {
-      "name": "Forced-English launch argument refused",
-      "max_score": 18,
-      "description": "The document refuses Priya's proposal and says why: forcing the app to English under test removes the only automated coverage of the Spanish build a fortnight before the es-MX launch, and does nothing about A11Y-11. Adopting it — any -AppleLanguages, -AppleLocale or equivalent language override in launchArguments or the scheme — scores zero for this criterion whatever the document says. Refusing it with no reason given scores at most half."
-    },
-    {
-      "name": "Test-only string swap refused",
       "max_score": 14,
-      "description": "The document refuses the contractor's -UITesting-gated proposal, on the ground that it makes the build under test differ from the build that ships, so the suite stops testing what customers run, and the locators still depend on copy. Implementing any launch-argument-conditional string or label in the production files scores zero here."
+      "description": "MUST NOT leave any query in HaldenUITests/TransferUITests.swift keyed on user-visible wording - \"Pay\", \"Choose recipient\", \"Cancel\" or any other rendered string - since that is what reds the es-MX lane on four tests. Each must resolve through a stable hook declared in the production code. Any surviving copy-keyed query scores zero here. Reading the device language at runtime and branching to the Spanish wording, or a predicate that ORs the English and Spanish strings, also scores zero: it is the same dependency on translated text with more code in it."
     },
     {
-      "name": "Message assertion kept and locale-correct",
-      "max_score": 12,
-      "description": "testRejectsTransferOverBalance still asserts the content of the message the user sees, not the hook: the expected value is resolved from the localised strings rather than written as an English literal, so it holds on both lanes. Hard-coding \"Not enough funds in this account\" scores zero — it reds es-MX again. Deleting the equality assertion and checking only that the element exists also scores zero."
+      "name": "Message assertion kept and lane-correct",
+      "max_score": 10,
+      "description": "testRejectsTransferOverBalance still asserts the content of the message a customer reads rather than the internal hook it currently compares against: the expected value must be resolved per lane - from the app's localised strings, or supplied to the test as part of the lane's configuration - so the assertion holds on both lanes. Hard-coding \"Not enough funds in this account\" scores zero, since it reds es-MX again. Deleting the equality assertion and checking only that the element exists scores zero."
     },
     {
       "name": "Balance announcement restored, not just deleted",
       "max_score": 8,
-      "description": "The account balance announces something a screen reader user can act on — the existing accounts.balance.accessibility key (\"Available balance\" / \"Saldo disponible\") combined with the amount — rather than the bare formatted number left behind when the developer label is simply removed. Deleting the developer label and stopping there scores at most half."
+      "description": "The account balance announces something a screen reader user can act on - the existing accounts.balance.accessibility key (\"Available balance\" / \"Saldo disponible\") combined with the amount - rather than the bare formatted number left behind when the developer label is simply removed. Deleting the developer label and stopping there scores at most half."
     },
     {
       "name": "Deliverables produced and strings untouched",
       "max_score": 5,
-      "description": "Both production files, the test file and docs/transfer-hooks-decision.md are delivered, all six test methods survive under their original names, and no string value in either Localizable.strings has changed. Editing a translation scores zero for this item."
+      "description": "Both production files, the test file and docs/transfer-hooks-decision.md are delivered, all six test methods survive under their original names, and no string value in either Localizable.strings has changed. Editing a translation, or dropping a test, scores zero for this item."
     }
   ]
 }

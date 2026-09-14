@@ -7,6 +7,7 @@ export const typeDefs = `#graphql
     status: String!
     trackingCode: String
     customerId: ID!
+    previous: Order
   }
 
   type Viewer {

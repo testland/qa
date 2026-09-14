@@ -3,9 +3,9 @@
 ## Problem Description
 
 Background, because you were not here for it. `warehouse-sync` runs from crontab
-on `wh-worker-02` at `*/10 * * * *`. On 21 July two copies of it ran at the same
-time and double-wrote 4,163 rows into `fact_orders`; it took two days to unpick
-and we paused the job the same afternoon. It has been off ever since - the
+every ten minutes. On 21 July two copies of it ran at the same time and
+double-wrote 4,163 rows into `fact_orders`; it took two days to unpick and we
+commented the job out the same afternoon. It has been off ever since - the
 warehouse migration ate August and nobody came back to it.
 
 Priya wrote `src/lock.js` and the wrapper in `src/sync.js` the week after that,
@@ -14,27 +14,28 @@ left a lock behind that stopped the job for four days before anyone noticed.
 Both paths have tests in `test/lock.test.js` and they pass. Her handover note is
 in `ops/priya-note.md`; she left in August.
 
-Analytics want the sync back on Monday morning. Priya's note says the only thing
-left is to pick a staleness number off the runtime data, and that may be right,
-but she never ran any of this against the real job - it has been paused the whole
-time it has existed. The run durations from the six weeks before we paused it are
-in `ops/sync-runtimes.txt` and the two incident write-ups are in `ops/`.
+Analytics want the sync back on Monday morning. Everything in this repo says it
+is ready to go and I would like that to be true, but the only evidence I have is
+a green test file and a note from someone who has left. The run durations from
+the six weeks before we paused it are in `ops/sync-runtimes.txt`, the two
+incident write-ups are in `ops/`, and `ops/fleet.md` is what Ansible thinks it
+has deployed.
 
-What I need out of this is a yes or a no on Monday, and if it is a no, the fix in
-the same change. I am not going through July again and I am not going through May
-again either.
+What I need out of this is a yes or a no on Monday, with the work that answer
+requires in the same change. I am not going through July again and I am not
+going through May again either.
 
 ## Output Specification
 
-1. Add `test/overlap.test.js`. `test/lock.test.js` covers the two paths Priya
-   wrote; the new file is for whatever else you conclude needs covering, and it
-   must run under `node --test` without waiting on real elapsed time.
+1. Add `test/overlap.test.js` for the cases you decide the job has to survive
+   before it goes back on. It must run under `node --test` without waiting on
+   real elapsed time.
 2. If `src/lock.js` or `src/sync.js` need to change, change them.
    `test/lock.test.js` must keep passing unmodified, including the crashed-run
    case.
 3. Write `docs/lock-policy.md`: whether the job is safe to switch back on, what
-   you changed and why, the staleness threshold you land on and the measurement
-   it comes from, and what now happens to a run that is killed mid-flight.
+   you changed and why, any staleness value you land on and the measurement it
+   comes from, and what now happens to a run that is killed mid-flight.
 4. `npm test` must be green when you are done.
 
 ## Input Files
@@ -169,18 +170,19 @@ test('runSync returns the row count from a run that starts', async () => {
 =============== FILE: ops/priya-note.md ===============
 # Handover - warehouse-sync lock, priya, 2026-07-28
 
-The lock is in. `acquire()` creates the file exclusively, so a second run gets
-`false` back and `runSync` exits without doing any work. A lock older than
-`STALE_AFTER_MS` is treated as abandoned, deleted and re-taken, so a killed run
-cannot stop the schedule the way INC-1996 did. Both paths have tests.
+Both failure modes are covered.
 
-The one thing I did not settle is `STALE_AFTER_MS`. I put 60s in so I could get
-the tests written and never went back to it with the runtime numbers in front of
-me. Pick a value off `ops/sync-runtimes.txt` before the job goes back on and I
-think this is done.
+`acquire()` creates the lock file exclusively, so a second run gets `false` back
+and `runSync` exits without doing any work - that is INC-2208. A lock that is
+older than `STALE_AFTER_MS` is treated as abandoned, deleted and re-taken, so a
+run that is killed cannot stop the schedule the way INC-1996 did. The pid of the
+holder goes into the file in case anyone needs to know who has it.
+
+Both paths have tests in `test/lock.test.js`. As far as I am concerned this is
+finished and the crontab lines can be uncommented whenever analytics want them.
 
 =============== FILE: ops/sync-runtimes.txt ===============
-# warehouse-sync wall-clock duration per run, wh-worker-02
+# warehouse-sync wall-clock duration per run
 # crontab: */10 * * * *   (every ten minutes)
 # window: 2026-06-08 .. 2026-07-21, 6,312 runs recorded, 0 missed
 #
@@ -209,21 +211,44 @@ think this is done.
 - 2026-07-21 09:40 - analytics reports order counts roughly double for the
   overnight window.
 - 2026-07-21 11:05 - confirmed 4,163 rows written twice. Two `warehouse-sync`
-  processes were alive at the same time for part of the night; both wrote.
-- 2026-07-21 14:20 - job paused in crontab pending a fix.
-- Cause recorded as: no protection against a run starting while the previous
-  one is still going. The job has no idempotency on write; it appends.
-- Action: Priya to add a lock. Done 2026-07-28, not yet exercised in anger
-  because the job has been paused since.
+  processes were alive at the same time for part of the night and both wrote.
+  The warehouse session log for 00:40-01:20 has the two writers connected from
+  10.4.2.12 and 10.4.2.15.
+- 2026-07-21 14:20 - job commented out of the crontab pending a fix.
+- Cause recorded as: no protection against a run starting while another one is
+  still going. The job has no idempotency on write; it appends.
+- Action: Priya to add a lock. Done 2026-07-28, not exercised in anger because
+  the job has been off since.
 
 =============== FILE: ops/incident-1996.md ===============
 # INC-1996 - warehouse-sync stopped for four days
 
 - 2026-05-02 - host OOM-killer took `warehouse-sync` mid-run. No exit handler
   ran.
-- 2026-05-02 .. 2026-05-06 - every subsequent invocation found the leftover
-  lock file and exited immediately. No alert fired; the job simply did nothing.
+- 2026-05-02 .. 2026-05-06 - every subsequent invocation found the leftover lock
+  file and exited immediately. No alert fired; the job simply did nothing.
 - 2026-05-06 - noticed when a weekly report came back empty. Lock deleted by
   hand, job resumed.
-- Action: any lock we keep has to recover by itself from this. A run that is
-  killed must not be able to stop the schedule permanently.
+- Action: a run that is killed must not cost us more than the cycle it died in.
+  Analytics can absorb one missed cycle and their hourly feed covers the rest;
+  four days of silence is what we are not doing again. Whatever we put in front
+  of this job has to be back to normal service by the next invocation, without
+  anybody logging in.
+
+=============== FILE: ops/fleet.md ===============
+# warehouse group - hosts and the crontab they carry
+
+Both hosts are in the `warehouse` Ansible group and take the same role. The role
+was applied to the group when wh-worker-05 was added on 2026-06-02.
+
+| Host         | Address    | Role applied | Notes                          |
+|--------------|------------|--------------|--------------------------------|
+| wh-worker-02 | 10.4.2.12  | 2026-04-14   | original worker                |
+| wh-worker-05 | 10.4.2.15  | 2026-06-02   | added for the migration        |
+
+The crontab the role writes, identical on both hosts, currently commented out:
+
+    # */10 * * * * /usr/local/bin/warehouse-sync --lock /var/run/warehouse-sync.lock >> /var/log/warehouse-sync.log 2>&1
+
+`/var/run` is tmpfs on both hosts. Nothing is mounted between them; the
+warehouse database is the only thing they share.

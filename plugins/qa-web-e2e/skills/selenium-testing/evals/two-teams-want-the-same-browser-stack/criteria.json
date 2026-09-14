@@ -1,51 +1,46 @@
 {
-  "context": "Two requests that pull in opposite directions, under consolidation pressure that makes one answer for both teams the attractive move. Predicted baseline failure: the agent takes the consultant's framing and standardises - most often on the memo's recommendation, with a phased port of Beacon's 400 specs, occasionally the mirror error of telling Atlas to inherit Beacon's stack because four of six people already know it. Both are wrong and the fixtures settle both. Atlas is a greenfield internal tool with no tests, no migration cost and no compliance surface, so the only argument for the incumbent stack is team familiarity, which is not a constraint. Beacon has three separate constraints stacked: a contract clause that names the W3C WebDriver specification as the protocol that must produce test evidence and requires ninety days' written notice before the tooling changes, a suite written in Ruby - a language with no first-party client for the framework the memo names, so 'port' means either an unofficial third-party client or rewriting 400 specs in another language - and a reporting service built on their existing output. The memo's two load-bearing claims, that it supports every language the teams write in and that it is standards-based so contractual commitments are unaffected, are the things the baseline is predicted to accept without checking. The deliverable spec is the second half of the measurement: it must match the conventions of the file already in that directory, including releasing the browser in an after hook and waiting on controls the manual script describes as disabled until ready.",
+  "context": "A one-line change presented as already agreed, and a second decision the supplied material deliberately does not settle. Predicted baseline failure: the agent signs the Atlas change off. It is one line, it is the documented way to reach a grid, the requester is inclined to say yes, and the author has attached evidence it worked. What the baseline is predicted to miss is that the evidence used a different address - Tomas ran it with baseUrl set to the staging host, while the CI job starts the app on the build runner and passes http://localhost:3000, and once the browser lives in a node container on ci-grid-01 that address resolves to the node itself, so all 60 tests hit nothing. Two further things break in the same move and neither is visible from the one-line diff: ReceiptUploadTest hands the browser a path on the machine running the test, which a remote node cannot read unless the driver is told the file is local; and InvoiceExportTest asserts that a downloaded CSV appears under target/downloads on the runner's own disk, which cannot happen when the browser doing the downloading is somewhere else. On Beacon the predicted failure is the opposite one - producing the yes or no the requester asked for. The clause requires ninety days' written notice before any change to the tooling that produces the evidence, legal has only ever been asked about the framework, and they say explicitly they have no view on whether where the browsers run counts. That question has not been answered by anyone with authority to answer it, so any date given today is invented; the correct output names the open question, the concrete way to close it, and the ninety-day consequence if it closes the wrong way. An agent that refuses both decisions scores no better than one that grants both.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverables produced",
       "max_score": 5,
-      "description": "docs/tooling-recommendation.md and beacon/spec/features/invoice_export_spec.rb both exist, and the recommendation gives a separate decision for each team rather than one blended answer. A single recommendation that does not distinguish the two teams scores zero for this item."
+      "description": "Atlas's files are edited in place and docs/grid-onboarding.md exists with a separate call on each team. A single blended recommendation scores zero for this item."
     },
     {
-      "name": "MUST NOT recommend porting Beacon's suite",
-      "max_score": 32,
-      "description": "The answer must decline the migration and answer the tech lead's question plainly - no, and not later either. Recommending a port, a rewrite, a phased or module-by-module migration, a 'strangler' transition, or a new-specs-on-the-new-tool split for Beacon scores zero for this criterion regardless of the rest. Full marks require the refusal plus at least two of the three constraints named specifically: the clause that names the protocol the evidence must be produced with, the absence of a first-party client for the language those 400 specs are written in, and the reporting service built on the current output. Declining only because 400 specs is a lot of work, or because 'migrations are risky', scores at most half."
+      "name": "MUST NOT sign the change off as proposed",
+      "max_score": 30,
+      "description": "Endorsing the one-line diff for Friday as written scores zero for this criterion regardless of the rest, and so does leaving Atlas's CI job telling a remote browser to open http://localhost:3000. Full marks require the address problem named concretely - that address resolves inside the node container on ci-grid-01, not on the build runner where the app was started, and Tomas's laptop trial passed only because he pointed it at a host the node could actually reach - plus the code changed to pass an address reachable from the node, plus at least one of the two file-transfer breakages named. Naming the address problem in prose while leaving the code unchanged scores at most half; fixing the address while treating the rest of the suite as unaffected scores at most half."
     },
     {
-      "name": "New project not given the incumbent stack by default",
+      "name": "Beacon decision escalated rather than guessed",
+      "max_score": 22,
+      "description": "Answering the requester's demand for a yes or a no with a yes, or with a flat no, scores zero - neither is supportable from what is attached. Full marks require all three: the open question stated (whether moving where the browsers run is a change to the tooling that produces the evidence, which legal explicitly has no view on), the concrete step that closes it and who takes it, and the consequence if it does count - ninety days' written notice, never shortened, which puts Beacon outside this freeze either way. Citing the clause but still handing over a date or a decision scores at most half."
+    },
+    {
+      "name": "File upload made to work across the grid",
       "max_score": 20,
-      "description": "Atlas is directed to a modern framework rather than to Beacon's stack, and the answer says why familiarity is not a reason to carry an older stack onto a greenfield project with nothing to migrate and no compliance surface. Recommending the incumbent stack for Atlas scores zero. Declaring the choice a toss-up, or deferring it to the team, scores at most half."
+      "description": "ReceiptUploadTest sends a path on the machine running the test to an element on a browser that is no longer on that machine. The remote driver must be given a local file detector so the file is uploaded to the node, with the path still resolved absolutely on the client. Leaving the test as it is scores zero. Identifying the problem in the document without changing the code, or 'solving' it by copying fixtures onto the node or mounting a volume into the node container, scores at most half."
     },
     {
-      "name": "Memo's claims checked rather than inherited",
-      "max_score": 16,
-      "description": "The recommendation addresses the memo's two load-bearing claims directly: that the named framework supports every language in use, and that it is standards-based so contractual commitments are unaffected. Repeating either claim as fact, or writing a recommendation that never engages with the memo, scores zero. Disputing one of the two scores at most half."
-    },
-    {
-      "name": "MUST NOT ship the new spec without releasing the browser",
+      "name": "Download assertion addressed",
       "max_score": 14,
-      "description": "From the skill's anti-pattern on skipping driver.quit(): the new spec must quit the driver in an after hook, as the neighbouring spec file does, so a failing example does not strand a browser. No quit, a quit only on the success path, or a quit placed at the end of the example body scores zero for this criterion."
+      "description": "InvoiceExportTest asserts a file exists under target/downloads on the runner's own filesystem; once the browser runs on a node that file lands on the node and the assertion can never pass. The answer must change what that test verifies - the application's own view of the export, or the export fetched over HTTP - or state that this test explicitly stays off the grid and why. Leaving it untouched while recommending the move scores zero; noticing it with no disposition scores at most half."
     },
     {
-      "name": "New spec waits on conditions the script describes",
+      "name": "MUST NOT leave a browser released only on the happy path",
       "max_score": 12,
-      "description": "Export and Download are described in the manual script as unavailable until the count settles and until the status reads Ready, and the spec waits for those conditions rather than sleeping or clicking blind. Any fixed sleep in the new spec scores zero. Waiting for mere presence of a control the script says starts disabled or absent scores at most half."
+      "description": "From the skill's anti-pattern on skipping the driver quit, whose stated consequence is a leaked browser and a CI runner running out of memory: InvoiceExportTest builds its own browser and quits it as the last statement of the test body, so a failing assertion strands a session - and on a shared grid that holds a node slot for every other team. It must be released whatever the outcome, in the same setup-and-teardown shape the base class already uses. Leaving the quit inside the test body scores zero; a try/finally inside the test rather than moving it to teardown scores at most half."
     },
     {
-      "name": "New spec belongs to the suite it joins",
+      "name": "Grid checked before the first run on it",
       "max_score": 10,
-      "description": "It reuses the helpers and setup shape already in spec_helper.rb - the driver builder, the sign-in helper, the wait - and uses the data-testid selectors the manual script names. Inventing a parallel setup, a second driver builder or a different selector convention scores at most half."
+      "description": "The document names the check to run against the hub before anyone's first run - the hub's status endpoint reporting ready, with both nodes registered - rather than assuming the grid is up because the compose file exists. No pre-flight check at all scores zero; 'check the grid is working' with nothing concrete behind it scores at most half."
     },
     {
-      "name": "Consolidation question answered honestly",
-      "max_score": 8,
-      "description": "The recommendation states what keeping two stacks costs and why that cost is worth paying here, rather than ignoring the budget question that prompted the review. An answer that never addresses the consolidation goal scores at most half."
-    },
-    {
-      "name": "Existing spec untouched",
+      "name": "Beacon spec_helper untouched",
       "max_score": 6,
-      "description": "MUST NOT modify beacon/spec/features/checkout_spec.rb. It passes, it is the reference for the new file's conventions, and it was not part of the request. Any edit to it scores zero here."
+      "description": "MUST NOT modify beacon/spec/spec_helper.rb. Beacon is not moving this week and the request excluded the file explicitly. Any edit to it scores zero here."
     }
   ]
 }

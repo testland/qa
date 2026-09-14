@@ -7,9 +7,10 @@
     "build": "vite build",
     "e2e": "cypress run",
     "e2e:visual": "cypress run --spec cypress/e2e/login.cy.js,cypress/e2e/profile.cy.js,cypress/e2e/invoice.cy.js,cypress/e2e/invoices-empty.cy.js,cypress/e2e/error.cy.js,cypress/e2e/dashboard.cy.js",
-    "test": "node --test test/"
+    "test": "node --test"
   },
   "devDependencies": {
+    "chromatic": "11.10.2",
     "cypress": "13.15.0",
     "pixelmatch": "6.0.0",
     "pngjs": "7.0.0",

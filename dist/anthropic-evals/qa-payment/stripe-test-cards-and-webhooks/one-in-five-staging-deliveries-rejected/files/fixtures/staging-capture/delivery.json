@@ -1,0 +1,12 @@
+{
+  "captured_at": "2026-09-10T09:31:14Z",
+  "source": "staging edge proxy request log, copied out of the log line verbatim",
+  "method": "POST",
+  "url": "/webhooks/stripe",
+  "headers": {
+    "content-type": "application/json",
+    "user-agent": "Stripe/1.0 (+https://stripe.com/docs/webhooks)",
+    "stripe-signature": "t=1789032672,v1=c8b41626d2ca717a3d9395eae99dbf7a054a6889ac787fae3b55dd998e633a2c"
+  },
+  "body": "{\"id\":\"evt_1QhV2sKJ8mXqL0ab\",\"object\":\"event\",\"api_version\":\"2025-04-30.basil\",\"created\":1789032672,\"livemode\":false,\"pending_webhooks\":1,\"type\":\"payment_intent.succeeded\",\"data\":{\"object\":{\"id\":\"pi_3QhV2rKJ8mXqL0ab1Y7n\",\"object\":\"payment_intent\",\"amount\":4900,\"amount_received\":4900,\"currency\":\"eur\",\"status\":\"succeeded\",\"receipt_url\":\"https:\\/\\/pay.stripe.com\\/receipts\\/payment\\/CAcaFwoVYWNjdF8xTj\",\"metadata\":{\"order_id\":\"ord_88213\",\"customer_note\":\"Livraison à la cave — café Mont-Blanc\"}}},\"request\":{\"id\":\"req_9Kx2QnAeT\",\"idempotency_key\":null}}"
+}

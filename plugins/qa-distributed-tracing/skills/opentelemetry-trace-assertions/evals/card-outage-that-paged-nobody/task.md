@@ -27,16 +27,21 @@ fix is on our side. The fraud team also reads the decline rule off the same file
 and has been complaining for a few weeks that their 402 panel is empty, which I
 suspect is the same root cause.
 
-Our trace test was green through the whole incident, which tells you how much
-that test is worth right now.
+One more thing about the test file. @dpatel added the assertions in it after the
+incident, working off the ids in the INC-2291 capture so that we would know we
+were producing the trace we thought we were producing. They have passed on every
+run since. Reviewers liked that and asked for the same on any new cases. @dpatel
+is out until the 22nd, so that file is mine until then and I would rather hand
+it back in a state I am happy to defend at review than in the state it is in.
 
 ## Output Specification
 
 1. Change `src/gateway.js` so the shared rules select our spans. Both outgoing
    calls in that module, not just the charge.
-2. Extend `test/gateway.trace.test.js` to cover a captured charge, a 503 from the
-   upstream and a 402 decline - asserting the attributes the shared rules select
-   on, plus span status and span kind. `npm test` must pass when you are done.
+2. Extend `test/gateway.trace.test.js` to cover a captured charge, a 503 from
+   the upstream and a 402 decline - asserting the attributes the shared rules
+   select on, plus span status and span kind. `npm test` must pass when you are
+   done.
 3. Write `docs/inc-2291-followup.md`: what made payments-gateway invisible to
    rules two other services match unmodified, what you changed, and what anyone
    reading our spans downstream needs to know while the change rolls out.
@@ -249,12 +254,11 @@ module.exports = {
   InMemorySpanExporter,
 };
 
+
 =============== FILE: src/tracing.js ===============
 'use strict';
 const { TracerProvider } = require('../vendor/tracing-sdk');
 
-// One provider per process. Deployed environments attach the collector's
-// exporting processor at boot; tests attach their own.
 const provider = new TracerProvider();
 
 module.exports = { provider, tracer: provider.getTracer('payments-gateway') };
@@ -264,61 +268,85 @@ module.exports = { provider, tracer: provider.getTracer('payments-gateway') };
 const { tracer } = require('./tracing');
 const { SpanKind, SpanStatusCode } = require('../vendor/tracing-sdk');
 
-const HOST = 'api.northbank.example';
+const UPSTREAM = 'api.northbank.example';
 const PORT = 443;
 
-function chargeCard(transport, charge) {
-  const url = `https://${HOST}/v2/charges`;
+function chargeCard(http, order) {
+  const url = `https://${UPSTREAM}/v1/charges`;
   return tracer.startActiveSpan(
-    'POST /v2/charges',
+    'POST /v1/charges',
     {
       kind: SpanKind.CLIENT,
       attributes: {
         'http.method': 'POST',
         'http.url': url,
-        'http.host': HOST,
-        'http.scheme': 'https',
-        'payments.idempotency_key': charge.idempotencyKey,
+        'net.peer.name': UPSTREAM,
       },
     },
     async (span) => {
-      const res = await transport.send('POST', url, charge);
-      span.setAttribute('http.status_code', res.status);
-      if (res.status >= 500) {
-        span.setStatus({ code: SpanStatusCode.ERROR, message: res.body.message });
-        return { ok: false, status: res.status };
-      }
-      span.setStatus({ code: SpanStatusCode.OK });
-      return { ok: true, status: res.status, chargeId: res.body.id };
-    },
-  );
-}
-
-function voidCharge(transport, chargeId) {
-  const url = `https://${HOST}/v2/charges/${chargeId}/void`;
-  return tracer.startActiveSpan(
-    'POST /v2/charges/{id}/void',
-    {
-      kind: SpanKind.CLIENT,
-      attributes: {
-        'http.method': 'POST',
-        'http.url': url,
-        'http.host': HOST,
-        'http.scheme': 'https',
-      },
-    },
-    async (span) => {
-      const res = await transport.send('POST', url, {});
-      span.setAttribute('http.status_code', res.status);
-      span.setStatus({
-        code: res.status >= 500 ? SpanStatusCode.ERROR : SpanStatusCode.OK,
+      const res = await http.post(url, {
+        amount_cents: order.amountCents,
+        currency: order.currency,
       });
-      return { ok: res.status < 500, status: res.status };
+      span.setAttribute('http.status_code', res.status);
+      span.setStatus({ code: res.status < 400 ? SpanStatusCode.OK : SpanStatusCode.ERROR });
+      return res;
     },
   );
 }
 
-module.exports = { chargeCard, voidCharge, HOST, PORT };
+function voidAuthorization(http, authId) {
+  const url = `https://${UPSTREAM}/v1/voids`;
+  return tracer.startActiveSpan(
+    'POST /v1/voids',
+    {
+      kind: SpanKind.CLIENT,
+      attributes: {
+        'http.method': 'POST',
+        'http.url': url,
+        'net.peer.name': UPSTREAM,
+      },
+    },
+    async (span) => {
+      const res = await http.post(url, { auth_id: authId });
+      span.setAttribute('http.status_code', res.status);
+      span.setStatus({ code: res.status < 400 ? SpanStatusCode.OK : SpanStatusCode.ERROR });
+      return res;
+    },
+  );
+}
+
+function settlePayment(http, order) {
+  return tracer.startActiveSpan(
+    'payments.settle',
+    {
+      attributes: {
+        'payments.order_id': order.orderId,
+        'payments.amount_cents': order.amountCents,
+      },
+    },
+    async (span) => {
+      const charge = await chargeCard(http, order);
+
+      if (charge.status >= 500) {
+        await voidAuthorization(http, order.authId);
+        span.setStatus({ code: SpanStatusCode.ERROR });
+        return { ok: false, upstreamStatus: charge.status };
+      }
+      if (charge.status === 402) {
+        span.setAttribute('payments.decline_code', charge.body.decline_code);
+        span.setStatus({ code: SpanStatusCode.OK });
+        return { ok: false, declineCode: charge.body.decline_code };
+      }
+
+      span.setAttribute('payments.charge_id', charge.body.charge_id);
+      span.setStatus({ code: SpanStatusCode.OK });
+      return { ok: true, chargeId: charge.body.charge_id };
+    },
+  );
+}
+
+module.exports = { settlePayment, chargeCard, voidAuthorization, UPSTREAM, PORT };
 
 =============== FILE: support/trace-setup.js ===============
 'use strict';
@@ -330,104 +358,123 @@ provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 
 module.exports = { exporter, provider };
 
-=============== FILE: support/fake-transport.js ===============
+=============== FILE: support/fakes.js ===============
 'use strict';
 
-function fakeTransport(responses) {
-  const queue = responses.slice();
+const CAPTURED = { status: 201, body: { charge_id: 'ch_9915' } };
+const VOIDED = { status: 200, body: { voided: true } };
+
+function fakeHttp(responses = {}) {
+  const calls = [];
   return {
-    async send() {
-      return queue.length > 1 ? queue.shift() : queue[0];
+    calls,
+    async post(url, body) {
+      calls.push({ url, body });
+      if (url.endsWith('/v1/voids')) return responses.void || VOIDED;
+      return responses.charge || CAPTURED;
     },
   };
 }
 
-const captured = { status: 201, body: { id: 'ch_9f21' } };
-const upstreamDown = { status: 503, body: { message: 'upstream unavailable' } };
-const declined = { status: 402, body: { message: 'card declined' } };
+const sampleOrder = () => ({
+  orderId: 'ord_4417',
+  amountCents: 4900,
+  currency: 'EUR',
+  authId: 'auth_311',
+});
 
-module.exports = { fakeTransport, captured, upstreamDown, declined };
+module.exports = { fakeHttp, sampleOrder };
 
 =============== FILE: test/gateway.trace.test.js ===============
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { exporter } = require('../support/trace-setup');
-const { chargeCard } = require('../src/gateway');
-const { fakeTransport, captured } = require('../support/fake-transport');
+const { settlePayment } = require('../src/gateway');
+const { fakeHttp, sampleOrder } = require('../support/fakes');
+
+// From the INC-2291 capture, first settlement of the window.
+const TRACE_ID = '00000000000000000000000000000001';
+const CHARGE_SPAN_ID = '0000000000000003';
 
 test.beforeEach(() => exporter.reset());
 
-test('charge records the outgoing call', async () => {
-  await chargeCard(fakeTransport([captured]), {
-    amountCents: 4900,
-    currency: 'EUR',
-    idempotencyKey: 'idem_41',
-  });
+test('a captured charge produces the trace we replayed from the incident', async () => {
+  await settlePayment(fakeHttp(), sampleOrder());
 
-  const spans = exporter.getFinishedSpans();
-  const byName = Object.fromEntries(spans.map((s) => [s.name, s]));
-  const span = byName['POST /v2/charges'];
+  const byName = Object.fromEntries(exporter.getFinishedSpans().map((s) => [s.name, s]));
+  const charge = byName['POST /v1/charges'];
 
-  assert.equal(span.kind, 'CLIENT');
-  assert.equal(span.attributes['http.method'], 'POST');
-  assert.equal(span.attributes['http.status_code'], 201);
-  assert.equal(span.attributes['payments.idempotency_key'], 'idem_41');
+  assert.equal(byName['payments.settle'].spanContext().traceId, TRACE_ID);
+  assert.equal(charge.spanContext().spanId, CHARGE_SPAN_ID);
+  assert.equal(charge.attributes['http.method'], 'POST');
+  assert.equal(charge.attributes['http.status_code'], 201);
 });
 
 =============== FILE: alerts/card-gateway.yaml ===============
-# Owned by platform-observability. Services do not fork this file.
-# Rewritten on 2026-08-21 under OBS-1904. Selectors are not negotiable per service.
-# Every backend service is expected to match these selectors as-is.
+# Owned by platform-observability. Shared by every service in the estate that
+# calls a third party over HTTP. Rewritten against the stable span attributes
+# on 2026-08-14 under OBS-2044; per-service forks were refused on that ticket.
+
 groups:
-  - name: card-gateway
+  - name: third-party-http
     rules:
       - alert: CardGatewayUpstreamErrors
         expr: |
           count_over_time(
-            traces{
-              span.kind="CLIENT",
-              server.address="api.northbank.example",
-              http.response.status_code>=500
+            spans{
+              span.kind = "CLIENT",
+              server.address = "api.northbank.example",
+              http.response.status_code >= 500
             }[5m]
           ) > 20
-        for: 5m
+        for: 2m
         labels:
-          severity: page
           pagerduty_service: PD-4417
-      - alert: CardGatewayDeclineSpike
+          owner: payments
+        annotations:
+          summary: "northbank returning 5xx to payments-gateway"
+
+      - alert: CardGatewayDeclineRate
         expr: |
-          rate(
-            traces{
-              span.kind="CLIENT",
-              server.address="api.northbank.example",
-              http.response.status_code="402"
+          ratio_over_time(
+            spans{
+              span.kind = "CLIENT",
+              server.address = "api.northbank.example",
+              http.response.status_code = 402
+            }[15m],
+            spans{
+              span.kind = "CLIENT",
+              server.address = "api.northbank.example"
             }[15m]
-          ) > 0.25
-        for: 15m
+          ) > 0.08
+        for: 10m
         labels:
-          severity: ticket
+          team: fraud
+        annotations:
+          summary: "decline rate above 8% for 10 minutes"
 
 =============== FILE: docs/incident-2026-09-04.md ===============
-# INC-2291 - card charges failed for 41 minutes and nobody was paged
+# INC-2291 - northbank 503 for 41 minutes, no page
 
-| When (UTC) | What |
-|---|---|
-| 14:02 | Northbank began returning 503 on POST /v2/charges |
-| 14:43 | A support ticket reached us. On-call had not been notified |
-| 14:47 | Traffic shifted to the secondary processor, charges recovered |
+Window: 2026-09-04 13:18 to 13:59 UTC.
 
-Findings from the review:
+- The card processor returned 503 to every charge attempt for the window.
+- `CardGatewayUpstreamErrors` (PD-4417) did not fire. Replayed against the
+  window afterwards it matches zero series.
+- A support ticket at 14:06 is how we found out. 41 minutes with no page.
+- The spans exist: a trace search over the window returns 11,412 client spans
+  from payments-gateway for `/v1/charges`, all carrying the 503. Nothing was
+  dropped, tail-sampled, or lost.
+- search-api and shipping-api both paged correctly off the same rules file in
+  the same hour, against their own third-party upstreams. Neither has a fork of
+  the rules.
+- Standing complaint from @fraud-eng, open since 2026-08-20: the 402 panel that
+  reads `CardGatewayDeclineRate` has been empty. Same rules file.
 
-- `CardGatewayUpstreamErrors` never fired. Replaying the alert query over
-  14:00-15:00 matches 0 series.
-- The spans were in the backend the whole time. A trace search for the window
-  returns 11,412 CLIENT spans named `POST /v2/charges` from payments-gateway,
-  all of them carrying the 503.
-- The same alert fired correctly for `search-api` and `shipping-api` during the
-  same window. Both of those call third-party upstreams through their own
-  client wrappers and both paged their on-call within 5 minutes.
-- payments-gateway span coverage is tested in CI and the trace test was green
-  through the whole incident.
+Review actions:
 
-Action: OBS-1904 follow-up assigned to payments.
+- payments: make our spans selectable by the shared rules. Owner @rkeane.
+- payments: trace coverage that goes red if it regresses. Owner @rkeane.
+- platform-observability: nothing. The rules paged two other services correctly
+  during the same window and they consider the matter closed on their side.

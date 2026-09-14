@@ -1,9 +1,9 @@
 'use strict';
-const { provider } = require('../src/tracing');
+
+const BATCH_DELAY_MS = 5000;
 
 async function settleSpans() {
-  await provider.forceFlush();
-  await new Promise((resolve) => setTimeout(resolve, 20));
+  await new Promise((resolve) => setTimeout(resolve, BATCH_DELAY_MS + 200));
 }
 
 module.exports = { settleSpans };

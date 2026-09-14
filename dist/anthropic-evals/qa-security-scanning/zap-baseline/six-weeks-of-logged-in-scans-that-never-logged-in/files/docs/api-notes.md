@@ -2,17 +2,14 @@
 
 ## POST /api/session
 
-Creates a session. Rewritten in April 2026 when the login page moved to React.
+Rewritten in April 2026 when the login page moved to React.
 
-- Accepts `application/json` **only**. The endpoint returns **415 Unsupported
-  Media Type** for `application/x-www-form-urlencoded`; this was deliberate, to
-  close the CSRF hole the old form POST had.
-- Body: `{"email": "...", "password": "..."}`. Note the field is `email`, not
-  `username`; the old form used `username` and we kept the old name nowhere.
-- On success: `204`, plus `Set-Cookie: bp_session=<opaque>; HttpOnly; Secure;
-  SameSite=Lax; Path=/; Max-Age=28800`.
-- There is no bearer token anywhere in the product. Everything server-side
-  reads `bp_session`.
+- Request content type: `application/json`. Anything else returns 415.
+- Body: `{"email": "...", "password": "..."}`.
+- Success: `204`, plus `Set-Cookie: bp_session=<opaque>; HttpOnly; Secure;
+  SameSite=Lax; Path=/; Max-Age=900`.
+- The cookie is reissued on every authenticated response. A session that goes
+  15 minutes without a request is gone and the next request 302s to `/login`.
 
 ## GET /logout
 
@@ -24,7 +21,27 @@ POST required — it has been on our list to change since 2024.
 Every route other than `/`, `/pricing`, `/status`, `/signup` and `/login`
 returns `302 -> /login` without a valid `bp_session`.
 
-Signed-in pages render a header containing `<a href="/logout">Sign out</a>` and
-a `data-tenant` attribute on `<body>`. The login page renders the string
-`Sign in to Brightpath` and, after a rejected attempt, `Those details did not
-match`.
+## Response body excerpts, captured by hand 2026-09-10
+
+Signed-in shell, `GET /tenants` 200:
+
+```html
+<body data-tenant="acme-prod">
+  <header class="app-nav">
+    <span class="who">Signed in as scanner@brightpath.dev</span>
+    <a href="/logout">Sign out</a>
+  </header>
+```
+
+Login page, `GET /login` 200:
+
+```html
+<main class="auth">
+  <h1>Sign in to Brightpath</h1>
+```
+
+Login page after a rejected attempt:
+
+```html
+  <p class="error">Those details did not match</p>
+```

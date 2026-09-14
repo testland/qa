@@ -53,7 +53,6 @@ function refundOrder(orderId, amountCents, gateway) {
       });
 
       const result = await gateway.refund(orderId, amountCents);
-      call.setAttribute('payments.provider', gateway.name);
 
       if (!result.ok) {
         span.setAttribute('checkout.refund_refused_reason', result.reason);
@@ -61,8 +60,10 @@ function refundOrder(orderId, amountCents, gateway) {
         return { ok: false, reason: result.reason };
       }
 
+      call.setAttribute('payments.provider', gateway.name);
       call.setStatus({ code: SpanStatusCode.OK });
       call.end();
+
       span.setAttribute('checkout.refund_id', result.refundId);
       span.setStatus({ code: SpanStatusCode.OK });
       return result;

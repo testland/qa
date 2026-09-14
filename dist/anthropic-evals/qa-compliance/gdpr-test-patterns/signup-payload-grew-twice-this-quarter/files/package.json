@@ -3,7 +3,6 @@
   "version": "3.6.0",
   "private": true,
   "scripts": {
-    "test": "node --test",
-    "fixtures:refresh": "bash scripts/export-signups.sh > fixtures/user_signup.json"
+    "test": "node --test"
   }
 }

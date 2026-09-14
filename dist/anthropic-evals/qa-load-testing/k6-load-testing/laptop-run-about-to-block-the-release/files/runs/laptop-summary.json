@@ -41,7 +41,16 @@
       "values": { "rate": 0.0119, "passes": 3625, "fails": 301043 },
       "thresholds": { "rate<0.02": { "ok": true } }
     },
-    "http_reqs": { "type": "counter", "values": { "count": 304668, "rate": 112.84 } },
+    "confirmed_orders": {
+      "type": "counter",
+      "values": { "count": 291599, "rate": 108 },
+      "thresholds": { "rate>0.995": { "ok": true } }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "values": { "count": 304668, "rate": 112.84 },
+      "thresholds": { "rate>150": { "ok": false } }
+    },
     "iterations": { "type": "counter", "values": { "count": 304668, "rate": 112.84 } },
     "iteration_duration": {
       "type": "trend",

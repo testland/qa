@@ -8,32 +8,36 @@ built on span names and attributes and a rename had already broken them once.
 Two things have gone wrong since.
 
 The first is cost. `npm test` has four real assertions in it and takes five and a
-half seconds on my laptop; on the CI runner the job reports around 35 seconds. On
-2026-09-02 someone raised `timeout-minutes` from 2 to 5 in the workflow so it
-would stop tripping, and that is where it was left. The only writing we have on
-any of this is @tvance's note in `docs/testing.md`.
+half seconds on my laptop, and every case anyone adds costs about another five.
+The fraud team have a branch with eleven more cases on it and it is the longest
+job in their pipeline by a distance. On 2026-09-02 someone raised
+`timeout-minutes` in the workflow so it would stop tripping and that is where it
+was left. The only writing we have on any of this is @tvance's note in
+`docs/testing.md`.
 
 The second is worse. `test/cart.trace.test.js` has been green since the day it
 was written. I deleted the whole body of `cart.add` locally - no span created at
 all - and it still passed.
 
 I need two more paths covered. Declines are what the fraud team reads off
-`checkout.submit`. And refunds: in August finance had a batch of refunds that
-northbank turned down, and when we went looking there was nothing in the traces
-naming the provider that had refused them. A refund the gateway refuses is the
-case I care about most.
+`checkout.submit`, and there is no coverage of them at all. And refunds: in
+August finance had a batch that northbank turned down, and we could not answer
+basic questions about them afterwards from the traces. A refund the gateway
+refuses is the case I care about most.
 
-Do not delete any test. Do not edit anything under `vendor/` - it is a checked-in
-mirror and it gets overwritten from upstream.
+Do not delete any test. Do not edit anything under `vendor/` - it is a
+checked-in mirror and it gets overwritten from upstream.
 
 ## Output Specification
 
 1. Cover the declined-card path and the refused-refund path in
-   `test/checkout.trace.test.js`, and keep the case already in that file working.
-2. `test/cart.trace.test.js` has to be worth something. Right now it is not.
+   `test/checkout.trace.test.js`, and keep the case already in that file
+   working.
+2. Every test under `test/` has to fail if the span it describes stops being
+   emitted.
 3. `npm test` passes and the job is quick again.
-4. Write `docs/trace-test-setup.md`, ten lines or fewer, saying what you changed
-   in the shared test wiring and why, so the next person does not undo it.
+4. Write `docs/trace-test-setup.md`, ten lines or fewer, so that the next person
+   does not undo whatever you did.
 
 ## Input Files
 
@@ -42,7 +46,7 @@ Extract the following files before beginning.
 =============== FILE: package.json ===============
 {
   "name": "checkout-api",
-  "version": "4.7.1",
+  "version": "4.7.2",
   "private": true,
   "scripts": {
     "test": "node --test"
@@ -166,6 +170,7 @@ class TracerProvider {
   }
 }
 
+// Hands every ended span straight to the exporter, in the caller's own tick.
 class SimpleSpanProcessor {
   constructor(exporter) {
     this._exporter = exporter;
@@ -179,6 +184,8 @@ class SimpleSpanProcessor {
   }
 }
 
+// Queues ended spans and exports them on a timer. scheduledDelayMillis
+// defaults to 5000 upstream; maxExportBatchSize defaults to 512.
 class BatchSpanProcessor {
   constructor(exporter, config = {}) {
     this._exporter = exporter;
@@ -238,12 +245,13 @@ module.exports = {
   InMemorySpanExporter,
 };
 
+
 =============== FILE: src/tracing.js ===============
 'use strict';
 const { TracerProvider } = require('../vendor/tracing-sdk');
 
 // One provider per process. In deployed environments the collector sidecar
-// attaches its own exporting processor at boot; tests attach their own.
+// attaches its own exporting processor at boot; nothing in src/ attaches one.
 const provider = new TracerProvider();
 
 module.exports = { provider, tracer: provider.getTracer('checkout-api') };
@@ -304,7 +312,6 @@ function refundOrder(orderId, amountCents, gateway) {
       });
 
       const result = await gateway.refund(orderId, amountCents);
-      call.setAttribute('payments.provider', gateway.name);
 
       if (!result.ok) {
         span.setAttribute('checkout.refund_refused_reason', result.reason);
@@ -312,8 +319,10 @@ function refundOrder(orderId, amountCents, gateway) {
         return { ok: false, reason: result.reason };
       }
 
+      call.setAttribute('payments.provider', gateway.name);
       call.setStatus({ code: SpanStatusCode.OK });
       call.end();
+
       span.setAttribute('checkout.refund_id', result.refundId);
       span.setStatus({ code: SpanStatusCode.OK });
       return result;
@@ -349,11 +358,11 @@ module.exports = { exporter, provider };
 
 =============== FILE: support/flush.js ===============
 'use strict';
-const { provider } = require('../src/tracing');
+
+const BATCH_DELAY_MS = 5000;
 
 async function settleSpans() {
-  await provider.forceFlush();
-  await new Promise((resolve) => setTimeout(resolve, 20));
+  await new Promise((resolve) => setTimeout(resolve, BATCH_DELAY_MS + 200));
 }
 
 module.exports = { settleSpans };
@@ -414,15 +423,21 @@ test('cart.add is recorded', async () => {
   await addToCart({ items: [] }, { sku: 'kb-01', cents: 4900 });
   await new Promise((resolve) => setTimeout(resolve, 200));
 
-  const spans = exporter.getFinishedSpans();
-  if (spans.length === 0) return;
-  assert.ok(spans.some((s) => s.name === 'cart.add'));
+  for (const span of exporter.getFinishedSpans().filter((s) => s.name === 'cart.add')) {
+    assert.equal(span.attributes['cart.sku'], 'kb-01');
+    assert.equal(span.attributes['cart.size'], 1);
+  }
 });
 
 =============== FILE: docs/testing.md ===============
 # Notes on the trace tests
 
 @tvance, 2026-07-18.
+
+We put the tests through the same span processor the collector uses in the
+deployed environments, deliberately: a test that exercises a different pipeline
+from the one production uses is not testing production. Please leave that wiring
+alone.
 
 Spans do not turn up in the exporter the instant a call returns, so a test that
 reads straight after the exercise sees nothing. `support/flush.js` exists for

@@ -1,5 +1,5 @@
 {
-  "_source": "downloaded from broker.internal - the contract published by notifications-worker 0b8e442",
+  "_source": "downloaded from broker.internal - the contract published by notifications-worker 0b8e442 on 2026-07-11",
   "consumer": { "name": "notifications-worker" },
   "provider": { "name": "orders-api" },
   "interactions": [

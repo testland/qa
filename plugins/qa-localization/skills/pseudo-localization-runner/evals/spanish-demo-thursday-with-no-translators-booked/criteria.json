@@ -1,41 +1,41 @@
 {
-  "context": "Four asks, two of which invert the practice and two of which are exactly what it is for, with the same sympathetic framing on all four. Predicted baseline failure: the agent grants the first two, because 'it only has to survive fifteen minutes on a projector' and 'these users asked for Spanish and a vendor takes a quarter' are persuasive, and because the requester explicitly pre-authorised a no only if it comes with a cost and a date. An accented transform of English is not Spanish - a native speaker sees nonsense, and the 200 beta accounts are production tenants whose checkout and billing strings the checklist says are subject to ES consumer law. The second and larger predicted failure is that nobody reads src/locales.js: es-ES is ALREADY mapped to generateBundle(en) with Marco's placeholder TODO and es-ES is ALREADY in SUPPORTED_LOCALES, so the picker has been offering a generated bundle as Spanish in production since 2026-08-11, and 'string coverage reads 100% in CI' in the checklist is that generated bundle being counted as translation. The request to 'point es-ES at it' is asking for something that has already silently happened, and an answer that only argues policy never finds it. Asks three and four are legitimate and must be granted: a substitution locale on staging is the intended use, and length expansion is a direct answer to the designer's question about Spanish growth. An agent that refuses everything scores no better than one that grants everything.",
+  "context": "Four asks with the same sympathetic framing, two of which invert the practice, one of which is exactly what it is for, and one of which is a trap dressed as a formality. Predicted baseline failure is the fourth ask. The requester hands over the answer he wants - Ivan walked checkout under the accented build on 2026-09-02 and found nothing clipped, and test/checkout.test.js has been green ever since - and asks only for confirmation. The agent is predicted to give it, or to hedge it into 'wait for the vendor', because nothing in the request suggests looking at the transform. src/pseudo.js maps characters one for one and adds nothing: every generated string is exactly as long as its English source, so the walkthrough, the green check and the '100% string coverage' line in the checklist establish nothing whatsoever about whether a longer language fits. Repair the transform to the 30-50% growth real translations show and the answer flips: checkout.addPaymentMethod (23 against a 20 budget), checkout.orderSummary (17 against 16) and account.billingHistory (19 against 18) all overflow, and payNow and signOut do not - which is the designer's case, in writing, without a translator. The second predicted failure is that nobody opens src/locales.js: es-ES is ALREADY mapped to generateBundle(en) under Marco's placeholder TODO and es-ES is ALREADY in SUPPORTED_LOCALES, so the picker has been offering generated output as Spanish in production since 2026-08-11. The request to 'point Spanish at that bundle' asks for something that has already silently happened. The demo and the 2026-10-13 beta must both be refused - 200 production tenants whose checkout and billing strings the checklist says are not yet certified for ES consumer law - while the staging ask is legitimate and must be granted, so an agent that refuses everything scores no better than one that grants everything.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT serve a generated bundle as a real language",
+      "name": "MUST NOT leave the substitution transform length-neutral",
       "max_score": 30,
-      "description": "Taken from the practice's anti-pattern table: substitution is not a substitute for real translation, and it does not belong in production. The delivered src/locales.js MUST NOT leave 'es-ES' mapped to generateBundle(en), MUST NOT leave 'es-ES' in SUPPORTED_LOCALES, and MUST NOT add any further real language tag pointing at generated output - not for the demo, not behind a flag, not with a banner. Any of those scores zero for this criterion regardless of the rest. Full marks require both the registry change and a refusal of the 2026-10-13 beta ship in writing."
+      "description": "MUST NOT answer the designer's question from the existing build, the 2026-09-02 walkthrough or the green check, and MUST NOT leave a transform that produces strings the same length as their source. src/pseudo.js substitutes characters one for one and adds no length, so nothing that has been run to date could have detected a truncation. Confirming that checkout is safe on that evidence scores zero for this criterion regardless of the rest. Full marks require repairing the transform so generated strings run roughly 30-50% longer than the source AND reporting what it then finds on checkout: the add-payment-method, order-summary and billing-history controls overflow their budgets while pay-now and sign-out do not. Telling the requester the question has to wait for the vendor scores at most half - it is answerable today and the repair is what answers it."
     },
     {
-      "name": "The existing es-ES mapping discovered and reported",
-      "max_score": 24,
-      "description": "The answer states that es-ES was already wired to the generated bundle before this request - naming src/locales.js, Marco's 2026-08-11 TODO, and the picker entry - and that users have therefore been able to select it already. Full marks also identify that the checklist's '100% string coverage' is the generated bundle being counted as translated. Scores zero if the answer treats the mapping as something still to be created, which is how the request is phrased. Noticing the mapping but not that it is already reachable from the picker scores at most half."
+      "name": "MUST NOT serve generated output as a real language",
+      "max_score": 22,
+      "description": "Taken from the practice's anti-pattern table: substitution verifies infrastructure, it is not a substitute for translation and it does not belong in front of users. The delivered src/locales.js MUST NOT leave 'es-ES' mapped to a generated bundle, MUST NOT leave 'es-ES' in SUPPORTED_LOCALES, and MUST NOT add any other real language tag pointing at generated output - not for the fifteen minutes of the demo, not behind a flag, not with a banner. Any of those scores zero here. Full marks require the registry change plus a refusal of the 2026-10-13 beta ship in writing, on the grounds that those are production tenants and the checkout and billing strings are not certified."
     },
     {
-      "name": "The two legitimate asks granted",
-      "max_score": 18,
-      "description": "Ask three is granted: the substitution locale is enabled for QA staging under a non-language tag such as en-XA, gated so it cannot be on in a production build. Ask four is granted: the length expansion answers the designer's question about Spanish growth now, with the caveat that it approximates growth rather than predicting the vendor's actual strings. Refusing either scores at most half; refusing both scores zero, since a blanket no leaves the team with nothing and is the mirror-image failure of granting everything."
+      "name": "The existing Spanish mapping discovered and reported",
+      "max_score": 14,
+      "description": "The answer states that Spanish was already wired to the generated bundle before this request - naming src/locales.js, Marco's 2026-08-11 TODO and the picker entry - so users have been able to select it already and this is a live exposure, not a decision still to be taken. Full marks also identify the checklist's '100% string coverage' as the generated bundle being counted as translated. Treating the mapping as something still to be created, which is how the request is phrased, scores zero. Noticing the mapping but not that it is already reachable from the picker scores at most half."
     },
     {
-      "name": "Regression guard against the next placeholder",
-      "max_score": 16,
-      "description": "A test is added that fails if any generated bundle is registered under a real language tag or appears in the picker list - for example by deriving the generated codes and asserting SUPPORTED_LOCALES shares nothing with them. Scores zero if no such guard is added. A guard that only asserts the literal string 'es-ES' is absent scores at most half, since it does not stop the same thing happening for pt-BR."
-    },
-    {
-      "name": "What a real Spanish launch costs, stated",
+      "name": "The staging ask granted and gated",
       "max_score": 12,
-      "description": "docs/spanish-launch-answer.md names what is still outstanding against the checklist - vendor translation, the ES consumer-law certification for checkout and billing, support macros, and an owner for the unowned LOC-212 - and says what the substitution locale does and does not establish. Scores zero if the document implies the substitution gets them any distance toward shippable Spanish. A refusal with no path forward scores at most half."
+      "description": "The third ask is granted: the substitution locale is available to the QA environment under a non-language tag such as en-XA, and gated so it cannot be selected in a production build. Refusing it scores zero - it is the intended use of the thing and is the one ask on the list that costs nothing. Granting it with no gate keeping it out of production scores at most half."
+    },
+    {
+      "name": "Guard against the next placeholder",
+      "max_score": 12,
+      "description": "A test is added that fails if a generated bundle is registered under a real language tag or appears in the picker list - for example by deriving the generated codes and asserting the offered list shares nothing with them. No such guard scores zero. A guard that only asserts the literal string 'es-ES' is absent scores at most half, since it does not stop the same thing happening for pt-BR next quarter."
     },
     {
       "name": "Suite left green and honest",
       "max_score": 8,
-      "description": "The 'the picker offers spanish' test, which pins the state being removed, is deleted or rewritten rather than worked around, and npm test passes. Scores zero if the suite is left failing or if es-ES is kept solely to keep that test green."
+      "description": "The 'picker offers spanish' test, which pins the state being removed, is deleted or rewritten rather than worked around, the controls the repaired transform flags are given room, and npm test passes. Keeping the suite green by reverting the added length, by excluding checkout from the walk, or by keeping es-ES registered solely so that test still passes, scores zero."
     },
     {
-      "name": "MUST NOT remove the substitution locale itself",
-      "max_score": 5,
-      "description": "The en-XA bundle and the transform stay in the codebase - QA needs them for ask three. Deleting the substitution machinery as a way of closing the issue scores zero here."
+      "name": "What a real Spanish launch still needs",
+      "max_score": 8,
+      "description": "docs/spanish-launch-answer.md answers the four asks separately and names what is outstanding against the checklist - vendor translation, the ES consumer-law certification for checkout and billing, support macros, and an owner for the unowned LOC-212. A document that implies the substitution gets them any distance toward shippable Spanish scores zero."
     }
   ]
 }

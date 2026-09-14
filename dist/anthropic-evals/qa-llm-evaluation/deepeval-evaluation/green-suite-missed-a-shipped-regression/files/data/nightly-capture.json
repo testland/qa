@@ -1,0 +1,18 @@
+{
+  "refund-window": {
+    "question": "How long do I have to send something back?",
+    "answer": "You can request a full refund within 60 days of purchase."
+  },
+  "refund-timing": {
+    "question": "When does the money actually land back on my card?",
+    "answer": "Refunds reach the original payment method within 5 business days."
+  },
+  "cancellation": {
+    "question": "Can I cancel halfway through the month?",
+    "answer": "Yes. Cancel from Settings > Billing and it applies at the end of the period."
+  },
+  "seat-removal": {
+    "question": "How do I take a seat off our plan?",
+    "answer": "Seat changes are handled by our billing team, please open a ticket."
+  }
+}

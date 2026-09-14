@@ -1,10 +1,11 @@
 {
-  "name": "quillbase-web",
-  "version": "2.9.0",
+  "name": "kerrisdale-portal",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "node scripts/build.js",
-    "start": "node scripts/serve.js",
+    "build": "vite build",
+    "preview": "node server/preview.js",
+    "lh:baseline": "node scripts/baseline.js",
     "test": "node --test"
   },
   "devDependencies": {

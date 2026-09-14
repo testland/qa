@@ -1,20 +1,18 @@
-# Requests in #web-qa, 2026-08-20 to 2026-09-08
+# Hide requests - open queue
 
-**R1 - @priya.** The chat bubble is in every baseline image and moves between
-runs. Hide it everywhere, not just where somebody remembers to.
+**HR-41** (growth, 2026-08-28)
+The rotating promo strip at the top of the homepage cycles through four offers
+on a timer and we cannot pin it. Please hide it.
 
-**R2 - @priya.** Same for the "last synced N minutes ago" line in the header.
-It is a relative timestamp, it changes on its own, it is never what we are
-checking.
+**HR-42** (data, 2026-09-02)
+The recommendation carousel inside the main content area reorders per visitor,
+which is the whole point of it. Easiest thing is to hide the main content area
+of the homepage and let the checks cover the chrome around it.
 
-**R3 - @sam.** The pricing page is the noisiest thing we own and I am tired of
-re-running it. Put a mask over `main` on the pricing check. Whatever is moving
-in there is inside `main`, so that ends it.
+**HR-43** (platform, 2026-09-04)
+`#build-stamp` in the footer prints the commit sha on every deploy. It is 11
+characters in 10px type in the bottom corner. Please hide it.
 
-**R4 - @ola.** Hide `[data-testid="plan-price"]` on the pricing check. The
-number under each plan is different between runs - I have seen 29, 24 and
-2,400 on three consecutive runs of the same commit.
-
-**R5 - @sam.** Do not spend any of this effort on `marketing hero`. That check
-has not failed once since it was written on 2026-05-12, it is the most stable
-thing in the suite, and touching it is how we break it.
+Note: HR-41 and HR-43 have both been "done" once already - entries were added
+for them in February and April - and both teams have re-filed because the
+checks still go through whatever we did.

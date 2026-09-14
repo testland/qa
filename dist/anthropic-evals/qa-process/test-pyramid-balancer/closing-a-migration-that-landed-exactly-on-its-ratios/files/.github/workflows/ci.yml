@@ -1,0 +1,33 @@
+name: ci
+on: [pull_request]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: node --test test/unit --test-reporter tap
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: node --test test/integration --test-reporter tap
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: ci
+    env:
+      HARBOR_DB: postgres://postgres:ci@localhost:5432/harbor
+      HARBOR_BASE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run seed
+      - run: node --test test/e2e --test-reporter tap

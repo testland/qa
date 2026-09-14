@@ -1,0 +1,11 @@
+# Filing partner API log for our account, sent by their support on request.
+# All times UTC. Period is taken from the document, not from the call.
+
+2026-09-07T00:00:02Z  PUT /filings/vat  201 accepted   period 2026-09-06
+2026-09-08T00:00:02Z  PUT /filings/vat  201 accepted   period 2026-09-07
+2026-09-11T02:00:03Z  PUT /filings/vat  201 accepted   period 2026-09-10
+2026-09-12T00:00:02Z  PUT /filings/vat  201 accepted   period 2026-09-11
+2026-09-13T00:00:01Z  PUT /filings/vat  201 accepted   period 2026-09-12
+
+# Their note: a second document for a period we already hold is rejected 409 and
+# is not stored. Nothing is queued; the call either lands or it does not.

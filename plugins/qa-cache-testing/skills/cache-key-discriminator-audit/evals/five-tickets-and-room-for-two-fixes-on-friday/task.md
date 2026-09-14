@@ -7,21 +7,19 @@ Friday's release window has room for maybe two changes, so what I need this
 morning is a triage: which of these are the same problem, which are mine at
 all, and which one goes first.
 
-Three of them read like staleness to me and my instinct is to drop the TTLs.
-The last time we did that the Redis box went to 90% CPU on a Monday morning
-and we spent a week putting it back, so I want a reason before I touch a TTL
-and I want to know what the reason actually is in each case.
+Three of them read like staleness to me. The last time we dropped TTLs across
+this service the Redis box went to 90% CPU on a Monday morning and we spent a
+week putting it back, so I would like to know what each one actually is before
+I reach for that again.
 
 `tickets/inbox-2026-09-11.md` has the five as they were reported. `src/` has
 the code behind each one. Everything in `src/` goes through the one Redis
-instance and every organisation on the platform is on it.
+instance and every organisation on the platform is on it -
+`ops/redis-2026-09-11.md` is last night's report off that box.
 
 Where a ticket is not mine, tell me whose it is and why. I have to route it
 today either way, and "not a cache problem" on its own will get it bounced
 straight back to me by lunchtime.
-
-One of these has been open since Tuesday with the account team asking whether
-it is a pricing change. I would like an answer on that one specifically.
 
 ## Output Specification
 
@@ -32,9 +30,7 @@ it is a pricing change. I would like an answer on that one specifically.
 2. Change the code behind every ticket that is yours, and order them in the
    triage document so I know which ones go in Friday's window and which one
    waits. Leave the rest of `src/` exactly as it is.
-3. Add `src/keyRegression.test.js`, one test per change you make, each driving
-   two different callers - or the same caller on two different days - through
-   one shared cache instance.
+3. Add `src/keyRegression.test.js`, one test per change you make.
 4. `npm test` must pass. `src/cache.test.js` is shipped and passing; do not
    edit or delete anything in it.
 
@@ -191,6 +187,7 @@ function invoiceTotalsKey(tenantId, period) {
   return `invoice-totals:${tenantId}:${period}`;
 }
 
+// db.invoiceRows is the slow part here - p95 380ms on a tenant with a full period.
 function loadInvoiceTotals(cache, session, period) {
   const key = invoiceTotalsKey(session.tenantId, period);
   const hit = cache.get(key);
@@ -243,7 +240,6 @@ function trialBannerKey(tenantId) {
   return `trial-banner:${tenantId}`;
 }
 
-// The trial end date does not move, so this is held for a week.
 function loadTrialBanner(cache, session, now) {
   const key = trialBannerKey(session.tenantId);
   const hit = cache.get(key);
@@ -364,3 +360,33 @@ test('invoice totals count the lines in the period', () => {
   assert.equal(totals.lines, 2);
   assert.equal(totals.amount, 'GBP 543.00');
 });
+
+=============== FILE: ops/redis-2026-09-11.md ===============
+# Redis - billing app instance, night of 2026-09-10
+
+maxmemory 24 GB, used 19.1 GB (80%), eviction policy `allkeys-lru`.
+Evictions in the last 24h: 4,210,880. The box has been evicting continuously
+since the 2026-08 growth, so anything that multiplies an entry count comes
+straight off the hit rate of everything else on the instance.
+
+## By key prefix
+
+| Prefix             | Keys      | Memory | Hit rate | TTL   |
+|--------------------|-----------|--------|----------|-------|
+| `invoice-totals:`  |   148,300 | 0.9 GB | 91.4%    | 900s  |
+| `seats:`           |     4,118 | 0.1 GB | 96.8%    | 300s  |
+| `trial-banner:`    |     1,102 | 0.1 GB | 99.1%    | 7d    |
+| `shell:`           |         5 | 0.1 GB | 99.8%    | 3600s |
+| `members:`         |     4,118 | 0.4 GB | 88.2%    | 600s  |
+| other              |           | 17.5 GB|          |       |
+
+## Platform shape, from last night's export
+
+| Measure                                   | Count     |
+|-------------------------------------------|-----------|
+| organisations                              |     4,118 |
+| members                                    | 2,304,110 |
+| distinct `locale` values in use            |         5 |
+| distinct `display_currency` values in use  |        11 |
+| organisations on a paid plan               |     1,640 |
+| organisations on the free plan             |     2,478 |

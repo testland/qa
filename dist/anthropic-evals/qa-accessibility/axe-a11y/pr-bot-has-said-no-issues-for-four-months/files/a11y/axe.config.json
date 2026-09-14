@@ -3,17 +3,8 @@
   "outputDir": "a11y/results",
   "runOptions": {
     "runOnly": {
-      "type": "rule",
-      "values": [
-        "image-alt",
-        "label",
-        "button-name",
-        "link-name",
-        "color-contrast",
-        "html-has-lang",
-        "document-title",
-        "region"
-      ]
+      "type": "tag",
+      "values": ["wcag2a", "wcag2aa"]
     }
   }
 }

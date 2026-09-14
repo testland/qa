@@ -17,26 +17,25 @@ full:
 Two theories are circulating and I do not believe either of them. Our on-call
 engineer thinks it is concurrency and wants to drop `maxConcurrency` to 2,
 which would make it slower rather than cheaper. The team lead's position is
-that we over-tested and we should "cut back to the nine cases we had in July
-and move both providers to the cheapest model we can find". I am not doing
-that. We added those checks because the assistant told a customer in June that
-we refund shipping, which we do not, and the whole point of #812 was to stop
-that happening again.
+that we over-tested and we should cut back to the nine cases we had in July and
+move both providers to the cheapest model we can find.
 
-What I want is the actual arithmetic. The config in July had nine cases. The
-config today still has nine cases. The run summary attached says the September
-run produced 82 evaluations. Those two numbers do not agree and I want to know
-which one is lying before I approve any change.
+I am not cutting the checks that exist because of the June incident. The
+assistant told a customer in June that we refund shipping, which we do not, and
+the whole point of #812 was to stop that happening again. Beyond that I have no
+position, because I do not understand where the money went. I want that
+explained to me line by line before I approve any change at all — a
+forty-five-fold jump from one pull request to the next is not something I am
+going to hand to finance as "we added more tests".
 
 Constraints:
 
 - The three-locale refund check is deliberate and stays. Support asked for it
   specifically after the June incident.
-- All nine cases stay. Both providers stay.
 - `assertions/no-placeholder.js` and its tests stay working. `node --test` must
   still exit 0.
-- The gate has to stay capable of failing. If the change makes the job cheaper
-  by making it less able to catch a bad answer, it is not a change I want.
+- The gate has to stay capable of failing. If a change makes the job cheaper by
+  making it less able to catch a bad answer, it is not a change I want.
 
 Attached: the current config, the prompt template, the CI workflow, the run
 summary from the last push on #812, the assertion helper and its tests, and the
@@ -44,17 +43,11 @@ July summary for comparison.
 
 ## Output Specification
 
-1. Edit `evals/support-bot/promptfooconfig.yaml` so the suite runs the number
-   of rows PR #812 intended to add, keeping the three-locale refund check and
-   all nine cases.
-2. Edit `.github/workflows/eval.yml` so that re-pushing to an open pull request
-   does not pay full price for rows that have not changed, and so the run
-   carries an explicit per-response spending bound.
-3. Write `docs/pr-812-eval-cost.md`. It must contain the row arithmetic — how
-   many rows the suite produced in July, how many it produces today, how many
-   it produces after your change, and how each of those numbers arises from the
-   config — and it must name specifically which parts of the config are
-   responsible for the difference.
+1. Edit `evals/support-bot/promptfooconfig.yaml`.
+2. Edit `.github/workflows/eval.yml` if your answer requires it.
+3. Write `docs/pr-812-eval-cost.md`. This is what goes to finance, so it has to
+   name specifically which parts of the configuration are responsible for the
+   difference between the two pull requests, and show the working.
 4. Do not remove any of the nine cases and do not change either provider.
 
 ## Input Files
@@ -254,9 +247,6 @@ Estimated cost this run: $45.78
 
 Spend on this pull request: 9 pushes, $412.02 total. No run reused a response
 from any earlier run on the branch.
-
-Latency assertion results this run: 82 of 82 passed, recorded latencies between
-612 ms and 3,940 ms.
 
 =============== FILE: reports/pr-798-run-summary.md ===============
 # PR #798, push 11 of 11, 2026-07-22T09:12Z

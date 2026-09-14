@@ -1,7 +1,6 @@
 # House rules for generated queries
 
-Agreed with the data team and our auditors, 2026-06-02. Nothing checks these
-today.
+Agreed with the data team and our auditors, 2026-06-02.
 
 1. **Every generated query is tenant-scoped.** A query that touches a table
    carrying `tenant_id` must constrain it. A query that returns cross-tenant

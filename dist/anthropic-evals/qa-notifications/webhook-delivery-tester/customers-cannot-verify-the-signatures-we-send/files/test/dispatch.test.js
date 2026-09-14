@@ -37,3 +37,10 @@ test('a 410 stops immediately', async () => {
   assert.equal(result.permanent, true);
   assert.equal(transport.calls.length, 1);
 });
+
+test('every attempt of one delivery carries the same message id', async () => {
+  const transport = transportReturning([503, 503, 200]);
+  await dispatch('https://example.test/hook', { type: 'order.created' }, transport);
+  const ids = transport.calls.map((r) => r.headers['webhook-id']);
+  assert.equal(new Set(ids).size, 1);
+});

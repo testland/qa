@@ -4,19 +4,7 @@
   "testEngine": { "name": "axe-core", "version": "4.10.2" },
   "toolOptions": {
     "reporter": "v1",
-    "runOnly": {
-      "type": "rule",
-      "values": [
-        "image-alt",
-        "label",
-        "button-name",
-        "link-name",
-        "color-contrast",
-        "html-has-lang",
-        "document-title",
-        "region"
-      ]
-    }
+    "runOnly": { "type": "tag", "values": ["wcag2a", "wcag2aa"] }
   },
   "violations": [],
   "incomplete": [
@@ -30,29 +18,34 @@
         {
           "target": ["p.banner-copy"],
           "html": "<p class=\"banner-copy\">Up to 40% off, this weekend only</p>",
-          "failureSummary": "Element background could not be determined due to a background image"
+          "failureSummary": "Element background colour could not be determined due to a background image"
         },
         {
           "target": ["a.banner-cta"],
           "html": "<a class=\"banner-cta\" href=\"/sale\">See the sale</a>",
-          "failureSummary": "Element background could not be determined due to a background image"
+          "failureSummary": "Element background colour could not be determined due to a background image"
         },
         {
           "target": ["span.sale-badge"],
           "html": "<span class=\"sale-badge\">Sale</span>",
-          "failureSummary": "Element background could not be determined due to a background gradient"
+          "failureSummary": "Element background colour could not be determined due to a background gradient"
         }
       ]
     }
   ],
   "passes": [
-    { "id": "image-alt", "impact": null, "nodes": [{ "target": ["img.hero"] }, { "target": ["img.logo"] }] },
-    { "id": "label", "impact": null, "nodes": [{ "target": ["#search-q"] }] },
-    { "id": "button-name", "impact": null, "nodes": [{ "target": ["button.search-go"] }] },
-    { "id": "link-name", "impact": null, "nodes": [{ "target": ["a.brand"] }, { "target": ["a.help"] }] },
-    { "id": "html-has-lang", "impact": null, "nodes": [{ "target": ["html"] }] },
-    { "id": "document-title", "impact": null, "nodes": [{ "target": ["html"] }] },
-    { "id": "region", "impact": null, "nodes": [{ "target": ["main"] }] }
+    { "id": "image-alt", "tags": ["cat.text-alternatives", "wcag2a", "wcag111"], "nodes": [{ "target": ["img.hero"] }, { "target": ["img.logo"] }] },
+    { "id": "label", "tags": ["cat.forms", "wcag2a", "wcag412", "wcag131"], "nodes": [{ "target": ["#search-q"] }] },
+    { "id": "button-name", "tags": ["cat.name-role-value", "wcag2a", "wcag412"], "nodes": [{ "target": ["button.search-go"] }, { "target": ["button.account-toggle"] }, { "target": ["button.pin"] }, { "target": ["button.remove"] }] },
+    { "id": "link-name", "tags": ["cat.name-role-value", "wcag2a", "wcag244", "wcag412"], "nodes": [{ "target": ["a.brand"] }, { "target": ["a.help"] }] },
+    { "id": "aria-hidden-focus", "tags": ["cat.name-role-value", "wcag2a", "wcag412"], "nodes": [{ "target": ["#account-menu"] }] },
+    { "id": "html-has-lang", "tags": ["cat.language", "wcag2a", "wcag311"], "nodes": [{ "target": ["html"] }] },
+    { "id": "document-title", "tags": ["cat.text-alternatives", "wcag2a", "wcag242"], "nodes": [{ "target": ["html"] }] }
   ],
-  "inapplicable": []
+  "inapplicable": [
+    { "id": "video-caption", "tags": ["cat.time-and-media", "wcag2a", "wcag122"], "nodes": [] },
+    { "id": "frame-title", "tags": ["cat.text-alternatives", "wcag2a", "wcag412"], "nodes": [] },
+    { "id": "th-has-data-cells", "tags": ["cat.tables", "wcag2a", "wcag131"], "nodes": [] },
+    { "id": "area-alt", "tags": ["cat.text-alternatives", "wcag2a", "wcag111"], "nodes": [] }
+  ]
 }

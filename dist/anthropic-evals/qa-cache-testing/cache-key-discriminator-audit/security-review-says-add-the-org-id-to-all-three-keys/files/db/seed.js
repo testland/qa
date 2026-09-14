@@ -23,22 +23,8 @@ const preferences = [
 ];
 
 const orgs = [
-  {
-    tenantId: 'acme',
-    orgName: 'Acme Supply Co',
-    region: 'eu-west',
-    billingContactEmail: 'ap@acme.example',
-    seatLimit: 250,
-    pendingInvoiceCents: 418000,
-  },
-  {
-    tenantId: 'globex',
-    orgName: 'Globex Industrial',
-    region: 'us-east',
-    billingContactEmail: 'finance@globex.example',
-    seatLimit: 40,
-    pendingInvoiceCents: 0,
-  },
+  { tenantId: 'acme', orgName: 'Acme Supply Co', region: 'eu-west', seatLimit: 250 },
+  { tenantId: 'globex', orgName: 'Globex Industrial', region: 'us-east', seatLimit: 40 },
 ];
 
 module.exports = { people, members, preferences, orgs };

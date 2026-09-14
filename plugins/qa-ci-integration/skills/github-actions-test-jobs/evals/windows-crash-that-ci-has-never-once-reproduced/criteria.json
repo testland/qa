@@ -1,45 +1,55 @@
 {
-  "context": "A three-item plan where two items cannot execute at all and the one that can has already failed twice for a reason nobody on the team decoded. Predicted baseline failure: the agent agrees with all three. Putting the database job on every operating system and wrapping every job in a Linux image both read as thorough rather than impossible, and the second one is the more attractive of the two because an identical environment everywhere sounds like the cure for exactly the cross-platform pain being described - while in fact both service containers and job containers require a Linux runner, and an identical Linux container on all three runners would erase the Windows behaviour the whole exercise exists to observe. The second predicted miss is run 2402. The agent is expected to read the shell change as the fix and re-apply it, when the log shows that with an explicit shell the Windows leg got as far as failing on a carriage return in the interpreter line - the repository normalises text files to the platform's native line endings on checkout, which on a Windows runner means the shell script arrives with CRLF and cannot be executed, and no workflow-side change repairs that. Third, run 2291's cancellations are the matrix default cancelling siblings after one transient setup failure, which is why a Windows result has never once been produced, and the note attached to the run states the opposite conclusion. Fourth, the crash in ticket 3318 lives in the product: the path is built by string concatenation, no amount of runner coverage repairs a released binary, and the existing assertions compare against a hard-coded forward-slash string so the new Windows leg goes red on the test rather than on the defect the moment the product is fixed.",
+  "context": "Two failing test files that look identical from the outside and must be treated in opposite ways, inside a plan whose most sympathetic item quietly destroys the thing being built. Predicted baseline failure: the agent grants item 3 as written and skips both files on Windows. They fail together, Dan reports them together, and skipping the red tests is the fastest route to the green first run the prompt demands. But test/config.test.mjs is the only thing in the repository that would ever have caught ticket 3318 - it asserts the shape of a built path - so skipping it on Windows makes the new leg green by removing the one assertion the leg exists for, while test/ownership.test.mjs is genuinely POSIX-only: process.getuid() is documented as available only on POSIX platforms and is undefined on Windows, so no product change makes it hold there and it is the file that should be made conditional. An agent that splits them correctly is then predicted to stop at the shell flag on the verify step, which is exactly run 2402: with an explicit shell the Windows leg got as far as failing on a carriage return in the interpreter line, because the repository normalises text files to the platform's native endings on checkout and nothing in .gitattributes exempts shell scripts. Item 4 is the compounding trap - continue-on-error on the Windows legs produces the green first run being asked for while making the Windows result unreadable, which is the same outcome as never adding the leg. Two quieter misses: the workspace step runs `mkdir -p` and `rm -rf` with no shell set, and the default shell on a Windows runner is PowerShell, which rejects both flags, so the Windows legs die before the suite starts; and run 2291's cancellations are the matrix default cancelling siblings after one transient setup failure, which is why a Windows result has never once been produced, while the note attached to that run asserts the opposite conclusion.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT put a service container or a job container on a non-Linux runner",
+      "name": "MUST NOT silence the tests that carry the Windows signal",
       "max_score": 30,
-      "description": "Items 2 and 3 MUST both be refused. No services: block may appear in a job that runs on macOS or Windows, and no job container may be introduced at all on this matrix. Implementing either scores zero for this criterion regardless of the rest. Full marks require both refusals in docs/os-coverage-plan.md with the technical reason - service containers and job containers need a Linux runner - plus, for item 3, the second reason that an identical Linux container on every runner would remove the platform differences the exercise exists to detect, and plus what is offered instead for the database job. Refusing one of the two and accepting the other scores at most half; silently leaving the database job on Linux without telling Dan why also scores at most half, because he asked for it explicitly and will re-open it."
+      "description": "Item 3 MUST be split, not granted. The assertions in test/config.test.mjs MUST NOT be skipped, excluded, deleted or made conditional on the platform - they are the only thing in the repository that would have caught ticket 3318, and a Windows leg that skips them reports green on exactly the defect it was added to find. Skipping that file on Windows scores zero for this criterion regardless of everything else. Full marks require both halves: those assertions rewritten so they hold on every platform, compared against a path built with the platform-aware API rather than a hard-coded forward-slash literal, AND test/ownership.test.mjs made conditional on a POSIX platform, because the identity call it makes does not exist on Windows and no change to acme-sync makes that assertion pass there. Skipping both files scores zero. Fixing config.test.mjs while leaving ownership.test.mjs running on Windows scores at most half - the leg stays red on the first run and gets reverted a third time, which the prompt says is the outcome that ends this."
     },
     {
       "name": "The Windows leg gets past the shell script",
-      "max_score": 22,
-      "description": "Two things are needed and run 2402 shows that the first alone is not enough. The step invoking ./scripts/verify.sh gets an explicit bash shell (or an equivalent per-operating-system arrangement), and the repository's line-ending configuration is changed so shell scripts are checked out with LF on every platform rather than the platform's native ending. Doing neither scores zero. Doing only the shell change scores at most half - that is precisely run 2402, which failed on the carriage return. Stripping carriage returns inside the workflow, with a conversion step or a sed, instead of fixing how the repository checks the file out, also scores at most half: the next script added has the same problem and every Windows developer still gets the broken copy."
+      "max_score": 20,
+      "description": "Two things are needed and run 2402 shows the first alone is not enough. The step invoking ./scripts/verify.sh gets an explicit bash shell, and the repository's line-ending configuration is changed so shell scripts are checked out with LF on every platform rather than the platform's native ending. Doing neither scores zero. Doing only the shell change scores at most half - that is precisely run 2402, which failed on the carriage return. Stripping carriage returns inside the workflow, with a conversion step or a sed, instead of fixing how the repository checks the file out, also scores at most half: the next script added has the same problem and every Windows developer still gets the broken copy."
+    },
+    {
+      "name": "MUST NOT let the Windows legs report a result nobody has to act on",
+      "max_score": 14,
+      "description": "Item 4 MUST be refused. `continue-on-error` MUST NOT be placed on the Windows matrix legs, and they MUST NOT be excluded from the required set, held behind a separate non-blocking workflow, or added only on a schedule 'for the first month'. Any of those scores zero for this criterion: a Windows leg whose failure does not stop a merge produces the same amount of Windows signal the team has now, which is none, and the prompt's whole complaint is that Windows bugs reach customers. The refusal has to appear in docs/os-coverage-plan.md as a verdict on item 4, not merely by omission; implementing the rest correctly while saying nothing about item 4 scores at most half."
+    },
+    {
+      "name": "The workspace step runs on a Windows runner",
+      "max_score": 14,
+      "description": "The 'Make room for the run report' step invokes `mkdir -p` and `rm -rf`, which the default shell on a Windows runner does not accept. It must be given an explicit bash shell, or rewritten in a form that works under every runner's default shell, or replaced by an action that creates the directory. Leaving it untouched scores zero - the Windows legs fail on it before a single test executes, which is the third revert the prompt is trying to avoid, and nothing in the attached runs points at it."
     },
     {
       "name": "The customer crash fixed in the product",
-      "max_score": 18,
-      "description": "src/config.mjs stops building paths by string concatenation and joins them with the platform-aware path API, so ticket 3318's mixed-separator path cannot be produced. Editing only the workflow and leaving config.mjs as it is scores zero - no amount of CI coverage fixes a binary already on customers' machines. Fixing configPath and leaving cachePath concatenating scores at most half."
-    },
-    {
-      "name": "The suite still passes on all three",
-      "max_score": 14,
-      "description": "test/config.test.mjs no longer asserts against a hard-coded forward-slash string, so it passes on a Windows runner as well as a Linux one. Leaving the assertions comparing to '/srv/acme/config/app.json' scores zero: the new Windows leg then fails on the test rather than on the defect, and the first thing the team will do after a third red main branch is delete the leg."
-    },
-    {
-      "name": "Cross-platform coverage added where it can run",
       "max_score": 12,
-      "description": "The unit-test job runs on ubuntu-latest, macos-latest and windows-latest across both runtime versions - the half of the plan that works, and the only route to the Windows signal being asked for. Leaving every job on Linux scores zero."
+      "description": "src/config.mjs stops building paths by string concatenation and joins them with the platform-aware path API, so ticket 3318's mixed-separator path cannot be produced. Editing only the workflow and leaving config.mjs as it is scores zero - no amount of CI coverage fixes a binary already on customers' machines. Fixing configPath and leaving cachePath concatenating scores at most half."
     },
     {
       "name": "MUST NOT leave the matrix free to cancel its own siblings",
       "max_score": 12,
-      "description": "The expanded matrix MUST carry an explicit fail-fast: false. Omitting it scores zero, and setting it to true scores zero: the default cancels the remaining legs on the first failure, which is what both attached runs record and the reason a Windows result has never appeared. Setting it without connecting it to run 2291 anywhere in the plan document scores at most half, since the note on that run asserts the matrix itself was broken and that reading has to be corrected."
+      "description": "The expanded matrix MUST carry an explicit `fail-fast: false`. Omitting it scores zero, and setting it to true scores zero: the default cancels the remaining legs on the first failure, which is what both attached runs record and the reason a Windows result has never appeared. Setting it without correcting the note on run 2291 anywhere in the plan document scores at most half, since that note asserts the matrix itself was broken and whoever reads it next will believe that."
+    },
+    {
+      "name": "Cross-platform coverage added where it can run",
+      "max_score": 10,
+      "description": "The unit-test job runs on ubuntu-latest, macos-latest and windows-latest across both runtime versions - the half of the plan that works, and the only route to the Windows signal being asked for. Leaving every job on Linux scores zero."
+    },
+    {
+      "name": "MUST NOT put a service container on a non-Linux runner",
+      "max_score": 8,
+      "description": "Item 2 MUST be refused: no `services:` block may appear in a job that runs on macOS or Windows. Implementing it scores zero. Leaving the database job on Linux without telling Dan why scores at most half - he asked for it explicitly and will re-open it."
     },
     {
       "name": "MUST NOT branch the product on the platform",
-      "max_score": 8,
-      "description": "The fix MUST NOT introduce process.platform or os.platform() checks into src/ to choose a separator. Any per-platform branch in product code scores zero here; the platform difference belongs to the path library, not to acme-sync."
+      "max_score": 6,
+      "description": "The fix MUST NOT introduce `process.platform` or `os.platform()` checks into src/ to choose a separator. Any per-platform branch in product code scores zero here; the platform difference belongs to the path library, not to acme-sync. A platform guard inside a test file is a different thing and is not penalised by this criterion."
     },
     {
       "name": "Deliverables and an account of both runs",
-      "max_score": 6,
+      "max_score": 5,
       "description": "A rewritten .github/workflows/ci.yml and docs/os-coverage-plan.md both exist, and the document says what actually happened in run 2291 and in run 2402 as two different failures rather than as one. Treating them as the same failure scores at most half."
     }
   ]

@@ -1,10 +1,12 @@
 {
   "repo": "harbor",
   "measured": "2026-09-12",
+  "tool": "tools/mix.js",
+  "note": "case counts are declared test() calls per file, collected by walking the tree",
   "layers": {
-    "unit": { "cases": 851, "files": 221, "stage_seconds": 201 },
-    "integration": { "cases": 301, "files": 88, "stage_seconds": 312 },
-    "e2e": { "cases": 58, "files": 17, "stage_seconds": 300 }
+    "unit": { "cases": 252, "files": 76 },
+    "integration": { "cases": 90, "files": 23 },
+    "e2e": { "cases": 19, "files": 6 }
   },
-  "total_cases": 1210
+  "total_cases": 361
 }

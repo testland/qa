@@ -24,12 +24,6 @@ export async function contextFor({ req }) {
     });
   }
 
-  if (claims.exp * 1000 <= Date.now()) {
-    throw new GraphQLError('Token expired', {
-      extensions: { code: 'UNAUTHENTICATED', http: { status: 401 } },
-    });
-  }
-
   return {
     user: { id: claims.sub, email: claims.email },
     dataSources,

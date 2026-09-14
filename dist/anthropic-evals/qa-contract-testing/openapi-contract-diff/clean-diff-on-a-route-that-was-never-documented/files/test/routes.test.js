@@ -26,5 +26,6 @@ test('listing returns every webhook that was created', () => {
   handle('POST', '/v1/webhooks', { url: 'https://b.example/hooks' });
   const res = handle('GET', '/v1/webhooks');
   assert.equal(res.status, 200);
-  assert.equal(res.body.length, 2);
+  assert.equal(res.body.data.length, 2);
+  assert.equal(res.body.nextCursor, null);
 });

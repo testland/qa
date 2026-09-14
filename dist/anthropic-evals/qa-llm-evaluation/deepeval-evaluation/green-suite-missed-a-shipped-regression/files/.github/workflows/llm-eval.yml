@@ -15,6 +15,10 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r requirements.txt
+      - name: Capture assistant answers
+        env:
+          ASSISTANT_URL: ${{ secrets.ASSISTANT_URL }}
+        run: python scripts/capture_answers.py > data/nightly-capture.json
       - name: Run quality suite
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

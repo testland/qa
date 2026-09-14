@@ -1,0 +1,14 @@
+deploy-payments-api run 1190 - job "production" - 2026-09-09
+
+  Compatibility check ......................... success (14s)
+  Roll out .................................... success (2m 51s)
+  Smoke ....................................... failure (1m 12s)
+      scripts/smoke.sh: POST /charges -> 500 on 3 of 5 probes
+      Error: Process completed with exit code 1
+  Record the deployment ....................... success (6s)
+      Deployment of payments-api version 9c22f10 to production recorded.
+
+  Job result: failure
+
+Rolled back by hand at 15:10 with kubectl rollout undo deploy/payments-api.
+No pipeline run was triggered by the rollback.

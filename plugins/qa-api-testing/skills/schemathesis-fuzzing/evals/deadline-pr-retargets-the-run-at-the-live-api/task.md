@@ -1,65 +1,75 @@
-# Review PR 4471 before Friday: staging has been dead 22 days and Priya has the board green again
+# A deadline PR points the generated-case job at the live API and calls it read-only
 
 ## Problem Description
 
-Northwind Ledger, accounting API. Our per-PR and nightly generated-case job runs
-against staging. Staging's seed step has been failing since 2026-08-21
-(OPS-1188) and the job has errored out with connection-refused every night
-since, so the board has been red for 22 days. Platform say OPS-1188 is about
-three weeks down their queue.
+Pallet Freight. Our staging estate went dark on Thursday for the data-centre
+move and does not come back until Monday. We have a customer integration review
+at 16:00 today and the generated-case job is a required check on every PR, so
+right now nothing can merge.
 
-Priya opened PR 4471 this afternoon to get the board green before the 1.9
-release on Friday. Her diff is attached, along with the run she got on her
-branch.
+Sam opened PR #4471 four hours ago to get us moving again. It is green - 38
+seconds, no failures - and he has three approvals from people who also have
+something blocked behind it. The diff is attached along with the run report from
+his branch and the job as it stands on `main`.
 
-Her PR description:
+The part I want a second opinion on is the argument in his PR body:
 
-> Two changes. The PR job no longer depends on staging at all: it stands our own
-> API document up as a service inside the job and runs the generated cases
-> against that, so the job is hermetic, deterministic, needs no secrets, and
-> finishes in well under a minute. And the deep run moves to
-> api.northwind-ledger.io with a read-only production key, scope `read:*`, which
-> cannot mutate anything - it is the same traffic our uptime probe already
-> sends, just more of it. While I was in there I wired the JUnit report, the
-> artifact upload and `workflow_dispatch`, which we have wanted for months.
->
-> Branch run attached: 44 operations, zero failures, 38 seconds. If somebody
-> would rather wait three weeks for OPS-1188 they can explain the red board to
-> the release meeting.
+> Staging is gone until Monday and I am not going to have the whole team
+> blocked for four days over it. Pointing the run at the live API is safe
+> here. Generated cases only send what our own document describes, and I have
+> restricted the run to the server-error validation, so the only thing this job
+> can do is tell us about a 500 - which we already page on. It is a read-only
+> configuration by construction. It also finishes in 38 seconds instead of
+> eleven minutes, which is a bonus.
 
-I am the reviewer. I do not want to be the person who blocked this for three
-weeks with nothing to offer, and I do not want to find out on Friday that we
-shipped on the strength of a green board that does not mean what we think it
-means.
+Three of the six hunks in that diff I have no problem with and would take
+today. I am not sure about the rest, and I am not sure the run being green
+means what Sam thinks it means.
 
-Review it. If it is sound, say so and I will merge tonight. If it is not, I need
-something the team can actually run tomorrow morning - the release is Friday and
-"wait for platform" is not an answer I can take into that meeting.
+Give me a review I can paste into the PR, and the job file as it should merge.
+`test/openapi-contract.test.js` passes and is out of scope - leave it alone.
 
 ## Output Specification
 
-1. `docs/review-4471.md` - your verdict (approve, or request changes), hunk by
-   hunk: what stays, what goes, and why.
-2. `.github/workflows/api-fuzz.yml` as you would have it merged - the version
-   the team runs tomorrow morning.
-3. Any supporting file your version needs, and nothing more.
-
-Do not change the assertions or the set of operations under test.
+1. `.github/workflows/api-checks.yml` as it should merge today.
+2. `docs/pr-4471-review.md` - every hunk in the diff with a verdict and a
+   reason, an account of what the 38-second green run actually did and what it
+   established, and - if the job is not going to run where Sam pointed it - the
+   target it should run against instead and why that one exists.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: .github/workflows/api-fuzz.yml ===============
-name: api-fuzz
+=============== FILE: .github/workflows/api-checks.yml ===============
+name: api-checks
 
 on:
   pull_request:
-  schedule:
-    - cron: '0 4 * * *'
 
 jobs:
-  fuzz:
+  preview:
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: deploy
+        name: Stand up this branch
+        run: |
+          # Builds the branch image, applies migrations on boot, seeds from
+          # fixtures/seed.sql, and prints the hostname it came up on.
+          ./ops/preview-up.sh >> "$GITHUB_OUTPUT"
+
+  contract:
+    needs: preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Contract tests against the branch stack
+        run: npm run contract -- --base "${{ needs.preview.outputs.url }}"
+
+  generated-cases:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -67,241 +77,269 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install schemathesis
-      - name: Generated cases against staging
+
+      - name: Generated cases
         env:
-          TOKEN: ${{ secrets.STAGING_READ_TOKEN }}
+          TOKEN: ${{ secrets.STAGING_TOKEN }}
         run: |
-          schemathesis run https://staging.northwind-ledger.io/openapi.json \
-            --base-url https://staging.northwind-ledger.io \
-            --hypothesis-max-examples 50 \
+          schemathesis run https://staging.pallet.dev/openapi.json \
+            --base-url https://staging.pallet.dev \
+            --hypothesis-max-examples 200 \
+            --workers 4 \
             --header "Authorization: Bearer $TOKEN"
 
-=============== FILE: reviews/pr-4471.diff ===============
-diff --git a/.github/workflows/api-fuzz.yml b/.github/workflows/api-fuzz.yml
---- a/.github/workflows/api-fuzz.yml
-+++ b/.github/workflows/api-fuzz.yml
-@@
+      - name: Document contract lint
+        run: node --test test/*.test.js
+
+=============== FILE: pr-4471.diff ===============
+PR #4471 - "unblock the required check until staging is back" - sam - 6 hunks
+
+--- a/.github/workflows/api-checks.yml
++++ b/.github/workflows/api-checks.yml
+
+@@ hunk 1 @@
  on:
    pull_request:
-   schedule:
-     - cron: '0 4 * * *'
 +  workflow_dispatch:
-@@
--      - name: Generated cases against staging
--        env:
--          TOKEN: ${{ secrets.STAGING_READ_TOKEN }}
--        run: |
--          schemathesis run https://staging.northwind-ledger.io/openapi.json \
--            --base-url https://staging.northwind-ledger.io \
--            --hypothesis-max-examples 50 \
--            --header "Authorization: Bearer $TOKEN"
-+      - name: Serve the API document
-+        run: |
-+          npx --yes @stoplight/prism-cli@5 mock openapi.yaml --port 4010 --host 127.0.0.1 &
-+          for i in $(seq 30); do
-+            curl -sf http://127.0.0.1:4010/v1/accounts >/dev/null && break
-+            sleep 1
-+          done
-+      - name: Generated cases
-+        run: |
+
+@@ hunk 2 @@
+       - name: Generated cases
+         env:
+-          TOKEN: ${{ secrets.STAGING_TOKEN }}
++          TOKEN: ${{ secrets.PROD_API_TOKEN }}
+         run: |
+-          schemathesis run https://staging.pallet.dev/openapi.json \
+-            --base-url https://staging.pallet.dev \
 +          schemathesis run ./openapi.yaml \
-+            --base-url http://127.0.0.1:4010 \
++            --base-url https://api.pallet.com \
+
+@@ hunk 3 @@
+-            --hypothesis-max-examples 200 \
+-            --workers 4 \
 +            --hypothesis-max-examples 5 \
-+            --workers 8 \
+
+@@ hunk 4 @@
++            --checks not_a_server_error \
+             --header "Authorization: Bearer $TOKEN"
+
+@@ hunk 5 @@
+             --header "Authorization: Bearer $TOKEN" \
 +            --junit-xml=results.xml
-+      - name: Upload report
++
++      - uses: actions/upload-artifact@v4
 +        if: always()
-+        uses: actions/upload-artifact@v4
 +        with:
-+          name: api-fuzz-results
++          name: generated-case-results
 +          path: results.xml
-+          retention-days: 14
 
-diff --git a/.github/workflows/api-fuzz-nightly.yml b/.github/workflows/api-fuzz-nightly.yml
-new file mode 100644
---- /dev/null
-+++ b/.github/workflows/api-fuzz-nightly.yml
-@@
-+name: api-fuzz-nightly
-+
-+on:
-+  schedule:
-+    - cron: '0 6 * * *'
-+
-+jobs:
-+  deep:
-+    runs-on: ubuntu-latest
-+    steps:
-+      - uses: actions/checkout@v5
-+      - uses: actions/setup-python@v5
-+        with:
-+          python-version: '3.12'
-+      - run: pip install schemathesis
-+      - name: Deep run
-+        env:
-+          TOKEN: ${{ secrets.PROD_READONLY_TOKEN }}
-+        run: |
-+          schemathesis run https://api.northwind-ledger.io/openapi.json \
-+            --base-url https://api.northwind-ledger.io \
-+            --hypothesis-max-examples 200 \
-+            --workers 4 \
-+            --junit-xml=results.xml \
-+            --header "Authorization: Bearer $TOKEN"
+@@ hunk 6 @@
+       - name: Document contract lint
+-        run: node --test test/*.test.js
++        run: node --test --test-reporter=spec test/*.test.js
 
-=============== FILE: reports/pr-4471-branch-run.md ===============
-# api-fuzz on branch fix/hermetic-fuzz, run 2026-09-10 - PASSED
+Notes left on the hunks by the author:
 
-44 operations selected, 5 examples each, 8 workers. Wall clock 38 seconds.
-0 failures. Checks reporting: status code, response schema, content type,
-server error.
+- hunk 2: the document in the repo is the same one the service was built from,
+  and reading it off disk means the job no longer depends on a host being up.
+- hunk 3: production is slower than staging was. 5 cases is enough to tell us
+  the endpoint answers.
+- hunk 4: this is the read-only guard. Restricting to the server-error
+  validation is what keeps the job from doing anything to live data.
 
-| Operation                      | Examples | Failures |
-|--------------------------------|----------|----------|
-| GET /v1/accounts               | 5        | 0        |
-| GET /v1/exports/{id}/download  | 5        | 0        |
-| GET /v1/statements/{id}/pdf    | 5        | 0        |
-| POST /v1/transfers             | 5        | 0        |
-| ... 40 further operations      | 200      | 0        |
+=============== FILE: reports/pr-4471-run.md ===============
+# Generated-case run, PR #4471 branch, 2026-09-14 09:12 UTC
 
-Priya's note on the run: "green first time, no flakes across four re-runs."
+Target: https://api.pallet.com
+Document: ./openapi.yaml (7 operations)
+5 cases per operation. 35 requests issued. 38.4s. 0 failures reported.
 
-=============== FILE: docs/open-defects.md ===============
-# Open API defects reported by the last good run against staging (2026-08-20)
+## Response status distribution across the 35 requests
 
-None of these has a fix merged. All three reproduce today against staging's
-last good snapshot and against production.
+| Status | Count | Notes                                                |
+|--------|-------|------------------------------------------------------|
+| 429    | 26    | Edge gateway. It sheds anything above 20 requests/sec from a single token. |
+| 201    | 6     | 4 x `POST /v1/shipments`, 2 x `POST /v1/manifests`   |
+| 200    | 3     | `GET /v1/shipments`                                  |
 
-| ID      | Operation                   | Reported as                                       | Status |
-|---------|-----------------------------|---------------------------------------------------|--------|
-| LED-771 | GET /v1/accounts            | 200 body omits `next`, which the document requires | open   |
-| LED-774 | POST /v1/transfers          | 422 returned; document declares only 201 and 400   | open   |
-| LED-780 | GET /v1/statements/{id}/pdf | 500 when `{id}` is an empty string                 | open   |
+## Follow-ups filed since the run
 
-LED-780 has a customer ticket attached and is on the 1.10 list. LED-771 has
-been open since June.
+- OPS-3390, 09:31 - six records exist in the production database that no
+  customer created. Four of them are shipments in `booked` state against the
+  account the CI token belongs to. Finance has asked who is unwinding them.
+- OPS-3391, 09:44 - the document served at https://api.pallet.com/openapi.json
+  lists 10 operations. The copy in the repository lists 7. The three that are
+  missing from the repository copy - `POST /v1/manifests/{id}/void`,
+  `GET /v1/rates` and `DELETE /v1/shipments/{id}` - were not exercised by this
+  run at all.
 
-=============== FILE: docs/ops-1188.md ===============
-# OPS-1188 - staging environment marked down
+## The same job on main, last green run before staging went dark
 
-Opened 2026-08-21. Owner: @platform (on-call rota, not an individual).
-Priority P3. Current position in the queue: about three weeks.
-
-The `seed` service in `deploy/compose.yml` pulls
-`s3://nw-dumps/latest/ledger.sql.gz`, which the data team stopped publishing
-when they moved to the new anonymisation pipeline. `seed` exits non-zero; the
-environment healthcheck gates on it, so the whole stack is marked down and the
-API's ingress is withdrawn.
-
-Notes on the ticket:
-
-- Nothing else in the stack has changed since July. The application image builds
-  and the container starts.
-- The service runs migrations on boot (`--migrate-on-boot`) and creates its own
-  schema; the dump only supplies realistic-looking rows for manual QA.
-- The service serves its own OpenAPI document at `/openapi.json` once it is up.
-
-=============== FILE: deploy/compose.yml ===============
-services:
-  db:
-    image: postgres:16
-    environment:
-      POSTGRES_PASSWORD: dev
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 2s
-      retries: 30
-
-  api:
-    build: .
-    command: ["./ledger", "serve", "--migrate-on-boot"]
-    ports: ["8080:8080"]
-    environment:
-      DATABASE_URL: postgres://postgres:dev@db:5432/ledger
-    depends_on:
-      db:
-        condition: service_healthy
-
-  seed:
-    build: .
-    command: ["./scripts/seed-staging.sh"]
-    environment:
-      DUMP_URL: s3://nw-dumps/latest/ledger.sql.gz
-    depends_on:
-      api:
-        condition: service_started
+Target: https://staging.pallet.dev
+Document: fetched from the target, 10 operations.
+200 cases per operation, 4 workers. 2,000 requests. 11m02s. 0 failures.
 
 =============== FILE: openapi.yaml ===============
 openapi: 3.0.3
 info:
-  title: Northwind Ledger API
-  version: 1.9.0
+  title: Pallet Freight API
+  version: 11.6.0
+x-generated-at: '2026-06-30T22:04:10Z'
 paths:
-  /v1/accounts:
+  /v1/shipments:
     get:
-      operationId: listAccounts
+      operationId: listShipments
       parameters:
         - name: limit
           in: query
-          schema: { type: integer, minimum: 1, maximum: 500 }
+          schema: { type: integer, minimum: 1, maximum: 200 }
       responses:
         '200':
-          description: accounts
+          description: page of shipments
           content:
             application/json:
               schema:
                 type: object
-                required: [items, next]
+                required: [data]
                 properties:
-                  items: { type: array, items: { type: object } }
-                  next: { type: string, nullable: true }
-        '400': { description: bad request }
-  /v1/exports/{id}/download:
-    get:
-      operationId: downloadExport
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200': { description: file }
-        '404': { description: unknown export }
-  /v1/statements/{id}/pdf:
-    get:
-      operationId: statementPdf
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200': { description: pdf }
-        '404': { description: unknown statement }
-  /v1/transfers:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Shipment' }
     post:
-      operationId: createTransfer
+      operationId: createShipment
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [from, to, amount_cents]
+              required: [origin, destination, weight_kg]
               properties:
-                from: { type: string }
-                to: { type: string }
-                amount_cents: { type: integer, minimum: 1 }
+                origin: { type: string, maxLength: 12 }
+                destination: { type: string, maxLength: 12 }
+                weight_kg: { type: number, minimum: 0.1, maximum: 24000 }
       responses:
-        '201': { description: created }
-        '400': { description: rejected }
+        '201':
+          description: booked
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Shipment' }
+        '400':
+          description: rejected
+  /v1/shipments/{id}:
+    get:
+      operationId: getShipment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: a shipment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Shipment' }
+        '404':
+          description: unknown shipment
+  /v1/manifests:
+    get:
+      operationId: listManifests
+      responses:
+        '200':
+          description: manifests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { type: string } }
+    post:
+      operationId: createManifest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [shipment_ids]
+              properties:
+                shipment_ids:
+                  type: array
+                  items: { type: string }
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id: { type: string }
+        '400':
+          description: rejected
+  /v1/manifests/{id}:
+    get:
+      operationId: getManifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: a manifest
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id: { type: string }
+        '404':
+          description: unknown manifest
+  /v1/accounts/me:
+    get:
+      operationId: currentAccount
+      responses:
+        '200':
+          description: the calling account
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name]
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+components:
+  schemas:
+    Shipment:
+      type: object
+      required: [id, origin, destination, status]
+      properties:
+        id: { type: string }
+        origin: { type: string }
+        destination: { type: string }
+        status: { type: string, enum: [draft, booked, cancelled] }
 
-=============== FILE: docs/prod-notes.md ===============
-# Production - notes the platform team asks reviewers to check against
+=============== FILE: test/openapi-contract.test.js ===============
+const test = require('node:test');
+const assert = require('node:assert');
+const fs = require('node:fs');
 
-- Scope `read:*` maps to every GET operation in the gateway config. That
-  includes `GET /v1/exports/{id}/download`, which records a metered billing
-  event per call: the customer is invoiced per export download.
-- `GET /v1/statements/{id}/pdf` renders on demand and holds one of 12 render
-  workers for up to 9 seconds.
-- On-call pages on a 5xx rate above 0.5% over 2 minutes, any endpoint, with no
-  suppression window.
+const spec = fs.readFileSync('openapi.yaml', 'utf8');
+
+test('no operation documents a 5xx response', () => {
+  const bad = spec.split('\n').filter((l) => /^ {8}'5\d\d':/.test(l));
+  assert.deepStrictEqual(bad, [], `5xx declared: ${bad.join(', ')}`);
+});
+
+test('every path is under /v1', () => {
+  const paths = spec
+    .split('\n')
+    .filter((l) => /^ {2}\/\S/.test(l))
+    .map((l) => l.trim().replace(/:$/, ''));
+  assert.ok(paths.length > 0, 'no paths found');
+  for (const p of paths) assert.match(p, /^\/v1\//, p);
+});

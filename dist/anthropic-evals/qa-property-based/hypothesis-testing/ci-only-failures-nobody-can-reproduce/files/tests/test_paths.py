@@ -1,8 +1,8 @@
-from hypothesis import given, strategies as st
+from hypothesis import example, given, strategies as st
 
 from src.paths import join, normalise
 
-SEGMENT_CHARS = "abcxy./-"
+SEGMENT_CHARS = "abx./"
 
 
 def test_normalise_examples():
@@ -16,6 +16,8 @@ def test_join_examples():
     assert join("assets/", "/img") == "assets/img"
 
 
+@example(p="assets//img//logo.svg")  # INC-3310, 2026-06-14
+@example(p="./assets//img")  # INC-3310, 2026-06-14
 @given(st.text(alphabet=SEGMENT_CHARS, min_size=1, max_size=24))
 def test_normalise_is_idempotent(p):
     assert normalise(normalise(p)) == normalise(p)

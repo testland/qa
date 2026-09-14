@@ -6,7 +6,7 @@
   member, export a statement.
 - Estimated end state on the current roadmap, end of Q1 2027: 55-70 browser
   tests plus an API tier of similar size. Nobody is projecting beyond that.
-- Actor types: one. Everything in this console is done by an internal
-  operations user. Merchants never sign in here - they use the merchant
-  portal, which is a separate product with its own team and its own tests.
+- Who uses this console: internal operations staff, one role, same
+  permissions for all of them. Merchants never sign in here - they use the
+  merchant portal, a separate product with its own team and its own tests.
 - Engineers who will write tests: 3, all TypeScript.

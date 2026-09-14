@@ -8,43 +8,36 @@ dealt with in one pass.
 First: it does not finish. The runner is capped at 120 minutes and the job has
 been killed mid-run on eleven of the last fourteen nights, usually somewhere
 around case 70 of 140. So most mornings there is no report at all, and the three
-nights it did finish are the only data anyone has. The 120-minute cap is not
-mine to raise; the platform team sets it for every scheduled workflow in the org
-and they have said no twice.
+nights it did finish are the only data anyone has. The cap is not mine to move;
+the platform team set it and the rules they work to are attached.
 
 Dev on my team has a patch up for this already — it is attached as
-`reports/proposed-patch.diff` — and I would take it today if it worked. Read
-`docs/platform-constraints.md` before you judge it; the dependency rules here
-are not negotiable and I have been burned by forgetting them.
+`reports/proposed-patch.diff` — and I would take it today if it worked. Give me a
+verdict on it either way, because he will ask.
 
 Second: on the three nights it did finish, the same four cases failed their
 grounding bar, and each failure paged whoever was on call at 04:00. Three
 separate people have now been woken for the same four cases. The rota is
 threatening to mute the channel, which would be worse than what we have. The
-team's ask, which I am passing on as they wrote it, is "drop the grounding bar
-from 0.7 to 0.3 so the nightly stops crying wolf, and we will pick the four up
-when we next touch retrieval".
+team's ask, which I am passing on as they wrote it: "drop the grounding bar from
+0.7 to 0.3 so the nightly stops crying wolf, and take those four out of the
+paging path until search-platform get to them."
 
 Attached: the workflow, the suite, the first ten rows of the goldens file (the
-real one is 140 rows in the same shape), the run history with per-case scores
-for those four cases, the constraints doc, the proposed patch, and the
-ownership table.
-
-The suite was written carefully last year and I do not want the cases touched.
-The 140 goldens are our whole regression corpus for this assistant and they were
-labelled by hand by two people over a fortnight.
+real one is 140 rows in the same shape), the run history with per-case scores for
+those four cases, the platform rules, the proposed patch, and the ownership
+table.
 
 ## Output Specification
 
-1. Edit `.github/workflows/nightly-llm-eval.yml` so a full run fits inside the
-   120-minute cap and produces a report. Do not change `timeout-minutes`.
-2. Decide on the team's request about the grounding bar, apply your decision to
-   `tests/llm/test_assistant_suite.py`, and leave the rest of the file as it is.
+1. Edit `.github/workflows/nightly-llm-eval.yml` so that a full run of the corpus
+   finishes inside the runner cap and produces a report.
+2. Apply your decision on the team's ask to `tests/llm/test_assistant_suite.py`
+   and to anything else it touches.
 3. Write `docs/nightly-run-decision.md`: what you changed and why, with the
    arithmetic showing the run now fits; your verdict on the attached patch; your
-   answer on the grounding bar with the evidence you based it on; and, if you
-   are not giving the team what they asked for, what you are doing instead about
-   the 04:00 pages.
+   answer on each part of the team's ask with the evidence behind it; and what
+   happens at 04:00 from now on.
 
 ## Input Files
 
@@ -117,11 +110,9 @@ def test_answer_addresses_the_question(g):
 - `timeout-minutes` is 120 for every scheduled workflow in the org. Raising it
   requires a platform exception. Two requests from this team have been declined.
 - `requirements.txt` is generated from the org approved-package manifest. A
-  package that is not already on the manifest goes through security review
-  before it can be added; current turnaround is three weeks and there is no
-  expedite path. Anything already pinned in `requirements.txt` is on the runner
-  image and free to use, including any command-line entry points those packages
-  install.
+  package that is not already on the manifest goes through security review before
+  it can be added; current turnaround is three weeks and there is no expedite
+  path.
 - Runners are 4 vCPU, 16 GB. No self-hosted pool is available to this team.
 - Judge-model API quota for this org: 50 requests in flight, org-wide. We are
   nowhere near it; the assistant team's nightly is the only scheduled consumer.
@@ -187,30 +178,26 @@ idle between calls.
 
 ## The four that fail on a completed night
 
-Grounding score, `test_answer_is_grounded`, bar 0.70:
+| Case               | grounding 09-03 | 09-06 | 09-10 | relevancy 09-03 | 09-06 | 09-10 |
+|--------------------|-----------------|-------|-------|-----------------|-------|-------|
+| tier-growth-price  | 0.31            | 0.29  | 0.30  | 0.94            | 0.92  | 0.95  |
+| tier-growth-limits | 0.34            | 0.33  | 0.36  | 0.91            | 0.93  | 0.90  |
+| tier-scale-price   | 0.28            | 0.31  | 0.29  | 0.96            | 0.94  | 0.95  |
+| tier-downgrade     | 0.35            | 0.33  | 0.34  | 0.88            | 0.90  | 0.89  |
 
-| Case               | 09-03 | 09-06 | 09-10 |
-|--------------------|-------|-------|-------|
-| tier-growth-price  | 0.31  | 0.29  | 0.30  |
-| tier-growth-limits | 0.34  | 0.33  | 0.36  |
-| tier-scale-price   | 0.28  | 0.31  | 0.29  |
-| tier-downgrade     | 0.35  | 0.33  | 0.34  |
-
-Relevancy score for the same four cases, `test_answer_addresses_the_question`,
-bar 0.70: between 0.88 and 0.96 on all three completed nights.
-
-All 276 other results were above 0.70 on all three completed nights.
+Both bars are 0.70. All 276 other results were above 0.70 on all three completed
+nights.
 
 =============== FILE: docs/ownership.md ===============
 # Who owns what — assistant programme
 
-| Surface                            | Team              | Lead     |
-|------------------------------------|-------------------|----------|
-| Assistant prompts and responses    | @assistant-core   | @lmurray |
-| Eval suite, goldens, nightly job   | @assistant-core   | @lmurray |
-| Retrieval index, chunking, rebuilds | @search-platform | @nsato   |
-| Help-centre and pricing content     | @content-ops     | @dwhite  |
-| CI runners, workflow policy         | @platform         | @ahassan |
+| Surface                             | Team             | Lead     |
+|-------------------------------------|------------------|----------|
+| Assistant prompts and responses     | @assistant-core  | @lmurray |
+| Eval suite, goldens, nightly job     | @assistant-core | @lmurray |
+| Retrieval index, chunking, rebuilds  | @search-platform| @nsato   |
+| Help-centre and pricing content      | @content-ops    | @dwhite  |
+| CI runners, workflow policy          | @platform       | @ahassan |
 
 Index rebuilds land on the third Tuesday of the month and are announced in
 #search-platform. The August rebuild was the most recent.

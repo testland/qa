@@ -10,6 +10,9 @@ models:
       - name: amount
         data_tests:
           - not_null
+      - name: payment_intent_id
+        data_tests:
+          - not_null
 
   - name: stg_payments
     columns:
@@ -19,4 +22,21 @@ models:
           - not_null
       - name: payment_intent_id
         data_tests:
+          - not_null
+      - name: amount
+        data_tests:
+          - not_null
+
+  - name: fct_refunds
+    columns:
+      - name: refund_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_accounts
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
           - not_null

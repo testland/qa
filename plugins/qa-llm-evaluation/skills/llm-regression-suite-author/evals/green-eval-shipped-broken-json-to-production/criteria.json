@@ -1,42 +1,41 @@
 {
-  "context": "The suite already carries a deterministic assertion on the case that broke production, and it already failed. Predicted baseline failure: the agent reads 'llm-rubric only' as the defect, adds is-json to the three JSON cases, declares the suite fixed, and ships something that would have reported green on the incident run all over again — because eval/promptfooconfig.yaml sets defaultTest.threshold to 0.5, and a promptfoo test fails only when the combined score of its assertions falls below that number. results/pr-1180.json settles it in one line: sum-json-login has componentResults showing starts-with failed, score 0.5, success true. One failing structural assertion out of two is exactly 0.5, so it passed. Adding a third assertion makes two of three, 0.667, and it passes again. The agent is further predicted to reach for starts-with as the structural check because the incident was a code fence, which leaves sum-json-refund-fields green — its output opens with a brace and then appends a sentence after the object, so only a check that actually parses the payload catches it — and to answer Finance by refusing the sampling outright rather than noticing that moving the three parsed cases onto deterministic assertions removes their grading cost instead of sampling it. The mirror-image failure is applying the structural check to all eight, which would fail the five prose cases that no machine reads."
-  ,
+  "context": "The suite already carried a deterministic assertion on the case that broke production, that assertion is recorded as having failed, and the run still reported 9 of 9. Predicted baseline failure: the agent reads 'these cases lean on llm-rubric' as the defect, adds is-json to the four cases prompts/summarise.txt marks format=json, declares the suite repaired, and ships a configuration that would have reported green on the incident run all over again. eval/promptfooconfig.yaml sets defaultTest.threshold to 0.7 and eval/cases.jsonl weights every llm-rubric at 5 against 1 for the structural assertion, and a promptfoo test fails only when the weighted average of its assertion scores falls below the threshold — 5 of 6 is 0.833, which is why login-after-reset passed with its starts-with assertion failing, and 5 of 7 is 0.714, which is why adding one more failing structural assertion passes as well. Neither figure is printed anywhere in the fixture; results/pr-1180.json records only pass booleans, so the arithmetic has to be done rather than matched. The agent is further predicted to treat starts-with as sufficient because the incident was a code fence, which leaves cancel-and-refund (a sentence appended after the closing brace) and access-revoked (a trailing comma inside the object) green — both open with a brace and neither survives JSON.parse — and to answer Finance by refusing the sampling outright, without checking that the modelled 60% ignores the nightly full runs the proposal introduces, and without noticing that several rubric clauses are mechanically checkable and need no grading call at all: the order number 88421 in duplicate-charge, 55120 in commande-non-livree, and the phone number and card digits in declined-card. The mirror-image failure is putting the structural check on the five format=prose cases, which nothing parses.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "MUST NOT leave a case able to pass with a structural assertion failing",
-      "max_score": 32,
-      "description": "MUST NOT deliver a configuration in which a failed deterministic assertion can be outvoted by a passing graded one. Full marks require identifying defaultTest.threshold at 0.5 as the reason the suite reported 8 of 8 while sum-json-login's starts-with assertion failed — the captured run records score 0.5 and success true on that case — and changing it so every assertion on the parsed cases must pass. Adding assertions while leaving the combined-score threshold at 0.5 scores zero for this criterion: the added assertions still cannot fail the run. Removing the threshold without saying what it was doing scores at most half."
+      "name": "MUST NOT ship a configuration where a failing structural assertion can be outvoted",
+      "max_score": 34,
+      "description": "MUST NOT deliver eval files in which a deterministic assertion can fail on a format=json case while that case is still reported as a pass. Any delivery where that remains arithmetically possible scores zero for this criterion — in particular adding is-json to the parsed cases while leaving defaultTest.threshold at 0.7 and the llm-rubric weight of 5 against 1 in place, which gives 5 of 7, or 0.714, and passes again. Full marks require the diagnosis alongside the fix: the test score is the weighted average of its assertions and login-after-reset scored 5 of 6, or 0.833, against a 0.7 threshold, which is why the suite reported 9 of 9 with a recorded assertion failure in it. Repairing it — threshold raised to 1, the threshold removed, or the structural weight raised above the graded one — without stating what the old setting was doing scores at most half."
     },
     {
-      "name": "A check that actually parses the payload, on all three parsed cases",
+      "name": "A check that survives JSON.parse, on every parsed case",
       "max_score": 22,
-      "description": "sum-json-login, sum-json-billing and sum-json-refund-fields each gain an assertion that rejects a body JSON.parse would throw on. Relying on starts-with alone scores at most half: sum-json-refund-fields opens with a brace and still appends prose after the closing one, so it stays green. Covering only sum-json-login, the case named in the incident, scores at most half. Leaving all three on graded assertions alone scores zero."
+      "description": "All four cases prompts/summarise.txt marks format=json — login-after-reset, duplicate-charge, cancel-and-refund, access-revoked — gain an assertion that rejects a body JSON.parse would throw on. Relying on starts-with alone scores zero for this criterion: cancel-and-refund and access-revoked both open with a brace and neither parses, so starts-with leaves both green. Covering only login-after-reset, the case named in the incident, or otherwise fewer than all four, scores at most half."
     },
     {
-      "name": "MUST NOT apply the structural check to the prose cases",
-      "max_score": 14,
-      "description": "MUST NOT add a JSON or shape assertion to any of the five sum-prose-* cases. They return prose a human reads, nothing parses them, and the assertion would fail every one of them. Adding it to any prose case scores zero here."
-    },
-    {
-      "name": "Finance answered with where the money actually comes from",
+      "name": "Finance answered with the arithmetic rather than a verdict",
       "max_score": 20,
-      "description": "Rejects running a random 3 of 8 per pull request — a gate that samples the cases it gates cannot catch the case it skipped, and the three parsed cases are the ones that took production down — and names the saving the repair itself produces: deterministic assertions are evaluated locally and remove grading cost on those cases rather than sampling it. Accepting the proposal as written scores zero. Refusing with no alternative costing scores at most half."
+      "description": "Rejects running a random 3 of the 9 cases per pull request — a gate that samples the cases it gates cannot catch the case it skipped, and the parsed cases are the ones that took production down. Full marks additionally (a) show the modelled 60% is wrong because the proposal adds nightly full runs that do not exist today: 94 pull-request runs at 3 cases plus about 31 nightly runs at 9 is roughly 560 grading calls against roughly 850 now, about a third of the line rather than 60%; and (b) name at least two rubric clauses a locally evaluated assertion checks for free — the order numbers 88421 and 55120, or the phone number and card digits in declined-card. Accepting the proposal as written scores zero. Refusing with neither the corrected arithmetic nor an alternative saving scores at most half."
     },
     {
-      "name": "Write-up names the cases the captured run now fails",
+      "name": "Write-up names every case the captured run now fails",
       "max_score": 12,
-      "description": "docs/assertion-plan.md states per case what it carries and why, and identifies both sum-json-login (fenced payload) and sum-json-refund-fields (prose appended after the object) as cases the recorded run would now fail, with the assertion each fails on. Naming only one of the two scores at most half. Naming neither scores zero."
+      "description": "docs/assertion-plan.md states per case what it carries and why, and names all three cases the recorded run would now fail — login-after-reset (code fence), cancel-and-refund (a sentence after the closing brace), access-revoked (a trailing comma inside the object) — with the assertion each one fails on. Naming only login-after-reset scores zero. Naming two of the three scores at most half."
     },
     {
-      "name": "Tests that would have caught the pre-incident suite",
+      "name": "MUST NOT put the structural check on the prose cases",
       "max_score": 10,
-      "description": "node --test passes with the shipped tests, and at least one added test fails when pointed at the suite as it stood on 2026-09-08 rather than merely restating the shipped lint rules. A suite that does not run, or added tests that pass equally against the old configuration, scores zero."
+      "description": "MUST NOT add a JSON or shape assertion to any of the five cases marked format=prose. Nothing machine-reads those replies and the assertion would fail every one of them. Adding it to any prose case scores zero here."
+    },
+    {
+      "name": "Tests that fail against the 2026-09-08 suite",
+      "max_score": 10,
+      "description": "node --test passes with the shipped tests intact, and at least one added test fails when pointed at the configuration as it stood on 2026-09-08 rather than restating the lint rules already shipped. A suite that does not run, or added tests that pass equally against the old configuration, scores zero."
     },
     {
       "name": "Captured evidence untouched",
-      "max_score": 5,
-      "description": "MUST NOT modify results/pr-1180.json. Any edit to it scores zero here, including rewriting an output to make a new assertion pass."
+      "max_score": 4,
+      "description": "MUST NOT modify results/pr-1180.json. Any edit scores zero here, including rewriting a recorded output so that a newly added assertion passes against it."
     }
   ]
 }

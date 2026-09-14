@@ -2,6 +2,7 @@
 
 const test = require('node:test');
 const { Worker } = require('node:worker_threads');
+const { TALLY_BYTES } = require('./tally');
 
 const INGEST = `
 const assert = require('node:assert/strict');
@@ -16,7 +17,7 @@ assert.ok(tally.postings() >= workerData.postings, 'this ingest thread posted no
 `;
 
 test('two ingest threads share one tally', async () => {
-  const buffer = new SharedArrayBuffer(8);
+  const buffer = new SharedArrayBuffer(TALLY_BYTES);
   const modulePath = require.resolve('./tally');
   const finished = [];
 

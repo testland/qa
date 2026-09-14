@@ -6,60 +6,61 @@ const path = require('node:path');
 const ROOT = path.join(__dirname, '..');
 
 function loadConfig() {
-  return JSON.parse(fs.readFileSync(path.join(ROOT, 'a11y-check.config.json'), 'utf8'));
+  return JSON.parse(fs.readFileSync(path.join(ROOT, 'a11y-gate.config.json'), 'utf8'));
 }
 
-function loadRun(file) {
-  return JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8'));
+function fingerprint(r) {
+  return r.scanner + '::' + r.rule_id + '::' + r.page_url + '::' + r.selector;
 }
 
-function counted(config, ruleId) {
-  const r = config && config.rules && config.rules[ruleId];
-  return !r || r.count !== false;
-}
-
-function countViolations(run, config) {
-  let total = 0;
-  for (const page of run) {
+function readRecords(file) {
+  const run = JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8'));
+  const out = [];
+  for (const page of run.pages) {
     for (const v of page.violations) {
-      if (!counted(config, v.id)) continue;
-      total += v.nodes.length;
-    }
-  }
-  return total;
-}
-
-function countByRule(run, config) {
-  const out = {};
-  for (const page of run) {
-    for (const v of page.violations) {
-      if (!counted(config, v.id)) continue;
-      out[v.id] = (out[v.id] || 0) + v.nodes.length;
+      for (const node of v.nodes) {
+        const rec = {
+          scanner: 'axe',
+          rule_id: v.id,
+          wcag_sc: v.tags[v.tags.length - 1],
+          page_url: page.url,
+          selector: node.target[0],
+          severity: v.impact,
+        };
+        rec.fingerprint = fingerprint(rec);
+        out.push(rec);
+      }
     }
   }
   return out;
 }
 
-function gate(counts, run, config) {
-  const current = countViolations(run, config);
-  if (!counts) {
-    return {
-      verdict: config.onMissingArtifact === 'fail' ? 'no-go' : 'go',
-      previous: null,
-      current,
-    };
-  }
-  return { verdict: current > counts.total ? 'no-go' : 'go', previous: counts.total, current };
+function classify(records, known, config) {
+  const baseline = new Set(known);
+  const seen = new Set(records.map((r) => r.fingerprint));
+  const fresh = records.filter((r) => !baseline.has(r.fingerprint));
+  const blockOn = new Set(config.blockOn);
+  const warnOn = new Set(config.warnOn);
+  return {
+    blockers: fresh.filter((r) => blockOn.has(r.severity)),
+    warnings: fresh.filter((r) => warnOn.has(r.severity)),
+    grandfathered: records.length - fresh.length,
+    fixed: [...baseline].filter((f) => !seen.has(f)),
+  };
 }
 
 if (require.main === module) {
   const config = loadConfig();
-  const artifact = path.join(ROOT, 'a11y-counts.json');
-  const counts = fs.existsSync(artifact) ? JSON.parse(fs.readFileSync(artifact, 'utf8')) : null;
-  const result = gate(counts, loadRun(process.argv[2] || 'reports/pr-4471-scan.json'), config);
-  console.log('# A11y check - verdict: ' + result.verdict.toUpperCase());
-  console.log('previous=' + result.previous + ' current=' + result.current);
-  process.exit(result.verdict === 'go' ? 0 : 1);
+  const known = JSON.parse(fs.readFileSync(path.join(ROOT, config.baseline), 'utf8')).violations;
+  const result = classify(readRecords(process.argv[2]), known, config);
+  const verdict = result.blockers.length ? 'no-go' : 'go';
+  console.log('# A11y check - verdict: ' + verdict.toUpperCase());
+  console.log('blockers=' + result.blockers.length + ' warnings=' + result.warnings.length +
+    ' grandfathered=' + result.grandfathered + ' fixed=' + result.fixed.length);
+  for (const b of result.blockers) console.log('BLOCK ' + b.rule_id + ' ' + b.page_url + ' ' + b.selector);
+  for (const w of result.warnings) console.log('WARN  ' + w.rule_id + ' ' + w.page_url + ' ' + w.selector);
+  for (const f of result.fixed) console.log('FIXED ' + f);
+  process.exit(verdict === 'go' ? 0 : 1);
 }
 
-module.exports = { loadConfig, loadRun, counted, countViolations, countByRule, gate };
+module.exports = { loadConfig, fingerprint, readRecords, classify };

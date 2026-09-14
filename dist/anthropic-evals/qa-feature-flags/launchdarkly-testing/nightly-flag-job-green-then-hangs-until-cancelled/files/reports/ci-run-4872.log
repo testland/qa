@@ -10,8 +10,6 @@
 2026-09-11T02:14:05Z  ok 7 - fixed promo never goes below zero
 2026-09-11T02:14:05Z  ok 8 - the pilot account stacks every promo
 2026-09-11T02:14:05Z  ok 9 - every other account keeps one promo
-2026-09-11T02:14:05Z  # tests 9
-2026-09-11T02:14:05Z  # pass 9
-2026-09-11T02:14:05Z  # fail 0
+2026-09-11T02:14:05Z  ok 10 - no account outside the pilot picks up stacking
 2026-09-11T02:24:04Z  Error: The operation was canceled.
 2026-09-11T02:24:04Z  ##[error]The job running on runner GitHub Actions 12 has exceeded the maximum execution time of 10 minutes.

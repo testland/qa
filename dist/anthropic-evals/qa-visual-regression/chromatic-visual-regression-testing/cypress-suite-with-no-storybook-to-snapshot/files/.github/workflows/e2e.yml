@@ -25,8 +25,8 @@ jobs:
         env:
           CYPRESS_BASE_URL: https://staging.ledger-console.internal
 
-      - name: Screenshot comparison (spike branch only)
+      - name: Hosted visual (Ash, spike branch only)
         if: github.ref == 'refs/heads/spike/visual-jo'
-        run: npm run e2e:visual
+        run: npx chromatic --playwright --exit-zero-on-changes
         env:
-          CYPRESS_BASE_URL: https://staging.ledger-console.internal
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

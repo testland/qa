@@ -1,0 +1,26 @@
+Lane: ios-en-US, iPhone 15, iOS 17.5, system language English (US), build 8.2.2
+
+Test Case '-[TransferUITests testBalanceIsShownOnSummary]' passed (6.771 seconds).
+Test Case '-[TransferUITests testCancelReturnsToSummary]' passed (9.140 seconds).
+Test Case '-[TransferUITests testOpensTransferFromSummary]' passed (8.402 seconds).
+Test Case '-[TransferUITests testPickRecipientBeforePaying]' passed (10.221 seconds).
+Test Case '-[TransferUITests testRejectsTransferOverBalance]' passed (12.004 seconds).
+Test Case '-[TransferUITests testSendsATransfer]' failed (14.905 seconds).
+  Failed to get matching snapshot: No matches found for StaticText "confirmation_banner"
+Executed 6 tests, with 1 failure (0 unexpected) in 61.443 seconds
+
+(green on every run up to and including build 8.2.1 on 2026-08-13)
+
+Lane: ios-es-MX, iPhone 15, iOS 17.5, system language Spanish (Mexico), build 8.2.2
+
+Test Case '-[TransferUITests testBalanceIsShownOnSummary]' passed (6.882 seconds).
+Test Case '-[TransferUITests testCancelReturnsToSummary]' failed (11.660 seconds).
+  Failed to get matching snapshot: No matches found for Button "Cancel" in NavigationBar
+Test Case '-[TransferUITests testOpensTransferFromSummary]' passed (8.511 seconds).
+Test Case '-[TransferUITests testPickRecipientBeforePaying]' failed (13.221 seconds).
+  Failed to get matching snapshot: No matches found for Button "Choose recipient"
+Test Case '-[TransferUITests testRejectsTransferOverBalance]' failed (15.118 seconds).
+  Failed to get matching snapshot: No matches found for Button "Pay"
+Test Case '-[TransferUITests testSendsATransfer]' failed (14.960 seconds).
+  Failed to get matching snapshot: No matches found for Button "Pay"
+Executed 6 tests, with 4 failures (0 unexpected) in 70.077 seconds

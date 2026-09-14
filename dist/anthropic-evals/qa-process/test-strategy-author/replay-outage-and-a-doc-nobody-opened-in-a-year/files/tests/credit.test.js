@@ -7,6 +7,12 @@ test('credits the wallet by the event amount', () => {
   assert.equal(applyCredit(w, { event_id: 'ev_1', amountCents: 2_500 }), 2_500);
 });
 
+test('records the provider event id against the wallet', () => {
+  const w = createWallet('w_1');
+  applyCredit(w, { event_id: 'ev_9', amountCents: 1_000 });
+  assert.deepEqual(w.appliedEvents, ['ev_9']);
+});
+
 test('rejects a credit with no event id', () => {
   const w = createWallet('w_1');
   assert.throws(() => applyCredit(w, { amountCents: 100 }), /event_id required/);

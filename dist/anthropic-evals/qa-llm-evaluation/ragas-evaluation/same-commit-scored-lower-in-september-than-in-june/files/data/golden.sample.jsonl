@@ -4,3 +4,5 @@
 {"id": "g-058", "collection": "changelog", "question": "Was the legacy CSV import removed?", "ground_truth": "The legacy CSV import was deprecated on 2026-02-02 and removed in the 2026-05-30 release."}
 {"id": "g-062", "collection": "api-reference", "question": "What is returned when a webhook signature fails verification?", "ground_truth": "A 401 with error code signature_invalid; the delivery is not retried."}
 {"id": "g-072", "collection": "changelog", "question": "What changed about seat proration in May?", "ground_truth": "From the 2026-05-09 release, seats added mid-cycle are prorated to the day rather than the month."}
+{"id": "g-091", "collection": "changelog", "question": "Which release added per-workspace API keys?", "ground_truth": "Per-workspace API keys shipped in the 2026-03-21 release."}
+{"id": "g-103", "collection": "changelog", "question": "When does a webhook delivery stop being retried?", "ground_truth": "Delivery stops after 6 attempts or once the endpoint has been disabled, whichever comes first."}

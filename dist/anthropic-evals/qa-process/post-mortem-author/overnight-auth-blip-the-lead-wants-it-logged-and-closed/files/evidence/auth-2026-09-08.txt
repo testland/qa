@@ -19,15 +19,13 @@ User impact, from auth-service access logs 03:12:40-03:16:50:
   monthly active users ........................... 402,000
   support tickets mentioning "logged out" on 09-08 ... 12
 
-Alert configuration, monitors/auth.yaml:
-  alert:     auth_error_budget_burn
-  window:    10m
-  condition: burn rate above 14.4x sustained across the full window
-  observed:  the outage lasted 4m10s. The monitor fired on the trailing edge of
-             its own window - 10m30s after the first user-visible failure and
-             6m20s AFTER the service had already recovered.
+Alert definition, monitors/auth.yaml (verbatim):
+  alert:      auth_error_budget_burn
+  expr:       error_budget_burn_rate > 14.4
+  window:     10m trailing, recomputed every 30s
+  routes:     pagerduty:auth
+  note:       burn rate is the error ratio over the trailing 10 minutes of
+              traffic, expressed against the 30-day budget.
 
-Memory configuration, deploy/auth-service.yaml:
-  resources.limits.memory: 512Mi   (set 2026-02-11, unchanged since)
-  observed working set, p99 over the last 30 days: 486Mi
-  there is no alert on container memory headroom for any service in this cluster
+There is no alert on container memory, memory headroom or restart count for any
+service in this cluster.

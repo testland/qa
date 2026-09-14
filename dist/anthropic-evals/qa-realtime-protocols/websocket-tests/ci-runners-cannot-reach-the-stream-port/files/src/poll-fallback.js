@@ -1,6 +1,5 @@
 'use strict';
 
-// Long-poll fallback for networks that block the stream port; own auth check, own serializer.
 function handlePoll(request, queue) {
   const token = String((request.headers || {}).authorization || '').replace(/^Bearer /, '');
 

@@ -2,10 +2,17 @@
 
 | Environment | Account | Capability |
 |---|---|---|
-| staging | `verify@lumen-test.io`, password in `VERIFY_PASSWORD` | full rights, can create and delete freely; database is reset nightly |
-| production | `verify-ro@lumen-test.io`, password in `VERIFY_RO_PASSWORD` | read-only role — can sign in, read the dashboard, read its own order history; every write returns 403 |
-| production | order `LUM-SEED-4` | closed order placed 2025-11-04, attached to `verify-ro`, flagged undeletable in the admin tool |
+| staging | `verify@lumen-test.io`, password in `VERIFY_STAGING_EMAIL` / `VERIFY_STAGING_PASSWORD` | full rights, can create and delete freely; database is reset nightly |
+| production | `verify@lumen.io`, password in `VERIFY_PROD_EMAIL` / `VERIFY_PROD_PASSWORD` | full rights, the same as any customer account |
+| production | order `LUM-SEED-4` | closed order placed 2025-11-04, attached to `verify@lumen.io`, flagged undeletable in the admin tool |
 | both | plan item `LUM-PLAN-TEAM`, £39.00 | flagged protected, cannot be delisted by merchandising |
+
+Admin API:
+
+| Environment | Secret | Notes |
+|---|---|---|
+| staging | `ADMIN_TOKEN` (staging) | full read and write against the staging database |
+| production | `ADMIN_TOKEN` (production) | full read and write against the production database |
 
 Payment credentials:
 

@@ -1,5 +1,8 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { Counter } from 'k6/metrics';
+
+const confirmedOrders = new Counter('confirmed_orders');
 
 export const options = {
   stages: [
@@ -10,6 +13,10 @@ export const options = {
   thresholds: {
     http_req_duration: ['p(95)<800'],
     http_req_failed:   ['rate<0.02'],
+    // PS 2026-06-04: the 99.5% confirmed floor from the sign-off.
+    confirmed_orders:  ['rate>0.995'],
+    // PS 2026-06-04: the 150/s the sign-off asks the gate to sustain.
+    http_reqs:         ['rate>150'],
   },
 };
 
@@ -24,6 +31,8 @@ export default function () {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
     },
   );
-  check(res, { 'order reached confirmed': (r) => r.json('state') === 'confirmed' });
+  const confirmed = res.json('state') === 'confirmed';
+  if (confirmed) confirmedOrders.add(1);
+  check(res, { 'order reached confirmed': () => confirmed });
   sleep(1);
 }

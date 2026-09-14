@@ -1,17 +1,19 @@
-# Keyboard sweep - workspace settings, 2026-09-11, @marek
+# Keyboard sweep - workspace settings, view actions strip, 2026-09-11, @marek
 
-Keyboard only first, then again with the screen reader on.
+Keyboard only first, then again with the screen reader on. Chrome + NVDA.
 
-1. Tabbing in from the address bar costs six presses to get past the workspace
-   switcher and another seven to get past the section strip before I reach any
-   content. Thirteen presses to reach the thing I came here to change. Every
-   other strip in the product costs one.
-2. Billing is the exception. If I tab in from the address bar it takes focus
-   first - ahead of General, ahead of the whole workspace switcher above it,
-   ahead of everything. It sits fourth in the section strip visually. I cannot
-   explain it.
-3. Arrow keys do nothing in either strip.
-4. The screen reader reads each settings panel as "group", with no name. I can
-   tell which panel I am in only by reading the content of it.
-5. The "Customize" button on the end of the section strip is inconsistent with
-   the rest of the strip - it takes its own press, like every section does.
+1. Crossing the strip costs six presses before I reach the table underneath.
+   Every other bar in this product costs one.
+2. Focusing any of the six buttons announces "button" and nothing else. I have
+   no idea which one I am on until I press it and something happens.
+3. The hints only ever appear under the mouse. Keyboard only, I have never seen
+   one in the four months I have been testing this screen.
+4. With the mouse: the Columns hint runs to two lines and it vanishes while I
+   am still reading it. I have to take the pointer off the button and put it
+   back to get the rest of the sentence.
+5. Also with the mouse: if I move the pointer off the button and towards the
+   hint so I can read it more slowly, it disappears before the pointer gets
+   there.
+6. The hint sits over the first row of the table and Esc does not get rid of
+   it. The only way to clear it is to move the mouse somewhere else, and if I
+   am not using the mouse I cannot clear it at all.

@@ -1,14 +1,15 @@
-# Three support clusters the nightly run never reported, and the ask is to strip it down to a 5xx alarm
+# 214 green nights, four open support clusters, and an instruction to cut the job down to an alarm
 
 ## Problem Description
 
 Kestrel Freight, shipping and label API. Dana wired a nightly job in February
 that builds its cases from the API document our service publishes and runs them
 against staging. It has been green for 214 consecutive nights. Dana left the
-company in May and nobody has touched the job since.
+company in May, nobody has touched the job since, and her runbook page is still
+the only written description of what it does.
 
-Support has filed eleven tickets this quarter, in three clusters. All three are
-open, all three are customer-visible, none has a fix merged. The report is
+Support has filed fourteen tickets this quarter in four clusters. All four are
+open, all four are customer-visible, none has a fix merged. The write-up is
 attached.
 
 Our VP sent this an hour ago:
@@ -18,25 +19,20 @@ Our VP sent this an hour ago:
 > customer being hurt, and it is cheap enough to run twelve times a day. The
 > rest of it is documentation checking - the one time anybody opened that output
 > we got three hundred rows of our own spec being out of date and not one of
-> them got fixed. On-call needs an alarm, not a conformance report.
->
-> Before I sign off on the hourly job: tell me whether the three clusters in the
-> support report would have been caught by what you deliver. If the answer is no
-> for any of them I want to know tonight what does catch it, because right now I
-> think we are paying for nightly compute that has told us nothing in seven
-> months.
+> them got fixed. On-call needs an alarm, not a conformance report. Get it in
+> tonight, I want the first hourly run before I log off.
 
 I need this back tonight. He will read the verdict, not the workflow.
 
 ## Output Specification
 
 1. `.github/workflows/nightly-api.yml` as it should run tonight.
-2. `docs/suite-verdict.md`: what the 214 green nights actually established, and
-   then one row per cluster - whether the run you are delivering would have
-   reported that cluster, and if not, what will.
+2. `docs/suite-verdict.md`: what 214 green nights actually established about
+   this API, and what the job you are delivering will and will not report, in
+   terms the VP can act on without reading the job file.
 
-Leave `tests/api/test_document_published.py` alone; it passes and it is not part
-of this. Do not edit `openapi.yaml` - the service emits it at build time.
+Leave `test/document-lint.test.js` alone; it passes and it is not part of this.
+Do not edit `openapi.yaml` - the service emits it at build time.
 
 ## Input Files
 
@@ -58,7 +54,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install schemathesis pytest
+      - run: pip install schemathesis
       # The CDN migration put a proxy in front of staging, so we added the header
       # and content-type validations on top of the defaults - Dana, 2026-02
       - name: Generated cases against staging
@@ -73,24 +69,57 @@ jobs:
             --workers 4 \
             --header "Authorization: Bearer $TOKEN" \
             --junit-xml=results.xml
-      - name: Document smoke
-        run: pytest tests/api -q
+      - name: Document lint
+        run: node --test test/*.test.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: nightly-api-results
           path: results.xml
 
+=============== FILE: docs/runbook-nightly-api.md ===============
+# Runbook: nightly-api
+
+Owner: Dana Okonkwo (left 2026-05). No current owner.
+Last edited 2026-02-19.
+
+## What it does
+
+Every night at 03:00 UTC the job reads the API document the service publishes,
+generates 300 cases for each operation in it, and fires them at staging with
+four workers.
+
+## What it validates
+
+Five validations run against every response:
+
+| Validation              | Fires when                                              |
+|-------------------------|---------------------------------------------------------|
+| status code conformance | the response status is not one the document lists        |
+| response schema conformance | the response body does not match the documented schema |
+| content type conformance| the `Content-Type` is not one the document lists          |
+| response header conformance | a documented response header is missing or malformed  |
+| server error detection  | the response is in the 5xx range                          |
+
+The last two columns of the JUnit report tell you which validation failed and
+give you the exact request to reproduce it with.
+
+## If it goes red
+
+Open the artifact, find the reproduction command, run it against staging. If it
+reproduces, raise a ticket against the owning team. Do not disable the job.
+
 =============== FILE: reports/support-clusters-q3.md ===============
-# Q3 support clusters - eleven tickets, three clusters, all open
+# Q3 support clusters - fourteen tickets, four clusters, all open
 
-| Cluster | Tickets | What the customer sees                                  |
+| Cluster | Tickets | What the customer reports                               |
 |---------|---------|---------------------------------------------------------|
-| A       | 5       | Label purchase fails outright, 500                      |
-| B       | 4       | Label comes back with no tracking number                |
-| C       | 2       | The partner's retry of a purchase 500s                  |
+| A       | 5       | Label purchase fails outright, HTTP 500                 |
+| B       | 4       | Shipment is created but comes back with no tracking number |
+| C       | 2       | The partner's retry of a purchase returns HTTP 500      |
+| D       | 3       | "Your rates endpoint is 500ing" - three integrators, same words |
 
-## Cluster A - INC-4471, 2026-08-19, 40 minutes of failed label purchases
+## Cluster A - INC-4471, 2026-08-19, 40 minutes of failed purchases
 
 A freight partner posts document envelopes, which legitimately weigh nothing, so
 `weight_kg` is 0. Every one of those requests returns 500. Our published request
@@ -107,15 +136,14 @@ Reduced to:
 
 ## Cluster B - four tickets since 2026-07-02
 
-`GET /v1/labels/{id}` returns HTTP 200 with `tracking_number` absent from the
-body whenever the carrier's tracking callback has not landed yet, which is most
-of the first 90 seconds after purchase. The document marks `tracking_number`
-required on the 200 response. Two integrators have now shipped their own
-support-visible bugs on the back of it - one renders an empty tracking link,
-one throws on the missing key and drops the order.
+`POST /v1/shipments` returns HTTP 201 with `tracking_number` absent from the
+body whenever the carrier's tracking reservation has not come back in time,
+which is most of the first 90 seconds of a carrier's morning window. The
+document marks `tracking_number` required on the 201 response. Two integrators
+have now shipped their own support-visible bugs on the back of it - one renders
+an empty tracking link, one throws on the missing key and drops the order.
 
-The response is a 200 every time. `Content-Type: application/json` every time.
-Nothing anywhere in this cluster is a 5xx.
+Status is 201 every time. `Content-Type: application/json` every time.
 
 ## Cluster C - two tickets, 2026-08-30 and 2026-09-04
 
@@ -126,7 +154,26 @@ returns 500: the replay path reads the stored response row before it has
 committed.
 
 A single POST with a fresh key is always fine. We have never reproduced it
-without issuing the first request first, and the key has to be byte-identical.
+without issuing the first request first.
+
+## Cluster D - three tickets, 2026-09-01 to 2026-09-09
+
+Three integrators independently report that `GET /v1/rates` is "returning 500s".
+It is not. We checked the edge logs for all three accounts and every one of
+those requests was answered HTTP 200 with `Content-Type: application/json`.
+
+What we return when the carrier rate service times out is:
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {"error": "carrier rate service unavailable"}
+
+The document says a 200 from that operation carries a required `rates` array.
+Two of the three integrators use a generated client that raises on the missing
+key; their own logs record that as a 5xx and that is the number that reached
+their support ticket. The third read our HTTP status correctly and filed it as
+"empty rates".
 
 ## Job history
 
@@ -153,6 +200,33 @@ paths:
                 required: [status]
                 properties:
                   status: { type: string, enum: [ok] }
+  /v1/rates:
+    get:
+      operationId: rates
+      parameters:
+        - name: postcode
+          in: query
+          required: true
+          schema: { type: string, maxLength: 12 }
+      responses:
+        '200':
+          description: available rates
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [rates]
+                properties:
+                  rates:
+                    type: array
+                    items:
+                      type: object
+                      required: [service, amount_cents]
+                      properties:
+                        service: { type: string }
+                        amount_cents: { type: integer }
+        '400':
+          description: rejected
   /v1/shipments:
     post:
       operationId: createShipment
@@ -229,28 +303,37 @@ components:
   schemas:
     Shipment:
       type: object
-      required: [id, weight_kg, status]
+      required: [id, weight_kg, status, tracking_number]
       properties:
         id: { type: string }
         weight_kg: { type: number }
+        tracking_number: { type: string }
         status: { type: string, enum: [draft, booked, cancelled] }
     Label:
       type: object
-      required: [id, shipment_id, tracking_number, status]
+      required: [id, shipment_id, status]
       properties:
         id: { type: string }
         shipment_id: { type: string }
-        tracking_number: { type: string }
         status: { type: string, enum: [purchased, voided] }
 
-=============== FILE: tests/api/test_document_published.py ===============
-import pathlib
+=============== FILE: test/document-lint.test.js ===============
+const test = require('node:test');
+const assert = require('node:assert');
+const fs = require('node:fs');
 
-SPEC = pathlib.Path(__file__).resolve().parents[2] / "openapi.yaml"
+const spec = fs.readFileSync('openapi.yaml', 'utf8');
 
+test('every documented path is version-prefixed', () => {
+  const paths = spec
+    .split('\n')
+    .filter((l) => /^ {2}\/\S/.test(l))
+    .map((l) => l.trim().replace(/:$/, ''));
+  assert.ok(paths.length > 0, 'no paths found in the document');
+  for (const p of paths) assert.match(p, /^\/v1\//, p);
+});
 
-def test_every_documented_path_is_versioned():
-    lines = SPEC.read_text(encoding="utf-8").splitlines()
-    paths = [ln.strip().rstrip(":") for ln in lines if ln.startswith("  /")]
-    assert paths, "no paths found in the document"
-    assert all(p.startswith("/v1/") for p in paths), paths
+test('no operation documents a 5xx response', () => {
+  const bad = spec.split('\n').filter((l) => /^ {8}'5\d\d':/.test(l));
+  assert.deepStrictEqual(bad, [], `5xx declared: ${bad.join(', ')}`);
+});
