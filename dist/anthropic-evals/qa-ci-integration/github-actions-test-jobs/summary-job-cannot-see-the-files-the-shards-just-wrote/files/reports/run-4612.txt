@@ -1,0 +1,26 @@
+run 4612 - test - pull_request #301 - 08 Sep 2026 09:12 UTC
+Conclusion: success
+
+  test (1) ........................... success  2m09s   (225 tests, 0 failing)
+  test (2) ........................... success  2m14s   (225 tests, 0 failing)
+  test (3) ........................... success  1m57s   (225 tests, 0 failing)
+  test (4) ........................... success  2m22s   (225 tests, 0 failing)
+  summary ............................ success  0m21s
+
+Artifacts on this run:
+  junit-1   4.1 KB   1 file
+  junit-2   3.9 KB   1 file
+  junit-3   4.4 KB   1 file
+  junit-4   4.0 KB   1 file
+
+summary / Collect shard results
+  Preparing to download the following artifacts:
+  - junit-1 (ID: 88214019, Size: 4198)
+  - junit-2 (ID: 88214020, Size: 3992)
+  - junit-3 (ID: 88214021, Size: 4501)
+  - junit-4 (ID: 88214022, Size: 4096)
+  Total of 4 artifact(s) downloaded
+  Download artifact has finished successfully
+
+summary / Summarise
+  0 tests, 0 failures

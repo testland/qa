@@ -1,0 +1,18 @@
+{
+  "model": "gte-small-v2",
+  "embedded_at": "2026-09-12",
+  "queries": [
+    {"id":"q-1","text":"restore a replica from a base backup","vec":[0.1324,-0.8899,0.164,-0.4044]},
+    {"id":"q-2","text":"connection pool exhausted at peak","vec":[0.081,-0.7731,0.4227,-0.4658]},
+    {"id":"q-3","text":"vacuum is not keeping up","vec":[0.1174,-0.9862,0.1122,-0.0338]},
+    {"id":"q-4","text":"roll back a bad deploy","vec":[0.2833,-0.0441,-0.5927,0.7527]},
+    {"id":"q-5","text":"canary is stuck at ten percent","vec":[-0.0913,0.1156,-0.9087,0.3906]},
+    {"id":"q-6","text":"migration lock held by an old pod","vec":[0.3967,0.1097,-0.8166,0.4046]},
+    {"id":"q-7","text":"pods cannot reach the internal registry","vec":[-0.4122,0.1517,0.3766,0.8156]},
+    {"id":"q-8","text":"tls handshake failures between services","vec":[-0.1057,-0.2628,0.7162,0.6378]},
+    {"id":"q-9","text":"load balancer draining too slowly","vec":[-0.4584,-0.2888,0.6181,0.5696]},
+    {"id":"q-10","text":"who is on call for payments this week","vec":[-0.8014,-0.5159,0.1188,0.2782]},
+    {"id":"q-11","text":"page fired with no runbook link","vec":[-0.9471,0.0346,-0.0455,-0.3159]},
+    {"id":"q-12","text":"escalate an incident to the vendor","vec":[-0.6904,0.0606,0.7203,0.0285]}
+  ]
+}

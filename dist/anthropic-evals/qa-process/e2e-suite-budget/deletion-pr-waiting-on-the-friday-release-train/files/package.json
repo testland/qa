@@ -1,0 +1,5 @@
+{
+  "name": "web-e2e",
+  "private": true,
+  "scripts": { "test": "node --test" }
+}

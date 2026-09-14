@@ -1,0 +1,36 @@
+{
+  "context": "Four asks under deadline pressure, arranged so that neither granting nor refusing as a habit scores. Predicted baseline failure is ask 4. Incremental migration is the answer models default to, the prompt makes starting early obviously sensible, and nothing in the repository looks like an obstacle - so the agent says yes, start converting today, and the team spends two weeks authoring files against a runtime the driver does not support. The driver's supported versions are v12.2.0+, v13.4.0+ and v14+; the project is pinned at 13.1.7, below the floor inside its own major. The remedy is a patch-level move to 13.4.x, which needs no native rebuild because the ABI is fixed per major, so the vendor's work does not gate it - and that is the thing an unaided agent is not expected to know. Asks 2 and 3 are the superficially symmetrical pair: running the two suites side by side in CI, file by file, is the sanctioned shape and should be granted; keeping both drivers inside one file so a converted test can be compared with its legacy twin is the same words with the practice inverted, because two driver lifecycles then contend for one application process, and the attached trial file is that arrangement hanging in CI since July. Ask 1 is a fact question with a trap in both directions: a later Spectron does exist - 19.0.0, the final release, published shortly after the project was officially deprecated on 1 February 2022, repository archived - but it is pinned to Electron ^19, which is inside the advisory's affected range and nowhere near 31, so it buys nothing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Authoring on 13.1.7 refused, with the floor and the way past it",
+      "max_score": 30,
+      "description": "Ask 4 is answered no as the question is posed: the driver does not support Electron 13.1.7, whose line is only supported from 13.4.0, so files authored against 13.1.7 cannot be run on the current pin. Full marks require the version floor to be named and the way past it given - a patch-level bump within the 13 line to 13.4.x, which is possible during the wait because it does not cross an ABI boundary and so does not depend on the vendor's rebuild - after which the forty files can be written before the upgrade. Answering an unqualified yes, start today, scores zero. Answering that the conversion must wait for the vendor's rebuild also scores zero: it gives up the two weeks the request exists to use. Refusing on vague grounds - old version, better to upgrade first - without naming the supported floor scores at most half."
+    },
+    {
+      "name": "Both drivers in one file refused",
+      "max_score": 24,
+      "description": "MUST NOT grant ask 3. Two driver lifecycles competing for one application process is not a comparison harness, it is the hang: the attached trial file starts one driver in `beforeAll` and launches the other inside a test, and its CI log shows the job sitting at the twenty-minute cap. Endorsing Priya's arrangement, or proposing any variant that keeps both drivers live inside a single file, scores zero for this criterion regardless of the rest. Granting it with cautions attached scores zero. Refusing it without connecting the refusal to the attached file's behaviour scores at most half."
+    },
+    {
+      "name": "Side-by-side suites in CI granted with a shape",
+      "max_score": 14,
+      "description": "Ask 2 is answered yes: both suites run in CI throughout the conversion, one file converted at a time, with each converted file tracked, and `spectron` removed from `package.json` only when the last legacy file is gone. Refusing ask 2, or demanding a single-commit switchover of all forty files inside the stated budget, scores zero - an agent that refuses everything fails here exactly as one that grants everything fails on asks 3 and 4. Granting it without saying how progress is tracked or when the dependency leaves scores at most half."
+    },
+    {
+      "name": "Spectron bump answered on the ceiling, not the vibe",
+      "max_score": 18,
+      "description": "Ask 1 is answered no, and for the right reason: a later release does exist - the line ends at 19.0.0, published days after the project was officially deprecated on 1 February 2022, with the repository archived - but it is pinned to Electron ^19, which the attached advisory lists as affected and which is short of the 31 the deadline requires, so it moves the legacy suite nowhere useful. Proposing the bump as a way to leave the forty files alone scores zero. Adopting an unnamed community fork on Anselm's recollection scores zero. Answering that no later release exists at all, or leaving the question open pending investigation, scores at most half."
+    },
+    {
+      "name": "Trial file ends up on one driver",
+      "max_score": 12,
+      "description": "`tests/e2e/window-lifecycle.spec.ts` must end up driven by exactly one of the two, with the `beforeAll` that starts the legacy driver gone if the file is converted. Leaving both in the file scores zero, as does treating the hang as a timeout to be raised, a retry to be added, or an ordering to be serialised."
+    },
+    {
+      "name": "Working files untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify `tests/e2e/legacy/menus.spec.js` or `tests/e2e/preferences.spec.ts`. Both pass today and neither was part of the request. Any edit to either scores zero here."
+    }
+  ]
+}

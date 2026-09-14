@@ -1,0 +1,13 @@
+{
+  "run": "2026-08-14",
+  "reference": "ref_2026-06-01_to_2026-06-28",
+  "tests": [
+    {"column": "driver_age", "method": "wasserstein", "drift_score": 0.019, "threshold": 0.1, "status": "SUCCESS"},
+    {"column": "quoted_premium_gbp", "method": "wasserstein", "drift_score": 0.027, "threshold": 0.1, "status": "SUCCESS"},
+    {"column": "competitor_price_index", "method": "wasserstein", "drift_score": 0.051, "threshold": 0.1, "status": "SUCCESS"},
+    {"column": "multi_policy_eligible", "method": "jensenshannon", "drift_score": 0.061, "threshold": 0.1, "status": "SUCCESS"},
+    {"column": "score", "method": "wasserstein", "drift_score": 0.318, "threshold": 0.1, "status": "FAIL"},
+    {"column": "...17 more", "method": "various", "drift_score": null, "threshold": 0.1, "status": "SUCCESS"}
+  ],
+  "notified": false
+}

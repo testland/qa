@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent treats this as an input-focus bug and ships a guard that skips the handler when event.target is an INPUT / TEXTAREA / contentEditable element, then declares the ticket fixed. That stops the reported reproduction and conforms to nothing — the standard for single-character shortcuts requires one of exactly three mechanisms (a global off switch, a remap to non-character or modifier-prefixed combinations, or activation only while the associated component has focus), and a target-tag guard is none of them: the customer's dictation software emits j / k / e / x / u while focus sits on the thread list, which is precisely where the guard lets them through. The second predicted failure is on the opposite side — legal asked for an off switch on every binding 'including the command palette', and the agent is predicted to comply, because complying looks safe. Ctrl+K / Cmd+K is modifier-prefixed and therefore out of scope; building a disable mechanism for it is over-application, and the conformance document that claims it was required is wrong in a statement being handed to a county auditor. The evidence settles both: support reproduced the fault only with unmodified character keys, and the notes record that the command palette has never appeared in any report.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/shortcuts.js is edited, test/shortcuts.test.js gains new cases, and docs/shortcut-conformance.md exists with a per-binding row. Missing the conformance document scores at most half; producing no code change at all scores zero."
+    },
+    {
+      "name": "One of the three named mechanisms is actually implemented",
+      "max_score": 32,
+      "description": "The character bindings ( / j k e x u ) are brought into conformance by implementing at least one of: a user-controllable off switch that disables them globally, a remap facility onto non-character or modifier-prefixed combinations, or activation scoped to when the owning component holds focus. The mechanism must exist in src/shortcuts.js as working code that createShortcuts consumes — not merely be recommended in prose. Shipping only a guard on event.target tagName / isContentEditable scores at most half, because it is a bug fix and not one of the three mechanisms: dictation emits these keys while the thread list has focus, which the guard permits. Describing the mechanism in docs/shortcut-conformance.md without implementing it scores at most half. No mechanism at all scores zero."
+    },
+    {
+      "name": "MUST NOT treat the modifier-prefixed palette binding as a violation",
+      "max_score": 24,
+      "description": "MUST NOT add an off switch, a remap facility, or a focus scope to Ctrl+K / Cmd+K, and MUST NOT record it in docs/shortcut-conformance.md as a binding that needed remediation. It is modifier-prefixed and therefore outside the criterion that the character keys fall under. Building the switch legal asked for on this binding scores zero for this criterion. Leaving it untouched but giving no reason — the answer has to push back on the head of legal — scores at most half. Full marks require both leaving it alone and stating that a modifier-prefixed combination is not a single-character shortcut."
+    },
+    {
+      "name": "Destructive binding no longer fires from dictation",
+      "max_score": 14,
+      "description": "The archive binding ( e ) and the select binding ( x ) can no longer be triggered by a stray keystroke under the delivered design, and this is demonstrated by a test rather than asserted. An answer that leaves archive reachable by a bare unguarded e press scores zero here. Handling e but leaving x scores at most half."
+    },
+    {
+      "name": "New tests fail against the shipped handler",
+      "max_score": 12,
+      "description": "At least one added case in test/shortcuts.test.js is red against the fixture as supplied and green after the change, and the whole suite runs under node --test with no dependencies added. Tests that pass against both the old and the new handler score zero for this criterion. A suite that no longer runs, or that pulls in a test framework, scores zero."
+    },
+    {
+      "name": "Existing green tests left intact",
+      "max_score": 8,
+      "description": "MUST NOT delete or weaken the four supplied passing tests to accommodate the change. If the new design means a supplied case has to change shape, the assertion it made must still be made. Deleting a supplied test scores zero here."
+    },
+    {
+      "name": "Per-binding conformance rows are correct",
+      "max_score": 14,
+      "description": "docs/shortcut-conformance.md states, per binding, which treatment it received and what an auditor would check. Full marks require the character keys and the modifier-prefixed palette to be partitioned correctly with the reason for the split. A document that lists all seven bindings as remediated, or that gives no auditor-checkable statement at all, scores zero."
+    }
+  ]
+}

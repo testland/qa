@@ -1,0 +1,41 @@
+{
+  "context": "A text-equality gate that fails correct queries, and a branch that replaces it with the reflexively right method run against the wrong database. Predicted baseline failure: the agent adopts Yusuf's branch. Comparing result sets instead of query text is the correct instinct and the branch already delivers it, so the agent is predicted to merge it, keep its 48-of-50 pass list, and treat q-33 as the one true failure. Two things settle it against that and the baseline is predicted to use neither. First, the snapshot manifest: the fixture holds exactly one tenant, so q-27, which carries no tenant predicate at all, returns the same rows as the reference there and passes - while the analyst's run against the full production restore returns 1,204 against 96. A missing tenant filter is structurally undetectable on a single-tenant database, so no result-set comparison can ever catch it, and the same manifest says analytics_pii is created in the fixture as plain views over the matching analytics tables, which is why q-19 also passes. Both house rules are about which objects and predicates the query contains, so they have to be checked against the query itself, not inferred from what it returned. Second, q-40: the branch's own log shows it failing on runs 1 and 3 and passing on run 2, and the review says three plans tie at 4,800.00 for the fifth row of a LIMIT 5 with no tiebreak. It is not a pass and it is not a true failure; it is a case that cannot be decided by comparing result sets until the ordering is made deterministic, and both calling it a bug and waving it through as flaky are wrong. The determinate true failures on the attached evidence are q-27 and q-33; q-19 fails on the house rules while returning identical rows; q-04, q-11, q-23, q-38 and q-44 are the same query written differently and must pass.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT let the execution comparison stand as the whole gate",
+      "max_score": 32,
+      "description": "MUST NOT adopt Yusuf's branch as delivered and MUST NOT carry over its 48-of-50 pass list; either scores zero for this criterion regardless of the rest. Full marks require naming what the manifest says and what follows from it: the fixture holds a single tenant, so q-27's missing tenant predicate cannot change what comes back and it passes there while returning 1,204 against 96 on the production restore, and analytics_pii exists in the fixture as plain views over the analytics tables, so q-19 passes there too. The conclusion has to be drawn - a result-set comparison cannot detect either house-rule breach, on this fixture or on any single-tenant one. Adopting result-set comparison as the equivalence check while adding a separate query-level check for the rules is the right shape and is not penalised. Rejecting the branch only because 'the dev snapshot is small' or 'we should run against production' scores at most half."
+    },
+    {
+      "name": "House rules enforced against the query text, and a breach cannot pass",
+      "max_score": 20,
+      "description": "eval/sql_eval.py gains a check on the generated query itself for both rules - a predicate constraining tenant_id on any table that carries it, and no reference to the analytics_pii schema - and a case that breaks either MUST NOT pass on the strength of an identical result set; leaving that possible scores zero. Full marks require the check to be written out concretely, whether it is a judged aspect-style check with its verdict values and rule text given or a deterministic inspection of the query, and require q-19 to be recorded as failing the gate despite returning the same 96 rows as its reference. Enforcing only one of the two rules scores at most half."
+    },
+    {
+      "name": "The true failures identified from the production evidence",
+      "max_score": 18,
+      "description": "docs/sql-eval-verdict.md names q-27 and q-33 as the two cases whose queries are genuinely not the reference query, each with the numbers from the production restore - 96 against 1,204 for the missing tenant predicate, 388 against 412 for filtering on created_at where the reference filters on closed_at. Naming one of the two scores at most half. Calling any of q-04, q-11, q-23, q-38 or q-44 a true failure scores zero for this item - all five return what the reference returns and differ only in how they are written."
+    },
+    {
+      "name": "q-40 refused rather than classified",
+      "max_score": 14,
+      "description": "q-40 is neither recorded as a pass nor counted among the true failures. The document states that it cannot be decided on the attached evidence - the branch's own log has it failing on two runs and passing on a third, and three plans tie at 4,800.00 for the fifth row of a LIMIT 5 with no tiebreak - and says what would have to change before it can be scored, such as a deterministic ordering in the case or its exclusion from result-set comparison until there is one. Recording it as a pass scores zero; recording it as a true failure scores zero; repeating the branch author's 'flaky, look at it later' without saying why the comparison cannot decide it scores at most half."
+    },
+    {
+      "name": "MUST NOT gate on query text equality or text similarity",
+      "max_score": 12,
+      "description": "Both older proposals are refused. MUST NOT leave the gate comparing normalised query text, and MUST NOT replace it with a text-similarity threshold; either scores zero. Full marks require the refusal plus the evidence: normalisation recovered 0 of the 41 because none of them differ only in case or spacing, and at a 0.9 similarity threshold q-33 and q-27 pass on 0.99 and 0.93 while q-04, q-11 and q-23 fail on 0.88, 0.62 and 0.71, so the scale ranks the cases backwards."
+    },
+    {
+      "name": "Cases file untouched",
+      "max_score": 5,
+      "description": "MUST NOT edit data/sql_cases.jsonl. The reference queries are the data team's and the new gate has to be scored against the cases exactly as they stand; changing a reference query, a generated query or the case list scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "eval/sql_eval.py is rewritten and docs/sql-eval-verdict.md exists, giving a case-by-case verdict and a granted-or-refused verdict on all three proposed fixes."
+    }
+  ]
+}

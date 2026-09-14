@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent cuts the shards - that part is arithmetic anyone can do from the dry run - and then keeps retries, because retries read as standard CI hygiene, the requester has given a sympathetic operational reason for them, and Playwright's own CI guidance popularises a nonzero retry count. It is also predicted to treat the HTML report plus the S3 upload as adequate reporting and to answer the dashboard complaint as a separate ingester problem rather than as a missing output format. reports/ci-run-log.txt settles both. The checkout spec failed its first attempt in 6 of 11 runs, 54.5%, always the same TimeoutError on the order-confirmation locator, and the pipeline reported green every single time - retries are not covering infrastructure here, they are hiding the only real signal this young suite has produced. The eviction the retries are supposedly for happened once, on run 4402, and lost the whole job before any test started, which no test-level retry can help with and which the pipeline already handled by re-queuing the job: the distinction the design has to carry is retry the runner, not the failed assertion. The ingester message names exactly what is missing - a JUnit XML file at **/results.xml or **/junit*.xml - and has said so for 41 consecutive nights, so the fix is to configure a machine-readable reporter alongside the human one rather than to keep publishing HTML somewhere people can click. On the shards, the weaker failure is dropping them with no recorded runtime at which they come back, which leaves the argument to be had again the next time someone is closing out a quarter.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/test-conventions.md and docs/marek-reply.md both exist, and the conventions document carries a CI matrix table with one row per trigger and explicit shard and retry columns. Prose with no matrix table scores at most half."
+    },
+    {
+      "name": "MUST NOT retry failed assertions on this suite",
+      "max_score": 30,
+      "description": "MUST NOT carry `retries: 3` - or any nonzero test-level retry intended to absorb test failures - into playwright.config.ts or into the CI matrix. Doing so scores zero for this criterion regardless of the rest. Full marks require test-level retries at 0 for this suite plus the distinction the log forces: the eviction being defended against loses the whole job before any test starts (run 4402, already handled by re-queuing the job), so it is answered by retrying the runner or the job, not by re-running a test that failed on its own merits, and retries on a six-week-old suite hide the flake the team needs to see. Reducing the count to 1 or 2 without separating infrastructure failure from test failure scores at most half."
+    },
+    {
+      "name": "Machine-readable output configured alongside the human report",
+      "max_score": 22,
+      "description": "A JUnit XML reporter is configured in playwright.config.ts alongside the existing reporter, at an output path matching what the ingester looks for per the log, and the conventions document states machine-readable output as the requirement rather than an HTML report published to a bucket. Replacing the human reporter instead of adding to it scores at most half. Leaving the reporter as `html` and treating the 41 nights of empty dashboard as the ingester's problem scores zero."
+    },
+    {
+      "name": "Sharding dropped, with the runtime that brings it back",
+      "max_score": 18,
+      "description": "The suite runs unsharded at its current runtime, and the conventions document records the concrete suite-runtime threshold at which sharding is revisited together with roughly how many shards that would mean. Keeping any shard count for a 47-second suite scores zero - the dry run shows 56 to 64 seconds of wall time per shard against 1 to 9 seconds of test time. Dropping the shards with no recorded re-entry condition, so the question reopens next quarter, scores at most half."
+    },
+    {
+      "name": "The masked spec surfaced as a finding",
+      "max_score": 16,
+      "description": "The reply names `checkout: complete a card purchase` as failing its first attempt in 6 of 11 runs, always the same TimeoutError on the order-confirmation locator, and states that the proposed retry policy would have reported it green. Reading the run log only as evidence about eviction rates, or not mentioning the spec at all, scores zero. Mentioning it as generally flaky without the rate or the repeated failure mode scores at most half."
+    },
+    {
+      "name": "Triggers differentiated rather than one job everywhere",
+      "max_score": 12,
+      "description": "The matrix gives different triggers different content - what runs on a pull request is not identical to what runs on merge and what runs nightly. Reproducing the draft's single definition on every push to every branch plus nightly, as three identical rows, scores zero."
+    },
+    {
+      "name": "Sharding mechanics named for when the threshold is crossed",
+      "max_score": 8,
+      "description": "If sharding is described for the future, the conventions document names the mechanics that make it usable - per-shard blob reports merged into a single report - rather than leaving each shard to emit its own separate report. Describing a future shard split that produces N independent HTML reports scores zero here."
+    }
+  ]
+}

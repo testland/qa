@@ -1,0 +1,10 @@
+# acme-ledger, Maven stage, build 4812, release/4.9
+
+>> Line Coverage (for mutated classes only): 1,402/1,610 (87%)
+>> Generated 3,318 mutations Killed 2,455 (74%)
+>> Mutations with no coverage 190. Test strength 78%
+>> Ran 14,067 tests (4.24 tests per mutation)
+
+Classes mutated: 146
+
+Build outcome: PASSED — mutation score of 74 clears the threshold of 65.

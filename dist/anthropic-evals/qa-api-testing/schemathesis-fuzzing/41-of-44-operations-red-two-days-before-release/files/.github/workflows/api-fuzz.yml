@@ -1,0 +1,32 @@
+name: api-fuzz
+
+on:
+  pull_request:
+    branches: [main, 'release/**']
+  schedule:
+    - cron: '0 5 * * *'
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install schemathesis
+      - name: Generated cases
+        env:
+          TOKEN: ${{ secrets.STAGING_TOKEN }}
+        run: |
+          schemathesis run https://staging.halloway.dev/openapi.json \
+            --base-url https://staging.halloway.dev \
+            --hypothesis-max-examples 200 \
+            --workers 4 \
+            --junit-xml=results.xml \
+            --header "Authorization: Bearer $TOKEN"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-fuzz-results
+          path: results.xml

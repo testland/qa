@@ -1,0 +1,30 @@
+# job run 2026-08-26, commit 4b19ad2 (before PR #1902)
+
+Running Lighthouse 3 time(s) on http://localhost:3000/
+Running Lighthouse 3 time(s) on http://localhost:3000/product
+Running Lighthouse 3 time(s) on http://localhost:3000/checkout
+Running Lighthouse 3 time(s) on http://localhost:3000/account/orders
+Done running Lighthouse!
+
+Checking assertions against 4 URL(s), 3 run(s) each
+
+4 result(s) for http://localhost:3000/product :
+
+  FAIL  largest-contentful-paint failure for maxNumericValue assertion
+          Largest Contentful Paint
+          expected: <=2500
+             found: 2611
+        all values: 2588, 2611, 2640
+
+  PASS  categories:performance minScore assertion   expected: >=0.85  found: 0.86
+  PASS  cumulative-layout-shift maxNumericValue assertion   expected: <=0.1  found: 0.02
+  WARN  total-blocking-time maxNumericValue assertion   expected: <=300  found: 318
+
+3 result(s) for http://localhost:3000/checkout :
+
+  PASS  categories:performance minScore assertion   expected: >=0.85  found: 0.91
+  PASS  largest-contentful-paint maxNumericValue assertion   expected: <=2500  found: 1904
+  PASS  cumulative-layout-shift maxNumericValue assertion   expected: <=0.1  found: 0.01
+
+assertion failures: 1
+exit status 1

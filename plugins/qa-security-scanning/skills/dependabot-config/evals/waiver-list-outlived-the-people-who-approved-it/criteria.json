@@ -1,0 +1,41 @@
+{
+  "context": "An audit with one request that the file cannot express and one that quietly breaks a downstream workflow. Predicted baseline failure, request 3: the agent takes 'silence that one advisory, put it in the file' at face value and writes something under `ignore` that looks advisory-shaped - an `advisory:` / `cve:` / `ghsa:` / `security-advisories:` key, or a comment naming the GHSA next to a version range - because a per-advisory waiver is what every other scanner in this space offers. There is no such selector: `ignore` matches on dependency name and version range only, so the only thing the file can do to `sharp` is suppress its updates wholesale, which is the opposite of 'change nothing else about sharp', and an unrecognised key gets the whole file rejected rather than partially applied, taking the other five suppressions with it. The request has to be declined in the file and pointed at the per-alert dismissal, which is also what leaves an auditable reason on the record. Predicted baseline failure, request 4: the agent adds `labels: [\"dep-waiver\"]`, which reads as adding a label and is in fact a replacement - the default `dependencies` label stops being applied, and the attached triage workflow gates on exactly that label, so every routed pull request silently stops being routed. Around those two, the determinate half: axios is expired, its approver left in 2025, and its range starts at 1.0.0 while the advisory is first patched in 1.8.2, so the suppression is why that advisory cannot be closed by an upgrade; lodash and the wildcard entry carry no reason, owner or date at all; boto3 suppresses patches specifically, the safest class, to fight a volume problem that grouping or cadence is for. React and django are correctly dated and in force, and django's range starts at 5.0 so 4.2.18 is reachable under it - an agent that clears the list wholesale has failed in the other direction.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT invent a per-advisory suppression in the file",
+      "max_score": 30,
+      "description": "MUST NOT write any advisory-selecting key into `.github/dependabot.yml` - `advisory`, `advisories`, `cve`, `ghsa`, `alert`, `security-advisories` or similar under an `ignore` entry. Any such key scores zero for this criterion: it is not in the schema, so the file is rejected outright and all six existing suppressions stop applying with it. Suppressing `sharp` by name, or by a version range that also holds out 0.33.5, scores zero as well - Marta asked for its ordinary bumps to keep arriving, and a name-or-range suppression cannot tell the advisory apart from them. Full marks decline request 3 in the file, state why (an `ignore` entry selects a dependency and a version range and has no advisory dimension), and name where the decision does belong - dismissing that specific alert with the reviewed reason recorded on it, which is also what an auditor can read back. Declining with no alternative offered scores at most half."
+    },
+    {
+      "name": "Default dependencies label kept when the new label is added",
+      "max_score": 22,
+      "description": "If `labels:` is set to satisfy request 4, the list still contains `dependencies` alongside `dep-waiver`. A block carrying `labels: [\"dep-waiver\"]` and nothing else scores zero - the option replaces the default label rather than adding to it, and the attached triage workflow runs only on pull requests carrying `dependencies`, so the routing Marta is trying to feed stops happening the day the change lands. Noting the risk in the write-up but still shipping a list without `dependencies` scores at most half. Not touching labels at all, leaving request 4 unmet with no explanation, scores zero."
+    },
+    {
+      "name": "Axios entry not left standing on a lapsed approval",
+      "max_score": 16,
+      "description": "The axios suppression is removed, or re-issued with a named current approver and a fresh dated re-review. Leaving it untouched scores zero - the re-review date passed in November 2025 and the only name on it left the company on 2025-06-30. Full marks also state the consequence of the range itself: `versions: [\">=1.0.0\"]` covers every release from 1.8.2 onward, so while it stands the advisory cannot be closed by any upgrade. Acting on the expired date alone, with no reference to the range or the advisory, scores at most half."
+    },
+    {
+      "name": "MUST NOT leave a suppression with no reason, owner or expiry",
+      "max_score": 14,
+      "description": "MUST NOT leave `- dependency-name: \"lodash\"` or `- dependency-name: \"*\"` in the file as they stand. Both carry no reason, no approver and no re-review date; the first holds out 4.17.21, a single patch release that is also the fix for a high-severity advisory against the installed 4.17.20, and the second applies to every package in the ecosystem. Either one surviving without a full justification block scores zero. Every suppression that survives into the rewritten file carries a reason, a named current approver and a dated re-review, or this criterion scores at most half."
+    },
+    {
+      "name": "In-force entries preserved",
+      "max_score": 12,
+      "description": "The react entry (approved, re-review 2026-12-01) and the django entry (approved, re-review 2026-10-15, PLAT-2210) both survive. Removing either scores zero - clearing the list wholesale is the mirror image of clearing none of it. Removing django on the grounds that it blocks the URLValidator fix scores zero for this item too: the range starts at 5.0 and the fix is available at 4.2.18, which the range does not reach."
+    },
+    {
+      "name": "Patch suppression read as a volume problem",
+      "max_score": 10,
+      "description": "The boto3 entry - which suppresses patch updates specifically, the safest class, while leaving minors and majors flowing - is removed or replaced, and the write-up says the daily release volume it was fighting belongs to consolidation into a grouped pull request or a slower schedule, not to suppressing the safest class of update. Leaving it as it stands scores zero; removing it with nothing offered for the volume it was hiding scores at most half."
+    },
+    {
+      "name": "Audit closed with a next-walk date",
+      "max_score": 5,
+      "description": "`docs/waiver-audit-2026-q3.md` exists, carries a section per suppression entry with an explicit keep / remove / re-issue verdict, answers all four of Marta's numbered asks, and names the date the next quarterly walk is due. Missing the next-walk date, or fewer than six entries addressed, scores at most half; no per-entry verdict anywhere scores zero."
+    }
+  ]
+}

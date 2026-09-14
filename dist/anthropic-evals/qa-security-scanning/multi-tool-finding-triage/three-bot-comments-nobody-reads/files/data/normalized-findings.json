@@ -1,0 +1,110 @@
+{
+  "commit": "3b91c07",
+  "pr": 4471,
+  "gate": { "fail_on": "critical" },
+  "scanners_run": [
+    { "name": "semgrep", "version": "1.96.0", "findings": 164 },
+    { "name": "sastpro", "version": "9.4.1", "findings": 171 },
+    { "name": "trivy", "version": "0.58.1", "findings": 74 },
+    { "name": "gitleaks", "version": "8.21.2", "findings": 3 },
+    { "name": "checkov", "version": "3.2.334", "findings": 0 }
+  ],
+  "totals": {
+    "raw": 412,
+    "after_dedupe": 318,
+    "consensus": 61,
+    "low": 47,
+    "info": 261
+  },
+  "note": "findings[] lists medium and above only; the low and info entries are in the triage-report.json artifact of this run",
+  "findings": [
+    {
+      "severity": "critical",
+      "file": "src/auth/login.js",
+      "line": 42,
+      "cwe": "CWE-89",
+      "message": "SQL injection: request parameter concatenated into the login query",
+      "fix_available": "parameterize the query",
+      "caught_by": ["semgrep", "sastpro"]
+    },
+    {
+      "severity": "critical",
+      "package": "npm:next@14.2.3",
+      "cve": "CVE-2025-29927",
+      "message": "Middleware authorization bypass via a crafted internal header",
+      "fix_available": "14.2.25",
+      "caught_by": ["trivy"]
+    },
+    {
+      "severity": "high",
+      "file": "config/settings.py",
+      "line": 18,
+      "secret_class": "AWS Access Key",
+      "verified": true,
+      "message": "Live AWS access key committed to the repository",
+      "fix_available": "rotate the key and move it to the secret store",
+      "caught_by": ["gitleaks", "sastpro"]
+    },
+    {
+      "severity": "medium",
+      "severity_by_scanner": { "semgrep": "high", "sastpro": "medium" },
+      "file": "web/render.js",
+      "line": 30,
+      "cwe": "CWE-79",
+      "message": "Reflected cross-site scripting in template output",
+      "fix_available": "escape the interpolated value",
+      "caught_by": ["semgrep", "sastpro"]
+    },
+    {
+      "severity": "high",
+      "package": "npm:vite@6.2.2",
+      "cve": "CVE-2025-30208",
+      "message": "Arbitrary file read past server.fs.deny",
+      "fix_available": "6.2.3",
+      "caught_by": ["trivy"]
+    },
+    {
+      "severity": "medium",
+      "file": "src/api/orders.js",
+      "line": 12,
+      "cwe": "CWE-798",
+      "message": "Hardcoded credential in source",
+      "fix_available": "read it from the environment",
+      "caught_by": ["semgrep"]
+    },
+    {
+      "severity": "medium",
+      "package": "npm:body-parser@1.20.2",
+      "cve": "CVE-2024-45590",
+      "message": "Denial of service when url encoding is enabled",
+      "fix_available": "1.20.3",
+      "caught_by": ["trivy", "sastpro"]
+    },
+    {
+      "severity": "medium",
+      "file": "infra/prod/main.tf",
+      "line": 21,
+      "message": "S3 bucket created without server-side encryption",
+      "fix_available": "add server_side_encryption_configuration",
+      "caught_by": ["trivy"]
+    },
+    {
+      "severity": "medium",
+      "file": "web/upload.js",
+      "line": 77,
+      "cwe": "CWE-22",
+      "message": "Path traversal in the upload filename handler",
+      "fix_available": "resolve and confine the path",
+      "caught_by": ["sastpro"]
+    },
+    {
+      "severity": "medium",
+      "file": "src/api/webhooks.js",
+      "line": 210,
+      "cwe": "CWE-918",
+      "message": "Server-side request forgery: outbound URL taken from the request body",
+      "fix_available": "allow-list the destination hosts",
+      "caught_by": ["semgrep"]
+    }
+  ]
+}

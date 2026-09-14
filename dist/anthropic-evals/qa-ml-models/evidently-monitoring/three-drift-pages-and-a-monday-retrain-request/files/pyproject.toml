@@ -1,0 +1,7 @@
+[project]
+name = "pagavia-fraud-monitoring"
+version = "11.3.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

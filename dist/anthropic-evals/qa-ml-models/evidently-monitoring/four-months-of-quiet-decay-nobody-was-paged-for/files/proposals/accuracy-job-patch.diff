@@ -1,0 +1,27 @@
+From: Renata Oyelaran <renata@rivermark.example>
+Subject: [PATCH] make the accuracy job able to fail
+
+--- a/monitoring/quality_check.py
++++ b/monitoring/quality_check.py
+@@
+-from evidently import Report
+-from evidently.presets import RegressionPreset
++from evidently.test_suite import TestSuite
++from evidently.tests import TestValueMAE
+@@
+-    report = Report([RegressionPreset()])
+-    result = report.run(reference_data=reference_df, current_data=current_df)
+-    result.save_html(Path("monitoring/out/quality-" + day.isoformat() + ".html"))
+-
+-    if should_page(result.dict()):
++    suite = TestSuite(tests=[TestValueMAE(lt=6.0)])
++    suite.run(reference_data=reference_df, current_data=current_df)
++    suite.save_html(Path("monitoring/out/quality-" + day.isoformat() + ".html"))
++
++    if not suite.as_dict()["summary"]["all_passed"]:
+         notify_oncall("delivery-eta accuracy on " + str(day))
+
+Rationale: a report only renders, it cannot pass or fail anything - that is what
+the test-suite class is for, and it is why this job has never notified anyone.
+While we are in there, put a hard number on it: MAE under 6 minutes or we get
+woken up. 6.0 is roughly where the complaints started.

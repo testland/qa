@@ -1,0 +1,51 @@
+From: Vik Raman <vik@larder.example>
+Subject: [PATCH] reorder: make the history spec reach row 31
+
+Four days on this. Green in 6m02s. I could not find another way to get at a row
+the list has not rendered.
+
+--- a/app/OrderHistoryScreen.jsx
++++ b/app/OrderHistoryScreen.jsx
+@@ -9,6 +9,9 @@ export default function OrderHistoryScreen({ orders, onOpen }) {
+       <FlatList
+         testID="order-history-list"
+         data={sortOrders(orders)}
++        initialNumToRender={100}
++        windowSize={21}
++        removeClippedSubviews={false}
+         keyExtractor={(o) => String(o.id)}
+         renderItem={({ item }) => <OrderRow order={item} onOpen={onOpen} />}
+       />
+
+--- a/e2e/reorder.test.js
++++ b/e2e/reorder.test.js
+@@ -1,3 +1,14 @@
++const SCROLL_STEPS = 8;
++const SETTLE_MS = 1500;
++
++async function scrollDownABit() {
++  for (let i = 0; i < SCROLL_STEPS; i++) {
++    await element(by.id('order-history-list')).scroll(250, 'down');
++    await new Promise((r) => setTimeout(r, SETTLE_MS));
++  }
++}
++
+ describe('Reorder', () => {
+   beforeAll(async () => {
+     await device.launchApp({ newInstance: true });
+@@ -11,13 +22,15 @@ describe('Reorder', () => {
+   it('reorders an older order further down the list', async () => {
+     await element(by.id('orders-tab')).tap();
++    await scrollDownABit();
+     await element(by.id('order-row')).atIndex(30).tap();
+     await element(by.id('reorder-button')).tap();
+     await expect(element(by.id('cart-count'))).toHaveText('2');
+   });
+
+   it('skips out-of-stock lines when reordering', async () => {
+     await element(by.id('orders-tab')).tap();
++    await scrollDownABit();
+     await element(by.id('order-row')).atIndex(30).tap();
+     await element(by.id('reorder-button')).tap();
+     await expect(element(by.id('reorder-skipped-notice'))).toBeVisible();
+   });

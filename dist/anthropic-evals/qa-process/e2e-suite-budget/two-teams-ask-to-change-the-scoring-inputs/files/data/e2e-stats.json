@@ -1,0 +1,43 @@
+{
+  "_window": "runtime and flake: rolling 4 weeks to 2026-09-08. prs_90d: PRs touching the test since 2026-06-10.",
+  "_file_totals_90d": {
+    "checkout.spec.ts": 5,
+    "cart.spec.ts": 3,
+    "auth.spec.ts": 6,
+    "account.spec.ts": 2,
+    "search.spec.ts": 6,
+    "reports.spec.ts": 3,
+    "admin.spec.ts": 14,
+    "orders.spec.ts": 4,
+    "notifications.spec.ts": 3,
+    "promo.spec.ts": 5,
+    "pricing.spec.ts": 2,
+    "settings.spec.ts": 1
+  },
+  "tests": {
+    "checkout.spec.ts > card-purchase-happy-path": { "runtime_min": 3.8, "flake_rate": 0.02, "prs_90d": 2 },
+    "checkout.spec.ts > saved-card-purchase": { "runtime_min": 3.1, "flake_rate": 0.03, "prs_90d": 1 },
+    "checkout.spec.ts > apply-discount-code": { "runtime_min": 2.2, "flake_rate": 0.04, "prs_90d": 2 },
+    "cart.spec.ts > line-item-edit": { "runtime_min": 1.4, "flake_rate": 0.01, "prs_90d": 1 },
+    "cart.spec.ts > persist-cart-across-sessions": { "runtime_min": 2.3, "flake_rate": 0.07, "prs_90d": 2 },
+    "auth.spec.ts > login-with-password": { "runtime_min": 1.0, "flake_rate": 0.01, "prs_90d": 1 },
+    "auth.spec.ts > sso-redirect": { "runtime_min": 2.4, "flake_rate": 0.09, "prs_90d": 3 },
+    "auth.spec.ts > password-reset-email": { "runtime_min": 2.8, "flake_rate": 0.08, "prs_90d": 2 },
+    "account.spec.ts > change-password": { "runtime_min": 1.6, "flake_rate": 0.02, "prs_90d": 1 },
+    "account.spec.ts > data-export-request": { "runtime_min": 2.9, "flake_rate": 0.06, "prs_90d": 1 },
+    "search.spec.ts > keyword-results": { "runtime_min": 1.3, "flake_rate": 0.04, "prs_90d": 1 },
+    "search.spec.ts > facet-filters": { "runtime_min": 1.8, "flake_rate": 0.06, "prs_90d": 2 },
+    "search.spec.ts > empty-state-copy": { "runtime_min": 0.9, "flake_rate": 0.03, "prs_90d": 3 },
+    "reports.spec.ts > export-50k-rows": { "runtime_min": 4.6, "flake_rate": 0.02, "prs_90d": 1 },
+    "reports.spec.ts > scheduled-email-report": { "runtime_min": 3.3, "flake_rate": 0.12, "prs_90d": 2 },
+    "admin.spec.ts > audit-log-download": { "runtime_min": 2.4, "flake_rate": 0.06, "prs_90d": 4 },
+    "admin.spec.ts > user-role-change": { "runtime_min": 2.0, "flake_rate": 0.03, "prs_90d": 1 },
+    "admin.spec.ts > bulk-import-10k-rows": { "runtime_min": 4.5, "flake_rate": 0.12, "prs_90d": 2 },
+    "orders.spec.ts > refund-to-original-method": { "runtime_min": 3.6, "flake_rate": 0.10, "prs_90d": 3 },
+    "orders.spec.ts > cancel-within-window": { "runtime_min": 2.0, "flake_rate": 0.03, "prs_90d": 1 },
+    "notifications.spec.ts > in-app-toast": { "runtime_min": 0.8, "flake_rate": 0.11, "prs_90d": 3 },
+    "promo.spec.ts > seasonal-banner": { "runtime_min": 1.6, "flake_rate": 0.19, "prs_90d": 5 },
+    "pricing.spec.ts > currency-switch": { "runtime_min": 1.5, "flake_rate": 0.05, "prs_90d": 2 },
+    "settings.spec.ts > api-key-rotation": { "runtime_min": 2.1, "flake_rate": 0.04, "prs_90d": 1 }
+  }
+}

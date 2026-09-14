@@ -1,0 +1,10 @@
+ticket,title,linked_incident,owner,priority,due,status,closed_date,resolution
+PLT-4410,Integration test for cache refill stampede,INC-2104,d.whitfield,P2,2026-07-22,Done,2026-07-21,Fixed
+PLT-4411,TTL jitter and single-flight guard on product-detail refill,INC-2104,unassigned,P1,,Done,2026-07-30,Won't Do
+PLT-4455,Dashboard for origin request rate per cache key,INC-2104,unassigned,,,Backlog,,
+PLT-4531,Retry budget on the notification fan-out,INC-2118,s.iyer,P2,2026-08-07,Done,2026-08-06,Fixed
+PLT-4602,Alert on cart total mismatch rate,INC-2130,m.lin,P2,2026-08-28,In Progress,,
+SRE-991,Exponential backoff for the email sender,INC-2142,t.okafor,P1,2026-09-09,Done,2026-09-08,Fixed
+SRE-992,Lower queue depth alert threshold,INC-2142,t.okafor,P2,2026-09-16,Done,2026-09-12,Fixed
+SRE-993,Runbook for email provider degradation,INC-2142,a.brody,P3,2026-09-30,Done,2026-09-26,Fixed
+# Export generated 2026-10-01. Filter: label=incident-followup, created 2026-07-01 to 2026-09-30.

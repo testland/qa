@@ -1,0 +1,13 @@
+2026-09-13T06:11:58Z  sast      Run semgrep scan --config .semgrep.yml --sarif --output semgrep.sarif
+2026-09-13T06:14:22Z  sast      Job succeeded
+2026-09-13T06:12:03Z  iac       Run checkov -d infra --output sarif --output-file-path checkov.sarif
+2026-09-13T06:12:47Z  iac       Job succeeded
+2026-09-13T06:12:10Z  sca       Run trivy fs --format sarif --output trivy/trivy-results.sarif .
+2026-09-13T06:14:31Z  sca       Job succeeded
+2026-09-13T06:12:14Z  secrets   Run gitleaks detect --report-format json --report-path gitleaks-report.json --exit-code 0
+2026-09-13T06:12:45Z  secrets   no leaks found
+2026-09-13T06:12:46Z  secrets   Job succeeded
+2026-09-13T06:15:02Z  gate      Run actions/download-artifact@v4
+2026-09-13T06:15:09Z  gate      Run node ci/gate.mjs --fail-on critical ci-artifacts
+2026-09-13T06:15:10Z  gate      verdict: PASS (no findings at or above critical)
+2026-09-13T06:15:10Z  gate      Job succeeded

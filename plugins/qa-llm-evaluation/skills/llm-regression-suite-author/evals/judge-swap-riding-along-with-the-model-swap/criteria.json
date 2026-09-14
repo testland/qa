@@ -1,0 +1,42 @@
+{
+  "context": "PR #2204 is described as two changes and is actually three. The diff in docs/pr-2204.diff also drops grader.passScore from 0.75 to 0.55, and the PR description never mentions it. Predicted baseline failure: the agent makes the confounded-experiment argument — model and grader moved together, so the pass rate is not a quality signal — calls it two changes, and stops there, which is the argument the PR description itself invites. It is predicted to miss that the pass bar moved too, and therefore to miss the arithmetic the result files make available: every graded case in the candidate run records a raw score, and only five of the fifteen reach 0.75, the bar the baseline was scored under, against the fifteen of fifteen the PR reports at 0.55. It is also predicted to report the run as simply uninformative, when the deterministic slice is clean evidence and says something specific: 14 of 15 in both runs, flat, with det-09 fixed and det-13 newly broken — so the entire 13-point headline sits in the graded slice, and the PR introduces a deterministic failure nobody has explained. Finally, the config on main names both the model under test and the grading model by undated family name, which is how a grader can move underneath a run in the first place; the agent is predicted to edit the model ids without pinning either to a dated snapshot."
+  ,
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The pass-bar change found and its effect computed",
+      "max_score": 32,
+      "description": "Identifies from docs/pr-2204.diff that PR #2204 also lowers grader.passScore from 0.75 to 0.55, unmentioned in the PR description, and recomputes the candidate's graded slice at the bar the baseline was scored under: 5 of 15 at 0.75 against the 15 of 15 reported at 0.55. Naming the change without recomputing scores at most half. A review that treats PR #2204 as making two changes scores zero for this criterion regardless of the rest."
+    },
+    {
+      "name": "MUST NOT certify the run as a quality improvement",
+      "max_score": 26,
+      "description": "MUST NOT approve, sign off, or report 0.833 to 0.967 as evidence that the new assistant model is better. Full marks require naming all three things that moved inside the one run — the model under test, the grading model, and the pass bar — so no single-variable claim survives. Recommending merge on the 1.16 retained ratio scores zero. Calling the run confounded while naming only the two model changes scores at most half."
+    },
+    {
+      "name": "Deterministic slice separated and read correctly",
+      "max_score": 24,
+      "description": "The review splits the run by assertion type and reports the deterministic slice as 14 of 15 in both runs — flat — so the whole headline delta sits in the graded slice. Full marks also report the change in composition: det-09 passes now and det-13 fails now, so the PR introduces a deterministic regression that has to be explained before merge. Reporting the split without surfacing det-13 scores at most half. Not splitting the run at all scores zero."
+    },
+    {
+      "name": "Grader validated against labels, not against its own output",
+      "max_score": 18,
+      "description": "docs/grader-validation-plan.md requires the new grading model to be checked against human-labelled outcomes on a held-out set, with an agreement figure and a fixed pass bar, before its scores are allowed to move the gate. It states plainly that a grader cannot be validated by the pass rate it produces. A plan whose acceptance test is that the new grader agrees with the old one, or that the pass rate is comparable, scores at most half. No plan scores zero."
+    },
+    {
+      "name": "MUST NOT ship an undated model name",
+      "max_score": 12,
+      "description": "MUST NOT leave either providers[0].id or grader.model as an undated family name. Whatever verdict is reached, the delivered eval/regression.config.json pins both to dated snapshots — the result files record which snapshots each run actually resolved to. Leaving either unpinned scores zero here."
+    },
+    {
+      "name": "Cost decision routed rather than dropped",
+      "max_score": 12,
+      "description": "The review says what happens to the $1,840: the assistant move proceeds on its own, since the 4.1 snapshot retires 2026-10-31 and the assistant has to move regardless, while the grading-model saving waits on validation. Saying nothing about the money scores zero. Blocking the whole PR without separating the two changes scores at most half."
+    },
+    {
+      "name": "Deliverables and tests",
+      "max_score": 6,
+      "description": "Both documents exist, eval/regression.config.json is edited, node --test passes including the shipped tests, and any analysis script added carries a test. A failing suite scores zero."
+    }
+  ]
+}

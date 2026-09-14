@@ -1,0 +1,63 @@
+[
+  {
+    "url": "/checkout",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [
+          { "target": ["a.promo-terms"] },
+          { "target": ["button.express-pay"] },
+          { "target": ["span.muted"] }
+        ]
+      },
+      {
+        "id": "label",
+        "impact": "critical",
+        "tags": ["cat.forms", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["input#coupon"] }]
+      }
+    ]
+  },
+  {
+    "url": "/legacy-orders",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["span.muted"] }]
+      },
+      {
+        "id": "image-alt",
+        "impact": "critical",
+        "tags": ["cat.text-alternatives", "wcag2a", "wcag111"],
+        "nodes": [{ "target": ["img.logo-print"] }]
+      }
+    ]
+  },
+  {
+    "url": "/account",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["span.plan-badge"] }]
+      },
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["a.icon-settings"] }]
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "tags": ["cat.keyboard", "best-practice", "wcag131"],
+        "nodes": [{ "target": ["body"] }]
+      }
+    ]
+  }
+]

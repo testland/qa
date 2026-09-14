@@ -1,0 +1,54 @@
+{
+  "run": {
+    "host": "tomas-mbp-16",
+    "command": "k6 run --vus 800 --duration 45m tests/load/checkout.js",
+    "started": "2026-09-09T22:55:04Z",
+    "duration_s": 2700,
+    "exit_code": 99
+  },
+  "metrics": {
+    "http_req_duration": {
+      "type": "trend",
+      "values": { "avg": 2401, "min": 61, "med": 1920, "max": 31240, "p(90)": 2905, "p(95)": 3182 },
+      "thresholds": { "p(95)<800": { "ok": false } }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "values": { "avg": 219, "min": 48, "med": 162, "max": 4380, "p(90)": 288, "p(95)": 311 }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "values": { "avg": 34, "min": 0.2, "med": 11, "max": 1980, "p(90)": 78, "p(95)": 96 }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "values": { "avg": 2148, "min": 1.2, "med": 1702, "max": 29800, "p(90)": 2610, "p(95)": 2861 }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "values": { "avg": 1892, "min": 0.9, "med": 1240, "max": 22410, "p(90)": 5100, "p(95)": 6120 }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "values": { "avg": 1204, "min": 0, "med": 890, "max": 18400, "p(90)": 3710, "p(95)": 4390 }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "values": { "avg": 611, "min": 0, "med": 420, "max": 9100, "p(90)": 1640, "p(95)": 1980 }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "values": { "rate": 0.0119, "passes": 3625, "fails": 301043 },
+      "thresholds": { "rate<0.02": { "ok": true } }
+    },
+    "http_reqs": { "type": "counter", "values": { "count": 304668, "rate": 112.84 } },
+    "iterations": { "type": "counter", "values": { "count": 304668, "rate": 112.84 } },
+    "iteration_duration": {
+      "type": "trend",
+      "values": { "avg": 7089, "min": 1064, "med": 6480, "max": 52100, "p(90)": 11200, "p(95)": 13400 }
+    },
+    "checks": { "type": "rate", "values": { "rate": 0.9571, "passes": 291599, "fails": 13069 } },
+    "vus": { "type": "gauge", "values": { "value": 800, "min": 800, "max": 800 } },
+    "vus_max": { "type": "gauge", "values": { "value": 800, "min": 800, "max": 800 } }
+  }
+}

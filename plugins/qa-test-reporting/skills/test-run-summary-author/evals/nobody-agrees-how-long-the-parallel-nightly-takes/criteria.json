@@ -1,0 +1,41 @@
+{
+  "context": "Five shards of one run, and the duration argument in the prompt is the trap stated out loud. Predicted baseline failure: the agent adds up the five testsuite time attributes - 448.2 + 502.7 + 391.5 + 613.8 + 470.1 = 2426.3s - and reports about 40 minutes, which is the platform lead's figure and the one the prompt frames as the case for rolling the parallelisation back. That number is the machine time consumed across five runners, not how long anybody waited. Every shard carries a timestamp: the earliest start is 01:00:04 and the last shard to finish is shard-4, which began at 01:00:09 and ran 613.8s, ending at 01:10:22.8, so the run took about 10m 19s wall clock. A near-miss also exists - quoting shard-4's 613.8s (10m 13.8s) as the duration ignores the nine-second stagger between shard starts and gets the right order of magnitude by the wrong method. The second predicted failure is the failure list. Seven tests failed; taken in shard order the first three are 'renders 200 orders' (38.4s), 'completes guest journey' (121.9s) and 'facets narrow results' (14.2s), which is close to what the lead says wasted the team's morning last time. Ranked by what actually cost the run, the three are the 180.5s bulk-import timeout, the 121.9s guest-checkout timeout and the 38.4s order-history assertion, and each needs the reason attached or the reader cannot tell why they were picked. Third, 50 cases ran with 7 failures and 2 skipped, so the rate over executed tests is 41/48 = 85.4%, not 41/50 = 82%.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite still passes",
+      "max_score": 5,
+      "description": "scripts/nightly.js runs and writes nightly.json, test/nightly.test.js exists, docs/nightly-2026-09-12.md exists, and npm test passes with the pre-existing test/junit.test.js still passing. A failing npm test scores zero for this item."
+    },
+    {
+      "name": "Duration is how long the run took, not how much machine time it used",
+      "max_score": 30,
+      "description": "The duration in the post is about 10 minutes 19 seconds, derived from the earliest shard start (01:00:04) to the latest shard end (shard-4 at 01:00:09 plus 613.8s). Reporting the sum of the five shard times - 2426.3s, about 40 minutes - scores zero, and so does any figure above about 15 minutes. Quoting shard-4's 613.8s as the duration without accounting for the stagger between shard starts scores at most half: the number is close but the method does not survive the next run where a later-starting shard finishes last."
+    },
+    {
+      "name": "MUST NOT list the three failures as bare names",
+      "max_score": 22,
+      "description": "MUST NOT present the three as a list of test names with nothing attached. Each carries why it is on the list - the 180.5s and 121.9s entries are timeouts that between them consumed over five minutes of the run, the order-history entry is a 38.4s assertion returning 100 rows where 200 were expected. Names with no stated basis score zero. Selecting the first three in shard order, which puts the 14.2s facet assertion ahead of the 180.5s bulk-import timeout, scores at most half."
+    },
+    {
+      "name": "An owner attached to each of the three",
+      "max_score": 14,
+      "description": "Each of the three carries the owning team taken from CODEOWNERS, not guessed: @acme/platform-admin for e2e/admin/bulk-import.spec.ts, @acme/payments for e2e/checkout/guest.spec.ts, @acme/orders for e2e/orders/order-history.spec.ts. No owners at all scores zero; owners invented from the test name rather than resolved through CODEOWNERS scores at most half."
+    },
+    {
+      "name": "The duration figure is reproducible by the next person",
+      "max_score": 12,
+      "description": "The note under the post states the method plainly enough that someone recomputes it from the same five files - earliest shard start to latest shard end - and says explicitly what the 40-minute figure is measuring and why the two numbers are both real and not in conflict. A bare number with no method scores at most half; no attempt to settle the argument scores zero."
+    },
+    {
+      "name": "The post stays a Slack message",
+      "max_score": 12,
+      "description": "The post itself is a short block - a lead line with the counts and rate, then the three failures with owners, then the duration - readable on a phone, with the explanatory note kept below it and out of the pasted message. A multi-section report presented as the post scores zero."
+    },
+    {
+      "name": "Rate computed over tests that executed",
+      "max_score": 10,
+      "description": "50 cases across the five shards, 41 passed, 7 failed, 2 did not execute, giving 41/48 = 85.4%. A rate with 50 in the denominator scores zero. The two non-executed cases are reported with their recorded reasons - the wishlist_sharing flag and the facet test that depends on the one that failed."
+    }
+  ]
+}

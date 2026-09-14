@@ -1,0 +1,8 @@
+{
+  "name": "quarrystone",
+  "version": "5.8.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

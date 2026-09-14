@@ -1,0 +1,3 @@
+[
+  {"RuleID":"generic-api-key","Description":"Generic API Key","File":"services/reporting/config/prod.yaml","StartLine":22,"Commit":"9fd4c17","Date":"2026-01-23T10:05:33Z","Author":"m.abioye","Match":"reporting_api_key: [REDACTED]","Secret":"REDACTED","Entropy":3.9,"Fingerprint":"9fd4c17:services/reporting/config/prod.yaml:generic-api-key:22"}
+]

@@ -1,0 +1,8 @@
+{
+  "name": "stream-edge",
+  "version": "1.9.4",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

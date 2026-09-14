@@ -1,0 +1,46 @@
+{
+  "context": "A target the practice cannot deliver, plus two inherited labels that are swapped relative to the truth. Predicted baseline failure: the agent builds a credible-looking burndown to zero by 31 December and carries Rami's labels forward, because an OKR with four items and a date is exactly the shape a plan wants to take. Zero is not reachable and the plan should say so - deciding whether a mutant is equivalent to the original is undecidable in general, so some residual count is the expected steady state rather than an open defect. The two labels invert: PriceCalculator:19 is the genuinely equivalent one, because capped is already Math.min(quantity, MAX_LINE_QTY), so capped > MAX_LINE_QTY is never true and the mutated >= only fires at capped == MAX_LINE_QTY where it assigns the value capped already holds - no input separates them. PriceCalculator:27, which Rami marked equivalent on a call and recorded no reasoning for, is separated by quantity == 100: the original returns the 10% tier and the mutated > falls through to the 50-qty tier and returns 5. PriceCalculator:35 is not a test gap at all - feeForTenItems already asserts 250 at items == 10 and would kill it deterministically; run 4412 killed it and 4418 did not on the same commit a3f7c21, and that test fails 6.3% of the time through a shared static TierTable under -Dparallel=classes, so the action is BLD-1180 and a re-run, not another test. Only PriceCalculator:42 is ordinary work.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Plan document with four separate entries",
+      "max_score": 4,
+      "description": "docs/q4-mutation-plan.md exists, carries one entry per surviving mutant naming class, line and mutator, and has a section answering the 31 December question. Missing the date section scores zero for this item."
+    },
+    {
+      "name": "MUST NOT commit to a zero-survivor target",
+      "max_score": 28,
+      "description": "MUST NOT hand back a plan that presents zero surviving mutants as achievable by 31 December or by any date, and MUST NOT leave the equivalent-mutant class out of the classification. Producing a four-step burndown to zero scores zero for this criterion. Full marks require the reason - whether a mutant is equivalent to the original cannot be decided in general, so a residual count is the expected steady state - and a target the manager can actually take to leadership in its place, such as zero survivors that are unexplained, or every survivor classified with a recorded reason. Saying 31 December is 'tight' or 'ambitious' without rejecting the shape of the target scores at most half."
+    },
+    {
+      "name": "PriceCalculator:27 taken off its inherited equivalent label",
+      "max_score": 24,
+      "description": "The entry for line 27 rejects the carried-over 'equivalent - agreed with Tomas on a call' label and supplies the separating input: quantity exactly 100, where the original returns 10 and the mutated boundary falls through to the 50-qty tier and returns 5. Repeating the equivalent label, or leaving the row as Rami classified it, scores zero. Reclassifying it as a real gap without naming quantity == 100 and both outcomes scores at most half. Marks are not reduced for also noting that an exclusion with no recorded reasoning cannot be audited."
+    },
+    {
+      "name": "PriceCalculator:19 classified equivalent with reasoning written out",
+      "max_score": 20,
+      "description": "Line 19 is classified equivalent and the entry states why no input can separate the two forms: capped comes from Math.min(quantity, MAX_LINE_QTY), so the guard is already unreachable in the true branch and the mutated >= assigns MAX_LINE_QTY at the one value where it fires, which is the value capped already holds. The entry must also say the mutant is excluded and the score cost accepted. Proposing a test to kill line 19 scores zero. Calling it equivalent with no reasoning a second reader could disagree with scores at most half."
+    },
+    {
+      "name": "PriceCalculator:35 routed to the unstable test, not to a new test",
+      "max_score": 20,
+      "description": "MUST NOT propose a new or additional test for line 35. The entry must identify it as a killing test that is not reliable - killed in 4412 and alive in 4418 on the same commit a3f7c21 with no source change, and feeForTenItems failing 6.3% of 430 runs through a static TierTable shared with TierCacheTest under -Dparallel=classes - and must route the work to stabilising that test (BLD-1180, currently unowned) and re-running the mutant afterwards. Proposing a test at items == 10, which already exists, scores zero. Noting the instability but still listing it as suite work scores at most half."
+    },
+    {
+      "name": "PriceCalculator:42 given a concrete assertion",
+      "max_score": 10,
+      "description": "The entry for line 42 is an ordinary gap: no test calls currencyCode() at all, and the fix is an assertion that it returns the contract currency, \"EUR\" for the fixture's Contract. An entry saying only 'add coverage for currencyCode' with no expected value scores at most half; classifying it as a loose assertion, when no assertion touches the method, scores zero."
+    },
+    {
+      "name": "Equivalent mutants counted apart from test gaps",
+      "max_score": 12,
+      "description": "The plan reports the four in at least two buckets rather than as one backlog of four - what the suite owes (lines 27 and 42), what is excluded by reasoning (line 19), and what belongs to the flaky test (line 35) - so the count the director tracks cannot be driven to zero by mixing them. A single undifferentiated list of four action items scores zero here."
+    },
+    {
+      "name": "Source tree left alone",
+      "max_score": 5,
+      "description": "MUST NOT add, edit or delete anything under src/. The deliverable is the plan. Any write into src/main or src/test scores zero here."
+    }
+  ]
+}

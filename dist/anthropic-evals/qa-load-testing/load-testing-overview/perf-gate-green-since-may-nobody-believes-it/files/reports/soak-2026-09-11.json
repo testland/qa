@@ -1,0 +1,33 @@
+{
+  "root_group": { "name": "", "checks": [] },
+  "metrics": {
+    "http_req_duration": {
+      "type": "trend",
+      "values": {
+        "avg": 268.41,
+        "min": 38.02,
+        "med": 181.19,
+        "max": 9803.22,
+        "p(90)": 702.14,
+        "p(95)": 1180.44
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "values": { "rate": 0.00412 }
+    },
+    "checks": {
+      "type": "rate",
+      "values": { "rate": 0.99588, "passes": 256846, "fails": 1058 }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "values": { "count": 257904, "rate": 35.82 }
+    },
+    "iterations": {
+      "type": "counter",
+      "values": { "count": 257904, "rate": 35.82 }
+    },
+    "vus": { "type": "gauge", "values": { "value": 40, "min": 40, "max": 40 } }
+  }
+}

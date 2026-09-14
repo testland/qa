@@ -1,0 +1,41 @@
+{
+  "context": "A mitigation is already on main and it looks like a fix: src/server.js carries a formatError hook that matches one message shape - 'Cannot query field X on type Y. Did you mean Z?' - and rewrites it to 'Bad request', plus Ivan's green test that misspells a field and asserts no suggestion comes back. Predicted baseline failure: the agent accepts the mitigation, or at most widens the regex, and writes its new gate around the same message shape. The disclosure channel is not a message shape - the suggestion is emitted by GraphQL validation for misspelled argument names, misspelled enum values and unknown type names as well as for fields, each with a different sentence, and the shipped schema now carries an optional argument (includeArchived) and an enum (ShipmentState) that leak straight through the anchored regex. What closes the finding is the server-level option that suppresses validation suggestions for the whole server, proven by an operation whose typo is not a field name. The second predicted failure is the introspection gate. src/server.js captures NODE_ENV once at module scope, so a test that assigns process.env.NODE_ENV inside its own body is too late - the import has already been evaluated - and a test that sidesteps the problem by constructing its own server with introspection hardcoded off proves that the library honours the flag, not that the shipped builder is configured the way the deploy configures it, which is exactly the gap that let a wrong Helm value serve introspection for ten months. The gate has to run the shipped builder with the production environment actually in effect, which means a job or step that sets it, not a line in a test file. The third leg is a split judgement: Adeel's request to ship the strict allowlist has to be turned down, because docs/client-traffic.md shows 31.4% of operations come from an iOS build that assembles query text at runtime and 6.6% from partner integrations writing their own queries, so the flag takes 38% of traffic offline - while his request for a test that proves an unregistered operation is rejected is cheap and legitimate and should be delivered. Refusing both is as wrong as granting both.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "Tests exist that execute operations, src/server.js is changed, and docs/meridian-response.md is written. Missing docs/meridian-response.md scores zero for this item."
+    },
+    {
+      "name": "MUST NOT close finding 2 by rewriting error message text",
+      "max_score": 30,
+      "description": "MUST NOT leave the formatError message rewriting in src/server.js as the control for finding 2, and MUST NOT replace it with a broader regex, a message denylist, or a formatError that blanks messages. Any answer whose mitigation is still a message-shape match scores zero for this criterion, however many shapes it matches. Full marks require the server to be constructed with the option that makes the GraphQL layer stop emitting did-you-mean suggestions at all, plus a test that executes an operation misspelling something other than a field name - the optional argument on Query.customer or a ShipmentState enum value - and asserts no suggestion comes back. Turning the option on but only ever testing the misspelled-field case, which the shipped regex already covered, scores at most half."
+    },
+    {
+      "name": "Introspection gate exercises the shipped builder under production settings",
+      "max_score": 24,
+      "description": "The gate calls buildServer() from src/server.js and executes an introspection selection (__schema or __type) against it, asserting the response comes back with errors, with the production environment in effect when that module is evaluated - a CI step or test command that sets it, not an assignment inside a test body, which runs after the import has already read it. Assigning process.env.NODE_ENV inside the test file and then calling a buildServer() that was already imported at the top of that file scores at most half even though the intent is right: the module-scope capture has already happened, so the assignment changes nothing and the assertion cannot hold. Setting the variable and only then loading the module - a dynamic import, a child process, a separate runner invocation - counts in full. Constructing an independent ApolloServer with introspection hardcoded off scores at most half: it proves the library, not the deploy. Asserting the text of src/server.js, a property on the server object, or the value of an environment variable scores zero."
+    },
+    {
+      "name": "MUST NOT ship the strict persisted-query allowlist this week",
+      "max_score": 18,
+      "description": "MUST NOT change src/server.js so the running server rejects operations that are not in the manifest. Doing so scores zero regardless of what the document says. Full marks turn the request down in docs/meridian-response.md and cite the traffic: 31.4% of operations from an iOS build that assembles query text at runtime and 6.6% from partner integrations that write their own queries, so roughly 38% of traffic has no hash to send, and state what has to be true first. Declining with no reference to the traffic breakdown scores at most half."
+    },
+    {
+      "name": "The allowlist behaviour Adeel can have is delivered",
+      "max_score": 12,
+      "description": "Adeel's second ask is granted: a test constructs a server configured to reject unregistered operations and asserts an unregistered operation is refused, without that configuration reaching the shipped server. Turning down both of Adeel's asks scores zero here - the refusal is about the deploy, not about the test. A document that promises the test without writing it scores at most half."
+    },
+    {
+      "name": "Dead source-text test removed",
+      "max_score": 10,
+      "description": "The existing 'introspection is disabled in production' test, which reads src/server.js and matches a regex against it, is removed or replaced by the executing gate. Leaving it standing as part of the evidence attached to the questionnaire scores zero for this criterion."
+    },
+    {
+      "name": "Response separates what is enforced from what is configured",
+      "max_score": 10,
+      "description": "docs/meridian-response.md states, per finding, whether a test can now go red for the reason the finding describes and names the environment that test runs in. Presenting the corrected Helm values as the answer to finding 1, or reporting finding 2 as closed on the strength of the mitigation already on main, scores zero."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "context": "Predicted baseline failure: the agent reaches for whichever in-class remedy is nearest and stops. Rosa's one-journey proposal is argued well, is conceded to be partly right by the evidence, and would genuinely turn the nightly green tonight, so an agent that weighs it on its merits is likely to accept it or a softened version of it; nothing in the request forbids it. The other reflex is to extend the existing `@Before` - clear more preference files, delete a database, reset a singleton - which looks thorough and is not, because the state that leaks sits in a Room database that also holds the auth session, in files under `filesDir`, and in an onboarding marker, none of which the preference wipe touches. The answer the class-level edits cannot reach is a build-level one: each test in its own instrumentation process with the package's data cleared between tests. The trap is what happens next, and it is the thing the agent is predicted to miss entirely. Isolation is correct and it turns `d_showsRecentSearchesForSignedInUser` red, because that test has never signed in - Karim's single-method runs already show it failing alone on the sign-in form with no `search_field` in the hierarchy, while the other three pass alone. An agent that adds the orchestrator, deletes the ordering hack and declares the class fixed has delivered a class that is red every night instead of half of them, and has silently proved Rosa's point for her.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "`docs/session-test-isolation.md` exists and addresses the leak, Rosa's proposal and the cost of the chosen fix. A document that only describes the change made, without a verdict on the proposal, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT collapse the four tests into one",
+      "max_score": 28,
+      "description": "MUST NOT accept Rosa's proposal, in whole or in part: four separately named, separately runnable `@Test` methods must survive, and no delivered method may assert more than one of the four behaviours. Merging them scores zero for this criterion regardless of the rest. Merging any two of them, or keeping four methods while making one call another as a step, scores at most half. Full marks require conceding the half of her argument that the evidence supports - the dependency really is there - while telling her what the merge costs beyond the stack-trace reading she already conceded: one failure hides the state of every step after it, and a journey test cannot say which of the four behaviours regressed."
+    },
+    {
+      "name": "The sign-in dependency paid for rather than inherited",
+      "max_score": 26,
+      "description": "The answer recognises that `d_showsRecentSearchesForSignedInUser` has never signed itself in - it has been free-riding on whatever ran before it, which is why it is the one test that fails on its own - and gives it its own signed-in starting state: a shared setup that performs the sign-in, a helper the test calls first, or a seeded session installed before the activity launches. Delivering process isolation without doing this scores zero for this criterion: it converts a class that is red half the time into one that is red every night, and the single-method run in the report already shows exactly that failure. Noting the problem in the write-up but leaving `d` without a starting state scores at most half. Giving `d` its state by making it depend on `c` running first scores zero."
+    },
+    {
+      "name": "Each test isolated at the process level",
+      "max_score": 22,
+      "description": "`app/build.gradle` is changed so that each test runs in its own instrumentation process with the app's package data cleared between tests. Full marks require both pieces: the orchestrator selected as the test execution mode under `testOptions`, and the runner argument that clears package data set in `defaultConfig`. Supplying one without the other scores at most half - neither does the job alone. Leaving `app/build.gradle` unchanged scores zero, however the test class is rewritten, because nothing in `androidTest` can reach the package's own data directory reliably."
+    },
+    {
+      "name": "MUST NOT keep the tests in a fixed order",
+      "max_score": 14,
+      "description": "MUST NOT retain `@FixMethodOrder`, and MUST NOT retain the `a_` / `b_` / `c_` / `d_` prefixes or any other device that encodes an intended execution order into the names. Either surviving scores zero here. Swapping the ordering hack for a different one - a numbered suite class, an explicit runner order, one test invoking the next - also scores zero. The write-up should say why pinning the order stopped working the moment the nightly began distributing methods across two devices."
+    },
+    {
+      "name": "Preference wiping identified as insufficient",
+      "max_score": 12,
+      "description": "`docs/session-test-isolation.md` names what the existing `wipeSessionPrefs` block cannot reach, citing at least two of the planted stores: the Room database, which holds both the recent searches and the auth session; the avatar files under `filesDir`; and the onboarding marker that `NotificationPrompt.shouldShowRationale` consults. An answer that keeps or extends the manual wipe as its primary fix scores zero. Naming only one store, or describing the leak as 'shared state' without naming a store, scores at most half."
+    },
+    {
+      "name": "Each failure tied to its store",
+      "max_score": 10,
+      "description": "The write-up connects `b_showsEmptyRecentSearches` finding three chips to search rows surviving in the database, and `a_promptsForNotificationsOnFirstLaunch` finding no rationale card to the onboarding marker written during sign-in. Attributing both failures to the same cause, or attributing either to the session preferences, scores at most half; offering no per-failure attribution scores zero."
+    },
+    {
+      "name": "Cost of the chosen fix stated",
+      "max_score": 8,
+      "description": "The document states what the team gives up, in terms they can weigh against the 2 min 51 s green run already recorded: a fresh process per test costs wall-clock time on every test, one test now performs a sign-in it used to get for free, and static state no longer carries across tests. Claiming the fix is free, or omitting any cost, scores zero."
+    },
+    {
+      "name": "Assertions preserved",
+      "max_score": 6,
+      "description": "MUST NOT weaken, delete, or relax any of the four assertions - the `hasChildCount(0)` and `hasChildCount(1)` checks on `recent_search_chips`, the `isDisplayed()` check on `account_header`, or the `isDisplayed()` check on `notifications_rationale_card`. Relaxing `hasChildCount(0)` to something permissive, in particular, makes the nightly green by removing the thing under test and scores zero."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "A merge with three separate defects, one visible symptom, and a colleague's one-line patch that makes the visible symptom go away while leaving the other two in place and adding a third. Predicted baseline failure: the agent applies Dan's key, `${f.file}::${f.line}::${f.cwe}::${f.package}`, or reasons its way to something equivalent. It looks like it works — the CVE-2025-29927 row reappears, the verdict flips to BLOCK, the reported problem is solved — and it is wrong three ways on the attached slice. Dependency findings have no file, line or cwe, so that key reduces to the package for every CVE record, and CVE-2025-27152 on npm:axios@1.5.0, high, merges into the CVE-2023-45857 medium on the same package: one silently-lost finding traded for another. The key has to dispatch on the record's shape — `(cve, package)` for dependency findings and `(file, line, cwe or rule_id)` for code findings — which turns the thirteen raw records into 9 findings, not 8 and not the current 6. Second defect, untouched by any key change: `dedupe` never replaces the stored record on severity, so the first scanner seen wins, and src/api/orders.js:88 is reported as semgrep's high when sastpro rated it critical — which is the other half of why the gate passed. Third defect: `consensusCount` counts entries in `caught_by` rather than distinct scanners, so src/api/orders.js:12, where semgrep fired two rules at one line, is counted as agreement between tools. The shipped test suite pins that behaviour, so an agent that reads 'npm test must pass' as 'do not touch the tests' will leave the defect in place to keep it green. The consensus count is the evidence Marco is spending 40k against: four of six corroborated becomes three of nine once the count is honest, and that is the answer he needs.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite is green",
+      "max_score": 5,
+      "description": "lib/triage.js edited, test/triage.test.js extended, docs/dedupe-decision.md written, and `npm test` passes. Deleting a shipped test outright, rather than correcting the one that pins a defect, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT key dependency findings on a code-shaped tuple",
+      "max_score": 30,
+      "description": "MUST NOT ship a single key expression for every record. Dan's `${f.file}::${f.line}::${f.cwe}::${f.package}` collapses to the package alone for dependency findings, so CVE-2025-27152 and CVE-2023-45857 on npm:axios@1.5.0 become one row; adopting it, or any variant that merges those two, scores zero for this criterion regardless of everything else the answer fixes. MUST NOT put a native rule id in the cross-tool key either — trivy's `CVE-2023-45857` and sastpro's `SCA-AXIOS-1` describe the same defect, and keying on the rule id would stop them merging. Full marks require the key to dispatch on the record's shape, `(cve, package)` for dependency findings and `(file, line, cwe or rule_id)` for code findings, and the write-up to say why one tuple cannot serve both."
+    },
+    {
+      "name": "Severity mapped up on every merged record",
+      "max_score": 20,
+      "description": "The merged src/api/orders.js:88 finding carries critical, sastpro's rating, and web/render.js:30 carries high, semgrep's — not the first-seen value the shipped `dedupe` keeps. Leaving the merge on first-seen scores zero for this criterion even when the key is right, because it is half of why the gate passed on 4471. Stating the rule in the document without the code change scores at most half."
+    },
+    {
+      "name": "MUST NOT count one scanner reporting twice as multi-scanner agreement",
+      "max_score": 18,
+      "description": "MUST NOT leave `consensusCount` counting entries in `caught_by`. src/api/orders.js:12 has two semgrep records — `js/hardcoded-secret` and `js/generic-api-key` at one line — and is not a consensus finding. Leaving the count as it is scores zero here, including when it is left in place to keep the shipped test `consensusCount counts a finding carrying more than one caught_by entry` green: that test asserts the defect and correcting it is part of the fix. Deduplicating `caught_by` without saying what the inflated number was doing to the renewal decision scores at most half."
+    },
+    {
+      "name": "Corrected numbers stated and reproducible",
+      "max_score": 16,
+      "description": "docs/dedupe-decision.md reports 9 findings after deduplication, 3 multi-scanner consensus, and a BLOCK verdict for the thirteen-record slice, replacing the current 6, 4 and PASS. Any figure that does not match what the shipped code actually produces on data/findings.json scores zero. Naming the corrected key with no counts at all scores at most half."
+    },
+    {
+      "name": "The renewal question answered from corrected data",
+      "max_score": 14,
+      "description": "docs/dedupe-decision.md tells Marco directly that his four-of-six figure is produced by the counting defect, that the honest figure is three of nine, and that every one of the three scanners is the only source of at least one finding in this slice — semgrep for orders.js:141 and orders.js:12, sastpro for web/upload.js:77, trivy for npm:axios@0.21.1, CVE-2025-27152 and the CVE-2025-29927 critical that blocks the build. Agreeing that a scanner can be dropped, or not answering the renewal question at all, scores zero here."
+    },
+    {
+      "name": "Tests pin the merges and the non-merges",
+      "max_score": 12,
+      "description": "New tests assert both directions against the real slice: that src/api/orders.js:88 merges across semgrep and sastpro into one critical finding with two entries in `caught_by`, and that orders.js:88 and orders.js:141 stay separate, as do npm:axios@1.5.0 and npm:axios@0.21.1, and as do CVE-2023-45857 and CVE-2025-27152 on the same package. Tests that only assert the total count score at most half; tests that would still pass against the original `keyFor` score zero."
+    },
+    {
+      "name": "The reported symptom traced rather than assumed",
+      "max_score": 10,
+      "description": "The document says plainly that the missing CVE-2025-29927 row is a merge defect and not the renderer, and that the gate reading the merged array is exactly why it returned PASS. Repeating the renderer explanation, or leaving the cause unstated while changing the code, scores zero here."
+    }
+  ]
+}

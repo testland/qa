@@ -1,0 +1,46 @@
+{
+  "context": "A build that reports success because almost nothing in it ran. Predicted baseline failure: the agent finds the one defect that is visible in the workflow file - `-Dmaven.test.failure.ignore=true` - removes it, declares the gate fixed, and stops. That change alone fixes nothing, because the two suites the prompt cares about are never selected by the test runner in the first place: the 2026-04-02 commit renamed CheckoutTest and LoginTest to CheckoutFlow and LoginJourney, which fall outside the runner's default class-name include patterns, and the build log settles it - three sources compile, one class runs, and the uploaded artifact holds exactly one XML. The second thing the baseline is predicted to miss is the coupling: the failure-ignore flag is there for a real reason, stated in a comment, which is that the team wanted their reports collected on a red run. Removing it without making the upload step run on failure trades one hole for a different one; making the upload unconditional is what lets the flag go. Also predicted: dating the outage window from the September release or from 'July, when I started looking' rather than from the April rename, and reaching for a shortcut that restores green rather than one that restores coverage.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The build and workflow files are edited in place and docs/e2e-gate-postmortem.md exists. Deleting, disabling or otherwise excluding either of the two non-running suites scores zero for this item, whatever else is done."
+    },
+    {
+      "name": "Unselected suites brought into the run",
+      "max_score": 26,
+      "description": "The answer identifies that CheckoutFlow and LoginJourney are never picked up because their class names fall outside the test runner's default include patterns, and fixes it - either by renaming them back to names the runner matches, or by configuring explicit includes on the surefire plugin - and says which route it took. Leaving both classes unselected scores zero. Asserting they are 'skipped' or 'disabled' without identifying the selection rule, or changing something that would not actually cause them to run, scores at most half."
+    },
+    {
+      "name": "Build no longer succeeds when a test fails",
+      "max_score": 22,
+      "description": "`-Dmaven.test.failure.ignore=true` is removed from the CI command and not reintroduced as a plugin property. Leaving it anywhere scores zero. Removing it while ignoring the reason recorded in the comment beside it scores at most half."
+    },
+    {
+      "name": "Report collection survives a red build",
+      "max_score": 16,
+      "description": "The artifact upload step is made to run even when the suite step fails, which is what makes dropping the failure-ignore flag safe. Leaving the upload to be skipped on a failed run scores zero, because the next red build then produces no evidence - the exact reason the flag was added."
+    },
+    {
+      "name": "MUST NOT leave the whole purchase journey in one test method",
+      "max_score": 14,
+      "description": "From the skill's anti-pattern on a single test class carrying one giant flow: once CheckoutFlow is actually in the gate, its sign-in, browse, add-to-cart, promo and pay steps must be separated into per-behaviour tests with per-test setup, so a red build names the step that broke instead of one method. Leaving the single method intact scores zero. Splitting it into two methods that still bundle unrelated behaviours scores at most half."
+    },
+    {
+      "name": "Verification named, not assumed",
+      "max_score": 14,
+      "description": "The postmortem says what to look at on the next run to confirm the gate is live - an XML report per test class in target/surefire-reports and a per-class run count in the build output, rather than 'the job should fail now'. No verification step at all scores zero; 'just re-run it and see' scores at most half."
+    },
+    {
+      "name": "MUST NOT restore green by a route that removes coverage",
+      "max_score": 10,
+      "description": "Adding continue-on-error, appending `|| true`, passing -DskipTests or -DfailIfNoTests=false, or annotating any test as disabled in order to keep the job passing scores zero for this criterion. The job is allowed - expected - to be red until the application is fixed."
+    },
+    {
+      "name": "Ungated window dated from the rename",
+      "max_score": 8,
+      "description": "The postmortem dates the loss of coverage to the 2026-04-02 rename commit, not to the September release or to the July commits the requester happened to review. Naming a window without tying it to that commit scores at most half."
+    }
+  ]
+}

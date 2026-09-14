@@ -1,0 +1,14 @@
+{
+  "package": "packages/ingest",
+  "window": "2026-09-06 to 2026-09-15",
+  "window_days": 9,
+  "commits_classified": 5,
+  "distribution": {
+    "data-heavy": { "commits": 2, "pct_commits": 40 },
+    "service-layer": { "commits": 2, "pct_commits": 40 },
+    "pure-logic": { "commits": 1, "pct_commits": 20 },
+    "ui-heavy": { "commits": 0, "pct_commits": 0 }
+  },
+  "mixed_commits": 3,
+  "notes": "package directory did not exist before 2026-08-29, so there is no earlier history at this path. 3 of the 5 commits are flagged mixed."
+}

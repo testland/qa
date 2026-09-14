@@ -1,0 +1,46 @@
+{
+  "context": "A cost brief where the cheapest-looking moves are the two that must be refused, and refusing them costs real money that has to be found elsewhere. Predicted baseline failure: the agent approves item 1. The matrix currently has no fail-fast setting, so it is already cancelling siblings by default; the requester has been told that is the biggest thing holding the bill down, the ask is explicitly to cut spend, and the correct answer - write fail-fast: false in and pay for it - increases the number of minutes billed. An agent optimising for the stated goal keeps it. The second predicted failure is item 2, where the arithmetic is stated confidently and is wrong: splitting a suite into four shards divides wall-clock time, not billable time, and on this matrix it multiplies the job count by four so that every shard pays its own checkout and install - the export puts that at 1.5 minutes of each job - which makes the bill worse, not a quarter of what it was. An agent that does not know sharding is cost-neutral has no reason to doubt the figure. Third, the export is deliberately arranged so raw runner minutes and billable minutes rank the runners differently: macOS is 36% of the minutes and 79% of the money, so a plan that reasons in raw minutes misjudges both what to cut and what deleting the macOS leg would be worth - and deleting it is item 3, which must be refused on the evidence of two release blockers found there and nothing else, so the macOS saving has to come from cadence instead. The quietest miss is the 11 jobs terminated at the six-hour maximum, all of them on the most expensive runner: nothing in the plan mentions them and they are worth more than the entire Linux bill.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT buy the saving by cancelling sibling matrix jobs",
+      "max_score": 26,
+      "description": "Item 1 MUST be refused and the matrix MUST end up carrying an explicit fail-fast: false. Endorsing item 1, writing fail-fast: true, or leaving the matrix at its default so it keeps cancelling siblings, each scores zero for this criterion regardless of the rest. Full marks need the refusal plus the reason - a failure on one platform cancels the legs that have not reported, so the run says nothing about the other platforms and the money already spent on them buys nothing - and an acknowledgement that this change costs minutes which the rest of the plan has to cover. Setting it correctly while leaving item 1 unanswered in the document scores at most half."
+    },
+    {
+      "name": "MUST NOT price sharding as a proportional saving",
+      "max_score": 24,
+      "description": "Item 2's arithmetic MUST be corrected: sharding divides elapsed time, not billed time, and on this matrix it multiplies the job count so each shard pays its own checkout and install on top. Repeating or endorsing the claim that four shards cost roughly a quarter scores zero for this criterion, and so does applying four-way sharding across the full operating-system and runtime matrix, which raises the bill the plan was written to lower. Accepting sharding narrowly for elapsed time on one tier while stating plainly that it saves no money scores full marks; refusing it outright with the right reason also scores full marks."
+    },
+    {
+      "name": "The jobs terminated at the maximum duration are dealt with",
+      "max_score": 16,
+      "description": "The plan addresses the 11 jobs the platform killed at six hours - a job-level time limit short enough to stop a hung job burning a full day of the most expensive runner, plus a note that a suite whose longest honest run is 14 minutes should never approach it. Not mentioning them at all scores zero: they are on the ten-times runner and are worth more than the whole Linux line of the export, and no other item in Marco's plan touches them."
+    },
+    {
+      "name": "Superseded runs stop running to completion",
+      "max_score": 14,
+      "description": "A concurrency group is added so that when a newer commit lands on the same branch the older run is cancelled rather than finishing, which is the 148 runs in the export. Omitting it scores zero. A group keyed so that every branch shares one lane, so that unrelated branches cancel each other, scores at most half."
+    },
+    {
+      "name": "macOS coverage kept, and paid for by cadence",
+      "max_score": 12,
+      "description": "Item 3 MUST be refused - two of the three Q2 release blockers were found on macOS and by nothing else, and the product ships a macOS app. Deleting the macOS leg outright scores zero. Keeping it on every pull request unchanged, with no answer for the fact that it is 79% of the bill, scores at most half: the saving has to come from running it less often rather than from not running it."
+    },
+    {
+      "name": "The sound item is taken, and the matrix is tiered by trigger",
+      "max_score": 12,
+      "description": "Item 4 is approved and implemented, and more generally the plan runs a small matrix on pull requests and the wider one on merges or on a schedule, with the jobs-per-run count given for each trigger as the output specification asks. Refusing all four of Marco's items scores zero here - one of them is right, and an answer that rejects the lot has failed in the opposite direction from an answer that accepts the lot."
+    },
+    {
+      "name": "The numbers are worked in billable minutes",
+      "max_score": 12,
+      "description": "The estimate in docs/ci-cost-plan.md applies the per-runner multipliers from the export, so a macOS minute is not counted as equal to a Linux minute. A plan that totals or ranks its savings in raw runner minutes scores zero - it is the specific error that makes the Windows and macOS legs look comparable when one costs five times the other."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The rewritten workflow file or files and docs/ci-cost-plan.md all exist, and the document carries a separate verdict on each of Marco's four items rather than one verdict on the plan as a whole."
+    }
+  ]
+}

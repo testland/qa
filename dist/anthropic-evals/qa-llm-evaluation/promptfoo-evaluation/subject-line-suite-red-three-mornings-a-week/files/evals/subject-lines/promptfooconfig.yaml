@@ -1,0 +1,57 @@
+description: Parcelwise campaign subject-line generator
+
+prompts:
+  - file://prompt.txt
+
+providers:
+  - openai:gpt-5-mini-0613
+  - anthropic:claude-haiku-4-5
+
+defaultTest:
+  assert:
+    - type: is-json
+    - type: javascript
+      value: file://../../assertions/subject-line.js:envelopeShape
+    - type: javascript
+      value: file://../../assertions/subject-line.js:underSixtyChars
+    - type: javascript
+      value: file://../../assertions/subject-line.js:noCompetitorNames
+
+tests:
+  - description: black friday promo
+    vars:
+      campaign: Black Friday 2026
+      offer: 20% off all annual plans
+      audience: lapsed trial users
+    assert:
+      - type: equals
+        value: '{"subject":"Black Friday: 20% off annual plans","preheader":"Ends Monday."}'
+
+  - description: tone matches the brand voice
+    vars:
+      campaign: Spring product update
+      offer: new reporting dashboard
+      audience: active admins
+    assert:
+      - type: levenshtein
+        value: 'Your new reporting dashboard is live'
+        threshold: 0.85
+
+  - description: winback nudge mentions the discount
+    vars:
+      campaign: Winback March
+      offer: 20% off for three months
+      audience: cancelled last quarter
+    assert:
+      - type: contains
+        value: 'Save 20%'
+
+  - description: renewal reminder stays close to the approved copy
+    vars:
+      campaign: Renewal reminder
+      offer: none
+      audience: annual plans renewing in 14 days
+    assert:
+      - type: rouge-n
+        value: 'Your plan renews in 14 days, nothing to do unless you want to change something'
+        threshold: 0.95

@@ -1,0 +1,46 @@
+{
+  "context": "Two senior engineers each propose a way to shrink 1,847 findings to something a team will act on, and both proposals are reasonable-sounding noise-reduction moves that destroy exactly the coverage this rollout exists to buy. Predicted baseline failure: the agent adopts Marta's cut and gates the check on ERROR severity only, because 212 is a humane number and severity filtering is the obvious dial; or it adopts Dev's cut and excludes src/legacy; or, worst and quite common, it merges the two and ships an ERROR-only scan with src/legacy excluded. The planted evidence settles all three. INC-2291 — the incident that caused this project — was flagged by express-cookie-session-no-secure, which the inventory and the incident writeup both record as severity WARNING, in a file under src/legacy/. Marta's cut drops that rule's entire severity band; Dev's cut drops the directory; either one reproduces August. The thing the agent is predicted not to reach for is diff-aware gating against a baseline ref, which blocks only findings the PR introduces while leaving all 1,847 pre-existing ones non-blocking, at full severity and full path coverage. The second thing it is predicted to miss is that a baseline grandfathers whatever is in it, and the inventory lists three ERROR findings introduced in the last fourteen days — a live SQL injection, a child_process call and a hardcoded JWT secret — which vanish into the baseline the moment it is cut unless they are fixed first.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "`.github/workflows/sast.yml` is rewritten as a blocking pull_request check with an explicit command line, and `docs/sast-rollout.md` exists. Leaving the workflow on a nightly schedule or keeping `continue-on-error: true` on the gating step scores zero for this item."
+    },
+    {
+      "name": "MUST NOT restrict the scan to a single severity band",
+      "max_score": 28,
+      "description": "MUST NOT gate on ERROR-only by passing a severity filter to the scanning command. Full marks require the scan to run at full severity and the plan to say plainly why Marta's cut is refused: the rule behind INC-2291 carries severity WARNING, so an ERROR-only gate would not have caught the incident that started this project, and the same rule still has 60 unfixed occurrences. Filtering by severity purely when presenting or triaging the report — after the scan, not on it — is acceptable and does not reduce this score. Shipping a command with an ERROR-only severity filter scores zero here whatever the plan says. Refusing the cut without connecting it to the WARNING severity of the incident rule scores at most half."
+    },
+    {
+      "name": "Diff-aware gating against a baseline",
+      "max_score": 26,
+      "description": "The blocking command scans against a baseline ref / baseline commit (e.g. `semgrep ci --baseline-ref=main` or the equivalent baseline-commit flag) so that only findings introduced by the pull request block it, while the 1,847 pre-existing findings are reported without blocking. Full marks require the plan to state that consequence in those terms. An answer that enables a full blocking scan of the whole tree scores zero — 22 engineers open PRs the same afternoon and every one of them goes red. An answer that defers enablement until the backlog is cleared also scores zero: the commitment is 2026-10-01."
+    },
+    {
+      "name": "MUST NOT drop src/legacy from the scan",
+      "max_score": 16,
+      "description": "MUST NOT exclude `src/legacy/` via a path exclude, an ignore file, or a scan-path restriction. The incident file itself lives under that tree and 54 of the 61 occurrences of the incident rule are in it, so Dev's cut removes the coverage the rollout was commissioned to provide. Any exclusion of src/legacy scores zero here. Excluding genuinely non-source paths — vendored or generated directories — does not count against this criterion."
+    },
+    {
+      "name": "Baseline grandfathering treated as a live risk",
+      "max_score": 18,
+      "description": "The plan states that cutting a baseline at today's main makes every existing finding permanently non-blocking, and names the three ERROR findings introduced since 2026-08-21 — the node-postgres SQL injection in src/billing/invoices/query.js, the child_process call in src/api/exports/archive.js, and the hardcoded JWT secret in src/api/auth/dev-token.js — as work that must be handled before the switch-over rather than absorbed into the baseline. Presenting the baseline as if it resolves the 1,847 scores zero. Mentioning that pre-existing findings still need fixing, without identifying the three recent ERROR findings from the inventory, scores at most half."
+    },
+    {
+      "name": "Backlog burn-down is a mechanism, not an intention",
+      "max_score": 12,
+      "description": "The plan gives the backlog an owner, a cadence and a date, and says how the baseline moves forward as findings are fixed. 'We will fix them over time' with no owner, no interval and no date scores zero for this item."
+    },
+    {
+      "name": "Both proposals answered by name",
+      "max_score": 8,
+      "description": "docs/sast-rollout.md addresses Marta's proposal and Dev's proposal explicitly, by name, with the reason each is not being adopted as stated and what part of each concern the plan does honour. A plan that never mentions either scores zero here; the requester asked for something forwardable to two people who will read it."
+    },
+    {
+      "name": "Application code and tests untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `src/legacy/session/cookies.js`, `test/cookies.test.js` or `package.json`. The task explicitly excludes code fixes, and the cookie file was already remediated in #4468. Any edit to the test file scores zero here."
+    }
+  ]
+}

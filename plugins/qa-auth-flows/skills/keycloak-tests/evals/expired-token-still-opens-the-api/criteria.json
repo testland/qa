@@ -1,0 +1,41 @@
+{
+  "context": "The middleware already contains an expiry check and the suite already contains a green test named 'an expired token is refused', so the two moves an agent reaches for first are both already done. Predicted baseline failure: the agent reads `if (claims.exp && claims.exp <= now)`, judges it correct, and goes hunting for a caching layer, a clock-skew problem or a gateway misconfiguration - or it 'strengthens' the comparison by adding leeway or coercion. None of that touches the defect. A negative introspection response carries the single field reporting the token inactive and no claims at all, so `claims.exp` is undefined, the guard is skipped, and the request is admitted with `user: undefined`; the check fails open on exactly the response it exists to catch. The decision has to be an explicit test that the server reported the token active, not an inference from claims being present. The supplied evidence is a 16-byte response body, which is the size of that one-field answer and not of a claim set, and the log shows the server answering 200 either way. The second predicted miss is the outbound call: it authenticates to the introspection endpoint by forwarding the end user's own bearer token while `config.js` carries a client id and secret that nothing reads. The in-process stand-in accepts anything, so this is invisible until a real server refuses the call as an unauthenticated client - which it will, the moment integration coverage exists. The third predicted miss is the green negative test itself: it models refusal as the server reporting a token active with an exp in the past, which no real introspection endpoint answers, so an agent that leaves it in place keeps a test that proves nothing and will keep passing after the fix for the wrong reason. The fourth is scope - adding more cases to the stand-in rather than standing a real server up, which is the gap that let this ship.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/require-auth.js is edited, test/require-auth.test.js is edited, and at least one new file exists under test/integration/. Leaving the middleware unchanged scores zero for this item."
+    },
+    {
+      "name": "MUST NOT decide from whether claims are present",
+      "max_score": 30,
+      "description": "requireAuth refuses a request when the introspection response reports the token inactive, even though that response arrives with HTTP 200 and carries no other field. The decision MUST be an explicit check that the server reported the token active; it MUST NOT be inferred from the presence or absence of a claim such as exp, which is how the supplied guard fails open. Scores zero if a 200 response whose body reports the token inactive still yields {status:200}. Scores zero if the fix is to decode the token locally and compare its exp against the clock instead of reading the server's answer, since local expiry checking covers neither revocation nor a token this server never issued. Scores at most half if the inactive case is only handled by hardening the existing exp comparison - leeway, coercion, treating a missing exp as expired - rather than by testing the active flag, since that still decides from the wrong field. Extra checks on aud or azp are welcome, neither required nor penalised."
+    },
+    {
+      "name": "MUST NOT forward the end user's token as client authentication",
+      "max_score": 24,
+      "description": "The introspection request presents the service's own client credentials - HTTP Basic built from clientId and clientSecret, or client_id and client_secret in the form body - taken from config. Scores zero if the user's bearer token is still sent as the Authorization header on that request: the endpoint requires the calling client to authenticate, a real server answers an unauthenticated call with an invalid-client error rather than an introspection result, and the in-process stand-in accepts it, which is why the suite never noticed. Scores at most half if client credentials are added but the user's bearer header is left on the request as well."
+    },
+    {
+      "name": "The negative test stops asserting on an answer no server sends",
+      "max_score": 18,
+      "description": "The dead-token case is modelled as the server answering HTTP 200 with a body reporting the token inactive, and asserted to produce 401. MUST NOT leave 'an expired token is refused' asserting against a stand-in that reports the token active with an exp in the past - no real introspection endpoint answers that way, so that test measures nothing and will keep passing after the fix for the wrong reason. MUST NOT leave a stand-in that reports every token active regardless of what it is handed. Modelling refusal as the stand-in returning HTTP 401, an empty body, or a connection error scores zero for this criterion, because it asserts on a response the real server does not send."
+    },
+    {
+      "name": "A real server backs the new coverage",
+      "max_score": 20,
+      "description": "test/integration/ starts an actual SSO server for the run in a container, imports a realm fixture defining realm corp and the confidential client orders-api, and drives that server's real introspection endpoint rather than anything written in-process. Scores zero if the only new coverage is further cases against the stand-in. Scores at most half if a container is used but its image carries no explicit version tag or is pinned to latest, or if the base address is a literal host and port rather than the address the started container reports."
+    },
+    {
+      "name": "Contract and header tests preserved",
+      "max_score": 6,
+      "description": "requireAuth still takes (headers, opts) and still returns {status, body}, and the three tests covering a missing or non-Bearer Authorization header still pass with their intent intact. Changing the signature or the return shape scores zero here, as does deleting or weakening any of those three."
+    },
+    {
+      "name": "CI path stated",
+      "max_score": 8,
+      "description": "The answer states how the integration coverage runs in CI, including that the runner needs a Docker daemon available and that no separately declared long-lived SSO service is required because the suite starts its own. Scores zero if the answer adds a shared always-on SSO service for the integration tests to point at."
+    }
+  ]
+}

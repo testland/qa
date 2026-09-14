@@ -1,0 +1,6 @@
+{
+  "_comment": "Bootstrap fixture for SDK init tests. The apiKey below is a fabricated constant checked in deliberately since 2021-04-14; it is never transmitted and corresponds to no account. Owner: sdk-team.",
+  "endpoint": "https://localhost:8443/v1",
+  "apiKey": "[REDACTED-IN-EVIDENCE-BUNDLE]",
+  "timeoutMs": 2000
+}

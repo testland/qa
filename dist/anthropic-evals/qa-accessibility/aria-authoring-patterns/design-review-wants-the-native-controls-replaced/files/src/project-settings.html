@@ -1,0 +1,41 @@
+<form id="project-settings" class="settings">
+  <label for="name">Project name</label>
+  <input id="name" name="name" />
+
+  <label for="country">Billing country</label>
+  <select id="country" name="country">
+    <option value="AF">Afghanistan</option>
+    <option value="AL">Albania</option>
+    <!-- 187 more options rendered from src/countries.json -->
+    <option value="ZW">Zimbabwe</option>
+  </select>
+
+  <label for="description">Description</label>
+  <textarea id="description" name="description"></textarea>
+
+  <fieldset>
+    <legend>Visibility</legend>
+    <label><input type="radio" name="visibility" value="private" checked /> Private</label>
+    <label><input type="radio" name="visibility" value="org" /> Anyone in the org</label>
+  </fieldset>
+
+  <label class="check">
+    <input type="checkbox" id="deploy-emails" name="deploy-emails" checked />
+    Email me when a deploy finishes
+  </label>
+
+  <p id="assignees-label">Assignees</p>
+  <div id="assignees-root" data-component="assignees"></div>
+
+  <div class="actions-wrap">
+    <button type="button" id="actions" class="btn">Actions</button>
+    <ul id="actions-menu" class="dropdown" hidden>
+      <li><a href="/projects/42/duplicate">Duplicate project</a></li>
+      <li><a href="/projects/42/settings/advanced">Advanced settings</a></li>
+      <li><a href="/projects/42/transfer">Transfer to another org</a></li>
+    </ul>
+  </div>
+
+  <button type="submit" id="save" class="btn btn-primary" disabled>Save changes</button>
+  <p id="save-hint" class="hint" hidden>Add a project name before you can save</p>
+</form>

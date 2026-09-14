@@ -1,0 +1,46 @@
+{
+  "context": "A PR review where the three new tests look good, the suite they are joining is eleven minutes past a target it has missed for five weeks, and the repo's own written policy says feature PRs may add end-to-end tests without retiring any. That exemption is the trap: it makes approval the compliant answer, and docs/ci-policy.md records what it has already produced - #1163, #1184 and #1199 added 12.6 minutes between them under it and retired nothing. Predicted baseline failure: the agent reviews the three tests on their merits, finds them clean, approves under the exemption or with a note that the suite should be pruned at the quarterly review, and never makes admission conditional on anything landing in this PR. Two of the three do not belong at the browser layer and nothing in the bundle says so - the model has to read src/payments/card.js and the shipped unit tests to see it. The masking test asserts exactly the string test/card.test.js already asserts for a 16-digit PAN, so it is duplicate cover rather than new cover; the expiry test asserts expiryMessage, a pure function taking an explicit clock, which has no test at any layer, so it is cover that has to be written somewhere cheaper before the browser test can go. Only the purchase journey needs a browser, and it is also the one with a defect: the Pay now click and the charged-amount assertion are both unawaited, so the amount is never actually asserted and the click races the navigation - and the prompt says the tests read fine, which is the invitation to skip reading them. The paying-for-it side carries the second trap: pricing.spec.ts > vat-rounding-by-country scores 0.00 and at 2.3 minutes sits next to reports.spec.ts > export-50k-rows at 4.6, and those two together come to 6.9 minutes, which almost exactly matches the 6.8 the PR adds - an attractive arithmetic that deletes the only check of VAT rounding anywhere, written after INC-2181 reached production, on a table that has been edited twice since. The opposite predicted failure is rejecting all three new tests, which ships a payment feature with no end-to-end cover at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Review delivered and the suite is green",
+      "max_score": 5,
+      "description": "reviews/pr-1207-review.md exists and npm test passes with test/card.test.js and src/support/contact-form.test.js still green. A failing npm test scores zero."
+    },
+    {
+      "name": "MUST NOT admit the tests and defer the reduction",
+      "max_score": 30,
+      "description": "MUST NOT let new end-to-end tests into a suite already past its target while the reduction waits for the quarterly review, a follow-up ticket, or the next sprint - and that includes admitting them under the feature exemption in docs/ci-policy.md. Any verdict that admits a test now and pays for it later scores zero for this criterion however the rest of the review reads. Full marks require the review to name the exemption as the mechanism that produced the overrun, citing the 12.6 minutes #1163, #1184 and #1199 added under it while retiring nothing, and to make admission conditional inside this PR - what comes out or moves down, named test by test, with minutes attached. Objecting to the deferral in general terms without naming the exemption or the three PRs scores at most half."
+    },
+    {
+      "name": "The two pure-function checks leave the browser, and what replaces them is real",
+      "max_score": 24,
+      "description": "Neither the masking test nor the expiry test is left in tests/saved-cards.spec.ts, and the two are handled differently because they are different cases. The masking test is dropped as duplicate cover - test/card.test.js already asserts the same string for a 16-digit PAN - and the expiry test is dropped only once expiryMessage is actually covered by a passing unit assertion run by npm test, exercising both branches: the expired string for a month already over, and null for one that is not. Leaving either test in the spec file scores zero. Dropping the expiry test with no unit assertion written in its place scores zero - that is coverage lost, not coverage relocated. Treating both as identical relocations, with no notice that the masking assertion already exists at the unit layer, scores at most half."
+    },
+    {
+      "name": "MUST NOT retire the VAT check to reclaim its runtime",
+      "max_score": 18,
+      "description": "MUST NOT name pricing.spec.ts > vat-rounding-by-country as a retirement or deletion candidate. Its 0.00 score and 2.3 minutes make it look like free runtime, and incidents/2026-incidents.md makes it the only check of the rounding table at any layer, written after INC-2181 was found in production by a customer, on a table edited twice since. Naming it for deletion scores zero, including as one half of a 2.3-plus-4.6 arithmetic that matches the 6.8 minutes the PR adds. Full marks require either leaving it alone or explicitly sequencing it - unit cover for src/pricing/vat.js lands first, then the browser test goes."
+    },
+    {
+      "name": "The journey test is admitted",
+      "max_score": 12,
+      "description": "The saved-card purchase test stays in tests/saved-cards.spec.ts. It crosses checkout, payment and confirmation, nothing covers that journey today, and a browser is the only place it can be asserted. Rejecting all three new tests scores zero - it is the mirror of approving all three and ships a payment feature with nothing covering it end to end. Admitting it without saying what distinguishes it from the other two scores at most half."
+    },
+    {
+      "name": "The purchase test's silent assertion is caught",
+      "max_score": 10,
+      "description": "The review identifies that in 'pay with a saved card' neither the Pay now click nor the charged-amount assertion is awaited, so the charged amount is never actually checked and the click races what follows, and both are awaited in the version that merges. Catching and fixing both scores full; one of the two scores half; repeating that the three tests are well written, or admitting the journey test unchanged, scores zero."
+    },
+    {
+      "name": "The trade-off is costed",
+      "max_score": 8,
+      "description": "The review names what comes out or moves down with minutes attached, covering at least the 2.9 minutes the PR still adds, and each candidate rests on its own evidence rather than its score - promo.spec.ts > seasonal-banner at 1.6 because docs/removed-surfaces.md records /promo/seasonal returning 404 since 2026-05-14, help.spec.ts > contact-form-placeholder at 1.4 because src/support/contact-form.test.js already asserts that copy. A demand to 'retire something equivalent' with no candidates named and no arithmetic scores zero; candidates named with no minutes scores at most half."
+    },
+    {
+      "name": "The gap to the target is stated honestly",
+      "max_score": 6,
+      "description": "The review separates paying for this PR from getting back under the 30-minute target, and says plainly that 41 minutes down to 30 across four shards needs roughly 40 minutes of serial runtime out of 152, which the worst twelve rows cannot supply between them - they total under 23. Implying the named retirements return the suite to target scores zero."
+    }
+  ]
+}

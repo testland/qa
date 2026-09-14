@@ -1,0 +1,8 @@
+{
+  "built": "2026-08-30",
+  "embedding_model": "text-embedding-3-large",
+  "collections": [
+    { "name": "api-reference", "chunk_words": 220, "chunks": 4100 },
+    { "name": "changelog", "chunk_words": 300, "chunks": 1840 }
+  ]
+}

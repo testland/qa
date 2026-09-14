@@ -1,0 +1,37 @@
+release #318, 2026-09-04, macos-latest
+
+  Run npm run package
+    > electron-builder --publish never
+    * notarising dist/mac-arm64/Ledgerline.app
+    Error: notarisation request timed out after 1800s
+    Error: Process completed with exit code 1.
+    (step is continue-on-error, job continues)
+
+  Run npm run test:gate
+    Running 3 tests using 1 worker
+      ok 1 artefact reports the release version
+      ok 2 artefact is a packaged build
+      ok 3 artefact opens exactly one window
+    3 passed (12.1s)
+
+release #319, 2026-09-10, macos-latest - dist/ deleted by hand before the gate step
+
+  Run ls -la dist/
+    ls: dist/: No such file or directory
+    Error: Process completed with exit code 1.
+    (step is continue-on-error, job continues)
+
+  Run npm run test:gate
+    3 passed (11.4s)
+
+release #320, 2026-09-11, macos-latest - dist/ restored from the 2026-08-28 build
+
+  Run /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" dist/mac-arm64/Ledgerline.app/Contents/Info.plist
+    4.7.1
+
+  Run npm run test:gate
+    Running 3 tests using 1 worker
+      ok 1 artefact reports the release version
+      ok 2 artefact is a packaged build
+      ok 3 artefact opens exactly one window
+    3 passed (12.6s)

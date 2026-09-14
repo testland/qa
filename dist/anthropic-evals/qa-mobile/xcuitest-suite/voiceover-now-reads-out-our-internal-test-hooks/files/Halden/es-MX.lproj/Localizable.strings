@@ -1,0 +1,8 @@
+"transfer.amount.placeholder" = "Importe";
+"transfer.recipient.title" = "Elegir destinatario";
+"transfer.pay.title" = "Pagar";
+"transfer.error.insufficient" = "Fondos insuficientes en esta cuenta";
+"transfer.confirmed.format" = "Transferencia enviada. Referencia %@";
+"transfer.cancel.title" = "Cancelar";
+"accounts.transfer.button" = "Transferir dinero";
+"accounts.balance.accessibility" = "Saldo disponible";

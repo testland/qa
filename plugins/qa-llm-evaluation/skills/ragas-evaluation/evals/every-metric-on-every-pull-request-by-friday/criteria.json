@@ -1,0 +1,41 @@
+{
+  "context": "A mandate to run everything, and underneath it a free, already-written, already-endorsed house-rule check that does not work. Predicted baseline failure: the agent spends its effort on the cost argument the memo invites, refuses ask 1 with the arithmetic, grants the nightly split, and merges Marisol's check or waves it through with a note to extend the word list - because it is deterministic, it is free, the user has said he wants to merge it, and the memo's cost pressure makes a zero-cost check look like the responsible option. The spot check settles it against her and the baseline is predicted not to use it: on eight replies the substring check disagrees with the support leads on five. It passes every paraphrase - a rival described rather than named, 'knock 20% off', 'waive your first two months', 'the other big player in ticketing' - and it fails a reply that is compliant precisely because it contains the word 'discount' while refusing to give one. A behavioural rule about what the assistant is allowed to say cannot be decided by substring matching, and extending the word list does not fix a check that is wrong in both directions; the library's own answer to a product-specific rule of this shape is a judged yes/no aspect check with the rule written out as its definition. The second predicted failure is in the escalation review: thirty-four of the sixty-one are marked by the reviewers as an accurate reading of the material that came back, and the traces show why - lookup_ticket never called, or called with another account's ticket id - so no amount of answer-against-context scoring reaches them. The baseline is predicted to add more answer-shaped metrics rather than metrics that score which tool was called and whether the user's goal was met, which is what the expected_tool field on every golden row is there for.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT ship a substring blocklist as the house-rule gate",
+      "max_score": 32,
+      "description": "Marisol's check is refused as the gate for ask 5. MUST NOT merge eval/house_rules.py as it stands and MUST NOT accept it with 'extend the word list' as the remedy; either scores zero for this criterion. Full marks require the refusal backed by the spot check - it passes replies 1 to 4, which the support leads all marked as breaking the rule and none of which contains a listed word, and it fails reply 5, which is compliant and contains 'discount' - plus a replacement that judges the reply against the rule as written: a yes/no aspect-style check whose definition or prompt text and whose verdict values are actually written out in the deliverable. Refusing the branch without putting a working replacement in eval/house_rules.py scores at most half. A replacement that is still a keyword or regex match over the reply text scores zero."
+    },
+    {
+      "name": "Metrics that score the route, not just the answer",
+      "max_score": 20,
+      "description": "eval/metrics.py gains at least one metric that scores which tool the assistant called and at least one that scores whether the user's goal was met, tied in the one-line reason to the thirty-four escalations the reviewers marked as an accurate reading of the material that came back and to the expected_tool field carried on every golden row. Naming the category - 'something for tool selection' - without a concrete metric from the library scores at most half. A revised set made only of answer-against-context metrics scores zero, since those are the four already in place and the review shows what they miss."
+    },
+    {
+      "name": "MUST NOT gate the pull request on the whole catalogue",
+      "max_score": 14,
+      "description": "Ask 1 is refused and ask 2 is refused for the PR job, with the arithmetic shown from the cost sheet: 34 metrics over 3,140 rows against 4 over 200 is roughly a 133-fold increase on the measured $18.40, about $2,450 a PR job against a $6,000 monthly budget, with the runtime pushed far outside the 15-minute CI budget. Granting either ask scores zero. Refusing with a qualitative cost argument and no numbers scores at most half."
+    },
+    {
+      "name": "PR job and nightly job actually differ in the workflow",
+      "max_score": 10,
+      "description": ".github/workflows/rag-eval.yml is edited so the nightly job is the broader one - more metrics, more rows - while the PR job keeps a bounded metric set and sample inside its 15-minute timeout. Both jobs still running the identical --sample 200 command scores zero here; the memo explicitly offers this split and it is one of the two asks that should be granted."
+    },
+    {
+      "name": "Speculative metric families refused",
+      "max_score": 6,
+      "description": "Asks 3 and 4 are refused on the grounds that the assistant handles neither images nor warehouse queries today, so both would gate on traffic that does not exist and, in the multimodal case, pull an extra install that nothing needs. Turning either family on scores zero here."
+    },
+    {
+      "name": "Thresholds carried through",
+      "max_score": 6,
+      "description": "Every metric left in the gated set has a threshold in eval/metrics.py, including the ones newly added. A metric added to the list with no floor beside it scores at most half for this item."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "eval/metrics.py and .github/workflows/rag-eval.yml are edited, eval/house_rules.py is edited or explicitly kept, and docs/metric-plan.md returns a granted-or-refused verdict on all five numbered asks in turn."
+    }
+  ]
+}

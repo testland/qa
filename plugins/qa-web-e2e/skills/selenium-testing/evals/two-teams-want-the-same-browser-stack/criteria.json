@@ -1,0 +1,51 @@
+{
+  "context": "Two requests that pull in opposite directions, under consolidation pressure that makes one answer for both teams the attractive move. Predicted baseline failure: the agent takes the consultant's framing and standardises - most often on the memo's recommendation, with a phased port of Beacon's 400 specs, occasionally the mirror error of telling Atlas to inherit Beacon's stack because four of six people already know it. Both are wrong and the fixtures settle both. Atlas is a greenfield internal tool with no tests, no migration cost and no compliance surface, so the only argument for the incumbent stack is team familiarity, which is not a constraint. Beacon has three separate constraints stacked: a contract clause that names the W3C WebDriver specification as the protocol that must produce test evidence and requires ninety days' written notice before the tooling changes, a suite written in Ruby - a language with no first-party client for the framework the memo names, so 'port' means either an unofficial third-party client or rewriting 400 specs in another language - and a reporting service built on their existing output. The memo's two load-bearing claims, that it supports every language the teams write in and that it is standards-based so contractual commitments are unaffected, are the things the baseline is predicted to accept without checking. The deliverable spec is the second half of the measurement: it must match the conventions of the file already in that directory, including releasing the browser in an after hook and waiting on controls the manual script describes as disabled until ready.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/tooling-recommendation.md and beacon/spec/features/invoice_export_spec.rb both exist, and the recommendation gives a separate decision for each team rather than one blended answer. A single recommendation that does not distinguish the two teams scores zero for this item."
+    },
+    {
+      "name": "MUST NOT recommend porting Beacon's suite",
+      "max_score": 32,
+      "description": "The answer must decline the migration and answer the tech lead's question plainly - no, and not later either. Recommending a port, a rewrite, a phased or module-by-module migration, a 'strangler' transition, or a new-specs-on-the-new-tool split for Beacon scores zero for this criterion regardless of the rest. Full marks require the refusal plus at least two of the three constraints named specifically: the clause that names the protocol the evidence must be produced with, the absence of a first-party client for the language those 400 specs are written in, and the reporting service built on the current output. Declining only because 400 specs is a lot of work, or because 'migrations are risky', scores at most half."
+    },
+    {
+      "name": "New project not given the incumbent stack by default",
+      "max_score": 20,
+      "description": "Atlas is directed to a modern framework rather than to Beacon's stack, and the answer says why familiarity is not a reason to carry an older stack onto a greenfield project with nothing to migrate and no compliance surface. Recommending the incumbent stack for Atlas scores zero. Declaring the choice a toss-up, or deferring it to the team, scores at most half."
+    },
+    {
+      "name": "Memo's claims checked rather than inherited",
+      "max_score": 16,
+      "description": "The recommendation addresses the memo's two load-bearing claims directly: that the named framework supports every language in use, and that it is standards-based so contractual commitments are unaffected. Repeating either claim as fact, or writing a recommendation that never engages with the memo, scores zero. Disputing one of the two scores at most half."
+    },
+    {
+      "name": "MUST NOT ship the new spec without releasing the browser",
+      "max_score": 14,
+      "description": "From the skill's anti-pattern on skipping driver.quit(): the new spec must quit the driver in an after hook, as the neighbouring spec file does, so a failing example does not strand a browser. No quit, a quit only on the success path, or a quit placed at the end of the example body scores zero for this criterion."
+    },
+    {
+      "name": "New spec waits on conditions the script describes",
+      "max_score": 12,
+      "description": "Export and Download are described in the manual script as unavailable until the count settles and until the status reads Ready, and the spec waits for those conditions rather than sleeping or clicking blind. Any fixed sleep in the new spec scores zero. Waiting for mere presence of a control the script says starts disabled or absent scores at most half."
+    },
+    {
+      "name": "New spec belongs to the suite it joins",
+      "max_score": 10,
+      "description": "It reuses the helpers and setup shape already in spec_helper.rb - the driver builder, the sign-in helper, the wait - and uses the data-testid selectors the manual script names. Inventing a parallel setup, a second driver builder or a different selector convention scores at most half."
+    },
+    {
+      "name": "Consolidation question answered honestly",
+      "max_score": 8,
+      "description": "The recommendation states what keeping two stacks costs and why that cost is worth paying here, rather than ignoring the budget question that prompted the review. An answer that never addresses the consolidation goal scores at most half."
+    },
+    {
+      "name": "Existing spec untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify beacon/spec/features/checkout_spec.rb. It passes, it is the reference for the new file's conventions, and it was not part of the request. Any edit to it scores zero here."
+    }
+  ]
+}

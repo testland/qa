@@ -1,0 +1,24 @@
+name: llm-eval
+
+on:
+  schedule:
+    - cron: "14 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Run quality suite
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: pytest tests/llm -q
+      - name: Post to Slack
+        if: always()
+        run: ./scripts/post-nightly.sh

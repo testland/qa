@@ -1,0 +1,33 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [debug, release]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: >
+          cmake -B build-${{ matrix.preset }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.preset == 'debug' && 'Debug' || 'RelWithDebInfo' }}
+          -DCMAKE_CXX_COMPILER=clang++
+          -DCMAKE_CXX_FLAGS="-fsanitize=thread -g -O1"
+
+      - name: Build
+        run: cmake --build build-${{ matrix.preset }} -j 4
+
+      - name: Test
+        run: ./build-${{ matrix.preset }}/audio_engine_tests
+
+      - name: Package
+        if: matrix.preset == 'release'
+        run: cmake --build build-release --target package

@@ -1,0 +1,12 @@
+# run by hand by @dpetrova, laptop, pinned to the same build the morning job used
+$ docker run --rm -v $HOME/.cache/trivy:/root/.cache/trivy \
+    aquasec/trivy:0.58.2 image --severity HIGH,CRITICAL --ignore-unfixed \
+    registry.internal/checkout-api@sha256:c41e7b9a0f28
+
+Version: 0.58.2
+Vulnerability DB:
+  UpdatedAt: 2026-09-13 06:09:12 +0000 UTC
+
+registry.internal/checkout-api@sha256:c41e7b9a0f28 (debian 12.7)
+Total: 1 (HIGH: 0, CRITICAL: 1)
+  libcurl4  CVE-2026-21491  CRITICAL  7.88.1-10+deb12u7  ->  7.88.1-10+deb12u9

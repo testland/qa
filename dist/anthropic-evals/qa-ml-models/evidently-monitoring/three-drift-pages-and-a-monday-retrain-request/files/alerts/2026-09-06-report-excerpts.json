@@ -1,0 +1,73 @@
+{
+  "model": "pagavia-fraud-scorer-v11",
+  "reference": "ref_2026-08-03_to_2026-08-30 (pinned, promoted 2026-08-31)",
+  "total_columns": 38,
+  "alerts": [
+    {
+      "alert_id": "A-1",
+      "fired_at": "2026-09-06T22:14:07Z",
+      "current_window": "2026-09-06T21:00Z..2026-09-06T22:00Z",
+      "share_drifted": 0.026,
+      "drifted_columns": [
+        {
+          "column": "merchant_id_hash",
+          "type": "categorical",
+          "method": "jensenshannon",
+          "drift_score": 0.612,
+          "threshold": 0.1,
+          "status": "FAIL",
+          "note": "unique value count 41,882 -> 41,879; overlap with reference vocabulary 0.4%"
+        }
+      ],
+      "stable_columns_sample": [
+        {"column": "amount_brl", "method": "wasserstein", "drift_score": 0.012, "threshold": 0.1, "status": "SUCCESS"},
+        {"column": "hour_of_day", "method": "jensenshannon", "drift_score": 0.031, "threshold": 0.1, "status": "SUCCESS"},
+        {"column": "card_bin_risk_score", "method": "wasserstein", "drift_score": 0.008, "threshold": 0.1, "status": "SUCCESS"}
+      ]
+    },
+    {
+      "alert_id": "A-2",
+      "fired_at": "2026-09-06T23:40:11Z",
+      "current_window": "2026-09-06T22:00Z..2026-09-06T23:00Z",
+      "share_drifted": 0.553,
+      "drifted_columns": [
+        {"column": "amount_brl", "method": "wasserstein", "drift_score": 0.284, "threshold": 0.1, "status": "FAIL"},
+        {"column": "basket_size", "method": "wasserstein", "drift_score": 0.331, "threshold": 0.1, "status": "FAIL"},
+        {"column": "hour_of_day", "method": "jensenshannon", "drift_score": 0.402, "threshold": 0.1, "status": "FAIL"},
+        {"column": "mcc_category", "method": "jensenshannon", "drift_score": 0.219, "threshold": 0.1, "status": "FAIL"},
+        {"column": "is_ecommerce", "method": "jensenshannon", "drift_score": 0.188, "threshold": 0.1, "status": "FAIL"},
+        {"column": "installments", "method": "jensenshannon", "drift_score": 0.245, "threshold": 0.1, "status": "FAIL"},
+        {"column": "and_15_more", "method": "various", "drift_score": null, "threshold": 0.1, "status": "FAIL"}
+      ],
+      "note": "21 of 38 columns above threshold"
+    },
+    {
+      "alert_id": "A-3",
+      "fired_at": "2026-09-07T02:05:44Z",
+      "current_window": "2026-09-07T00:00Z..2026-09-07T02:00Z",
+      "share_drifted": 0.158,
+      "drifted_columns": [
+        {"column": "device_fingerprint_age_days", "method": "wasserstein", "drift_score": 0.377, "threshold": 0.1, "status": "FAIL"},
+        {"column": "card_bin_risk_score", "method": "wasserstein", "drift_score": 0.194, "threshold": 0.1, "status": "FAIL"},
+        {"column": "avg_ticket_30d", "method": "wasserstein", "drift_score": 0.421, "threshold": 0.1, "status": "FAIL"},
+        {"column": "session_velocity_5m", "method": "wasserstein", "drift_score": 0.266, "threshold": 0.1, "status": "FAIL"},
+        {"column": "billing_zip_match", "method": "jensenshannon", "drift_score": 0.155, "threshold": 0.1, "status": "FAIL"},
+        {"column": "issuer_decline_rate_7d", "method": "wasserstein", "drift_score": 0.303, "threshold": 0.1, "status": "FAIL"}
+      ]
+    },
+    {
+      "alert_id": "A-4",
+      "fired_at": "2026-09-07T04:12:19Z",
+      "current_window": "2026-09-07T03:00Z..2026-09-07T04:00Z",
+      "share_drifted": 0.053,
+      "drifted_columns": [
+        {"column": "payroll_window_flag", "method": "jensenshannon", "drift_score": 0.488, "threshold": 0.1, "status": "FAIL"},
+        {"column": "cardholder_segment", "method": "jensenshannon", "drift_score": 0.213, "threshold": 0.1, "status": "FAIL"}
+      ],
+      "stable_columns_sample": [
+        {"column": "amount_brl", "method": "wasserstein", "drift_score": 0.041, "threshold": 0.1, "status": "SUCCESS"},
+        {"column": "issuer_decline_rate_7d", "method": "wasserstein", "drift_score": 0.036, "threshold": 0.1, "status": "SUCCESS"}
+      ]
+    }
+  ]
+}

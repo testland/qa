@@ -1,0 +1,21 @@
+{
+  "realm": "corp",
+  "enabled": true,
+  "sslRequired": "none",
+  "clients": [
+    {
+      "clientId": "reports-api",
+      "name": "Reports resource server",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "reports-test-secret",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "redirectUris": [],
+      "webOrigins": []
+    }
+  ],
+  "users": [],
+  "roles": { "realm": [] }
+}

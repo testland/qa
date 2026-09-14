@@ -1,0 +1,23 @@
+# Branch `spike/execdiff` - Y. Bensalem, 2026-09-11
+
+Stop comparing query text. Run both queries, sort both result sets, diff them.
+If they match, the model wrote the same query the data team wrote, whatever it
+looks like. If they do not, it did not.
+
+Runs against `fixtures/dev-snapshot`, which is already in CI, so this costs a
+few seconds a PR and never touches production.
+
+## Run output
+
+```
+$ python -m eval.execdiff --cases data/sql_cases.jsonl
+2026-09-11 09:02  run 1  48/50 pass   fail: q-33, q-40
+2026-09-11 15:47  run 2  49/50 pass   fail: q-33
+2026-09-12 08:20  run 3  48/50 pass   fail: q-33, q-40
+```
+
+9 of 50 to 48 of 50, and the one that fails every time is a real bug - it
+filters on the wrong date column. That is the gate doing its job.
+
+q-40 comes and goes between runs and I have not chased it down yet; I would
+merge this and look at that separately rather than hold the whole thing up.

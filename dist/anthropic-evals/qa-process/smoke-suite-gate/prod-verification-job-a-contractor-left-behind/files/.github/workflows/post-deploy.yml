@@ -1,0 +1,19 @@
+name: post-deploy
+
+on:
+  workflow_run:
+    workflows: [release]
+    types: [completed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci
+      - name: Deploy to production
+        run: ./scripts/deploy.sh production ${{ github.sha }}
+      - name: Announce
+        run: ./scripts/announce.sh "deployed ${{ github.sha }}"

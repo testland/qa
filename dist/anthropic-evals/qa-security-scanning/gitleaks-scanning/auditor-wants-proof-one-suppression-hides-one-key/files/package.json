@@ -1,0 +1,8 @@
+{
+  "name": "vantage-api",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "test": "node --test"
+  }
+}

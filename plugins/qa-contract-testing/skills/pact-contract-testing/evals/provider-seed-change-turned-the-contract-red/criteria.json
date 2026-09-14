@@ -1,0 +1,46 @@
+{
+  "context": "A red verification with a pre-drafted, genuinely cheap fix on the provider's side and four days of pressure behind it. Predicted baseline failure: the agent says yes to Priya's diff, or reaches for the reflexive move - swap the literal expectations for type matchers - and stops there. Here that reflex does not even work. cart.js filters on availability === 'in_stock' and drops everything else, so the interaction has to keep that value pinned; pinned under an each-element matcher it is asserted across the whole array, and the migrated category 12 contains a backordered row, so the contract still fails on the third element. The agent that notices this is then pushed toward the one escape the rubric punishes: loosening availability to any string, which silently removes the only assertion in the contract that protects the cart. The thing that actually resolves it is in the provider's verify script, which is attached and which the agent is predicted not to read as the cause: the handler for 'category 12 has products' returns a description and sets nothing up, so the interaction is replayed against whatever the boot seed happens to hold - which is why a data migration broke a contract that is supposed to be about shape. The handler next to it, for 'category 99 is empty', calls db.products.replaceCategory and is the interaction that still passes. Establishing the declared state in the handler is what makes the contract independent of the seed file, and it is what lets availability stay pinned without the provider having to carry a placeholder row forever.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "apps/checkout-web/test/catalog.consumer.spec.js is edited and docs/contract-fix.md exists, names a cause, and gives an explicit yes or no on Priya's diff. A written explanation with no code change, or no verdict on the diff, scores zero for this item."
+    },
+    {
+      "name": "The declared state is actually established before replay",
+      "max_score": 30,
+      "description": "services/catalog-api/test/verify-catalog.js is changed so the handler for 'category 12 has products' puts the service into that state - calling db.products.replaceCategory(12, ...) with the rows the interaction needs, in the shape the neighbouring 'category 99 is empty' handler already demonstrates, ideally restoring the previous rows afterwards using the value it returns. The write-up ties this to the symptom: the handler currently returns a description and sets nothing up, so the interaction was replayed against whatever seeds/catalog.js happened to hold and a data migration was able to break a contract about response shape. Leaving that file unchanged scores zero, whatever else the answer does. Registering a differently named state that still sets no data up, or adding the call without saying why the replay was reading seed data, scores at most half."
+    },
+    {
+      "name": "MUST NOT change the provider's seed data",
+      "max_score": 24,
+      "description": "MUST NOT edit services/catalog-api/seeds/catalog.js and MUST NOT recommend that Priya's diff be applied. Re-adding the id 101 placeholder row anywhere it survives beyond the interaction - the seed file, a second contract-only fixture file loaded at boot, or the migration itself - scores zero for this criterion regardless of the rest, because it makes the provider carry data it does not want in production in order to satisfy example values the consumer never depended on. Setting rows up inside a state handler and putting the previous rows back is not the same thing and does not score zero here."
+    },
+    {
+      "name": "The value the cart branches on stays pinned",
+      "max_score": 14,
+      "description": "availability is still asserted as exactly 'in_stock' after the change, because purchasable() in cart.js filters on that exact string and silently drops anything else - a provider that began returning 'available' or 'AVAILABLE' would satisfy a loosened contract and empty the cart. Blanket-loosening the whole body including availability scores at most half. Dropping availability from the expected body altogether scores zero. Note that this only holds together once the state handler controls what category 12 returns; an answer that pins availability while leaving the backordered seed row in play has not produced a green run and should be marked down under the state-handler criterion, not here."
+    },
+    {
+      "name": "The interaction stops asserting values the consumer never reads",
+      "max_score": 16,
+      "description": "The recorded interaction no longer binds id, name and priceCents to the specific demo values - they are type-matched - and sku, which nothing in cart.js touches, is dropped from the expected body rather than re-pinned to a new literal. Re-pinning the expectation to the migrated values (4417 / 'Embody Chair' / 179900 / 'EMB-K4-BK') scores zero: it is the same defect with fresher data. Loosening some of the fields but leaving others as literals scores proportionally."
+    },
+    {
+      "name": "Path back to a green provider build",
+      "max_score": 12,
+      "description": "docs/contract-fix.md says the edited spec has to be re-run to regenerate the contract and the regenerated contract published to the broker under a new consumer version before the provider's job sees any of it - the verification log shows the provider reads from the broker, not from our working copy. Saying only 're-run the consumer test' with no publish step scores at most half; stopping at the code change with no account of how it reaches their pipeline scores zero."
+    },
+    {
+      "name": "MUST NOT hand-edit the generated contract file",
+      "max_score": 10,
+      "description": "MUST NOT edit pacts/checkout-web-catalog-api.json directly. It is an output of running the consumer test, so a hand-edit is overwritten on the next run and until then describes expectations no test checks. Editing it instead of the spec, or editing it as well so the two are kept in step by hand, scores zero here."
+    },
+    {
+      "name": "Passing code and tests left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify apps/checkout-web/src/cart.js or apps/checkout-web/test/cart.test.js. Both pass and neither appears in the failure. Any change to either scores zero here."
+    }
+  ]
+}

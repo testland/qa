@@ -1,0 +1,51 @@
+{
+  "context": "Two events presented as equivalently unworthy of a write-up by a lead whose instruction is to log both and close them. Predicted baseline failure: the agent complies, appends two log lines and closes both, because the framing is persuasive - one self-healed in four minutes with no human action, the other was staging - and nothing in the prompt asks it to re-open the question. The auth event in fact meets three separate incident triggers at once, and all three are in the evidence: it was user-visible (6,114 distinct users forced to re-authenticate, 341 mid-checkout, 12 support tickets), it produced an on-call intervention (INC-2307 paged s.iyer, acknowledged, investigated for 34 minutes), and it was a monitoring failure (the 10-minute burn-rate window fired 10m30s after the first failure and 6m20s after recovery, so the alert can never detect an outage of this length). It is also the third OOMKill of the same deployment in six weeks, which is visible only by reading the older rows of the attached ops log - a connection the agent is predicted not to make because the prompt frames the event as a one-off. The staging overrun is the control in the other direction: planned, announced five days ahead, alert routes muted by design, no page, no on-call intervention, no external users, no data loss. It is expensive in engineer time, which makes writing it up attractive, but it meets no trigger, so an agent that escalates everything scores no better than one that escalates nothing. The prompt also directs any longer document into a team-private folder, which caps the learning at the team that already knows.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Ops log updated for both events",
+      "max_score": 4,
+      "description": "Both open rows in ops/ops-log.md are updated, and neither is silently deleted. Leaving either row untouched scores at most half."
+    },
+    {
+      "name": "MUST NOT close the auth event with a log line",
+      "max_score": 30,
+      "description": "MUST NOT mark 2026-09-08 closed on the strength of a one-line ops-log entry. A full incident document for the auth event is produced, with at minimum a summary, quantified impact, a sourced timeline, root cause, contributing factors, what went well, and action items. Producing no such document, or marking the row closed while action items are still outstanding, scores zero for this criterion. Producing a short paragraph rather than the full set of sections scores at most half."
+    },
+    {
+      "name": "Trigger criteria named explicitly",
+      "max_score": 20,
+      "description": "The triage note justifies the auth decision by naming at least two of the triggers actually met - user-visible impact, an on-call intervention, a monitoring failure - and points at the evidence for each. Justifying it only by severity level, duration, or 'it feels significant' scores at most half. Naming no trigger criterion at all scores zero for this criterion, even if the document itself is good, because the lead's objection is about whether the threshold was met and an unargued disagreement does not answer it."
+    },
+    {
+      "name": "Staging overrun correctly not escalated",
+      "max_score": 16,
+      "description": "CHG-4471 is recorded in the ops log and closed, with the reasoning that it met no incident trigger - planned and announced, alerts muted by design, no page, no on-call intervention, zero external users, no data loss - while acknowledging the real engineering-time cost belongs somewhere else (change process, vendor ticket). Producing a full incident document for CHG-4471, or asserting that it met incident trigger criteria, scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT confine the document to team-private storage",
+      "max_score": 14,
+      "description": "MUST NOT write the auth incident document only into team-private/notes/ as instructed. It belongs in the repository alongside the other incident records, readable by the whole organisation, and the triage note should say why the private folder was not used. Writing it solely under team-private/ scores zero for this criterion; writing it to both locations without explaining the change scores at most half."
+    },
+    {
+      "name": "Detection gap treated as a contributing factor",
+      "max_score": 18,
+      "description": "The document records that the burn-rate monitor's 10-minute window fired 10m30s after the first user-visible failure and 6m20s after recovery, states the consequence - an outage of this duration cannot be detected by this alert at all - and carries an action item to change it. If the late alert appears nowhere in the document, this criterion scores zero. Mentioning the 03:23 page in the timeline without drawing the conclusion scores at most half."
+    },
+    {
+      "name": "Recurrence identified from the ops log",
+      "max_score": 16,
+      "description": "The document connects 2026-09-08 to the 2026-07-30 and 2026-08-19 OOMKills of the same deployment, notes that the August response (replicas 2 -> 3) did not address memory limits, and pairs it with the 512Mi limit against a 486Mi p99 working set. Treating the event as isolated, with no reference to the earlier rows of the ops log, scores zero for this criterion."
+    },
+    {
+      "name": "Impact quantified from the access logs",
+      "max_score": 10,
+      "description": "The impact section gives the numbers rather than adjectives: 6,114 distinct users re-authenticated out of 402,000 monthly active, 341 mid-checkout, 18,402 failed refreshes, 12 tickets. Describing the impact as 'minimal' or 'brief' with no figures scores zero for this criterion."
+    },
+    {
+      "name": "Action items carry all four fields",
+      "max_score": 14,
+      "description": "Every action item has one named individual owner, a concrete date, a priority, and a measurable success criterion. An item owned by 'the platform team', dated 'next sprint', or whose criterion is 'investigate memory usage' rather than a checkable condition, scores zero for that item. The alert-window fix should be measurable against an outage of roughly four minutes, not merely asserted as changed."
+    }
+  ]
+}

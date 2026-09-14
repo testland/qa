@@ -1,0 +1,47 @@
+Branch: sandbox/vkulkarni/ui-coverage, last run 2026-07-19, Pixel 6 API 34.
+Nothing on this branch ever went green on the build agent.
+
+--- item 2, attempt with an in-process view matcher -------------------------
+com.northwind.shop.VaultTest > unlocksSavedCardsWithFingerprint FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Unlock saved cards"
+
+If the target view is not part of the view hierarchy, you may need to use
+Espresso.onData to load it from one of the following AdapterViews:
+
+    View Hierarchy:
+    +>DecorView{id=-1, visibility=VISIBLE, width=1080, height=2400}
+    |
+    +->LinearLayout{id=-1}
+    |
+    +-->FrameLayout{id=16908290, res-name=content}
+    |
+    +--->CoordinatorLayout{id=2131231044, res-name=account_root, visibility=VISIBLE}
+    |
+    +---->MaterialButton{id=2131231051, res-name=unlock_saved_cards_button, visibility=VISIBLE, text=Unlock saved cards}
+    |
+    +---->FrameLayout{id=2131231060, res-name=saved_cards_root, visibility=GONE}
+
+    38 views dumped, all under com.northwind.shop. Branch note from V.K.:
+    "screen recording shows the prompt filling the bottom half of the display at
+    the moment this dump was taken. I do not understand why it is not in here."
+
+--- item 1, attempt with an in-process view matcher -------------------------
+com.northwind.shop.NotificationTest > opensOrderFromNotification FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Order confirmed"
+    63 views dumped, all under com.northwind.shop.
+
+--- item 5, first attempt: match the row by its text ------------------------
+com.northwind.shop.OrderHistoryTest > showsRefundedBadge FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "NW-10042"
+    View Hierarchy:
+    +-->RecyclerView{id=2131231301, res-name=orders_list, visibility=VISIBLE, child-count=9}
+
+--- item 5, second attempt: scroll first, then match ------------------------
+com.northwind.shop.OrderHistoryTest > showsRefundedBadge FAILED
+androidx.test.espresso.PerformException: Error performing 'scroll to' on view 'view.getId() is <2131231301/com.northwind.shop:id/orders_list>'.
+Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints:
+(view has effective visibility <VISIBLE> and is descendant of a: (is assignable from class <class android.widget.ScrollView> or is assignable from class <class android.widget.HorizontalScrollView> or is assignable from class <class androidx.core.widget.NestedScrollView>))
+Target view: "RecyclerView{id=2131231301, res-name=orders_list, visibility=VISIBLE, child-count=9}"
+
+--- items 3 and 4 -----------------------------------------------------------
+Not attempted. Branch notes say "share sheet + webview - ask someone".

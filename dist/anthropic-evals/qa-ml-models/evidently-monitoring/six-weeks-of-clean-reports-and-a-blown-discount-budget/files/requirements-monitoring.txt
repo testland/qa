@@ -1,0 +1,4 @@
+pandas==2.2.3
+pyarrow==18.1.0
+pytest==8.3.5
+evidently>=0.7.2,<0.8.0

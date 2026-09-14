@@ -1,0 +1,28 @@
+# Timing from the 2026-09-25 run on main: unit 1m12s, integration 11m04s,
+# lint 0m48s, total 14m03s. The integration job is the long pole and has been
+# raised in the last three retros.
+name: ci
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo lint
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run test:unit
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run db:reset
+      - run: npm run test:integration

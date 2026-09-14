@@ -1,0 +1,46 @@
+{
+  "context": "Five proposals from two people, three of which must be refused, one of which must be granted against the loudest voice in the room, and one of which turns on a green test that is green about the wrong thing. Predicted baseline failure: the agent accepts proposal 2. The July work is already written, already tested, and its test passes — it names the generators and appends the run settings as per-JVM overrides, which is exactly what the shipped assertion checks. That flag sets a property on the machine that starts the run and does not reach the generators at all, so each generator falls back to the defaults compiled into the plan: 800 threads against staging, not 5,000 against the rehearsal stack, with nothing in the output saying so. The agent is predicted to keep the shipped behaviour precisely because the test is green and the brief says the script needs nothing doing to it. The second predicted miss compounds it: the shipped test hard-codes a thread count of 5,000 alongside four generators, and every generator runs the whole plan, so honouring that figure across four machines is 20,000 sessions at a stack borrowed for one afternoon — the per-generator figure is the target divided by the generator count, and it lands at 1,250, above the roughly one thousand threads a single machine carries before contention distorts the measurement. The third is proposal 5, which is the one that must be granted: data files are not shipped to the generators when a run starts, so a copy has to be on each machine beforehand, and the agent is predicted to side with @tkowalski's single-source-of-truth argument and refuse it. An agent that refuses everything scores as badly here as one that grants everything.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite runs",
+      "max_score": 5,
+      "description": "scripts/build-args.mjs and scripts/build-args.test.mjs are both modified and docs/rehearsal-plan.md exists with a separate section per proposal carrying a plain yes or no. If `node --test` does not pass against the delivered files, this criterion scores zero."
+    },
+    {
+      "name": "MUST NOT hand the run settings to the generators as per-JVM overrides",
+      "max_score": 30,
+      "description": "The argv emitted for the rehearsal MUST NOT carry the run settings with the per-JVM override flag the shipped script uses, which sets a property only on the machine that starts the run. Emitting only that flag for the multi-machine invocation scores zero for this criterion, and so does answering proposal 2 with a yes. Leaving the shipped test 'a run across generators names them and carries the same overrides as a local run' still asserting the per-JVM form also scores zero — it is green about the wrong thing and it is the evidence @tkowalski will cite. Full marks require the propagating form in the emitted argv, an assertion covering it, and one sentence in docs/rehearsal-plan.md saying what the generators would otherwise have run with. Substituting a properties file assumed to be sitting on each generator, with no account of how it gets there or stays in step with the repository, scores at most half."
+    },
+    {
+      "name": "Thread count is per generator, not the target",
+      "max_score": 22,
+      "description": "The thread figure handed to the generators is the per-generator number, because every generator runs the whole plan and four of them at the configured count produce four times that load. Emitting a thread count of 5,000 alongside four generators scores zero — that is 20,000 sessions at a borrowed stack, and it is the figure the shipped test asserts. Proposal 1 must additionally be refused on the per-machine ceiling of roughly a thousand threads before contention distorts the measurement, with an explicit statement that core count is not what limits it; refusing proposal 1 on cores, RAM or 'it is his interactive box' alone scores at most half. Arriving at 1,250 per generator without noticing that this sits above the ceiling, and saying what is done about it — a fifth generator, a lower agreed target, or a stated exception that is measured on the day — scores at most half."
+    },
+    {
+      "name": "Driving machine is not also carrying threads",
+      "max_score": 16,
+      "description": "Proposal 3 is answered on what the driving machine actually does during the run: it receives and writes every sample from every generator, and the 800-thread nightly already produces 1.9 M samples and a 212 MB file, so at roughly six times that load the driving machine is the constraint. Full marks require a topology in which the machine that starts and collects the run carries no share of the threads, with the sample volume given as the reason. Agreeing that gen-a both drives and generates scores zero. Answering proposal 3 only on whose box perf-01 is, or on fairness and idle machines, with nothing about what the driving machine is doing, scores at most half."
+    },
+    {
+      "name": "Data file placed on every generator",
+      "max_score": 14,
+      "description": "Proposal 5 is granted: the file the plan reads from a relative path is not shipped out to the generators when the run starts, so a copy must exist on each of gen-a..gen-d before the window or every generator fails on a missing file. Refusing proposal 5 as needless duplication, or siding with the single-source-of-truth argument, scores zero. Granting it without saying what puts the file on each machine before the window scores at most half. Noticing that four generators reading identical copies replay the same order identifiers, and doing something about it, is credited but not required for full marks."
+    },
+    {
+      "name": "MUST NOT edit the rehearsal host into the plan",
+      "max_score": 12,
+      "description": "MUST NOT resolve proposal 4 by editing the host into plans/order-entry.jmx for the afternoon and reverting it afterwards. The plan already reads its host through an overridable property and the rehearsal host belongs in the invocation, not in committed XML. A delivered plan file carrying rehearsal.orders.example.com anywhere, or a document that agrees to the edit-and-revert, scores zero for this criterion."
+    },
+    {
+      "name": "New assertions fail against the shipped script",
+      "max_score": 10,
+      "description": "At least one assertion added to scripts/build-args.test.mjs would fail if run against the unmodified scripts/build-args.mjs. Tests that only restate behaviour the shipped implementation already has score zero for this criterion."
+    },
+    {
+      "name": "Nightly single-runner path untouched",
+      "max_score": 6,
+      "description": "MUST NOT change the argv produced for the existing 800-thread nightly run, which has worked for two years and which the brief says nobody wants touched. If any of the first five shipped tests had to be edited to keep the suite green, this scores zero; the sixth is the one that encodes the rehearsal behaviour and changing it is expected."
+    }
+  ]
+}

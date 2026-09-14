@@ -1,0 +1,13 @@
+{
+  "uuid": "a1f2c0de-0007-4000-8000-000000000007",
+  "historyId": "gate.auth.sso",
+  "name": "Sign in with SSO",
+  "fullName": "gate.auth.AuthGate#sso",
+  "status": "passed",
+  "start": 1789182113000,
+  "stop": 1789182138000,
+  "labels": [
+    { "name": "suite", "value": "Auth" },
+    { "name": "severity", "value": "critical" }
+  ]
+}

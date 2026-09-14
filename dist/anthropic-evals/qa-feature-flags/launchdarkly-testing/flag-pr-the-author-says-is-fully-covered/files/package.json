@@ -1,0 +1,6 @@
+{
+  "name": "search-service",
+  "private": true,
+  "scripts": { "test": "node --test \"test/**/*.test.js\"" },
+  "dependencies": { "launchdarkly-node-server-sdk": "^7.0.4" }
+}

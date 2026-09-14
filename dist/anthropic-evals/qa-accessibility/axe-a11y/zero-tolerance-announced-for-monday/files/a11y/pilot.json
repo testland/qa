@@ -1,0 +1,10 @@
+{
+  "apps": ["checkout", "dashboard", "settings", "billing", "status"],
+  "onboarded": {
+    "checkout": "2026-06-02",
+    "dashboard": "2026-06-02",
+    "settings": "2026-06-02",
+    "billing": "2026-06-02",
+    "status": "2026-09-01"
+  }
+}

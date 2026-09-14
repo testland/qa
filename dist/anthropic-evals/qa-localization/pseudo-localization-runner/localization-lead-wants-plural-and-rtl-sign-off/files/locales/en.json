@@ -1,0 +1,7 @@
+{
+  "greeting.hello": "Hello, {{name}}",
+  "cart.summary": "{{count}} items - {{total}} due",
+  "invite.sent": "Invite sent to {{email}}",
+  "cart.checkout": "Proceed to checkout",
+  "cart.empty": "Your cart is empty"
+}

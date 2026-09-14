@@ -1,0 +1,55 @@
+From: Aleks Novak <aleks@larder.example>
+Subject: [PATCH] e2e: unblock the suite before code freeze
+
+Suite is green in 3m08s with this. Three approvals. Merging Thursday unless
+someone objects.
+
+--- a/e2e/init.js
++++ b/e2e/init.js
+@@ -1,9 +1,17 @@
+ const { device } = require('detox');
+
++const PAUSE_MS = 2500;
++const pause = () => new Promise((r) => setTimeout(r, PAUSE_MS));
++
+ beforeAll(async () => {
+   await device.launchApp({ newInstance: true });
++  // The app never reports itself idle since sprint 44, so stop waiting for it.
++  await device.disableSynchronization();
+ });
+
+ beforeEach(async () => {
+   await device.reloadReactNative();
++  await pause();
+ });
++
++global.pause = pause;
+
+--- a/e2e/orders.test.js
++++ b/e2e/orders.test.js
+@@ -1,18 +1,23 @@
+ describe('Orders', () => {
+   it('shows the most recent order first', async () => {
+     await element(by.id('orders-tab')).tap();
++    await global.pause();
+     await expect(element(by.id('order-row-1188'))).toBeVisible();
+   });
+
+   it('filters by delivery date', async () => {
+     await element(by.id('orders-tab')).tap();
++    await global.pause();
+     await element(by.id('filter-this-week')).tap();
++    await global.pause();
+     await expect(element(by.id('order-count'))).toHaveText('2 orders');
+   });
+
+   it('reorders a past order', async () => {
+     await element(by.id('orders-tab')).tap();
++    await global.pause();
+     await element(by.id('order-row-1042')).tap();
++    await global.pause();
+     await element(by.id('reorder-button')).tap();
++    await global.pause();
+     await expect(element(by.id('cart-count'))).toHaveText('2');
+   });
+ });

@@ -1,0 +1,19 @@
+Payments partner - delivery report for subscriber sub_9f21
+Generated 2026-09-11T12:40Z at the subscriber's request.
+
+First-delivery window covered by this report
+  from  2026-09-10T02:00:00Z
+  to    2026-09-11T02:00:00Z
+  earliest event first delivered  2026-09-10T02:03:41Z
+  latest event first delivered    2026-09-11T01:58:12Z
+
+Events first delivered in the window .......................... 5,400
+    settlement.payout.* ......................................    182
+    settlement.line_item.created / .adjusted .................  5,218
+Events acknowledged by sub_9f21 at 2026-09-11T02:00:09Z ......    500
+Events still sitting on the subscriber queue .................  4,900
+Events written to the subscriber's order store ...............    500
+
+Distinct merchants with at least one missing record ..........    214
+Settlement value represented by the missing events ....... $1,180,400
+Duplicate or conflicting writes caused by the gap ............      0

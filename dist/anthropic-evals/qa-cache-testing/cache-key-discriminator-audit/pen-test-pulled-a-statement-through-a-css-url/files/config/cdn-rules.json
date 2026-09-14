@@ -1,0 +1,7 @@
+[
+  { "name": "static-css", "match": "suffix", "value": ".css", "store": true, "ttlSeconds": 31536000, "honorOriginHeaders": false },
+  { "name": "static-js", "match": "suffix", "value": ".js", "store": true, "ttlSeconds": 31536000, "honorOriginHeaders": false },
+  { "name": "static-img", "match": "suffix", "value": ".png", "store": true, "ttlSeconds": 31536000, "honorOriginHeaders": false },
+  { "name": "marketing", "match": "prefix", "value": "/site/", "store": true, "ttlSeconds": 300, "honorOriginHeaders": true },
+  { "name": "default", "match": "prefix", "value": "/", "store": false, "ttlSeconds": 0, "honorOriginHeaders": true }
+]

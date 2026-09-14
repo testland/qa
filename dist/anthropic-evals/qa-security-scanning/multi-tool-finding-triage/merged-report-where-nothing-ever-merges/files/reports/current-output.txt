@@ -1,0 +1,20 @@
+$ node -e "import('./lib/triage.js').then(async m => {
+    const f = JSON.parse(await (await import('node:fs/promises')).readFile('data/findings.json','utf8'));
+    const d = m.dedupe(f);
+    console.log('raw records in :', f.length);
+    console.log('findings out   :', d.length);
+    console.log('consensus      :', m.consensusCount(d));
+    console.log('verdict        :', m.verdict(d, 'critical').verdict);
+    for (const x of d) console.log(' ', x.severity.padEnd(8), (x.file ? x.file + ':' + x.line : x.package).padEnd(22), x.rule_id, '| caught_by:', [...new Set(x.caught_by)].join(','));
+  })"
+
+raw records in : 13
+findings out   : 6
+consensus      : 4
+verdict        : PASS
+  high     src/api/orders.js:88   js/sql-injection | caught_by: semgrep,sastpro
+  high     src/api/orders.js:141  js/sql-injection | caught_by: semgrep
+  medium   src/api/orders.js:12   js/hardcoded-secret | caught_by: semgrep
+  medium   web/render.js:30       XSS-014 | caught_by: sastpro,semgrep
+  high     web/upload.js:77       PATH-009 | caught_by: sastpro
+  medium   npm:axios@1.5.0        CVE-2023-45857 | caught_by: trivy,sastpro

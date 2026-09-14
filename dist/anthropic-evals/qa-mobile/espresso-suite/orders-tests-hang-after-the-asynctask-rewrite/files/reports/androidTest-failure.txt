@@ -1,0 +1,45 @@
+### Build 4470 - 2026-08-27, last build before the networking migration merged
+
+com.northwind.orders.OrdersListTest > loadsOrdersForReturningCustomer PASSED (2.2s)
+com.northwind.orders.OrdersListTest > showsRefundBadgeOnRefundedOrder PASSED (2.6s)
+com.northwind.orders.OrdersListTest > showsEmptyStateForNewAccount PASSED (0.9s)
+
+### Build 4471 - 2026-08-28, immediately after the networking migration merged
+
+com.northwind.orders.OrdersListTest > loadsOrdersForReturningCustomer FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: view.getId() is <2131231301/com.northwind.orders:id/order_row_0>
+    View Hierarchy:
+    +>DecorView{id=-1, visibility=VISIBLE, ...}
+    |
+    +->LinearLayout{id=-1, ...}
+    |
+    +-->RecyclerView{id=2131231299, res-name=orders_list, visibility=VISIBLE, child-count=0}
+    elapsed: 0.41s
+
+com.northwind.orders.OrdersListTest > showsRefundBadgeOnRefundedOrder FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: view.getId() is <2131231303/com.northwind.orders:id/order_row_2>
+    elapsed: 0.38s
+
+com.northwind.orders.OrdersListTest > showsEmptyStateForNewAccount PASSED (0.9s)
+
+### Build 4502 - 2026-09-09, after NetworkIdlingResource was added
+
+com.northwind.orders.OrdersListTest > loadsOrdersForReturningCustomer FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [NetworkIdlingResource] to become idle timed out
+    at androidx.test.espresso.base.UiControllerImpl.loopUntil(UiControllerImpl.java:472)
+    elapsed: 26.1s
+
+com.northwind.orders.OrdersListTest > showsRefundBadgeOnRefundedOrder FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [NetworkIdlingResource] to become idle timed out
+    elapsed: 26.0s
+
+com.northwind.orders.OrdersListTest > showsEmptyStateForNewAccount FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [NetworkIdlingResource] to become idle timed out
+    elapsed: 26.0s
+
+### Timing captured with a logging interceptor, same build, same emulator
+
+GET /v1/orders                 -> 200 in 612 ms   (OkHttp dispatcher thread OkHttp Dispatcher-3)
+GET /v1/orders/NW-10042        -> 200 in 488 ms   (OkHttp dispatcher thread OkHttp Dispatcher-1)
+GET /v1/orders/NW-10091        -> 404 in 501 ms   (OkHttp dispatcher thread OkHttp Dispatcher-2)
+callback delivered to main thread 3-9 ms after the response completes

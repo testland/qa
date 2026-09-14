@@ -1,0 +1,40 @@
+[
+  {
+    "url": "/checkout",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [
+          { "target": ["button.primary"] },
+          { "target": ["a.footer-legal"] },
+          { "target": ["span.tax-note"] }
+        ]
+      },
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["a.icon-cart"] }]
+      }
+    ]
+  },
+  {
+    "url": "/pricing",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["a.footer-legal"] }, { "target": ["span.per-seat"] }]
+      },
+      {
+        "id": "aria-required-attr",
+        "impact": "critical",
+        "tags": ["cat.aria", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["div[role=\"dialog\"]"] }]
+      }
+    ]
+  }
+]

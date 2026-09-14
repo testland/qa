@@ -1,0 +1,42 @@
+# edge proxy capture, 2026-09-12, header names as delivered to the handler
+
+--- device A, app 3.4.2 (iOS 16) ----------------------------------------
+GET /stream HTTP/1.1
+host: chat.example.com
+upgrade: websocket
+connection: Upgrade
+sec-websocket-key: x3JJHMbDL1EzLkh9GBhXDw==
+sec-websocket-version: 13
+sec-websocket-protocol: chat-v1
+
+HTTP/1.1 101 Switching Protocols
+upgrade: websocket
+connection: Upgrade
+sec-websocket-protocol: chat-v2
+
+--- device B, app 4.1.0 (Android 14) ------------------------------------
+GET /stream HTTP/1.1
+host: chat.example.com
+upgrade: websocket
+connection: Upgrade
+sec-websocket-key: dGhlIHNhbXBsZSBub25jZQ==
+sec-websocket-version: 13
+sec-websocket-protocol: chat-v2, chat-v1
+
+HTTP/1.1 101 Switching Protocols
+upgrade: websocket
+connection: Upgrade
+sec-websocket-protocol: chat-v2
+
+--- device C, app 2.9.0 (Android 11, subprotocol support added in 3.0) ---
+GET /stream HTTP/1.1
+host: chat.example.com
+upgrade: websocket
+connection: Upgrade
+sec-websocket-key: 7GDNsbUm5ldtaYCzPqPZjw==
+sec-websocket-version: 13
+
+HTTP/1.1 101 Switching Protocols
+upgrade: websocket
+connection: Upgrade
+sec-websocket-protocol: chat-v2

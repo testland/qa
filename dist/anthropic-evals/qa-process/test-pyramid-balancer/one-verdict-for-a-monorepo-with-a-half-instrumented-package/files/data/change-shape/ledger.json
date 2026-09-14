@@ -1,0 +1,13 @@
+{
+  "package": "packages/ledger",
+  "window": "2026-06-17 to 2026-09-15",
+  "window_days": 90,
+  "commits_classified": 196,
+  "distribution": {
+    "service-layer": { "commits": 139, "pct_commits": 71 },
+    "pure-logic": { "commits": 33, "pct_commits": 17 },
+    "data-heavy": { "commits": 16, "pct_commits": 8 },
+    "ui-heavy": { "commits": 8, "pct_commits": 4 }
+  },
+  "mixed_commits": 6
+}

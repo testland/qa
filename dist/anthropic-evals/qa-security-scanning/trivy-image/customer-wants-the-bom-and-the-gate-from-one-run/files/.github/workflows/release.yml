@@ -1,0 +1,33 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: build and push
+        run: |
+          docker build -t registry.internal/checkout-api:${{ github.ref_name }} .
+          docker push registry.internal/checkout-api:${{ github.ref_name }}
+
+      - name: scan, gate and produce the bill of materials
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${{ github.workspace }}:/out \
+            aquasec/trivy:0.58.2 image \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --format cyclonedx \
+              --output /out/sbom.cdx.json \
+              --exit-code 1 \
+              registry.internal/checkout-api:${{ github.ref_name }}
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: sbom.cdx.json

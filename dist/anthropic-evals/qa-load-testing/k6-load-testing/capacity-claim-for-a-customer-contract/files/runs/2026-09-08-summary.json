@@ -1,0 +1,44 @@
+{
+  "run": {
+    "started": "2026-09-08T09:12:00Z",
+    "duration_s": 1200,
+    "script": "tests/load/api.js"
+  },
+  "metrics": {
+    "http_req_duration": {
+      "type": "trend",
+      "values": { "avg": 411, "min": 94, "med": 268, "max": 4217, "p(90)": 672, "p(95)": 690 },
+      "thresholds": { "p(95)<1000": { "ok": true } }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "values": { "avg": 405, "min": 89, "med": 262, "max": 4212, "p(90)": 666, "p(95)": 684 }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "values": { "avg": 1.2, "min": 0.2, "med": 0.9, "max": 41, "p(90)": 2.4, "p(95)": 3.1 }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "values": { "avg": 4.6, "min": 0.7, "med": 3.9, "max": 58, "p(90)": 7.9, "p(95)": 9.4 }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "values": { "rate": 0.0009, "passes": 951, "fails": 1055461 },
+      "thresholds": { "rate<0.005": { "ok": true } }
+    },
+    "checks": {
+      "type": "rate",
+      "values": { "rate": 0.9991, "passes": 1055461, "fails": 951 }
+    },
+    "http_reqs": { "type": "counter", "values": { "count": 1056412, "rate": 880.34 } },
+    "iterations": { "type": "counter", "values": { "count": 1056412, "rate": 880.34 } },
+    "dropped_iterations": { "type": "counter", "values": { "count": 0, "rate": 0 } },
+    "iteration_duration": {
+      "type": "trend",
+      "values": { "avg": 412, "min": 95, "med": 269, "max": 4219, "p(90)": 673, "p(95)": 691 }
+    },
+    "vus": { "type": "gauge", "values": { "value": 1148, "min": 12, "max": 1642 } },
+    "vus_max": { "type": "gauge", "values": { "value": 2500, "min": 2500, "max": 2500 } }
+  }
+}

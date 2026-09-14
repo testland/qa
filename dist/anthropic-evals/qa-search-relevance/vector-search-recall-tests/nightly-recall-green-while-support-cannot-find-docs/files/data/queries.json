@@ -1,0 +1,14 @@
+[
+  {"id":"q-1","text":"charge on my invoice is wrong","vec":[0.1022,0.5662,-0.575,0.4303,0.086,0.3818]},
+  {"id":"q-2","text":"how do I change the card on file","vec":[0.3702,0.4491,-0.2335,-0.0557,-0.3663,0.6851]},
+  {"id":"q-3","text":"why was I billed twice","vec":[0.3358,0.5454,-0.1068,0.5807,-0.4647,0.1587]},
+  {"id":"q-4","text":"device will not pair with the app","vec":[-0.3832,0.0873,-0.493,-0.6157,0.349,0.3187]},
+  {"id":"q-5","text":"hub firmware update keeps failing","vec":[0.0012,0.2693,-0.2365,-0.5291,0.4653,0.6124]},
+  {"id":"q-6","text":"sensor readings look wrong","vec":[-0.6997,0.4767,-0.2672,0.2985,0.2919,0.1936]},
+  {"id":"q-7","text":"device shows as offline on wifi","vec":[0.4387,-0.0108,-0.2985,-0.2498,-0.0403,-0.8089]},
+  {"id":"q-8","text":"poor signal in the back room","vec":[-0.2952,-0.2846,-0.2011,-0.218,0.5492,-0.6651]},
+  {"id":"q-9","text":"router settings for the hub","vec":[-0.026,0.0052,-0.425,-0.5382,0.0107,-0.7272]},
+  {"id":"q-10","text":"cannot sign in after a password reset","vec":[-0.7919,0.207,-0.1187,-0.5352,0.1696,-0.0273]},
+  {"id":"q-11","text":"add a second admin to the account","vec":[-0.1228,0.531,-0.2009,-0.6412,0.2559,-0.4312]},
+  {"id":"q-12","text":"export all of my data","vec":[-0.2417,-0.0608,-0.1459,-0.3991,-0.1479,-0.8576]}
+]

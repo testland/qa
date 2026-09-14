@@ -1,0 +1,46 @@
+{
+  "context": "The reflex answer to 'marts were built from bad rows' is 'they ran the models and the assertions as separate steps, switch to the integrated build command'. That answer is unavailable here: the workflow already runs `dbt build` and has since April, and the prompt says so. Predicted baseline failure: the agent, having lost its reflex, either blames the errored `accepted_values` node, or blames the Slack script, or writes a general note about pipelines needing gates — and leaves `models/staging/schema.yml` alone. The actual cause is the two `config: severity: warn` blocks on `stg_payments.payment_key`, which the June PR note frames as harmless because nothing was deleted and everything still runs. A warned assertion does not halt the graph, so every downstream node of `stg_payments` was built from the 118,432 null-key rows. The artifact proves the mechanism by contrast within the same run: `not_null_stg_payments_payment_key` returned 118,432 rows with status `warn` and `mart_revenue_daily` succeeded, while `accepted_values_stg_refunds_reason_code` came back `error` and `mart_refunds_daily` is `skipped`. The second predicted failure is granting the ingest team's request, since it is already approved by a named lead, is only a config change, and the noise complaint is legitimate — but granting it as asked is granting exactly the configuration that caused the incident. The third is the summary script: it filters `status === 'fail'`, and there is no node in that entire run with status `fail`, which is why the post read zero. The agent is predicted to leave the shipped `warn` test asserting an exact zero-failure string, because editing it is the only way to keep the suite honest and leaving it is the only way to keep the suite green without thinking.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave the key assertions at unbounded warn severity",
+      "max_score": 32,
+      "description": "The `not_null` and `unique` assertions on `stg_payments.payment_key` MUST NOT be left at, or returned to, a blanket `severity: warn` with no failure bound. Leaving either as-is, or granting the ingest team's request by keeping that configuration through October, scores zero for this criterion regardless of everything else written. Full marks require both the edit and the reason: a warned assertion is not a failure, so the graph does not halt and every downstream node of `stg_payments` is built from the offending rows. Making the edit without explaining why a warn does not stop the build scores at most half."
+    },
+    {
+      "name": "Mechanism evidenced from the run artifact",
+      "max_score": 22,
+      "description": "`docs/incident-2026-09-04.md` cites the contrast inside `target/run_results.json` — `not_null_stg_payments_payment_key` at `warn` with 118432 failures followed by `mart_revenue_daily` at `success`, against `accepted_values_stg_refunds_reason_code` at `error` followed by `mart_refunds_daily` at `skipped`. Naming only one side of the contrast scores at most half. Asserting the marts were built because models and assertions ran as separate steps scores zero: that is contradicted by the attached workflow."
+    },
+    {
+      "name": "Summary script counts more than one status",
+      "max_score": 20,
+      "description": "`scripts/dbt-summary.mjs` no longer reports a clean night for this artifact. Full marks require an errored node to be surfaced as a problem rather than silently dropped — a node that never executed is not a pass — and warned nodes to be surfaced with their row counts as a separate, visible count. Handling only one of the two scores at most half. A script that still reports zero problems when handed the attached `target/run_results.json` scores zero for this criterion."
+    },
+    {
+      "name": "Shipped expectation corrected rather than preserved",
+      "max_score": 12,
+      "description": "The third case in `scripts/dbt-summary.test.mjs` asserts an exact rendered string for a run containing a `warn` node with 12 failures. That expectation encodes the behaviour that produced the incident and must be updated, with coverage added for an errored node. Special-casing the script so this assertion keeps passing unchanged scores zero. `node --test` must pass at the end; a failing suite scores at most half here."
+    },
+    {
+      "name": "Ingest team answered with a bounded alternative",
+      "max_score": 16,
+      "description": "The document gives an explicit no to the request as put, and offers a concrete alternative that keeps the assertion blocking while reducing 03:40 noise — a numeric failure bound on the assertion so that a small known batch warns and a batch on the order of 118,432 rows halts the build, with the chosen number stated. A refusal with no alternative scores at most half; the prompt asks specifically for a defensible position. Restating the request back as approved scores zero."
+    },
+    {
+      "name": "Artifact survives a halted night",
+      "max_score": 10,
+      "description": "The artifact upload step in `.github/workflows/nightly.yml` is made to run even when the build step fails — once the assertion blocks, that step fails and the run_results file is the only evidence of why. Leaving the upload conditional on the build succeeding scores zero here."
+    },
+    {
+      "name": "MUST NOT widen the blast radius to unrelated assertions",
+      "max_score": 6,
+      "description": "The assertions on `stg_orders.order_id` and `stg_refunds.refund_key` MUST NOT be re-configured, relaxed or deleted — they are not what this is about and neither appears in the request. Changing either scores zero here. Correcting the `reason_code` identifier that produced the errored node is acceptable and is not penalised."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "`docs/incident-2026-09-04.md` exists and separately answers both numbered questions plus the ingest request. A single narrative that does not answer the Slack-post question at all scores zero for this item."
+    }
+  ]
+}

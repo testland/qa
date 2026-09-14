@@ -1,0 +1,9 @@
+path,commits,loc,commits_per_1k_loc,repo_decile
+services/search,94,21400,4.4,10
+services/inventory/cache,47,8400,5.6,10
+services/admin/audit,9,4400,2.0,6
+services/promo,12,5200,2.3,7
+services/payments/fallback,3,6100,0.5,2
+services/tax/legacy_import,1,3900,0.3,1
+services/partners/sftp,0,2100,0.0,1
+services/catalog/import,6,3300,1.8,5

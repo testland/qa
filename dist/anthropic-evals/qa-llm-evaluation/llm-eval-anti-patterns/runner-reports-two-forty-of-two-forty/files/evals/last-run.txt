@@ -1,0 +1,11 @@
+Pasted numbers, scraped from PR descriptions:
+
+PR #9188  2026-08-21  model=gpt-4o  240 / 240 cases passed
+PR #9204  2026-08-26  model=gpt-4o  240 / 240 cases passed
+PR #9231  2026-09-01  model=gpt-4o  240 / 240 cases passed
+PR #9248  2026-08-28  model=gpt-4o  240 / 240 cases passed
+PR #9271  2026-09-02  model=gpt-4o  240 / 240 cases passed
+PR #9290  2026-09-08  model=gpt-4o  240 / 240 cases passed
+PR #9304  2026-09-11  model=gpt-4o  240 / 240 cases passed
+
+Every entry since the log was started in February reads 240 / 240.

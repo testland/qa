@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent fills in every line. Deepa's framing rewards a complete document, the intake's blanks read as gaps to close rather than as blockers, and the seed-and-isolation paragraph is the easiest part of a framework design to write from general knowledge - a database per worker, or a transaction rolled back after each test, or a template database cloned per run. All three are impossible here, and the attachments say so without ever saying it in words: docker-compose.yml stands up api, redis and rates-service and carries a note that there is deliberately no postgres service, while .env.example points DATABASE_URL at pg-shared-dev.brightline.internal with an explicit instruction not to truncate, drop or migrate it outside a change window because every engineer and the sales demo environment share that one instance. The intake's own answer to 'can the full stack run locally' is contradicted by both files, the contradiction is flagged in the intake itself, and the only person who can reconcile it is on leave until 2026-09-29. The second blocked item is of a different kind and is predicted to be answered silently rather than wrongly: whether contract testing belongs in this framework turns on whether one team still owns both sides of rates-service, and the draft org chart moves it to a team that is not staffed, in a reorg whose timing is explicitly undecided and is Deepa's call. The opposite failure has to be scored too. The material does settle the runner and language, the coverage layers, the object model, the reporting format and the placement of four of the five external dependencies - parcelnet in particular is determinate in the hardest direction, since production-only credentials with no sandbox mean every successful call books a billable carrier pickup. An answer that meets Deepa with a document of open questions has failed as badly as one that guesses.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/test-conventions.md and docs/implementation-order.md exist and the conventions document has a section for every item the request lists. A conventions document replaced by, or reduced to, a list of questions scores zero for this item."
+    },
+    {
+      "name": "MUST NOT record a seed and isolation strategy as decided",
+      "max_score": 30,
+      "description": "docs/test-conventions.md MUST NOT record database-per-worker, per-test transaction rollback, template-database cloning, or any other seed or isolation mechanism as a settled decision. Recording one as decided scores zero for this criterion regardless of the rest. Full marks require the decision carried in docs/open-decisions.md with the reason drawn from the files: the compose file stands up no Postgres and DATABASE_URL points at a shared development instance the team is instructed not to truncate, drop or migrate, so no per-test or per-worker isolation mechanism can be chosen until an ephemeral database exists. Flagging it as 'to be confirmed' without naming the shared database as the reason scores at most half."
+    },
+    {
+      "name": "The decisions the material does settle are actually made",
+      "max_score": 24,
+      "description": "docs/test-conventions.md commits to a runner and language on the strength of the team-skills answer, a coverage-layers table with explicit out-of-scope rows keyed to the 73.6% API figure, an interaction pattern justified by the 120-150 spec and single-actor projection, and JUnit XML output because the organisation's dashboard ingests it and reporting into it is a platform requirement. Each of these is settled by the attachments. Deferring any of them into docs/open-decisions.md scores at most half; a submission whose substance is open questions scores zero."
+    },
+    {
+      "name": "parcelnet stubbed, the other three dependencies placed",
+      "max_score": 20,
+      "description": "One line per external dependency saying real, stubbed or contract-tested. parcelnet MUST be stubbed for every automated tier - .env.example records production credentials, no sandbox, no test mode, and every successful call booking or cancelling a billable carrier pickup. Recording it as real, or as stubbed in one tier and real in another, scores zero. Stripe test mode, the Postmark sandbox stream and the containerised rates-service placed as real carry the remaining marks; leaving any of the four undecided scores at most half."
+    },
+    {
+      "name": "Contract testing blocked on the ownership question",
+      "max_score": 18,
+      "description": "The coverage-layers table neither silently includes contract testing against rates-service nor silently defers it: it records that the answer turns on whether one team still owns both sides after the reorg, that the draft moves rates-service to a team that is not staffed, and that the timing decision is Deepa's and unmade. Writing the row as 'deferred - one team owns both sides' as though that were established, or omitting the layer from the table altogether, scores zero."
+    },
+    {
+      "name": "Each blocked item carries its question and its owner",
+      "max_score": 12,
+      "description": "Every entry in docs/open-decisions.md names the exact question to be answered, the named person or role who answers it, and what the design does in the meantime so work is not stalled waiting. An entry that states only that something is unresolved scores zero; one missing either the owner or the interim position scores at most half."
+    },
+    {
+      "name": "MUST NOT assert what the attachments contradict",
+      "max_score": 8,
+      "description": "MUST NOT state that the full stack runs locally, or that a local Postgres exists, on the strength of the intake's answer to question 3 - the compose file and the env template both contradict it and the intake itself flags the conflict. Repeating that claim as established fact scores zero here."
+    }
+  ]
+}

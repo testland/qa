@@ -1,0 +1,16 @@
+Change calendar entry CHG-4471 - staging node pool upgrade
+
+Announced ....... 2026-09-04 in #eng-announce and on the engineering calendar
+Planned window .. 2026-09-09 08:00-10:00 UTC (two hours)
+Actual .......... 2026-09-09 08:02-14:22 UTC (6h 20m)
+Overrun cause ... node image pulls throttled by the registry; vendor ticket 118204
+Environment ..... staging only. No production traffic reaches this node pool.
+Paging .......... staging alert routes are muted by design - routes/staging.yaml
+                  sets "notify #eng-staging only, never page"
+On-call ......... not paged; no on-call intervention at any point
+External users .. 0. Staging serves no external users.
+Data ............ no data loss. Staging datastores were not touched by the upgrade.
+Detection ....... immediate. The window was planned and watched in #eng-staging
+                  from 08:00.
+Cost ............ 14 engineers could not run integration suites for the afternoon;
+                  the Thursday release train slipped to Friday.

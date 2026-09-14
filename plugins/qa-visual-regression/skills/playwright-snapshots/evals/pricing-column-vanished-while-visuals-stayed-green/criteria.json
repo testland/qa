@@ -1,0 +1,36 @@
+{
+  "context": "A confidently wrong definition of `threshold`, stated by the engineer who set the values, approved in review by a second engineer, and copied into the runbook the team still follows - with the prompt asking the agent to justify itself before contradicting any of it. Predicted baseline failure: the agent takes the documented reading at face value, or half-takes it, and treats the incident as a `maxDiffPixels` problem alone - lowering 45000 to something small, leaving `threshold: 0.6` in place or trimming it to 0.3, and never saying that threshold is a per-pixel perceived colour difference in YIQ space with a default of 0.2, not a proportion of the image. That value is why a vanished column produced only 31044 differing pixels inside a 416 x 812 bounding box: nine per cent of the region it destroyed registered as different at all. The second predicted miss is the baseline itself. Nothing states that the committed images are wrong; the git log shows the pricing baselines last rewritten on 2026-09-02 by a PR whose body says the job was noisy and there were no source changes, which sits between the 09-01 14:20 start and the 09-04 09:05 fix - so the broken page is what every future run is compared against, and tightening the numbers alone would make the suite fail on the correct page. The third is scope: the ad slot alone reaches 41800 differing pixels at rest, more than the regression, so no project-wide number can both tolerate it and catch the column, and the chart's 2400-3900 floor belongs on the chart's own assertion rather than donated to every check - which is precisely how the tolerances reached 45000.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "New tolerance derived against the measured regression",
+      "max_score": 28,
+      "description": "The project-wide budget after the change is demonstrably below the size of the regression, with the arithmetic shown from the report: 31044 differing pixels out of 1152000 on plan-cards.png, which is 2.7 per cent. MUST NOT leave any project-wide setting that would still pass that diff - a retained `maxDiffPixels` at or above 31044, or a `maxDiffPixelRatio` at or above 0.027, scores zero for this criterion regardless of the rest. Choosing a smaller number without relating it to the measured regression scores at most half."
+    },
+    {
+      "name": "threshold defined correctly",
+      "max_score": 24,
+      "description": "The document states what `threshold` actually controls - the acceptable perceived colour difference per pixel in YIQ space, between 0 and 1, default 0.2 - and says plainly that the runbook and PR #2011's definition are wrong, that it is not a proportion of the image, and that at 0.6 pixels have to change almost completely before they are counted at all. Repeating or leaving unchallenged the 'fraction of the image' reading scores zero. Lowering the value without correcting the definition scores at most half. Connecting it to the evidence - only 31044 pixels counted as differing inside a 416 x 812 box whose content disappeared - earns the top of the range."
+    },
+    {
+      "name": "Poisoned baseline identified and replaced",
+      "max_score": 22,
+      "description": "The answer establishes that the committed pricing baselines were captured during the incident, using the 2026-09-02 refresh in the git log against the 2026-09-01 14:20 to 2026-09-04 09:05 window, and requires them to be regenerated from the restored page and reviewed before the tightened configuration is trusted. Never raising the state of the committed baselines scores zero. Saying 'regenerate the baselines' without tying it to the incident window, or without requiring the restored page to be verified first, scores at most half."
+    },
+    {
+      "name": "Chart tolerance scoped to the chart",
+      "max_score": 16,
+      "description": "The usage chart's measured 2400-3900 floor is accommodated on that assertion alone. MUST NOT carry it project wide: any project-wide `maxDiffPixels` at or above 3900, or `maxDiffPixelRatio` at or above 0.017, scores zero here, because donating one check's noise floor to every other check is exactly the mechanism that produced 45000. Leaving the chart with no allowance at all, so that a known-stable check now fails on rendering noise, also scores zero."
+    },
+    {
+      "name": "Noisy regions selected from the study, content left alone",
+      "max_score": 14,
+      "description": "The counter strip, the ad slot and the review widget are hidden on the pricing captures, chosen from their non-zero ranges in the variance study, and the answer notes that the ad slot alone reaches 41800 differing pixels at rest - more than the regression - so no tolerance value could have covered it. Hiding the plan-comparison region, or any region the study measured at zero variance, scores zero. Hiding the launch countdown because its name sounds dynamic, when the study shows it pinned at zero by the seed, scores at most half."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 5,
+      "description": "docs/inc-2214-visual-gap.md exists, names each configuration value that contributed, and states how the new configuration would have failed on the missing column. A document that describes the incident without naming the settings scores zero."
+    }
+  ]
+}

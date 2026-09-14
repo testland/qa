@@ -1,0 +1,27 @@
+name: release-verify
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+
+jobs:
+  verify:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Verify release
+        run: bash scripts/verify-release.sh "${{ inputs.version }}"
+
+      - name: Tidy build dir
+        run: rm -rf build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-verify
+          path: |
+            reports/
+            build/

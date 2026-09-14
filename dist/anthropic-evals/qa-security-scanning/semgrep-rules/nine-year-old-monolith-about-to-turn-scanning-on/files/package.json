@@ -1,0 +1,8 @@
+{
+  "name": "atlas-core",
+  "version": "9.2.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

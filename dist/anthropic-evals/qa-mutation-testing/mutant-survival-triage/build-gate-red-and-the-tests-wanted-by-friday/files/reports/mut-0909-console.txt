@@ -1,0 +1,38 @@
+$ mutmut run --paths-to-mutate shipping/ --runner "python -m unittest discover -s tests -t ."
+
+- Mutation testing starting -
+
+These are the steps:
+1. A full test suite run will be made to make sure we
+   can run the tests successfully and we know how long it takes
+2. Mutants will be generated and checked
+
+Results are stored in .mutmut-cache.
+Print found mutants with `mutmut results`.
+
+Legend for output:
+[K] Killed mutants.   The goal is for everything to end up in this bucket.
+[T] Timeout.          Test suite took 10 times as long as the baseline so were killed.
+[S] Suspicious.       Tests took a long time, but not long enough to be fatal.
+[L] Survived.         This means your tests need to be expanded.
+[X] Skipped.          Skipped.
+
+1. Running tests without mutations
+   Done
+
+2. Checking mutants
+   41/41  [K] 37  [T] 0  [S] 0  [L] 4  [X] 0
+
+$ mutmut results
+
+To apply a mutant on disk:
+    mutmut apply <id>
+
+To show a mutant:
+    mutmut show <id>
+
+Survived (4)
+
+---- shipping/rates.py (4) ----
+
+12, 19, 24, 27

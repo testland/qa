@@ -1,0 +1,41 @@
+{
+  "context": "Section 3 is mostly fine, and the document is built so that everything eye-catching about it is a decoy. Predicted baseline failure: the agent reviews the page the way a reader reviews a page and returns six to nine findings and a blocking call, because the prose is loose in ways that are not verifiability defects. It is predicted to flag the misspelling 'caracters'; to flag the dismissive 'Nobody is realistically going to keep more than twenty of these lying around' as unprofessional or as an unjustified assumption; to challenge the 11-hour prune budget as absurd for a nightly job, which it is, while missing that an 11-hour wall-clock ceiling on a named job is perfectly checkable; and to write the Background paragraph, the 'Not in this release' line and the Open question up as unverifiable claims when none of the three asserts anything about system behaviour. Only two sentences are actually defective, and they are defective in the mildest way available: 'Users can share a saved view with a teammate' and 'The export button on a saved view returns the same rows the view is showing' both name an outcome you could stand in front of and an unambiguous way to judge it, and simply never say for whom, for which inputs, or in which states. That is a clarification Priya can type into the ticket in one line, not a product decision, so the honest top-line call on section 3 is that it needs a clarification before Thursday and not that it is blocked. An agent that returns a blocking call over a typo and a rhetorical aside has produced exactly the message the requester said he would not send.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT flag the five decoys",
+      "max_score": 30,
+      "description": "MUST NOT record any of these as a problem with the sentence: (a) the misspelling 'caracters'; (b) the tone of 'Nobody is realistically going to keep more than twenty of these lying around'; (c) the 11-hour ceiling on the nightly prune job, on the grounds that 11 hours is too long, arbitrary, or not a real constraint; (d) the Background paragraph about support tickets and renewal calls; (e) the 'Open question' about org-wide sharing. Each one that appears as a row in docs/refinement-notes.md loses a fifth of this criterion. Three or more of them appearing scores zero. Note that the 'caracters' spelling is a proofreading item and that the 11-hour figure is checkable-but-questionable, and it still counts as flagged if the review asks for either to change."
+    },
+    {
+      "name": "Top-line call is a clarification, not a block",
+      "max_score": 22,
+      "description": "The call on section 3 says it can go to Thursday's refinement once the two under-specified sentences get a one-line answer from the author — it is not held. Full marks require the reasoning: nothing in section 3 describes an outcome you cannot see from outside, and nothing in it leaves two reviewers free to disagree about whether it happened; the only gap is which inputs and which people the two sentences cover. Calling section 3 blocked or not-ready scores zero. Calling it clean with no action needed at all also scores zero."
+    },
+    {
+      "name": "Both under-specified sentences found, and only those",
+      "max_score": 18,
+      "description": "'Users can share a saved view with a teammate' and 'The export button on a saved view returns the same rows the view is showing' are both identified. Finding one of the two scores at most half. Finding both but alongside three or more other sentences scores at most half, because a list that long is the outcome the requester said produces the same argument again. The reason given must be the missing input domain — which teammates, what the recipient can then do, which views and what row volumes, what happens to rows the user's permissions no longer cover — and not that the sentences are short or informal."
+    },
+    {
+      "name": "Every row carries a replacement sentence",
+      "max_score": 16,
+      "description": "Each flagged sentence is paired with a specific sentence Priya could paste in, naming the actor, the input domain and the cases that are excluded — for example a share limited to users in the same org with read-only access and no re-share, or an export capped at a stated row count that omits rows the requesting user can no longer read. A row that says the sentence needs to be more specific, needs a measurable definition, or asks the author to clarify without supplying the words scores zero for that row. No row carrying a replacement scores zero for this criterion."
+    },
+    {
+      "name": "Sentence count excludes the non-claims",
+      "max_score": 10,
+      "description": "The stated count of sentences assessed covers only the sentences in Behaviour that assert what the system does. Counting the Background paragraph, the 'Not in this release' line, the 'Open questions' heading or the open question itself into that total scores zero. Giving no count at all scores zero."
+    },
+    {
+      "name": "MUST NOT edit the PRD",
+      "max_score": 7,
+      "description": "docs/prd-saved-views.md is byte-identical to the supplied fixture. Rewriting the two weak sentences in place, fixing the 'caracters' typo in the file, or reflowing the document scores zero here even if the same replacements also appear in the notes."
+    },
+    {
+      "name": "MUST NOT extend the feature",
+      "max_score": 6,
+      "description": "MUST NOT add requirements section 3 does not contain — nothing about what happens when a shared view's owner leaves, about mobile parity, about export formats, or about org-wide sharing. Any such addition scores zero here; the review reads the sentences that are present."
+    }
+  ]
+}

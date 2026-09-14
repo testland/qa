@@ -1,0 +1,31 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------< com.shop:shop-e2e >-------------------------
+[INFO] Building shop-e2e 4.11.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:3.3.1:testResources (default-testResources) @ shop-e2e ---
+[INFO] skip non existing resourceDirectory /home/runner/work/shop/shop/src/test/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.13.0:testCompile (default-testCompile) @ shop-e2e ---
+[INFO] Compiling 3 source files with javac [debug release 21]
+[INFO]
+[INFO] --- maven-surefire-plugin:3.5.2:test (default-test) @ shop-e2e ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.shop.e2e.SmokeTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.104 s -- in com.shop.e2e.SmokeTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  41.882 s
+[INFO] Finished at: 2026-09-05T08:31:14Z
+[INFO] ------------------------------------------------------------------------

@@ -1,0 +1,41 @@
+{
+  "context": "The section mixes three sentences that cannot be built twice the same way with three that can, plus one sentence that is half of each. Predicted baseline failure: the agent treats the webhook sentence as one unit and condemns all of it, losing the fact that the payload half already pins down the method, the destination, the four field names and an HMAC-SHA256 signature over the raw body — everything two independent teams need — and that only the trailing 'and delivery is reliable' is unbuildable. It is also predicted to grade 'The endpoint returns an error when the payload is invalid' as merely thin on detail and to hand back 'specify the error format', when the actual defect is that nothing in it lets two implementations agree on an outcome: no status code, no error body, and no definition of invalid, so both teams can ship, both can pass their own tests, and the partner still gets two different responses. It is further predicted to flatten severities, giving 'Rows whose `sku` already exists are updated in place instead of inserted' the same weight as the unbuildable ones when that sentence already names its outcome and its way of judging it and is short only an input domain — which the doc owner can supply himself this afternoon, which is precisely the distinction he said governs his Friday. Finally the requester twice says he does not want his product decisions relitigated, and the doc is baited with three: a job that reports `status: \"succeeded\"` when 9,999 of 10,000 rows failed, a hard 10,000-row ceiling justified by one partner's 8,400-row file, and skip-rather-than-retry. All three are checkable exactly as written; an agent that raises any of them has answered a question that was not asked.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Webhook sentence split in two",
+      "max_score": 28,
+      "description": "The webhook sentence is treated as two separate assertions with two separate outcomes: the delivery-and-payload half (POST to the configured `callback_url`, the four named fields, the HMAC-SHA256 `X-Signature` over the raw body) is safe to hand over as written, and only 'and delivery is reliable' is not. MUST NOT emit a single row that condemns the whole sentence. Doing so scores zero even if the replacement text happens to be good. Flagging 'delivery is reliable' but saying nothing about the rest of the sentence scores at most half, because the requester cannot tell from that whether the payload contract survived. Full marks require the replacement to convert 'reliable' into something countable — a retry schedule with a stated attempt count and backoff, a stated acknowledgement window, and what happens when the attempts run out."
+    },
+    {
+      "name": "The invalid-payload sentence diagnosed correctly",
+      "max_score": 24,
+      "description": "'The endpoint returns an error when the payload is invalid' is identified as unsafe because two teams reading it cannot arrive at the same verifiable outcome — no status code, no error body shape, and no statement of what makes a payload invalid — and it is given the same blocking weight as 'delivery is reliable' and 'should feel fast'. The replacement must name concrete values: at least a specific status code and a specific error body, plus the conditions that trigger it. Returning 'specify the error format' or 'clarify what invalid means' with no replacement text scores zero. Grading it as a minor or author-fixable item scores at most half."
+    },
+    {
+      "name": "The sku sentence kept at the lighter weight",
+      "max_score": 18,
+      "description": "'Rows whose `sku` already exists are updated in place instead of inserted' is flagged, but as the mild case the doc owner can settle himself, explicitly below the three blocking sentences. Giving it the same weight as 'delivery is reliable' or 'returns an error when the payload is invalid' scores zero; not flagging it at all scores zero. The reason must be the unnamed input domain — exists within this request or against the partner's whole catalogue, scoped per partner or globally, what happens when the same `sku` appears twice in one body — and the replacement must answer those."
+    },
+    {
+      "name": "MUST NOT relitigate the settled product decisions",
+      "max_score": 14,
+      "description": "MUST NOT raise as problems: the job reporting `status: \"succeeded\"` when only one row imported, the 10,000-row ceiling and its `413`, or the decision to skip failing rows rather than retry them. Each is stated with a visible outcome, a way to judge it and a stated input domain, and the requester said twice that he wants to know whether sentences can be built and checked, not whether he chose right. Any one of the three appearing as a problem row scores at most half; two or more scores zero. A single aside noting that the `status: \"succeeded\"` rule will surprise partners, clearly marked as outside what was asked, does not count against this."
+    },
+    {
+      "name": "Perf sentence routed, not just flagged",
+      "max_score": 10,
+      "description": "'The import should feel fast for a partner uploading their first catalogue' is flagged as unbuildable — no surface, no measurement, no number — and the review says where it has to go, naming the non-functional-requirement-extractor workflow as the place that turns a performance wish into a stated budget. Full marks require both the flag and the routing, since the requester explicitly asked who each unfixable sentence needs to go to. Flagging it with no routing scores at most half; not flagging it scores zero."
+    },
+    {
+      "name": "MUST NOT score the rationale or the FAQ",
+      "max_score": 7,
+      "description": "MUST NOT assess the 'Note: we picked 10,000 because...' paragraph — it explains a choice and asserts nothing about what the endpoint does — and MUST NOT review docs/partner-faq-draft.md, which is marked as out of scope. Either one appearing in the review scores zero here."
+    },
+    {
+      "name": "Deliverable, call and counts",
+      "max_score": 5,
+      "description": "docs/import-contract-review.md exists, states the section is not safe to hand over on Monday as written, gives a count of sentences assessed and a count of unsafe ones, and leaves docs/import-contract.md unmodified. Modifying the contract file scores zero here."
+    }
+  ]
+}

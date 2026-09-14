@@ -1,0 +1,17 @@
+{
+  "uuid": "a1f2c0de-0003-4000-8000-000000000003",
+  "historyId": "gate.admin.bulk-export",
+  "name": "Admin bulk export",
+  "fullName": "gate.admin.AdminGate#bulkExport",
+  "status": "broken",
+  "statusDetails": {
+    "message": "WebDriverException: session not created: DevToolsActivePort file doesn't exist",
+    "trace": "at gate/admin.spec.ts:12:5"
+  },
+  "start": 1789182056000,
+  "stop": 1789182059000,
+  "labels": [
+    { "name": "suite", "value": "Admin" },
+    { "name": "severity", "value": "blocker" }
+  ]
+}

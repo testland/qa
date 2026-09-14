@@ -1,0 +1,13 @@
+{
+  "uuid": "a1f2c0de-0011-4000-8000-000000000011",
+  "historyId": "gate.payments.update-method",
+  "name": "Update payment method",
+  "fullName": "gate.payments.PaymentsGate#updateMethod",
+  "status": "passed",
+  "start": 1789182215000,
+  "stop": 1789182233000,
+  "labels": [
+    { "name": "suite", "value": "Payments" },
+    { "name": "severity", "value": "normal" }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "A job where the reflexive repair is blocked by a stated constraint and the actual defect is a conditional that cannot fire. Predicted baseline failure: the agent reaches for the familiar pair - delete continue-on-error, add an always-run condition to the upload - which trades away the one thing the prompt says is non-negotiable, because without continue-on-error a failing unit suite skips the contract suite and payments lose their result exactly as run 8790 records. The agent that instead keeps continue-on-error, correctly, is then predicted to leave the gate step alone, and the gate is the bug: a step whose failure is absorbed by continue-on-error reports outcome failure but conclusion success, the job status never becomes failure, and if: failure() is skipped. That is what run 9042 shows and it is why six failing tests posted a green check. Nothing in the prompt names the mechanism; the agent has to know that the gate must key on the suite steps' outcome, or that continue-on-error has to go with an explicit always-run condition put on the contract step in its place. The second predicted miss runs the other way. Priya's rewrite put an always-run condition on every step below the suites, including the one that pushes an image to the registry and the one that moves the :latest tag onto that commit, and the prompt praises the uniformity as the only predictable thing in the file. An agent asked to keep the artifacts flowing is expected to preserve that block wholesale rather than split it - uploads and coverage stay on the always path, the two registry steps must come off it, and run 9042 shows both of them succeeding off a run with six failing tests.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave a job-failing gate that cannot fire",
+      "max_score": 32,
+      "description": "A failing suite must make the job fail. Two mechanisms are acceptable: keep continue-on-error on the suite steps and gate the job on steps.unit.outcome and steps.contract.outcome, or drop continue-on-error and give the contract step an explicit always-run condition so it still executes. What MUST NOT survive is if: failure() - or any other test of job status, such as job.status == 'failure' - as the gate while a continue-on-error step precedes it, because that is the condition that was skipped in run 9042. Leaving it scores zero for this criterion regardless of everything else in the answer. Gating on only one of the two suites, so the other can fail silently, scores at most half."
+    },
+    {
+      "name": "MUST NOT leave the registry steps on the always path",
+      "max_score": 26,
+      "description": "'Push preview image' and 'Update the :latest tag' MUST NOT keep an always-run condition - if: always(), if: !cancelled(), if: success() || failure() - and MUST NOT be given continue-on-error instead. Either scores zero for this criterion regardless of the rest. Full marks need both left conditional on the suites having passed, plus the reason recorded in docs/ci-step-policy.md: a step that pushes an image consumers pull, or moves a floating tag onto the commit, is not a reporting step and does not belong on the failure path. Making them conditional with no reasoning written down scores at most half."
+    },
+    {
+      "name": "Reporting steps still run on a red suite",
+      "max_score": 16,
+      "description": "The JUnit and debug-log upload and the coverage push both keep an explicit always-run condition, so run 8790's outcome - no artifacts on exactly the runs anyone wants - cannot recur. Stripping the condition from either of them scores zero here, which is the trap in tidying the whole block the same way in the other direction."
+    },
+    {
+      "name": "Both suites still report on every run",
+      "max_score": 16,
+      "description": "A failure in the unit suite MUST NOT prevent the contract suite from running. A workflow in which a red unit suite skips the contract step scores zero whatever mechanism was used to make the check honest - that is run 8790's behaviour and the prompt states payments will not accept it. Removing continue-on-error from the unit step without putting an always-run condition on the contract step is the specific way this is lost."
+    },
+    {
+      "name": "Per-step verdict and the run 9042 restatement",
+      "max_score": 10,
+      "description": "docs/ci-step-policy.md gives a row per step of the test job with whether it runs after a red suite and why, and states what run 9042 would have reported once the change is in: a failing check, with the artifacts and coverage still published and the two registry steps skipped. A single verdict for the whole job scores zero; omitting the run 9042 restatement scores at most half."
+    },
+    {
+      "name": "MUST NOT edit lint.yml",
+      "max_score": 5,
+      "description": "The separately owned .github/workflows/lint.yml MUST NOT be modified, merged into test.yml, or reformatted. Any change to it scores zero here, including a change that is an improvement."
+    },
+    {
+      "name": "MUST NOT quiet either suite",
+      "max_score": 5,
+      "description": "No file under test/, contract/ or src/ is edited, skipped or deleted. Making the check honest by changing what the suites assert scores zero here."
+    }
+  ]
+}

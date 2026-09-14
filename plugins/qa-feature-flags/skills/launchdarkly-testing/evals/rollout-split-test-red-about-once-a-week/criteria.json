@@ -1,0 +1,41 @@
+{
+  "context": "A flag suite that tests the platform's bucketing rather than the product, with the wrong fix already chosen and a freeze on Thursday. Predicted baseline failure: the agent takes Ana's plan, because the caller said he is taking it and it is demonstrably two lines - re-record user-2 as being in the redesign, add retries for the sampled test - or it substitutes a more sophisticated version of the same idea: a wider band, a larger sample, a fixed or seeded key list, a chi-square or confidence-interval assertion. Every one of those keeps the file asserting how the SDK hashes a context key into a rollout bucket, which is not this repository's code. That is precisely why a patch release moved user-2 with nothing in the fixture or the dashboard changing, and why re-recorded values will move again at the next bump; and a 50/50 draw over 1,000 random keys has a standard deviation near 16, so the reported 3 failures in 60 nights is what the arithmetic predicts rather than a defect. The second predicted miss is the two tests nobody has complained about. 'free plans see five items in the redesign' and 'classic shell users still see all seven items' never establish nav-redesign for the context they pass; they pass only because user-1 currently hashes into the treatment and user-3 currently does not, so the two tests that actually assert something about src/nav.js are riding on the same hash as the two that are red - and because they need opposite variations, no single edit to the fixture's fallthrough can satisfy both, which is what forces per-context pinning rather than a fixture tweak. The third is a judgement the caller has already made wrongly: Tomas's nine-item case is the only variant most accounts will get and nothing in the file covers it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Repeatably green file delivered",
+      "max_score": 5,
+      "description": "docs/nav-rollout-tests.md exists and test/nav-rollout.test.js passes on repeated runs of npm test with the same result every time. A file that still varies between runs, or is left red, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT assert the platform's bucketing",
+      "max_score": 30,
+      "description": "MUST NOT leave any assertion whose outcome depends on how the SDK hashes a context key into a rollout bucket. That rules out re-recording user-1 and user-2 against 7.0.4 as Ana proposes, and it rules out the sampled-distribution test in every repaired form - wider band, 10,000 users, fixed or seeded key list, statistical test. Either surviving scores zero for this criterion regardless of the rest. Full marks require both assertions gone with the reason stated: bucket assignment is the platform's arithmetic and not this repository's behaviour, which is why a patch release moved it while the fixture and the dashboard stayed put. Replacing them with a property that does not depend on the hash's values - the same context key returning the same variation across repeated evaluations in one run - is credited here."
+    },
+    {
+      "name": "Assignment pinned per context",
+      "max_score": 24,
+      "description": "Every test left in the file that asserts navVariant behaviour establishes the variation that context receives - a per-context targeting entry or an explicit flag value set in the test - rather than relying on where a key lands in the rollout. This must cover 'free plans see five items in the redesign' and 'classic shell users still see all seven items', neither of which sets nav-redesign for the context it passes today. Note that these two need opposite variations, so a single change to the fixture's fallthrough cannot pin both: an answer that edits the fixture globally and leaves one of them riding on the hash scores at most half. No pinning anywhere scores zero."
+    },
+    {
+      "name": "Tomas's uncovered variant added",
+      "max_score": 16,
+      "description": "The nine-item redesign nav that non-free plans get is covered by a test after the change, and the write-up says so to Tomas rather than agreeing with the caller that it is premature - it is the branch of src/nav.js most accounts will hit at the ramp and nothing in the file touches it today. Leaving that branch uncovered scores zero. Agreeing it is premature while adding the test anyway, or adding the test without answering Tomas, scores at most half."
+    },
+    {
+      "name": "MUST NOT paper over the sampled test",
+      "max_score": 12,
+      "description": "MUST NOT answer any of the three with --test-retries, a rerun-on-failure job, skipping, quarantining, or marking the test known-flaky. Any of those in the delivered file, the workflow or the recommendation to Ana scores zero for this criterion."
+    },
+    {
+      "name": "Patch-bump breakage explained",
+      "max_score": 12,
+      "description": "docs/nav-rollout-tests.md states that nothing in the repository or the dashboard changed - the SDK's bucket assignment changed - and that a recorded bucket for a named key is therefore an assertion about an SDK version, which re-recording resets rather than fixes. Attributing the failure to the fixture, to the rollout percentage, to a bug in the SDK that should be reported upstream, or leaving it unexplained, scores zero."
+    },
+    {
+      "name": "Out-of-scope files untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify src/nav.js or test/nav-label.test.js. Any change there scores zero for this item."
+    }
+  ]
+}

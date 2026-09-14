@@ -1,0 +1,51 @@
+{
+  "context": "src/gateway.js emits the pre-1.20 HTTP attribute names - http.method, http.url, http.host, http.status_code - while the shared rules select on the current ones, server.address and http.response.status_code. The evidence settles it without guessing: the spans are in the backend, the rules page correctly for two sibling services that do not fork them, and the trace test was green throughout. Predicted baseline failure: the agent diffs the rules file against the instrumentation, renames exactly the two keys the rules happen to name, and stops - leaving http.method and http.url in place because nothing in the fixture points at them, leaving server.port unset, leaving error.type off the 503 path, and most importantly leaving the existing assertion on span.attributes['http.method'] untouched in test/gateway.trace.test.js, where it still passes and re-pins the deprecated key for the next reader. The second predicted miss is the void call, which emits the same legacy keys and is easy to skip because no rule in the file mentions it. The third is the rollout: emitting a renamed key is a breaking change for anything still reading the old one, and the baseline answer rarely says what covers that window.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite green",
+      "max_score": 5,
+      "description": "test/gateway.trace.test.js covers a captured charge, a 503 and a 402; docs/inc-2291-followup.md exists; `npm test` passes. A red suite or a missing case scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT assert the deprecated HTTP attribute keys",
+      "max_score": 30,
+      "description": "No assertion in test/gateway.trace.test.js may read http.method, http.url, http.host or http.status_code - including the pre-existing assertion on http.method, which survives a partial rename because it still passes. Any legacy key left on the left-hand side of an assertion scores zero for this criterion. Full marks require the new cases asserting http.request.method, url.full, server.address and http.response.status_code."
+    },
+    {
+      "name": "Instrumentation migrated past the two keys the rules name",
+      "max_score": 20,
+      "description": "src/gateway.js emits the current names for every HTTP attribute it sets, not only the two the alert file happens to select on: http.request.method, url.full, server.address and server.port alongside http.response.status_code. Renaming only server.address and http.response.status_code and leaving http.method / http.url as they are scores at most half. Omitting server.port scores at most half. Leaving the module on the old names entirely scores zero. Emitting both old and new names during the cutover is acceptable here provided the new ones are present and correct."
+    },
+    {
+      "name": "The failing call carries error.type",
+      "max_score": 14,
+      "description": "The 503 path sets error.type on the span - the status code as a string, or the exception type - and the 503 test case asserts it together with the error span status. Asserting only that the status code attribute is 503, with nothing marking the span as an error beyond it, scores at most half. No error signal on the span at all scores zero."
+    },
+    {
+      "name": "Both outgoing calls migrated",
+      "max_score": 8,
+      "description": "voidCharge is migrated as well as chargeCard. It is easy to skip because no rule in the alert file mentions that endpoint. Leaving voidCharge on the deprecated names scores zero for this criterion."
+    },
+    {
+      "name": "Rollout risk named in the follow-up",
+      "max_score": 12,
+      "description": "docs/inc-2291-followup.md says something true and specific about consumers that still read the old names during the cutover - either emitting both names for a window, naming the SDK's opt-in switch for dual emission, or listing the dashboards and saved searches that have to be rechecked before the old keys go. A document that only narrates the rename scores at most half."
+    },
+    {
+      "name": "MUST NOT edit the shared alert file",
+      "max_score": 10,
+      "description": "alerts/card-gateway.yaml MUST NOT be modified. Changing the selectors to match what payments-gateway already emits rolls back a migration two other services have completed, and scores zero for this criterion even if everything else is right."
+    },
+    {
+      "name": "Spans reached by name and status asserted",
+      "max_score": 8,
+      "description": "New cases resolve spans through a name lookup rather than indexing into the finished-span array, and assert the client span kind and the span status per case. Positional indexing, or a bare length assertion standing in for identifying the span, scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT edit the vendored mirror",
+      "max_score": 4,
+      "description": "vendor/tracing-sdk.js MUST NOT be modified. Any edit to that file scores zero here."
+    }
+  ]
+}

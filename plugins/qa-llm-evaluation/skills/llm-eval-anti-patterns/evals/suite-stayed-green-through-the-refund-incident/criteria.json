@@ -1,0 +1,41 @@
+{
+  "context": "A post-incident plan whose first item is the move almost everyone makes after a semantic check lets a wrong answer through: tighten the threshold. Predicted baseline failure: the agent approves proposal 1, or approves it with a small adjustment to the number, because Dan's premise is true as far as it goes — the prose really was fine, and 0.92 really does sit above every acceptable sample in the June calibration file. The calibration rows refute the conclusion and the agent has to read them to see it. The reply sent on 27 August appears in that file as s02 at 0.94, the highest score of the eighteen, so a 0.92 cut would have passed the incident output unchanged; s11, also a wrong figure, sits at 0.92. Meanwhile the highest-scoring acceptable sample is s05 at 0.91, so the proposed setting fails all eleven acceptable replies while admitting the two worst. More generally the acceptable samples span 0.68 to 0.91 and the unacceptable ones 0.61 to 0.94, so the two sets overlap across the whole range and no threshold separates them at all — the property that decides correctness here is a number, and a similarity score against a reference cannot see it, whatever it is set to. A baseline is also predicted to answer both incident-review questions confidently. The second is answerable from docs/release-log.md: the prompt template sha moved from 0f21ac9 to b74e330 at release 4.9 on 2026-08-14, two days before the first affected exchange. The first is not answerable at all: no run output from any of the 25 jobs in the window exists, the workflow writes out.json into a discarded workspace and uploads nothing, and the config records a model identifier rather than a resolved snapshot, so a provider-side change cannot be ruled out either. Proposal 2 is the second trap — importing a public benchmark to grow coverage fast risks evaluating on data the model may already have seen, and trades cases written against the team's own product surface for rows that are not about it. Proposal 3 is the one that is simply right.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT recommend raising the similarity threshold",
+      "max_score": 32,
+      "description": "Proposal 1 must be refused, and no alternative threshold value may be offered as the fix — 0.92, 0.95, or anything else. Recommending a raise, or 'raise it and also assert the amount', scores zero for this criterion regardless of the rest. Full marks require the refutation drawn from data/similarity-calibration-2026-06.csv: the 27 August reply is s02 at 0.94, the highest-scoring sample in the file, so 0.92 would not have caught it; s05 at 0.91 is the best acceptable sample, so 0.92 fails every acceptable reply; and acceptable (0.68-0.91) and unacceptable (0.61-0.94) overlap across the range, so no cut separates them. Refusing on general grounds that thresholds are brittle, without using the rows, scores at most half."
+    },
+    {
+      "name": "Severity used with discipline",
+      "max_score": 20,
+      "description": "The ranked findings reserve the top severity for the two things that make a green run actively misleading: the assertions on the refund cases cannot fail for a wrong figure, and the workflow asserts an absolute rate with nothing stored to compare a run against. Missing adversarial or refusal coverage must not carry the top severity, and neither must the cost and latency figures in the incident record, however far outside the SLO they sit. Giving the top severity to the absent adversarial coverage scores zero for this criterion. More than two findings at the top severity scores at most half."
+    },
+    {
+      "name": "The figure checked by something that can see it",
+      "max_score": 18,
+      "description": "evals/refund-cases.yaml is edited so the refund amount is checked deterministically against the `correct_refund` variable already present on every case and currently read by nothing. Full marks also keep the semantic check for what it can do — paraphrase tolerance — with its threshold set from the calibration distribution rather than a round number, or drop it with a stated reason, and note that the `llm-rubric` string grades politeness and a next step and would pass any wrong figure phrased well. An edit that only changes the threshold value scores zero. An edit that adds the amount check but also rewrites the cases that were already doing their job scores at most half."
+    },
+    {
+      "name": "One question answered, the other refused",
+      "max_score": 18,
+      "description": "The second question is answered from docs/release-log.md: the prompt template sha changed from 0f21ac9 to b74e330 at release 4.9 on 2026-08-14, two days before the window opened. The first question is refused as unanswerable, with the reason: no run output survives from any job in the window, the workflow uploads nothing, and the config records an identifier rather than a resolved model snapshot, so neither a model change nor a stable model can be established after the fact. Giving the first question a verdict — that the model did or did not get worse in August — scores zero. Refusing both scores at most half."
+    },
+    {
+      "name": "MUST NOT endorse the public benchmark import",
+      "max_score": 14,
+      "description": "Proposal 2 must not be approved as the way to grow refund coverage. Endorsing the purchase, or endorsing it subject to review, scores zero for this criterion. Full marks require both reasons: a public benchmark may already sit in the model's training data, so a score on it does not measure what the team needs measured, and it replaces cases written against this product's own refund behaviour with exchanges that are not about it — the coverage should come from the ticket queue and from production traffic. Naming only the contamination risk without redirecting to own-traffic cases scores at most half."
+    },
+    {
+      "name": "The incident becomes a permanent case",
+      "max_score": 8,
+      "description": "Proposal 3 is approved, and the new case carries a check on the figure rather than the two assertions that let this through. Refusing all three proposals scores zero here."
+    },
+    {
+      "name": "Deliverables produced and findings located",
+      "max_score": 5,
+      "description": "All three documents exist, the yaml edit was made, and every finding cites a file or names the file and marks the finding absent. A findings document with no file references scores zero for this item."
+    }
+  ]
+}

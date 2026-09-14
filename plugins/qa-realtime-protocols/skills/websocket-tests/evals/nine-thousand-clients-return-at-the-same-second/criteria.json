@@ -1,0 +1,41 @@
+{
+  "context": "The prompt restates product's requirement - back within a few seconds - which is exactly what the broken module already satisfies, and that framing is the trap. Predicted baseline failure: the agent reads RETRY_DELAY_MS = 1000, replaces it with a doubling sequence, and writes a test that asserts the client reconnects and that the second delay is larger than the first. That is half the fix and it does not remove the outage. A deterministic backoff schedule is still a synchronised schedule: 9,400 clients that were disconnected in the same 400ms and all compute 1s, 2s, 4s, 8s will arrive in the same four pulses as before, just fewer of them. What the fixture makes objectively checkable is whether the answer adds randomisation and, more importantly, whether the delivered suite can detect its absence - which requires the random source to be injected, because an assertion that two clients disagree is otherwise a coin flip that will eventually fail in CI. A second predicted failure is a latency assertion dressed up as coverage: a test that ticks the clock 30 seconds and asserts a reconnection happened passes identically against the fixed interval, the doubling schedule, and the randomised one, so it separates nothing. The exported delays array and the injected clock in testutil/ mean neither the growth nor the randomisation assertion needs a real timer.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "test/reconnect.backoff.test.js and docs/reconnect-policy.md both exist and src/reconnect.js has been changed. Any one of the three missing scores at most half; producing only the source change scores zero."
+    },
+    {
+      "name": "MUST NOT ship a retry schedule every client agrees on",
+      "max_score": 32,
+      "description": "The anti-pattern being tested is a hard-coded reconnect interval with no jitter. The delivered src/reconnect.js MUST NOT produce the same delay for the same attempt number on every client, and the delivered suite MUST NOT be satisfiable by an implementation that does. Full marks require both: randomisation in the delay, and a test that fails if the randomisation is removed - typically by constructing two reconnectors driven by different random values and asserting their delays for the same attempt differ. Leaving RETRY_DELAY_MS as the delay scores zero. A purely deterministic backoff - 1s, 2s, 4s with no randomisation - scores at most half, because a fleet disconnected together still returns together. A randomised implementation with no test that would catch its removal also scores at most half."
+    },
+    {
+      "name": "Growth and ceiling asserted",
+      "max_score": 18,
+      "description": "The suite asserts that successive delays grow rather than repeat, and that growth is bounded by a ceiling so a long outage does not push a client to an hour-long wait. Asserting only that a reconnection eventually occurs, or only that delay[1] > delay[0] without covering the ceiling, scores at most half. A suite with no assertion on any delay value scores zero."
+    },
+    {
+      "name": "Randomness injected so the assertion is deterministic",
+      "max_score": 16,
+      "description": "The random source is a constructor option with a default, so the test drives it with fixed values and the jitter assertion is decided rather than sampled. Calling Math.random() directly inside the module and asserting that two runs differ scores at most half - it is a test that fails on its own schedule. Bounding the delay so the assertion holds for any draw is equally acceptable and scores full marks. No jitter assertion at all scores zero."
+    },
+    {
+      "name": "MUST NOT measure the schedule with real time",
+      "max_score": 10,
+      "description": "The new tests MUST NOT use real timers, await a sleep, or set a test timeout to wait out a delay; the injected clock in testutil/clock.js exists for this. Any real-time wait in the delivered suite scores zero for this criterion."
+    },
+    {
+      "name": "Policy document connects the schedule to the arrival curve",
+      "max_score": 12,
+      "description": "docs/reconnect-policy.md gives the concrete schedule - base delay, growth, ceiling, randomisation range - and says what 9,400 clients now do to the accept queue under it, with numbers. A document that only restates that the client retries with backoff scores zero; one that gives the schedule but never returns to the fleet-level arrival spread scores at most half."
+    },
+    {
+      "name": "Published signature and existing suite intact",
+      "max_score": 6,
+      "description": "createReconnector still accepts the same options and still returns start / stop / attempts / delays, test/reconnect.basic.test.js is byte-identical to the fixture, and npm test passes. Editing the basic test to accommodate the new schedule scores zero."
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/checkout_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:id="@+id/empty_cart_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cart_is_empty" />
+
+            <EditText
+                android:id="@+id/promo_field"
+                android:layout_width="match_parent"
+                android:layout_height="140px"
+                android:hint="@string/promo_hint"
+                android:inputType="textCapCharacters"
+                android:imeOptions="actionDone" />
+
+            <Button
+                android:id="@+id/apply_button"
+                android:layout_width="264px"
+                android:layout_height="132px"
+                android:text="@string/apply" />
+
+            <TextView
+                android:id="@+id/subtotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include layout="@layout/partial_saved_cards" />
+            <include layout="@layout/partial_upsell_rows" />
+
+            <TextView
+                android:id="@+id/legal_copy"
+                android:layout_width="match_parent"
+                android:layout_height="400px"
+                android:text="@string/checkout_terms" />
+
+            <Button
+                android:id="@+id/place_order_button"
+                android:layout_width="match_parent"
+                android:layout_height="168px"
+                android:text="@string/place_order" />
+
+            <TextView
+                android:id="@+id/order_confirmation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:id="@+id/upsell_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="220px"
+        android:layout_gravity="bottom"
+        android:alpha="0"
+        android:clickable="true"
+        android:background="@drawable/upsell_sheet_backdrop" />
+</FrameLayout>

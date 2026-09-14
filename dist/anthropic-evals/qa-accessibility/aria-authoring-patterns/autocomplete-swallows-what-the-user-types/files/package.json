@@ -1,0 +1,8 @@
+{
+  "name": "storefront-search",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "context": "The directory tally is wrong and every downstream number depends on it. Predicted baseline failure: the agent writes a classifier that keys off the path (test/unit, test/integration, test/e2e), reproduces the consultant's 26/6/9, and then argues about what to do with it — most likely agreeing that 15% in the middle is thin, or haggling over the size of the Q4 budget. What the planted evidence settles is that four files under test/unit/ are not unit tests: queue-drain (4 cases), tariff-sync (3) and label-store (3) all take a real postgres pool out of helpers/pg.js and run TRUNCATE and INSERT against it, and tracking-widget (2) launches a chromium browser out of helpers/browser.js. Mirror-image, webhook-verify.test.js sits under test/integration/ and calls a pure function with no I/O at all. Reclassified on content, the mix is 16 unit / 14 integration / 11 e2e — 39 / 34 / 27 — so the middle layer is already ABOVE its 25% target and the consultant's nine-to-eleven engineer-weeks would push it to 40%. The CI file corroborates independently: the unit job declares postgres and chromium services, exports DATABASE_URL and E2E_BASE_URL, and burns 11m 12s of its 14m 06s inside exactly four spec files. The change-shape report is supplied and says service-layer 62%, which fixes the target at 70/25/5, so the real deficit is the unit layer at 39% against 70%.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "scripts/test-mix.js runs and writes reports/test-mix.json, test/tools/mix.test.js exists, and reports/mix-review.md exists. Missing any one of the three scores at most half; producing only prose with no runnable script scores zero."
+    },
+    {
+      "name": "MUST NOT report the directory tally as the mix",
+      "max_score": 30,
+      "description": "The classifier MUST NOT assign a layer from the directory path alone, and the review MUST NOT present 26 / 6 / 9 as the repository's test mix. Full marks require every one of the four misfiled files under test/unit/ to be reclassified on a content signal — queue-drain, tariff-sync and label-store to integration because they open a postgres pool and run SQL, tracking-widget to e2e because it launches a browser — with the signal recorded per file in reports/test-mix.json. Reclassifying only the three database files and leaving the browser one under unit scores at most half. Reproducing the path-based tally, or recording a layer with no evidence field, scores zero for this criterion regardless of the rest."
+    },
+    {
+      "name": "Q4 proposal rejected on the corrected share",
+      "max_score": 22,
+      "description": "The review states plainly that the middle layer is not starved: corrected, it is 14 of 41 cases, roughly 34%, already above the 25% target, and adding twelve more would take it near 40%. Full marks require the arithmetic to be shown. Rejecting the proposal on general grounds — 'the numbers look unreliable', 'do more analysis first' — without giving the corrected middle-layer share scores at most half. Endorsing the Q4 plan, or endorsing it at reduced size, scores zero."
+    },
+    {
+      "name": "Unit layer named as the actual deficit",
+      "max_score": 16,
+      "description": "The verdict identifies the unit layer as the thin one — 16 of 41 cases, roughly 39%, against a 70% target — and the recommendation is to grow the base rather than to cut the top. An answer that names no layer as deficient, or that proposes deleting end-to-end tests as the primary move when the e2e count is already only 11 and sits inside the 5-15 range a critical-journey suite needs, scores at most half."
+    },
+    {
+      "name": "Target ratio taken from the supplied change shape",
+      "max_score": 12,
+      "description": "The targets come from the change-shape report in the bundle — service-layer at 62% of commits and 64% of files — and the review names the resulting target split explicitly. Applying a single universal ratio with no reference to the change shape scores at most half. Regenerating or re-deriving the change-shape distribution from the repository, which the requester explicitly asked not to be redone, scores zero."
+    },
+    {
+      "name": "Job timings explained by the misfiled cases",
+      "max_score": 14,
+      "description": "The review connects the 14m 06s unit job to the reclassification: the job declares postgres and chromium services and exports DATABASE_URL and E2E_BASE_URL, and 11m 12s of its runtime sits in four spec files, which are the four that are not unit tests. An explanation that blames unit-test count, machine size, or missing parallelism scores zero here; noting the anomaly without tying it to the four specific files scores at most half."
+    },
+    {
+      "name": "Pure test in the integration directory moved down",
+      "max_score": 10,
+      "description": "test/integration/webhook-verify.test.js is reclassified to the unit layer — it imports signWebhook from src/dispatch.js and touches nothing else. Missing it scores zero for this criterion. It is the case that stops the answer being a blanket 'anything in test/unit/ is suspect' rule, so classification must run in both directions."
+    },
+    {
+      "name": "Classifier is tested and the suite stays green",
+      "max_score": 8,
+      "description": "test/tools/mix.test.js asserts the classification of at least one database-backed file and one browser-driven file by the signal that decides it, and npm test passes with all of the repository's existing tests still present and green. Tests that only assert the total count, or a suite that no longer passes, score zero."
+    },
+    {
+      "name": "MUST NOT modify the shipped suite",
+      "max_score": 6,
+      "description": "MUST NOT edit, move, rename or delete anything under test/unit/, test/integration/, test/e2e/, src/, helpers/, data/ or docs/, and MUST NOT touch reports/change-shape-2026-q3.md. Moving the misfiled files into the right directory is the tempting version of this and still scores zero: the request was for a number to take to a planning meeting, not a migration."
+    }
+  ]
+}

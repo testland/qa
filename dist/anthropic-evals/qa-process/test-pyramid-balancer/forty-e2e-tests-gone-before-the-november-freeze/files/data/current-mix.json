@@ -1,0 +1,11 @@
+{
+  "repo": "remit",
+  "measured": "2026-09-15",
+  "layers": {
+    "unit": { "cases": 612, "files": 174, "stage_seconds": 361 },
+    "integration": { "cases": 9, "files": 3, "stage_seconds": 71 },
+    "e2e": { "cases": 78, "files": 24, "stage_seconds": 1980, "shards": 3 }
+  },
+  "total_cases": 699,
+  "pipeline_wall_clock_seconds": 2640
+}

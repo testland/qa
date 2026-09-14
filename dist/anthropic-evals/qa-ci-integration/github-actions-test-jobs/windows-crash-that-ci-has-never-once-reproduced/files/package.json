@@ -1,0 +1,9 @@
+{
+  "name": "acme-sync",
+  "version": "4.2.0",
+  "bin": { "acme-sync": "./src/cli.mjs" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:integration": "node --test integration/*.test.mjs"
+  }
+}

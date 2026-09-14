@@ -1,0 +1,16 @@
+description: ticket summariser regression suite
+
+providers:
+  - id: openai:chat:gpt-5.4-mini-2026-04-02
+    config:
+      temperature: 0
+      seed: 42
+
+tests: file://eval/cases.jsonl
+
+defaultTest:
+  threshold: 0.5
+
+evaluateOptions:
+  repeat: 1
+  cache: true

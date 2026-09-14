@@ -1,0 +1,28 @@
+--- desktop-e2e #1904, 2026-07-29 ---
+Running 3 tests using 1 worker
+
+  ok 1 window-lifecycle.spec.ts > main window is visible - legacy
+
+  (no further output for 19m 41s)
+
+Error: The operation was canceled.
+Reason: job exceeded the 20 minute timeout
+
+--- desktop-e2e #1907, 2026-07-30 ---
+Running 3 tests using 1 worker
+
+  ok 1 window-lifecycle.spec.ts > main window is visible - legacy
+  ok 2 window-lifecycle.spec.ts > main window is visible - converted
+
+  (no further output for 19m 12s)
+
+Error: The operation was canceled.
+Reason: job exceeded the 20 minute timeout
+
+--- local, Priya's machine, 2026-08-04 ---
+$ npx playwright test tests/e2e/window-lifecycle.spec.ts
+  3 passed (14.2s)
+
+$ npx playwright test tests/e2e/window-lifecycle.spec.ts
+  ok 1 main window is visible - legacy
+  ^C after 6 minutes

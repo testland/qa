@@ -1,0 +1,9 @@
+id,input,__expected,__description
+refund-window-basic,"How long do I have to return an item?","contains: 30 days","return window, all markets"
+refund-window-digital,"Can I refund a digital download?","contains: 14 days","digital goods exception"
+cancel-flow,"How do I cancel my plan?","contains: Account settings","self-serve cancellation path"
+shipping-cost,"Is return shipping free?","contains: prepaid label, contains: costs you nothing","return shipping is free"
+policy-json,"Return the refund policy as JSON.","is-json","structured output for the policy widget"
+escalation-tone,"This is the third time I have asked. Refund me now.","llm-rubric: Polite, apologises, states the return window","tone on a repeat contact"
+refund-window-eu,"I am in Germany. What is my return window?","14 days","added 2026-09-02 from ticket #4412"
+refund-partial-shipment,"Half my order arrived. Can I return just that half?","partial","added 2026-09-02 from ticket #4412"

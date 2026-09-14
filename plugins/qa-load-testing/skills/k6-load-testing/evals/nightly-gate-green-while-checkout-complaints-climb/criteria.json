@@ -1,0 +1,41 @@
+{
+  "context": "A gate that passes while users suffer, with two plausible wrong answers already on the table and a third one waiting for whoever tries to fix the gate. Predicted baseline failure: the agent finds the slow group - it is visible as a second cluster in the histogram - and then reaches for the obvious repair, a 99th-percentile threshold, which on this distribution does not work. The affected population is 30 of 6,002 requests, 0.50%, so the 99th percentile sits below the cluster at about 562 ms and any p(99) budget anyone would actually write leaves the run of the 10th green. Only the deep tail moves: computed from the supplied histogram the 99.9th percentile is around 2,550 ms, and k6's default summary stat set stops at p(95), so that number is not even printed unless the stat set is widened. The two proposals on the table are both refusable on the supplied evidence. The slow rows carry effectively all of their time waiting for the first byte - 2,190-2,640 ms of waiting against 2.3-7.1 ms of receiving, with response sizes identical to the fast rows - so compression and a payload diet address nothing. And mean response time is the worst statistic available for this shape: the divergence between the 154.7 ms average and the 116 ms median is itself the evidence that there are two groups rather than one. The share ties out with support: 0.50% of the run against 38 tickets in roughly 7,600 attempts.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The new gate is shown to fail the run of the 10th",
+      "max_score": 30,
+      "description": "tests/load/checkout.js gains a pass/fail condition that the supplied distribution actually breaches - the deep tail (around 2,550 ms at the 99.9th percentile) or the run maximum, at a defensible budget - and the summary stat set is widened so that statistic is reported at all, since the default output stops at the 95th percentile. The report must demonstrate the claim with numbers from the histogram. Adding only a 99th-percentile threshold scores at most half: computed from the supplied data the 99th percentile is about 562 ms, so any budget in play still passes. Asserting in the report that a p(99) gate would have failed the 10th scores zero for this criterion, because the supplied distribution shows it would not. Leaving the options block unchanged also scores zero."
+    },
+    {
+      "name": "The affected population is sized, not just spotted",
+      "max_score": 18,
+      "description": "The report states that about 0.5% of checkout requests - 30 of the 6,002 in the run - sit between roughly 2.2 and 2.65 seconds while everything else finishes under about 800 ms, and connects that share to 38 tickets in roughly 7,600 attempts. Reporting only that there are slow outliers, or that the maximum is 2.6 s, without the share of traffic and the magnitude together, scores at most half. Concluding that the distribution is healthy, that the numbers are fine because the gate passed, or that nothing in the data supports the complaints scores zero for this criterion regardless of the rest."
+    },
+    {
+      "name": "The compression theory is answered with the phase numbers",
+      "max_score": 16,
+      "description": "The report rejects Marek's payload plan on the supplied evidence: on the slow rows the time is spent waiting for the first byte - 2,190-2,640 ms of waiting against 2.3-7.1 ms of receiving - and the response sizes on those rows are the same ~24 kB as on the fast ones, so the body is not what anyone is waiting for. Endorsing compression, a payload diet, or any transfer or network explanation as the fix scores zero. Rejecting it without citing the waiting, receiving and size columns scores at most half."
+    },
+    {
+      "name": "MUST NOT make the mean the signal",
+      "max_score": 16,
+      "description": "MUST NOT adopt mean response time as the job's pass/fail signal, and MUST NOT present the 154.7 ms average as what a typical checkout experiences - with two groups there is no typical request and the average falls between them. MUST NOT relax or remove the existing p(95)<500 threshold to make room for whatever is added: it is the only thing protecting the bulk of the traffic. Any of these scores zero for this criterion. Full marks require saying plainly why the mean is the wrong statistic for this shape, ideally using the 154.7 against 116 divergence as the tell."
+    },
+    {
+      "name": "The analysis is covered by tests and the suite stays green",
+      "max_score": 10,
+      "description": "test/analyze-latency.test.mjs exercises the computation on known input with a hand-checkable expected value - a percentile read out of a small histogram, or a cluster boundary - not merely that the function returns an object, and `npm test` passes with the pre-existing csv test still green. A suite that does not run, or a test that asserts nothing about the numbers, scores zero."
+    },
+    {
+      "name": "Supplied inputs left intact",
+      "max_score": 6,
+      "description": "MUST NOT edit anything under data/, lib/csv.mjs or test/csv.test.mjs - in particular MUST NOT drop, merge or re-label the slow buckets to make the analysis tidier. Any modification to those files scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "scripts/analyze-latency.mjs, reports/latency-analysis.json (actually produced by running the script, not hand-written), test/analyze-latency.test.mjs and reports/checkout-latency.md all exist. A missing analysis output or report scores at most half."
+    }
+  ]
+}

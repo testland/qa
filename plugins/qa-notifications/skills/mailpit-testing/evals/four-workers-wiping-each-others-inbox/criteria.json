@@ -1,0 +1,46 @@
+{
+  "context": "Four workers share one mail container and every test starts by deleting the whole mailbox, so each worker routinely destroys mail another worker has already had accepted. Predicted baseline failure: the agent reads run #4471 as one timing problem and accepts the attached lock patch, because the patch note reports 19 green runs out of 20 and the patch is the only proposal that visibly addresses interleaving. The lock is wrong twice over — it releases as soon as the search hits, so failure 1 (the clear that lands between the search and the fetch-by-id) survives it untouched, and its own numbers show the job going from 6m11s to a 10m14s median, which is most of the parallelism the team bought. The deeper miss is that no lock is needed at all: nothing in this suite requires an empty mailbox, only a mailbox in which this test can find its own message and no other. The three failures have three causes — a clear between search and fetch, a clear that destroyed an already-accepted message, and a read of the newest message in a shared mailbox — and the fix is per-test recipient isolation with every read scoped to that recipient, after which the whole-mailbox clear can be deleted and the workers stop interacting. The second predicted failure is the support lead's new check: the welcome file's existing test asserts against `Snippet`, and the captured search result in the report shows `Snippet` truncated mid-word at roughly 250 characters with the sign-in URL below the cut, so a check copied from the line above it can never see the URL it is supposed to verify.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "All three test files are rewritten and `docs/email-suite-parallel-fix.md` exists. Missing the write-up scores zero for this item."
+    },
+    {
+      "name": "Per-test recipient isolation",
+      "max_score": 30,
+      "description": "Each test sends to an address unique to that test run — a per-test suffix on the local part, a per-test tag, or an equivalent that the capture server can filter on — and every read is scoped to that address or tag, so no test can ever be handed another test's message. Full marks require the uniqueness to be per test invocation and the reads to be filtered by it. Uniqueness only at the worker level (one fixed address per worker, shared by that worker's tests) scores at most half. Leaving both tests sending to the same fixed `qa@example.com` / `newuser@example.com` and relying on the mailbox being empty scores zero."
+    },
+    {
+      "name": "MUST NOT clear the whole mailbox",
+      "max_score": 26,
+      "description": "MUST NOT leave any whole-mailbox delete in the suite. A `DELETE /api/v1/messages` surviving in `beforeEach`, moved to a once-per-worker `before`, or wrapped in the proposed lock all score zero for this criterion: every one of them destroys mail that a concurrently running worker has already had accepted, which is failure 2. Deleting only this test's own messages after it has finished with them is acceptable."
+    },
+    {
+      "name": "Lock patch rejected on its own numbers",
+      "max_score": 20,
+      "description": "The write-up rejects the lock proposal and says why on the evidence: it releases at the search hit so the fetch-by-id in failure 1 is still unprotected, and its own note records a 10m14s median against the current 6m11s. Recommending or merging the lock scores zero. Rejecting it as 'unnecessary' without engaging with either the surviving failure or the wall-clock number scores at most half."
+    },
+    {
+      "name": "Support lead's check reads the message body",
+      "max_score": 20,
+      "description": "The new plain-text assertion runs against the full text part of the message, fetched as a single message by its id, and covers both the recipient's name and the whole sign-in URL. Asserting against `Snippet` scores zero — the report shows it truncated mid-word before the URL, so such a test can never fail for the reason the support lead cares about and can never pass for the right one. Asserting only the name, or only that some URL is present, scores at most half."
+    },
+    {
+      "name": "Three failures, three causes",
+      "max_score": 18,
+      "description": "The write-up names a distinct cause for each of the three logged failures: the clear that lands between the search and the fetch-by-id; the clear that removed a message the container had already accepted; and the newest-message read returning another worker's mail. Giving all three the same cause, or treating any of them as slow delivery, scores zero. Two of three scores at most half. Full marks also account for the seven `Cannot read properties of undefined` crashes as the same newest-message read against a momentarily empty mailbox."
+    },
+    {
+      "name": "Wait-longer proposal rejected on the evidence",
+      "max_score": 12,
+      "description": "The write-up states that raising the wait to thirty seconds fixes none of the three: failure 2 polled for the full five seconds against a message that no longer existed, failure 1 and failure 3 failed in under a second of their trigger. Adopting the longer timeout, or leaving the question unanswered, scores zero."
+    },
+    {
+      "name": "Tests preserved and the job not slowed",
+      "max_score": 6,
+      "description": "All four original tests still exist with assertions no weaker than before, and the workflow still runs at four-way concurrency. Deleting a test, relaxing an assertion, or pinning the email tests to a serial lane scores zero."
+    }
+  ]
+}

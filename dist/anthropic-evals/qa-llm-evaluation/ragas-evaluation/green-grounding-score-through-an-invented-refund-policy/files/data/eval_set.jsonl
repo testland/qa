@@ -1,0 +1,12 @@
+{"id": "q-01", "question": "How long do I have to get a refund on a monthly plan?", "reference": "Monthly plans are refundable in full within 30 days of the charge."}
+{"id": "q-02", "question": "Where do I download an invoice?", "reference": "Invoices are under Settings > Billing > Invoices."}
+{"id": "q-03", "question": "Can I move a seat to a different person?", "reference": "An account owner reassigns a seat from Settings > Members; the seat is not re-billed."}
+{"id": "q-04", "question": "Is there a cooling-off period on the annual plan?", "reference": "There is no cooling-off period. Annual plans are refundable in full within 30 days of the charge and not at all after that."}
+{"id": "q-05", "question": "Do you support SAML?", "reference": "SAML SSO is available on the Scale tier, configured from Settings > Security."}
+{"id": "q-06", "question": "What happens if my card is declined?", "reference": "We retry the charge on days 3 and 7, then suspend the workspace on day 10."}
+{"id": "q-07", "question": "If I sign up for a year and change my mind in the first fortnight, what happens?", "reference": "There is no cooling-off period. Annual plans are refundable in full within 30 days of the charge and not at all after that."}
+{"id": "q-08", "question": "Where is our data stored?", "reference": "Account data is held in the region selected at signup: EU, US or AP."}
+{"id": "q-09", "question": "If I cancel an annual plan halfway through, do I get half my money back?", "reference": "No. Annual plans are refunded in full within 30 days of the charge and are not prorated after that."}
+{"id": "q-10", "question": "How do I add a teammate?", "reference": "An account owner adds members from Settings > Members; new seats are prorated on the next invoice."}
+{"id": "q-11", "question": "A colleague said there is a two-week window to back out of an annual contract. Is that right?", "reference": "There is no cooling-off period. Annual plans are refundable in full within 30 days of the charge and not at all after that."}
+{"id": "q-12", "question": "Is data encrypted at rest?", "reference": "Data is encrypted at rest and in transit."}

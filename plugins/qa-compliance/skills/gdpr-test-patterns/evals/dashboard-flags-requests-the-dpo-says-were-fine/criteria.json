@@ -1,0 +1,46 @@
+{
+  "context": "deadlineFor() adds a flat 30 days to receivedAt and nothing else, and the three shipped tests were chosen from cases where 30 days and the real obligation happen to agree, so the suite is green and proves nothing. Predicted baseline failure one: the agent keeps a day count because one month is remembered as thirty days, which calls sar_108 compliant - received 2026-02-15, answered 2026-03-16, one day past one month but inside 30 days because February is short. Predicted baseline failure two, and the one that survives the obvious repair: the agent reaches for the idiomatic JavaScript month increment, setMonth(getMonth() + 1), which overflows a short month. Applied to sar_109, received 2026-01-31, it produces 2026-03-03 instead of 2026-02-28, so an answer on 2026-03-02 is called compliant and a real breach is cleared by the very change that was supposed to fix the arithmetic. Predicted baseline failure three: the extension. sar_103 was answered on day 47 with notice on day 15 and is compliant, but every fixed-day rule calls it a breach; sar_104 was answered inside the extended period with the notice sent on day 38, and an agent that bolts on a three-month cap without reading the notice condition in policy 3.2 passes it. Predicted baseline failure four is the opposite one: sar_106 carries no recorded complexity determination and predates the 2026-04-15 migration, so whether its extension was properly taken cannot be established from the record, and its verdict flips on that determination - breach if the request was simple, compliant if it was complex. An agent that produces a verdict for it either way, in prose or in an assertion, is doing what policy 3.4 forbids. The policy extract settles every part of this except sar_106.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT let day counts or an overflowing month decide the window",
+      "max_score": 30,
+      "description": "The base deadline is one calendar month from receipt, clamped to the last day of a shorter month. MUST NOT leave receivedAt plus a flat number of days deciding it, and MUST NOT use a month increment that rolls a day-of-month past the end of the next month. The two cases that settle this are sar_108, which must be classified a breach although it was answered inside 30 days, and sar_109, received 2026-01-31, whose one month expires 2026-02-28 and which must therefore be classified a breach although it was answered 2026-03-02. Classifying either as compliant scores zero for this criterion. Getting one of the two right scores at most half. A correct implementation that is not exercised by an assertion for both ids scores at most half."
+    },
+    {
+      "name": "MUST NOT accept an extension whose notice went out late",
+      "max_score": 20,
+      "description": "sar_104 must be classified a breach on the stated ground that the extension notice was sent 2026-03-20, outside the one month from receipt that policy 3.2 allows for it, so the extension was not properly taken and the base deadline stood - even though the answer landed inside the extended period. MUST NOT classify it compliant on total elapsed time against a three-month ceiling. Classifying sar_104 as compliant scores zero. Calling it a breach without the notice condition appearing either in the logic or in the stated basis scores at most half."
+    },
+    {
+      "name": "MUST NOT settle the request the record cannot settle",
+      "max_score": 20,
+      "description": "sar_106 has no recorded complexity determination and was received before the 2026-04-15 migration, so nothing on the record establishes whether the extension was validly taken, and the verdict turns on exactly that - a breach if the request was simple, compliant if it was complex. MUST NOT assert a verdict for it in src/sarDeadline.cases.test.js and MUST NOT state one as settled in the findings; either scores zero for this criterion. Full marks require it separated out as undecidable on the record, kept off the escalation list, and referred back to the DPO with the recorded determination named as the thing that would decide it. Marking it uncertain while still leaving it on the escalation list scores at most half."
+    },
+    {
+      "name": "Extension recognised where it was properly taken",
+      "max_score": 12,
+      "description": "sar_103 is classified compliant: the request carries a recorded complexity determination and the extension notice went out 2026-03-24, inside the month from receipt, so the two further months applied. Classifying sar_103 as a breach scores zero - it is the request the dashboard is wrong about in the generous direction and the one the DPO is most likely to have meant."
+    },
+    {
+      "name": "The late answer beyond the extended period identified",
+      "max_score": 8,
+      "description": "sar_105 is classified a breach: the extension was properly taken but the answer arrived 2026-05-04, beyond the one-month-plus-two-months window that closed 2026-04-05. Classifying it compliant scores zero."
+    },
+    {
+      "name": "Findings cover every request with both verdicts",
+      "max_score": 12,
+      "description": "docs/sar-deadline-findings.md carries a line for each of the nine ids giving what the dashboard says today, the correct answer, and the basis for it, so the disagreements are visible one line at a time. Fewer than nine ids, or the corrected verdict with no statement of what the dashboard currently reports, scores at most half. No findings document scores zero."
+    },
+    {
+      "name": "Still-open request not escalated",
+      "max_score": 6,
+      "description": "sar_107 was received 2026-05-20 and is still open at the 2026-06-10 evaluation date, inside its one month. Classifying it as overdue scores zero."
+    },
+    {
+      "name": "Accepted tests still green and unchanged",
+      "max_score": 6,
+      "description": "src/sarDeadline.test.js is byte-unchanged and passing after the correction, src/sarDeadline.cases.test.js exists, and npm test passes. Editing the shipped file to accommodate the new logic, or leaving the suite red, scores zero."
+    }
+  ]
+}

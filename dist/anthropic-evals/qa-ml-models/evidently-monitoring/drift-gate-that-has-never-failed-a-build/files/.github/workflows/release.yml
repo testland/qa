@@ -1,0 +1,26 @@
+name: release-candidate
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["rc-*"]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements-ci.txt
+      - name: unit tests
+        run: pytest -q
+      - name: drift gate
+        continue-on-error: true
+        run: python -m ci.drift_gate || true
+      - name: upload drift report
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-report
+          path: drift_report.html

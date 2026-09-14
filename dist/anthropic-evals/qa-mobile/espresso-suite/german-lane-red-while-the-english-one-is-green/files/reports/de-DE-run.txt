@@ -1,0 +1,52 @@
+Lane: android-de-DE, Pixel 6 API 34, system locale de-DE, 2026-09-12 02:14 UTC
+Lane: android-en-US, Pixel 6 API 34, system locale en-US - all 6 PASSED
+
+com.northwind.signup.SignUpTest > showsPasswordStrengthMeter PASSED
+com.northwind.signup.SignUpTest > rejectsShortPassword PASSED
+
+com.northwind.signup.SignUpTest > continuesFromEmailStep FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Continue"
+    View Hierarchy:
+    +-->Button{id=2131231188, res-name=continue_button, visibility=VISIBLE, text=Weiter}
+
+com.northwind.signup.SignUpTest > createsAccount FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Continue"
+    (failed on the first step; the "Create account" tap was never reached)
+
+com.northwind.signup.SignUpTest > greetsTheNewUserByName FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Continue"
+
+com.northwind.signup.SignUpTest > showsFirstYearTotalOnConfirmation FAILED
+    java.lang.AssertionError: 'with text: is "$22.49"' doesn't match the selected view.
+    Expected: with text: is "$22.49"
+    Got: "AppCompatTextView{id=2131231402, res-name=first_year_total, text=22,49 $}"
+
+4 tests failed, 2 passed.
+
+--- Manual run, de-DE lane, after Marco locally hardcoded the German labels ---
+
+com.northwind.signup.SignUpTest > continuesFromEmailStep PASSED
+
+com.northwind.signup.SignUpTest > createsAccount FAILED
+androidx.test.espresso.AmbiguousViewMatcherException: 'with text: is "Konto erstellen"' matches multiple views in the hierarchy.
+Problem views are marked with '****MATCHES****' below.
+
+    +--->LinearLayout{id=2131231221, res-name=password_step, visibility=VISIBLE}
+    |
+    +---->AppCompatTextView{id=2131231224, res-name=password_step_title, visibility=VISIBLE, text=Konto erstellen} ****MATCHES****
+    |
+    +---->AppCompatButton{id=-1, res-name=NO_ID, visibility=VISIBLE, text=Konto erstellen} ****MATCHES****
+
+com.northwind.signup.SignUpTest > greetsTheNewUserByName FAILED
+    java.lang.AssertionError: 'with text: is "Willkommen, Steve"' doesn't match the selected view.
+    Expected: with text: is "Willkommen, Steve"
+    Got: "AppCompatTextView{id=2131231377, res-name=greeting, visibility=VISIBLE, text=Willkommen, {0}}"
+
+com.northwind.signup.SignUpTest > showsFirstYearTotalOnConfirmation FAILED
+    java.lang.AssertionError: 'with text: is "$22.49"' doesn't match the selected view.
+    Got: "AppCompatTextView{id=2131231402, res-name=first_year_total, text=22,49 $}"
+
+--- Same two views on the en-US lane, same build, for comparison ---
+
+    "AppCompatTextView{id=2131231377, res-name=greeting, text=Welcome, Steve}"
+    "AppCompatTextView{id=2131231402, res-name=first_year_total, text=$22.49}"

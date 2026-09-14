@@ -1,0 +1,37 @@
+# 12 refund cases. Same two-assertion shape on each; three shown in full.
+- id: refund-reply-01
+  vars:
+    ticket: "Duplicate seat charge on the September invoice."
+    correct_refund: "14.00"
+  assert:
+    - type: similar
+      value: "A refund of $14.00 has been issued to the card ending 4417. It should appear within 5 business days."
+      threshold: 0.80
+    - type: llm-rubric
+      value: "Reply is polite, explains the refund and gives the customer a next step."
+
+- id: refund-reply-02
+  vars:
+    ticket: "Cancelled on day 9 of a 30 day cycle at $60.00."
+    correct_refund: "42.00"
+  assert:
+    - type: similar
+      value: "A refund of $42.00 has been issued to the card ending 0192. It should appear within 5 business days."
+      threshold: 0.80
+    - type: llm-rubric
+      value: "Reply is polite, explains the refund and gives the customer a next step."
+
+- id: refund-reply-03
+  vars:
+    ticket: "Charged twice for the August invoice at $41.00."
+    correct_refund: "41.00"
+  assert:
+    - type: similar
+      value: "A refund of $41.00 has been issued to the card ending 7731. It should appear within 5 business days."
+      threshold: 0.80
+    - type: llm-rubric
+      value: "Reply is polite, explains the refund and gives the customer a next step."
+
+# refund-reply-04 .. refund-reply-12 follow the same shape against their own
+# reference replies. `correct_refund` is set on every case and is not read by
+# any assertion; it is there for the ticket generator.

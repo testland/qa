@@ -1,0 +1,41 @@
+{
+  "context": "The fix an agent reaches for first has already been applied: every test launches its own copy and closes it, and the config already pins one test at a time, so neither per-test launching nor the concurrency answer is available as the remedy. What is left is where the close sits. It is the last statement of each test body, so it runs only when the body reaches it - a failed assertion aborts the test and the application it started is never closed, which is what the three surviving processes in the attached `ps` are, and every later launch then finds that instance still holding the lock in the shared user-data directory. Predicted baseline failure: the agent reads the follow-on launch errors as the problem rather than as a consequence, and answers with the retries, the process-killing CI step, or the return to a single shared launch that the prompt offers, or it tightens assertions and calls the cascade environmental. The second and third symptoms each need a separate insight that the per-test launch does not supply. The recent-documents count grows across runs because restarting the process does not clear what the application wrote to disk - every launch lands in the same default user-data directory - which is why deleting one folder buys exactly one green run. And the single-instance test passed with the lock removed because it reads a synchronous snapshot of the window list immediately after starting the second copy, before anything has had a chance to happen, so it asserts nothing either way.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Closing the application is teardown, not the last line of the test",
+      "max_score": 28,
+      "description": "MUST NOT leave the close as a statement at the end of the test body, where a failing assertion skips it and leaks a running instance. The close must move somewhere that runs whatever the outcome - a fixture whose teardown runs after the test, or an `afterEach` - so a failure inside one test cannot leave an application alive for the next one. Any test whose only close is inside its own body scores zero for this criterion regardless of the rest, including a body-level close wrapped in `try` / `finally` for only some of the four. Moving the close into teardown for some tests but not all scores at most half."
+    },
+    {
+      "name": "User-data directory unique per test",
+      "max_score": 24,
+      "description": "Each launch is pointed at its own user-data directory - a fresh per-test temporary path given to the launch - so recent documents, workspace state, window bounds and the lock file cannot carry over between tests or between runs. Leaving every launch in the machine's default user-data directory scores zero: that is why the recent-documents count reads 34 on a developer machine and 1 on a clean runner, and deleting the folder by hand buys one green run only. Creating one fresh directory for the whole file rather than one per test scores at most half."
+    },
+    {
+      "name": "Single-instance test can now fail",
+      "max_score": 18,
+      "description": "The assertion must no longer be a synchronous read of the window list taken immediately after the second launch - it must wait for something the lock actually causes, such as the second application's process terminating, or the first application reporting from its own main process that it has been signalled and still holds exactly one window. Both launches in that test must also share that test's own user-data directory, because the lock is scoped to it - give them separate directories and both copies start cleanly and the test passes for the wrong reason again. Reading the window list immediately scores zero, as does putting the two launches in different directories, closing the first instance before starting the second, or deleting, skipping or quarantining the test."
+    },
+    {
+      "name": "Cascade not papered over",
+      "max_score": 10,
+      "description": "MUST NOT answer with retries on the file, a step that kills leftover Ledgerline processes before the job, a raised timeout, or serialised execution declared intentional. Nadia's and Bo's proposals are to be answered no in `docs/workspace-isolation.md`. Adopting any of them as part of the remedy scores zero here, even alongside a correct fix."
+    },
+    {
+      "name": "No return to a shared instance",
+      "max_score": 10,
+      "description": "MUST NOT reinstate a single application shared across the file's tests through `beforeAll` / `afterAll` - Jonas's proposal is the arrangement the team already moved away from, and one leaked window or piece of main-process state contaminates the next test. Any surviving shared launch scores zero here, and the document must answer Jonas directly."
+    },
+    {
+      "name": "All three symptoms explained separately",
+      "max_score": 12,
+      "description": "`docs/workspace-isolation.md` explains the cascade as a leaked instance from a close that never ran, the developer-machine failure as on-disk state accumulating in one shared user-data directory across runs, and the green run on the lock-removed branch as an assertion taken before anything could have happened. Explaining two of the three scores at most half; collapsing all three into one 'test isolation' explanation, or attributing any of them to the environment, scores zero."
+    },
+    {
+      "name": "Out-of-scope files and working config untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify `src/main/index.ts` or `tests/e2e/about.spec.ts`, both declared out of scope, and MUST NOT raise the worker count - the config already runs one test at a time and more concurrency would reintroduce the same collision deliberately. Any of these scores zero here."
+    }
+  ]
+}

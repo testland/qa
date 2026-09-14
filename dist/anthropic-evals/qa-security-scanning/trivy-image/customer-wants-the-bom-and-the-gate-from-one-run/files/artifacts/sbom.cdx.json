@@ -1,0 +1,28 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:2f1c9a10-6b64-4a7e-9d51-0a7c2e884f31",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-11T04:22:18Z",
+    "component": {
+      "type": "container",
+      "name": "registry.internal/checkout-api",
+      "version": "sha256:6ae0b31d77c4"
+    }
+  },
+  "components": [
+    { "type": "library", "name": "libssl3", "version": "3.0.14-1~deb12u2", "purl": "pkg:deb/debian/libssl3@3.0.14-1~deb12u2" },
+    { "type": "library", "name": "libc6", "version": "2.36-9+deb12u8", "purl": "pkg:deb/debian/libc6@2.36-9+deb12u8" },
+    { "type": "library", "name": "libexpat1", "version": "2.5.0-1", "purl": "pkg:deb/debian/libexpat1@2.5.0-1" },
+    { "type": "library", "name": "undici", "version": "6.21.1", "purl": "pkg:npm/undici@6.21.1" },
+    { "type": "library", "name": "express", "version": "4.19.2", "purl": "pkg:npm/express@4.19.2" },
+    { "type": "library", "name": "pino", "version": "9.4.0", "purl": "pkg:npm/pino@9.4.0" }
+  ],
+  "vulnerabilities": [
+    { "id": "CVE-2025-30208", "ratings": [ { "severity": "high" } ], "affects": [ { "ref": "pkg:npm/vite@5.4.8" } ] },
+    { "id": "CVE-2024-21538", "ratings": [ { "severity": "high" } ], "affects": [ { "ref": "pkg:npm/cross-spawn@7.0.3" } ] },
+    { "id": "CVE-2025-48387", "ratings": [ { "severity": "critical" } ], "affects": [ { "ref": "pkg:npm/tar-fs@3.0.4" } ] },
+    { "id": "CVE-2024-9143", "ratings": [ { "severity": "high" } ], "affects": [ { "ref": "pkg:deb/debian/libssl3@3.0.11-1~deb12u2" } ] }
+  ]
+}

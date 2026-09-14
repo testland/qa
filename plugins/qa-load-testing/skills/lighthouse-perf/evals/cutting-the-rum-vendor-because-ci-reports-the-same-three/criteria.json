@@ -1,0 +1,41 @@
+{
+  "context": "The director's case rests on a factual claim about the CI job — 'it reports the same three metrics on every pull request' — and that claim is false in a way that is sitting in the attached config. Every entry in the assertion matrix is a regular expression anchored around a bare path (^/portal$, ^/portal/messages$, ^/appointments(/new)?$) while the collected URLs are absolute (http://localhost:4300/portal and siblings), so no entry can match any URL the job audits and nothing has been asserted since March. That is what 214 runs with zero failures means, alongside three regressions that shipped green and were caught by the vendor being cut. Predicted baseline failure: the agent treats the attached config as working context rather than as the thing to check, writes the lab-versus-field essay, and — where it engages with the never-red gate at all — adopts Marisol's explanation that the thresholds are too generous and tightens numbers that are never evaluated, which changes nothing and leaves the reviewer with a written statement that the free instrument already covers the paid one. The second predicted miss is the hourly production run offered as the replacement: it sounds like a compromise, it fires real traffic at a patient-facing system and pollutes its analytics, and it still yields a synthetic median rather than a distribution over real sessions. An agent that refuses everything and cuts nothing has failed differently but just as clearly — the nightly single-URL production audit is the line that genuinely duplicates the per-PR gate, and the director said to keep it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/perf-tooling-decision.md exists and carries an explicit keep / cancel / change recommendation for all three line items on the cost sheet. A document that discusses the question without landing a recommendation on each line scores zero for this item."
+    },
+    {
+      "name": "MUST NOT accept the CI gate as a working instrument",
+      "max_score": 30,
+      "description": "The answer must establish that the CI job has asserted nothing since March because each matchingUrlPattern is anchored around a bare path and cannot match the absolute http://localhost:4300/... URLs the job collects, AND must edit .lighthouserc.js so every collected URL is covered by a pattern that actually matches it. MUST NOT adopt Marisol's explanation: lowering thresholds, or changing any threshold value as the remedy while the patterns stay as they are, scores zero for this criterion regardless of how well the rest is argued, as does leaving .lighthouserc.js unedited. Naming the defect in prose but shipping no corrected patterns scores at most half; correcting the patterns with no explanation of why 214 runs were green also scores at most half."
+    },
+    {
+      "name": "MUST NOT remove the real-user measurement",
+      "max_score": 18,
+      "description": "MUST NOT delete or disable src/vitals.mjs, MUST NOT drop the web-vitals dependency, and MUST NOT recommend cancelling the real-user vendor. Any of those scores zero for this criterion. Full marks require the recommendation to keep it plus the reason stated as a capability difference — a synthetic run on a build the pipeline controls answers whether a change made things worse, while only production telemetry answers what real members experience at the 75th percentile across the devices and connections they actually have. Keeping it on vague grounds such as 'more data is better' scores at most half."
+    },
+    {
+      "name": "MUST NOT offer scheduled production runs as the substitute",
+      "max_score": 14,
+      "description": "MUST NOT endorse pointing the runner at https://portal.halloway.health on an hourly or any other schedule. Recommending it, or passing over it in silence when the cost sheet and the director's message both raise it, scores zero for this criterion. Full marks require both reasons: it fires real traffic at a patient-facing production system and contaminates the analytics collected there, and its output is still a synthetic median rather than a distribution over real sessions, so it does not restore what the cut removed."
+    },
+    {
+      "name": "Divergence read as evidence",
+      "max_score": 10,
+      "description": "The document uses the attached comparison — 2.21 s against 4.93 s on /portal, or 2.60 s against 6.02 s on /appointments — together with at least one structural reason for the gap available in the attachments: the 68% mobile field mix against a desktop-preset run, the 41% cold-cache share, or the Cascadia widget that renders for 22% of real members and never for a synthetic member with no plan attached. Asserting only that the two tools are different in kind, with no reference to the measured gap, scores at most half. Treating the field numbers as miscalibrated scores zero."
+    },
+    {
+      "name": "The genuinely redundant line is cut",
+      "max_score": 10,
+      "description": "Beacon Nightly is recommended for cancellation — one synthetic audit of one production URL, which the per-PR gate already covers on four URLs with repeated runs once it is asserting anything at all, and which hits production to do it. Recommending that all three line items be kept scores zero here: it hands back a review that saves nothing and refuses the director on every line, including the one where he is right."
+    },
+    {
+      "name": "No collateral edits",
+      "max_score": 5,
+      "description": "MUST NOT modify anything under test/, and node --test must still pass against the edited config. Any edit under test/ scores zero here."
+    }
+  ]
+}

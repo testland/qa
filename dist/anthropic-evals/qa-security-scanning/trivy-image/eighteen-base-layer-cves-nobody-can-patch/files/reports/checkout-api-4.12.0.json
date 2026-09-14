@@ -1,0 +1,43 @@
+{
+  "ArtifactName": "checkout-api:4.12.0",
+  "ArtifactType": "container_image",
+  "Metadata": { "OS": { "Family": "debian", "Name": "12.7" } },
+  "Results": [
+    {
+      "Target": "checkout-api:4.12.0 (debian 12.7)",
+      "Class": "os-pkgs",
+      "Type": "debian",
+      "Vulnerabilities": [
+        { "VulnerabilityID": "CVE-2024-6119", "PkgName": "libssl3", "InstalledVersion": "3.0.11-1~deb12u2", "FixedVersion": "3.0.14-1~deb12u2", "Severity": "CRITICAL" },
+        { "VulnerabilityID": "CVE-2023-31484", "PkgName": "perl-base", "InstalledVersion": "5.36.0-7+deb12u1", "FixedVersion": "", "Severity": "CRITICAL" },
+        { "VulnerabilityID": "CVE-2024-41996", "PkgName": "openssl", "InstalledVersion": "3.0.11-1~deb12u2", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2023-45918", "PkgName": "libncursesw6", "InstalledVersion": "6.4-4", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2022-27943", "PkgName": "libstdc++6", "InstalledVersion": "12.2.0-14", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-33601", "PkgName": "libc-bin", "InstalledVersion": "2.36-9+deb12u8", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-45491", "PkgName": "libexpat1", "InstalledVersion": "2.5.0-1", "FixedVersion": "2.5.0-1+deb12u1", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2023-39804", "PkgName": "tar", "InstalledVersion": "1.34+dfsg-1.2+deb12u1", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-26462", "PkgName": "libkrb5-3", "InstalledVersion": "1.20.1-2+deb12u2", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2022-3219", "PkgName": "gpgv", "InstalledVersion": "2.2.40-1.1", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2025-27113", "PkgName": "libxml2", "InstalledVersion": "2.9.14+dfsg-1.3~deb12u1", "FixedVersion": "2.9.14+dfsg-1.3~deb12u2", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2023-50495", "PkgName": "libtinfo6", "InstalledVersion": "6.4-4", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-28085", "PkgName": "bsdutils", "InstalledVersion": "1:2.38.1-5+deb12u1", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2023-4039", "PkgName": "libgcc-s1", "InstalledVersion": "12.2.0-14", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-0553", "PkgName": "libgnutls30", "InstalledVersion": "3.7.9-2+deb12u2", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2022-41409", "PkgName": "libpcre2-8-0", "InstalledVersion": "10.42-1", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2023-7008", "PkgName": "libsystemd0", "InstalledVersion": "252.30-1~deb12u2", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-52533", "PkgName": "libglib2.0-0", "InstalledVersion": "2.74.6-2+deb12u4", "FixedVersion": "", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-9143", "PkgName": "libssl3", "InstalledVersion": "3.0.11-1~deb12u2", "FixedVersion": "3.0.15-1~deb12u1", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2025-24528", "PkgName": "libkrb5-3", "InstalledVersion": "1.20.1-2+deb12u2", "FixedVersion": "1.20.1-2+deb12u3", "Severity": "HIGH" }
+      ]
+    },
+    {
+      "Target": "app/package-lock.json",
+      "Class": "lang-pkgs",
+      "Type": "npm",
+      "Vulnerabilities": [
+        { "VulnerabilityID": "CVE-2025-30208", "PkgName": "vite", "InstalledVersion": "5.4.8", "FixedVersion": "5.4.15", "Severity": "HIGH" },
+        { "VulnerabilityID": "CVE-2024-21538", "PkgName": "cross-spawn", "InstalledVersion": "7.0.3", "FixedVersion": "7.0.5", "Severity": "HIGH" }
+      ]
+    }
+  ]
+}

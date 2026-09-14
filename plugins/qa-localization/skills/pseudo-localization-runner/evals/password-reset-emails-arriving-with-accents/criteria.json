@@ -1,0 +1,41 @@
+{
+  "context": "An accented test locale reaching 3,102 customers, with the runtime switch verifiably off the whole time. Predicted baseline failure: the agent goes after the flag anyway - hardening src/flags.js, adding a NODE_ENV guard around pseudoLocalize, gating src/notifier.js on an environment check - and declares the incident closed. Every one of those is a no-op here. PSEUDO_LOCALE is already an equality test against 'on', it was unset on the host, and src/notifier.js therefore never called the transform during the window. The accented strings were already in locales/en.json inside the image: ci/release.sh runs `node scripts/build-locales.js` with no arguments, build() defaults `code` to 'en', and the output path defaults to locales/<code>.json - so the generator reads the source locale, transforms it, and writes it back over itself. Every service on that release script inherits the same overwritten bundle regardless of any flag, which is why digest-worker on 2026-09-22 is next and why nothing reproduces from a local checkout. The suite stayed green for two reinforcing reasons the agent is predicted to state as one or neither: release.sh runs npm test before the generator, and test/build-locales.test.js always passes an explicit --out, so the defaulting path has never been executed under test. Dana's proposal is the second trap and it is cheap, sympathetic and specific - and it deletes the property that surfaced CX-8890, the SMS gateway transcoding to a single-byte encoding, which is a real defect that would garble French and German the same way.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT strip the accents from the generator",
+      "max_score": 30,
+      "description": "MUST NOT adopt Dana's proposal or any variant that leaves the transform producing plain ASCII - dropping MAP, transliterating back to unaccented letters, bracket-markers only. Doing so scores zero for this criterion regardless of the rest. Full marks require the refusal plus the reason tied to the evidence in the report: the accented characters are what exposed CX-8890, and an ASCII-only test locale cannot surface an encoding defect on any path. Refusing on generic grounds, without connecting it to the SMS finding, scores at most half."
+    },
+    {
+      "name": "Real mechanism found",
+      "max_score": 26,
+      "description": "Identifies that ci/release.sh invokes scripts/build-locales.js with no arguments, that build() then defaults the locale code to 'en' and the output path to locales/en.json, and that the generator therefore overwrites the source bundle inside the release image - so the shipped artifact contains accented strings and no runtime flag is involved. An answer that hardens src/flags.js, adds an environment guard in src/notifier.js, or otherwise treats this as a flag or configuration failure scores zero here. Naming the generator as the culprit without the defaulting path that causes the overwrite scores at most half."
+    },
+    {
+      "name": "Regression check that fails before and passes after",
+      "max_score": 16,
+      "description": "A check exists that is red against the repository as supplied and green against the fix - for example the generator refusing to write the source locale path, or a build-time assertion that the shipped source bundle still matches the committed one. Full marks require it to exercise the defaulting path, which is the path nothing has ever run. A test that only re-asserts the explicit --out case, which already passes today, scores zero. Describing the check in prose without adding it scores at most half."
+    },
+    {
+      "name": "Why the suite was green",
+      "max_score": 12,
+      "description": "States both reasons: ci/release.sh runs npm test before the generator, so tests never see the generated tree, and test/build-locales.test.js always supplies --out, so the defaulting branch has never been executed under test. One reason alone scores at most half. Attributing the green suite to missing coverage of the notifier scores zero."
+    },
+    {
+      "name": "Every consumer of the artifact covered",
+      "max_score": 10,
+      "description": "The fix protects anything built by that release script, not just the notifier - the report names digest-worker releasing 2026-09-22, plus billing-mailer and invite-service. A fix applied only inside src/notifier.js scores zero here even if the mechanism was correctly identified."
+    },
+    {
+      "name": "MUST NOT remove the accented mode",
+      "max_score": 6,
+      "description": "MUST NOT resolve this by deleting scripts/build-locales.js, removing src/pseudo.js, or otherwise leaving no way to run the accented locale in staging - the answer must keep it usable off the production path. Removing the capability scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/inc-4471-followup.md exists and covers the mechanism, the green suite, the decision on Dana's proposal and the impact on the other services, and npm test passes. Missing the write-up entirely scores zero."
+    }
+  ]
+}

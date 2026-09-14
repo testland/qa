@@ -1,0 +1,46 @@
+id,component,severity,found_in,opened,summary
+BUG-4401,inventory-cache,S1,production,2026-02-09,Stale stock shown after warehouse sync
+BUG-4408,inventory-cache,S2,test,2026-02-12,Cache key collision across regions
+BUG-4415,inventory-cache,S3,test,2026-02-18,TTL not honoured on bulk invalidate
+BUG-4422,inventory-cache,S1,production,2026-02-24,Oversell on flash sale SKUs
+BUG-4430,inventory-cache,S3,test,2026-03-02,Metrics label cardinality blowup
+BUG-4441,inventory-cache,S2,production,2026-03-09,Negative stock after partial refund
+BUG-4449,inventory-cache,S3,test,2026-03-16,Warm-up job races with deploy
+BUG-4455,inventory-cache,S2,test,2026-03-23,Region failover serves cold cache
+BUG-4460,inventory-cache,S3,test,2026-03-30,Eviction metric off by one
+BUG-4471,inventory-cache,S1,production,2026-04-07,Oversell repeat on same SKU family
+BUG-4480,inventory-cache,S3,test,2026-04-14,Redis client retry storm
+BUG-4488,inventory-cache,S3,test,2026-04-21,Cache stampede on cold start
+BUG-4495,inventory-cache,S2,test,2026-04-28,Invalidation missed on price change
+BUG-4402,promo,S3,test,2026-02-10,Expired promo shows in cart hint
+BUG-4419,promo,S3,test,2026-02-20,Free-shipping promo copy truncated
+BUG-4433,promo,S3,test,2026-03-04,Stacked promo order dependent
+BUG-4451,promo,S3,test,2026-03-19,Promo code case sensitivity
+BUG-4467,promo,S3,test,2026-04-03,Percentage promo tooltip rounding display
+BUG-4483,promo,S3,test,2026-04-16,Promo badge misaligned on mobile
+BUG-4437,payments-fallback,S1,test,2026-03-06,Fallback provider times out at 30s in chaos drill
+BUG-4404,,S2,test,2026-02-11,Audit console: export misses deleted users
+BUG-4406,,S3,test,2026-02-11,Audit console: filter resets on paginate
+BUG-4411,,S2,test,2026-02-14,Audit console: actor column blank for API keys
+BUG-4413,,S3,test,2026-02-16,Audit console: CSV encoding on non-ASCII actor
+BUG-4417,,S2,production,2026-02-19,Audit console: entries missing for bulk role change
+BUG-4421,,S3,test,2026-02-23,Audit console: timezone shown in UTC only
+BUG-4425,admin-audit,S1,production,2026-02-26,Audit log gap during failover window
+BUG-4428,,S3,test,2026-03-01,Audit console: search ignores quotes
+BUG-4435,,S2,test,2026-03-05,Audit console: retention banner wrong count
+BUG-4439,,S3,test,2026-03-08,Audit console: sort by actor unstable
+BUG-4443,,S2,test,2026-03-11,Audit console: impersonation not labelled
+BUG-4446,,S3,test,2026-03-14,Audit console: empty state copy
+BUG-4452,,S2,production,2026-03-20,Audit console: entries duplicated on retry
+BUG-4457,,S3,test,2026-03-25,Audit console: column widths reset
+BUG-4462,,S2,test,2026-03-31,Audit console: API key rotation not recorded
+BUG-4465,,S3,test,2026-04-02,Audit console: tooltip overflow
+BUG-4469,admin-audit,S2,test,2026-04-06,Audit log write dropped under backpressure
+BUG-4473,,S3,test,2026-04-09,Audit console: date picker off by one day
+BUG-4477,,S2,test,2026-04-13,Audit console: role diff not shown
+BUG-4482,,S3,test,2026-04-15,Audit console: export button disabled state
+BUG-4486,,S2,test,2026-04-20,Audit console: filter by IP unsupported
+BUG-4490,,S3,test,2026-04-23,Audit console: pagination count wrong
+BUG-4493,,S2,test,2026-04-27,Audit console: bulk export truncated at 5k
+BUG-4497,,S3,test,2026-04-30,Audit console: help link 404
+BUG-4499,catalog-import,S3,test,2026-05-01,Import skips rows with empty GTIN

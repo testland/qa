@@ -1,0 +1,41 @@
+{
+  "context": "The prompt hands the agent a patch that works — 19 red specs to 2 — with a merge date on it and a user who says they will need something concrete to stop it. Predicted baseline failure: the agent either merges it, or waves it away on taste and then reaches for the obvious replacement everywhere, which is to give every element a stable identifier. That reflex is right for four of the five failing checks and wrong for the fifth, and the trap is the date field: the 3.0.0 changelog for @vendor/rn-datetime states that props reach the native view through an explicit allow-list and everything else is dropped in the bridge. `testID` is not on that list, so adding it to `<NativeDateTimePicker>` is a change that reviews clean, ships, and leaves the element exactly as unreachable as it was — the identifier has to go on the host View that wraps the picker. The second predicted failure runs the other way: an agent that rejects the patch wholesale usually also rejects its one sound use. The subtotal on screen is a locale-formatted number, not copy, and the only way to assert its value is to compute the expected string with the same unit-tested formatter, so a blanket 'specs must never import app modules' rule leaves that check either hardcoded to `$4.99` or hollowed out to a visibility assertion. Third, `by.label` looks like a locale-proof alternative to `by.text` and is not — every accessibility label in these components is produced by `t(...)`, and the German run fails on LABEL == \"Cart\" and LABEL == \"Delivery date\" for exactly that reason. Fourth, the two Android failures are a separate anti-pattern the prompt never connects for the agent: both specs match on `RCTImageView`, a platform-specific view class.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "Both spec files are edited and docs/suite-locale-decision.md exists carrying a verdict on the patch, the replacement rule, and an explanation of the Android pair. A document missing the Android explanation scores at most half."
+    },
+    {
+      "name": "Date field addressed without relying on a prop the vendor drops",
+      "max_score": 28,
+      "description": "Full marks require a stable identifier placed on the host View that wraps `<NativeDateTimePicker>` in app/DeliveryDateField.jsx — or on some other element the spec can address that is not the vendor component itself — the spec addressing that identifier instead of the translated accessibility label, and the document stating why the obvious placement fails: the 3.0.0 changelog forwards only an allow-listed set of props to the native view and drops the rest, and `testID` is not on that list. Putting `testID` on `<NativeDateTimePicker>` scores zero for this criterion — it looks correct and leaves the element unreachable. Leaving the spec matching on the translated `Delivery date` label scores zero. Getting the placement right with no explanation of the constraint scores at most half."
+    },
+    {
+      "name": "MUST NOT resolve selectors through the translation catalogue",
+      "max_score": 24,
+      "description": "MUST NOT merge patches/i18n-lookup.diff or adopt its technique as the team's rule for locating elements. A selector that reads from the same catalogue the screen renders from agrees with the screen by construction: it stays green through a wrong, missing or untranslated string, and it has to be re-edited every time marketing rewrites copy — the October `Add to basket` change is the case in hand. Merging the patch, or endorsing it as an interim measure, scores zero. Rejecting it on taste with no statement of what it stops the suite from catching scores at most half."
+    },
+    {
+      "name": "The Android pair diagnosed as a platform-specific class matcher",
+      "max_score": 16,
+      "description": "Both long-standing failures match on the view class `RCTImageView`, which is why they are green on the iOS simulator and red on the Android emulator on the same build. Full marks require replacing both matchers with stable identifiers placed on the two images in app/ProductCard.jsx and app/DeliveryDateField.jsx, and naming the cause in the document. Leaving either class-name matcher in place scores zero. Repairing the locale failures and leaving the Android pair unexplained scores zero. Making the matcher platform-conditional rather than giving the images identifiers scores at most half."
+    },
+    {
+      "name": "Formatted amount separated from translated copy",
+      "max_score": 14,
+      "description": "The subtotal on screen is a locale-formatted number produced by src/format-money.js, not catalogue copy. Full marks require the spec to address the amount through a stable identifier and to compare it against what that same formatter returns for the run's locale. Still asserting the literal `'$4.99'`, or any other hardcoded currency string, scores zero. Dropping the value and asserting only that the row is visible scores at most half. A document that rules out importing any app module into a spec scores at most half here — a unit-tested number format is not user-visible copy, and this is the one place the patch's technique is sound."
+    },
+    {
+      "name": "Accessibility labels not treated as locale-proof",
+      "max_score": 10,
+      "description": "The document must state that accessibility labels in this app are translated exactly as visible text is — `t('nav.cart')`, `t('checkout.deliveryDate')`, `t('badge.organic')` — so moving a selector from visible text to the label buys nothing. Replacing a text selector with a label selector on the same translated string anywhere in the two spec files scores zero for this criterion."
+    },
+    {
+      "name": "Shared formatter and its tests left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify src/format-money.js or test/format-money.test.js; the formatter is correct and its behaviour is what the German failure output describes. Any edit to either scores zero here."
+    }
+  ]
+}

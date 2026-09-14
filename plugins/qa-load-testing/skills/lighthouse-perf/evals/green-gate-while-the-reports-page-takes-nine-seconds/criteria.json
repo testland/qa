@@ -1,0 +1,41 @@
+{
+  "context": "Two colleagues each offer a confident account of the gate and both are wrong, with nobody in the prompt casting doubt on either. Ilya's is the one that decides this scenario: budget.json exists at the project root, it is shaped correctly, it is even covered by a passing test — and nothing loads it, because the collection settings carry no reference to it, so no byte cap has ever been applied to any run. Its single /* entry is also set above every route in the transfer-size table (2000 kB script, 2000 kB image, 4000 kB total against 1193 / 1604 / 2857 on the worst route), so wiring it up unchanged still gates nothing. Predicted baseline failure: the agent accepts 'bundle size is already handled', spends its effort on the Web Vitals side, and never discovers that the artifact is inert — the file's presence, its correct shape and its green test all argue that it works. Priya's proposal is the other half: raising the category minimum cannot catch the reports page, because the audited URL set is one page, the statically-built marketing home, which is the only route with no ticket against it, and because an aggregate score blends subscores so it cannot say which of the three symptoms the tickets describe — nine seconds to render, the layout jumping twice, a first click that does nothing — actually moved. An agent that adds the reports URL and asserts some Web Vitals on it produces a competent-looking answer that still leaves the April vendor-chunk regression invisible to the pipeline.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "An updated .lighthouserc.js that still loads as CommonJS, plus docs/perf-gate-review.md addressing both Priya and Ilya by name. A review document with no config change scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave the byte budget inert",
+      "max_score": 30,
+      "description": "The resource-size budget must actually be applied by the run: the collection settings must reference the budget file by path, and the answer must state that until now nothing did, which is why the April dependency commit passed every gate. MUST NOT accept Ilya's claim that bundle size is already handled — repeating it, or leaving the config with no reference to the budget file, scores zero for this criterion however good the Web Vitals work is. Referencing it but leaving the single /* entry at caps no route in the transfer-size table can exceed scores at most half, as does splitting the budget per path without wiring it in. Full marks require both: wired in, and scoped per path with caps that the reports route as it stands today would actually exceed."
+    },
+    {
+      "name": "MUST NOT answer with a stricter category score",
+      "max_score": 22,
+      "description": "MUST NOT raise categories:performance minScore as the remedy, and MUST NOT leave an aggregate category score as the only performance assertion in the config. Either scores zero for this criterion. Full marks require individual Web Vitals asserted for loading, interactivity and layout stability, plus the reason Priya's change fails stated in both of its parts: the score is measured on the one route in the inventory that has no ticket against it, and an aggregate score blends subscores so it cannot say which of the three reported symptoms regressed."
+    },
+    {
+      "name": "Representative URL set",
+      "max_score": 16,
+      "description": "The audited set covers more than the complaint: at minimum the marketing home, a logged-in app route, /app/reports and the form route /app/exports/new, chosen as representatives rather than every path in the inventory. Leaving /app/reports unaudited scores zero. Adding only /app/reports and nothing else scores at most half — it fixes the ticket in hand and leaves every other long-tail route exactly as unmeasured as it was."
+    },
+    {
+      "name": "Cause named from the build evidence",
+      "max_score": 12,
+      "description": "The document identifies the concrete cause in the attached data — the 780 kB gzip shared vendor chunk dated to the 2026-04-09 dependency commit, the 412 kB gzip reports chunk, or the 1604 kB of unresized 180px thumbnails — and distinguishes it from the timing symptom the tickets report. Restating that the page is slow, or quoting only a loading figure, scores at most half."
+    },
+    {
+      "name": "Authenticated routes actually reachable",
+      "max_score": 8,
+      "description": "The answer accounts for the app routes redirecting to /login without a session, using the demo tenant cookie the preview server prints or another stated mechanism wired into the run. Listing a logged-in URL with nothing said about auth scores zero here: the run would silently audit the login page and report a healthy number for a route it never loaded."
+    },
+    {
+      "name": "Existing suite untouched and still passing",
+      "max_score": 5,
+      "description": "Nothing under test/ is modified and node --test still passes — budget.json must still parse as a non-empty array whose entries each declare a path, and the config must still export a ci.collect block of parseable URLs. Editing or deleting a test to accommodate the change scores zero."
+    }
+  ]
+}

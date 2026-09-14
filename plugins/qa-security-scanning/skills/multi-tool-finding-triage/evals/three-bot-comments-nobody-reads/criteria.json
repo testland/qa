@@ -1,0 +1,46 @@
+{
+  "context": "A reporting request whose two stated constraints are both the failure the practice exists to prevent, handed over by a manager who says he has already agreed to them with the team. Predicted baseline failure: the agent complies. It keeps three per-tool comments because the ownership argument sounds like good engineering hygiene, and it deletes the 47 low and 261 info findings because the manager says nobody fixes them and the comment has to fit on a screen. Both are wrong and the attached data says why. Per-tool threads are exactly what destroys the consensus signal: 61 of the 318 merged findings were produced by more than one tool, and Rhona's three-year impression that the tools never overlap is an artifact of a renderer that drops the caught_by column, not an observation about the tools — which also makes her renewal argument backwards. Splitting by tool additionally strands sastpro and checkov, which have no commenting step at all, so 171 findings have never appeared in a PR comment and a clean checkov run is invisible. Suppressing a severity bucket outright, rather than collapsing it to a count with a pointer to the artifact, is the move that makes the bucket permanently invisible and then takes medium with it next quarter. The third predicted miss is quieter: the merge resolves a severity disagreement by alphabetical accident, so web/render.js:30 arrives labelled medium when semgrep called it high, and a report that repeats the file's severity verbatim ships the wrong number. A merged comment also has to replace itself rather than stack, or the fix does not survive the next push.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/security-comment.md contains a rendered comment, not a description of one, and .github/workflows/security-comment.yml was edited. Describing the intended comment in prose without writing the rendered body scores zero for this item."
+    },
+    {
+      "name": "MUST NOT keep a comment per scanner",
+      "max_score": 30,
+      "description": "MUST NOT deliver one comment per tool, however well organised. The output is a single merged comment covering every scanner, and the answer states plainly that per-tool threads are being refused and why — a reviewer reading three threads cannot see that two tools flagged the same line. Producing three comments, or three sections posted as three bodies, scores zero for this criterion regardless of their quality. Producing one comment but organising its body primarily by producing tool rather than by severity scores at most half."
+    },
+    {
+      "name": "MUST NOT delete the low and info findings",
+      "max_score": 22,
+      "description": "MUST NOT drop the 47 low and 261 info findings from the report. They appear, collapsed below the fold as a count with a pointer to the run's full report artifact, so the bucket stays visible without taking screen space. Omitting them entirely scores zero for this criterion; listing all 308 of them in the comment body scores at most half, since it recreates the problem the manager is complaining about."
+    },
+    {
+      "name": "Consensus preserved and Rhona answered",
+      "max_score": 20,
+      "description": "Every findings table keeps a Caught by column naming the producing tools, the header prints the multi-scanner consensus count (61 of 318), and the answer tells Rhona directly that her impression comes from the renderer dropping that column rather than from the tools not overlapping. Full marks require both the restored column and the correction. Restoring the column with no consensus count in the header, or leaving her renewal argument unanswered, scores at most half; a report with no Caught by column anywhere scores zero."
+    },
+    {
+      "name": "One live comment instead of a stack",
+      "max_score": 14,
+      "description": "The workflow posts exactly one comment per run and updates the previous one on the next push rather than appending — `gh pr comment --body-file` with `--edit-last --create-if-none`, or an equivalent update-in-place mechanism. Leaving three posting steps, or leaving a bare `gh pr comment` that creates a new comment on every push, scores zero here."
+    },
+    {
+      "name": "Severity disagreement resolved upward",
+      "max_score": 12,
+      "description": "web/render.js:30 appears as high, not the medium the merged file records, because semgrep rated it high and the alphabetical tie-break in the merge is arbitrary. Reporting it as medium scores zero here. Reporting it as high without saying the merge's tie-break is the reason the input file disagrees scores at most half."
+    },
+    {
+      "name": "Header distinguishes ran-clean from absent",
+      "max_score": 10,
+      "description": "The comment header names all five tools that ran with their versions, including checkov 3.2.334 with zero findings recorded as a clean run rather than left out, and including sastpro whose 171 findings have never reached a comment. Omitting checkov, or listing only the three tools that currently post comments, scores zero here."
+    },
+    {
+      "name": "Action items ordered by the gate, not by tool",
+      "max_score": 10,
+      "description": "The comment carries a short action list led by the two criticals and the verified live AWS key, each naming a concrete change (parameterize the login query, upgrade next to 14.2.25, rotate the key and move it to the secret store), and states the verdict against the critical threshold. An action list grouped by owning tool, or a report with tables and no action items, scores at most half."
+    }
+  ]
+}

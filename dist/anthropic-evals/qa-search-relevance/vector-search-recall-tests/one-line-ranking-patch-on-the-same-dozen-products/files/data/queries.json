@@ -1,0 +1,18 @@
+[
+  {"id":"q-1","text":"lightweight trail running shoe","vec":[-0.411,0.341,-0.339,0.429,-0.645]},
+  {"id":"q-2","text":"waterproof running shoe for winter","vec":[-0.122,0.782,-0.076,0.6,-0.09]},
+  {"id":"q-3","text":"wide fit trainers","vec":[-0.587,0.507,0.571,-0.177,-0.201]},
+  {"id":"q-4","text":"40 litre hiking backpack","vec":[0.481,-0.549,-0.128,0.571,0.353]},
+  {"id":"q-5","text":"daypack with a hydration sleeve","vec":[-0.555,0.559,-0.124,0.344,-0.496]},
+  {"id":"q-6","text":"frameless pack for fastpacking","vec":[-0.099,0.335,-0.655,0.214,-0.634]},
+  {"id":"q-7","text":"hardshell jacket for the hills","vec":[0.065,0.714,-0.128,0.058,-0.683]},
+  {"id":"q-8","text":"breathable waterproof jacket","vec":[0.795,-0.156,-0.473,0.341,0.053]},
+  {"id":"q-9","text":"packable windproof layer","vec":[-0.421,0.48,-0.048,0.75,-0.169]},
+  {"id":"q-10","text":"two person tent under two kilos","vec":[-0.242,0.57,-0.405,0.093,-0.666]},
+  {"id":"q-11","text":"freestanding tent for wild camping","vec":[0.201,0.753,0.376,0.267,-0.424]},
+  {"id":"q-12","text":"four season tent","vec":[0.834,0.06,-0.112,0.534,0.055]},
+  {"id":"q-13","text":"shoes for muddy ground","vec":[-0.649,0.276,-0.248,0.353,-0.563]},
+  {"id":"q-14","text":"pack that fits a bear canister","vec":[0.212,0.719,-0.214,-0.15,-0.608]},
+  {"id":"q-15","text":"jacket with pit zips","vec":[-0.659,0.323,0.382,0.47,-0.307]},
+  {"id":"q-16","text":"tent with a big porch","vec":[0.011,-0.305,-0.66,0.53,-0.436]}
+]

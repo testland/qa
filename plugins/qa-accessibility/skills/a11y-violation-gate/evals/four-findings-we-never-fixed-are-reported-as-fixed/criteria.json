@@ -1,0 +1,51 @@
+{
+  "context": "The merge collapses findings across tools on rule-plus-element, keeping whichever tool is read first, and the stored list therefore holds whatever identity happened to win. The hosted tool sorted first for four years, so every stored fingerprint begins wave::. Predicted baseline failure: the agent treats this as a reporting bug - it fixes the undefined rows, maybe rewrites the wave:: prefixes to axe::, and leaves the cross-tool collapse in place because the prompt says plainly that the author does not want the same button listed three times, which reads as a requirement to keep deduping. Collapsing at merge time is what broke: identity has to carry the tool that produced the finding, so a tool leaving the pipeline cannot look like four fixes, and deduplication belongs in the rendering of the PR comment, not in the stored identity. Verified against the shipped fixture: fixed-since-baseline is 0, not 4, and all four of those elements are still live in reports/axe.json. Only two findings are genuinely new - color-contrast on /checkout span.tax-note and aria-required-attr on /pricing div[role=\"dialog\"] - and both are on what #812 touched. Two further predicted misses: the two undefined rows come from Lighthouse audits with score null and scoreDisplayMode notApplicable and manual, which are not failures at all; and color-contrast on /pricing a.footer-legal is live in the axe report, has never appeared in any comment or in the stored list, and has been suppressed the whole time by the key dropping the page - it is pre-existing debt on a footer untouched since March, not a regression to pin on Ravi.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The rewritten merge still writes reports/merged.json, a11y-baseline.json is delivered, and docs/pr-812-a11y.md and docs/scanner-change-note.md both exist. A missing scanner-change note scores zero for this item."
+    },
+    {
+      "name": "MUST NOT report the four as fixed",
+      "max_score": 30,
+      "description": "MUST NOT carry the four fixed-since-baseline entries through into the PR comment or the quarterly figure. Full marks require fixed reported as 0 for this run AND the reason: the hosted tool leaving the pipeline changed the identity under which those four findings are recorded, and every one of them is still live in the attached reports. Reporting four fixed, or repeating the counter's output without challenging it, scores zero. Saying the counter is unreliable without stating that the correct figure is zero scores at most half."
+    },
+    {
+      "name": "Tool identity survives the merge",
+      "max_score": 26,
+      "description": "Each tool's findings survive into reports/merged.json under their own identity, so dropping or adding a tool can never read as fixes or regressions; collapsing happens only when the comment is rendered. Keeping one record per rule-and-element across tools in merged.json or in the stored list scores zero, whichever tool is chosen as the winner and however the prefixes are rewritten. Keeping per-tool identity but with the page still absent from it - so the two a.footer-legal findings remain one record - scores at most half."
+    },
+    {
+      "name": "MUST NOT list the two genuine new findings",
+      "max_score": 16,
+      "description": "MUST NOT put color-contrast on /checkout span.tax-note or aria-required-attr on /pricing div[role=\"dialog\"] into the delivered a11y-baseline.json. Both are new on the markup #812 changed and both must block. Either appearing in the delivered list scores zero here, as does regenerating the list from this run's merged output."
+    },
+    {
+      "name": "Stored list migrated rather than abandoned",
+      "max_score": 18,
+      "description": "The four wave:: fingerprints, which no tool can ever produce again, are replaced in this change by the identities the three remaining tools do produce for those same four elements, with the substitution recorded as deliberate. Deleting them with no replacement scores zero - the same findings then re-fire as blockers on the next run. Leaving them in place to sit as permanently phantom-fixed entries also scores zero. Migrating only the four and missing that /pricing a.footer-legal is live and unrecorded scores at most half."
+    },
+    {
+      "name": "Verdict for #812",
+      "max_score": 14,
+      "description": "docs/pr-812-a11y.md blocks #812 on exactly the two genuine findings and does not blame it for the rest. Charging #812 with the four re-identified findings, or with the /pricing footer contrast on a footer untouched since March, scores at most half. Passing #812, or blocking it on all eight, scores zero."
+    },
+    {
+      "name": "Audits that did not fail produce no findings",
+      "max_score": 10,
+      "description": "The two undefined rows are gone, and gone because Lighthouse audits carrying score null with scoreDisplayMode notApplicable or manual are not violations - not because a record with a missing selector was filtered out downstream. Either row still present in merged.json scores zero; suppressing them by dropping records with no selector scores at most half, since that would also hide a genuine page-level finding."
+    },
+    {
+      "name": "Comment reads once per element",
+      "max_score": 8,
+      "description": "The PR comment presents the checkout button as one issue seen by more than one tool rather than as three separate rows, while the stored list keeps the separate per-tool entries. Triple-listing in the comment scores zero; achieving a single row by collapsing the stored identities also scores zero, because that is the defect being fixed."
+    },
+    {
+      "name": "Shipped suite still passes",
+      "max_score": 4,
+      "description": "The three existing tests still pass and the three report files under reports/ are unedited. Editing a report to make a number work out scores zero."
+    }
+  ]
+}

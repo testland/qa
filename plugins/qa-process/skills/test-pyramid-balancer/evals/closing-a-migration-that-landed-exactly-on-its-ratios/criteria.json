@@ -1,0 +1,41 @@
+{
+  "context": "Every percentage in the summary is correct and every one of them is inside its target band, which is precisely why a check that reads shares signs this off. Predicted baseline failure: the agent recomputes 851 / 301 / 58 as 70.3 / 24.9 / 4.8, compares to 70 / 25 / 5, agrees the migration landed, writes the confirmation paragraph and closes the project — perhaps with a soft note about monitoring. The evidence that settles it sits in the absolute numbers, not the shares. The approved plan called for +260 unit cases; 11 arrived, an attainment of 0.04. The plan said the total case count would go UP to about 1465 because one broad case becomes several narrow ones; it went DOWN, 1423 to 1210. The plan's own 'done means' required every retired end-to-end case to be accounted for, and retired-e2e.md says 236 of the 427 carry a replaced-by trailer whose value is literally `none`, across permission-matrix evaluation, statement formatting, fee arithmetic, date windows and export ordering — five areas the plan itself named as the assertions to move down, none of which has been removed from the product. The commit log corroborates: 31 retirement commits against 2 port-to-unit commits, and the unit stage moved 11 seconds. The ratio is in band because the top of the stack was amputated, not because the base grew. The opposite failure is also predicted: a blanket rejection that ignores the parts that genuinely landed — the middle layer went 98 to 301 against a planned 290, 84 retirements name a real integration replacement, and 96 covered product surfaces that were deleted in Q2 and need no cover at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT close the project on the percentage table",
+      "max_score": 32,
+      "description": "MUST NOT confirm the migration as done, complete, or ready to close, and MUST NOT write a staff-review paragraph that says so. Doing any of those scores zero for this criterion regardless of caveats attached elsewhere in the document. Full marks require the verdict to state that the ratios are in band and that this is not evidence of success here, because the band was reached by shrinking the top rather than growing the base. A verdict that closes the project while logging follow-up work scores zero; a verdict that is merely non-committal, or that asks the requester to decide, scores at most half."
+    },
+    {
+      "name": "Absolute change computed per layer, not just share",
+      "max_score": 24,
+      "description": "reports/verification.json and the verdict both carry, per layer, the planned change against the change that happened: unit +260 planned against +11 actual, integration +192 against +203, end-to-end -410 against -427. Full marks require the unit figure to be called out as the finding — roughly 4% of what the plan asked for — and require the total case count to be read against the plan's explicit statement that it should rise to about 1465, where it instead fell from 1423 to 1210. Reporting only after-state shares, or reporting deltas without singling out the unit layer, scores zero for this criterion."
+    },
+    {
+      "name": "The 236 unaccounted retirements named as the gap",
+      "max_score": 20,
+      "description": "The verdict names the 236 retired end-to-end cases whose replaced-by trailer is `none`, breaks them out by the five areas retired-e2e.md lists, and states that none of those five surfaces was removed from the product — so the plan's own completion condition is unmet. Full marks require the arithmetic to reconcile: 96 removed-feature plus 84 integration plus 11 unit plus 236 unaccounted equals the 427 retired. Referring vaguely to 'some tests that may lack coverage' without the number and the areas scores at most half; not identifying the trailer breakdown at all scores zero."
+    },
+    {
+      "name": "What genuinely landed is credited",
+      "max_score": 14,
+      "description": "The verdict states that the middle layer work was delivered as planned — 98 to 301 against a target of about 290, with 22 commits and 84 named replacements behind it — and that the 96 retirements covering deleted product surfaces are legitimate and need no follow-up. A blanket rejection that treats all 427 retirements as coverage loss scores zero here: it overstates the gap by 191 cases and would send two engineers after work that does not exist."
+    },
+    {
+      "name": "Outstanding work sized for the staffing decision",
+      "max_score": 12,
+      "description": "The residual work is expressed as something the requester can weigh against the search rewrite: the 236 assertions to be rewritten at a lower layer, grouped by the five areas, with an ordering or a first slice rather than one undifferentiated number. Naming the gap without giving it any size or shape scores at most half — the requester said explicitly that whatever is outstanding competes for the same two people."
+    },
+    {
+      "name": "Verification is computed by the script and tested",
+      "max_score": 8,
+      "description": "node scripts/verify-rebalance.js runs and writes reports/verification.json with per-layer planned change, actual change, and a pass or fail on whether the layer moved as planned; test/verify-rebalance.test.js asserts the unit layer does NOT pass, and npm test passes with test/delta.test.js still green. A script that reports only shares, or one whose verification passes every layer, scores zero; a failing suite scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "All three artifacts exist at the requested paths and reports/q2-verdict.md contains the paragraph for the 29th as asked. Missing any one scores at most half."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "dev-snapshot",
+  "built": "2026-09-05",
+  "purpose": "CI fixture for warehouse-facing tests",
+  "rows_per_table_cap": 500,
+  "tenants_present": ["tnt_0007"],
+  "schema_notes": [
+    "analytics_pii is created here as plain views over the matching analytics tables so developer queries do not error; the column masking in production is not reproduced",
+    "analytics.orders_v and analytics.customers_masked_v are created with their production definitions",
+    "row counts are capped per table and are not proportional to production"
+  ]
+}

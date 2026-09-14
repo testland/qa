@@ -1,0 +1,20 @@
+13:02:44  Running with dbt=1.9.2
+13:02:47  Registered adapter: snowflake=1.9.0
+13:02:53  Found 61 models, 148 data tests, 4 sources, 0 exposures, 0 metrics, 512 macros
+13:02:53
+13:02:55  Concurrency: 8 threads (target='ci')
+13:02:55
+13:02:56    1 of 209 START sql view model dbt_pr_812.stg_refunds ......... [RUN]
+13:02:59    1 of 209 OK created sql view model dbt_pr_812.stg_refunds .... [CREATE VIEW (0 rows, 0 processed) in 2.94s]
+13:03:04    2 of 209 START sql table model dbt_pr_812.fct_refunds ....... [RUN]
+13:03:09    2 of 209 OK created sql table model dbt_pr_812.fct_refunds .. [CREATE TABLE (0.0 rows, 0 processed) in 4.71s]
+13:03:22   61 of 209 START test assert_refund_amount_positive .......... [RUN]
+13:03:23   61 of 209 PASS assert_refund_amount_positive ................ [PASS in 1.02s]
+13:03:58  148 of 209 PASS not_null_stg_refunds_amount ................. [PASS in 0.77s]
+13:04:10  209 of 209 PASS unique_fct_refunds_refund_id ................ [PASS in 0.81s]
+13:04:11
+13:04:11  Finished running 38 view models, 23 table models, 148 data tests in 0 hours 1 minutes and 16.42s.
+13:04:12
+13:04:12  Completed successfully
+13:04:12
+13:04:12  Done. PASS=209 WARN=0 ERROR=0 SKIP=0 TOTAL=209

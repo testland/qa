@@ -1,0 +1,9 @@
+{
+  "name": "payments-suite",
+  "version": "1.9.0-rc.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/unit/*.test.js",
+    "test:payments": "node --test test/payments/*.test.js"
+  }
+}

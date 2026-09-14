@@ -1,0 +1,16 @@
+# payments-config delivery pipeline
+pipelines:
+  code:
+    stages:
+      - name: canary
+        traffic: 5
+        hold: 10m
+        gate: error_rate_delta_under_1_5x
+      - name: full
+        traffic: 100
+  config:
+    stages:
+      - name: full
+        traffic: 100
+    comment: >
+      config-only changes are metadata and are applied by config-sync on merge

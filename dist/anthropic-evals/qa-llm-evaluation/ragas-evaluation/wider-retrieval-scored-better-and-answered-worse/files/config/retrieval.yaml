@@ -1,0 +1,16 @@
+# Shared by both routes. Changed 2026-08-03 (top_k 4 -> 20).
+embedding_model: text-embedding-3-large
+top_k: 20
+rerank: false
+
+routes:
+  handbook:
+    corpus: hr-handbook
+    chunk_words: 120
+    chunks_indexed: 9400
+    note: 22 departments, one index, department named in chunk metadata only
+  contracts:
+    corpus: legal-contracts
+    chunk_words: 600
+    chunks_indexed: 380
+    note: long PDFs, clause text often split across two chunks

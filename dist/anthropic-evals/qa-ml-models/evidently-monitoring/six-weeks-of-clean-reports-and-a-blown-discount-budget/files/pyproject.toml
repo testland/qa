@@ -1,0 +1,7 @@
+[project]
+name = "alderway-quote-accept-monitoring"
+version = "2.8.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

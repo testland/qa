@@ -1,0 +1,9 @@
+{
+  "name": "outfitter-catalogue",
+  "version": "9.4.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "recall": "node -e \"const d=require('./data/corpus.json'),q=require('./data/queries.json');const{ingest}=require('./src/ingest');const{measureRecall}=require('./src/recall');console.log('recall@10',measureRecall(ingest(d),d,q).toFixed(3))\""
+  }
+}

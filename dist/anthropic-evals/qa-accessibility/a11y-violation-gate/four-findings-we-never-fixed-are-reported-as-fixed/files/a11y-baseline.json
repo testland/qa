@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "updated_at": "2026-06-30T10:02:00Z",
+  "violations": [
+    "wave::contrast::/checkout::button.primary",
+    "wave::contrast::/checkout::a.footer-legal",
+    "wave::link_empty::/checkout::a.icon-cart",
+    "wave::contrast::/pricing::span.per-seat"
+  ]
+}

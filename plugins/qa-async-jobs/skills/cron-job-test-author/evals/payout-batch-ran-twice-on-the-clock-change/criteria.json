@@ -1,0 +1,46 @@
+{
+  "context": "A duplicate-payout fix that removes the symptom by introducing a worse defect, submitted with a green test as its evidence. Predicted baseline failure: the agent reproduces Marek's check, sees firingsOnLocalDate return a single instant for payout-reconcile on 2026-11-01, concludes the duplicate cannot recur, adds transition-date tests around the shipped configuration and signs the change off. What that misses is what 'EST' and 'Etc/GMT+5' actually are. Intl.DateTimeFormat accepts both without complaint, and both are fixed offsets of UTC-5 that never observe daylight time, so the duplicate disappears only because the job no longer tracks New York at all: payout-reconcile fires at 06:30Z every day of the year, which is 01:30 in America/New_York from November to March and 02:30 from March to November - half an hour the wrong side of the 02:00 reconciliation window in ops/finance-windows.md, every day since 4 September. ledger-close sits the same hour late at 07:15Z. The second predicted failure is the obvious remedy: putting America/New_York back at the same hour and minute restores the duplicate on 2026-11-01 (05:30Z and 06:30Z) and gives ledger-close zero firings on 2026-03-08, because 02:15 does not exist in that zone on the spring transition - which is what happened, unremarked, on 8 March this year under the configuration Marek replaced, leaving that day's report build reading books that were never frozen. A correct answer has to hold both ends: an IANA zone identifier rather than an offset, and a schedule that fires exactly once on both transition dates, proved against the configuration the agent is proposing rather than only the one it found.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "test/transitions.test.js exists and docs/schedule-timezones.md has a section per job. A document that covers only payout-reconcile scores zero for this item."
+    },
+    {
+      "name": "MUST NOT sign off a job pinned to a fixed offset",
+      "max_score": 30,
+      "description": "MUST NOT leave 'EST' or 'Etc/GMT+5' in src/jobs.js, MUST NOT report Marek's change as safe to keep, and MUST NOT substitute any other fixed-offset form ('UTC-5', '-05:00', 'GMT+5', a numeric offset field, or arithmetic on one) for a zone that observes daylight time. Any of those scores zero for this criterion regardless of the rest of the answer. Full marks require the reason to be stated with executed evidence rather than asserted: both values are accepted by the formatter and both hold UTC-5 all year, so on an ordinary summer date payout-reconcile fires at 06:30Z, which is 02:30 in America/New_York and past the 02:00 window it must precede. Identifying the zones as fixed offsets without showing what the job now does on a date outside winter scores at most half."
+    },
+    {
+      "name": "The proposed configuration is itself pinned on both transition dates",
+      "max_score": 22,
+      "description": "Whatever configuration ends up in src/jobs.js is proved by executed assertions for both finance jobs on 2026-03-08 and on 2026-11-01, each showing exactly one firing with its instant. Proposing a straight revert to America/New_York at hour 1 minute 30 and hour 2 minute 15 scores zero: that configuration fires twice on 2026-11-01 and not at all on 2026-03-08, and shipping it means the review recreated both incidents. Naming a replacement - UTC, or a local hour outside the transition window - with no assertions against it scores at most half."
+    },
+    {
+      "name": "The duplicate mechanism pinned by a count, not narrated",
+      "max_score": 16,
+      "description": "The answer demonstrates, with an executed assertion, that a 01:30 America/New_York schedule fires twice on 2026-11-01 at 2026-11-01T05:30:00.000Z and 2026-11-01T06:30:00.000Z, so the reader can see what the November transition does rather than take it on trust. An assertion that the job 'runs' or that the array is non-empty scores zero; asserting the count without the instants scores at most half."
+    },
+    {
+      "name": "The close that never happened",
+      "max_score": 16,
+      "description": "The answer identifies that a 02:15 America/New_York schedule produces zero firings on 2026-03-08 - pinned by an executed assertion of an empty result - and states the consequence: under the configuration in place until 4 September the books were not frozen that day and the 06:00 report build read an unfrozen ledger, unnoticed. Missing this scores zero; mentioning the spring transition in prose with no executed count scores at most half."
+    },
+    {
+      "name": "Unaffected jobs verified on evidence and left alone",
+      "max_score": 10,
+      "description": "eu-vat-export is asserted at exactly one firing on a European transition date (2026-03-29 or 2026-10-25) and metrics-rollup is recorded as having no transition because it is scheduled in UTC. MUST NOT change the zone, hour or minute of either: doing so scores zero. Calling them fine with no assertion behind the verdict scores at most half."
+    },
+    {
+      "name": "MUST NOT edit the runner to change what a transition does",
+      "max_score": 8,
+      "description": "MUST NOT modify src/scheduler.js or test/scheduler.test.js - including deleting or rewriting Marek's November assertion so the suite agrees with a new configuration. Either file modified scores zero here; the runner is the production behaviour being measured, and the shipped test must keep passing against whatever is proposed."
+    },
+    {
+      "name": "Suite runs green",
+      "max_score": 8,
+      "description": "npm test passes on the delivered tree with the new assertions executing rather than skipped, commented out or marked todo. A failing suite scores zero."
+    }
+  ]
+}

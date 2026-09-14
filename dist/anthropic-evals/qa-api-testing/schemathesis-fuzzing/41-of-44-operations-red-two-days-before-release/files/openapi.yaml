@@ -1,0 +1,126 @@
+openapi: 3.0.3
+info:
+  title: Halloway Payments API
+  version: 1.13.2
+x-generated-by: openapi-gen 0.4
+x-generated-at: '2026-01-18T09:41:00Z'
+x-note: hand-edited twice since generation - see API-903
+paths:
+  /v1/invoices:
+    get:
+      operationId: listInvoices
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 500 }
+      responses:
+        '200':
+          description: invoices
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Invoice' }
+        '400': { description: bad request }
+    post:
+      operationId: createInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount_cents, currency]
+              properties:
+                amount_cents: { type: integer, minimum: 1 }
+                currency: { type: string, minLength: 3, maxLength: 3 }
+      responses:
+        '200':
+          description: created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Invoice' }
+        '400': { description: rejected }
+  /v1/invoices/{id}:
+    get:
+      operationId: getInvoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: invoice
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Invoice' }
+        '404':
+          description: unknown invoice
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
+  /v1/payouts/{id}:
+    get:
+      operationId: getPayout
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: payout
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Payout' }
+        '404':
+          description: unknown payout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
+    delete:
+      operationId: cancelPayout
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: cancelled }
+        '404':
+          description: unknown payout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
+components:
+  schemas:
+    Invoice:
+      type: object
+      required: [id, amount_cents, currency, status]
+      properties:
+        id: { type: string }
+        amount_cents: { type: integer }
+        currency: { type: string }
+        status: { type: string, enum: [draft, open, settled, void] }
+    Payout:
+      type: object
+      required: [id, status]
+      properties:
+        id: { type: string }
+        status: { type: string }
+        amount_cents: { type: integer }
+        currency: { type: string }

@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent identifies the unsafe double-checked lock immediately - that part is textbook and will score at ceiling in both arms - and then delivers a bigger version of the instrument that already failed. The attractive move, and the one Jon is pushing, is a longer loop on arm64: more threads, more iterations, a repeat-count annotation, perhaps a start latch bolted onto the existing executor test. That cannot produce the answer the requester explicitly asked for, because a loop reports only 'not observed', never 'cannot occur', and the fixture makes the reason unusually concrete. The publication being tested happens exactly once per JVM - `instance` is set on the first `get()` and every one of the remaining 31,999,999 iterations reads a warm static field - so Jon's 32 million iterations sample the contended event once, and his 200 green runs are 200 samples, not 6.4 billion. What is needed is a harness that enumerates the interleavings of two actors and classifies each observed result against what the memory model permits, so the illegal observation - a non-null reference whose fields still hold their defaults - is declared forbidden up front and any single occurrence on any run fails. The second predicted miss is why the existing test could not have failed even if it had observed the defect: every assertion runs inside a task submitted to the executor, `submitted` is populated and then never consulted, and `awaitTermination` returns a boolean that is discarded, so an AssertionFailedError inside a task is captured in a Future nobody reads and the method returns green.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Outcome-classifying harness delivered",
+      "max_score": 30,
+      "description": "The deliverable is a concurrency harness that runs two actors against a fresh shared state per invocation and classifies each observed result pair against a declared set of permitted and forbidden outcomes - jcstress with a test-annotated class, an actor per participant, a result holder, and the partially-published observation (reference visible, fields still at their defaults) declared forbidden. Scores zero if the deliverable is another executor or thread loop with assertions inside it, however many iterations, threads, latches or repeat annotations it carries. Scores at most half if the harness is named or described but no test class with actors and declared outcomes is actually produced."
+    },
+    {
+      "name": "MUST NOT accept a longer loop as settling it",
+      "max_score": 20,
+      "description": "MUST NOT endorse raising the iteration count, running the existing test overnight on arm64, or any variant of 'run it longer and if it is green we close it' as the way to resolve CFG-91. Doing so scores zero. Full marks require telling Jon both halves: that a loop can only ever report what it happened to observe and cannot establish that an interleaving is impossible, and that the weaker ordering on the arm64 pool is exposing something the x86 pool was hiding rather than causing something new, so a green arm64 run would not clear it either."
+    },
+    {
+      "name": "Publication occurs once per JVM",
+      "max_score": 14,
+      "description": "The answer identifies that the contended event under test - the first, unsynchronised publication of `instance` - happens once in the life of a JVM, so the million-iteration inner loop reads an already-populated static field for all but the first pass and the 200 runs are 200 samples of the interesting moment. Scores zero if the answer treats the 32 million iterations as 32 million trials or repeats Jon's arithmetic uncritically. Scores at most half if it says only that the test is weak without locating where the sampling actually collapses."
+    },
+    {
+      "name": "Task failures reach the build",
+      "max_score": 14,
+      "description": "`ConfigRegistryStressTest` is repaired so a failed check inside a submitted task fails the test: every Future in `submitted` is consumed with `get()` (or `invokeAll` plus `get` on each result), and the boolean returned by `awaitTermination` is checked rather than discarded. Scores zero if assertions remain inside `submit(...)` lambdas whose Futures are never read. Scores at most half if failures are collected into a shared flag or exception list without the main test thread then asserting on it."
+    },
+    {
+      "name": "Green result honestly labelled",
+      "max_score": 10,
+      "description": "The document answers the question that was asked directly: a green run of the delivered harness means the forbidden outcome was not observed across the interleavings explored, not that it cannot occur, and longer or repeated runs explore more. The run mode or duration chosen is named. Presenting the harness as proof of impossibility scores zero; omitting the question entirely scores at most half."
+    },
+    {
+      "name": "Build wiring added",
+      "max_score": 10,
+      "description": "`pom.xml` gains what the harness needs to build and run - the harness dependency and whatever packaging or execution step it requires - rather than the harness being dropped into `src/test/java` with no way to invoke it. A dependency added with no way to run the harness scores at most half."
+    },
+    {
+      "name": "Registry class untouched",
+      "max_score": 8,
+      "description": "MUST NOT modify `src/main/java/com/northwind/config/ConfigRegistry.java`. Marking `instance` volatile, switching to a holder class or an enum singleton, or making the fields final scores zero here even though one of those is the correct eventual fix - the platform team is mid-review on that file and the prompt says so."
+    },
+    {
+      "name": "Document produced",
+      "max_score": 5,
+      "description": "`docs/cfg-91-answer.md` exists, addresses the August closure and the arm64 proposal separately, and states what evidence would justify closing CFG-91 again. A document that covers only one of the two positions scores at most half."
+    }
+  ]
+}

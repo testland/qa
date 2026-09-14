@@ -1,0 +1,19 @@
+name: Mutation coverage
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    if: "!contains(github.event.pull_request.title, '[skip-mut]')"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Mutation coverage
+        run: mvn -B clean pitest:mutationCoverage -DwithHistory

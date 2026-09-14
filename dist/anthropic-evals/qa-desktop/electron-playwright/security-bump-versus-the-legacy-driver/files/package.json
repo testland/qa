@@ -1,0 +1,16 @@
+{
+  "name": "ledgerline-desktop",
+  "version": "4.7.2",
+  "private": true,
+  "scripts": {
+    "test:legacy": "mocha tests/e2e/legacy --timeout 30000",
+    "test:e2e": "playwright test --config=playwright.electron.config.ts"
+  },
+  "devDependencies": {
+    "@ledgerline/statement-parse": "2.4.0",
+    "@playwright/test": "^1.47.0",
+    "electron": "13.1.7",
+    "mocha": "^10.4.0",
+    "spectron": "^13.0.0"
+  }
+}

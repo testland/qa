@@ -1,0 +1,23 @@
+$ pact-broker can-i-deploy \
+    --pacticipant payments-api \
+    --version e55c108 \
+    --to-environment production
+
+Computer says no
+
+The versions of the pacticipants currently recorded as deployed to
+"production" are:
+
+  checkout-web      a91f3c2
+  refunds-worker    6d10b4e
+
+CONSUMER        | C.VERSION | PROVIDER     | P.VERSION | SUCCESS? | RESULT#
+----------------|-----------|--------------|-----------|----------|--------
+checkout-web    | a91f3c2   | payments-api | e55c108   | false    | 1
+refunds-worker  | 6d10b4e   | payments-api | e55c108   | true     | 2
+
+1. https://broker.internal/verification-results/1
+   FAILURE  a request for a charge by id
+     body: $.charge.legacy_id  Expected attribute "legacy_id" but it was missing
+
+exit status 1

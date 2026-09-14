@@ -1,0 +1,9 @@
+{
+  "name": "remit",
+  "version": "12.8.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

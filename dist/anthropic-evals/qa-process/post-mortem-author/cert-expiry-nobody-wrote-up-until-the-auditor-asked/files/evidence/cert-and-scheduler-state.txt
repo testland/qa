@@ -1,0 +1,40 @@
+kubectl get certificate -A -o yaml   (captured 2026-09-12)
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: api-origin
+  namespace: platform-certs
+  creationTimestamp: "2026-08-05T13:22:41Z"
+  annotations:
+    change-ticket: CHG-5012
+spec:
+  secretName: api-origin-tls
+  duration: 2160h
+  renewBefore: 720h
+  dnsNames: [api.example.com]
+status:
+  notBefore: "2026-08-05T13:24:02Z"
+  notAfter:  "2026-11-03T13:24:02Z"
+  renewalTime: "2026-10-04T13:24:02Z"
+
+# `kubectl get certificate -A` returns exactly this one row, cluster-wide.
+
+---
+
+Scheduler (argo-cron) - jobs in namespace platform-certs, exported 2026-09-12
+
+NAME                   SCHEDULE    CREATED               LAST RUN    LAST RESULT
+cert-renew-api-origin  0 3 * * *   2026-08-05T13:40:00Z  2026-09-12  Succeeded
+
+Run history retained: last 20 runs per job.
+Retained runs for cert-renew-api-origin: 2026-08-24 through 2026-09-12,
+all Succeeded.
+
+Export note: this listing covers every job that has ever existed in this
+namespace, deleted jobs included, back to the cluster's creation on 2025-06-11.
+No job whose name begins cert-renew existed before 2026-08-05.
+
+Change calendar, CHG-5012, closed 2026-08-05:
+  "Introduce cert-manager and a renewal schedule for the api origin
+   certificate." Requested by d.ferreira. Approved by r.osei.

@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent reaches for volume and timing instead of control. The attractive move — and the one the prompt's framing pushes toward — is to copy the shipped `tally.concurrent.test.js`, raise the thread count to eight and the posting count to a few hundred thousand, and rely on the sheer number of read-modify-write pairs to make the lost update appear. That produces a test that is red most of the time on a loaded machine and green on a fast one, which is exactly what the requester said they did not want, and it is the anti-pattern the practice exists to replace: threads must be held at an explicit start gate and released together so the contended section is entered simultaneously by construction. Node exposes a real one — `Atomics.wait` / `Atomics.notify` on a shared Int32Array — and with four threads released from a gate the deficit is enormous and reproduces on every single run. The second predicted miss is that the shipped concurrent test cannot fail: its only assertion runs inside the worker, the worker is awaited via `worker.on('exit', resolve)` with the exit code discarded and no `'error'` listener attached, so an assertion failure inside an ingest thread terminates that thread and leaves the suite green. That is why two engineers read the file and reported concurrency as covered. An agent that writes a good new test but leaves the old one structurally incapable of failing has fixed the symptom and left the instrument broken.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Threads released from an explicit start gate",
+      "max_score": 26,
+      "description": "The new test holds every ingest thread at a shared rendezvous and releases them together — `Atomics.wait`/`Atomics.notify` on a shared Int32Array, a ready-count each thread increments before parking, or an equivalent all-threads-ready handshake — so they enter `post` at the same moment by construction. MUST NOT rely on `setTimeout`, a spawn stagger, a raised posting count, or a raised thread count as the mechanism that produces the overlap: a test whose only concurrency device is volume or timing scores zero here even if it happens to go red. Scores at most half if a gate exists but only the spawning is synchronised while the contended loop still starts whenever each thread gets there."
+    },
+    {
+      "name": "Ingest-thread failures reach the suite",
+      "max_score": 24,
+      "description": "`src/tally.concurrent.test.js` is repaired so a failure inside an ingest thread fails the suite: every `Worker` gets an `'error'` listener, and the `'exit'` code is inspected and a non-zero code turned into a rejection or a failed assertion. Scores zero if workers are still awaited with the exit code discarded and no error listener, which is the shipped defect. Scores at most half if the worker's own assertion is kept as the only real check rather than the verdict being decided by an assertion on the main thread against the shared totals."
+    },
+    {
+      "name": "Test fails before the fix and passes after",
+      "max_score": 18,
+      "description": "`src/tally.race.test.js` asserts the exact invariant — observed postings and cents equal threads times postings per thread — and `docs/lost-update.md` records the real observed numbers from running it against the unfixed accumulator, not a hypothetical. Reporting only that it 'would fail' with no observed figures scores at most half. A test that asserts something weaker than the exact total, such as 'no error was thrown' or 'the total is greater than zero', scores zero."
+    },
+    {
+      "name": "More than one execution treated as evidence",
+      "max_score": 14,
+      "description": "The answer does not treat a single green run after the fix as proof: the contended section is exercised over repeated rounds inside the test, or the suite is stated to have been run repeatedly, with the count given. Scores zero if a single post-fix run is presented as settling it. Scores at most half if repetition is recommended in prose but nothing in the delivered test or the documented procedure actually does it."
+    },
+    {
+      "name": "Fix confined to the accumulator's methods",
+      "max_score": 10,
+      "description": "`src/tally.js` changes only inside `post`, `cents` and `postings`, the storage remains a `SharedArrayBuffer` shared across threads, and ingest is still done by worker threads. MUST NOT resolve the defect by giving each thread its own buffer, by moving the accumulation back onto the main thread, or by serialising the threads — any of those scores zero, because it deletes the condition under test instead of making it safe."
+    },
+    {
+      "name": "Existing test preserved",
+      "max_score": 8,
+      "description": "`src/tally.concurrent.test.js` still exists under its own name with its test name intact, and `src/tally.basic.test.js` is unmodified. Deleting either file, or renaming the concurrent test, scores zero here."
+    },
+    {
+      "name": "Suite green and documented",
+      "max_score": 6,
+      "description": "`npm test` passes at the end, and `docs/lost-update.md` explains why the shipped concurrent test stayed green for months. A document that describes the fix without naming the reason the old test could not fail scores at most half."
+    }
+  ]
+}

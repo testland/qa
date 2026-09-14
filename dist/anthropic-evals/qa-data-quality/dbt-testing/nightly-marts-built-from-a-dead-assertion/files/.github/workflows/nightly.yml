@@ -1,0 +1,41 @@
+name: nightly warehouse
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  warehouse:
+    runs-on: ubuntu-latest
+    env:
+      DBT_PROFILES_DIR: .ci/dbt
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: install
+        run: pip install 'dbt-core>=1.8' 'dbt-snowflake'
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt build
+        run: dbt build
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-artifacts
+          path: target/run_results.json
+          retention-days: 14
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: slack summary
+        run: node scripts/dbt-summary.mjs target/run_results.json

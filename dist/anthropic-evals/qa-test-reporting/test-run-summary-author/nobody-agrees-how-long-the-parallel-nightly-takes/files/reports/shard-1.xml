@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nightly-e2e">
+  <testsuite name="shard-1" tests="10" failures="1" errors="0" skipped="0" time="448.2" timestamp="2026-09-12T01:00:04">
+    <testcase classname="e2e/orders/order-history.spec.ts" name="renders 200 orders" time="38.4">
+      <failure message="expected 200 rows, received 100">AssertionError at order-history.spec.ts:46</failure>
+    </testcase>
+    <testcase classname="e2e/orders/order-detail.spec.ts" name="shows line items" time="52.1"/>
+    <testcase classname="e2e/orders/order-detail.spec.ts" name="shows tracking" time="41.7"/>
+    <testcase classname="e2e/orders/reorder.spec.ts" name="reorders previous order" time="36.9"/>
+    <testcase classname="e2e/orders/invoice.spec.ts" name="downloads invoice" time="44.3"/>
+    <testcase classname="e2e/orders/returns.spec.ts" name="starts a return" time="61.2"/>
+    <testcase classname="e2e/orders/returns.spec.ts" name="cancels a return" time="39.8"/>
+    <testcase classname="e2e/orders/order-history.spec.ts" name="filters by date" time="48.6"/>
+    <testcase classname="e2e/orders/order-history.spec.ts" name="sorts by total" time="45.7"/>
+    <testcase classname="e2e/orders/invoice.spec.ts" name="emails invoice" time="39.5"/>
+  </testsuite>
+</testsuites>

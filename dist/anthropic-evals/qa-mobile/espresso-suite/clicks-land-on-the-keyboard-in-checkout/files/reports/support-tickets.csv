@@ -1,0 +1,10 @@
+ticket,opened,device,os,tag,summary
+NP-4471,2026-08-26,Pixel 2,Android 14,checkout,"Place order button does nothing. I scroll right to the bottom of the page, tap it, nothing happens. Tried six times."
+NP-4478,2026-08-27,Moto G Power 1080x1920,Android 13,checkout,"Cannot complete an order on my phone since last week. The button at the bottom is dead. It worked before."
+NP-4483,2026-08-29,Galaxy A13 1080x1920,Android 13,checkout,"Tapping Place order at the bottom of the page does nothing at all. Had to order on the website instead."
+NP-4490,2026-09-01,Pixel 7 Pro,Android 15,account,"Cannot change my billing email, the save button spins forever."
+NP-4494,2026-09-02,iPad,iPadOS 18,checkout,"Order went through twice and I was charged twice."
+NP-4501,2026-09-03,Galaxy Tab S9,Android 14,checkout,"Promo code WELCOME10 says expired but the email says it runs to October."
+NP-4509,2026-09-05,Pixel 6a,Android 14,account,"Push notifications stopped arriving after I reinstalled."
+NP-4515,2026-09-08,Moto G Power 1080x1920,Android 13,checkout,"Still cannot place an order from the app. Three weeks now."
+NP-4520,2026-09-09,Galaxy Tab S9 Ultra,Android 14,checkout,"Would like a saved-address feature, having to retype the address every time."

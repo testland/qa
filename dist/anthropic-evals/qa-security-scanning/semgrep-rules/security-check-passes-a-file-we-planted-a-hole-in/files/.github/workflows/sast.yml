@@ -1,0 +1,29 @@
+name: sast
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep:1.99.0
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Static analysis
+        run: |
+          semgrep scan \
+            --config p/owasp-top-ten \
+            --config p/javascript \
+            --json --output semgrep.json \
+            --metrics=off
+
+      - name: Keep the report
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-json
+          path: semgrep.json

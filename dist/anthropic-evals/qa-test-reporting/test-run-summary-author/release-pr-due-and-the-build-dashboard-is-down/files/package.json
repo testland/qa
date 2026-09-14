@@ -1,0 +1,7 @@
+{
+  "name": "acme-release-notes",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

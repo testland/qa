@@ -1,0 +1,41 @@
+{
+  "context": "The cheap replacement for a per-spec reinstall is the first thing anyone writes and the prompt asks for exactly one rule covering all ten files, so the shared hook itself is not what separates a good answer here. Predicted baseline failure: the agent writes the shared reload hook, keeps the two files Dana's log names because the log names them, and applies the single rule to everything else — which quietly breaks e2e/onboarding.test.js. That file is the trap. Its 'seen the tour' flag is written to device storage, so it survives a JS reload and dies only on reinstall: under a reload-only rule the first spec finds no tour to dismiss and the file goes red, and nothing in the prompt or in Dana's results points at it, because the report states it was added on 2026-09-02, after her attempt. It is currently green precisely because of the reinstall the agent is being asked to remove. The second predicted miss is the permissions file: Dana's log shows only the first of its two specs failing, and an agent reading that log concludes the second one is safe under the new rule. It is not — the OS grant never took effect in her run, the banner was visible in both cases, and the spec that expects it visible passed for the wrong reason, so 'it passed' is not evidence about that file. Third, an agent that takes 'one rule, no exceptions' literally strips the deep-link specs' own launches, which are the behaviour under test: the app has to be started BY the link, and Dana's log shows exactly what happens when it is not.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Shared hook no longer reinstalls",
+      "max_score": 6,
+      "description": "MUST NOT leave a per-spec uninstall-and-install in e2e/init.js; the reinstall is 1m52s of every spec's runtime and a JS reload of the running app buys the same isolation for 0.8s. Keeping the reinstall scores zero. A full cold relaunch in the shared hook rather than a reload scores at most half — it is eight times the cost for the same result, by the report's own instrumentation."
+    },
+    {
+      "name": "The onboarding file is recognised as needing a fresh install",
+      "max_score": 30,
+      "description": "e2e/onboarding.test.js must end up starting from a genuinely fresh install of its own, not from the shared reload rule. Its 'seen' flag lives in device storage, so it outlives a JS reload and only a reinstall clears it: the first spec expects to find a tour that will not be there. Leaving that file to run under the shared reload rule with no fresh-install launch of its own scores zero. Giving it a launch without saying why — that persisted storage survives a reload and the tour is a once-per-install behaviour — scores at most half. Deleting, skipping or rewriting the file to dodge the problem scores zero."
+    },
+    {
+      "name": "Deep-link launches preserved",
+      "max_score": 18,
+      "description": "The two deep-link specs must keep starting the app from the URL themselves; being started by the link is the behaviour under test, and Dana's log shows both specs landing on home when the app is already running. Removing or replacing their own launches in pursuit of a single uniform rule scores zero. Keeping them but not explaining in docs/e2e-lifecycle.md why this file is different scores at most half."
+    },
+    {
+      "name": "Permissions file, including the spec that passed for the wrong reason",
+      "max_score": 16,
+      "description": "Both permissions specs must keep launching with their own permission state. Full marks additionally require noticing that Dana's run is not evidence of safety for the second spec: only the first is listed as failing, but the grant never took effect in her run, the banner was visible in both cases, and 'shows the banner when denied' passed without testing anything. Restoring the launches without that observation scores at most half. Letting either spec run under the shared rule scores zero."
+    },
+    {
+      "name": "MUST NOT reach for fixed waits or a per-spec reinstall anywhere",
+      "max_score": 14,
+      "description": "MUST NOT introduce fixed-duration sleeps between actions or in the shared hooks as a way of steadying the suite after the reinstall comes out, and MUST NOT keep a reinstall in any file that does not need one. Either scores zero. Adding retries to paper over the order-dependence scores at most half."
+    },
+    {
+      "name": "Lifecycle document produced",
+      "max_score": 5,
+      "description": "docs/e2e-lifecycle.md exists and states the default rule for how a spec starts plus every file that departs from it and why. A document that states only the default rule scores at most half."
+    },
+    {
+      "name": "Files that did not need to change left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify e2e/browse.test.js or e2e/cart.test.js; both are correct under the new shared rule and neither was part of the failure. Any edit to either scores zero here."
+    }
+  ]
+}

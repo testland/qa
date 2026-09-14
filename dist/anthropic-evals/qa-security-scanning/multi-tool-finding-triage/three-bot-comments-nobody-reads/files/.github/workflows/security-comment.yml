@@ -1,0 +1,38 @@
+name: security-comment
+
+on:
+  pull_request:
+
+jobs:
+  comment:
+    needs: [scan]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: scan-*
+          merge-multiple: true
+          path: ci-artifacts
+
+      - name: render per-tool comments
+        run: node ci/render-comments.js ci-artifacts
+
+      - name: post semgrep comment
+        run: gh pr comment "$PR" --body-file out/semgrep-comment.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+
+      - name: post dependency comment
+        run: gh pr comment "$PR" --body-file out/trivy-comment.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+
+      - name: post secrets comment
+        run: gh pr comment "$PR" --body-file out/gitleaks-comment.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}

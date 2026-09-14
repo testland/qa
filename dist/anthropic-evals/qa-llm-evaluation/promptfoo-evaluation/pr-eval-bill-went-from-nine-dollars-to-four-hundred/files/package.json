@@ -1,0 +1,9 @@
+{
+  "name": "support-bot-evals",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "eval": "npx promptfoo eval -c evals/support-bot/promptfooconfig.yaml"
+  }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_name_hint">Vorname</string>
+    <string name="email_hint">E-Mail-Adresse</string>
+    <string name="continue_label">Weiter</string>
+    <string name="create_account_label">Konto erstellen</string>
+    <string name="create_account_title">Konto erstellen</string>
+    <string name="password_too_short">Passwort ist zu kurz</string>
+    <string name="plan_annual_label">Jahresabo</string>
+    <string name="welcome_greeting">Willkommen, {0}</string>
+</resources>

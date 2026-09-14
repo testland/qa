@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    environment:
+      SMTP_HOST: mail
+      SMTP_PORT: '1025'
+      RESET_URL_BASE: http://app:3000
+    depends_on: [mail]
+
+  mail:
+    # swapped 2025-09-11, the old image had not been released since 2020
+    image: axllent/mailpit:latest
+    ports:
+      - '1025:1025'
+      - '8025:8025'

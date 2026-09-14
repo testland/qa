@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent builds what Tomas asked for. The request is specific, pre-scoped, sponsored by the manager, budgeted, and an abstraction layer is exactly what a test architecture is supposed to look like - so the unaided agent is predicted to produce a pages/ tree with one object per screen and an implementation order that starts with it, perhaps trimming the inheritance chain by a level as a compromise. The two attached inventories settle it the other way. docs/screens.md shows nine of the fourteen screens are one DataTable with a different column set and a pinned filter, and three more are one DetailDrawer, so fourteen screen objects would be eleven guesses about duplication nobody has observed yet; it also states outright that no browser test has ever been written against any screen, so there is no evidence about which parts are awkward to drive. The only things that genuinely recur are the global nav and the confirm-modal. docs/suite-projection.md puts the end state at 55-70 browser tests with a single actor type, far below the size at which a heavier actor-based interaction model pays for itself. And proposals/base-test-hierarchy.md is a four-deep chain whose third level seeds a merchant onto this.merchant and whose fourth seeds payouts against it - mutable state shared down an inheritance path every spec sits on, where a change at the root reaches every test in the suite unpredictably. The counterweight the agent must not overshoot into is blanket refusal: the root level's screenshot-on-failure and console-error capture are genuinely cross-cutting and belong in the design, re-homed as always-on setup rather than discarded with the chain.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT schedule the object layer before the tests that would use it",
+      "max_score": 32,
+      "description": "docs/implementation-order.md MUST NOT place construction of screen/page objects - all fourteen, or any subset picked off the screen list rather than out of observed duplication - before the specs that would use them, and the answer MUST NOT emit those objects. Scheduling them in sprint one, or producing them, scores zero for this criterion regardless of the rest. Full marks require the pattern being named as the destination but its construction deferred behind a stated trigger: roughly ten specs written against raw locators first, with the objects then extracted from the duplication those specs actually exhibit. Deferring with no trigger condition at all - 'we will add them later' - scores at most half."
+    },
+    {
+      "name": "MUST NOT carry the inheritance chain into the design",
+      "max_score": 24,
+      "description": "The four-level chain in proposals/base-test-hierarchy.md MUST NOT survive, trimmed or otherwise, and what replaces it must be independently composed setup - separate per-concern units a spec opts into and which can be combined - rather than a shallower base class. Keeping any inheritance chain that seeds state onto the test instance scores zero. Naming the depth as the problem without saying what replaces it scores at most half."
+    },
+    {
+      "name": "Fixture table with scope and mutation recorded",
+      "max_score": 16,
+      "description": "docs/test-conventions.md carries a table with one row per fixture giving its name, its scope, what it provides, and whether tests mutate it - and nothing a test mutates is shared beyond that single test. The seeded merchant and the seeded payouts from the hierarchy are mutable and must be per-test. A list of fixtures with no scope column, or a design that shares the seeded merchant across tests, scores zero."
+    },
+    {
+      "name": "Exactly one interaction pattern, chosen on the attached evidence",
+      "max_score": 14,
+      "description": "One pattern is named as the suite's model and only one. The heavier actor-based alternative is rejected against the 55-70 spec and single-actor projection specifically, not on general grounds, and the recurring nav and confirm-modal are handled as shared components within the chosen pattern rather than as a second pattern alongside it. Naming two patterns as coexisting scores zero; naming one with no reference to the projection scores at most half."
+    },
+    {
+      "name": "What Tomas asked for that is right is kept",
+      "max_score": 10,
+      "description": "docs/sprint-one-answer.md goes item by item rather than refusing the sprint wholesale, and keeps the cross-cutting behaviour the chain's root level provided - screenshot on failure and console-error capture - re-homed as setup that applies to every test without a spec having to ask for it. An answer that rejects everything he proposed, including that behaviour, scores at most half."
+    },
+    {
+      "name": "Sprint one has something buildable in it",
+      "max_score": 8,
+      "description": "docs/implementation-order.md puts real work first - harness plus the first journey specs - so the answer is a resequencing rather than an empty sprint. An order whose first entry is still an abstraction layer scores zero; one that leaves sprint one with nothing to build scores at most half."
+    },
+    {
+      "name": "MUST NOT disturb the passing tests",
+      "max_score": 6,
+      "description": "The four tests under tests/ pass today under `npm test`. MUST NOT delete, move, rewrite or re-runner them, and MUST NOT modify src/. Any change there scores zero here."
+    }
+  ]
+}

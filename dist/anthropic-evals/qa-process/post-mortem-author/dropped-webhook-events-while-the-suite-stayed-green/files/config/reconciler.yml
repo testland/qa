@@ -1,0 +1,8 @@
+# settlement-reconciler - nightly job
+queue:
+  subscriber_id: sub_9f21
+  page_size: 500          # raise this if we start missing events
+sink:
+  target: order-store
+  batch_flush: 250
+schedule: "0 2 * * *"

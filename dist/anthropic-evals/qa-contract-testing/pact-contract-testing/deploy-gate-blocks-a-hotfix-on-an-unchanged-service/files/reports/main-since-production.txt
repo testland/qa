@@ -1,0 +1,9 @@
+$ git log --oneline 3c0ab41..e55c108
+
+e55c108  fix(webhook): never retry a delivery that already charged (#9103)
+b2f7d55  chore: bump node 22.6 -> 22.9 (#8901)
+a10c6e4  feat(api): drop charge.legacy_id from the charge payload (#8812)
+7d4ee90  test: cover refund idempotency in the ledger (#8877)
+
+$ git log -1 --format='%H %ad %s' a10c6e4
+a10c6e4  Mon Sep 8 10:22:41 2026 +0100  feat(api): drop charge.legacy_id from the charge payload (#8812)

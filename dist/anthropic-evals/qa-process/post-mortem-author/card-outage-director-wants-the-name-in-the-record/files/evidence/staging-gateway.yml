@@ -1,0 +1,10 @@
+# staging gateway - payments
+upstream:
+  mode: mock
+  responder: gateway-stub
+  fixed_latency_ms: 40
+  outbound_calls: none
+timeouts_file: config/gateways/stripe/timeouts.yml
+traffic:
+  source: synthetic smoke suite
+  requests_per_day: 1200

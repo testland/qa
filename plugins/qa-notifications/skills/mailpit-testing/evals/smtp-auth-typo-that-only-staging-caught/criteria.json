@@ -1,0 +1,41 @@
+{
+  "context": "Two defects stack, and only one of them is visible by reading the code. `.env.test` exports `SMTP_PASS` while `smtpConfig` reads `SMTP_PASSWORD`, so `pass` is undefined and the `user && pass ? ... : undefined` ternary silently drops the auth block — which is why staging never issued AUTH. That much a careful reader finds. The reason six weeks of CI stayed green is in `docker-compose.test.yml`: PR #1043 set the capture container to accept any SMTP username and password, including none, so the local server would have accepted the send whether the credentials were right, wrong, stale or entirely absent. Predicted baseline failure: the agent fixes the variable name, makes the missing-credential case throw instead of falling through, adds a test asserting the shape of the returned config object, and declares the rotation covered — leaving accept-any in place, which means the suite still cannot go red when the password is rotated and not updated, which is the one thing that was asked for. A test can only fail on a bad credential if the server has a credential to compare against, which means removing accept-any, giving the container a credential set it actually checks, and keeping insecure authentication permitted on the unencrypted local listener so the mailer can authenticate at all. That combination is the discriminator; the variable-name typo is not.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The defect is named with its file and line, the config and test files are edited, and `docs/smtp-auth-gap.md` exists. A missing write-up scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave the capture container accepting any credential",
+      "max_score": 32,
+      "description": "MUST NOT ship `MP_SMTP_AUTH_ACCEPT_ANY` (or its flag form) on the mail service. While it is set the server accepts any username and password including none, so no credential the suite supplies can ever be wrong and the rotation the request is about is untestable. Full marks: accept-any removed, the container given a credential set it genuinely checks — a password file or the equivalent option that takes explicit credentials, with the file itself created in the fixture — and insecure PLAIN/LOGIN authentication still permitted on the unencrypted local listener so the mailer can authenticate over port 1025 at all. Leaving accept-any set in any form scores zero. Removing accept-any but supplying no credential for the server to check, so authentication is simply not required, also scores zero. Removing accept-any and the insecure-auth permission together, which leaves the mailer unable to authenticate and the delivery test failing for the reason PR #1043 recorded, scores at most half."
+    },
+    {
+      "name": "A wrong credential is rejected by the server, and the suite goes red",
+      "max_score": 24,
+      "description": "A new test sends with a deliberately wrong or stale password against the running container and asserts the send fails with the server's authentication rejection, so the 90-day rotation is covered. A test that only inspects the object `smtpConfig` returns, or that asserts against a mocked or stubbed transport, scores zero — neither can observe a credential the server disagrees with. A test that asserts an exception is thrown by the application before any SMTP conversation happens also scores zero for the same reason."
+    },
+    {
+      "name": "Silent auth fall-through made loud",
+      "max_score": 14,
+      "description": "`smtpConfig` no longer returns `auth: undefined` when a credential is half-configured. Full marks: a username without a password, or a password without a username, fails loudly, and a deployment that is meant to authenticate cannot start without both. Leaving the ternary as it is scores zero. Throwing only when both are missing scores at most half, since the incident was one present and one absent."
+    },
+    {
+      "name": "Credential variable name reconciled everywhere",
+      "max_score": 8,
+      "description": "The `SMTP_PASS` / `SMTP_PASSWORD` mismatch is resolved to one name used consistently by `src/mailer-config.mjs`, `.env.test` and the staging environment shown in the deploy log. Fixing only one side, so `.env.test` and the deployed environment now disagree, scores at most half."
+    },
+    {
+      "name": "Existing config tests still pass",
+      "max_score": 4,
+      "description": "Both tests in `test/config.test.mjs` still exist and pass. Deleting or loosening either to accommodate the fix scores zero."
+    },
+    {
+      "name": "Write-up explains both halves of the six green weeks",
+      "max_score": 12,
+      "description": "`docs/smtp-auth-gap.md` names both causes: the credential never reached the transport, and the capture container would have accepted the send regardless. Attributing the green CI to the variable-name mismatch alone scores zero — the mismatch explains the staging failure, not the absence of a red build."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "capturedAt": "2026-09-10T03:09:00Z",
+  "source": "run 4419",
+  "model": "gpt-5.4-mini-2026-04-02",
+  "datasetFile": "datasets/golden-v4.4.0.jsonl",
+  "passed": 844,
+  "total": 1000
+}

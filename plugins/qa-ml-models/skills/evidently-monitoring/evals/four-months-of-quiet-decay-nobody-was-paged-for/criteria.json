@@ -1,0 +1,41 @@
+{
+  "context": "Two monitors that both look correct at a glance, and neither can report the thing it exists to report. Predicted baseline failure: the agent reads `baseline.load(\"eta_v6_normal\")` as a pinned snapshot - it is a named file, loaded from disk, not computed from `today` - concludes the baseline is fine, and spends the answer on thresholds, statistical methods, or adding an accuracy check that the repository already has. The line that matters is the last one in `nightly_drift.py`: on any night that does not page, the job overwrites the snapshot with that night's traffic, so a baseline advertised as fixed advances every 24 hours and a feature creeping 0.8-2.6% per week is compared against a reference that crept with it. The snapshot mtime in `job-history.json` is last night's; `monitoring/baselines/` is not in version control, so nothing preserves the week-14 distribution. The second predicted failure is the accuracy job. It looks like exactly the check a reviewer would ask for - RegressionPreset, target and prediction columns present, labels available two hours after delivery - but the Report is constructed without tests enabled, so the run dictionary carries metrics and no `tests` key at all, and the shared `should_page` helper reads a missing key as nothing to page about. `tests/test_alerting.py` locks that in as intended behaviour. The job has rendered 19 weeks of true MAE into `monitoring/out/` and can never notify. The third predicted failure is the patch: the classes it imports do not exist in the pinned 0.7 line, and `as_dict()[\"summary\"][\"all_passed\"]` is not a shape the installed library produces, so adopting it replaces a job that cannot fire with one that cannot import. Rejecting it for the wrong reason - the hard 6.0 constant - and adopting the rewrite scores badly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/postmortem-eta-decay.md exists and at least one file under monitoring/ is changed. A postmortem with no code change, or code with no postmortem, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave a baseline the job rewrites itself",
+      "max_score": 30,
+      "description": "The postmortem identifies that `nightly_drift.py` overwrites `eta_v6_normal` with the current night's traffic whenever the night is quiet, so every night's comparison is against roughly the night before, and the delivered code stops the monitoring jobs writing to their own reference. MUST NOT deliver monitoring that still refreshes, promotes or rewrites the baseline as a side effect of a clean run. Scores zero if the refresh survives anywhere in the delivered code, and zero if the postmortem blames the miss on thresholds, sample size, or the choice of statistical method without identifying that the reference moves. Scores at most half if the self-refresh is named in prose but the delivered job still calls it, or if the replacement is a snapshot recomputed from a trailing window at run time, which is the same fault with a longer memory."
+    },
+    {
+      "name": "The accuracy job is diagnosed as unable to fire, not as missing",
+      "max_score": 24,
+      "description": "The answer states that the accuracy job's Report is built without per-column tests enabled, so its run dictionary has no `tests` entry, and that `should_page` treats an absent `tests` key as a quiet night - which is why 19 weeks of measured MAE produced no notification. The delivered job enables tests on that Report and the delivered `should_page` no longer reports quiet for a run that carries no tests at all. Scores zero if the answer treats accuracy monitoring as something to be added, as though the job were not already there, or if it attributes the silence only to nobody opening the HTML. Scores at most half if the missing-tests construction is fixed in `quality_check.py` but `should_page` still returns False for a run with no `tests` key."
+    },
+    {
+      "name": "MUST NOT adopt the patch's rewrite",
+      "max_score": 22,
+      "description": "MUST NOT deliver code importing a separate test-suite class, `evidently.test_suite`, `evidently.tests`, `evidently.report` or `evidently.metric_preset`, and MUST NOT read a result through `as_dict()` or a top-level summary/all_passed key. The pinned dependency is the 0.7 line, where pass/fail comes from enabling tests on a Report and reading per-test status from the run dictionary. Scores zero if any of those imports or that result shape appears in the delivered files. Rejecting the patch only on the hard-coded 6.0 minute limit, while accepting the rewrite, scores zero as well. Scores at most half if the verdict rejects it correctly but never says what the working mechanism on the installed version is."
+    },
+    {
+      "name": "The replacement reference is genuinely fixed and its refresh is an event",
+      "max_score": 16,
+      "description": "The new reference is a stored snapshot or named date range that changes only on a deliberate act - a promoted retrain with a written promotion note, per the runbook - and the answer says who replaces it and on what event. Scores zero if the delivered reference is still derived from recent traffic on a schedule. Scores at most half if a fixed reference is described but nothing states the condition under which it may be replaced."
+    },
+    {
+      "name": "Tests brought in line rather than deleted",
+      "max_score": 12,
+      "description": "tests/test_alerting.py is updated so it no longer asserts that a run carrying no tests is a quiet night, and the suite passes under `pytest -q`. Scores zero if that test file is deleted, emptied, or marked skip/xfail, and zero if the assertion that a missing `tests` key means no page is left standing while the production code is changed around it."
+    },
+    {
+      "name": "Postmortem argues from the attached numbers",
+      "max_score": 8,
+      "description": "It uses the supplied evidence: the per-week feature movement against the 4.1 to 9.8 MAE progression with no retrain in the window, the input share of drifted columns never exceeding 0.088, and the accuracy job writing a report every night while paging zero times. Scores zero if it reasons only from reading the code and cites none of the supplied figures."
+    }
+  ]
+}

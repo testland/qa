@@ -1,0 +1,51 @@
+{
+  "context": "A pass-rate figure with a denominator problem, dressed up as a week-over-week collapse. Predicted baseline failure: the agent trusts the attached script because its test suite is green, and reports 55% this week against 84% last week - a 29 pp fall - because the script divides successes by every run the CI API returned, cancelled and skipped included. The planted evidence settles it three ways. The merge queue was switched on midweek on the 8th, and the cancelled column jumps from 0-1 a day to 6, 5, 4, 3 on exactly the days after it: those cancellations are a newer commit superseding an older one, not the software failing. The prior window's page, written by hand before the script existed, says 89% for the same week the script now calls 84%, which is only reconcilable if the two denominators differ. And the terminal-conclusion figures are 47 successes against 13 failures this window (78%) and 62 against 8 the window before (89%), a real fall of about 10 pp. The green test suite is the trap, not the evidence: it asserts 0.547 and 0.838, so it locks the wrong denominator in and passes. The mirror-image failure is over-correcting into 'the drop was an artefact, the week was fine' - a 10 pp fall is still outside ordinary noise and is the worst area on the page.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "quality-digest/2026-09-13.md, docs/dashboard-discrepancy.md, and edits to both files under tools/ all exist. Missing the digest file scores zero for this item; missing only the discrepancy note scores at most half."
+    },
+    {
+      "name": "MUST NOT count cancelled or skipped runs in the pass-rate denominator",
+      "max_score": 32,
+      "description": "The reported pass rate for 2026-09-07..2026-09-13 is 78% (47 successes over 47 + 13 terminal failures), and the prior window is 89% (62 over 62 + 8). Reporting 55%, or any figure derived from a denominator that includes the 22 cancelled or 4 skipped runs, scores zero for this criterion regardless of the rest of the page. Full marks require the figure plus the stated reason that a cancelled or skipped run carries no information about whether the software works - here, a newer commit superseding an older one under the merge queue enabled on the 8th. Reporting 78% with no explanation of why the other runs are out scores at most half."
+    },
+    {
+      "name": "Trend reported as a delta against the comparable prior figure",
+      "max_score": 20,
+      "description": "The trend is about -10 pp (89% down to 78%), computed against the prior window on the same denominator rule, and it is classified RED because it is worse than -5 pp. Reporting a -29 pp fall scores zero. Reporting only the current rate with no trend, or comparing 78% against the dashboard's 84%, scores at most half."
+    },
+    {
+      "name": "Script and test corrected together and still green",
+      "max_score": 18,
+      "description": "tools/ci-metrics.mjs computes successes over successes plus failures, and tools/ci-metrics.test.mjs is updated to assert 0.783 and 0.886 so that `node --test` passes from the project root. Changing the script but leaving the test asserting 0.547 - so the suite now fails - scores at most half. Changing the test to match the old behaviour, or leaving both untouched, scores zero."
+    },
+    {
+      "name": "Headline is the worst area, not a blend",
+      "max_score": 16,
+      "description": "The headline for the week is RED, set by the pass-rate trend, which is the worst of the areas on the page (pass rate 78% AMBER, trend RED, 1 escape AMBER, 2 stale quarantine entries AMBER, 1 new flake AMBER). A headline of AMBER, or any averaged or blended overall score, scores zero here. RED asserted without naming which area set it scores at most half."
+    },
+    {
+      "name": "Escape and flake figures computed on the stated window",
+      "max_score": 14,
+      "description": "Escapes for this window is 1 (FUL-2305). FUL-2298 was created 2026-09-02 and belongs to the prior window, so counting 2 escapes scores zero for this criterion. Flake debt is (2 stale x 2) + 1 new = 5, with the 2026-09-05 entry correctly not stale at 8 days; a different score, or one computed without stating the weight and the staleness cut-off in the page, scores at most half."
+    },
+    {
+      "name": "Machine-readable summary line emitted",
+      "max_score": 12,
+      "description": "The page ends with a digest-row line carrying team, window, pass_rate about 0.78, delta_pp about -10, escapes=1, deployments=9, flake_debt=5, rag=RED and the threshold basis, matching the shape of the line on last week's page. Omitting the line scores zero; emitting it with figures that contradict the body scores zero."
+    },
+    {
+      "name": "Director note answers which number and whether the move is real",
+      "max_score": 14,
+      "description": "docs/dashboard-discrepancy.md names 78% as the figure to use, explains that the dashboard's 55% came from counting cancelled and skipped runs after the merge queue changed how many of those there are, AND states that a real fall of about 10 pp remains after that is removed. Concluding that the drop was entirely an artefact and the week was fine scores at most half - it is the mirror-image error and would send the director into Monday with a RED trend he has been told to ignore. Endorsing the dashboard figure scores zero."
+    },
+    {
+      "name": "Sources named and no new tracking proposed",
+      "max_score": 8,
+      "description": "Each figure on the page names the artifact it came from (the two run CSVs, quarantine.json, defects/production-defects.csv). Adding new instrumentation, new CI fields, or a proposal to change what the CI API exports is outside what was asked and scores at most half here."
+    }
+  ]
+}

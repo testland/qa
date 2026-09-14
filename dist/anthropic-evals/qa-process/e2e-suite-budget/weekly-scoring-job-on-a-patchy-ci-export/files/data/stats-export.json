@@ -1,0 +1,30 @@
+{
+  "_note": "runtime_min is null where the test did not execute in the window. flake_rate is absent where the test never ran on the retry-enabled lane, so pass-after-retry could not be computed for it. Neither is a measurement of zero.",
+  "_window": "2026-09-01 to 2026-09-08",
+  "tests": {
+    "checkout.spec.ts > card-purchase-happy-path": { "runtime_min": 3.8, "flake_rate": 0.02 },
+    "checkout.spec.ts > saved-card-purchase": { "runtime_min": 3.1, "flake_rate": 0.0 },
+    "checkout.spec.ts > three-d-secure-challenge": { "runtime_min": 2.7 },
+    "cart.spec.ts > line-item-edit": { "runtime_min": 1.4, "flake_rate": 0.0 },
+    "auth.spec.ts > login-with-password": { "runtime_min": 1.0, "flake_rate": 0.01 },
+    "auth.spec.ts > sso-redirect": { "runtime_min": 2.4, "flake_rate": 0.09 },
+    "auth.spec.ts > password-reset-email": { "runtime_min": 2.8 },
+    "account.spec.ts > change-password": { "runtime_min": 1.6, "flake_rate": 0.0 },
+    "account.spec.ts > data-export-request": { "runtime_min": 2.9 },
+    "account.spec.ts > avatar-upload": { "runtime_min": null, "flake_rate": 0.13 },
+    "search.spec.ts > keyword-results": { "runtime_min": 1.3, "flake_rate": 0.0 },
+    "search.spec.ts > facet-filters": { "runtime_min": 1.8, "flake_rate": 0.06 },
+    "search.spec.ts > sort-order-persistence": { "runtime_min": 1.5 },
+    "reports.spec.ts > export-50k-rows": { "runtime_min": 4.6, "flake_rate": 0.0 },
+    "reports.spec.ts > scheduled-email-report": { "runtime_min": 3.3 },
+    "admin.spec.ts > audit-log-download": { "runtime_min": 2.4, "flake_rate": 0.06 },
+    "admin.spec.ts > user-role-change": { "runtime_min": 2.0, "flake_rate": 0.0 },
+    "orders.spec.ts > cancel-within-window": { "runtime_min": 2.0, "flake_rate": 0.0 },
+    "orders.spec.ts > print-packing-slip": { "runtime_min": null, "flake_rate": 0.05 },
+    "pricing.spec.ts > currency-switch": { "runtime_min": 1.5, "flake_rate": 0.0 },
+    "settings.spec.ts > api-key-rotation": { "runtime_min": 2.1, "flake_rate": 0.0 },
+    "notifications.spec.ts > digest-opt-out": { "runtime_min": 1.1, "flake_rate": 0.0 },
+    "onboarding.spec.ts > sample-data-import": { "runtime_min": 3.4, "flake_rate": 0.0 },
+    "promo.spec.ts > seasonal-banner": { "runtime_min": null, "flake_rate": 0.19 }
+  }
+}

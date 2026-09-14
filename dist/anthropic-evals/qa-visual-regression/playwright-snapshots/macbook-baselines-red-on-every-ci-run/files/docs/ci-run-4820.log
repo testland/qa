@@ -1,0 +1,31 @@
+Run 4820 - PR #2291 "chore: bump date-fns" - runs-on ubuntu-latest
+
+  1) [chromium] > account.spec.ts:9:1 > account overview ------------------
+
+    Error: A snapshot doesn't exist at
+      tests/account.spec.ts-snapshots/account-overview-chromium-linux.png,
+      writing actual.
+      wrote 1280 x 3160
+
+  2) [chromium] > account.spec.ts:13:1 > billing panel --------------------
+
+    Error: A snapshot doesn't exist at
+      tests/account.spec.ts-snapshots/billing-chromium-linux.png,
+      writing actual.
+      wrote 980 x 620
+
+  3) [chromium] > account.spec.ts:18:1 > security panel -------------------
+
+    Error: A snapshot doesn't exist at
+      tests/account.spec.ts-snapshots/security-chromium-linux.png,
+      writing actual.
+      wrote 980 x 540
+
+  3 failed
+
+Files present in tests/account.spec.ts-snapshots/ at checkout:
+  account-overview-chromium-darwin.png   1280 x 3160
+  billing-chromium-darwin.png            980 x 620
+  security-chromium-darwin.png           980 x 540
+
+This is the same three errors on every run since 2026-08-21. 41 runs.

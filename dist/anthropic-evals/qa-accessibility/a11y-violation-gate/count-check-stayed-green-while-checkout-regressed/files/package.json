@@ -1,0 +1,8 @@
+{
+  "name": "storefront-a11y",
+  "version": "2.3.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

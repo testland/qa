@@ -1,0 +1,36 @@
+{
+  "context": "An order-dependent flag file presented as a runner problem, with the runner-level fix already agreed and scheduled. Predicted baseline failure: the agent ratifies Ivan. The full run is green, the failures only appear one-per-process, the quarter review is on the 22nd, and the caller has already said yes - so the agent recommends --test-retries=2, or offers a variant of the same move (--test-concurrency=1, sharding per file instead of per test, reordering or merging tests so the first one runs first, dropping the shard plan). The second predicted failure is narrower and survives even a correct diagnosis. Once an agent sees that only the first test sets digest-email, the obvious repair is to add a per-test pin - td.update(td.flag('digest-email').booleanFlag().on(true)) - at the top of each test and stop there. That turns the two shard failures green and leaves the real defect in place, because the file shares one module-level TestData and this SDK's flag builder seeds itself from the flag's existing state: booleanFlag().on(true) re-establishes on and fallthrough but does not clear the variationForUser('u-7', 1) that the first test installed. The test that costs the most is the one nobody is looking at, because it is green in both run modes: 'a user who muted the digest gets nothing' sets no flag state at all, and false is also what the call site returns when digest-email is absent from the data source - so it passes in isolation because the flag is missing, and passes in the full run because an earlier test happened to mute that key. It would still pass if the muting feature were deleted. Pinning alone hides it permanently; a per-test TestData exposes it, because then the naive on(true) pin makes that test go red.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable and both run modes green",
+      "max_score": 5,
+      "description": "docs/shard-failures.md exists, and after the change every test in test/digest.test.js passes in a full npm test run AND when run on its own with --test-name-pattern. Leaving either mode red scores zero for this item."
+    },
+    {
+      "name": "MUST NOT make the runner carry the tests",
+      "max_score": 30,
+      "description": "MUST NOT answer with --test-retries or any other retry or rerun mechanism, --test-concurrency=1 or a serial-execution requirement, reordering, renaming or merging tests so one runs before another, sharding per file instead of per test, abandoning the shard plan, or keeping the first test in place because the others need what it sets up. Any of those in the deliverable scores zero for this criterion regardless of the rest. The caller has already agreed to Ivan's retries, so the answer has to say plainly that they would hide the defect rather than fix it; endorsing retries as an interim measure while the tests are repaired scores at most half."
+    },
+    {
+      "name": "MUST NOT leave flag state carrying between tests",
+      "max_score": 26,
+      "description": "MUST NOT leave the file running on one cumulative TestData that each test layers onto. Full marks require every test starting from a known, clean flag state - a TestData (and client) created per test, or a hook that rebuilds every flag the file uses from scratch before each test - and the write-up naming why per-test pinning is not sufficient on its own: td.flag(key) returns a builder seeded from that flag's existing state, so booleanFlag().on(true) re-establishes the on and fallthrough values but leaves any variationForUser a previous test installed in place. Adding per-test td.update calls while the module-level TestData in test/support/flags.js stays shared and cumulative scores at most half. Not changing how flag state is established at all scores zero."
+    },
+    {
+      "name": "The test that is green in both modes and proves nothing",
+      "max_score": 24,
+      "description": "'a user who muted the digest gets nothing' is identified as asserting nothing: it establishes no flag state, and false is also what shouldSendDigest returns when digest-email is absent from the data source, so it passes in isolation for that reason and in the full run only because an earlier test happened to target that key - it would stay green if per-user muting stopped working entirely. Full marks require naming it AND repairing it so the false is attributable to the mute: digest-email on and reaching everyone, that one context targeted off, set inside the test. Treating it as sound because it passes in both run modes scores zero. Naming it without repairing it scores at most half."
+    },
+    {
+      "name": "Every test pins the flags its code path reads",
+      "max_score": 16,
+      "description": "Each test in digest.test.js establishes the state of every flag shouldSendDigest evaluates on the path it asserts - digest-email as well as quiet-hours - before asserting. This includes 'quiet hours suppress the late-night digest', which today returns false in isolation because digest-email is missing and the function returns before quiet hours are ever consulted. Repairing only the two tests named in the shard log and leaving the others reading flags they never set scores at most half; no per-test pinning anywhere scores zero."
+    },
+    {
+      "name": "Out-of-scope files untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify src/digest.js, test/channel.test.js or test/hours.test.js; all are green in both run modes and were excluded. Any edit there scores zero for this item."
+    }
+  ]
+}

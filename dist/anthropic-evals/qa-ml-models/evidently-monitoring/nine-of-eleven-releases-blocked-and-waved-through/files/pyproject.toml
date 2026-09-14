@@ -1,0 +1,7 @@
+[project]
+name = "churn-propensity-ci"
+version = "6.5.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

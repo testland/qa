@@ -1,0 +1,5 @@
+{
+  "name": "e2e-scoring",
+  "private": true,
+  "scripts": { "test": "node --test" }
+}

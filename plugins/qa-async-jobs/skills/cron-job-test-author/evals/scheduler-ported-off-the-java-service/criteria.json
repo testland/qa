@@ -1,0 +1,41 @@
+{
+  "context": "A one-constant PR that reads as the obvious fix for a real regulatory miss, sitting on top of a replay that is broken in a way no count assertion can see. Predicted baseline failure: the agent agrees with Sandra, raises CATCH_UP_WINDOW_MS to thirty days, adds tests in the shape of the three already there - a count of replayed runs per job - and reports it covered, because the framing arrives as arithmetic (the outage was three days, the window was one) and the fixture's green suite models exactly that assertion. Two things are wrong with it. The window is one setting for five jobs that want three different answers: vat-file-upload must file every period and the partner rejects a second file for a period it already holds, so replay is right for it; metrics-rollup rewrites a partition from source, so replay is harmless; payout-post appends a settlement batch with nothing in the ledger keyed on the period and dunning-email mails customers, so a thirty-day window turns the next outage into thirty duplicate batches and thirty rounds of email, which is the incident this work exists to prevent rather than the outcome it wants; and session-prune deletes whatever has expired whenever it runs, so replaying 2,880 prunes achieves what one run achieves. The second is in replayMissed itself: it computes the missed slots correctly and then calls run(job, Date.now()) instead of run(job, slot), so every replayed run is told it is running now and takes its period from the boot rather than from the slot it is making up. The jobs derive their period from that argument, which is why the file replayed on 11 September did not close the gap the partner is charging for, and why widening the window multiplies runs that all process the same period. The shipped tests pass through it untouched because each of them only counts calls or reads job.name.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "test/replay.test.js exists and docs/catch-up-policy.md has a section per job and a direct yes or no on PR 812. A document that answers the PR without a per-job position scores at most half."
+    },
+    {
+      "name": "MUST NOT widen catch-up across the jobs that append and mail",
+      "max_score": 30,
+      "description": "MUST NOT end up with one catch-up window applied to all five jobs, and MUST NOT leave payout-post or dunning-email able to replay a backlog of missed runs. Merging PR 812 as written, or shipping any arrangement where a thirty-day outage replays settlement batches or customer email, scores zero for this criterion whatever else the answer gets right - the ledger has no key on the batch and the mail has no second chance. Full marks require the refusal to be stated per job with the property it turns on: replay is safe where a repeated run is absorbed (the partner holds one file per period, the partition is rewritten from source) and unsafe where it is not, and the answer says what happens to those jobs' missed runs instead."
+    },
+    {
+      "name": "The replayed run is handed its own slot",
+      "max_score": 24,
+      "description": "The answer identifies that replayMissed passes Date.now() rather than the slot it is replaying, so every caught-up run processes the period the boot falls in rather than the period it missed, fixes it in src/catchup.js, and pins it with an executed test asserting the exact instants or periods handed to the runs of a boot after an outage - a test that fails against the shipped code. Not finding it scores zero. Finding it in prose without a test that inspects the arguments the replayed runs received scores at most half, and a test that only counts calls scores zero for this criterion because that is the assertion the shipped suite already makes."
+    },
+    {
+      "name": "The regulatory gap is closed on the evidence, not on the constant",
+      "max_score": 14,
+      "description": "docs/catch-up-policy.md says how the periods the filing partner is missing actually get filed, and does not propose replaying them through the shipped code, which would file them under the boot's period and burn the partner's one-file-per-period slot. An answer that treats widening the window as sufficient for Tax, with no reference to what the replayed run would file, scores at most half; one that never addresses the missed filings scores zero."
+    },
+    {
+      "name": "The jobs that need no backlog are decided rather than swept in",
+      "max_score": 10,
+      "description": "session-prune is recorded as needing one run and not a backlog - it deletes whatever has expired regardless of the period it is handed, so 2,880 replays after a thirty-day gap do what a single run does - and metrics-rollup is recorded as replayable because it rewrites the partition from source. Giving all five jobs the same policy scores zero here; stating the policies with no reason attached to what each job does scores at most half."
+    },
+    {
+      "name": "Every job's boot behaviour asserted, not just the two that are wrong",
+      "max_score": 12,
+      "description": "test/replay.test.js exercises all five entries in src/jobs.js against a boot after an outage, asserting per job what the replay does under the policy delivered - including the jobs whose policy is not to replay, which must be asserted to produce no runs. Covering only vat-file-upload and payout-post scores at most half; a suite that asserts nothing about the jobs left unchanged scores zero for this item."
+    },
+    {
+      "name": "Suite runs green",
+      "max_score": 8,
+      "description": "npm test passes on the delivered tree with test/catchup.test.js unmodified and missedSlots and replayMissed still callable as they are called there. A failing suite scores zero, and so does one that reaches green by editing or deleting the shipped tests, or by changing their signatures."
+    }
+  ]
+}

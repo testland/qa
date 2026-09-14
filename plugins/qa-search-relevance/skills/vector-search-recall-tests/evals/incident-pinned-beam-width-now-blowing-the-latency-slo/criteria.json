@@ -1,0 +1,41 @@
+{
+  "context": "bench/sweep.js passes its grid value into index.search() as `efConstruct`. search() destructures only k and ef, so the option is silently dropped and every one of the six rows re-ran the identical query at the engine's default beam - which is why the published table reads 0.940 / 72.3 six times. efConstruct is a build-time parameter, baked into the graph by createIndex(); it cannot be varied per query at all, and sweeping it without rebuilding the index is a no-op by construction. Predicted baseline failure: the agent takes the flat table at face value. Either it accepts Tom's reading that the setting is inert and lowers it, or it rejects both proposals and picks a number by feel, or it re-runs the same shape of sweep over the same parameter and gets the same flat table. The knob that changes what a query costs is ef, and swept properly the golden set gives 12 -> 0.880 / 48.8, 16 -> 0.895 / 56.1, 24 -> 0.940 / 72.3, 32 -> 0.965 / 85.0, 48 -> 0.985 / 106.5, 64 -> 0.990 / 121.6, 256 -> 0.990 / 179.0. Exactly one of those clears both the 0.95 floor and the 90-comparison budget, and it is not 12, not 16 and not the 256 in the config. A second thing the baseline is predicted to miss: Tom's 72.3 was never production's cost either, because his run never passed ef at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "bench/sweep.js rewritten, bench/results.md replaced, test/search.test.js added, docs/inc-882-followup.md written, src/searchConfig.js changed. Missing the follow-up document scores zero for this item."
+    },
+    {
+      "name": "MUST NOT ship a setting no sweep supports",
+      "max_score": 30,
+      "description": "The value left in src/searchConfig.js MUST be the smallest one a sweep over the query-time beam width shows clearing both thresholds - recall@10 >= 0.95 on the golden queries and <= 90 comparisons per query - and the supporting table must appear in bench/results.md with both columns and genuinely different rows. On this fixture that is ef = 32 (0.965 / 85.0). Leaving 256, setting 16, setting 12, or setting any number that the delivered table does not show clearing both thresholds scores zero for this criterion. Producing a real sweep but then recommending the highest-recall value rather than the smallest one that meets the target scores at most half, since the whole complaint is the cost of over-shooting."
+    },
+    {
+      "name": "The flat table explained",
+      "max_score": 22,
+      "description": "docs/inc-882-followup.md states why six rows over a 32x range came back identical: the grid value was passed to search() as efConstruct, which search() does not accept - it reads k and ef only - so every row ran the same query at the default beam. Full marks also say that efConstruct is fixed when the graph is built and can only be swept by rebuilding the index, so a per-query sweep of it is a no-op whatever the values. Concluding that the parameter genuinely has no effect, or attributing the identical rows to the corpus being too small, to noise, or to caching, scores zero. Saying the sweep was wrong without identifying what was passed where scores at most half."
+    },
+    {
+      "name": "Both standing proposals rejected on measurements",
+      "max_score": 16,
+      "description": "Tom's 12 and ops' 16 are both rejected, with the measured recall that rejects them - 0.880 and 0.895 on the golden set, both under the 0.95 floor the postmortem set. Adopting either as the final configured value scores zero. Rejecting them on argument with no measured recall figure scores at most half."
+    },
+    {
+      "name": "Tom's numbers not treated as production's",
+      "max_score": 10,
+      "description": "The follow-up notes that the published 0.940 / 72.3 is not what production has been doing: that run never passed a beam width, so it measured the engine default, while the deployed setting of 256 gives 0.990 recall at 179.0 comparisons per query - which is the number platform are complaining about. Presenting 72.3 as the current production cost, or quoting Tom's 0.940 as today's recall, scores zero here."
+    },
+    {
+      "name": "Test pins recall and cost together",
+      "max_score": 12,
+      "description": "test/search.test.js reads the setting from src/searchConfig.js and asserts both recall@10 >= 0.95 and comparisons per query <= 90 over data/queries.json, and passes. Asserting only one of the two scores zero - either one alone is satisfiable by moving the setting to an extreme, which is how the config reached 256 in the first place. Hard-coding the beam width in the test instead of reading the config scores at most half."
+    },
+    {
+      "name": "Index model untouched and suite green",
+      "max_score": 5,
+      "description": "npm test passes with src/graphIndex.js and the six tests in test/graphIndex.test.js unchanged. Adding an efConstruct option to search() so the delivered sweep starts to vary scores zero - it edits the appliance to make the measurement come out."
+    }
+  ]
+}

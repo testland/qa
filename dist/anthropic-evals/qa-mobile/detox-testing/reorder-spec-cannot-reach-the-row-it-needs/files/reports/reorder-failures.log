@@ -1,0 +1,27 @@
+# Run 1 - as first written, ios.sim.debug
+
+FAIL e2e/reorder.test.js
+  x reorders the most recent order
+      Multiple elements were matched: "id == order-row". Please use
+      atIndex(<index>) to select one of the elements, or refine the matcher
+      so that it resolves to a single element.
+      Matched 9 elements.
+
+# Run 2 - after QA added atIndex, ios.sim.debug
+
+FAIL e2e/reorder.test.js
+  v reorders the most recent order (4.1 s)
+  x reorders an older order further down the list
+      Index 30 out of bounds: the matcher "id == order-row" resolved to
+      9 elements.
+  x skips out-of-stock lines when reordering
+      Index 30 out of bounds: the matcher "id == order-row" resolved to
+      9 elements.
+
+Notes from QA:
+- The test account has 40 orders. Order 1042 is the 31st of them, counting from
+  the newest, and that is the one the second and third specs are about.
+- Scrolling down to order 1042 by hand on the simulator and then re-running the
+  spec makes it pass, so the row itself is fine once it is on screen.
+- The account gains orders every sprint. Order 1042 is the 31st today and will
+  be the 44th next quarter.

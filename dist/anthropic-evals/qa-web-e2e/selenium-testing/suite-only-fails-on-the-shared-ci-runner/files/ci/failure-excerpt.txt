@@ -1,0 +1,32 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.7, pytest-8.3.3, pluggy-1.5.0
+collected 11 items
+
+tests/test_catalog.py ..                                                 [ 18%]
+tests/test_checkout.py F.F                                               [ 45%]
+tests/test_orders.py .....                                               [ 90%]
+tests/test_profile.py .                                                  [100%]
+
+=================================== FAILURES ===================================
+________________________________ test_place_order _______________________________
+
+    WebDriverWait(driver, 10).until(EC.url_contains("/orders/"))
+E   selenium.common.exceptions.TimeoutException: Message:
+E   Stacktrace:
+E   #0 0x5581e1c8a9e3 <unknown>
+
+tests/test_checkout.py:18: TimeoutException
+_____________________ test_guest_checkout_requires_an_email ____________________
+
+    error = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-testid=guest-email-error]"))
+    )
+E   selenium.common.exceptions.TimeoutException: Message:
+E   Stacktrace:
+E   #0 0x5581e1c8a9e3 <unknown>
+
+tests/test_checkout.py:52: TimeoutException
+=========================== short test summary info ============================
+FAILED tests/test_checkout.py::test_place_order - TimeoutException
+FAILED tests/test_checkout.py::test_guest_checkout_requires_an_email - TimeoutException
+========================= 2 failed, 9 passed in 214.11s ========================

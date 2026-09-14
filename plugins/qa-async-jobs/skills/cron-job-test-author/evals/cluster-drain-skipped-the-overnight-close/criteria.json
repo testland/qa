@@ -1,0 +1,41 @@
+{
+  "context": "A namespace-wide policy drafted in good faith after a real incident, where each of its three clauses is defensible in isolation and each one is wrong for at least one of the three workloads. Predicted baseline failure: the agent reads the draft as a safety improvement, signs it off with at most cosmetic adjustments, and applies Replace, a six-hour deadline and failure alerting across all three manifests, because refusing a proposal is harder than improving one. Clause 1 is the expensive one. warehouse-compact runs hourly, a pass takes 70 to 110 minutes over the same partitions, and it rewrites in place with no resume - so Replace means the controller terminates a pass part way through a rewrite once an hour and leaves the partitions in whatever state it had reached. The object is also the only one of the three with no concurrencyPolicy field at all, which means the controller's default is already letting the next hourly pass start on top of the running one; the job that needs the setting most is the one nobody configured, and the draft would replace one corruption path with another. Clause 2 lands on the customer send: 09:30 Tuesday with 300 seconds of grace becomes a send that can start at any point up to 15:30, and growth-eng has already measured what a 16:40 send does - 900 unsubscribes and a third of the usual click rate. Clause 3 is the one the incident disproves: no Job object was ever created, nothing failed, the CronJob looked healthy with a last-success timestamp from the month before, so an alert on Job failure would have stayed quiet for the same nine days. The quiet finding underneath all three is close-books' missing timeZone: the cluster notes say a zone-less schedule is evaluated in UTC, and 02:00 UTC on the 1st is 22:00 on the last day of the previous month in America/New_York, so the close has been reading a period that has not ended yet, every month. And one clause of the draft is simply right for one workload - 120 seconds of deadline against a 20-to-40-minute drain is what skipped the August close - so an answer that rejects the draft wholesale is as wrong as one that signs it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/scheduling-review.md exists, answers the draft's three proposals explicitly, and carries a section per workload naming the missed-run decision, the overlap decision and the field that implements each. A review that covers only close-books, or that never addresses the draft's proposals as proposals, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT let the hourly compaction be killed or doubled",
+      "max_score": 30,
+      "description": "MUST NOT apply concurrencyPolicy: Replace to warehouse-compact: the pass rewrites partitions in place with no resume, so terminating one part way leaves the partitions half-rewritten, and Replace on an hourly schedule against a 70-110 minute pass does that routinely. Ending up with Replace on that object scores zero for this criterion regardless of the rest. The manifest must end up with an explicit policy that prevents a second pass starting while one is running. Full marks require the answer to state what the object does today - it carries no concurrencyPolicy at all, so the controller's default already permits the overlapping passes nobody has reported - rather than presenting this as a change from a safe state."
+    },
+    {
+      "name": "MUST NOT give the customer send a six-hour catch-up window",
+      "max_score": 22,
+      "description": "MUST NOT raise promo-blast's startingDeadlineSeconds, and MUST NOT otherwise arrange for a missed send to be made up later in the day. Doing either scores zero, whatever else is right: growth-eng measured a 16:40 send at 900 unsubscribes and a third of the usual click rate, and six hours of grace on a 09:30 slot permits exactly that. Full marks require the decision to be written down as a decision - a missed send is skipped and the segment rolls into the next slot - rather than the workload simply being omitted from the changes."
+    },
+    {
+      "name": "Failure alerting refused as the missed-run detector",
+      "max_score": 18,
+      "description": "The review states that the draft's third proposal would not have caught INC-5503 - no Job object was created, so no Job failed, and the CronJob's own status looked healthy - and names a signal that fires on the absence of a run: an alert on the age of the last successful completion, or a heartbeat the job pings when it finishes and a dead-man check on that. Signing off failure alerting as the fix for visibility scores zero. Saying only 'add monitoring' or 'alert on the CronJob' with no named signal scores at most half."
+    },
+    {
+      "name": "The close runs after the period it is closing",
+      "max_score": 16,
+      "description": "close-books is identified as running against the wrong period boundary: the object carries no timeZone, a zone-less schedule is evaluated in UTC per the cluster notes, and 02:00 UTC on the 1st falls on the last day of the previous month in America/New_York - before the accounting period the close reads has ended. The fix pins the zone on the object so the schedule means local time. Missing this scores zero; noting the absent zone as untidy without connecting it to the period boundary scores at most half."
+    },
+    {
+      "name": "The one clause that is right is applied",
+      "max_score": 14,
+      "description": "close-books' startingDeadlineSeconds of 120 is raised to a value that comfortably exceeds a documented 20-to-40-minute drain, because for this workload a late close is an annoyance and a missing close is a restatement. Leaving it at 120 scores zero - rejecting the whole draft leaves the workload in the state that caused the incident. A new value below the documented drain duration, or one given with no reference to how long a drain lasts, scores at most half."
+    },
+    {
+      "name": "MUST NOT ship one setting across three workloads",
+      "max_score": 10,
+      "description": "MUST NOT apply the same concurrency and deadline values uniformly to all three manifests. The three objects must end up differing in line with the three requirements, and images, args, resources, history limits, backoffLimit and the schedules themselves must be left exactly as they are. A uniform policy scores zero here even where the individual values happen to be defensible; editing unrelated fields scores at most half."
+    }
+  ]
+}

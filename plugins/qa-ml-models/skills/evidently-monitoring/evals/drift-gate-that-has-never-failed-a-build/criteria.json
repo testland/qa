@@ -1,0 +1,46 @@
+{
+  "context": "A gate that is broken in three independent ways at once, framed so that only the least interesting one is obvious. Predicted baseline failure: the agent treats this as a dependency-upgrade chore, keeps the shape of the existing code, and writes the pre-0.7 API from memory - `from evidently.report import Report`, `from evidently.metric_preset import DataDriftPreset`, and above all a separate `TestSuite`/`DataDriftTestPreset` pair whose result is read as `as_dict()['summary']['all_passed']`. That module was removed in 0.7 (evidentlyai/evidently issue #1556) and the current library has no standalone TestSuite at all: tests are an option on a Report (`include_tests=True`) and the result dictionary carries top-level `metrics` and `tests`, with a status on each test, and no aggregate `summary.all_passed` or top-level `status` key. So a rewrite that keeps the old contract produces exactly the failure being complained about - `should_block` reads a key nothing emits, falls through its `True`/`False` default, and the gate passes again, this time with no import error to hint at it. The second predicted miss is the reference: both sides of the comparison are slices of one March training export, so the comparison is curated-data-against-itself and cannot contain a production feed change by construction - the manual re-run against the real production week passing anyway is what proves the decision function is broken on top of that. The third, `continue-on-error: true` plus `|| true`, is the one a competent agent will spot unaided.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "All four exist: a rewritten ci/drift_gate.py, a fixed ci/gate_decision.py, an updated tests/test_gate_decision.py, an edited .github/workflows/release.yml, and docs/why-the-gate-never-fired.md. Missing the explanation document scores zero for this item."
+    },
+    {
+      "name": "Gate decides from per-test statuses on the run result",
+      "max_score": 32,
+      "description": "The rewritten gate builds one Report over the drift preset with tests enabled on the Report itself (include_tests=True), runs it with the reference and current datasets, and reaches its verdict by inspecting the individual test entries in the run result - each entry's own status - then exits non-zero when any of them is not passing. Scores zero if the delivered code imports from evidently.report / evidently.metric_preset / evidently.test_suite / evidently.test_preset, or constructs a standalone TestSuite object: those were removed on the 0.7 line the project has installed, so the file cannot run at all. Scores at most half if the imports are current but the verdict is still taken from an aggregate key rather than from the per-test statuses."
+    },
+    {
+      "name": "MUST NOT keep the summary/all_passed contract",
+      "max_score": 24,
+      "description": "MUST NOT leave should_block (or its replacement) reading report_dict['summary']['all_passed'], a top-level 'status' key, or any other aggregate the library does not emit, and MUST NOT keep tests/test_gate_decision.py asserting that a dictionary with no recognised key means ship. Either one surviving scores zero for this criterion regardless of the rest, because it reproduces the reported symptom with the import error removed. Full marks require the replacement to be fail-closed: a result whose shape is not recognised blocks the candidate rather than passing it. Fixing the function but leaving the old-shaped assertions in the test file scores at most half."
+    },
+    {
+      "name": "MUST NOT compare the training export against itself",
+      "max_score": 20,
+      "description": "MUST NOT leave the gate comparing data/train_sample.parquet against data/candidate_eval.parquet. Both are slices of the same March training export, produced by the training job and never touched by live traffic, so no vendor feed change can appear on either side - curated training data does not reflect the served distribution. The delivered gate must take its reference from a pinned, validated window of real production traffic, and the answer must say how that file is produced and when it is allowed to change. Scores zero if the script still loads the training sample as the reference. Scores at most half if the document raises the point but the code is unchanged."
+    },
+    {
+      "name": "Blocked candidate fails the job",
+      "max_score": 10,
+      "description": "`continue-on-error: true` and the trailing `|| true` are both gone from the drift gate step, and the report is still uploaded on failure (an `if: always()` on the upload step, or equivalent). Scores zero if either suppressor survives anywhere in the step."
+    },
+    {
+      "name": "Tests updated, not discarded",
+      "max_score": 12,
+      "description": "tests/test_gate_decision.py still exercises the decision function and passes under `pytest -q`, covering a failing test status, an all-passing result, and an unrecognised or empty result. Scores zero if the file is deleted, emptied, or marked skip/xfail rather than rewritten against the real result shape."
+    },
+    {
+      "name": "Explanation names each cause separately",
+      "max_score": 10,
+      "description": "docs/why-the-gate-never-fired.md lists the causes as independent faults - the decision key that is never present, the two training-export datasets, the suppressed CI step - each tied to the file that carries it, and states that fixing only one of them would have left the August incident undetected. Scores zero if it offers a single cause, or describes the problem only as 'the library API changed'."
+    },
+    {
+      "name": "Unrelated test left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify or delete tests/test_feature_parity.py or ci/feature_names.py. They pass, they are not part of the drift path, and they were not in the request. Any edit to either scores zero here."
+    }
+  ]
+}

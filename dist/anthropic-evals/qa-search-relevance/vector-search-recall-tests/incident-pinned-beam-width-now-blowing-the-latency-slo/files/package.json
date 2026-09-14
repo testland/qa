@@ -1,0 +1,9 @@
+{
+  "name": "contract-search",
+  "version": "6.1.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "sweep": "node bench/sweep.js"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Three of the four failures in this fixture are defects in how the dataset rows were written, not in either model, and the CSV is the promptfoo test-file format where an __expected cell is parsed as TYPE: VALUE and a cell with no type prefix is an exact-match assertion. Predicted baseline failure: the agent reconciles the two runs by intersecting case ids, reports 5/6 against 5/6, declares no regression and ships — treating refund-window-eu and refund-partial-shipment as either model failures or as cases the comparison can simply drop. Both were appended with bare __expected cells, so they assert equality against a whole reply. The planted evidence settles it: refund-window-eu's recorded output contains the string '14 days' verbatim and the case still failed, which no substring check could produce; and shipping-cost, which fails identically in BOTH runs and has been red since 2026-07-24, has two checks jammed into one cell so only the first is read and its value swallows the second — promptfoo takes multiple assertions as numbered __expected1 / __expected2 columns. The agent is further predicted to keep an absolute 0.95 floor (the anti-pattern the skill names: use a ratio against the baseline, not an absolute floor, or every added case fails the gate until its outputs are recorded), to leave refund-window-eu asserting 14 days for Germany when docs/policy.md puts the window at 30 days in every market, and to call refund-partial-shipment a regression when the baseline model was never run on it at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Bare __expected cells identified as the mechanism",
+      "max_score": 32,
+      "description": "Identifies that refund-window-eu and refund-partial-shipment were appended with __expected cells carrying no assertion-type prefix, so each is an exact-match assertion against the entire reply rather than the substring check Priya intended, and repairs the cells with an explicit type. Full marks require naming the missing type prefix as the reason, citing refund-window-eu's recorded output containing '14 days' verbatim while the case still failed. Attributing either failure to the candidate model's quality without addressing the cell syntax scores zero. So does making the cells pass by editing the recorded outputs in results/ or by deleting the rows."
+    },
+    {
+      "name": "shipping-cost split into numbered columns",
+      "max_score": 18,
+      "description": "The shipping-cost row holds two checks in a single __expected cell, so only the first is read and its value absorbs the second, which is why the row fails in both runs while both recorded outputs satisfy the intent. Full marks require splitting it into numbered __expected1 / __expected2 columns. Dropping one of the two checks, or deleting the row, scores at most half. Leaving the row untouched, or reporting it as a model failure, scores zero."
+    },
+    {
+      "name": "MUST NOT decide the upgrade on an absolute pass-rate floor",
+      "max_score": 24,
+      "description": "MUST NOT ship a gate that fails the candidate because its own rate is below a fixed 0.95. The delivered scripts/gate.mjs compares the candidate against the stored baseline on cases both runs actually cover, and reports what it could not compare rather than counting it as a failure. A gate that still goes red purely because cases were added scores zero. A gate that restricts to shared cases and then applies an absolute floor to that rate scores at most half."
+    },
+    {
+      "name": "New-case failure not claimed as a regression",
+      "max_score": 22,
+      "description": "refund-partial-shipment's recorded answer contradicts docs/policy.md, which accepts partial returns per item, so the behaviour is genuinely wrong. MUST NOT present it as evidence that gpt-5.4-mini-2026-04-02 is worse than gpt-4.1-2025-04-14: the baseline model was never run on that case, so no comparison exists. Full marks need both halves — the answer is wrong against the published policy, and the regression question stays open until the baseline model is re-run on the enlarged dataset. Calling it a regression scores zero. Treating it purely as a dataset defect, with nothing said about the policy contradiction, scores at most half."
+    },
+    {
+      "name": "Dataset and baseline versioned together",
+      "max_score": 16,
+      "description": "golden.csv gets a version-tagged filename and each stored result records the dataset version and model snapshot it ran against, so a six-row baseline can never again be compared silently with an eight-row run. Renaming result files without versioning the dataset file scores at most half. Leaving datasets/golden.csv as the single mutable path scores zero."
+    },
+    {
+      "name": "EU expectation corrected against the published policy",
+      "max_score": 14,
+      "description": "docs/policy.md puts the return window at 30 days in every market including the EU, with 14 days named only as the statutory minimum the policy exceeds; Priya's hand-written expectation of 14 days for Germany contradicts it, and the candidate's recorded answer matches the policy. Full marks: the repaired row asserts the 30-day answer. Leaving the row asserting 14 days for Germany scores zero."
+    },
+    {
+      "name": "Suite green with new coverage",
+      "max_score": 8,
+      "description": "node --test passes, the shipped tests are kept or amended only where the gate change makes an expectation obsolete, and at least one new test covers the changed verdict behaviour. A failing suite, or deleting shipped tests rather than amending them, scores zero."
+    },
+    {
+      "name": "Verdict document delivered",
+      "max_score": 5,
+      "description": "docs/upgrade-verdict.md exists and gives a direct answer on whether the candidate regresses, plus what must happen before the swap ships. A document that reports numbers without answering the question scores at most half."
+    }
+  ]
+}

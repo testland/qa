@@ -1,0 +1,51 @@
+{
+  "context": "A reporter with real evidence and the wrong conclusion. Predicted baseline failure: the agent treats this as an organisation question — one plan or four — and never works out why the consolidated plan behaves as though it is not parameterised at all. The environment values in plans/orders.jmx are declared as plan variables holding literals and referenced as ${BASE_HOST}, ${PORT}, ${THREADS}; the workflow overrides them with command-line property flags of the same names. That combination silently does nothing: the flag sets a property, a variable of that name is not a property and is never consulted for one, so every job since August has run against the literals compiled into the file. The attached results file settles it and nobody has read it — the URL column on last night's EU run carries the US staging host, and both thread-count columns read 400 on a job that passed 80. Because the agent is predicted to miss that, it is also predicted to get Ask 1 and Ask 3 wrong in the reporter's favour: Ask 1 asks to abandon the parameterised plan and go back to per-environment copies, and the reporter's observation that EU's numbers are indistinguishable from US staging is genuine evidence pointing at a conclusion that is the opposite of correct; Ask 3 asks to retire the US staging nightly because EU has been green since day one, which is not a fact about EU. Ask 2 (default the plan at production) is the reflexive refusal and Ask 4 (delete the two leftover copies) is the one that must be granted against the colleague who wants them kept, so an agent that refuses everything scores no better than one that grants everything.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite runs",
+      "max_score": 5,
+      "description": "plans/ is restructured, .github/workflows/orders-load.yml covers all four environments, scripts/check-envs.mjs and scripts/check-envs.test.mjs are both modified, and docs/orders-load.md exists with a separate section per ask carrying a plain yes or no. If `node --test` does not pass against the delivered files, this criterion scores zero."
+    },
+    {
+      "name": "Overrides actually reach the plan",
+      "max_score": 32,
+      "description": "The environment-specific values are read inside plans/orders.jmx through the property function, so that a command-line property override takes effect. Delivering a plan whose environment values are still plan variables holding literals scores zero for this criterion — that is the defect, not a stylistic preference. A variable whose value is itself a property-function reference is correct and scores full marks. The property names overridden in the workflow must match the names read in the plan character for character; any mismatch scores at most half, because the symptom is again a silent fallback with nothing reported. Full marks additionally require docs/orders-load.md to cite what the attached results file shows — the US staging host in the URL column and 400 in both thread-count columns of a job that passed 80 — rather than asserting the fix in the abstract."
+    },
+    {
+      "name": "MUST NOT go back to per-environment copies",
+      "max_score": 26,
+      "description": "MUST NOT answer Ask 1 by returning to one plan file per environment. Delivering plans/orders-eu.jmx, plans/orders-apac.jmx or any other environment-named copy scores zero for this criterion, and so does a document that agrees to the split however it is hedged. The reporter's evidence is real and his conclusion is inverted: the parameterised plan is inert because of a specific defect in how its values are read, not because parameterisation does not work. Full marks require the refusal, the correct cause, and the July /v1 drift named as what per-environment copies produce. Refusing Ask 1 on the general principle that duplication is bad, without engaging with the evidence he brought, scores at most half."
+    },
+    {
+      "name": "Ask 3 refused on what the results file shows",
+      "max_score": 18,
+      "description": "Ask 3 is refused because the EU job has never run against EU, so its unbroken green record is not evidence about EU and retiring the US staging nightly would leave both regions represented by a single run of US staging. Agreeing to retire the US staging nightly scores zero. Refusing it on cost, caution or 'we should keep both' with no reference to what the attached results file records scores at most half."
+    },
+    {
+      "name": "Guard extended so this cannot recur silently",
+      "max_score": 12,
+      "description": "scripts/check-envs.mjs gains a check that would have failed against the tree as shipped — the natural one being that every property the workflow overrides is actually read as a property inside the plan — and scripts/check-envs.test.mjs covers it. Adding no new check scores zero. A check added with no test, or one so loose that it also passes against the plan as shipped, scores at most half."
+    },
+    {
+      "name": "Token out of the repository",
+      "max_score": 12,
+      "description": "No service token remains in any committed plan file, and the authorization header takes its value from an override supplied at invocation and wired in the workflow from the secret store. A token left anywhere in the delivered tree scores zero, including inside a leftover copy that was kept. The workflow overrides no token today, so making the plan read one as a property without also passing it from the workflow scores at most half — the 2026-10-01 rotation is the stated reason this is being done."
+    },
+    {
+      "name": "MUST NOT default the plan at production",
+      "max_score": 10,
+      "description": "Ask 2 is refused: the plan MUST NOT carry a production host, port or credential as its compiled-in default, because a forgotten or misspelled override then sends the 400-thread profile at the live system, and the defaults exist so that a missing override is harmless. Granting Ask 2 scores zero. Refusing it without offering anything for the underlying complaint — a documented one-line invocation per environment, or an equivalent — scores at most half."
+    },
+    {
+      "name": "Ask 4 granted and the leftovers deleted",
+      "max_score": 10,
+      "description": "plans/orders-dev.jmx and plans/orders-prod.jmx are deleted from the delivered tree. Keeping either for reference, for rollback, or 'until we are sure' scores zero: the dev copy is the one that spent six weeks on /v1 and it is still on /v1 if it survives."
+    },
+    {
+      "name": "EU sizing survives the fix",
+      "max_score": 8,
+      "description": "Once the override actually reaches the plan, EU runs at roughly a fifth of the 400-thread profile per the SRE note of 2026-09-08. A delivered tree in which EU would run at 400 scores zero, and so does achieving EU sizing by giving EU a plan file of its own."
+    }
+  ]
+}

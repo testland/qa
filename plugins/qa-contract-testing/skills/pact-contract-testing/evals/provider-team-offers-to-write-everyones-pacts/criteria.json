@@ -1,0 +1,46 @@
+{
+  "context": "A free offer from a competent neighbouring team, three of four consumers already signed up, and a deadline. Five proposals, two of them sound, three of them wrong in ways that get less visible as you go down the list. Predicted baseline failure: the agent spends its attention on proposal 1 - the one whose flaw is the founding principle of the practice and which any strong model can argue against - and waves proposals 4 and 5 through as the boring operational half of the RFC. Proposal 4 is the expensive one. Verification results are recorded per consumer-version and provider-version pair; running verification on every commit says nothing about whether the particular build about to be rolled out has a green result against the particular consumer versions currently in the target environment, which is the only question a deploy is allowed to ask, and proposal 4 also deletes the deployment records that make that question answerable at all. Its stated evidence - fourteen months without the check ever disagreeing - reads as reassurance and is the argument for keeping it. Proposal 5 sounds like more coverage and is less: pinning the verifier to the latest expectations from every consumer branch lets an unmerged experiment in someone else's repo turn the provider's build red, while still leaving the versions that are actually deployed unverified, which is exactly the pairing the deploy question asks about. The two sound proposals are the control - an agent that protects itself by objecting to the whole RFC scores no better than one that signs it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/rfc-88-review.md exists and answers all five numbered proposals separately with a yes or a no on each. A single verdict on 'the RFC', or a review that merges proposals together, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT let the deploy gate be retired",
+      "max_score": 28,
+      "description": "Proposal 4 is rejected, and so is the removal of deployment recording that rides along with it. MUST NOT endorse dropping the compatibility command from the deploy pipeline or the step that records each deployment. Full marks require the reason: a verification result belongs to one consumer-version / provider-version pair, so verifying on every commit does not establish that the build being rolled out is green against the versions currently deployed in the target environment - and without deployment records nothing knows what those versions are. Rejecting it because 'the check is cheap' or 'defence in depth' with no account of what the two steps answer that verification does not scores at most half. Endorsing either half of proposal 4 scores zero for this criterion."
+    },
+    {
+      "name": "Consumer selection corrected rather than widened",
+      "max_score": 20,
+      "description": "Proposal 5 is not accepted as written. The review says which consumer versions the verifier should be pinned to - the consumer's main branch together with the versions recorded as deployed or released - and why: every-branch selection lets an unmerged consumer experiment fail the provider's build while still leaving the deployed versions unverified, which are the ones the deploy question compares against. Accepting proposal 5 as written scores zero. Rejecting it with no replacement selection named, or naming only the main branch, scores at most half."
+    },
+    {
+      "name": "MUST NOT adopt expectations generated from the provider's own document",
+      "max_score": 18,
+      "description": "Proposal 1 is rejected. MUST NOT sign off on it, commit pacts/generated/fulfillment-ui-orders-api.json, publish it under the fulfillment-ui name, or take it as a starting point to be edited into our test. Any of those scores zero for this criterion. Full marks require naming what such a check would prove: the expectations come out of openapi/orders.yaml and are replayed against the service that document describes, so a pass reports that orders-api agrees with its own spec and carries no information about any consumer - and with identical content published under four consumer names, the record says every consumer reads every field, which is the one answer the two outages cannot use. Rejecting it as a process preference, with no account of what a pass or a failure would mean, scores at most half."
+    },
+    {
+      "name": "Our test asserts only what our screen reads",
+      "max_score": 18,
+      "description": "test/orders.consumer.spec.js records a GET /orders/{orderId} interaction asserting id, status, placedAt and the sku and qty inside lines, and nothing else, matched on type rather than the literal example values, with a named starting state on the interaction so proposal 2's handlers have something to attach to. Each additional asserted field that src/orderList.js never touches - updatedAt, channel, customerId, customerTier, warehouseCode, carrierHint, pickWaveId, subtotalCents, taxCents, shippingCents, totalCents, currency, internalRiskScore, fraudReviewState, notesInternal, unitPriceCents, pickBin, lotCode - costs credit; carrying the whole documented body across from the generated draft scores zero. Producing no test file scores zero. Pinning the literal example values rather than matching on type scores at most half."
+    },
+    {
+      "name": "The two sound proposals endorsed with reasons",
+      "max_score": 10,
+      "description": "Proposals 2 and 3 are each answered yes with a reason: a declared starting state with no registered handler has nothing to set it up, so the interaction is replayed against whatever the service happens to hold; and running on every commit with the outcome recorded attaches the result to the exact build a deploy later asks about, which a 02:00 scheduled run cannot. Rejecting or deferring either scores at most half; rejecting both, or answering yes to both with no reasons, scores zero."
+    },
+    {
+      "name": "The cost of the no is carried, not handed back",
+      "max_score": 8,
+      "description": "The review states what fulfillment-ui now owes instead - its own test, in its own pipeline, published under its own name, with a date - and what Pavel should be told to say to the other three consumer teams, so he leaves Thursday with a route to coverage rather than four refusals. It also routes the legitimate want behind proposal 1, knowing when any of the 38 documented responses changes, to comparing successive releases of openapi/orders.yaml against each other, which needs no consumer at all. An objection with no counter-offer scores zero."
+    },
+    {
+      "name": "Working code and tests left alone",
+      "max_score": 4,
+      "description": "MUST NOT modify src/orderList.js or test/orderList.test.js. Both pass and neither was part of the request. Any change to either scores zero here."
+    }
+  ]
+}

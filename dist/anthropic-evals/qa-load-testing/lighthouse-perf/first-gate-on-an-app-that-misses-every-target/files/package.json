@@ -1,0 +1,13 @@
+{
+  "name": "quillbase-web",
+  "version": "2.9.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.js",
+    "start": "node scripts/serve.js",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1"
+  }
+}

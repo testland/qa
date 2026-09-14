@@ -1,0 +1,13 @@
+{
+  "uuid": "a1f2c0de-0010-4000-8000-000000000010",
+  "historyId": "gate.orders.refund-shipped",
+  "name": "Refund a shipped order",
+  "fullName": "gate.orders.OrdersGate#refundShipped",
+  "status": "passed",
+  "start": 1789182180000,
+  "stop": 1789182214000,
+  "labels": [
+    { "name": "suite", "value": "Orders" },
+    { "name": "severity", "value": "critical" }
+  ]
+}

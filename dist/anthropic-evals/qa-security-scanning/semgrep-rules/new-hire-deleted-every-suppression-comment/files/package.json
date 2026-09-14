@@ -1,0 +1,9 @@
+{
+  "name": "ledger",
+  "version": "9.4.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "proto": "protoc --js_out=import_style=commonjs,binary:src ./proto/billing/v2/billing.proto"
+  }
+}

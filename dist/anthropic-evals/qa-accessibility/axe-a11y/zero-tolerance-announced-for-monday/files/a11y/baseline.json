@@ -1,0 +1,19 @@
+{
+  "recorded": "2026-06-02",
+  "known": [
+    { "app": "checkout", "ruleId": "color-contrast" },
+    { "app": "checkout", "ruleId": "heading-order" },
+    { "app": "checkout", "ruleId": "label" },
+    { "app": "checkout", "ruleId": "link-name" },
+    { "app": "dashboard", "ruleId": "aria-required-attr" },
+    { "app": "dashboard", "ruleId": "color-contrast" },
+    { "app": "dashboard", "ruleId": "link-name" },
+    { "app": "dashboard", "ruleId": "th-has-data-cells" },
+    { "app": "dashboard", "ruleId": "heading-order" },
+    { "app": "settings", "ruleId": "label" },
+    { "app": "settings", "ruleId": "color-contrast" },
+    { "app": "settings", "ruleId": "link-name" },
+    { "app": "billing", "ruleId": "color-contrast" },
+    { "app": "billing", "ruleId": "label" }
+  ]
+}

@@ -1,0 +1,7 @@
+route,auth,traffic_share,field_lcp_p75_ms,field_inp_p75_ms,field_cls_p75,lab_lcp_median_ms,lab_inp_median_ms,lab_cls_median
+/,public,0.41,1180,74,0.02,980,61,0.01
+/pricing,public,0.12,1310,88,0.03,1040,70,0.02
+/app/dashboard,logged-in,0.28,4120,386,0.19,3870,340,0.17
+/app/reports,logged-in,0.11,5600,240,0.07,5210,225,0.06
+/app/invoices/new,logged-in,0.08,2900,210,0.14,2740,190,0.12
+/share/:token,public,,,,,3110,168,0.22

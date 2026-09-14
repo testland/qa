@@ -1,0 +1,46 @@
+{
+  "context": "A 34-minute mutation job on a two-line PR, with four proposals in the thread and none of them correct. Predicted baseline failure: the agent reaches for the visible knobs — trim the mutated glob, lower or soften the threshold, tune concurrency, add caching of node_modules — and never notices that the config is running the generic command test runner (testRunner: 'command' with commandRunner npm test). That runner shells out to the whole suite and can tell Stryker nothing about which test covered which line, so coverage analysis is unavailable to it and every mutant re-runs all 1,240 tests: the log says '1,240.00 tests per mutant on average' for 1,412 mutants, which is the entire 34 minutes. The project is a Jest project (jest 29 and ts-jest are already in devDependencies) and the fix is the jest runner plugin plus testRunner 'jest', at which point coverageAnalysis perTest — the default, currently overridden to 'off' — runs only the tests that cover each mutant. The second half the agent is predicted to miss is that a PR job should be incremental and that incremental only helps if the state file survives between runs, so the workflow has to restore and save reports/stryker-incremental.json (or the configured incrementalFile) rather than just adding the flag, with the unconditional full run moved to a schedule against main. The concurrency of 16 on a 2-core runner is what swapped 7.6 GB and produced 43 timeouts that do not reproduce on a laptop, so more workers is the wrong direction. All four proposals in the thread must be refused: deleting the job, zeroing the break number, narrowing the mutated set to src/utils (which abandons the checkout code the job exists for), and raising concurrency to 32.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "Edited stryker.conf.json, .github/workflows/mutation.yml and package.json are all returned, plus docs/mutation-job-plan.md carrying a separate explicit verdict on each of Tomas, Rae, Ben and Marek. A document that answers fewer than all four scores at most half."
+    },
+    {
+      "name": "Jest runner plugin replaces the command runner",
+      "max_score": 30,
+      "description": "package.json gains @stryker-mutator/jest-runner in devDependencies and stryker.conf.json sets testRunner to 'jest' with the commandRunner block gone. Leaving testRunner as 'command' scores zero for this criterion regardless of every other improvement, because nothing else removes the whole-suite-per-mutant cost. Naming the plugin only in the document, or setting testRunner without adding the dependency, scores at most half. Full marks require the document to connect it to the evidence: the command runner gives Stryker no per-test coverage information, which is why the log reports 1,240 tests run per mutant across 1,412 mutants."
+    },
+    {
+      "name": "Coverage analysis restored",
+      "max_score": 18,
+      "description": "MUST NOT ship a config that still carries coverageAnalysis 'off'. The returned config either sets it to 'perTest' or drops the key so the default applies, so that only the tests covering a mutant are executed for it. A shipped config still reading 'off' scores zero here. Switching it to 'all' scores at most half — that skips uncovered mutants but still runs the full suite for every covered one."
+    },
+    {
+      "name": "Incremental PR runs with state that survives",
+      "max_score": 20,
+      "description": "The pull-request path runs incrementally — the incremental option or the --incremental flag — AND the workflow persists the incremental state file (reports/stryker-incremental.json by default, or whichever path the config names) across runs via a cache or artifact step, with the unconditional full run moved to a schedule or a main-branch trigger. Neither enabling incremental nor persisting the file scores zero. Adding the flag but leaving a workflow that starts every run with an empty state, so the second PR run is as slow as the first, scores at most half."
+    },
+    {
+      "name": "Mutated scope keeps the checkout code",
+      "max_score": 14,
+      "description": "MUST NOT adopt Ben's proposal: the shipped mutate globs must still cover src/checkout/**, and the document must reject narrowing the mutated set to src/utils as buying speed by no longer measuring the code the job exists for. A config whose globs no longer match src/checkout scores zero here. Endorsing the narrowing as a temporary step, or excluding most of src/ by some other route, scores at most half. Excluding a specific untestable or generated subtree with a stated reason is not this and is not penalised."
+    },
+    {
+      "name": "The gate still blocks",
+      "max_score": 12,
+      "description": "MUST NOT delete the job (Tomas) or set the break threshold to 0 or null (Rae). The shipped config keeps break at the agreed 55 and the workflow still runs on pull requests. Removing the job or shipping a break value of 0 scores zero. Recommending either as a temporary measure while the real fix lands scores at most half; nothing here requires the gate to be switched off, because the job becomes fast enough to keep."
+    },
+    {
+      "name": "Concurrency brought back to the runner",
+      "max_score": 10,
+      "description": "MUST NOT follow Marek to 32 workers. Concurrency is lowered to what a 2-core runner can hold, or the key is removed so the default core-count-derived value applies, and the document ties the 43 timeouts and the 7.6 GB peak on a 7 GB runner to 16 processes thrashing rather than to genuinely slow tests — the same code does not time out on a laptop. Shipping a raised concurrency scores zero. Leaving 16 in place without comment scores at most half."
+    },
+    {
+      "name": "Expected runtime stated",
+      "max_score": 10,
+      "description": "The document gives the PR runtime expected after the change — single-digit minutes, ideally with the reasoning that a per-test-scoped incremental run touches only the mutants in the changed files — so the reader can tell on the next PR whether the fix worked. Giving no figure scores zero; 'it should be much faster' with no number scores at most half."
+    }
+  ]
+}

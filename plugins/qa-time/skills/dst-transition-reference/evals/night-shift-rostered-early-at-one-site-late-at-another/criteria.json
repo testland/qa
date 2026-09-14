@@ -1,0 +1,41 @@
+{
+  "context": "The offered patch is correct about the half of the problem that was reported and introduces a defect in the half that was not. Predicted baseline failure: the agent adopts it. Anchoring the end of the shift to the site's handover time is right, it resolves all four incidents, and the ops lead has already verified that; the agent is predicted to confirm the patch, write tests for the four release instants, and stop. What it is predicted to miss is the line the ops lead deliberately left alone. Once both ends are anchored to the local clock, the span between them stops being eight hours on exactly the nights in question - it is nine hours at the New York site on the night of 2026-10-31, seven at the London site on 2026-03-28, seven and a half at the Lord Howe site on 2026-10-03 and eight and a half on 2026-04-04 - while `paidHours` still emits the constant 8, and the payroll note in the fixture says that column is paid verbatim as time on the floor. So the patch as written converts a coverage incident into a wage one that nobody will notice, because no crew complains about the roster looking normal. The second option is the mirror trap: it is keyed on dates, and the four sites do not share dates - the two northern sites are three weeks apart, the southern site moves in the opposite half of the year, and the fourth never moves at all - and at the Lord Howe site the change is thirty minutes, so adding an hour there is wrong by thirty minutes in the same direction it was already wrong. The Bangalore site is the control: every night of its year is eight hours and nothing about it needs to change.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "src/shiftPlan.js is modified, tests covering the incident nights are added, and docs/roster-fix.md exists and gives a verdict on both of the ops lead's options. A document that verdicts only the patch and not the alternative scores at most half; no code change scores zero."
+    },
+    {
+      "name": "MUST NOT keep a constant paid duration",
+      "max_score": 30,
+      "description": "MUST NOT leave `paidHours` emitting a fixed 8, and MUST NOT endorse the ops lead's decision to leave that column alone. Doing either scores zero for this criterion regardless of the rest. The paid figure must be derived from the two instants the shift actually spans. Full marks require the correct figures for the incident nights stated in docs/roster-fix.md - nine hours at nyc-1 on the night of 2026-10-31, seven at ldn-2 on 2026-03-28, seven and a half at lhi-4 on 2026-10-03 and eight and a half at lhi-4 on 2026-04-04, with blr-3 unchanged at eight - and at least one test asserting one of them. Changing the column without naming what the incorrect figures would have been, or without connecting it to the payroll note, scores at most half."
+    },
+    {
+      "name": "The release instant is anchored to the site's local handover",
+      "max_score": 22,
+      "description": "The end of the shift is computed from the site's handover wall-clock reading in the site's zone, not by adding a fixed number of hours to the start. Leaving the fixed-hours addition in place scores zero. Computing the end correctly but only for the sites that appear in the incident list scores at most half."
+    },
+    {
+      "name": "MUST NOT nudge the transition nights by an hour on known dates",
+      "max_score": 18,
+      "description": "MUST NOT adopt the alternative - a correction keyed on the calendar dates of the clock changes - and MUST NOT ship any date literal or month-and-ordinal-Sunday rule in src/shiftPlan.js. Doing either scores zero here. Full marks require both reasons: the four sites do not change on the same dates and one of them never changes at all, and the change at the Lord Howe site is thirty minutes, so an hour is the wrong amount there even on the right night. Rejecting it only as 'hardcoding is bad practice', without the thirty-minute point, scores at most half."
+    },
+    {
+      "name": "Tests pin the four incident nights to exact instants",
+      "max_score": 16,
+      "description": "New tests assert the generated start and end instants for all four incident nights: nyc-1 on 2026-10-31 running 2026-11-01T02:30:00.000Z to 2026-11-01T11:30:00.000Z, ldn-2 on 2026-03-28 running 2026-03-28T22:30:00.000Z to 2026-03-29T05:30:00.000Z, lhi-4 on 2026-10-03 running 2026-10-03T12:00:00.000Z to 2026-10-03T19:30:00.000Z, and lhi-4 on 2026-04-04 running 2026-04-04T11:30:00.000Z to 2026-04-04T20:00:00.000Z. Two or three of the four score at most half. Tests that assert only the local reading, or no new test, score zero."
+    },
+    {
+      "name": "Both options traced to what they would actually produce",
+      "max_score": 14,
+      "description": "docs/roster-fix.md states, per incident night, what each of the ops lead's two options produces - the patch fixing all four handovers while leaving the paid column reading 8 against a span that is not 8, and the date-keyed alternative correcting the two northern nights, over-correcting both Lord Howe nights by thirty minutes, and having no dates at all for a site that never changes. Rejecting either option in general terms with nothing computed scores zero for that option. Crediting the patch with fixing the incidents is required, not penalised: an answer that rejects it outright as though the handover anchoring were also wrong scores at most half."
+    },
+    {
+      "name": "Existing behaviour preserved",
+      "max_score": 6,
+      "description": "The five tests already in test/shiftPlan.test.js still pass unmodified, including the Bangalore shift at eight paid hours. Editing or deleting an existing test, or changing what the generator produces on an ordinary June night at any site, scores zero."
+    }
+  ]
+}

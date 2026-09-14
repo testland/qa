@@ -1,0 +1,8 @@
+{
+  "name": "acme-primitives",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "context": "Two defects, one of which the repository actively recommends walking into. The shared wiring registers a BatchSpanProcessor, and the house answer to the lag it causes is already written down and already in use: support/flush.js exports settleSpans(), the existing case calls it, and docs/testing.md tells the next person to call it before every read and to tune scheduledDelayMillis if that is not fast enough. Predicted baseline failure: the agent copies the house style - settleSpans() in front of each new read, or a lowered delay, or another timeout-minutes bump - and ships a suite that is green and asynchronous, with the reason the cart test was vacuous untouched. The second and heavier defect is in src/checkout.js: refundOrder opens payments.refund with startSpan and only ends it on the success branch, so a refused refund emits checkout.refund and nothing else - which is exactly the August symptom of no provider named in the traces. An agent that writes the refused-refund case honestly hits an undefined span and has two ways out: end the span in src/, or quietly assert only checkout.refund and move on. The prompt never says a span is missing, and dropping the assertion is the cheaper exit, so that is the predicted route. The third predicted miss is cross-test leakage: the exporter is module-scoped, the surviving case carries no count assertion to trip over, and nothing forces a reset hook."
+,
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT ship a refused-refund case that cannot see the refund call",
+      "max_score": 30,
+      "description": "The refused-refund case asserts that payments.refund was emitted, that it carries payments.provider, and that it ends marked as a failure - and src/checkout.js is changed so that span is ended on the refusal branch. Delivering a refused-refund case that asserts only checkout.refund, or that works around the missing span in any way rather than fixing src/, scores zero for this criterion however green the suite is. Ending the span but leaving its status as it is set today scores at most half. Deleting the payments.refund span, or making the refund test cover only the successful path, scores zero."
+    },
+    {
+      "name": "MUST NOT leave the batching processor in the test wiring",
+      "max_score": 22,
+      "description": "support/trace-setup.js MUST NOT keep BatchSpanProcessor. Full marks require registering the processor that hands each ended span to the exporter in the caller's own tick, so a read straight after the exercised call sees the spans with no flush, no sleep and no timer left on the loop - and support/flush.js is no longer used by any test. Keeping BatchSpanProcessor and compensating with settleSpans(), a bare forceFlush, an awaited delay or a lowered scheduledDelayMillis scores zero here however green and however fast the suite ends up. Swapping the processor but leaving settleSpans() or any sleep in a test body scores at most half."
+    },
+    {
+      "name": "The vacuous cart test made honest",
+      "max_score": 12,
+      "description": "In test/cart.trace.test.js the `if (spans.length === 0) return;` early exit and the 200ms sleep are both gone, and the test now fails if cart.add emits no span. Leaving the early exit in place scores zero. Removing the sleep while keeping any construct that lets an empty read pass scores zero as well."
+    },
+    {
+      "name": "Status and kind asserted on the declined path",
+      "max_score": 10,
+      "description": "The declined-card case asserts the error status that src/checkout.js sets on both checkout.submit and payments.charge, and asserts payments.charge carries the outgoing-call span kind rather than the default in-process one. Asserting only span names and attributes, with no status and no kind, scores at most half."
+    },
+    {
+      "name": "Spans reached by name, not by position",
+      "max_score": 8,
+      "description": "New assertions resolve spans through a name lookup, the way the existing case does, rather than indexing spans[0]/spans[1] or relying on the order in which spans ended. Any positional index into the finished-span array in the new cases scores zero for this criterion."
+    },
+    {
+      "name": "Each case sees only its own spans",
+      "max_score": 8,
+      "description": "The exporter is emptied between tests - a beforeEach or afterEach hook calling reset() - so the refund case does not read the checkout case's spans. Nothing in the shipped file trips over the leakage, so its absence is silent: no reset anywhere scores zero. A reset written inline in one test body only, leaving the ordering dependency for whoever adds the next case, scores at most half."
+    },
+    {
+      "name": "MUST NOT offer the timeout bump or a wait as the remedy",
+      "max_score": 8,
+      "description": "MUST NOT present raising `timeout-minutes` in .github/workflows/trace-tests.yml, or inserting an awaited delay before reading spans, as the fix for the wall clock. Doing either scores zero. Saying that the 2026-09-02 bump was treating a symptom and can now be put back earns full marks."
+    },
+    {
+      "name": "Both cases added and the suite green",
+      "max_score": 5,
+      "description": "test/checkout.trace.test.js gains a declined-card case and a refused-refund case, and `npm test` passes with every pre-existing test still present. A missing case, a deleted test, or a red suite scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT edit the vendored mirror",
+      "max_score": 5,
+      "description": "vendor/tracing-sdk.js MUST NOT be modified - in particular its default scheduledDelayMillis MUST NOT be lowered to make the existing wiring look synchronous. Any edit to that file scores zero here."
+    },
+    {
+      "name": "Note written",
+      "max_score": 4,
+      "description": "docs/trace-test-setup.md exists, is ten lines or fewer, and names the change made to the shared wiring rather than restating the ticket."
+    }
+  ]
+}

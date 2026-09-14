@@ -1,0 +1,48 @@
+ios-nightly #612, runner image macos-15 20260905.1, started 2026-09-09 02:00:41 UTC
+
+Test Case '-[AppointmentsUITests testBooksFollowUpFromAppointmentsList]' started.
+  AppointmentsUITests.swift:20: error: No matches found for Cell "appointment-row-0"
+  AppointmentsUITests.swift:21: error: No matches found for Button "book-follow-up"
+  AppointmentsUITests.swift:22: error: No matches found for Button "slot-2026-09-15-0930"
+  AppointmentsUITests.swift:23: error: No matches found for Button "confirm-booking"
+  AppointmentsUITests.swift:24: error: XCTAssertTrue failed
+  AppointmentsUITests.swift:25: error: XCTAssertEqual failed: ("") is not equal to ("APT-77341")
+  AppointmentsUITests.swift:26: error: XCTAssertTrue failed
+  AppointmentsUITests.swift:26: error: Failed to get isEnabled for element that does not exist
+Test Case '-[AppointmentsUITests testBooksFollowUpFromAppointmentsList]' failed (52.118 seconds).
+
+Test Case '-[AppointmentsUITests testCancelsAnAppointment]' started.
+  AppointmentsUITests.swift:31: error: No matches found for Cell "appointment-row-0"
+  AppointmentsUITests.swift:32: error: No matches found for Button "row-cancel"
+  AppointmentsUITests.swift:33: error: No matches found for Button "cancel-confirm"
+  AppointmentsUITests.swift:34: error: XCTAssertTrue failed
+  AppointmentsUITests.swift:35: error: XCTAssertEqual failed: ("") is not equal to ("Appointment cancelled")
+  AppointmentsUITests.swift:36: error: XCTAssertFalse failed
+  AppointmentsUITests.swift:36: error: element query returned no results
+Test Case '-[AppointmentsUITests testCancelsAnAppointment]' failed (48.902 seconds).
+
+Test Case '-[AppointmentsUITests testFiltersAppointmentsByClinician]' started.
+  AppointmentsUITests.swift:41: error: No matches found for Button "filter-clinician"
+  AppointmentsUITests.swift:42: error: No matches found for Cell "clinician-option-dr-ferrar"
+  AppointmentsUITests.swift:43: error: No matches found for Button "apply-filter"
+  AppointmentsUITests.swift:44: error: XCTAssertEqual failed: ("0") is not equal to ("2")
+  AppointmentsUITests.swift:45: error: XCTAssertTrue failed
+  AppointmentsUITests.swift:45: error: No matches found for StaticText "filter-chip-dr-ferrar"
+  AppointmentsUITests.swift:45: error: snapshot request timed out after 3 retries
+Test Case '-[AppointmentsUITests testFiltersAppointmentsByClinician]' failed (61.774 seconds).
+
+Test Case '-[AppointmentsUITests testDateOfBirthAcceptsLeapDay]' started.
+  AppointmentsUITests.swift:50: error: No matches found for Element type PickerWheel
+Test Case '-[AppointmentsUITests testDateOfBirthAcceptsLeapDay]' failed (24.310 seconds).
+
+Test Case '-[AppointmentsUITests testEmptyStateForNewPatient]' passed (19.884 seconds).
+Test Case '-[AppointmentsUITests testOpensPatientRecord]' passed (17.220 seconds).
+
+Executed 6 tests, with 23 failures (0 unexpected) in 224.208 seconds
+
+Note from @nadia 2026-09-10: the appointments tab now fetches page 1 and then a
+count endpoint before it renders any row - measured 420-610 ms on the stub API,
+longer on the runner. Rows are correct once they arrive; nothing else changed.
+`testDateOfBirthAcceptsLeapDay` has failed on the runner every night since the
+2026-09-05 image, passes on my machine on 17.5, and I have no run record from
+any of the failing nights to look at.

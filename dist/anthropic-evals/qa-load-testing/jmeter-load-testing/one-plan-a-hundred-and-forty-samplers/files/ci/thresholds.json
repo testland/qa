@@ -1,0 +1,12 @@
+{
+  "error_budget": 10,
+  "response_time": {
+    "default_p95_ms": 3000,
+    "per_sampler_p95_ms": {
+      "POST /checkout/pay": 4000,
+      "GET /admin/audit-log": 4000,
+      "GET /reporting/ledger": 8000,
+      "GET /reporting/export": 8000
+    }
+  }
+}

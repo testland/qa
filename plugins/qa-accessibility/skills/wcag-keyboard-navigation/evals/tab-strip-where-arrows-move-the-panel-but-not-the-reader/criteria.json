@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent accepts the front-end lead's proposal, or half-accepts it. Making every tab a tab stop is the framing the prompt pushes hardest — it sounds like removing custom behaviour in favour of native behaviour, the lead is senior, and it is already written in the thread. It is the wrong direction: a tab strip is one tab stop for the whole group, with the selected tab carrying tabindex 0 and every other tab carrying -1, and the arrow keys moving focus between them. The supplied module is broken in exactly the mirror-image way and the agent is predicted to fix only the visible half: attrsFor hands tabindex 0 to all seven tabs, which is why the support lead counts seven Tab presses, and handleKeydown moves activeIndex and aria-selected without ever moving DOM focus, which is why the screen reader stays parked on Overview. The supplied suite passes while focus is broken because every case asserts on aria-selected and hidden and none asserts on focus, so 'the tests are green' is actively misleading here. A second predicted failure is reaching for explicit tabindex numbers to sequence the strip; positive tabindex values create an order separate from the DOM and are never the fix.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/tabs.js is edited, test/tabs.test.js gains cases, and docs/tabs-keyboard-review.md exists and addresses the proposal in the thread. Producing the code change with no written answer scores at most half."
+    },
+    {
+      "name": "One tab stop for the whole strip",
+      "max_score": 32,
+      "description": "attrsFor returns tabindex 0 for the active tab only and -1 for every other tab, so the strip is a single stop in the page's Tab sequence and the arrow keys move within it. Leaving tabindex 0 on all seven scores zero for this criterion regardless of anything else delivered. Emitting -1 on all of them, so the strip cannot be reached by Tab at all, also scores zero. Describing the arrangement in the review document without changing attrsFor scores at most half."
+    },
+    {
+      "name": "Arrow keys move focus, not only selection",
+      "max_score": 26,
+      "description": "The arrow handling moves DOM focus onto the newly active tab as well as updating aria-selected and the tabindex pair — for example by returning or recording the element id to focus and calling focus on it — and a new test proves focus moved. This is the actual cause of the screen-reader report: the reader announces what has focus, not what carries aria-selected. An answer that changes only aria-selected, exactly as the supplied module already does, scores zero. Moving focus but leaving the tabindex values stale so the browser's own Tab order disagrees scores at most half."
+    },
+    {
+      "name": "MUST NOT sequence the strip with positive tabindex",
+      "max_score": 14,
+      "description": "MUST NOT emit tabindex values above 0 anywhere in src/tabs.js. Numbering the tabs 1..7 to control their order creates a focus order separate from the DOM and breaks as soon as tabs are added or reordered. Any positive tabindex in the delivered module scores zero for this criterion."
+    },
+    {
+      "name": "The lead's proposal is answered, not absorbed",
+      "max_score": 18,
+      "description": "docs/tabs-keyboard-review.md states plainly that deleting the arrow handling and making every tab a tab stop is not the fix, and why — it is the cause of the support lead's seven presses, and the strip's convention is one stop plus arrows. Adopting the proposal scores zero. Fixing the code correctly but leaving the proposal unanswered, so it comes back in review, scores at most half."
+    },
+    {
+      "name": "Home and End implemented",
+      "max_score": 10,
+      "description": "Home moves to the first tab and End to the last, both moving focus the same way the arrows do. Absent entirely scores zero; implemented as selection-only, without focus, scores at most half."
+    },
+    {
+      "name": "New tests are red against the supplied module",
+      "max_score": 12,
+      "description": "At least one added case fails against src/tabs.js exactly as supplied — a focus assertion and a tabindex assertion are the two that do — and passes after the change, with the suite still running under node --test and no dependency added. Cases that pass against both versions score zero for this criterion. The four supplied tests must still pass; deleting one to make room scores zero."
+    }
+  ]
+}

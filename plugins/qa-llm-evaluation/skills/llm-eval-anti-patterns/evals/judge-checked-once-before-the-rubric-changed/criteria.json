@@ -1,0 +1,41 @@
+{
+  "context": "A comparison that has visibly done everything an auditor usually checks for — the grader is named in the config rather than inherited from a default, it is a larger model than the system under test, it was validated against adjudicated human labels, both variants saw identical tickets, and n is 100 rather than a dozen. Predicted baseline failure: the agent confirms Marcus and ships variant B, because 61-39 reads as decisive and every box a reviewer normally ticks is already ticked. Two things in the fixtures refute it and neither is stated anywhere. First, NOTES.md says variant A is always the baseline and variant B is always the candidate, and run.mjs puts the candidate in the 'Response 2' slot unconditionally; the August order check judged the same twelve pairs in both orders with nothing else varied, and the verdict flipped on nine of the twelve, with the reply in the second slot winning 21 of the 24 judgements. So the 61-39 split is consistent with slot position rather than with any property of variant B, and Dan's reason for fixing the order — the shuffled run looked noisier, the fixed one reruns consistently — describes a bias being made stable rather than removed. Second, the grader and the system under test are the same provider and the same model family, which a larger-model-grades-smaller-model framing hides rather than solves. The July validation compounds this: it was pointwise acceptable/not-acceptable grading on summarisation outputs under a different rubric, and the pairwise preference mode now deciding the rollout has never been checked against a human at all. A baseline is also predicted to answer 'cannot tell' and stop there, which loses the other half: the structured handoff comparison is deterministic, does not involve the grader, and says variant B emits JSON the routing service cannot parse on 29 of 100 tickets. That part is decidable and argues against B.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT declare variant B the better variant on the pairwise result",
+      "max_score": 32,
+      "description": "The verdict must not recommend rolling out variant B on the strength of the 61-39 grader split, and must not report that split as evidence of B's quality. Recommending the rollout, or calling the pairwise result a real but narrow win, scores zero for this criterion regardless of the rest — so does 'ship B, the margin is large enough to absorb some bias'. Full marks require the refusal tied to the confound: the candidate occupies the same slot in every pair, and the order check shows the slot deciding the verdict, so the split cannot be attributed to the variant. Refusing on general caution about single numbers, without connecting the fixed slot to the order-check rows, scores at most half."
+    },
+    {
+      "name": "Position effect read out of the order-check file",
+      "max_score": 22,
+      "description": "The review uses reports/order-check-2026-08-14.csv as evidence: the same pair judged both ways changed winner on nine of the twelve pairs, and the reply presented second won 21 of the 24 judgements. It names the fix as swapping or randomising the order across runs so the effect averages out, and states that Dan's stability argument in NOTES.md has it backwards — a fixed order makes a biased result reproducible, it does not remove the bias. Endorsing the fixed order for stability scores zero. Noting the file exists without reading the flips out of it scores at most half."
+    },
+    {
+      "name": "Grader and system under test are the same family",
+      "max_score": 20,
+      "description": "The review flags that openai:gpt-4o grading openai:gpt-4o-mini is the same provider and the same model family, and that a grader preferring output from its own family is a documented effect rather than a hypothetical, so this grader is not independent of what it grades. Treating the larger-model-grades-smaller-model arrangement as adequate, or praising the config for naming the grader explicitly without raising the family question, scores zero. Naming the concern without proposing a grader from a different family scores at most half."
+    },
+    {
+      "name": "The deterministic comparison is reported",
+      "max_score": 16,
+      "description": "The verdict states what this run does settle: the `is-json` check on the handoff block is deterministic, the grader plays no part in it, and variant B produces a block the routing service cannot parse on 29 of 100 tickets against variant A's 0, which is a regression and an argument against shipping B. Answering only 'nothing can be concluded from this suite' scores zero here — always refusing is the mirror-image failure of always deciding. Mentioning the schema numbers without separating them from the grader-decided result scores at most half."
+    },
+    {
+      "name": "MUST NOT prescribe more pairwise judgements as the remedy",
+      "max_score": 12,
+      "description": "Running more tickets, more pairs, or repeated grading passes under the same fixed order must not be offered as the way to make the comparison trustworthy; a systematic position effect accumulates with n rather than averaging out, so a larger run buys a tighter interval around the wrong quantity. Recommending 'run 500 pairs to be sure', or presenting sample size as the main weakness of the 100-pair run, scores zero for this criterion."
+    },
+    {
+      "name": "The July validation does not cover what is being used",
+      "max_score": 12,
+      "description": "The review states that the 84% figure was measured on pointwise acceptable/not-acceptable grading, on summarisation outputs (sum-001..sum-050), under a different rubric from the one in run.mjs, and that the pairwise preference mode deciding this rollout has never been compared against human labels. Treating the July validation as covering the current grader, or quoting 84% against a published bar as sufficient, scores zero. Noting only that the validation is old or small scores at most half."
+    },
+    {
+      "name": "Findings located, severities used with discipline, deliverables produced",
+      "max_score": 5,
+      "description": "All three documents exist, every row in docs/judge-review.md cites a file or names it and marks the finding absent, and the top severity is reserved for an assertion that cannot fail for the right reason rather than applied across the table. A findings document with no file references scores zero for this item."
+    }
+  ]
+}

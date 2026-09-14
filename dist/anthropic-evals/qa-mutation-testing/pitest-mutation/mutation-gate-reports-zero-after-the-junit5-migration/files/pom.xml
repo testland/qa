@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>billing-core</artifactId>
+  <version>4.2.1-SNAPSHOT</version>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-junit5-plugin</artifactId>
+      <version>1.2.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.17.0</version>
+        <configuration>
+          <targetClasses>
+            <param>com.acme.billing.*</param>
+            <param>com.acme.billing.*Test</param>
+          </targetClasses>
+          <targetTests>
+            <param>com.acme.billing.*Test</param>
+          </targetTests>
+          <mutationThreshold>70</mutationThreshold>
+          <coverageThreshold>95</coverageThreshold>
+          <outputFormats>
+            <format>HTML</format>
+            <format>XML</format>
+          </outputFormats>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

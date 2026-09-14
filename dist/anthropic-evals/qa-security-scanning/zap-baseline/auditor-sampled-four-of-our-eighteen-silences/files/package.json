@@ -1,0 +1,8 @@
+{
+  "name": "veridian-pay-ci",
+  "version": "2.11.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

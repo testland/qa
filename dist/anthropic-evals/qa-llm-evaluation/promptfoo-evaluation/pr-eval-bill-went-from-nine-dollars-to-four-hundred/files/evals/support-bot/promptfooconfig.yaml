@@ -1,0 +1,127 @@
+description: Support bot regression gate
+
+prompts:
+  - file://prompt.txt
+
+providers:
+  - openai:gpt-5-mini-0613
+  - anthropic:claude-haiku-4-5
+
+defaultTest:
+  vars:
+    locale: en-GB
+    examples: 'Q: Can I cancel? A: Yes, from Settings then Billing.'
+  assert:
+    - type: javascript
+      value: file://../../assertions/no-placeholder.js:noPlaceholderText
+    - type: latency
+      threshold: 4000
+    - type: llm-rubric
+      value: is grounded in the supplied help-centre extract and adds no policy that is not in it
+    - type: llm-rubric
+      value: reads as a calm support reply, no exclamation marks, no blame
+
+tests:
+  - description: cancel_subscription
+    vars:
+      question: How do I cancel?
+      context: A subscription can be cancelled at any time from Settings then Billing.
+    assert:
+      - type: icontains
+        value: Settings
+
+  - description: plan_change
+    vars:
+      question: I want to move from Team to Business mid-month, what happens?
+      context: Plan changes take effect immediately and are prorated to the day.
+      examples:
+        - 'Q: Can I upgrade today? A: Yes, and we prorate it to the day.'
+        - 'Q: Will I be charged twice? A: No, the change is prorated.'
+        - 'Q: When does it take effect? A: Immediately.'
+        - 'Q: Do I lose my settings? A: No, everything carries over.'
+        - 'Q: Can I move back down? A: Yes, at the end of the period.'
+        - 'Q: Is there a fee? A: No.'
+    assert:
+      - type: icontains
+        value: prorat
+
+  - description: shipping_refund
+    vars:
+      question: Do I get the postage back as well?
+      context: Refunds cover the item price. Shipping charges are not refunded.
+    assert:
+      - type: llm-rubric
+        value: states clearly that shipping is not refunded
+
+  - description: card_declined
+    vars:
+      question: My card was declined, am I cut off?
+      context: A declined payment retries for seven days before the account is suspended.
+    assert:
+      - type: icontains
+        value: seven days
+
+  - description: refund_window
+    vars:
+      question: How long do I have to send it back?
+      context: Customers may request a full refund within 30 days of purchase.
+      locale:
+        - en-GB
+        - en-US
+        - de-DE
+      examples:
+        - 'Q: How long for a refund? A: 30 days from purchase.'
+        - 'Q: Is it 30 days or a month? A: 30 days.'
+        - 'Q: From when? A: From the purchase date.'
+        - 'Q: Bank holidays? A: Calendar days.'
+        - 'Q: Can it be extended? A: No.'
+        - 'Q: Where do I start one? A: Settings then Orders.'
+    assert:
+      - type: icontains
+        value: '30'
+
+  - description: invoice_copy
+    vars:
+      question: Can you send me last month's invoice again?
+      context: Invoices are downloadable from Settings then Billing then History.
+    assert:
+      - type: icontains
+        value: History
+
+  - description: seat_removal
+    vars:
+      question: How do I take a seat off our plan?
+      context: An account owner can remove a seat from Settings then Members.
+      examples:
+        - 'Q: Who can remove a seat? A: The account owner.'
+        - 'Q: Where? A: Settings then Members.'
+        - 'Q: Does it refund? A: Billing adjusts next period.'
+        - 'Q: Immediately? A: The licence frees immediately.'
+        - 'Q: Can a member do it? A: No, only the owner.'
+        - 'Q: Is it reversible? A: Yes, add the seat back.'
+    assert:
+      - type: icontains
+        value: Members
+
+  - description: tax_receipt
+    vars:
+      question: I need a VAT receipt for accounting.
+      context: VAT receipts are attached to every invoice in Settings then Billing.
+    assert:
+      - type: icontains
+        value: VAT
+
+  - description: billing_contact
+    vars:
+      question: Can the invoices go to our finance inbox instead?
+      context: The billing contact is changed under Settings then Billing then Contact.
+      examples:
+        - 'Q: Can I change the billing email? A: Yes, under Billing then Contact.'
+        - 'Q: Does it change the login? A: No.'
+        - 'Q: Can it be a shared inbox? A: Yes.'
+        - 'Q: Who can change it? A: The account owner.'
+        - 'Q: Will past invoices resend? A: No.'
+        - 'Q: Is there a limit? A: One billing contact.'
+    assert:
+      - type: icontains
+        value: Contact

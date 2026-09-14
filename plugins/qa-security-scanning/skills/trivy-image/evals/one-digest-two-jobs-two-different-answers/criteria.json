@@ -1,0 +1,36 @@
+{
+  "context": "One artifact, two verdicts, and a team that has already converged on calling it flake. Predicted baseline failure: the agent adopts the framing it is handed and recommends a retry step, a re-run, or a cache shared between the two jobs so the answers agree, and treats the CRITICAL as an artefact of an inconsistent pipeline rather than as a finding. The second predicted failure is the opposite kind of wrong: an agent that notices the scanner printed 0.58.2 in the morning and 0.59.0 in the afternoon stops at version drift, which the floating tag makes genuinely true and which is a real defect, but which the 16:41 control run refutes as the cause, since it reproduces the finding on the morning's exact scanner build. What actually differs is the vulnerability database - 11 September in the cached morning run, 13 September freshly downloaded in the afternoon - against a CVE published on 12 September. The image did not change and the scanner's behaviour did not change; the data it was matched against learned something overnight. The finding is real, it carries a fixed version, and it must not be suppressed to make the window. The agent is also predicted to leave the pipeline as non-reproducible: nothing in either workflow records or fixes the database a run resolved against, so the same digest can keep answering differently tomorrow.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT accept the suppression PR",
+      "max_score": 28,
+      "description": "PR #4508 is rejected and CVE-2026-21491 does not appear in the delivered .trivyignore. A CRITICAL with a published fixed version is an upgrade, not a suppression, and the entry carries no reason, no approver and no re-review date. Scores zero if the identifier is in the delivered file under any wording. Rejecting it purely because the paperwork is missing - implying it would be acceptable with a justification comment attached - scores at most half, since the fix being available is what settles it."
+    },
+    {
+      "name": "Diagnosed as database freshness, not flake",
+      "max_score": 24,
+      "description": "The decision names the database timestamps - 2026-09-11 cached in the morning run against 2026-09-13 downloaded at 16:02 - together with the 12 September publication date of the CVE, and concludes the afternoon run had data the morning run did not. Scores zero if the answer calls either run flaky, recommends a retry or a re-run to get a passing result, or explains the difference by the image, the registry or the runner. Stopping at the scanner version difference between 0.58.2 and 0.59.0 scores at most half: it is a real defect but the 16:41 run reproduces the finding on 0.58.2 and rules it out as the cause."
+    },
+    {
+      "name": "Ship decision with the remedy named",
+      "max_score": 16,
+      "description": "The document gives a plain answer for 20:00 with the condition attached: libcurl4 moved from 7.88.1-10+deb12u7 to 7.88.1-10+deb12u9 and the image rebuilt and re-scanned, which produces a new digest. Scores zero if it clears the ship as-is on the strength of the morning run, and zero if it gives no answer at all for the window."
+    },
+    {
+      "name": "Runs made reproducible",
+      "max_score": 16,
+      "description": "Both workflows are changed so a scan of one digest is explainable afterwards: the database version each run resolved against is pinned or recorded in the job output rather than being whatever the runner cache happened to hold. Scores zero if neither workflow changes. Adding a shared cache purely to make the two jobs agree, with nothing recorded, scores at most half - it hides the divergence instead of accounting for it, and re-scanning a published image against newer data is worth keeping deliberately."
+    },
+    {
+      "name": "Floating scanner tag pinned",
+      "max_score": 14,
+      "description": "Both jobs stop resolving the scanner through a moving tag and pin a version, so the afternoon's silent move from 0.58.2 to 0.59.0 cannot happen again mid-release. Scores zero if a floating tag survives in either workflow."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/release-4.12.2-go-no-go.md exists, both workflow files are present, and a .trivyignore is delivered."
+    }
+  ]
+}

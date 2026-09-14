@@ -1,0 +1,41 @@
+{
+  "context": "Priya's three tests in tests/orders.test.js are green and two of them are green for a reason that has nothing to do with their names. She put the signed-in customer on a `context` key inside the operation object - the first argument - where it is not read, so every one of those operations runs with an empty context, every resolver hits its sign-in guard and throws, and an assertion that merely checks an errors array came back passes no matter what the resolver logic does. The test named for another customer's order never reaches the ownership check; the test named for a missing id never reaches the repository; and the third test, which supplies no context at all and expects a refusal, is the only one that means what it says. Her own remark that the happy-path versions 'kept coming back with no customer on them' is the symptom of exactly this. Predicted baseline failure: the agent reads the file, sees a plausible context object in a plausible place, treats the three as sound, splits the nine-operation test in the same shape, and ships a suite in which every negative test passes for the wrong reason and the happy paths cannot be made to work at all - or notices the happy paths fail and reaches for a token or a header to fix them, which the constraints have closed off. Supplying the context as the second argument to the executed operation is what makes the whole suite work at once, and asserting the machine-readable code on the error is what stops a sign-in failure from masquerading as an ownership refusal, since the two produce different codes and identical-looking errors arrays. The second predicted failure is granting both of the requester's asks: keeping the nine-operation test as a renamed smoke test re-creates the undiagnosable failure line the whole exercise is about and drags the staging token back in with it, while keeping the malformed-query and unknown-field cases is cheap, legitimate and should be granted. Refusing both is as wrong as granting both.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The nine operations are covered by separate tests and docs/test-notes.md is written. A rewrite that leaves the nine operations behind one assertion scores zero for this item."
+    },
+    {
+      "name": "MUST NOT supply the context inside the operation object",
+      "max_score": 32,
+      "description": "MUST NOT leave, copy, or add a `context` key inside the first argument of an executed operation - it is ignored there, the operation runs with an empty context, and every test that expects a refusal passes for the wrong reason. Any surviving instance in tests/orders.test.js or in the new tests scores zero for this criterion. Full marks require the signed-in customer and the data sources to be supplied as the context value in the second argument of every operation that needs one, and Priya's two miswritten tests to be corrected rather than deleted. Correcting the new tests while leaving Priya's file as it is scores at most half."
+    },
+    {
+      "name": "The two refusals are told apart by their error codes",
+      "max_score": 20,
+      "description": "MUST NOT assert on the wording of an error message - 'That order belongs to another customer' or 'Sign in first' - which is brittle and, worse here, is the only thing separating the two cases if the code is not asserted. Full marks require the other-customer test to assert the FORBIDDEN code and the signed-out test to assert the UNAUTHENTICATED code, both read from the error's extensions. Asserting only that an errors array came back, for either case, scores zero for this criterion: that is precisely the assertion that was already passing against the wrong error."
+    },
+    {
+      "name": "MUST NOT keep the nine-operation test as a smoke test",
+      "max_score": 18,
+      "description": "MUST NOT retain the accumulate-a-boolean-then-assert-once test, renamed or otherwise. Keeping it scores zero, and keeping it while noting the concern also scores zero - it reproduces the failure line the request exists to remove and it is the only thing in the suite that still needs the staging token. Full marks turn the ask down in docs/test-notes.md and say what replaces the deploy-level confidence it was providing. The requester's second ask is granted: the malformed-query and unknown-field cases survive as tests of their own; dropping them scores at most half for this criterion."
+    },
+    {
+      "name": "New field covered across its three cases",
+      "max_score": 12,
+      "description": "The orders coverage includes a customer with orders, a customer with none - asserting an empty list, not an absent or null field - and an order belonging to another customer. Covering two of the three scores at most half; asserting the empty case by checking the field is nullish scores zero for that case."
+    },
+    {
+      "name": "Write-up names what the suite stopped exercising",
+      "max_score": 14,
+      "description": "docs/test-notes.md says plainly that supplying the context directly bypasses src/context.js, so the Authorization header parsing, the Bearer prefix check, the token introspection call and the inactive-token path are no longer covered anywhere, and names where that coverage has to live instead. A note that describes the new setup without naming the lost coverage scores zero; naming the gap but proposing no home for it scores at most half. It must also answer both of the requester's asks explicitly."
+    },
+    {
+      "name": "Constraints honoured",
+      "max_score": 12,
+      "description": "No request to auth.staging.parcelly.dev or any other network call survives anywhere in the suite, including one guarded by an environment variable or a try/catch fallback; no dependency is added to package.json; no local token issuer, route handler or fetch replacement is introduced; and src/schema.js and src/context.js are unchanged. Any one of these scores zero for this criterion."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "context": "Predicted baseline failure: the agent treats this as a CI-plumbing job - moves the severity flag off its current setting, keeps the pull-request comment step essentially as written, and accepts the closing offer to make the check advisory. Two things are wrong with that and neither is stated in the prose. First, the comment step decides what is breaking with `f.level === 'ERR'`, and the attached #4471 report encodes severity numerically (3, 2, 1 in the `level` field), so that filter matches nothing on any report ever produced - which is why a run carrying two definite breaks posted '0 breaking changes found' and a reviewer approved on it. An agent that does not know the report's severity encoding has no reason to doubt that line and will carry it over. Second, `--fail-on INFO` is what turned 31 of 44 pull requests red: it fails on every reported change including additions. The correct line for a surface that generates and publishes four SDKs at tag time with no staging window is to fail on definite breaking changes - and the closing invitation to make the check advisory has to be refused, because `continue-on-error: true` is already on the step and is precisely what let #4471 through. Predicted: the agent fixes the noisy flag, leaves the string comparison, and thanks the user for the advisory option.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Severity read from the report's own encoding",
+      "max_score": 26,
+      "description": "The answer explains that the #4471 comment was produced by comparing `f.level` against the string 'ERR' while the report carries severity as a number - 3 for a definite breaking change, 2 for a potential one, 1 for non-breaking - so the filter matched nothing and the two level-3 findings (`request-property-became-required`, `response-property-enum-value-removed`) were never mentioned. The delivered workflow must not repeat it: either filter on the numeric encoding, or drop the hand-rolled filter and post the tool's own rendered output. Carrying the `=== 'ERR'` comparison into the rewrite scores zero for this criterion. Diagnosing the #4471 comment as a missing artifact, an empty report, or the step having been skipped scores zero. Fixing the filter without saying why the old comment lied scores at most half."
+    },
+    {
+      "name": "MUST NOT deliver a check that cannot fail the build",
+      "max_score": 24,
+      "description": "MUST NOT accept the closing offer to take the check off the blocking path. The delivered workflow must be able to turn the job red: no `continue-on-error: true` on the comparison step, no `|| true`, no swallowing of the exit status, and the severity gate present rather than omitted. Any one of those surviving scores zero for this criterion, including when the answer argues that an advisory check people read is better. Making it blocking but never saying that the advisory option was declined and why scores at most half."
+    },
+    {
+      "name": "Failure tier moved off every-reported-change",
+      "max_score": 20,
+      "description": "The gate no longer fails on the non-breaking tier. Failing on definite breaking changes is the expected line; failing additionally on potential breaking changes is acceptable here if the answer ties it to the SDK generation and the eleven integrators still on a 4.x SDK. Leaving the tier at the every-change setting scores zero. Removing the severity flag altogether scores at most half - it stops the noise by removing the gate."
+    },
+    {
+      "name": "Report survives a red run",
+      "max_score": 14,
+      "description": "The comparison output is uploaded from a run where the job went red - the upload step carries an always-condition and the report file is still written when the comparison exits non-zero. Leaving the upload step unconditional, so it is skipped exactly when somebody needs the file, scores zero. Relying on the step being non-fatal to reach the upload scores zero, since that is the configuration this criterion and the one above exist to remove."
+    },
+    {
+      "name": "Policy document draws an actual line",
+      "max_score": 10,
+      "description": "`docs/spec-check-policy.md` states which findings fail the build and which are reported without failing, and justifies that line from this API's consumers - four generated SDKs published at tag time, integrators pinned to a major, no staging window. A document that lists the severity names without saying which one stops a merge scores at most half. No document scores zero."
+    },
+    {
+      "name": "MUST NOT churn the step that works",
+      "max_score": 6,
+      "description": "The base-spec extraction step - the full-history checkout and the merge-base extraction of the published spec - MUST NOT be rewritten, replaced with a fetch of a remote URL, or removed. Changing it scores zero for this criterion."
+    }
+  ]
+}

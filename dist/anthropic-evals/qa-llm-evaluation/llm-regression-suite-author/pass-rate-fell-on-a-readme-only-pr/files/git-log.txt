@@ -1,0 +1,11 @@
+2026-09-02  chore: mirror provider feed for week 36
+2026-08-28  revert: "docs: tidy README badges" (#814, reverts #812)
+2026-08-27  docs: tidy README badges (#812)   [README.md only]
+2026-08-19  chore: mirror provider feed for week 34
+2026-07-30  feat(eval): add 11 cases for the new onboarding flow (golden-v2.3.0)
+2026-06-11  chore: mirror provider feed for week 24
+2026-05-06  chore(ci): move eval to the weekly schedule
+2026-04-09  chore: mirror provider feed for week 15
+2026-03-25  docs: eval runbook
+2026-02-19  feat(eval): golden-v2.2.0, 196 cases
+2026-01-28  chore(ci): eval workflow

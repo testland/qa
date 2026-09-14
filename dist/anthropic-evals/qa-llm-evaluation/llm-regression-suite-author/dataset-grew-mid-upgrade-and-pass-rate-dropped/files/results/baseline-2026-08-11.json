@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-08-11T09:14:00Z",
+  "model": "openai:chat:gpt-4.1-2025-04-14",
+  "datasetFile": "datasets/golden.csv",
+  "results": [
+    { "id": "refund-window-basic", "success": true },
+    { "id": "refund-window-digital", "success": true },
+    { "id": "cancel-flow", "success": true },
+    {
+      "id": "shipping-cost",
+      "success": false,
+      "output": "Return shipping is free. We email you a prepaid label, so it costs you nothing.",
+      "assertion": "__expected"
+    },
+    { "id": "policy-json", "success": true },
+    { "id": "escalation-tone", "success": true }
+  ]
+}

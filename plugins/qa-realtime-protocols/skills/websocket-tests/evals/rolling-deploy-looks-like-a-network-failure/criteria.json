@@ -1,0 +1,46 @@
+{
+  "context": "The prompt asks for the server-initiated endings to be 'pinned down' starting 'from what the client actually observes', and the drain path currently produces code 1006 with wasClean false. Predicted baseline failure: the agent writes a characterisation suite - drives hub.drain(), observes 1006 / wasClean false, asserts exactly that, gets a green npm test and reports the behaviour is now protected. That locks the defect in and makes the next person who fixes it look like the one who broke something. The evidence that settles it is in the fixture rather than in the prompt: FakeSocket.terminate() writes no close frame and the peer synthesises 1006, while close() records a closeFrame and ends with wasClean true - so 1006 is not a code any endpoint ever sends, it is what a peer invents when the connection dies mid-flight. A rolling deploy is the textbook going-away case and should write a close frame with 1001, which the client already handles gracefully - the 1008 and 1011 rows prove the client's clean path works. A second predicted error is over-correction: sweeping every terminate() in src/hub.js into close(), including idleSweep, where the peer has been silent for two minutes and there is nobody left to complete a closing handshake.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "Both test/hub.close-codes.test.js and docs/close-codes.md exist. Producing neither scores zero; producing the suite with no matrix document scores at most half."
+    },
+    {
+      "name": "MUST NOT pin the abnormal ending as the expected drain behaviour",
+      "max_score": 30,
+      "description": "The delivered suite MUST NOT contain an assertion that the drain path is expected to produce code 1006, wasClean false, terminated === true, or an absent close frame. Any such assertion scores zero for this criterion regardless of the rest of the answer, because it converts a shipped defect into a protected contract. Full marks require the drain path to be asserted as writing a close frame, with src/hub.js changed so that it does. Deleting or weakening the existing 'drain disconnects everyone' test instead of adding the missing assertion also scores zero."
+    },
+    {
+      "name": "Going-away code chosen for the rollout path",
+      "max_score": 20,
+      "description": "The drain path ends connections with close code 1001, and the answer says why that code rather than another: the server is going away, which is the case the client's grey reconnecting path already handles. Choosing 1000 or 1011 for a rollout, or writing a close frame with no stated reason for the code, scores at most half. Writing no close frame at all scores zero."
+    },
+    {
+      "name": "1006 explained as a synthesised ending",
+      "max_score": 18,
+      "description": "The answer states that 1006 is not transmitted by either endpoint - it is what a peer reports when the connection ended with no close frame received - and therefore that its appearance in the deploy column means the gateway dropped the socket rather than closed it. Saying only 'the close was not clean' or 'abnormal closure' without connecting it to the missing close frame scores at most half. Treating the 1006 rows as network loss, proxy behaviour, or a client bug scores zero."
+    },
+    {
+      "name": "Every server-initiated path covered, not just the drain",
+      "max_score": 12,
+      "description": "The suite and docs/close-codes.md cover kick, fail, idleSweep and drain - four paths, each with the code the peer observes and whether the ending was clean. A document or suite covering only the drain path scores zero; covering three of the four scores at most half."
+    },
+    {
+      "name": "MUST NOT rewrite the idle sweep",
+      "max_score": 10,
+      "description": "idleSweep drops a peer that has been silent past MAX_IDLE_MS, and dropping it is correct - a closing handshake needs a peer that is still there to echo the close frame. The answer MUST NOT convert idleSweep to a polite close as part of a blanket replacement of terminate(); doing so scores zero. Leaving it alone but never explaining why the same primitive is right here and wrong in drain scores at most half."
+    },
+    {
+      "name": "Closing handshake is given a chance to complete",
+      "max_score": 12,
+      "description": "The drained socket is allowed to acknowledge the close frame before the connection is abandoned - a bounded grace period, or waiting on the close event - and the hub does not forget the socket before it has finished closing. Writing close(1001) and then immediately terminating, or clearing the socket map in the same tick so the close handler has nothing to remove, scores at most half."
+    },
+    {
+      "name": "Suite runs green and the existing tests survive",
+      "max_score": 6,
+      "description": "npm test passes and test/hub.basic.test.js is still present. Leaving the suite failing, or deleting an existing test to get green, scores zero."
+    }
+  ]
+}

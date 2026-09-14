@@ -1,0 +1,58 @@
+{
+  "url": "https://staging.shopfront.example/",
+  "timestamp": "2026-09-12T02:14:07.442Z",
+  "testEngine": { "name": "axe-core", "version": "4.10.2" },
+  "toolOptions": {
+    "reporter": "v1",
+    "runOnly": {
+      "type": "rule",
+      "values": [
+        "image-alt",
+        "label",
+        "button-name",
+        "link-name",
+        "color-contrast",
+        "html-has-lang",
+        "document-title",
+        "region"
+      ]
+    }
+  },
+  "violations": [],
+  "incomplete": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": ["cat.color", "wcag2aa", "wcag143"],
+      "description": "Ensures the contrast between foreground and background colours meets WCAG 2 AA thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast",
+      "nodes": [
+        {
+          "target": ["p.banner-copy"],
+          "html": "<p class=\"banner-copy\">Up to 40% off, this weekend only</p>",
+          "failureSummary": "Element background could not be determined due to a background image"
+        },
+        {
+          "target": ["a.banner-cta"],
+          "html": "<a class=\"banner-cta\" href=\"/sale\">See the sale</a>",
+          "failureSummary": "Element background could not be determined due to a background image"
+        },
+        {
+          "target": ["span.sale-badge"],
+          "html": "<span class=\"sale-badge\">Sale</span>",
+          "failureSummary": "Element background could not be determined due to a background gradient"
+        }
+      ]
+    }
+  ],
+  "passes": [
+    { "id": "image-alt", "impact": null, "nodes": [{ "target": ["img.hero"] }, { "target": ["img.logo"] }] },
+    { "id": "label", "impact": null, "nodes": [{ "target": ["#search-q"] }] },
+    { "id": "button-name", "impact": null, "nodes": [{ "target": ["button.search-go"] }] },
+    { "id": "link-name", "impact": null, "nodes": [{ "target": ["a.brand"] }, { "target": ["a.help"] }] },
+    { "id": "html-has-lang", "impact": null, "nodes": [{ "target": ["html"] }] },
+    { "id": "document-title", "impact": null, "nodes": [{ "target": ["html"] }] },
+    { "id": "region", "impact": null, "nodes": [{ "target": ["main"] }] }
+  ],
+  "inapplicable": []
+}

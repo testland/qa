@@ -1,0 +1,7 @@
+[
+  { "path": "/", "name": "home", "lighthouse": true },
+  { "path": "/product", "name": "product", "lighthouse": true },
+  { "path": "/checkout", "name": "checkout", "lighthouse": true },
+  { "path": "/account/orders", "name": "orders", "lighthouse": true },
+  { "path": "/internal/status", "name": "status", "lighthouse": false }
+]

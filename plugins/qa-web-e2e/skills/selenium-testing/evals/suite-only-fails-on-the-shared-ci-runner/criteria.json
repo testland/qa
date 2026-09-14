@@ -1,0 +1,46 @@
+{
+  "context": "A plausible two-part remedy put up for endorsement, where both parts are wrong and the evidence that kills them is in the fixtures. Predicted baseline failure: the agent accepts the framing - 'the runner is slow, our waits are already explicit, so widen them' - and either endorses the sixty-second budget outright or waves it through while tidying something else. It cannot help. The waits in front of both failing clicks are `presence_of_element_located` and `visibility_of_element_located`, and Aarti's notes settle what those conditions are looking at: the buttons are in the DOM and on screen from first paint in the disabled state, so both conditions are already satisfied at t=0 and return immediately. Raising a budget that is never consumed changes nothing; the condition has to be one that requires the control to be enabled before the click. The second predicted miss is the memory story: the process listing shows chrome processes whose elapsed times are spaced about a day apart on a box with 14 days of uptime, which is one leaked browser per nightly run, not a suite that needs a larger machine - two of the three checkout tests build their own driver and call quit() as the last statement of the test body, so every failing run strands a browser. A third likely miss is the fixed three-second sleep sitting in the shared helper the whole suite calls, in a suite the requester believes has had no fixed waits since November.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The test files are edited in place and docs/ci-suite-diagnosis.md exists and answers the two proposed changes as two separate decisions. Deleting a test scores zero for this item."
+    },
+    {
+      "name": "MUST NOT endorse a longer wait budget as the remedy",
+      "max_score": 30,
+      "description": "The answer must reject the ten-to-sixty-second change and say why it cannot work: the conditions in front of the two failing clicks are satisfied the instant the page paints, because the controls are present and visible while still disabled, so the wait returns at once and the click lands on a disabled control that dispatches nothing. The fix is to wait on a condition that requires the element to be enabled and clickable before clicking. Raising any wait budget, or leaving a presence or visibility condition in front of either gated click, scores zero. Switching to a clickable condition without explaining why sixty seconds would have made no difference scores at most half."
+    },
+    {
+      "name": "MUST NOT leave a driver that is only quit on the happy path",
+      "max_score": 22,
+      "description": "From the skill's anti-pattern on skipping driver.quit(), whose stated consequence is a leaking browser and a CI runner running out of memory. The two tests that construct their own webdriver.Chrome() and call quit() as the final statement of the test body must be changed so the browser is released even when the test fails - the shape the skill uses is creation in setup and quit in teardown. Leaving either quit inside the test body scores zero. Wrapping the body in try/finally inside the test, rather than moving the driver into a fixture, scores at most half."
+    },
+    {
+      "name": "Memory pressure explained from the process listing",
+      "max_score": 14,
+      "description": "The diagnosis reads the listing as accumulated orphaned browsers - roughly one per nightly run across 14 days of uptime, 47 of them alive - and therefore rejects the 16 GB runner class as the remedy. Endorsing the larger runner scores zero. Saying only 'browsers are heavy' or 'headless Chrome uses a lot of memory' without engaging with the elapsed times or the count scores at most half."
+    },
+    {
+      "name": "MUST NOT leave the fixed sleep in the shared helper",
+      "max_score": 12,
+      "description": "`time.sleep(3)` in helpers.open_cart is removed in favour of waiting on a condition, and the diagnosis notes that the suite's no-fixed-waits premise was not actually true. Leaving the sleep, shortening it, or moving it elsewhere scores zero. Deleting the line without putting a condition in its place scores at most half."
+    },
+    {
+      "name": "Per-test browser instead of one session-wide browser",
+      "max_score": 12,
+      "description": "The session-scoped driver fixture is narrowed so each test gets a fresh browser and a fresh cookie jar, which is also what makes the 'clean session' workaround in test_apply_promo unnecessary. Leaving the fixture at session scope without mentioning it scores zero. Noting the risk but not changing the scope scores at most half."
+    },
+    {
+      "name": "Mechanism tied to why it is CI-only",
+      "max_score": 10,
+      "description": "The diagnosis explains why laptops never see it - the totals request resolves in around 100 ms locally, so the disabled window closes before the click, while a loaded shared runner sometimes loses that race - rather than treating the failures as random flakiness. An answer that offers no account of the laptop-versus-runner difference scores at most half."
+    },
+    {
+      "name": "Catalog tests untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify tests/test_catalog.py. It appears in no failure, uses the fixture correctly and already waits on a clickable condition. Any edit to it scores zero here."
+    }
+  ]
+}

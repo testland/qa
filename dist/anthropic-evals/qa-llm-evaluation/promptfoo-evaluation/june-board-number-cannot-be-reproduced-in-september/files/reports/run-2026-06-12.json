@@ -1,0 +1,25 @@
+{
+  "commit": "a31f0c9",
+  "timestamp": "2026-06-12T08:30:11Z",
+  "config": "evals/assistant/promptfooconfig.yaml",
+  "provider": {
+    "id": "openai:gpt-5-mini",
+    "resolvedModel": "gpt-5-mini-0613"
+  },
+  "gradingProvider": {
+    "id": "openai:gpt-5-mini",
+    "resolvedModel": "gpt-5-mini-0613"
+  },
+  "results": {
+    "rows": 79,
+    "passed": 73,
+    "failed": 6,
+    "passRate": 0.924
+  },
+  "failuresByAssertionType": {
+    "g-eval": 3,
+    "llm-rubric": 2,
+    "contains": 1,
+    "is-json": 0
+  }
+}

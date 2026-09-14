@@ -1,0 +1,33 @@
+Collected from kube events, Grafana and PagerDuty. Cluster prod-eu-1.
+All times UTC, 2026-09-08.
+
+03:12:40  auth-service 401 rate jumps 0.2% -> 94%      (Grafana panel "auth 4xx")
+03:12:44  kube event: pod auth-service-7d9c-fkq2 OOMKilled (limit 512Mi, usage 512Mi)
+03:12:51  kube event: pod auth-service-7d9c-m4bx OOMKilled
+03:13:02  kube event: pod auth-service-7d9c-t9rr OOMKilled  - all three replicas down
+03:13:20  kubelet restarting containers, CrashLoopBackOff 10s
+03:16:50  401 rate back to 0.3%, all three replicas Ready   (Grafana)
+03:23:10  PagerDuty INC-2307 triggered "auth error budget burn rate"
+03:29:02  INC-2307 acknowledged by s.iyer
+03:31-04:05  s.iyer investigating live, no further errors observed
+04:07:00  INC-2307 resolved by s.iyer, note "self-recovered before I was paged"
+
+User impact, from auth-service access logs 03:12:40-03:16:50:
+  failed token refreshes ......................... 18,402
+  distinct users forced to re-authenticate ....... 6,114
+  of those, users with a checkout in progress .... 341
+  monthly active users ........................... 402,000
+  support tickets mentioning "logged out" on 09-08 ... 12
+
+Alert configuration, monitors/auth.yaml:
+  alert:     auth_error_budget_burn
+  window:    10m
+  condition: burn rate above 14.4x sustained across the full window
+  observed:  the outage lasted 4m10s. The monitor fired on the trailing edge of
+             its own window - 10m30s after the first user-visible failure and
+             6m20s AFTER the service had already recovered.
+
+Memory configuration, deploy/auth-service.yaml:
+  resources.limits.memory: 512Mi   (set 2026-02-11, unchanged since)
+  observed working set, p99 over the last 30 days: 486Mi
+  there is no alert on container memory headroom for any service in this cluster

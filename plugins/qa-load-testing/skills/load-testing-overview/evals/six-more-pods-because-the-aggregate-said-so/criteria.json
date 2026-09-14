@@ -1,0 +1,51 @@
+{
+  "context": "A manager wants a yes or a no on 4,112 a month of extra pods, and the number underneath the request has been pre-defended against the objection an agent is most likely to reach for. Predicted baseline failure: the agent notices that percentiles cannot be averaged, finds that the CR says so first and takes the worst generator instead, and therefore accepts 2,810 ms as a real tail figure - then argues about the sizing arithmetic, proposes a smaller pod count, or asks for more monitoring. All of those endorse the figure. The 2,810 ms is a measurement of perf-gen-01. Four generator processes shared a 4 vCPU box; the fourth was handed 1,250 of the 2,000 virtual users and sat at 99.4% CPU for the whole twenty minutes while the other three ran near 62%. Its CSV is the proof: 6,180 requests at 5.15/s against roughly 41,000 at 34/s on each of its neighbours. Five times the users producing a seventh of the requests at ten times the latency is a saturated generator, not a slow storefront - the process could not issue requests fast enough, so every request it did issue queued behind its own event loop. Taking the maximum across per-generator percentiles is no more a percentile of the run than the mean would have been, and in this run the maximum is simply the sickest generator; a true p95 needs the raw per-request data or one coordinating run, and no per-generator summary column can be combined into one. Two further defects make the run unusable in either direction: the locustfile drives one URL with one hardcoded shared token and constant(0) wait time, against a path production serves from a CDN on a 60s edge TTL, so it is a cache-hit benchmark; and staging is one pod against production's six with 1.8M order rows against 14.2M and nothing discarded for warm-up. The mirror-image failure is also on offer - three generators sitting near 270 ms invite the conclusion that the storefront is fine for November, which is the same cached single-URL one-pod run read the other way round.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Review document with a stated verdict",
+      "max_score": 4,
+      "description": "docs/capacity-review.md exists and states plainly whether CR-473 can be signed on this evidence. A document that surveys the problems without reaching a verdict scores at most half; no document scores zero."
+    },
+    {
+      "name": "The 2,810 ms is identified as the generator",
+      "max_score": 32,
+      "description": "MUST NOT treat worker-4's 2,810 ms as storefront tail latency - as a struggling pod, a slow query, a thread-pool limit or peak November behaviour. Doing so scores zero for this criterion whatever else the review gets right. Full marks require the figures tied together: that process carried 1,250 of the 2,000 users and pinned a core at 99.4% on a box running four generators on four vCPUs, and it produced 6,180 requests at 5.15/s against roughly 41,000 at 34/s on each of the others - five times the users and a seventh of the throughput, which is the generator failing to issue requests rather than the storefront failing to answer them. Noting the CPU number without connecting it to the request-count collapse, or concluding only that worker-4 'looks anomalous' and should be excluded, scores at most half."
+    },
+    {
+      "name": "No per-generator column is promoted to the run's p95",
+      "max_score": 20,
+      "description": "The review states that the maximum across four generators' 95% columns is not the run's p95 any more than their mean would be, and that no combination of per-generator summary columns recovers one - it needs the raw per-request data or a single coordinating run. MUST NOT carry 2,810 ms forward as the run's p95, MUST NOT compare it to the 400 ms budget, and MUST NOT leave scripts/aggregate.mjs emitting a single figure: any of those scores zero. Accepting the CR's framing that the maximum is the safe conservative reading, or replacing it with a request-count-weighted mean of the same four percentiles, scores at most half."
+    },
+    {
+      "name": "CR-473 refused without a substitute number",
+      "max_score": 16,
+      "description": "The verdict is that CR-473 cannot be signed on this evidence. Endorsing six pods scores zero. Proposing a different pod count derived from the same run - three, or four, or 'start with two and watch' - also scores zero: no pod count is derivable from these files, and offering one is the same error in a cheaper suit."
+    },
+    {
+      "name": "A concrete replacement run is specified",
+      "max_score": 14,
+      "description": "The review names the run that would produce a number worth acting on, with the command: one coordinating run that aggregates centrally rather than four independent processes merged afterwards (a master with worker processes, or one process per core on the host), generators sized so that no generator core is pinned, parameterised product ids and a pool of accounts instead of one hardcoded token, think time rather than constant(0), a warm-up period discarded rather than included, and a non-zero exit on failures. Saying only 're-run it properly', or naming fewer than three of those, scores at most half; no replacement run at all scores zero."
+    },
+    {
+      "name": "The run measured a cache, not the storefront",
+      "max_score": 12,
+      "description": "The review calls out that every virtual user fetched the same URL with the same hardcoded shared token and no wait time, and that production serves that path from a CDN on a 60s edge TTL, so the run is a cache-hit benchmark that no November traffic will resemble. Not raising the single-URL / single-account shape at all scores zero."
+    },
+    {
+      "name": "Environment extrapolation refused",
+      "max_score": 10,
+      "description": "The review states that one staging pod against six in production, 1.8M order rows against 14.2M, no CDN, and a measurement window that includes process start make a 4x November projection unsupportable in either direction. Accepting the 4x framing as valid and disputing only the arithmetic scores zero."
+    },
+    {
+      "name": "Does not declare the storefront ready either",
+      "max_score": 8,
+      "description": "MUST NOT conclude from the three healthy generators sitting near 270 ms that the storefront is inside budget or ready for November. Those numbers came from the same cached single-URL run on a one-pod environment. Any 'the system is actually fine' verdict scores zero here."
+    },
+    {
+      "name": "The script no longer emits the figure, and the suite passes",
+      "max_score": 6,
+      "description": "scripts/aggregate.mjs is changed so it stops printing a single run-level p95 and a pass/fail against the budget, and `node --test` passes as delivered. Deleting the 'the readiness run reports 2810ms' case rather than updating it to the new behaviour scores at most half; leaving the suite failing scores zero."
+    }
+  ]
+}

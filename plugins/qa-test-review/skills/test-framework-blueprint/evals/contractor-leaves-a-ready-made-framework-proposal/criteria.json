@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent endorses Dan's proposal, or produces a design that quietly keeps its two load-bearing choices - a Java/Selenium/Cucumber stack and an all-UI coverage table - because the prompt stacks every social and sunk-cost argument in its favour (an idle paid-for grid, a central QA group volunteering to own it, Java expertise in the building, a well-regarded author, a CTO who has already read it) and because Selenium plus Cucumber plus Page Objects reads as the conventional, safe, enterprise answer. The two attached reports settle it against the proposal, and the agent is predicted to treat them as background colour rather than as the decision itself. reports/team-skills.md records all six engineers writing TypeScript and none writing Java, plus the March ownership change that makes those six the maintainers - the central QA group is two people across nine products with a three-week queue, which is why the policy changed, so their offer does not rescue the choice; a suite in a language its maintainers cannot read rots because nobody fixes flake they cannot read. reports/change-shape.md records 84.2% of 412 merged PRs touching the API or domain layer against 10.0% touching the console alone, and all four recent incidents in the domain layer, while the proposal puts 100% of coverage on 31 console screens and marks the API tier out of scope - the layer that changes most and breaks most gets nothing, the layer that changes least gets everything. A design that names a runner before it records who writes the tests, or that carries the proposal's coverage allocation forward, has reproduced the failure.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Design documents produced",
+      "max_score": 5,
+      "description": "docs/test-conventions.md, docs/implementation-order.md and docs/review-answer.md all exist, and review-answer.md gives a direct verdict on Dan's proposal rather than a neutral comparison. A set of documents that never says whether the proposal is adopted scores zero for this item."
+    },
+    {
+      "name": "MUST NOT adopt a stack the maintainers cannot read",
+      "max_score": 32,
+      "description": "MUST NOT select Java, Selenium WebDriver or Cucumber-JVM as the framework's language or runner. Choosing any of them scores zero for this criterion regardless of the rest, including a split that keeps Java on the grid for cross-browser work and adds TypeScript for the API tier - that still leaves a Java codebase for six engineers who do not write Java. Full marks require the rejection plus the reason taken from the evidence: every engineer in reports/team-skills.md writes TypeScript and none writes Java, and the March ownership change makes those six the people who will write and fix these tests, so the central QA group's offer (two people, nine products, three-week queue, no added headcount) does not make the choice survivable. Rejecting Java only because 'the repo is already JavaScript', with no reference to who maintains the suite, scores at most half."
+    },
+    {
+      "name": "Coverage-layers table keyed to change shape",
+      "max_score": 22,
+      "description": "docs/test-conventions.md contains a layers table that marks each layer in scope or explicitly out of scope with a reason, and gives the API/domain tier the primary automated coverage on the strength of the 84.2% figure and the four domain-layer incidents, with web E2E kept thin and journey-based. Carrying Dan's allocation forward - API out of scope, all 31 console screens covered - scores zero. A table that lists only the layers being covered, with nothing stated as deliberately excluded, or that names both tiers without saying which one gets the fast feedback, scores at most half."
+    },
+    {
+      "name": "Inventory recorded before the tool is named",
+      "max_score": 14,
+      "description": "The design records the system inventory first - stack, how and where it deploys, the change shape, and which engineers will write and maintain the tests - and presents the runner decision as following from those facts. A document that opens with the tool choice and cites the team's languages afterwards as supporting detail scores at most half; one that never records who writes the tests scores zero."
+    },
+    {
+      "name": "Rejected alternatives recorded with their reasons",
+      "max_score": 12,
+      "description": "docs/test-conventions.md names each alternative that was considered and dropped - Dan's stack, and at least one other credible runner - with the specific reason it lost, so the question does not reopen next quarter. Naming only the winner scores zero. Listing alternatives with no reason attached scores at most half."
+    },
+    {
+      "name": "One runner across the layers in scope",
+      "max_score": 10,
+      "description": "The chosen tiers are served without standing up separate runners, configs and reporters for each, or the design states plainly why more than one is unavoidable here. Proposing three toolchains for the in-scope layers scores zero."
+    },
+    {
+      "name": "MUST NOT disturb the existing passing tests",
+      "max_score": 6,
+      "description": "test/rating.test.js passes today under `npm test`. MUST NOT delete it, port it to another runner, or pull the unit tier into this framework's scope - the proposal was right that unit stays with the dev teams. Any modification under src/ or test/ scores zero here."
+    }
+  ]
+}

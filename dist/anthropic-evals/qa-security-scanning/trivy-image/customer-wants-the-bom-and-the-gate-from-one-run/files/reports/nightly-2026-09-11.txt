@@ -1,0 +1,10 @@
+$ nightly inventory job, same digest sha256:6ae0b31d77c4, no thresholds applied
+
+registry.internal/checkout-api (debian 12.7)
+Total: 137 (UNKNOWN: 0, LOW: 44, MEDIUM: 62, HIGH: 27, CRITICAL: 4)
+
+app/package-lock.json (npm)
+Total: 19 (UNKNOWN: 0, LOW: 3, MEDIUM: 9, HIGH: 6, CRITICAL: 1)
+
+Of the 156 findings above, 117 have no fixed version published.
+Components enumerated: 214.

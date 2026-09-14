@@ -1,0 +1,51 @@
+{
+  "context": "isOptedOut() reads one thing: the do-not-sell cookie our own banner sets. The reporter's trace carries no Cookie header at all, so both surfaces treated her as not opted out, loaded the sharing scripts, and wrote share records against her visit - and every case in src/optOut.cookie.test.js passes because every case in it sets that cookie. Predicted baseline failure, and the one the weight sits on: the agent fixes the gate and stops. It honours the browser signal going forward, tests that the scripts no longer load, and never addresses that the vendors already hold what was sent during her visit. src/vendors.js keeps a share record per vendor per visitor and a directive channel for telling a vendor what to do about a subject, and src/corrections.js already uses exactly that pattern - a consumer correction is pushed to every vendor that received the old value. Nothing pushes anything to the vendors when a consumer opts out, so the recipients of her activity are left free to go on using it and the reply to her can say nothing about what happened to the data that already left. Predicted baseline failure two: picking the older header out of the trace. DNT: 1 and Sec-GPC: 1 arrive together and DNT is the more familiar, but keying the implementation off DNT leaves the reported behaviour unfixed for every browser that sends only the Global Privacy Control signal. Predicted baseline failure three: scope. src/embed.js carries its own duplicated cookie check, so a fix confined to src/page.js leaves the booking widget sharing exactly as before. Predicted baseline failure four: submitOptOutForm is the only path that writes a record, so a visitor who opts out by signal leaves nothing on file at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT stop at shutting off future sharing",
+      "max_score": 34,
+      "description": "Her activity reached the vendors during that visit and src/vendors.js records which vendors hold it. MUST NOT leave those recipients untouched. Full marks require honouring the opt-out to also push a directive to every vendor holding data for that visitor - the same propagation src/corrections.js already performs for a correction - and a test in src/optOut.reported.test.js that shares to two vendors for a visitor, opts that visitor out, and asserts vendors.directivesFor returns an entry for each of them. Emitting nothing to the vendors that already received her activity scores zero for this criterion however complete the rest of the fix is. Emitting directives in the implementation with no test asserting them, or notifying only one vendor when the share log holds two, scores at most half."
+    },
+    {
+      "name": "MUST NOT rest the opt-out decision on the banner cookie",
+      "max_score": 16,
+      "description": "MUST NOT leave isOptedOut reading only the do-not-sell cookie. After the change a request carrying the browser opt-out signal in its headers and no cookies at all must be treated as opted out, and src/optOut.reported.test.js must assert exactly that shape - headers set, cookies empty or absent. Scores zero if the signal is not honoured, and zero if every new case still sets the cookie. Scores at most half if the implementation honours it but no test pins the cookie-free request."
+    },
+    {
+      "name": "Opt-out recorded as evidence for a signal-only visit",
+      "max_score": 14,
+      "description": "A visitor who opts out by signal leaves a record behind that says how the preference reached us, and a test asserts one exists for that visitor although submitOptOutForm was never called. Scores zero if nothing is persisted for a signal-only visit, leaving us unable to evidence that she ever expressed a preference. Scores at most half if a record is written but nothing asserts it."
+    },
+    {
+      "name": "The right signal out of the trace",
+      "max_score": 12,
+      "description": "The implementation keys off Sec-GPC with the value '1'. The trace carries DNT: 1 alongside it as the older and more familiar signal; keying off DNT instead scores zero here even though it makes this reporter's own request opt out, because every browser sending only the Global Privacy Control signal keeps being shared. Honouring both headers scores full marks provided Sec-GPC alone is sufficient and is tested alone."
+    },
+    {
+      "name": "Both reported surfaces covered",
+      "max_score": 10,
+      "description": "src/embed.js is fixed as well as src/page.js, and a test asserts a signal-carrying visitor gets neither analytics-share.js nor partner-audience.js from the widget. A change confined to src/page.js scores zero - the report shows two script lists and the widget holds its own copy of the cookie check."
+    },
+    {
+      "name": "Reply is specific about her visit",
+      "max_score": 8,
+      "description": "docs/disclosure-2026-09-05.md names the signal she sent, both surfaces that ignored it, what we now hold recording a preference expressed that way, and what was done about the vendors that already received her activity. A generic acknowledgement that identifies neither the signal nor the second surface scores zero."
+    },
+    {
+      "name": "Signed-off banner flow not regressed",
+      "max_score": 8,
+      "description": "MUST NOT change the behaviour of the banner path: src/optOut.cookie.test.js is byte-unchanged and every case in it still passes, including the one asserting a visitor who has not opted out does receive the sharing scripts. Editing that file, or leaving any of its cases red, scores zero."
+    },
+    {
+      "name": "First-party scripts still load",
+      "max_score": 6,
+      "description": "app.js, consent-banner.js and embed.js still load for an opted-out visitor. A fix that blanket-suppresses the whole script list rather than the sharing scripts scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/optOut.reported.test.js and docs/disclosure-2026-09-05.md both exist and npm test passes. A written reply with no executable coverage scores zero for this item."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "A clean result from a comparison that could not have been anything else. Predicted baseline failure: the agent wires up CI, reads the attached 'No breaking changes.' output as evidence, and forwards a yes to the account team. Two independent things make that yes wrong and neither is stated anywhere in the prose. First, the script resolves the published side from the portal's `specs/latest/` path, and the runbook says `make publish-spec` overwrites `specs/latest/` with the release branch's own spec at branch cut on 2026-09-11 - four days before Priya's run - so both sides of that comparison are the 3.2.0 file and a clean result was guaranteed regardless of content. The fix is to pin the base to something frozen: the committed `spec/openapi.v3.1.0.yaml` portal copy, the portal's `specs/v3.1.0/` path, or the merge-base of the pull request. Second, the comparison only ever sees the two spec files, and the route carrying 12,406 calls a month from seven named integrator keys - `DELETE /v1/webhooks/{webhookId}` - appears in neither of them and has no handler in `src/routes.mjs`, so a spec-to-spec comparison certifies the spec, not the service. Run correctly against the pinned 3.1.0 copy, the comparison is also not clean: `secret` was dropped from the `Webhook` schema's `required` list, which narrows a response every integrator on 3.1.0 was promised. The answer to the account team is no, on grounds the attached output cannot show.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT certify 3.2.0 off a clean comparison",
+      "max_score": 30,
+      "description": "`docs/release-readiness-3.2.0.md` must answer no. MUST NOT state or imply that 3.2.0 is safe for integrators on 3.1.0, and MUST NOT present 'No breaking changes.' - or any re-run of the supplied script - as the evidence for a verdict. Answering yes scores zero for this criterion no matter how good the CI job is. A hedged 'probably fine, watch it on Thursday' scores zero. Answering no without naming at least one concrete thing that breaks scores at most half."
+    },
+    {
+      "name": "Base spec pinned instead of a moving pointer",
+      "max_score": 26,
+      "description": "The comparison's base side is something frozen - the committed `spec/openapi.v3.1.0.yaml`, the portal's `specs/v3.1.0/` path, or the pull request's merge-base revision of the spec - and the answer says why `specs/latest/` was worthless: the runbook republishes it from the release branch at branch cut, so the Monday run compared 3.2.0 against 3.2.0. Leaving `specs/latest/` as the base side anywhere in the delivered script or CI job scores zero here. Switching to a pinned base without ever explaining why the earlier run was clean scores at most half."
+    },
+    {
+      "name": "Endpoint that is in neither spec identified",
+      "max_score": 18,
+      "description": "The answer names `DELETE /v1/webhooks/{webhookId}` - 12,406 calls and seven distinct keys in August, no handler in `src/routes.mjs`, absent from both spec files - and draws the conclusion that a spec-to-spec comparison cannot report a change it was never told about, so the tool's verdict is not a statement about the running service. Mentioning the traffic row without connecting it to the blind spot scores at most half. Not mentioning it scores zero."
+    },
+    {
+      "name": "The break the comparison does catch",
+      "max_score": 14,
+      "description": "The answer identifies that `secret` was removed from the `Webhook` schema's `required` list between the published 3.1.0 copy and 3.2.0, and treats it as a definite break for a client already parsing that response rather than a tidy-up. Missing it entirely scores zero; listing it as a cosmetic or advisory change scores at most half."
+    },
+    {
+      "name": "CI job can actually turn the pull request red",
+      "max_score": 12,
+      "description": "The added job's pass/fail comes from the comparison tool's own exit status set to fail on definite breaking changes, not from a human reading printed output, a grep of the text, or a step that only annotates. A job that runs the comparison and always exits 0 scores zero. A job that fails on every reported change including additions scores at most half - it will be switched off within a month."
+    },
+    {
+      "name": "MUST NOT edit the published portal copy",
+      "max_score": 8,
+      "description": "`spec/openapi.v3.1.0.yaml` is a record of what was published and MUST NOT be modified, including 'correcting' it to add the DELETE route that the traffic shows was live. Any edit to that file scores zero for this criterion."
+    },
+    {
+      "name": "Existing tests untouched and passing",
+      "max_score": 6,
+      "description": "`node --test` still passes and `test/routes.test.js` is unmodified, with no dependency added to `package.json`. Deleting, skipping or rewriting an existing test scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "A CI workflow file and `docs/release-readiness-3.2.0.md` both exist, and the readiness document leads with a yes or a no rather than a description of the tooling. A document that never states a verdict scores zero."
+    }
+  ]
+}

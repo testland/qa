@@ -1,0 +1,41 @@
+{
+  "context": "A suite that is green for four different reasons, three of which are defects in the checks themselves. Predicted baseline failure: the agent reads four plausible-looking generated-input checks, concludes the gap was 'no coverage of non-finite amounts', bolts a fifth check on for NaN and leaves the existing three as they are - so the two checks that already had the incident's own input in scope stay broken. The fixtures settle each one. test_amount_line_cells_are_decimal already draws NaN and infinity, but it replaces format_amount with a constant-returning stub for the duration of the call, so the only function that mishandles them never executes; drop the stub and that check goes red on precisely the incident. test_amount_round_trip is bounded to non-negative two-decimal values, which excludes NaN, infinity and negatives by construction, and the two obvious ways to widen it are both wrong: asking a bounded float strategy to allow NaN is rejected outright by the generator, and widening into the same equality assertion is unsatisfiable for NaN however correct the code is, so the finite round-trip and the non-finite rejection have to become two separate checks. test_currency_cell_normalised guards its only assertion behind is_currency_code on arbitrary text, which yields a three-letter ISO code essentially never, so it passes a hundred times a run having asserted nothing - and the tempting repair, wrapping the same broad strategy in a discard, trades a silently skipped assertion for a run that throws away almost everything it draws. test_field_escape_round_trip is a sound property over a sound strategy, green because the escaping is correct; touching it is a wrong answer too. Nothing in the fixtures states what the exporter should do with a non-finite amount: src/exporter.py catches ExportError and dead-letters the row, and normalise_currency already raises it, which is where the intended behaviour has to be read from.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Audit produced with a verdict per check",
+      "max_score": 5,
+      "description": "docs/csvio-audit.md exists and gives a named verdict for all four checks in tests/test_csvio.py, each with the specific reason that check stayed green. Fewer than four named verdicts scores zero for this item; 'coverage was insufficient' in place of a per-check reason scores at most half."
+    },
+    {
+      "name": "MUST NOT keep a stubbed function inside a generated check",
+      "max_score": 26,
+      "description": "MUST NOT leave the patch of csvio.format_amount inside test_amount_line_cells_are_decimal, and MUST NOT introduce any new patch, stub, fake or monkeypatch of a src/csvio function inside a generated-input check. Leaving it or adding another scores zero for this criterion. Full marks require the removal plus an assertion that observes what the real format_amount produces, so that this check would have gone red on the incident input."
+    },
+    {
+      "name": "Non-finite amounts drawn, and drawn in a way that works",
+      "max_score": 28,
+      "description": "After the change at least one check draws NaN and both infinities and asserts the behaviour the exporter's dead-letter path implies for them. Leaving test_amount_round_trip bounded to non-negative two-decimal values scores zero. A widened strategy the generator rejects - NaN or infinity enabled on a float strategy that still carries bounds - scores zero, because the suite then errors instead of running. Widening the domain while keeping a single assertion that a decoded amount equals the value it came from scores at most half: that equality is false for NaN against itself whatever the code does, so the widened check is broken rather than fixed. Full marks require the finite round-trip and the non-finite rejection to be separate checks, both sound, with negatives inside the finite one."
+    },
+    {
+      "name": "Source brought in line with the wire format",
+      "max_score": 18,
+      "description": "src/csvio.py is changed so a non-finite amount raises ExportError rather than being rendered as text, which is what src/exporter.py already catches and dead-letters and what normalise_currency already does for a bad code. Emitting an empty cell, a zero, or a sentinel string scores at most half. Editing docs/export-format.md, or leaving the source unchanged and fixing only the tests, scores zero."
+    },
+    {
+      "name": "Vacuous branch fixed at the strategy, not by discarding",
+      "max_score": 20,
+      "description": "test_currency_cell_normalised must execute its assertion on essentially every case after the fix, because the strategy produces currency codes rather than arbitrary text. Leaving the guarded branch on a broad text strategy scores zero. Wrapping the same broad strategy in a discard or precondition call, so that nearly every draw is thrown away to find the occasional code, scores at most half."
+    },
+    {
+      "name": "The sound check left alone",
+      "max_score": 6,
+      "description": "MUST NOT modify test_field_escape_round_trip or the encode_field / decode_field pair. That check is a genuine round-trip over an unrestricted text strategy and is green because the escaping is correct. Any change to it scores zero for this item."
+    },
+    {
+      "name": "No check quietly dropped or de-generated",
+      "max_score": 5,
+      "description": "All four checks still exist and all four still draw generated input. Deleting one, or converting one to a fixed list of values or a parametrized example, scores zero for this item."
+    }
+  ]
+}

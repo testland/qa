@@ -1,0 +1,24 @@
+# find . -type f -size +900k -not -path './node_modules/*' -not -path './.git/*'
+# printed as: bytes, path. Generated 2026-09-11.
+
+   1663104  server/handlers/bundle.js
+   1512880  vendor/pdfkit/pdfkit.standalone.js
+   1488221  vendor/mapbox/mapbox-gl.js
+   1402993  server/legacy/report-engine.js
+   1344110  vendor/chartjs/chart.umd.js
+   1298440  public/assets/app.7f21c0.min.js
+   1211096  vendor/quill/quill.core.js
+   1188002  public/assets/vendor.9ac3e1.min.js
+   1120977  server/handlers/webhooks.compiled.js
+   1094311  vendor/ace/ace.js
+   1062884  vendor/tinymce/tinymce.min.js
+   1005513  src/generated/openapi-client.js
+    964402  vendor/moment/moment-with-locales.js
+    931118  src/locales/strings.bundle.js
+
+Note for whoever reads this: `server/handlers/bundle.js` and
+`server/handlers/webhooks.compiled.js` are not third-party. They are our own
+handler code, bundled at build time by the esbuild step and committed because
+the deploy target loads them directly. They are what actually runs in
+production. `server/legacy/report-engine.js` is hand-written, 1.4 MB, one file,
+and has been since 2018.

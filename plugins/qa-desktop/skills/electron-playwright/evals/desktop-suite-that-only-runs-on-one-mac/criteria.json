@@ -1,0 +1,36 @@
+{
+  "context": "Every reflexive remedy for this failure is already in the repository, correctly applied, and the run is still red. Predicted baseline failure: the agent recognises `Failed to initialize display` as the standard Linux-runner problem and proposes the standard answer - a virtual framebuffer wrapper - finds it already there, and then either duplicates it, moves it, swaps it for `--headless`, or falls back to Ravi's flags (`--no-sandbox`, `--disable-gpu`, `--disable-dev-shm-usage`), none of which supply a display and none of which change the outcome. The cause is one line in the launch helper. The launch option that sets environment variables replaces the environment rather than adding to it - it defaults to the parent process's environment, and supplying an object substitutes that object wholesale - so the three variables listed there are the only three the application process receives. `DISPLAY`, correctly set in the job and correctly exported by the wrapper, never reaches it, which is why the display server is demonstrably up in the same log that shows the launch failing blind. The corroborating detail is on the green legs: the application reports its user-data path as `/Ledgerline` and finds no preferences on any run, because `HOME` was stripped by the same substitution. The second trap is the ten-minute target, which makes Karol's proposal - let the runner use its six cores - the attractive move; concurrent launches of one desktop application collide on its user-data directory, and the wall clock has to come from splitting the run across parallel CI jobs instead.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Launch environment extended rather than replaced",
+      "max_score": 34,
+      "description": "The environment passed to the launch must carry the process's own environment forward with the three Ledgerline variables added to it, so `DISPLAY`, `HOME` and `PATH` survive. Leaving a freestanding object of only the application's own variables scores zero for this criterion regardless of what else is fixed. Reaching for `--no-sandbox`, `--disable-gpu`, `--disable-dev-shm-usage`, a headless flag, an `ELECTRON_*` display override, or the removal of the Linux leg as the remedy for `Failed to initialize display` scores zero - the attached log already shows the display server answering queries on the same runner. Dropping the environment option entirely, which restores the inherited environment but loses the two variables the application is given, scores at most half."
+    },
+    {
+      "name": "One launch at a time, and the ten minutes comes from splitting the run",
+      "max_score": 24,
+      "description": "MUST NOT raise the worker count or hand it back to the runner to hit the ten-minute target - concurrent launches of the same desktop application collide on its user-data directory, and Karol's proposal is to be answered no in `docs/desktop-ci-notes.md`. Any configuration that permits more than one concurrent launch per job, including removing the pin or setting `fullyParallel: true`, scores zero. Full marks additionally require the budget to be met by splitting the suite across parallel CI jobs - a shard matrix passing the shard index and count, with the per-shard reports collected or merged. Keeping one worker but leaving the run unsharded and saying nothing about the 34 minutes scores at most half."
+    },
+    {
+      "name": "Diagnosis names the substitution, not the runner",
+      "max_score": 12,
+      "description": "`docs/desktop-ci-notes.md` states that the launch replaced the child process's environment instead of extending it, so the display variable set in the job never reached the application, and connects the same cause to the missing user data on the green legs. Attributing the failure to a missing or misconfigured display server, a missing package on the image, GPU or sandbox behaviour, an image change, or runner flakiness scores zero. Saying only that environment variables were involved, without naming the replacement, scores at most half."
+    },
+    {
+      "name": "Existing Linux display setup left in place",
+      "max_score": 8,
+      "description": "The virtual-display wrapper on the Linux leg stays where it is and stays scoped to that leg. Removing it, or replacing it with something equivalent for no reason, scores zero; applying it to the macOS and Windows legs as well scores zero, since neither needs it and both currently pass."
+    },
+    {
+      "name": "Pull-request budget shown as arithmetic",
+      "max_score": 8,
+      "description": "The notes state how the ten-minute target is reached in numbers - the current per-image wall clock, the number of parallel jobs the suite is split into, and the resulting per-job time. Asserting the gate will now be fast enough without any figures scores zero."
+    },
+    {
+      "name": "Working parts left alone",
+      "max_score": 8,
+      "description": "MUST NOT undo what already works: the per-platform artefact resolution stays derived from the running platform rather than being replaced by a fixed path, the four spec files are unmodified, and the report upload keeps its per-image name and its run-always condition. Any of these regressing scores zero here."
+    }
+  ]
+}

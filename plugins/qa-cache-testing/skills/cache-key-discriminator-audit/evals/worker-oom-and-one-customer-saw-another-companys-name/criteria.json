@@ -1,0 +1,46 @@
+{
+  "context": "A colleague's explanation is quoted, the requester says in the prompt that he is minded to act on it, and it is wrong on both counts. Predicted baseline failure: the agent adopts it, or half-corrects it and still lands in the same place - attributing ticket 8812 to method-level memoisation sharing one cache across instances, and claiming a cross-tenant collision on the billing path. `functools.lru_cache` keys on the whole argument tuple with `self` included, in one cache living on the class, so whether two instances collide depends entirely on how `self` hashes, and neither class here is what the note describes. `CatalogRepo` carries no `__eq__` or `__hash__` of its own; it inherits them from `RegionKeyed` in `app/registry.py`, which computes both from `(region, catalog_version)` and never touches `tenant_id`. Two repos for different tenants in the same region therefore compare equal, hash equal and share every entry - and none of that is visible at the decorator or anywhere in `app/catalog.py`, so an agent that reads the memoised method and stops will not find it. The access log puts acme at 14:02:11 immediately before northwind at 14:02:44, both in `eu`. `PricingEngine` is a plain class whose instances hash by identity, so it cannot mix tenants at all; `quote_for` builds a fresh engine on every call, so its cache takes a miss every single time and has never served a hit - what it does do is hold a strong reference to all 8,192 engines it has seen, each with its own rate table, which is the OOM the referrer chain in `ops/memory-2026-09-10.md` describes. The attractive remedy there is a smaller `maxsize` or a scheduled `cache_clear()`, which changes the ceiling and leaves the retention pattern exactly as it was. Two further predicted failures: sweeping in `currency_symbol` and `TenantContext.feature_flags`, which are a module-level pure function over a four-key table and an instance-level `cached_property` released with its request; and, when moving the pricing memoisation off the instance, writing a key that drops the currency or the tenant, which the shipped pricing tests catch.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Ticket 8812 traced to the inherited equality and hash",
+      "max_score": 32,
+      "description": "The report attributes the wrong company name to `CatalogRepo` inheriting `__eq__` and `__hash__` from `RegionKeyed`, which are computed from `(region, catalog_version)` and exclude `tenant_id`, so two repos differing only in tenant compare equal, hash equal and share every memoised entry; and the fix removes that collision, either by moving the memoised call off the instance to a function that takes the tenant as an explicit argument or by giving `CatalogRepo` equality and hashing that include the tenant. Not naming `CatalogRepo` scores zero. Naming it but attributing the crossover to method-level caching in general, to `maxsize`, or to the 4.2.0 deploy, rather than to what the inherited equality leaves out, scores at most half. A fix that simply deletes the memoisation scores at most half and will fail a shipped test."
+    },
+    {
+      "name": "PricingEngine diagnosed as retention, not collision",
+      "max_score": 20,
+      "description": "The report says `PricingEngine.quote` does not mix tenants - a plain class hashes its instances by identity, so each request's engine gets its own entries - and that the defect is the class-level cache holding a strong reference to every engine it has seen, which is the memory growth. Calling it a cross-tenant collision scores zero. Full marks also require noting that a fresh engine is built per call, so the cache records a miss every time and has never served a hit, meaning the memoisation the changelog describes does not work. Reporting the memory growth without connecting it to the retained `self` references, or without noticing that `maxsize=8192` matches the live object count in the report, scores at most half."
+    },
+    {
+      "name": "MUST NOT offer a smaller maxsize or a periodic clear as the fix",
+      "max_score": 18,
+      "description": "The remedy for the memory growth MUST NOT be lowering `maxsize`, calling `cache_clear()` on a timer, or restarting the worker on a schedule. Any of those presented as the fix scores zero for this criterion, because they change the ceiling and leave request-scoped objects pinned by a class-level cache. Full marks require the memoisation moving off the instance entirely, to a function that takes the discriminators it needs as arguments. Offering the correct fix but listing a smaller `maxsize` alongside it as an equally valid option scores at most half."
+    },
+    {
+      "name": "MUST NOT repeat the self-is-not-in-the-key explanation",
+      "max_score": 16,
+      "description": "The report MUST NOT state or rely on `self` being absent from the cache key, or on all instances of a class sharing one set of entries, as the explanation for either symptom. Doing so scores zero for this criterion regardless of what else the answer gets right. Full marks require the correct mechanism in its place: entries are keyed on the whole argument tuple with `self` included, in a single cache on the class, so collision depends on how `self` hashes - and the report must say plainly that it is not acting on the quoted note as written. Contradicting the note without saying what is true instead scores at most half."
+    },
+    {
+      "name": "Regression test that two tenants no longer share",
+      "max_score": 16,
+      "description": "`tests/test_tenant_isolation.py` drives two tenants in the same region through the catalogue entry point and asserts each receives its own company name and its own items, so it fails against the code as shipped, and covers every other callable the answer changed. A test that only asserts two repo objects are unequal or hash differently, without going through the memoised call, scores at most half. No new test, or a test that already passes against the unfixed code, scores zero."
+    },
+    {
+      "name": "MUST NOT flag the two that are correct",
+      "max_score": 12,
+      "description": "`app/formatting.py` and `app/context.py` MUST NOT be edited, and neither `currency_symbol` nor `TenantContext.feature_flags` may be reported as a defect: one is a module-level pure function over a fixed four-entry table, the other is a `cached_property` stored on the instance and released with the request. Editing either file scores zero for this criterion. Listing either as a defect while leaving the code alone scores at most half."
+    },
+    {
+      "name": "Suite green and the billing path still prices correctly",
+      "max_score": 8,
+      "description": "`python -m unittest discover -s tests -t .` passes and all four tests in `tests/test_catalog.py` and `tests/test_pricing.py` are present and unmodified. Editing or deleting any of them scores zero, and so does any replacement key on the pricing path that omits the currency or the tenant - both are discriminators the returned quote depends on, and the shipped tests fail if either is dropped."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "`docs/cache-audit-8812.md` exists with a separate entry for each of the four memoised callables in `app/`, and `tests/test_tenant_isolation.py` exists. An audit covering fewer than four callables scores at most half."
+    }
+  ]
+}

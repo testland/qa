@@ -1,0 +1,12 @@
+# edge-router secret-scanner config
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = """
+Reason: infra/ holds rendered Terraform plan output and vendored provider
+        schemas; both are machine-generated and full of high-entropy ids.
+Approved-by: s.okonkwo@hexley.io
+Re-review-date: 2026-05-01
+"""
+paths = ['''infra/.*''']

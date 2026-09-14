@@ -1,0 +1,30 @@
+nightly-desktop 2026-09-09, tests/e2e/open-project.spec.ts
+
+  1) opening a project loads it and records it
+
+     Error: Timeout 30000ms exceeded.
+     waiting for expect(locator).toHaveText('demo-ledger')
+     locator resolved to hidden <h1 id="project-title">No project open</h1>
+
+     at open-project.spec.ts:19
+
+  1 failed, 0 passed (31.4s)
+
+nightly-desktop 2026-09-05, tests/e2e/open-project.spec.ts
+
+  1) opening a project loads it and records it
+
+     TypeError: Cannot read properties of undefined (reading 'getByRole')
+
+     at open-project.spec.ts:25
+
+  1 failed, 0 passed (33.8s)
+
+nightly-desktop 2026-08-11, first run after the spec was added to the job
+
+  1) opening a project loads it and records it
+
+     Error: Timeout 30000ms exceeded.
+     waiting for expect(locator).toHaveText('demo-ledger')
+
+  1 failed, 0 passed (31.9s)

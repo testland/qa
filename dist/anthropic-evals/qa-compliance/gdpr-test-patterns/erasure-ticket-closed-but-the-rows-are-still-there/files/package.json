@@ -1,0 +1,8 @@
+{
+  "name": "helio-account-service",
+  "version": "4.2.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

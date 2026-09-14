@@ -1,0 +1,20 @@
+$ sw_vers -productVersion
+15.5
+$ xcodebuild -version
+Xcode 16.2
+Build version 16C5032a
+
+$ # verify-release.sh does not produce one of these, so I made this bundle by
+$ # hand from a local run to see what is inside it
+$ ls build
+result.xcresult
+
+$ xcrun xcresulttool get --path build/result.xcresult --format json > build/results.json
+xcresulttool: error: This command is deprecated. Pass --legacy to keep using it;
+it will be removed in a future release.
+
+$ xcrun xcresulttool get --path build/result.xcresult --format json --legacy | head -c 200
+{"_type":{"_name":"ActionsInvocationRecord"},"actions":{"_type":{"_name":"Array"}, ...
+
+(worked in August on the old toolchain without the flag. I do not want to ship
+something that tells me it is going away - what is the current way to do this?)

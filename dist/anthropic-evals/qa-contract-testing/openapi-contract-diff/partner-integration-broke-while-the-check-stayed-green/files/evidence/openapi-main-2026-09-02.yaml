@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: Exports API
+  version: '3.3.1'
+paths:
+  /v1/exports:
+    post:
+      operationId: createExport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Export'
+  /v1/exports/{exportId}:
+    get:
+      operationId: getExport
+      parameters:
+        - name: exportId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the export payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Export'
+        '404':
+          description: not found
+components:
+  schemas:
+    ExportRequest:
+      type: object
+      required: [dataset]
+      properties:
+        dataset:
+          type: string
+        format:
+          type: string
+          enum: [csv, jsonl]
+    Export:
+      type: object
+      required: [id, dataset, createdAt]
+      properties:
+        id:
+          type: string
+        dataset:
+          type: string
+        createdAt:
+          type: string
+          format: date-time

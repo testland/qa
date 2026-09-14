@@ -1,0 +1,8 @@
+incident,service,event,timestamp_utc,actor,note
+INC-2088,api-edge,triggered,2026-07-23T09:41:12Z,monitor:edge-5xx,edge 5xx rate above 20% sustained 60s
+INC-2088,api-edge,acknowledged,2026-07-23T09:46:03Z,k.novak,
+INC-2088,api-edge,priority_set,2026-07-23T09:52:19Z,k.novak,SEV-2
+INC-2088,api-edge,resolved,2026-07-23T10:32:40Z,k.novak,edge healthy - 5xx back to baseline
+# Export generated 2026-09-12 from PagerDuty. Incident events are immutable.
+# This export is complete: no other events were ever recorded against INC-2088.
+# No notes, no status updates, and no responder other than k.novak.

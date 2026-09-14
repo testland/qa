@@ -1,0 +1,25 @@
+Ticket comments export - tickets in the same filter, comments only.
+
+PLT-4410  2026-07-21 10:14  d.whitfield
+  cache_refill_test.go added. Reproduces the stampede at 200 concurrent misses.
+  Marked t.Skip for now - it cannot pass until the single-flight guard from
+  PLT-4411 lands. Merged in #6612.
+
+PLT-4411  2026-07-30 16:02  r.kaur
+  Closing this. The refill rework is a larger piece than we scoped and the team
+  is committed to the checkout migration through August. Resolution set to
+  Won't Do so it stops sitting on the board. We can revisit if it bites us.
+
+PLT-4455  2026-07-12 09:05  d.whitfield
+  Filed from the INC-2104 review. No owner yet.
+
+PLT-4531  2026-08-06 11:48  s.iyer
+  Retry budget shipped in #6774. Verified against the replayed fan-out from
+  2026-07-28.
+
+PLT-4602  2026-09-30 17:20  m.lin
+  Still blocked on the staging pricing fixture. Not started in earnest.
+
+SRE-993   2026-09-26 09:40  a.brody
+  Runbook published and linked from the PagerDuty service for
+  email-transactional. Dry-run completed with t.okafor on 2026-09-25.

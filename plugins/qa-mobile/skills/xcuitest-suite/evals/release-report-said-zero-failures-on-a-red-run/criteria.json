@@ -1,0 +1,41 @@
+{
+  "context": "A release page that reported a number nobody could have derived from the run, and a colleague offering a fix that leaves the reporting on the same footing. Predicted baseline failure: the agent accepts the framing that this is a pattern-matching bug, adopts or improves Rob's suggestion, and delivers a script that still decides pass or fail by reading console text - which would have reported the right number this time and will keep the step green next time, because the pattern is not what made the job succeed. Two independent defects produced the zero, and both are visible in the script. First, xcodebuild is piped into tee, so the status the shell sees is tee's, not xcodebuild's; set -e cannot save a pipeline whose last command succeeded, and the raw tail ends in ** TEST FAILED ** while the step exited clean. Second, the tee writes build/test.log and the grep counts build/tests.log, a file that does not exist - stderr is discarded and the count falls back to zero, so the page would have printed 0 failures for any run whatsoever. The durable fix is not a better regex: the run must be asked to record its own results with a result-bundle path and the counts read out of that bundle, with the real exit status propagated. Two further predicted misses: nothing in the workflow survives a failed run, because the build directory is deleted before the upload step names it, so Nadine had nothing to look at two days later; and Kwame is likely to be handed the --legacy flag his own error message suggests, pinning the pipeline to a deprecated command rather than the current test-results form of the tool.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Results read from the run record, not console text",
+      "max_score": 30,
+      "description": "The rewritten scripts/verify-release.sh asks xcodebuild for a result bundle and derives the pass / fail counts on the release page from that bundle. MUST NOT decide the outcome or the failure count by grepping, counting or pattern-matching xcodebuild's console output - a tighter pattern is the same defect with better aim - and any delivered script that still does scores zero for this criterion. Writing a bundle but continuing to count from the log scores at most half."
+    },
+    {
+      "name": "Real exit status reaches the step",
+      "max_score": 22,
+      "description": "A run with failing tests now fails the script and the job: the pipe that hid xcodebuild's status is gone, or the status is captured and propagated explicitly, and the script exits non-zero. Leaving an unguarded `xcodebuild ... | tee` as the invocation scores zero. So does a script that reports the failures accurately but still exits zero when tests failed, which is the property that let 7.3 ship."
+    },
+    {
+      "name": "Both causes of the zero named",
+      "max_score": 16,
+      "description": "docs/release-7.3-postmortem.md identifies both defects: the swallowed exit status through the pipe, and the count taken from build/tests.log when the output was written to build/test.log, which makes zero the answer for every run. Naming only one scores at most half. Attributing the zero to the grep pattern - the explanation Rob's suggestion rests on - scores zero, and the document must give an explicit verdict on that suggestion rather than adopting it silently."
+    },
+    {
+      "name": "MUST NOT lose the evidence for a failed run",
+      "max_score": 14,
+      "description": "MUST NOT delete the build directory before the artifacts are uploaded, and MUST NOT leave the upload conditional on the job succeeding - the result bundle with its per-test detail and screenshots is exactly what Nadine needed on 2026-09-07. The delivered workflow must upload the bundle whatever the outcome and must not tidy it away first. A workflow where a failed run still leaves nothing behind scores zero here."
+    },
+    {
+      "name": "Kwame unblocked on the current tool form",
+      "max_score": 12,
+      "description": "The structured extraction uses the tool's current test-results form rather than the deprecated plain get invocation. Shipping `--legacy` as the answer scores at most half - it is what the error message offers and it pins the pipeline to a command the toolchain says is going away. Leaving the failing command in place, or inventing a subcommand, scores zero."
+    },
+    {
+      "name": "Test file untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify TidewaterUITests/SignInUITests.swift. Both of its tests passed on the 7.3 run, neither appears in the incident, and the request explicitly excludes them. Any edit to that file scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The rewritten script, the edited workflow and docs/release-7.3-postmortem.md are all delivered, and the release page still carries the version, the simulator it ran on and a failure count. A missing deliverable scores zero for this item."
+    }
+  ]
+}

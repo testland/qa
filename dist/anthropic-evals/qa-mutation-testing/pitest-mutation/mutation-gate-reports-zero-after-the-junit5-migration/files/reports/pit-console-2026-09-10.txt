@@ -1,0 +1,28 @@
+[INFO] --- pitest:1.17.0:mutationCoverage (default-cli) @ billing-core ---
+[INFO] Found 1 test classes on classpath scan
+[INFO] Sending 0 tests to minion
+================================================================================
+- Statistics
+================================================================================
+>> Line Coverage (for mutated classes only): 0/402 (0%)
+>> Generated 1103 mutations Killed 0 (0%)
+>> Mutations with no coverage 1103. Test strength 0%
+>> Ran 0 tests (0.00 tests per mutation)
+
+================================================================================
+- Mutators
+================================================================================
+> org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator
+>> Generated 77 Killed 0 (0%)
+> org.pitest.mutationtest.engine.gregor.mutators.ReturnValsMutator
+>> Generated 331 Killed 0 (0%)
+> org.pitest.mutationtest.engine.gregor.mutators.MathMutator
+>> Generated 168 Killed 0 (0%)
+> org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator
+>> Generated 186 Killed 0 (0%)
+> org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator
+>> Generated 341 Killed 0 (0%)
+
+[ERROR] Failed to execute goal org.pitest:pitest-maven:1.17.0:mutationCoverage
+[ERROR]   (default-cli) on project billing-core: Mutation score of 0 is below
+[ERROR]   the threshold of 70

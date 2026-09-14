@@ -1,0 +1,79 @@
+{
+  "url": "https://staging.northwind.example/checkout",
+  "timestamp": "2026-09-12T01:30:11.004Z",
+  "testEngine": { "name": "axe-core", "version": "4.10.2" },
+  "toolOptions": { "reporter": "v1", "runOnly": { "type": "tag", "values": ["wcag2a", "wcag2aa"] } },
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": ["cat.color", "wcag2aa", "wcag143"],
+      "description": "Ensures the contrast between foreground and background colours meets WCAG 2 AA thresholds",
+      "nodes": [
+        { "target": ["main > form#order > button.primary"], "html": "<button class=\"primary\">Place order</button>", "failureSummary": "Contrast 3.1:1, expected 4.5:1" },
+        { "target": ["footer li:nth-child(1) > a.footer-link"], "html": "<a class=\"footer-link\" href=\"/help\">Help</a>", "failureSummary": "Contrast 2.8:1, expected 4.5:1" }
+      ]
+    },
+    {
+      "id": "label",
+      "impact": "critical",
+      "tags": ["cat.forms", "wcag2a", "wcag412", "wcag131"],
+      "description": "Ensures every form element has a label",
+      "nodes": [
+        { "target": ["#email"], "html": "<input id=\"email\" type=\"email\">", "failureSummary": "Form element has no label" }
+      ]
+    },
+    {
+      "id": "image-alt",
+      "impact": "critical",
+      "tags": ["cat.text-alternatives", "wcag2a", "wcag111"],
+      "description": "Ensures img elements have alternate text",
+      "nodes": [
+        { "target": ["main > img.hero"], "html": "<img class=\"hero\" src=\"/hero.png\">", "failureSummary": "Element has no alt attribute" }
+      ]
+    },
+    {
+      "id": "link-name",
+      "impact": "serious",
+      "tags": ["cat.name-role-value", "wcag2a", "wcag412", "wcag244"],
+      "description": "Ensures links have discernible text",
+      "nodes": [
+        { "target": ["header nav > a.icon-cart"], "html": "<a class=\"icon-cart\" href=\"/cart\"></a>", "failureSummary": "Element has no inner text" }
+      ]
+    }
+  ],
+  "incomplete": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": ["cat.color", "wcag2aa", "wcag143"],
+      "nodes": [
+        { "target": ["footer li:nth-child(3) > a.footer-link"], "html": "<a class=\"footer-link\" href=\"/privacy\">Privacy</a>", "failureSummary": "Element background could not be determined due to a background image" },
+        { "target": ["span.badge"], "html": "<span class=\"badge\">New</span>", "failureSummary": "Element background could not be determined due to a background image" }
+      ]
+    }
+  ],
+  "passes": [
+    { "id": "html-has-lang", "nodes": [{ "target": ["html"] }] },
+    { "id": "document-title", "nodes": [{ "target": ["html"] }] },
+    { "id": "button-name", "nodes": [{ "target": ["button.primary"] }, { "target": ["button.apply-coupon"] }] },
+    { "id": "list", "nodes": [{ "target": ["ul.summary"] }] },
+    { "id": "aria-roles", "nodes": [{ "target": ["div.tablist"] }] },
+    { "id": "td-headers-attr", "nodes": [{ "target": ["table.lines"] }] },
+    { "id": "valid-lang", "nodes": [{ "target": ["html"] }] },
+    { "id": "meta-viewport", "nodes": [{ "target": ["meta"] }] },
+    { "id": "duplicate-id-aria", "nodes": [{ "target": ["body"] }] },
+    { "id": "aria-allowed-attr", "nodes": [{ "target": ["div.tablist"] }] },
+    { "id": "aria-required-attr", "nodes": [{ "target": ["div.tablist"] }] },
+    { "id": "aria-hidden-body", "nodes": [{ "target": ["body"] }] },
+    { "id": "form-field-multiple-labels", "nodes": [{ "target": ["#postcode"] }] },
+    { "id": "input-button-name", "nodes": [{ "target": ["input.go"] }] },
+    { "id": "scrollable-region-focusable", "nodes": [{ "target": ["div.lines-scroll"] }] },
+    { "id": "bypass", "nodes": [{ "target": ["a.skip"] }] }
+  ],
+  "inapplicable": [
+    { "id": "video-caption" },
+    { "id": "frame-title" },
+    { "id": "area-alt" }
+  ]
+}

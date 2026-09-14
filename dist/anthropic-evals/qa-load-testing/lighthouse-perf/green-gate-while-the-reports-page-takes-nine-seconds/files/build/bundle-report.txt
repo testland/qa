@@ -1,0 +1,15 @@
+$ npm run build -- --report
+
+dist/assets/vendor-Ba91c2.js      2,412.88 kB  gzip: 780.41 kB
+dist/assets/reports-D71f0a.js     1,341.02 kB  gzip: 412.77 kB
+dist/assets/dashboard-C08b1c.js     302.10 kB  gzip:  96.44 kB
+dist/assets/index-A5d3e8.js         118.44 kB  gzip:  38.02 kB
+dist/assets/exports-E22c91.js        94.70 kB  gzip:  29.61 kB
+dist/assets/index-Ff10ab.css         64.31 kB  gzip:  11.90 kB
+
+Warning: some chunks are larger than 500 kB after minification.
+
+$ git log --oneline -- package.json | head -3
+8f21ac4  chore: add charting + date-picker deps (2026-04-09)
+1d0e73b  chore: bump build tooling (2026-03-02)
+a44bb90  chore: initial deps (2025-11-18)

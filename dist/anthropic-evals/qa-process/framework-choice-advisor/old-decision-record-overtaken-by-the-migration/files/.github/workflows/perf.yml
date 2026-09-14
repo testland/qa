@@ -1,0 +1,18 @@
+name: perf-nightly
+on:
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  checkout-profile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run the checkout load plan
+        run: >
+          docker run --rm -v "$PWD/perf:/perf" justb4/jmeter:5.5
+          -n -t /perf/checkout.jmx -l /perf/results.jtl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jtl
+          path: perf/results.jtl

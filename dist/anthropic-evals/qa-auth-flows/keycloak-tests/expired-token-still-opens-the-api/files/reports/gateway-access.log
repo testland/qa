@@ -1,0 +1,15 @@
+# egress + ingress, request id 7f13c2, 2026-09-11 (Thursday)
+# columns: time, direction, method, path, status, response bytes, peer
+
+14:02:41.118  out  POST  /realms/corp/protocol/openid-connect/token/introspect  200    16  sso.corp.internal
+14:02:41.122  in   GET   /orders                                                200  4113  orders-api
+
+# The replayed bearer decodes to:
+#   iss  https://sso.corp.internal/realms/corp
+#   sub  9f2a1c04-8e33-4f61-bb0e-5d7c2a119e40
+#   azp  corp-portal
+#   iat  2026-09-09T16:26:02Z
+#   exp  2026-09-09T16:31:02Z
+#
+# @mreid: the proxy does not keep response bodies, only sizes. 16 bytes is not a
+# token and not a set of claims. Whatever the server said, it was short.

@@ -1,0 +1,25 @@
+# staging deploy 2026-09-09T14:31Z — protocol logging enabled before rollback
+
+14:31:02 app  starting, NODE_ENV=staging
+14:31:02 app  smtp target relay.mailprovider.example:587
+14:31:04 app  [smtp] C: EHLO harbour-staging
+14:31:04 app  [smtp] S: 250-relay.mailprovider.example Hello
+14:31:04 app  [smtp] S: 250-STARTTLS
+14:31:04 app  [smtp] S: 250-AUTH PLAIN LOGIN
+14:31:04 app  [smtp] S: 250 OK
+14:31:04 app  [smtp] C: STARTTLS
+14:31:04 app  [smtp] S: 220 Ready to start TLS
+14:31:05 app  [smtp] C: EHLO harbour-staging
+14:31:05 app  [smtp] S: 250-AUTH PLAIN LOGIN
+14:31:05 app  [smtp] S: 250 OK
+14:31:05 app  [smtp] C: MAIL FROM:<security@example.com>
+14:31:05 app  [smtp] S: 530 5.7.0 Authentication Required
+14:31:05 app  [smtp] C: QUIT
+14:31:05 app  ERROR sendPasswordReset failed for u1: 530 5.7.0 Authentication Required
+14:31:41 deploy  health check failed 3/3, rolling back to build 2891
+
+# staging env, as rendered by the deploy (secret values redacted)
+SMTP_HOST=relay.mailprovider.example
+SMTP_PORT=587
+SMTP_USER=harbour-staging
+SMTP_PASS=***redacted***

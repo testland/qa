@@ -1,0 +1,19 @@
+# Helm values — production release ledger-prod-41, applied 2026-08-30.
+replicaCount: 6
+
+image:
+  repository: ghcr.io/hollowpoint/ledger
+  tag: "9.4.2"
+
+env:
+  NODE_ENV: production
+  LEDGER_REGION: eu-west-1
+
+integrations:
+  acme:
+    baseUrl: https://api.acme-billing.example.com/v2
+    # Injected into the pod as ACME_TOKEN. Rotated manually; last rotation
+    # 2025-02-14 by p.novak.
+    token: "acme_live_2f8d41b09ce74a7f9db35c1e"
+  stripe:
+    secretRef: ledger-stripe-secret

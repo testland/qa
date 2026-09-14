@@ -1,0 +1,39 @@
+--- ubuntu-latest, desktop-e2e run 63, 2026-09-11 ---
+
+  Run Start a virtual display
+    Xvfb :99 -screen 0 1280x1024x24 &
+
+  Run Show display state
+    DISPLAY=:99
+    name of display:    :99
+    version number:     11.0
+
+  Run Run desktop suite (Linux)
+    Running 42 tests using 1 worker
+
+      1) [desktop] > launch.spec.ts:5:1 > app window opens
+
+        Error: electron.launch: Process failed to launch!
+        [3311:0911/094402.118460:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
+        Trace/breakpoint trap (core dumped)
+
+      2) [desktop] > workspace.spec.ts:5:1 > recent list keeps five entries
+
+        Error: electron.launch: Process failed to launch!
+        [3402:0911/094404.221781:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
+        Trace/breakpoint trap (core dumped)
+
+    42 failed, 0 passed (18.7s)
+
+--- macos-latest, desktop-e2e run 63, 2026-09-11 ---
+  Running 42 tests using 1 worker
+    42 passed (34m 08s)
+
+--- windows-latest, desktop-e2e run 63, 2026-09-11 ---
+  Running 42 tests using 1 worker
+    42 passed (31m 52s)
+
+--- macos-latest, desktop-e2e run 63, first lines of the app's own stdout ---
+  Ledgerline 4.7.2 starting
+  userData: /Ledgerline
+  no preferences file found, writing defaults

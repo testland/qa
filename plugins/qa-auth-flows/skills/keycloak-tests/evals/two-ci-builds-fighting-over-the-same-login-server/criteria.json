@@ -1,0 +1,46 @@
+{
+  "context": "The merge gate runs against one shared identity server that concurrent builds and a person doing manual QA both write to. Predicted baseline failure: the agent adopts one or both of the first two suggestions, because both are named in the prompt, both are cheap, one already has a branch ready, and both make the red go away. Neither is a fix; they make a shared mutable dependency survivable rather than removing it, and the failure table is the evidence - runs 4502 and 4519 failed with nothing else of that job in flight, and the users that broke them, mchen-manual-test and rotation-test-01, are names this suite never creates. No amount of serialising or per-run naming covers a human on the same box. The agent has to read that out of the table itself; nothing in the report says it. The second predicted miss is the version question, planted as a reasonable request from a teammate and backed by a real regression the old gate missed: following the shared server's rolling upgrades means a release nobody on the team chose can turn the gate red, or green, between two runs of the same commit, so the answer should decline it, pin an explicit tag, and say how the version gets moved forward deliberately. The third is that even agents which do stand up their own server tend to keep building the seeded state through admin REST calls in a fixture rather than importing a checked-in realm file, which leaves the same create-then-count fragility in place and gives the count assertion no fixed baseline - and where a realm file is added, the current distribution imports it only when the server is started with the realm-import argument, so a file that is merely mounted changes nothing. The fourth is residue: leaving KC_URL readable as a base address, or leaving the fixture demanding admin credentials from the environment, so the suite either still points at staging when one variable is set or errors on collection when the workflow stops supplying them.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The files under tests/auth are edited, .github/workflows/auth-integration.yml is edited, and docs/auth-suite-decision.md exists. Scores zero if the workflow is left untouched."
+    },
+    {
+      "name": "MUST NOT keep the merge gate pointed at a server the run does not own",
+      "max_score": 30,
+      "description": "Every test under tests/auth runs against an identity server the test run starts and owns for itself, so two builds cannot see each other's data and a person on another box cannot affect the result. Scores zero if any code path still resolves to sso-staging.corp.internal, if KC_URL survives as a usable base address - including as an override with a container-derived default, which leaves the gate one environment variable away from staging - or if the workflow still passes a staging URL in. Scores at most half if only one of the two test modules is moved over while the other keeps talking to the shared instance."
+    },
+    {
+      "name": "Seeded state imported from a checked-in realm file",
+      "max_score": 24,
+      "description": "The realm, its svc-reports client with its service account and secret, and the seeded users alice and bob arrive from a realm JSON file committed to the repository and imported when the server starts, so every run begins from a known state and the count assertion has a fixed baseline. Scores zero if that state is still built at run time by a sequence of admin REST calls in a fixture, which reproduces the create-then-count fragility on a new server. Scores at most half if a realm file is added but the server is started without the argument that performs the import, since mounting the file into the import directory does not on its own import it. The one user the provisioning test creates on purpose stays created by that test."
+    },
+    {
+      "name": "Serialising and name-randomising rejected as the fix",
+      "max_score": 20,
+      "description": "docs/auth-suite-decision.md says why neither of the first two suggestions is the fix, and grounds it in the failure table: runs 4502 and 4519 failed with no other run of the job in flight, on usernames the suite never creates, which neither a concurrency group nor per-run names can prevent. Scores zero if the delivered change's mechanism for correctness is that only one job runs at a time, or if per-run random usernames plus teardown deletion is presented as the remedy. Scores at most half if both are declined but the answer never cites the two failures that had nothing else running. Randomised data kept as a belt-and-braces extra on top of an isolated server is not penalised, provided the isolation is what the answer relies on."
+    },
+    {
+      "name": "The rolling-version request declined and a tag pinned",
+      "max_score": 18,
+      "description": "The server image is pinned to an explicit version tag, and the request to track whatever the platform team upgrade to is declined in writing, on the grounds that an upgrade nobody on the team chose would change the merge gate's result between two runs of the same commit and make a red build unreproducible. Scores zero if the container is started on latest, on a floating tag, or with no tag at all. Scores at most half if a tag is pinned but the question is not answered, or if it is answered without offering any deliberate route to a newer version, since the regression the March gate missed is a real cost of pinning and forever."
+    },
+    {
+      "name": "Admin access comes from the started server",
+      "max_score": 12,
+      "description": "The admin credentials the fixture uses come from the server the run starts - its own configured admin account - rather than from required environment variables. Scores zero if os.environ[\"KC_ADMIN_USER\"] or os.environ[\"KC_ADMIN_PASSWORD\"] survive as a hard requirement, because the suite then errors during collection as soon as the workflow stops supplying them, and it also leaves the third suggestion unhonoured: the team's repository secrets should no longer be able to create users on the platform team's box."
+    },
+    {
+      "name": "Workflow reflects the new shape",
+      "max_score": 8,
+      "description": "The job no longer injects KC_URL, KC_ADMIN_USER or KC_ADMIN_PASSWORD, the dependency the new fixture needs is declared, and the answer notes that the runner needs a Docker daemon, which ubuntu-latest already provides, and that no separately declared service container is required. Scores zero if the workflow still hands the suite staging credentials."
+    },
+    {
+      "name": "Assertions preserved",
+      "max_score": 6,
+      "description": "Both supplied tests still assert what they asserted - one user found by exact username, and the realm containing exactly the seeded set - rather than being loosened to a membership or non-empty check to survive shared state. Weakening either assertion scores zero here."
+    }
+  ]
+}

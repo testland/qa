@@ -1,0 +1,21 @@
+From: dev@example.com
+Subject: [PATCH] nightly: run the suite in parallel so it fits the cap
+
+Tested locally on a 10-golden slice, wall clock dropped roughly 8x. Should take
+us comfortably under the cap on the full corpus.
+
+--- a/.github/workflows/nightly-llm-eval.yml
++++ b/.github/workflows/nightly-llm-eval.yml
+@@
+       - name: Quality suite
+         env:
+           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+-        run: python -m pytest tests/llm -q
++        run: python -m pytest tests/llm -q -n auto
+
+--- a/requirements.txt
++++ b/requirements.txt
+@@
+ deepeval==3.2.6
+ pytest==8.3.3
++pytest-xdist==3.6.1

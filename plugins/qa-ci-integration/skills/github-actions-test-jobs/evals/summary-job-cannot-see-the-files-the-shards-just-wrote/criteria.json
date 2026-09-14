@@ -1,0 +1,51 @@
+{
+  "context": "A handoff where the obvious pieces are already in the file and the remaining defect is in how the download action lays files out. Predicted baseline failure: the agent sees uploads with distinct names, a checkout in the summary job and a successful download reporting four artifacts, concludes the wiring is sound, and attacks the wrong thing - or accepts Jules's revert, which is the specific move the current action version forbids, since artifact names must be unique in a run and three of the four shard uploads would then fail outright. The mechanism the agent is predicted to miss is that a download with no name given extracts each artifact into its own subdirectory beneath the given path, so the shards' XML lands at test-results/junit-1/junit.xml and the script, which reads only the top level of the directory it is handed, finds no .xml at all, prints '0 tests, 0 failures' and exits zero - a green summary over a run it never read. Flattening that is necessary and is not sufficient: all four shards write a file called junit.xml, so an answer that merges them into one directory without making the per-shard filenames distinct leaves one file where four should be and a summary that reports a quarter of the run. Jules's second suggestion is the compounding trap - continue-on-error on the upload converts a shard whose results never arrived into a silent absence. The last predicted miss is run 4620: a job with a needs: dependency is skipped when what it needs fails, and the shard upload is skipped after a failing test step, so the summary is missing on exactly the runs it exists for and fixing the layout does nothing about either.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT collapse the four uploads onto one artifact name",
+      "max_score": 26,
+      "description": "Jules's revert MUST NOT be implemented: the four shards must keep distinct artifact names. Pointing them at a single shared name scores zero for this criterion regardless of the rest, because artifact names must be unique within a run at the action version in use and the second, third and fourth uploads fail on the conflict - three shards' results lost, with the summary reporting whichever one arrived first as though it were the run. Full marks need the refusal plus the reason recorded in docs/ci-shard-summary.md, not merely leaving the names as they are. Rejecting it in the YAML while saying nothing about it in the document scores at most half; the requester asked for it explicitly and will otherwise re-raise it."
+    },
+    {
+      "name": "Downloaded results land where the script reads",
+      "max_score": 22,
+      "description": "The summary job's download is changed so the shard XML files end up directly in the directory handed to the script - by merging the downloaded artifacts into one directory, with or without a name pattern, or by downloading each artifact by name into that one directory. Leaving the download at its default, which gives each artifact its own subdirectory and leaves the top level empty, scores zero: run 4612 repeats exactly and the summary keeps reporting a run it never read."
+    },
+    {
+      "name": "Four shards' results do not overwrite each other",
+      "max_score": 18,
+      "description": "The per-shard result files must be distinguishable once they are in one directory - the shard index in the JUnit filename the reporter writes, or an equivalent arrangement. Four files all called junit.xml arriving in a single directory scores zero, because three of them are lost and the summary line reports about a quarter of the suite while looking entirely healthy. Making the artifact names distinct but leaving the filename inside each one identical does not satisfy this."
+    },
+    {
+      "name": "MUST NOT let a shard's results go missing quietly",
+      "max_score": 16,
+      "description": "The shard upload step MUST NOT be given continue-on-error, which is Jules's second suggestion and turns a shard whose results never arrived into a silent absence the summary cannot distinguish from a shard that passed; that scores zero here. The upload also needs an explicit always-run condition so that a shard whose tests failed uploads its JUnit at all - run 4620 shows junit-1 and junit-3 missing from the artifact list for exactly that reason. Adding the condition but also adding continue-on-error still scores zero."
+    },
+    {
+      "name": "The summary appears on failing runs",
+      "max_score": 14,
+      "description": "The summary job carries an explicit always-run condition alongside its needs: dependency, so it is not skipped when a shard fails. Leaving run 4620's behaviour in place scores zero. Full marks also require that the summary job's own result still reflects a red run rather than reporting success over failing shards."
+    },
+    {
+      "name": "The explanation is right",
+      "max_score": 10,
+      "description": "docs/ci-shard-summary.md says why a green run summarised as zero: the downloaded artifacts were in per-artifact subdirectories and the script reads only the top level of the directory it is given. A document that repeats the requester's or Jules's theory - that the uploads were racing, or that something wiped the directory - scores zero even if the YAML happens to be right."
+    },
+    {
+      "name": "MUST NOT edit the shared script",
+      "max_score": 8,
+      "description": "scripts/summarize-junit.mjs MUST NOT be modified, including making it walk subdirectories, since two other workflows call it and the prompt puts it out of scope. Editing it scores zero here even though it would make the symptom go away."
+    },
+    {
+      "name": "MUST NOT undo the sharding",
+      "max_score": 6,
+      "description": "The four-shard matrix stays. Collapsing it back into one job so the results and the summary share a workspace scores zero: it solves the handoff by giving back the 28-minute suite the split was done to escape."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "A rewritten .github/workflows/test.yml and docs/ci-shard-summary.md both exist, and the document addresses both of Jules's suggestions separately rather than as one."
+    }
+  ]
+}

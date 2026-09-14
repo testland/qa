@@ -1,0 +1,20 @@
+14:02:09 (2914) INFO ConfigReader Using stryker.conf.json
+14:02:11 (2914) INFO InputFileResolver Found 412 of 1,180 file(s) to be mutated.
+14:02:14 (2914) INFO Instrumenter Instrumented 412 source file(s) with 1,412 mutant(s)
+14:02:14 (2914) INFO ConcurrencyTokenProvider Creating 16 test runner process(es).
+14:02:57 (2914) INFO DryRunExecutor Starting initial test run. This may take a while.
+14:03:40 (2914) INFO DryRunExecutor Initial test run succeeded. Ran 1,240 tests in 43 seconds (net 41 seconds, overhead 2 seconds).
+14:03:40 (2914) INFO MutationTestExecutor 1,412 mutant(s) generated, 0 excluded, 1,412 to be tested.
+Mutation testing  [====================] 100% (elapsed: 32m, remaining: 0s) 1,412/1,412 Mutants tested (871 killed, 498 survived, 43 timed out)
+14:36:21 (2914) INFO MutationTestExecutor Done in 34 minutes 12 seconds.
+
+Ran 1,412 mutants. 1,240.00 tests per mutant on average.
+--------------|---------|----------|-----------|------------|----------|
+File          | % score | # killed | # timeout | # survived | # no cov |
+--------------|---------|----------|-----------|------------|----------|
+All files     |   64.73 |      871 |        43 |        498 |        0 |
+--------------|---------|----------|-----------|------------|----------|
+
+Peak memory on the runner: 7.6 GB of 7 GB available; the job swapped for most of
+the middle half hour. 43 of the timeouts are in `src/checkout/` and did not time
+out on the same code when Priya ran the tool on her laptop.

@@ -1,0 +1,43 @@
+name: llm-nightly
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  pull_request:
+    paths:
+      - 'prompts/**'
+      - 'eval/**'
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the current baseline
+        uses: actions/download-artifact@v4
+        with:
+          name: llm-baseline
+          path: results/
+
+      - name: Run the suite
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node scripts/run-eval.mjs --out results/tonight.json
+
+      - name: Gate
+        run: node scripts/gate.mjs results/baseline.json results/tonight.json
+
+      - name: Promote tonight's run to baseline
+        if: always()
+        run: cp results/tonight.json results/baseline.json
+
+      - name: Publish baseline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-baseline
+          path: results/baseline.json
+          overwrite: true
+          retention-days: 30

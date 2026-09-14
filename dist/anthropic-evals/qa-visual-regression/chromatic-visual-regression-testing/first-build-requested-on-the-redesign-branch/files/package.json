@@ -1,0 +1,15 @@
+{
+  "name": "harbor-app",
+  "version": "6.0.3",
+  "private": true,
+  "scripts": {
+    "build-storybook": "storybook build",
+    "test": "node --test test/"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "8.3.5",
+    "chromatic": "11.10.2",
+    "storybook": "8.3.5",
+    "vite": "5.4.8"
+  }
+}

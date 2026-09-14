@@ -1,0 +1,15 @@
+[ERROR] PaymentTest.paysWithAValidCard -- Time elapsed: 1.204 s <<< ERROR!
+org.openqa.selenium.SessionNotCreatedException:
+Could not start a new session. Response code 500.
+Message: session not created: This version of ChromeDriver only supports Chrome version 120
+Current browser version is 141.0.7390.65 with binary path C:\Program Files\Google\Chrome\Application\chrome.exe
+Host info: host: 'BUILD-AGENT-07', ip: '10.4.2.17'
+Build info: version: '4.27.0', revision: 'b307b0d2b3'
+System info: os.name: 'Windows 11', os.arch: 'amd64', java.version: '21.0.5'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+
+        at org.openqa.selenium.remote.RemoteWebDriver.<init>(RemoteWebDriver.java:184)
+        at com.shop.pages.BasePage.startBrowser(BasePage.java:24)
+
+Agents on Chrome 141: 07, 08, 09, 10, 11, 12  -> failing
+Agents pinned to Chrome 120 by group policy: 01, 02, 03, 04, 05  -> passing

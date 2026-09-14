@@ -1,0 +1,41 @@
+{
+  "context": "Five tokens that all name real roles, so nothing looks obviously fake, and an external auditor whose third finding invites exactly the wrong repair. Predicted baseline failure: the agent fixes the Account control by giving the popup a menu role and every row a menu-item role, because Farrow's note says the screen reader 'reports the menu as containing no items' and supplying the missing items is the reading the note pushes. The three rows are anchors to /profile, /billing and /logout - destinations, not commands - and menu-item semantics override the link role, take those destinations out of the user's list of links, and promise arrow-key menu behaviour the library does not implement. The defect is on the trigger, which carries a menu role itself on a button that opens a list, and the correct shape is the disclosure the component already almost is: a plain button publishing its open state and the element it controls, over a list that stays a list of links. The counter is the second predicted miss: the token names a real role and the pinned test is green, so nothing looks wrong, but the value is rendered on a div with no tabindex and no key handling, so the audit's 'Tab goes straight from Decrease to Increase' is the whole widget being unreachable - and the native numeric input covers the case outright. The collapsible is the determinate one: a pressed state describes a toggle button, not a region that opens and closes. The restraint cases are the two Farrow could not verify, and they split. The toggle is correct as shipped and must be left alone, because an on/off control of this kind is the one place in the list where no native element carries the meaning. The hint is a real finding for a reason the automated pass could not have given: the role is right, but nothing associates the bubble with the Save button and the render never unhides it, so it is announced to nobody. An agent that confirms both unverified findings scores the same as one that dismisses both.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite green",
+      "max_score": 4,
+      "description": "tokens/roles.json and src/render.js are edited, docs/role-map.md has a row per component covering what it announces today, what it should announce and whether a plain HTML element would cover the case, and npm test passes. A role map missing the native-element column scores at most half. No edit to the token file scores zero."
+    },
+    {
+      "name": "MUST NOT rebuild the Account control as a menu",
+      "max_score": 30,
+      "description": "MUST NOT put a menu, menubar, menuitem, menuitemradio or menuitemcheckbox role anywhere in renderMenuTrigger or in the menu-trigger token, including on the popup list or its three rows. Any of those scores zero for this criterion regardless of what else was corrected. Full marks require the opposite repair: the menu role comes off the trigger, the trigger keeps its native button semantics while publishing its open/closed state and the element it controls, the three rows stay anchors, and docs/role-map.md says why - they navigate to other pages, so menu-item semantics would replace the link role the user depends on and promise menu keyboard behaviour this component does not have. Taking the role off the trigger but moving it onto the list scores zero; leaving the trigger's role alone scores at most half."
+    },
+    {
+      "name": "Counter made operable, or replaced by the native control",
+      "max_score": 22,
+      "description": "Full marks for either resolution: the value becomes a native numeric input, with the token updated to match and docs/role-map.md naming it as the element that covers the case; OR the existing role is kept and the control is made to work - focusable, with Up/Down and Home/End handling exported from src/render.js and covered by a test, and the minimum and maximum published alongside the current value. Leaving the field unreachable scores zero, and so does changing only the role name. Adding the minimum and maximum, or a tabindex, without the key handling that makes the value changeable scores at most half."
+    },
+    {
+      "name": "MUST NOT change the toggle",
+      "max_score": 16,
+      "description": "MUST NOT alter the toggle token or renderToggle. Farrow's fourth item is a false positive and the verdict in docs/role-map.md must say so. Changing the role, the state attribute, or the element scores zero. Recording it as correct with no reason, or with a reason that does not turn on there being no native element that carries this meaning - unlike every other row in the map, where one does - scores at most half."
+    },
+    {
+      "name": "Collapsible publishes opened and closed, not pressed",
+      "max_score": 14,
+      "description": "The collapsible token stops publishing a pressed state and publishes the expanded state instead, and the value tracks whether the region is open. Leaving the pressed state in place scores zero. Publishing the expanded state but keeping the redundant role on an element that is already a button scores at most half, and docs/role-map.md is expected to name the native element pair that covers this pattern outright."
+    },
+    {
+      "name": "Hint confirmed for the right reason",
+      "max_score": 14,
+      "description": "Farrow's fifth item is confirmed as real, and the verdict identifies the cause the automated pass could not have: the bubble's role is correct but nothing on the Save trigger points at it as its description, and renderHint hard-codes the bubble hidden so it is never shown at all. Full marks also require the conditions the repaired behaviour has to meet - shown on hover or on keyboard focus, dismissable without moving the pointer or focus, and able to be hovered into. Dismissing the item as a false positive scores zero. Confirming it on the strength of Farrow's flag alone, or by changing the role, scores at most half."
+    },
+    {
+      "name": "Pinned assertions rewritten rather than removed",
+      "max_score": 8,
+      "description": "Every assertion in test/render.test.js that your changes invalidate is rewritten to pin the corrected output, and the assertions covering components you decided not to change are left exactly as they are. Deleting a pinned assertion or a test to get the suite green scores zero, and so does weakening one into a check that would pass against either the old or the new output."
+    }
+  ]
+}

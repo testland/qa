@@ -1,0 +1,15 @@
+{
+  "repo": "studio-web",
+  "window": "2026-06-14 to 2026-09-12",
+  "commits_classified": 188,
+  "generated": "2026-09-12",
+  "regenerate_cost": "~35 minutes; do not run by hand",
+  "distribution": {
+    "ui-heavy": { "commits": 128, "pct_commits": 68, "pct_files": 71 },
+    "pure-logic": { "commits": 32, "pct_commits": 17, "pct_files": 15 },
+    "service-layer": { "commits": 21, "pct_commits": 11, "pct_files": 10 },
+    "data-heavy": { "commits": 7, "pct_commits": 4, "pct_files": 4 }
+  },
+  "mixed_commits": 9,
+  "not_decided_here": "target layer ratios, effort hours and test selection are downstream decisions"
+}

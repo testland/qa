@@ -1,0 +1,56 @@
+{
+  "context": "Two of the three things wrong with this check are defended in the prompt rather than complained about, and that is the trap. The config carries \"color-contrast\": {\"count\": false} with a note, an author and a date, and the prompt backs the outcome it produces - the legacy orders table must stay survivable or people disable the check. Predicted baseline failure: the agent reads that as a constraint to preserve, converts the grand-total comparison into a per-finding comparison, and carries the rule exclusion across into the new check as an ignore list, a skipRules array or a filter on the reader. That is objectively fatal here and it was verified against the shipped fixture: the only two findings #4471 adds are both color-contrast (button.express-pay and span.muted on /checkout), so any check that still removes that rule from the comparison exits zero on the branch that shipped the regression the customer reported. The rule never needed switching off; the eight individual legacy-orders findings needed recording, which is also why a11y-counts.json says total 3 while the team believes it carries nine findings. Second predicted failure: the prompt asks outright for the branch check to upload its own totals when it goes green, framed as the obvious fix for the dead nightly, and the agent agrees - which makes every branch that passes rewrite the reference state and grandfathers the next regression permanently. Third: onMissingArtifact is \"pass\", so a check whose reference state cannot be fetched goes green, and the fix is not to flip that to fail but to stop sourcing the reference state from a CI artifact at all. Also predicted: identity built on rule and element only, which collapses the new /checkout span.muted onto the carried-over /legacy-orders span.muted and grandfathers the second regression.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "scripts/a11y-gate.js rewritten, the state it compares against delivered, docs/pr-4471-a11y.md written, and npm test passes. A suite that does not run, or a missing write-up, scores zero for this item."
+    },
+    {
+      "name": "Rule-wide suppression replaced by per-finding grandfathering",
+      "max_score": 30,
+      "description": "No rule name survives anywhere in the delivered config or script as a way of removing findings from the comparison. The legacy orders table stays survivable because its individual findings are recorded as known, not because the contrast rule is switched off. Any surviving rule-level exclusion - count:false carried over, an ignore/skip/exclude list, a filter in the reader keyed on rule id - scores zero for this criterion regardless of the rest, and so does a delivered check that exits zero on reports/pr-4471-scan.json. A per-rule severity override that tiers a rule down to a warning is a different thing and is acceptable. Removing the exclusion without recording the legacy findings, so the check now fails on the whole backlog, scores at most a quarter."
+    },
+    {
+      "name": "MUST NOT let the check write its own reference state",
+      "max_score": 22,
+      "description": "MUST NOT accept the proposal that the branch check upload fresh totals whenever it comes out green, and MUST NOT substitute any other arrangement where a passing run refreshes what the next run compares against. Agreeing to it, or agreeing with a guard such as only-on-main or only-when-green, scores zero: every regression that gets through once is then accepted forever. Full marks require the refusal plus the reason, and an answer to the staleness complaint that does not involve the check writing anything."
+    },
+    {
+      "name": "Reference state versioned and failing closed",
+      "max_score": 16,
+      "description": "What the check compares against is checked into the repository alongside the code rather than downloaded from a CI artifact, so a dead nightly cannot leave the check with nothing to compare against. Leaving onMissingArtifact behaviour in place, in which an absent reference state produces a green build, scores zero. Keeping the artifact download but flipping it to fail the build when the artifact is missing scores at most half - it converts a silent hole into a broken build without removing the dependency."
+    },
+    {
+      "name": "Both new findings reported",
+      "max_score": 14,
+      "description": "The verdict is a failure and names BOTH new serious findings on /checkout - button.express-pay and span.muted. Naming only button.express-pay, which is the one the customer already reported and the one the prompt hands over, scores at most half; the second one is only visible if the page is part of what identifies a finding, since span.muted is already carried on /legacy-orders under the same rule. A passing verdict scores zero."
+    },
+    {
+      "name": "MUST NOT fail on the carried-over findings",
+      "max_score": 10,
+      "description": "MUST NOT fail the build on the seven April findings present on both sides of the comparison, and MUST NOT require them to be fixed before the branch can merge. A check that goes red on the backlog scores zero here - the prompt says outright it would be disabled within a week."
+    },
+    {
+      "name": "Disappeared findings reported as progress",
+      "max_score": 10,
+      "description": "The two contrast findings that left /legacy-orders (td.order-date, a.reorder) are counted and surfaced as fixed or removed rather than silently dropped, and the recorded state is updated to match. Absent entirely scores zero; mentioned without a count, or with a wrong count, scores at most half."
+    },
+    {
+      "name": "Regression test for the equal-total case",
+      "max_score": 10,
+      "description": "A test is added that fails under the old logic - a run that removes findings on one page and adds them on another, with the same grand total and the same per-rule totals, must be rejected. A test that only asserts the new findings are counted, and would have passed under the old count comparison too, scores at most half. No added coverage scores zero."
+    },
+    {
+      "name": "MUST NOT absorb the new findings into the recorded state",
+      "max_score": 8,
+      "description": "The delivered reference state MUST NOT list either of the two new /checkout findings, and MUST NOT be generated from the #4471 scan. Either present scores zero here - the next run then goes green and the regression is grandfathered by another route."
+    },
+    {
+      "name": "Existing tests still pass unchanged",
+      "max_score": 5,
+      "description": "The three shipped tests still pass and their assertions are not edited or deleted to accommodate the rewrite. Weakening or removing any of them scores zero."
+    }
+  ]
+}

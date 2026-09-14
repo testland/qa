@@ -1,0 +1,8 @@
+# Product surface status - updated 2026-09-02
+
+| Surface               | Status                                                           |
+|-----------------------|------------------------------------------------------------------|
+| Seasonal promo banner | Removed in release 2026-04-30. All code paths deleted.            |
+| Referral invite beta  | Ended 2026-03-15. The entry point renders for no account.         |
+| Print packing slip    | Replaced by the PDF label service 2026-06-11; the old page 302s.  |
+| Everything else       | Shipping.                                                         |

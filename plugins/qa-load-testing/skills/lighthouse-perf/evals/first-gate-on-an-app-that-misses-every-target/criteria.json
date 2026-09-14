@@ -1,0 +1,51 @@
+{
+  "context": "Both the PM and the person asking want one rule, the published good numbers, hard failure on every route, and neither of them raises a single objection to it. Predicted baseline failure: the agent writes exactly that, because 2500 / 200 / 0.1 is the number it already knows and two stakeholders have asked for it in writing. The quiet half of the damage is on the two CDN-served marketing routes, which measure 1180 ms and 1310 ms loading and 74 ms and 88 ms interactivity: the published defaults there are a gate that cannot fail, those routes would have to get roughly twice as slow before anyone heard about it, and the PM has pre-approved waving them through because 'they will just pass, which is fine'. A cached, statically-served route should be held tighter than the generic default, not left on it, and nothing in the prompt hints at that. The loud half is the three logged-in routes that miss every target by a wide margin for work two other teams own and that is not happening this quarter; hard-failing them lands a gate red on its first run. The mirror-image failure is just as available to an agent that notices the problem: pinning each threshold to the measured value, which leaves no room for ordinary run-to-run variance. The third trap is the new share route, where the only measurement in existence is a single run taken on a runner that was simultaneously building an Android app and there is no field data at all — the correct move is to refuse to derive a blocking number from it and say what has to be measured first, while the CSV invites reading 3110 / 168 / 0.22 as a baseline like any other row.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "An assertion configuration added to .lighthouserc.js that still loads as CommonJS, plus docs/vitals-budget.md covering all six routes in the CSV. A doc that names fewer than six routes, or a config edit with no doc, scores zero for this item."
+    },
+    {
+      "name": "Cached marketing routes held tighter than the published defaults",
+      "max_score": 28,
+      "description": "/ and /pricing get loading and interactivity thresholds meaningfully stricter than the generic 2500 ms / 200 ms — in the region of 1500 ms and 100 ms — with the reason given: they are statically generated and CDN-served and measure 1180 ms / 74 ms and 1310 ms / 88 ms today, so the published defaults are a threshold those routes could never trip. Leaving either route on the generic defaults scores zero for this criterion. Tightening only one of the two, or only the loading number and not the interactivity number, scores at most half."
+    },
+    {
+      "name": "MUST NOT hard-fail the routes that miss the targets",
+      "max_score": 24,
+      "description": "MUST NOT set an error-level assertion at the published good values (2500 ms / 200 ms / 0.1) on /app/dashboard, /app/reports or /app/invoices/new. Doing so on any of those three scores zero for this criterion however well the rest reads — complying with the instruction as written is the specific failure being measured. Full marks require those routes landing at a level that reports rather than blocks, at numbers derived from where they are today, plus an explicit statement that a gate red on its first run for work this team cannot do this quarter is a gate that gets switched off rather than fixed."
+    },
+    {
+      "name": "MUST NOT gate the new route off a single contended measurement",
+      "max_score": 16,
+      "description": "/share/:token has one lab run, taken while the runner was building something else, and no field data at all. MUST NOT give it a blocking threshold derived from that number — doing so scores zero for this criterion. Full marks require it held at a reporting level or explicitly kept out of the gate for now, plus what has to exist before it is gated: a repeated measurement (a median of at least three runs on a quiet runner) and field data once the analytics SDK is on the route. Leaving it out of both the config and the doc without saying why scores at most half."
+    },
+    {
+      "name": "Per-route assertions rather than one rule",
+      "max_score": 14,
+      "description": "The config expresses per-route thresholds through URL-pattern-matched assertion groups rather than a single flat assertions block applied to all six URLs. One shared block for every route scores zero here — it is the specific thing that was asked for and the reason the marketing pages and the dashboard cannot both be gated correctly."
+    },
+    {
+      "name": "Headroom above the measured value",
+      "max_score": 10,
+      "description": "Thresholds for the currently-failing routes sit above today's measurement with real margin — roughly ten percent over, so ~4500 ms rather than 4120 ms for the dashboard loading number — not pinned to the observed value. A threshold set equal to the measured value scores zero: it has no room for normal variance and turns the gate into a noise generator. Numbers with no stated relationship to the baseline data score at most half."
+    },
+    {
+      "name": "Stated path from reporting to blocking",
+      "max_score": 8,
+      "description": "The doc states the condition under which a reporting-level assertion becomes a blocking one — a defined period of staying green, e.g. two weeks — and the condition for tightening a number later. A doc that lists thresholds with no ramp and no review trigger scores zero: it answers the 1 October deadline without answering the objection that warnings never get fixed."
+    },
+    {
+      "name": "Form route treated as a form route",
+      "max_score": 8,
+      "description": "/app/invoices/new is identified as the route where interactivity and layout stability matter most — continuous typing, a live preview pane that moves the layout — and the doc names the destination values it should eventually hold (on the order of 100 ms interactivity and 0.05 layout shift) even though it lands looser today at 0.14. Treating it as an ordinary dynamic route on default thresholds scores at most half."
+    },
+    {
+      "name": "Existing suite untouched and still passing",
+      "max_score": 4,
+      "description": "Nothing under test/ is modified and node --test still passes against the edited config, which must still export a ci.collect block with a non-empty array of parseable URLs. Editing a test to accommodate a config change scores zero."
+    }
+  ]
+}

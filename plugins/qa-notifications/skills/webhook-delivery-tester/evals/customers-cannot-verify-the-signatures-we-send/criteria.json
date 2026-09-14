@@ -1,0 +1,46 @@
+{
+  "context": "The sender emits a hex HMAC taken over the JSON body alone, keyed on the literal secret string, under bespoke X-Webhook-* headers. Predicted baseline failure: the agent treats 'make it standard' as 'make it like the payment processor I have seen most often' and reinvents a scheme — most commonly a t=<ts>,v1=<hex> style header signed over {timestamp}.{payload}, or a sha256=<hex> body-only digest — either of which leaves the three customers exactly where they are, because their libraries are not asking for a different flavour of ad-hoc, they are asking for the canonical construction. The four facts that decide it are all specific and all easy to get almost right: the signed string binds the message id AND the timestamp AND the raw payload joined by dots, the key is the base64-decoded secret rather than the whsec_-prefixed string as typed, the signature travels base64 with a v1, version prefix (SUP-4430 says the library 'expects to find a versioned signature'), and the header names are the lower-case canonical trio. The second predicted failure is in the customer-facing snippet: a Node verification function written under time pressure compares the computed digest to the header with === or a plain string equality, shipping a timing oracle to eleven customers at once, and the third is treating tests as satisfied by re-running the signer against itself, which is the exact reason this shipped green for two years.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "src/ signing changed, tests added under test/, docs/webhook-signatures.md and docs/rollout.md both written. Missing either document scores at most half; producing no test file scores zero for this item."
+    },
+    {
+      "name": "Signed string binds id, timestamp and payload, keyed on the decoded secret",
+      "max_score": 30,
+      "description": "The HMAC-SHA256 input is the message id, the timestamp and the exact payload bytes joined by dots in that order, and the key is the base64-decoded secret with any whsec_ prefix stripped rather than the secret as typed. Signing the payload alone, or {timestamp}.{payload} without the id, scores zero for this criterion regardless of how well the rest is presented. Getting the dotted three-part string right but continuing to key the HMAC on the raw prefixed string scores at most half."
+    },
+    {
+      "name": "Canonical headers and versioned base64 signature",
+      "max_score": 20,
+      "description": "Deliveries carry the lower-case canonical trio (id, timestamp and signature headers named per the spec rather than X-Webhook-*), the signature is base64 rather than hex, and it is emitted with the v1, version prefix so a versioned parser can read it. Keeping hex, or omitting the version prefix, scores at most half; keeping the bespoke X-Webhook-* names as the only headers sent scores zero."
+    },
+    {
+      "name": "MUST NOT publish a plain-equality signature comparison",
+      "max_score": 22,
+      "description": "The verification function in docs/webhook-signatures.md, and any comparison added in src/ or test/, MUST NOT compare the computed signature to the header value with === or == or String equality. It must use a constant-time comparison (crypto.timingSafeEqual over equal-length buffers, guarded for length). Shipping === in the customer-facing snippet scores zero for this criterion even if the rest of the snippet is correct, because that snippet is about to be pasted into eleven handlers."
+    },
+    {
+      "name": "New tests fail against the current signer and do not check the signer against itself",
+      "max_score": 14,
+      "description": "At least one new test asserts the signature against an independently constructed expected value — a literal, or an HMAC computed inline in the test from the documented inputs — rather than by calling the same exported signing function it is exercising. A test suite that only re-invokes signPayload and compares it to signPayload, or that only asserts header presence and lengths, scores zero: that is the pattern that kept this green for two years."
+    },
+    {
+      "name": "Brightsail kept working through the overlap",
+      "max_score": 12,
+      "description": "docs/rollout.md states that deliveries carry both the legacy X-Webhook-Signature and the new canonical headers until Brightsail's November window, and names an end date for the legacy header. Simply cutting over and telling Brightsail to hurry scores zero; proposing an overlap with no stated end date for the legacy header scores at most half."
+    },
+    {
+      "name": "IP allowlisting refused as a substitute for verification",
+      "max_score": 14,
+      "description": "Ticket SUP-4462 is answered by refusing: an IP allowlist is not a substitute for verifying the signature on a signed delivery, because it authenticates the network path and not the payload, so anything that reaches the endpoint from an allowed address is accepted unverified. Agreeing to support IP allowlisting instead of verification scores zero. Answering only 'here are the ranges, but we recommend the signature too' without saying the check remains required scores at most half."
+    },
+    {
+      "name": "Retry and dead-letter behaviour left alone",
+      "max_score": 6,
+      "description": "MUST NOT change the DELAYS schedule or the retry / permanent-failure branches in src/dispatch.js, or the tests in test/dispatch.test.js. None of it was part of the request and the schedule carries a note not to touch it. Any edit to the delay table or the status-code branching scores zero here."
+    }
+  ]
+}

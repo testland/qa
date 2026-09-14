@@ -1,0 +1,46 @@
+{
+  "consumer": { "name": "checkout-web" },
+  "provider": { "name": "catalog-api" },
+  "interactions": [
+    {
+      "description": "a request for the products in category 12",
+      "providerStates": [{ "name": "category 12 has products" }],
+      "request": {
+        "method": "GET",
+        "path": "/categories/12/products",
+        "headers": { "Accept": "application/json" }
+      },
+      "response": {
+        "status": 200,
+        "headers": { "Content-Type": "application/json" },
+        "body": [
+          {
+            "id": 101,
+            "name": "Aeron Chair",
+            "priceCents": 129900,
+            "availability": "in_stock",
+            "sku": "AER-B2-GR"
+          }
+        ]
+      }
+    },
+    {
+      "description": "a request for the products in category 99",
+      "providerStates": [{ "name": "category 99 is empty" }],
+      "request": {
+        "method": "GET",
+        "path": "/categories/99/products",
+        "headers": { "Accept": "application/json" }
+      },
+      "response": {
+        "status": 200,
+        "headers": { "Content-Type": "application/json" },
+        "body": []
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": { "version": "3.0.0" },
+    "pactJs": { "version": "13.1.4" }
+  }
+}

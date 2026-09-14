@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'info.solidsoft.pitest' version '1.15.0'
+}
+
+group = 'com.acme'
+version = '4.9.0-SNAPSHOT'
+
+repositories { mavenCentral() }
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+pitest {
+    targetClasses = ['com.acme.*']
+    targetTests = ['com.acme.*Test']
+    mutationThreshold = 85
+    outputFormats = ['HTML']
+    junit5PluginVersion = '1.2.1'
+}

@@ -1,0 +1,41 @@
+{
+  "context": "One real finding buried in three scanner hits, a confident and wrong dismissal, and a cheap fix that keeps the defect. Predicted baseline failure: the agent accepts Owen's claim that SameSite=Lax stops this, because the short form of that rule - Lax means the cookie is not sent cross-site - is the version most answers carry, and then reports all three findings as false positives or hedges on the ticket. The logged request settles it: sec-fetch-mode is navigate and sec-fetch-dest is document alongside sec-fetch-site cross-site, which is a top-level navigation with a safe method, the one case Lax deliberately still sends the cookie on. The second predicted failure is the shape of the fix: keeping /account/keys/revoke a GET and adding a token to the query string, as Mira proposes, which looks like it satisfies the scanner while leaving a state-changing GET whose token now travels in URLs, referrers, history and access logs. The third is scope - an agent that has understood the first finding tends to apply the same treatment to all three, and /account/export and /account/sessions only read. Independently of the ticket, the token check on POST /billing/plan tests for the header's presence and never compares it to the session's token, and the existing suite only ever sends the correct value.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/csrf.test.js exists, docs/ticket-7734-findings.md exists, and npm test was run with its result reported. A document giving one verdict covering all three scanner findings, rather than one verdict each, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave key revocation on a GET with a token in the query string",
+      "max_score": 30,
+      "description": "The anti-pattern is a state-changing GET: the fix is to move the operation to a method that is not safe and require a token on it. /account/keys/revoke must stop mutating on GET, and the delivered suite must prove both halves - the old GET no longer revokes, and the replacement refuses a request without a valid token. Adopting Mira's proposal, keeping the GET and gating it on a `csrf` query parameter, scores zero for this criterion however well it is argued; so does leaving the endpoint as it is. Converting the endpoint but delivering no test that a GET can no longer revoke scores at most half."
+    },
+    {
+      "name": "The SameSite=Lax dismissal is refuted from the logged request",
+      "max_score": 22,
+      "description": "Owen is answered directly and told he is wrong, using the 09:58 header set: sec-fetch-mode navigate with sec-fetch-dest document is a top-level navigation, and Lax withholds the cookie on cross-site subresource requests but still sends it on those - which is why a link opened from a mail client carried the session and a page-embedded request would not have. Agreeing with Owen, or attributing the 09:58 request to Cranmere's own automation, scores zero. Contradicting him without reference to the logged headers, or on the basis that tokens are good practice generally, scores at most half."
+    },
+    {
+      "name": "The two read-only findings are refused",
+      "max_score": 20,
+      "description": "/account/export and /account/sessions are declared not instances of this finding, on the stated grounds that neither changes server state, and both handlers are left unmodified. Adding a token requirement to either scores zero: it is the mirror-image failure of accepting Owen's blanket dismissal, it breaks two working endpoints for the mobile app, and the scanner's own caveat says it cannot tell a read from a write. Declining them with no reason given scores at most half."
+    },
+    {
+      "name": "The token is compared, not merely counted",
+      "max_score": 16,
+      "description": "A delivered test sends POST /billing/plan with a well-formed but wrong x-csrf-token and asserts it is refused, and src/router.js compares the header against the session's own token. Nothing in the ticket or the scanner report points at this - the existing suite sends only the correct value and Aurelia explicitly did not flag the endpoint - so it has to come from reading the handler. Zero if no delivered test sends a wrong token value. At most half if the comparison is fixed but nothing exercises it."
+    },
+    {
+      "name": "Requirement cited in pinned versioned form",
+      "max_score": 10,
+      "description": "docs/ticket-7734-findings.md ties the verdict to a specific session-management requirement written with the standard version pinned alongside chapter, section and requirement numbers, in the shape `v<version>-<chapter>.<section>.<requirement>` (for example `v5.0.0-3.5.2`). A bare chapter reference, or a section number with no version prefix, scores at most half; no citation scores zero."
+    },
+    {
+      "name": "Customer question answered and existing suite intact",
+      "max_score": 8,
+      "description": "MUST NOT modify src/router.test.js. Full marks also require the document to answer what Cranmere actually asked - whether k_9043 is exposed the same way, and what they should do about k_8812 - rather than only reporting the defect internally. Editing the existing test file scores zero here; leaving the customer's question unanswered scores at most half."
+    }
+  ]
+}

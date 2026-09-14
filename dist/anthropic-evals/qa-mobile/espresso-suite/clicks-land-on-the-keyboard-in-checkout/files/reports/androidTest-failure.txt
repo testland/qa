@@ -1,0 +1,54 @@
+### main, build 8812, 2026-09-11
+
+com.northwind.pay.CheckoutFlowTest > appliesPromoCode[Pixel_2_API_34] FAILED
+androidx.test.espresso.PerformException: Error performing 'single click - At Coordinates: 180, 1502 and precision: 16, 16' on view 'view.getId() is <2131231012/com.northwind.pay:id/apply_button>'.
+Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints:
+at least 90 percent of the view's area is displayed to the user.
+Target view: "AppCompatButton{id=2131231012, res-name=apply_button, visibility=VISIBLE, alpha=1.0, width=264, height=132, x=48.0, y=1436.0, text=Apply}"
+
+com.northwind.pay.CheckoutFlowTest > appliesPromoCode[Tab_S9U_API_34] FAILED
+androidx.test.espresso.PerformException: Error performing 'single click - At Coordinates: 180, 1502 and precision: 16, 16' on view 'view.getId() is <2131231012/com.northwind.pay:id/apply_button>'.
+Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints:
+at least 90 percent of the view's area is displayed to the user.
+Target view: "AppCompatButton{id=2131231012, res-name=apply_button, visibility=VISIBLE, alpha=1.0, width=264, height=132, x=48.0, y=1436.0, text=Apply}"
+
+com.northwind.pay.CheckoutFlowTest > placesOrderWithSavedCard[Pixel_2_API_34] FAILED
+androidx.test.espresso.PerformException: Error performing 'single click - At Coordinates: 540, 2604 and precision: 16, 16' on view 'view.getId() is <2131231188/com.northwind.pay:id/place_order_button>'.
+Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints:
+at least 90 percent of the view's area is displayed to the user.
+Target view: "AppCompatButton{id=2131231188, res-name=place_order_button, visibility=VISIBLE, alpha=1.0, width=1012, height=168, x=34.0, y=2520.0, text=Place order}"
+
+com.northwind.pay.CheckoutFlowTest > placesOrderWithSavedCard[Tab_S9U_API_34] PASSED
+com.northwind.pay.CheckoutFlowTest > showsEmptyCartMessage[Pixel_2_API_34] PASSED
+com.northwind.pay.CheckoutFlowTest > showsEmptyCartMessage[Tab_S9U_API_34] PASSED
+
+### branch ivan/checkout-waits, build 8819, 2026-09-12
+### diff: Thread.sleep(1500) before each failing perform, plus swipeUp() before
+### the place_order_button click. No other change.
+
+com.northwind.pay.CheckoutFlowTest > appliesPromoCode[Pixel_2_API_34] FAILED
+androidx.test.espresso.PerformException: Error performing 'single click - At Coordinates: 180, 1502 and precision: 16, 16' on view 'view.getId() is <2131231012/com.northwind.pay:id/apply_button>'.
+Caused by: java.lang.RuntimeException: Action will not be performed because the target view does not match one or more of the following constraints:
+at least 90 percent of the view's area is displayed to the user.
+
+com.northwind.pay.CheckoutFlowTest > appliesPromoCode[Tab_S9U_API_34] FAILED
+    (same constraint failure, same coordinates, same target view)
+
+com.northwind.pay.CheckoutFlowTest > placesOrderWithSavedCard[Pixel_2_API_34] FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: view.getId() is <2131231204/com.northwind.pay:id/order_confirmation>
+    View Hierarchy:
+    +>DecorView{id=-1, visibility=VISIBLE}
+    |
+    +->FrameLayout{id=-1}
+    |
+    +-->NestedScrollView{id=2131231099, res-name=checkout_scroll, visibility=VISIBLE, scrollY=966}
+    |
+    +-->View{id=2131231255, res-name=upsell_scrim, visibility=VISIBLE, alpha=0.0, clickable=true}
+    No exception was raised by the click on place_order_button on this run.
+    elapsed: 4.6s
+
+com.northwind.pay.CheckoutFlowTest > placesOrderWithSavedCard[Tab_S9U_API_34] PASSED
+com.northwind.pay.CheckoutFlowTest > showsEmptyCartMessage[Pixel_2_API_34] PASSED
+com.northwind.pay.CheckoutFlowTest > showsEmptyCartMessage[Tab_S9U_API_34] PASSED
+
+Wall clock, whole class, both configurations: main 4m02s, ivan/checkout-waits 11m18s.

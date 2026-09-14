@@ -1,0 +1,27 @@
+{
+  "run": 6641,
+  "date": "2026-09-04T09:22:11Z",
+  "snapshots": [
+    {
+      "name": "pricing-full.png",
+      "viewport": { "width": 1280, "height": 5000 },
+      "totalPixels": 6400000,
+      "diffPixels": 38912,
+      "diffBoundingBox": { "x": 432, "y": 610, "width": 416, "height": 980 }
+    },
+    {
+      "name": "plan-cards.png",
+      "viewport": { "width": 1280, "height": 900 },
+      "totalPixels": 1152000,
+      "diffPixels": 31044,
+      "diffBoundingBox": { "x": 432, "y": 42, "width": 416, "height": 812 }
+    },
+    {
+      "name": "usage-chart.png",
+      "viewport": { "width": 640, "height": 360 },
+      "totalPixels": 230400,
+      "diffPixels": 3112,
+      "diffBoundingBox": { "x": 12, "y": 40, "width": 601, "height": 280 }
+    }
+  ]
+}

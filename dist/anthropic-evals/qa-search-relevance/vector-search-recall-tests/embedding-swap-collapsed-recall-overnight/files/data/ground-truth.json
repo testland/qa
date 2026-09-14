@@ -1,0 +1,21 @@
+{
+  "k": 10,
+  "metric": "cosine",
+  "model": "minilm-l6-v1",
+  "generated": "2026-06-30",
+  "method": "exhaustive scan of the catalogue sample",
+  "top_k": {
+    "q-1": ["doc-037","doc-040","doc-014","doc-012","doc-031","doc-013","doc-002","doc-021","doc-026","doc-038"],
+    "q-2": ["doc-021","doc-012","doc-014","doc-016","doc-038","doc-010","doc-001","doc-003","doc-023","doc-039"],
+    "q-3": ["doc-018","doc-006","doc-031","doc-037","doc-024","doc-026","doc-040","doc-020","doc-035","doc-022"],
+    "q-4": ["doc-045","doc-046","doc-040","doc-033","doc-028","doc-022","doc-044","doc-041","doc-032","doc-048"],
+    "q-5": ["doc-027","doc-043","doc-025","doc-036","doc-047","doc-041","doc-034","doc-029","doc-030","doc-046"],
+    "q-6": ["doc-045","doc-046","doc-033","doc-041","doc-040","doc-028","doc-022","doc-044","doc-032","doc-048"],
+    "q-7": ["doc-066","doc-062","doc-071","doc-064","doc-072","doc-061","doc-081","doc-054","doc-056","doc-068"],
+    "q-8": ["doc-050","doc-055","doc-060","doc-059","doc-065","doc-069","doc-061","doc-068","doc-090","doc-064"],
+    "q-9": ["doc-055","doc-090","doc-058","doc-063","doc-061","doc-065","doc-068","doc-052","doc-069","doc-050"],
+    "q-10": ["doc-093","doc-088","doc-092","doc-091","doc-054","doc-081","doc-078","doc-049","doc-073","doc-096"],
+    "q-11": ["doc-074","doc-079","doc-080","doc-075","doc-091","doc-087","doc-073","doc-085","doc-076","doc-088"],
+    "q-12": ["doc-076","doc-073","doc-074","doc-077","doc-091","doc-088","doc-078","doc-086","doc-079","doc-075"]
+  }
+}

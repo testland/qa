@@ -1,0 +1,21 @@
+{
+  "site": [
+    {
+      "@name": "https://pr-1.atlas-review.dev",
+      "alerts": [
+        {
+          "pluginid": "10049",
+          "name": "Cookie No HttpOnly Flag",
+          "riskdesc": "Low (Medium)",
+          "instances": [{ "uri": "https://pr-1.atlas-review.dev/app" }]
+        },
+        {
+          "pluginid": "10063",
+          "name": "Permissions Policy Header Not Set",
+          "riskdesc": "Low (Medium)",
+          "instances": [{ "uri": "https://pr-1.atlas-review.dev/" }]
+        }
+      ]
+    }
+  ]
+}

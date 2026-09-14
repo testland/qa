@@ -1,0 +1,18 @@
+{
+  "datasetFile": "datasets/golden-v6.1.0.jsonl",
+  "providers": [
+    {
+      "id": "openai:chat:gpt-4.1",
+      "config": { "temperature": 0, "seed": 42 }
+    }
+  ],
+  "grader": {
+    "model": "gpt-4.1",
+    "assertionTypes": ["llm-rubric", "g-eval"],
+    "passScore": 0.75
+  },
+  "gate": {
+    "compareTo": "results/baseline-2026-08-30.json",
+    "minRetainedRatio": 0.95
+  }
+}

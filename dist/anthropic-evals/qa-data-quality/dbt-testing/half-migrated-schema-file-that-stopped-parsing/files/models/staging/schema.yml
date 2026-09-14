@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_subscriptions
+    description: One row per subscription from the billing source.
+    columns:
+      - name: subscription_id
+        tests:
+          - unique
+          - not_null
+
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['trialing', 'active', 'past_due', 'canceled']
+
+      - name: account_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_accounts')
+              field: account_id
+
+  - name: stg_accounts
+    columns:
+      - name: account_id
+        tests:
+          - unique
+          - not_null

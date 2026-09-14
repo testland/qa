@@ -1,0 +1,42 @@
+[
+  {
+    "id": "request-property-became-required",
+    "level": 3,
+    "operation": "POST",
+    "operationId": "issueCard",
+    "path": "/v1/cards",
+    "source": "spec/openapi.yaml",
+    "section": "paths",
+    "text": "the request property 'spendLimit' became required"
+  },
+  {
+    "id": "response-property-enum-value-removed",
+    "level": 3,
+    "operation": "GET",
+    "operationId": "getCard",
+    "path": "/v1/cards/{cardId}",
+    "source": "spec/openapi.yaml",
+    "section": "paths",
+    "text": "removed the enum value 'frozen' from the response property 'status' for the response status '200'"
+  },
+  {
+    "id": "optional-response-header-removed",
+    "level": 2,
+    "operation": "GET",
+    "operationId": "getCard",
+    "path": "/v1/cards/{cardId}",
+    "source": "spec/openapi.yaml",
+    "section": "paths",
+    "text": "the optional response header 'x-request-id' was removed for the response status '200'"
+  },
+  {
+    "id": "response-optional-property-added",
+    "level": 1,
+    "operation": "GET",
+    "operationId": "getCard",
+    "path": "/v1/cards/{cardId}",
+    "source": "spec/openapi.yaml",
+    "section": "paths",
+    "text": "added the optional property 'network' to the response with the '200' status"
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "context": "A suite that stayed green through an eleven-day production outage on the exact screen it covers, plus a colleague's branch that makes it greener. Predicted baseline failure: the agent treats this as a flakiness / timing problem, because that is what the prompt's framing offers — a shared CI box, a slow simulator, taps landing early — and it responds by adding waits everywhere, which changes nothing. Three of the six tests cannot fail for reasons that have nothing to do with speed, and each has a different mechanism. testPromoCodeApplies wraps its only assertion in `if promoField.waitForExistence(timeout: 3) { ... }`, so when the screen never renders the body is skipped and the test reports success having asserted nothing — that is what @dev-mackay's stub probe proves, and no amount of waiting fixes it; the wait must be asserted, not branched on. testCheckoutShowsNoValidationErrors asserts the ABSENCE of `field-error` with `.exists`, which returns immediately, and the view controller only unhides that label ~350ms later after async validation returns — so the assertion is evaluated before the error it is looking for could exist and passes vacuously; the fix is to wait for the screen's terminal state first and only then assert absence. testCartBadgeCountsItems asserts `.exists` on a badge the view controller keeps in the hierarchy at all times showing \"0\", so it passes for any count including zero; the assertion has to be on the label value. Two tests (testEmptyCartShowsPlaceholder, testGuestCheckoutRejectsBlankEmail) are already correct and are the control — an agent that rewrites everything uniformly damages them. Priya's branch must be refused: sleeps mask nothing here and are the wrong instrument regardless.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Conditional assertion body removed",
+      "max_score": 28,
+      "description": "In testPromoCodeApplies the `if promoField.waitForExistence(timeout: 3) { ... }` guard is gone and the wait itself is asserted, so a promo screen that never renders fails the test. Any surviving form that lets the body be skipped — the same `if`, a `guard ... else { return }`, an early `return` when the element is missing, an `XCTSkip` — scores zero for this criterion regardless of the rest. Full marks require the body to run unconditionally with the order-total assertion still in place. Merely lengthening the timeout while keeping the branch scores zero."
+    },
+    {
+      "name": "Vacuous absence check identified and fixed",
+      "max_score": 22,
+      "description": "testCheckoutShowsNoValidationErrors is recognised as passing before the thing it looks for could have appeared: `.exists` returns immediately and `field-error` is unhidden only after the ~350ms async validation named in the view controller. Full marks require both the diagnosis in the document and a rewrite that establishes the screen's terminal state — waiting for the payment step to be reached — before asserting the error is absent. A rewrite that fixes the code without naming why the old form could not fail scores at most half; an answer that explains it as CI slowness scores zero."
+    },
+    {
+      "name": "Existence asserted where a value was meant",
+      "max_score": 16,
+      "description": "testCartBadgeCountsItems asserts on the badge's label value (\"1\", or the expected count) rather than on `.exists`, and the document states that the view controller keeps `cart-badge` in the hierarchy permanently with text \"0\", so the old assertion passed for an empty cart. Changing the assertion without stating why the old one was unfailable scores at most half. Leaving `XCTAssertTrue(...exists)` as the only assertion scores zero."
+    },
+    {
+      "name": "MUST NOT wait by sleeping",
+      "max_score": 16,
+      "description": "The delivered FieldmarkUITests/CheckoutUITests.swift MUST NOT contain `Thread.sleep`, `sleep(`, `usleep`, or any fixed-duration pause, including the two already in the file (signIn and testOrderConfirmationShowsOrderId) — waits must be on the element's appearance with an explicit timeout. Any fixed sleep left in or added scores zero here. Full marks additionally require the document to refuse Priya's branch explicitly rather than leaving it unanswered."
+    },
+    {
+      "name": "Per-test verdict delivered",
+      "max_score": 14,
+      "description": "docs/why-the-suite-was-green.md covers all six tests individually and separates the ones that could not fail from the ones that could, giving a distinct mechanism for each unfailable test rather than one shared explanation. A document that lists a single cause for the whole class scores at most half. Naming fewer than three unfailable tests scores zero."
+    },
+    {
+      "name": "Correct tests left alone",
+      "max_score": 8,
+      "description": "MUST NOT weaken, shorten or restructure testEmptyCartShowsPlaceholder or testGuestCheckoutRejectsBlankEmail — both already assert an awaited element and its value, and neither appears in the incident. Dropping any assertion from either, or converting either to an existence-only check, scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The rewritten test file and docs/why-the-suite-was-green.md both exist, all six test methods are still present under their original names, and Fieldmark/Checkout/CheckoutViewController.swift is unmodified. Deleting or renaming a test, or editing the view controller, scores zero for this item."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "A coverage audit whose owner hands over a confident, plausible, wrong diagnosis. Predicted baseline failure: the agent accepts Tom's premise. The repo genuinely did migrate to pnpm, the lockfile genuinely is gone, `packageManager` genuinely says pnpm, and the three packages genuinely get nothing - so `package-ecosystem: \"pnpm\"` looks like the fix and looks confirmed by the evidence. There is no `pnpm` ecosystem, and none for `yarn` either; the npm ecosystem is the one that handles all three lockfile formats, so the identifier was never the problem. An unrecognised identifier is not ignored or partially applied - the file is rejected, and the two blocks that were working stop working too, which is a strictly worse position to sign a SOC 2 attestation from than the one the team is in now. The real causes are three, all in blocks that already exist and all invisible from the dashboard: the npm block reads only the root manifest, which in a workspace repo holds nothing but the dev dependencies that made up all 61 pull requests, so the per-package manifests need their own directory entries; the Actions block points at `/.github/workflows`, when the documented value for that ecosystem is `/` and Dependabot searches the workflows directory from there, which is why nine workflow files produced nothing in twelve months; and the `allow` filter on the pip block restricts that ecosystem to Django, silently dropping `requests`, `cryptography` and 40 others while the four Django pull requests it did produce made the block look alive. The second half of Tom's proposal is the anti-pattern in the other direction, and the auditor's quarterly requirement for the Terraform estate has a documented interval value that is not `monthly` and not an invented string.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT change the JavaScript blocks to a pnpm or yarn ecosystem",
+      "max_score": 28,
+      "description": "MUST NOT write `package-ecosystem: \"pnpm\"` (or `\"yarn\"`, or any other identifier outside the documented set) anywhere in the rewritten file. Doing so scores zero for this criterion regardless of what else the answer fixes - the identifier is not recognised, the file is rejected rather than partially applied, and the npm and pip blocks that were working stop working as well. Full marks keep `npm` as the identifier, tell Tom plainly that the npm ecosystem is what covers pnpm and yarn lockfiles so the migration changed nothing about which value belongs there, and name the actual cause of the package gap instead. Keeping `npm` by accident, without addressing Tom's diagnosis in the document as the output specification requires, scores at most half."
+    },
+    {
+      "name": "Workspace packages actually covered",
+      "max_score": 20,
+      "description": "The three per-package manifests under `/packages/` get npm coverage - a `directories` array or glob covering them, or one block each - and the document says why the existing block never did: it reads the root manifest, which carries only the dev dependencies that account for all 61 pull requests. Leaving a single npm block at `/` as the only npm coverage scores zero. Covering some but not all three, or adding them without naming the root-manifest cause in the matrix, scores at most half."
+    },
+    {
+      "name": "Actions block pointed at the repository root",
+      "max_score": 18,
+      "description": "The github-actions block's `directory` becomes `/`, which is the documented value for that ecosystem and the point from which the workflows directory is searched. Leaving `/.github/workflows`, or substituting another path such as `/.github` or `/.github/workflows/*`, scores zero - all of them reproduce the same twelve months of silence against nine workflow files, and the matrix row would be evidence of coverage that does not exist."
+    },
+    {
+      "name": "Narrow allow filter identified as the cause of the pip gap",
+      "max_score": 14,
+      "description": "The `allow: dependency-name: \"django*\"` entry is removed or widened so the other 42 dependencies of the ranker service are covered, and the matrix names it as the reason `requests` and `cryptography` have never been proposed. Leaving the filter in the rewritten file scores zero. Removing it without identifying it in the matrix as the cause scores at most half - the auditor's question is why, not what."
+    },
+    {
+      "name": "Quarterly cadence expressed with a documented interval",
+      "max_score": 10,
+      "description": "The Terraform block's schedule actually delivers the quarterly cadence the auditor asked for, using a value the schema accepts. Substituting `monthly` scores zero - it is three times the cadence a change-controlled estate was signed off for, and the matrix would then misstate it. An invented value such as `\"3-months\"` or `\"every-quarter\"` scores zero, since the file is rejected rather than partially applied. Leaving the Terraform block on the same weekly or daily cadence as everything else scores zero."
+    },
+    {
+      "name": "MUST NOT put every block on a daily schedule",
+      "max_score": 10,
+      "description": "MUST NOT adopt the second half of Tom's proposal. Setting `interval: \"daily\"` across the blocks scores zero for this criterion. Full marks refuse it with the reason that applies here: widening coverage from two manifests to eight multiplies the volume on its own, and a daily cadence on three npm packages carrying over a hundred runtime dependencies between them turns a coverage problem into a review-capacity problem. Some consolidation of the noisy root dev-dependency stream by grouping is expected alongside the widened coverage; no grouping anywhere scores at most half."
+    },
+    {
+      "name": "Unconfigured ecosystems added, and the matrix is readable as evidence",
+      "max_score": 12,
+      "description": "Blocks are added for `/infra/main.tf` and `/services/media/Dockerfile` using the documented ecosystem identifiers, and `docs/coverage-matrix.md` has a row per manifest naming the block that covers it and, for the previously uncovered ones, the specific cause rather than 'was not configured'. Adding neither block scores zero; adding one scores at most half. A matrix that reproduces the YAML without per-manifest reasoning scores at most half."
+    }
+  ]
+}

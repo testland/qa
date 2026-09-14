@@ -1,0 +1,8 @@
+{
+  "name": "fanout-client",
+  "version": "3.7.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

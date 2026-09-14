@@ -1,0 +1,41 @@
+{
+  "context": "A vendor review where the loudest reported problem is the component working correctly and the real blocker is invisible to a keyboard pass. Predicted baseline failure: the agent adopts Dan's first observation as the headline finding - thirty dates unreachable by Tab - because it is stated confidently, it sounds catastrophic, and a reviewer under deadline pressure defers to the person who actually pressed the keys. It is the component's one correct decision: a grid of dates takes a single stop in the page's tab sequence and movement inside it belongs to the arrow keys, which keys.js implements for arrows, Home, End, Enter and Space, and which tabIndexFor pins in the shipped test. Dan's second observation is the same mistake again: a sold-out date that still takes focus is deliberate, because a date the user cannot skip past silently is a date they never learn is sold out, and the disabled state is already published on it. Dan's third observation is the one that is real, and its cause is not where a keyboard pass would look: statusFor returns hidden for a nights count of zero, so the polite region is out of the accessibility tree at the moment it first gains text, which is exactly why only the first selection is silent and every later one announces. The second real blocker is in the markup and nobody reported it: role='presentation' on the calendar table makes the table's own rows and cells presentational, which leaves the gridcell-roled day divs with no row or grid ancestor at all, so a user arrowing across the month is told nothing about where they are in it and there is no grid left for the October heading to name. The restraint half is everything else the March incident makes expensive: the icon-only month buttons, their hidden SVGs, the pressed-state toggle, the plain help anchor and the labelled date fields are all correct.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Report delivered with a verdict up front",
+      "max_score": 4,
+      "description": "reports/daterange-aria-review.md exists, gives a go / no-go in its first two lines, and keeps the blocking findings separate from the things that are correct. A verdict buried after the findings scores at most half. No report scores zero. Editing any file under vendor/ scores zero for this item."
+    },
+    {
+      "name": "MUST NOT report the single tab stop on the calendar as a defect",
+      "max_score": 30,
+      "description": "MUST NOT list Dan's observation 1 as a blocking finding, and MUST NOT ask Kestrel to make every day cell tabbable or to remove the tabindex='-1' values. Doing either scores zero for this criterion however good the rest of the report is. Full marks require the report to return a verdict of 'already correct' on observation 1 and to say why in terms Dan and Kestrel can both check: a grid of dates is one stop in the page's tab sequence, movement inside it is the arrow keys' job, and keys.js already handles arrows, Home, End, Enter and Space, with the shipped tabIndexFor test pinning the one-stop behaviour. Hedging - listing it as non-blocking but 'worth Kestrel confirming', or recommending both models - scores at most half."
+    },
+    {
+      "name": "Calendar structure stripped from the date grid",
+      "max_score": 22,
+      "description": "The report flags role='presentation' on the calendar table as the second blocker and states what it costs: the table's own rows and cells are made presentational, so the day divs carrying a gridcell role are left with no row or grid ancestor, their role has no context to be valid in, and a user arrowing across the month is never told which row or column they landed on - nor is there any element left carrying a grid role for the October heading to name. Missing this finding entirely scores zero. Naming role='presentation' as wrong without saying what the removed structure cost the user, or without connecting it to the orphaned day cells, scores at most half."
+    },
+    {
+      "name": "First announcement lost because the live region is not there yet",
+      "max_score": 16,
+      "description": "The report identifies Dan's observation 3 as real and traces it to statusFor returning hidden when the nights count is zero: the polite region is outside the accessibility tree at the moment it first receives text, which is why only the first selection is silent and every subsequent change announces. The fix is that the region is rendered and unhidden from the start with empty text, and only its content changes. Missing the finding scores zero. Repeating Dan's symptom, or attributing it to the wrong politeness setting, to a missing role, or to a timing bug, scores at most half."
+    },
+    {
+      "name": "MUST NOT report the focusable sold-out date as a defect",
+      "max_score": 14,
+      "description": "MUST NOT list Dan's observation 2 as a blocking finding and MUST NOT ask Kestrel to remove the 16th from the arrow-key path or to use the native disabled behaviour on it. Doing either scores zero. Full marks require the verdict to be 'already correct' with the reason: the unavailable date already publishes its disabled state, and a date that cannot be reached at all is a date the user never learns is sold out, so keeping it navigable inside the grid is the correct choice."
+    },
+    {
+      "name": "MUST NOT report the correct parts as defects",
+      "max_score": 10,
+      "description": "MUST NOT list as findings: the aria-label on the icon-only Previous/Next month buttons, which carry no visible text; the aria-hidden and focusable='false' SVGs inside them; aria-pressed on the Flexible dates toggle; the plain anchor used for the help link; or the label-and-input pairs for check-in and check-out. Two or more of these appearing as defects scores zero; one scores at most half. Full marks require the report to state explicitly which parts were checked and found correct, as the request asked for."
+    },
+    {
+      "name": "Verdict rests on the findings that are real",
+      "max_score": 8,
+      "description": "The no-go for Thursday is justified by the calendar-structure finding and the lost first announcement, not by Dan's observations 1 and 2. A go verdict scores zero. A no-go whose stated reasons are the tab stop or the focusable sold-out date scores zero for this criterion, because the report would then be arguing for changes that make the component worse."
+    }
+  ]
+}

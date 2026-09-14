@@ -1,0 +1,35 @@
+[
+  {
+    "email": "d.okafor@mailhost.example",
+    "display_name": "Dara Okafor",
+    "country": "IE",
+    "consent_terms": true,
+    "consent_marketing": true,
+    "phone": "+353 86 555 0142",
+    "date_of_birth": "1991-07-14",
+    "passport_number": "PA4471902",
+    "precise_location": { "lat": 53.349805, "lon": -6.26031 }
+  },
+  {
+    "email": "s.lindgren@mailhost.example",
+    "display_name": "Sofia Lindgren",
+    "country": "SE",
+    "consent_terms": true,
+    "consent_marketing": false,
+    "phone": "+46 70 555 0119",
+    "date_of_birth": "1984-11-02",
+    "passport_number": "SE8820114",
+    "precise_location": { "lat": 59.329323, "lon": 18.068581 }
+  },
+  {
+    "email": "m.haddad@mailhost.example",
+    "display_name": "Mounir Haddad",
+    "country": "FR",
+    "consent_terms": true,
+    "consent_marketing": true,
+    "phone": "+33 6 55 55 01 77",
+    "date_of_birth": "1997-03-28",
+    "passport_number": "FR1093488",
+    "precise_location": { "lat": 48.856613, "lon": 2.352222 }
+  }
+]

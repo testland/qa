@@ -1,0 +1,41 @@
+{
+  "context": "Four items in one ticket, framed so that the two integrations look identical and the two operational items look like housekeeping. Predicted baseline failure: the agent says yes to all four and finishes Vikram's draft. Item 4 is the one that costs most and the one an agent under a deadline is most likely to wave through, because it removes a fortnight of platform work, removes credentials nobody wants to rotate, and its author is the only cooperative person in the ticket. Handing the provider a file from our repository to replay leaves no record of the outcome anywhere: nothing knows which of our versions their build checked, nothing can be asked whether the build they are about to deploy is compatible with the version of ours that is running, and their job silently follows whatever lands on our main rather than what we have deployed - so the arrangement buys a red PR and forecloses the deploy question entirely. Item 2 is the other refusal: this technique needs the other side to run the verification, and the ticket describes support email only, nine-day replies and no shared CI, so a contract published for that participant sits unverified forever and the deploy comparison is permanently red or has to be told to ignore it; a green run against a sandbox that trails production by a release proves nothing about what Shiplane deploys. Items 1 and 3 are the control - an agent that defends itself by refusing everything scores no better than one that grants everything.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/arch-742-response.md exists and gives a separate, explicit verdict on each of the four numbered items, and test/pricing.consumer.spec.js is written. One undifferentiated recommendation covering 'the integrations', or a review missing item 4, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT let the provider verify against a file in our repository",
+      "max_score": 26,
+      "description": "Item 4 is refused. MUST NOT accept an arrangement where the Pricing team's job fetches the expectation file from our repo, a raw URL, a submodule or an artifact instead of from the broker, and MUST NOT commit the expectation file for them to consume. Full marks require the consequences: no verification outcome is recorded against a version of ours, so nothing can later be asked whether a candidate build of theirs is compatible with the version of ours that is deployed; and their job would follow whatever is on our main at that moment rather than what we are running, so our own unreleased changes would fail their PRs. The answer must also deal with the practical objection - the token is what platform has already issued, so the fortnight Dan is avoiding does not apply. Accepting item 4, in any form, scores zero for this criterion. Refusing it as 'not the standard setup' with no account of what is lost scores at most half."
+    },
+    {
+      "name": "MUST NOT put the vendor under a published contract",
+      "max_score": 22,
+      "description": "MUST NOT finish, rename, wire into the test script, or keep test/shiplane.consumer.spec.js as part of the suite; MUST NOT register Shiplane as a participant in the broker; MUST NOT treat a run against sandbox.shiplane.com as provider verification. Any of these scores zero for this criterion. Full marks require the reason: this technique needs the provider to run the verification, Shiplane cannot be made to run anything, so the contract is never verified and the deploy comparison is permanently red or has to be configured to ignore that participant - plus the point that the sandbox trails production by a release, so even a green run there says nothing about what the vendor has deployed. Refusing on 'it is a third party' alone, with no reference to who has to run the verification, scores at most half."
+    },
+    {
+      "name": "A replacement for the vendor integration that would have caught INC-2264",
+      "max_score": 16,
+      "description": "The response proposes watching Shiplane's own published OpenAPI document - a scheduled fetch and diff against the last accepted copy, alerting or failing on a breaking change - and says why it needs nothing from the vendor, given they regenerate it on every release and their changelog arrived two days after the outage. Proposing only alerting on our own error rate, a synthetic checkout, or defensive parsing scores at most half: those detect the outage, not the change. Leaving item 2 with a refusal and no replacement scores zero."
+    },
+    {
+      "name": "The internal test is written and scoped to what we read",
+      "max_score": 20,
+      "description": "test/pricing.consumer.spec.js records a POST /v1/quotes interaction with a provider state drawn from the ones the Pricing team already declare, and asserts only the four fields src/quote.js reads - currency, subtotal_cents, discount_amount_cents, total_cents - matched on type rather than literal fixture values. Asserting fields nothing in src/quote.js touches (tax_cents, breakdown, quote_id, expires_at, pricing_engine_version, experiment_bucket, cache_hit) scores at most half, since each becomes a breakage the Pricing team has to answer for. Pinning exact literal values for the four scores at most half. Inventing a state name when three are documented scores at most half. Refusing item 1, or producing no test file, scores zero."
+    },
+    {
+      "name": "Second consumer endorsed",
+      "max_score": 10,
+      "description": "Item 3 is answered yes: mobile-bff publishes its own expectations under its own consumer name and pricing-service verifies against both. Telling the mobile team to call through us instead, or answering that a provider can only carry one consumer, scores zero - it is the mirror-image failure of granting the vendor request, and it hides a second set of expectations from the team whose releases are supposed to be checked against them."
+    },
+    {
+      "name": "Working code and tests left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify src/quote.js or test/quote.test.js. Both pass and neither was part of the request. Any change to either scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/run-results/v5.json",
+    "dbt_version": "1.9.2",
+    "generated_at": "2026-09-12T03:44:02.771Z"
+  },
+  "args": { "which": "build", "select": [] },
+  "elapsed_time": 611.884,
+  "results": [
+    {
+      "unique_id": "test.ops.not_null_fct_shipments_delivered_at.c41b02",
+      "status": "fail",
+      "failures": 14118,
+      "execution_time": 4.108,
+      "message": "Got 14118 results, configured to fail if != 0"
+    },
+    {
+      "unique_id": "model.ops.mart_delivery_sla",
+      "status": "skipped",
+      "failures": null,
+      "execution_time": 0.0,
+      "message": "SKIP"
+    },
+    {
+      "unique_id": "test.ops.unique_stg_web_sessions_session_id.9de117",
+      "status": "fail",
+      "failures": 1104,
+      "execution_time": 12.664,
+      "message": "Got 1104 results, configured to fail if != 0"
+    },
+    {
+      "unique_id": "model.ops.mart_web_traffic",
+      "status": "skipped",
+      "failures": null,
+      "execution_time": 0.0,
+      "message": "SKIP"
+    },
+    {
+      "unique_id": "test.ops.relationships_fct_orders_account_id__account_id__ref_dim_accounts_.7710aa",
+      "status": "fail",
+      "failures": 209,
+      "execution_time": 3.402,
+      "message": "Got 209 results, configured to fail if != 0"
+    },
+    {
+      "unique_id": "model.ops.mart_revenue_by_account",
+      "status": "skipped",
+      "failures": null,
+      "execution_time": 0.0,
+      "message": "SKIP"
+    },
+    {
+      "unique_id": "test.ops.not_null_fct_shipments_shipped_at.2ab900",
+      "status": "pass",
+      "failures": 0,
+      "execution_time": 3.771,
+      "message": null
+    },
+    {
+      "unique_id": "test.ops.unique_fct_orders_order_id.41bb7c",
+      "status": "pass",
+      "failures": 0,
+      "execution_time": 8.902,
+      "message": null
+    }
+  ]
+}

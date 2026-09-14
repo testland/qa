@@ -1,0 +1,46 @@
+{
+  "context": "The mapper looks up error.decline_code and nothing else. That field only exists on the card_declined family; an expired card and a wrong security code arrive as top-level codes expired_card and incorrect_cvc with no decline_code at all, so both fall through to the generic 'contact your bank' entry - the two support tickets. lost_card and fraudulent do have a decline_code but no table entry, so they also fall through to an entry marked retryable, which is how the dunning job came to retry a card the bank had flagged. The recorded bodies in fixtures/test-mode-declines.json show both shapes side by side. Predicted baseline failure: the agent writes the new cases from memory rather than from the recording, and invents error objects that carry the granular reason in code - {code: 'insufficient_funds'} or {code: 'lost_card'} - which the real API never sends for those declines. Tests built on invented inputs pass against a mapper keyed on the wrong field, so the agent either concludes the mapper is fine or 'fixes' it to read code alone, breaking the card_declined family that currently works, and production still shows one message for every decline. It is also predicted to write the plain truth into the customer-facing string for lost_card and fraudulent, telling whoever is holding the card that it has been flagged.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "test/declines.test.js added, src/declineAction.js changed, docs/decline-mapping.md written. Scores zero if the mapping document is missing."
+    },
+    {
+      "name": "Cases are built from the real error shapes",
+      "max_score": 30,
+      "description": "Every new case uses an error body matching what the payment API actually returns for that card: code card_declined plus a decline_code for generic_decline, insufficient_funds, lost_card and fraudulent, and a bare top-level code with no decline_code for expired_card and incorrect_cvc. Scores zero if any case puts a granular reason in code for a card_declined decline (for example {code: 'insufficient_funds'} or {code: 'lost_card'}), because such a case passes against a mapper that is wrong in production. Scores at most half if only declines carrying a decline_code are covered, leaving the expired-card and security-code tickets untested."
+    },
+    {
+      "name": "The mapper resolves both fields",
+      "max_score": 26,
+      "description": "declineAction selects on decline_code when one is present and falls back to the top-level code when it is not, so both shapes resolve. Scores zero if it still keys on decline_code alone, zero if it is rewritten to key on code alone (which collapses every card_declined decline back into one bucket), and zero if the fix is to have the caller synthesise a decline_code the API never sent, which the output specification rules out."
+    },
+    {
+      "name": "MUST NOT tell the customer the card was flagged",
+      "max_score": 18,
+      "description": "The customer-facing message for lost_card, stolen_card and fraudulent is the neutral generic decline wording. Scores zero if any customer-facing string says the card was reported lost or stolen, or that the payment was blocked as fraudulent - the person at the checkout may be the one who took the card, and the specific reason belongs in the internal record only."
+    },
+    {
+      "name": "Retry and risk flags corrected",
+      "max_score": 16,
+      "description": "lost_card and fraudulent come back non-retryable with the risk notification set, so the dunning job stops and somebody sees it. expired_card and incorrect_cvc are non-retryable too: retrying the same card unattended cannot succeed when the customer has to supply something new. Scores at most half if only the lost-card and fraud pair is fixed. Scores zero if the new mapping still lets the dunning job retry a bank-flagged card."
+    },
+    {
+      "name": "Card identifiers are named, not scattered",
+      "max_score": 8,
+      "description": "The card numbers or payment-method identifiers used by the cases are referenced through named constants or the recorded fixture rather than repeated as bare literals across the assertions, so a change to the set is a one-line change."
+    },
+    {
+      "name": "Mapping document is complete",
+      "max_score": 10,
+      "description": "docs/decline-mapping.md has a row per handled decline with the customer message, the retry decision and whether risk is notified. Scores zero if the retry column is missing, since that is the column that caused the chargeback."
+    },
+    {
+      "name": "Existing test untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit, skip or delete test/declineAction.test.js, and both of its cases still pass against the changed mapper. Scores zero if the file is modified or if its generic-decline expectations no longer hold."
+    }
+  ]
+}

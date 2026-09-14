@@ -1,0 +1,8 @@
+{
+  "name": "workspace-settings-header",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

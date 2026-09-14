@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent closes all four items, because product asked for all four and the fourth looks like the other three. B-4 is the refusal case — a free-hand signature is path-dependent input, where the value carried is the path the pointer traced rather than the endpoint it reached, and it is the named exemption from the requirement that all functionality be keyboard operable. Attempting to synthesise it (arrow-key drawing, a generated cursive font, a canvas walked with the arrow keys) produces a worse artifact and a legally different one, and the correct response argues the exemption while noting that the controls around the pad still have to be operable. The second predicted failure is to repeat the contractor's mistake at a smaller scale: the cards carry role=\"button\" and an aria-label but no tabindex and a DOM onclick, so they are not in the tab sequence at all — ARIA renames a control, it never makes one focusable or activatable — and an agent that adds tabindex=\"0\" to the existing div rather than emitting a real button has reproduced the thing that reopened the ticket. Third, B-1 is predicted to be answered with advice rather than code: the module already contains the whole move implementation behind onDragEnd, reachable only from a drag event, and the fix is a keyboard-invocable route to that same logic, not a new one. B-3 is determinate and the report names the symptom: activate handles Enter only, so the second tester, who pressed Space the way a native button responds to Space, got nothing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/board.js is edited, test/board.test.js gains cases, and docs/keyboard-remediation.md has a section for each of B-1..B-4. Covering fewer than four items scores at most half."
+    },
+    {
+      "name": "A card can be moved between columns from the keyboard",
+      "max_score": 30,
+      "description": "src/board.js gains a keyboard-invocable route that moves a card to another column and index — arrow keys plus a commit key on a grabbed card, or explicit move controls — and it reaches the existing move implementation rather than a second copy of the reordering logic, since the prompt says that logic is shared with the mobile client. The drag path must still work and the supplied drag tests must stay green. Describing the approach in docs/keyboard-remediation.md without adding it to the module scores zero for this criterion. Reimplementing the reorder arithmetic alongside the existing one scores at most half. Removing or disabling drag-and-drop to make room scores zero."
+    },
+    {
+      "name": "MUST NOT close B-2 with ARIA attributes on the div",
+      "max_score": 22,
+      "description": "MUST NOT leave the card as a div carrying role=\"button\" and aria-label as the remediation, and MUST NOT settle for adding tabindex=\"0\" to that div while the activation stays on a DOM onclick attribute. cardMarkup must emit a real button element for the card's open action. Delivering any variant that keeps the div-plus-role shape as the answer to B-2 scores zero for this criterion, since that is exactly what was shipped last sprint and did not change the report. Emitting a button but leaving the onclick attribute in the markup scores at most half."
+    },
+    {
+      "name": "B-4 refused as path-dependent input",
+      "max_score": 20,
+      "description": "docs/keyboard-remediation.md declines to make the signature stroke itself keyboard operable and gives the reason: free-hand drawing is path-dependent input, which is the named exemption, so the requirement does not reach it. Building an arrow-key drawing mode, a keyboard canvas, or a generated-signature substitute and presenting it as conformance scores zero for this criterion. Declining with no argument Deniz can be shown — just 'not applicable' — scores at most half. Noting that the pad's surrounding controls (clear, done, and any non-drawn signing route the product offers) must still be operable is expected alongside the refusal."
+    },
+    {
+      "name": "Space activates alongside Enter",
+      "max_score": 16,
+      "description": "activate handles the space key as well as Enter for controls presented as buttons, which is what the second tester in B-3 pressed and what a native button does. Leaving activate on Enter only scores zero. Adding space handling without an added test covering it scores at most half."
+    },
+    {
+      "name": "New tests are red against the supplied module",
+      "max_score": 12,
+      "description": "At least one added case fails against src/board.js exactly as supplied — a space-activation assertion and a keyboard-move assertion both do — and passes after the change, with all five supplied tests still green and no dependency added. Cases that pass against both versions score zero for this criterion. Deleting a supplied test to make the suite green scores zero."
+    },
+    {
+      "name": "The reopened ticket is explained, not just re-fixed",
+      "max_score": 10,
+      "description": "docs/keyboard-remediation.md says why last sprint's change did not move the report — the attributes renamed the control for assistive technology without putting it in the tab sequence or giving it a key-activated handler. An answer that fixes the code but leaves the team no account of the failed attempt scores at most half."
+    }
+  ]
+}

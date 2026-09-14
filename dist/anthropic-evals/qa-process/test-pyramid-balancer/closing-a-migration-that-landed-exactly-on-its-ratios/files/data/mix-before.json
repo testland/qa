@@ -1,0 +1,10 @@
+{
+  "repo": "harbor",
+  "measured": "2026-03-31",
+  "layers": {
+    "unit": { "cases": 840, "files": 219, "stage_seconds": 190 },
+    "integration": { "cases": 98, "files": 34, "stage_seconds": 108 },
+    "e2e": { "cases": 485, "files": 96, "stage_seconds": 2460 }
+  },
+  "total_cases": 1423
+}

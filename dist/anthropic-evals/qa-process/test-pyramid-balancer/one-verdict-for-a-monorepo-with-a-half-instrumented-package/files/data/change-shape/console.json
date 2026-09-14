@@ -1,0 +1,13 @@
+{
+  "package": "packages/console",
+  "window": "2026-06-17 to 2026-09-15",
+  "window_days": 90,
+  "commits_classified": 174,
+  "distribution": {
+    "ui-heavy": { "commits": 115, "pct_commits": 66 },
+    "pure-logic": { "commits": 31, "pct_commits": 18 },
+    "service-layer": { "commits": 23, "pct_commits": 13 },
+    "data-heavy": { "commits": 5, "pct_commits": 3 }
+  },
+  "mixed_commits": 11
+}

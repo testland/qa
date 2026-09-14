@@ -1,0 +1,46 @@
+{
+  "context": "A reproducibility complaint with a branch attached that solves reproducibility by destroying the measurement. Predicted baseline failure: the agent adopts Marta's branch, or endorses it as the reproducible core of a new gate, because it answers the question the user actually asked - three runs of the tag, identical to four decimal places, no judge, no drift - and because the agent is predisposed to like determinism in a test suite. What the baseline is predicted to miss is that the spot check settles it against her: the three answers the docs team marked wrong score 0.91, 0.88 and 0.86 on her metric while two of the three they marked right score 0.29 and 0.41, so there is no floor anywhere on that scale that separates a right answer from a wrong one, and the judged metric she is replacing scored the same six rows 0.20 / 0.15 / 0.34 against 0.96 / 0.94 / 0.98. Text-overlap metrics measure whether the answer reused the reference's wording, which is not what the gate is for. The reproducibility hole is real and is closed by holding the stack still, not by changing what is measured: requirements.txt pins nothing and the library moved 0.2.9 to 0.3.4 between the two jobs, and the workflow passes a floating judge alias, so the model behind the name is not the model June measured. A baseline answer is predicted to pin the packages and stop. The third predicted failure is over-attribution: the 09-02 control run reproduces June on three metrics and on the api-reference rows while changelog recall sits at 0.78 against 0.88, and the two index manifests show the changelog chunk size went 900 words to 300 in the 2026-08-30 rebuild while the api-reference chunking did not move. That is a retrieval regression, not drift, and the proposal to rebaseline onto 09-10 would write it permanently into the floor.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT trade the judged metrics for text-overlap metrics to buy determinism",
+      "max_score": 32,
+      "description": "Marta's branch is refused. MUST NOT leave the gate computing its verdict from n-gram, character-overlap or string-distance comparison against the reference in place of the judged metrics; doing so scores zero for this criterion however well the rest of the answer reads. Full marks require the refusal plus the spot-check arithmetic: the three answers the docs team marked wrong score 0.91, 0.88 and 0.86 on her metric and two of the three they marked right score 0.29 and 0.41, so no floor separates them, and the metric is measuring reuse of the reference's wording rather than whether the answer is right. Refusing on general grounds - 'string similarity is a weak proxy', 'we would lose signal' - without using the six rows scores at most half. Keeping a non-judged metric as a supplementary reported number, with the judged metrics still carrying the gate, is not penalised."
+    },
+    {
+      "name": "MUST NOT leave the stack free to move under the thresholds",
+      "max_score": 18,
+      "description": "MUST NOT leave requirements.txt unpinned and MUST NOT leave JUDGE_MODEL set to a floating alias. Full marks require both closed: exact version pins for the eval library and its dependencies, and a judge pinned to a dated model snapshot rather than an alias, in the workflow environment. Pinning the Python packages while leaving the judge alias in place scores at most half. Doing neither scores zero."
+    },
+    {
+      "name": "MUST NOT rebaseline onto today's numbers",
+      "max_score": 16,
+      "description": "The first proposal is refused. Thresholds MUST NOT be lowered across the board to sit under the 09-10 figures; doing so scores zero regardless of what the document says, because it writes an unexplained regression into the baseline. Full marks require the refusal plus the specific reason the middle step of the argument fails: the code not changing does not make the measurement comparable when neither the library nor the judge was held still, and one of the four movements is not measurement drift at all."
+    },
+    {
+      "name": "The retrieval regression separated from the drift",
+      "max_score": 16,
+      "description": "The document identifies the changelog rows' recall drop as a real retrieval regression rather than version or judge drift, and ties it to evidence: the 2026-09-02 control run holds June's library versions and reproduces June on three metrics and on the api-reference rows while changelog recall sits at 0.78 against 0.88, and the two index manifests show the changelog chunk size cut from 900 words to 300 in the 2026-08-30 rebuild with the api-reference chunking unchanged. Attributing the whole delta to drift scores zero, as does any answer that never separates the two collections. Naming the changelog drop without either the control run or the manifest difference scores at most half."
+    },
+    {
+      "name": "The baseline records the stack it was measured on",
+      "max_score": 10,
+      "description": "eval/thresholds.yaml, or a record it points at, carries the pinned library version, the judge snapshot and the index manifest the numbers were taken against, with the date, so a future threshold is only ever compared within a stack. Saying this in the document without putting it in the file scores at most half. Leaving the file's provenance comment as it stands scores zero."
+    },
+    {
+      "name": "Re-measurement ordered before any threshold moves",
+      "max_score": 8,
+      "description": "The answer states that the gate is re-run on the newly pinned stack and the baseline re-taken deliberately from that run, rather than floors being adjusted off the three runs already in hand. Setting new floors immediately from the attached tables scores zero here."
+    },
+    {
+      "name": "Golden set left alone",
+      "max_score": 5,
+      "description": "MUST NOT edit the golden set or its sample to close the gap between the runs. It has been frozen since 2026-07-11 and is the only thing in this comparison that has held still; editing it scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "requirements.txt and .github/workflows/eval.yml are both edited and docs/baseline-drift.md exists. Any threshold that was moved carries its stated reason in eval/thresholds.yaml as asked."
+    }
+  ]
+}

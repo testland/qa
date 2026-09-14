@@ -1,0 +1,20 @@
+{
+  "value": {
+    "ready": true,
+    "message": "Selenium Grid ready.",
+    "nodes": [
+      {
+        "id": "6f0b1a2c-9d44-4c0e-91aa-2f1c7d5b0e31",
+        "uri": "http://172.19.0.4:5555",
+        "maxSessions": 4,
+        "availability": "UP",
+        "slots": [
+          { "id": { "hostId": "6f0b1a2c", "id": "a1" }, "stereotype": { "browserName": "chrome", "browserVersion": "131.0", "platformName": "linux" }, "session": null },
+          { "id": { "hostId": "6f0b1a2c", "id": "a2" }, "stereotype": { "browserName": "chrome", "browserVersion": "131.0", "platformName": "linux" }, "session": null },
+          { "id": { "hostId": "6f0b1a2c", "id": "a3" }, "stereotype": { "browserName": "chrome", "browserVersion": "131.0", "platformName": "linux" }, "session": null },
+          { "id": { "hostId": "6f0b1a2c", "id": "a4" }, "stereotype": { "browserName": "chrome", "browserVersion": "131.0", "platformName": "linux" }, "session": null }
+        ]
+      }
+    ]
+  }
+}

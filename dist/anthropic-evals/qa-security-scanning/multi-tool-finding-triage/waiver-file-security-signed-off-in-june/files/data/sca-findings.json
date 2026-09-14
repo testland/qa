@@ -1,0 +1,74 @@
+[
+  {
+    "cve": "CVE-2025-41220",
+    "package": "deb:ghostscript@10.02.1",
+    "severity": "high",
+    "cvss_base": 8.8,
+    "message": "Sandbox escape in the PostScript interpreter via a crafted device specification",
+    "fix_available": "10.03.1",
+    "caught_by": ["trivy", "grype"]
+  },
+  {
+    "cve": "CVE-2024-21538",
+    "package": "npm:cross-spawn@7.0.3",
+    "severity": "high",
+    "cvss_base": 7.5,
+    "message": "Regular expression denial of service in path traversal handling",
+    "fix_available": "7.0.5",
+    "caught_by": ["grype"]
+  },
+  {
+    "cve": "CVE-2025-27789",
+    "package": "npm:@babel/helpers@7.26.9",
+    "severity": "medium",
+    "cvss_base": 6.2,
+    "message": "Inefficient RegExp complexity in generated code for named capturing groups",
+    "fix_available": "7.26.10",
+    "caught_by": ["trivy"]
+  },
+  {
+    "cve": "CVE-2024-4068",
+    "package": "npm:braces@3.0.2",
+    "severity": "high",
+    "cvss_base": 7.5,
+    "message": "Uncontrolled resource consumption in brace expansion",
+    "fix_available": "3.0.3",
+    "caught_by": ["trivy", "grype"]
+  },
+  {
+    "cve": "CVE-2023-45857",
+    "package": "npm:axios@1.5.0",
+    "severity": "medium",
+    "cvss_base": 5.3,
+    "message": "XSRF-TOKEN header sent to third-party hosts",
+    "fix_available": "1.6.0",
+    "caught_by": ["trivy"]
+  },
+  {
+    "cve": "CVE-2025-30208",
+    "package": "npm:vite@6.2.2",
+    "severity": "high",
+    "cvss_base": 7.5,
+    "message": "Arbitrary file read past server.fs.deny",
+    "fix_available": "6.2.3",
+    "caught_by": ["trivy"]
+  },
+  {
+    "cve": "CVE-2024-45590",
+    "package": "npm:body-parser@1.20.2",
+    "severity": "medium",
+    "cvss_base": 5.3,
+    "message": "Denial of service when url encoding is enabled",
+    "fix_available": "1.20.3",
+    "caught_by": ["trivy", "grype"]
+  },
+  {
+    "cve": "CVE-2022-25883",
+    "package": "npm:semver@7.3.7",
+    "severity": "low",
+    "cvss_base": 3.7,
+    "message": "Regular expression denial of service in range parsing",
+    "fix_available": "7.5.2",
+    "caught_by": ["grype"]
+  }
+]

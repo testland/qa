@@ -1,0 +1,30 @@
+kestrel-web :: last 11 runs on main, 2026-08-28 to 2026-09-11
+retries in effect for this window: 2 (set temporarily by @marek.z while
+piloting the pipeline; the committed config still says 0)
+
+run 4471  PASS  checkout: complete a card purchase   attempt 1
+run 4478  PASS  checkout: complete a card purchase   attempt 3   <- failed 1, 2
+run 4483  PASS  checkout: complete a card purchase   attempt 1
+run 4490  PASS  checkout: complete a card purchase   attempt 2   <- failed 1
+run 4495  PASS  checkout: complete a card purchase   attempt 3   <- failed 1, 2
+run 4501  PASS  checkout: complete a card purchase   attempt 1
+run 4507  PASS  checkout: complete a card purchase   attempt 2   <- failed 1
+run 4512  PASS  checkout: complete a card purchase   attempt 3   <- failed 1, 2
+run 4518  PASS  checkout: complete a card purchase   attempt 1
+run 4524  PASS  checkout: complete a card purchase   attempt 1
+run 4531  PASS  checkout: complete a card purchase   attempt 2   <- failed 1
+
+  first-attempt failures for this spec: 6 of 11 runs (54.5%)
+  every failed attempt: TimeoutError waiting for getByTestId('order-confirmation')
+  the pipeline reported green on all 11 runs
+  no other spec failed an attempt in this window
+
+runner evictions in the same window: 0
+  last eviction was 2026-08-19, run 4402. The whole job was lost before any
+  test started; the pipeline re-queued the job and the second job passed.
+
+--- test-health dashboard ingest, nightly since 2026-08-01 ---
+[ingest] kestrel-web: scanning build artifact bundle
+[ingest] kestrel-web: no JUnit XML found (looked for **/results.xml, **/junit*.xml)
+[ingest] kestrel-web: 0 results recorded; this suite will not appear on the dashboard
+[ingest] kestrel-web: 41 consecutive nights with no results

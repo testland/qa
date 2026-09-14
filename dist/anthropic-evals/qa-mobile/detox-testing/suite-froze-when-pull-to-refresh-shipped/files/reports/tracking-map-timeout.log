@@ -1,0 +1,20 @@
+# Branch ines/tracking-map-spec, 2026-06-19, months before sprint 44.
+# Same output on every run since. No other spec behaved like this at the time.
+
+FAIL e2e/tracking-map.test.js (121.904 s)
+  Live tracking map
+    x shows the courier moving towards the delivery address (120011 ms)
+
+    Exceeded timeout of 120000 ms for a test.
+
+    The app did not report itself idle at any point in the last 120000 ms while
+    trying to perform:
+
+      tap on element with id "track-order-button"
+
+    Still outstanding when the attempt was abandoned:
+
+     * UI elements are busy:
+       - 1 view animation pending (repeatCount = INFINITE)
+
+Tests:       1 failed, 1 total

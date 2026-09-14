@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="acme-web nightly" tests="40" failures="5" errors="0" skipped="2" time="67.15">
+  <testsuite name="cart" tests="9" failures="1" errors="0" skipped="0" time="13.76" timestamp="2026-09-05T02:00:05">
+    <testcase classname="cart" name="adds item" time="1.09"/>
+    <testcase classname="cart" name="removes item" time="0.97"/>
+    <testcase classname="cart" name="updates quantity" time="1.28"/>
+    <testcase classname="cart" name="applies bulk discount" time="2.51">
+      <failure message="expected line total 89.10, received 91.00">AssertionError at cart.spec.ts:142</failure>
+    </testcase>
+    <testcase classname="cart" name="merges guest cart on login" time="1.91"/>
+    <testcase classname="cart" name="persists across reload" time="1.49"/>
+    <testcase classname="cart" name="clears cart" time="1.06"/>
+    <testcase classname="cart" name="shows stock warning" time="1.57"/>
+    <testcase classname="cart" name="applies stacked coupons" time="1.88"/>
+  </testsuite>
+  <testsuite name="checkout" tests="9" failures="1" errors="0" skipped="1" time="16.62" timestamp="2026-09-05T02:00:19">
+    <testcase classname="checkout" name="completes with saved card" time="2.58"/>
+    <testcase classname="checkout" name="validates address" time="1.77"/>
+    <testcase classname="checkout" name="blocks empty cart" time="1.22"/>
+    <testcase classname="checkout" name="calculates tax" time="1.94"/>
+    <testcase classname="checkout" name="applies shipping" time="2.11"/>
+    <testcase classname="checkout" name="shows order summary" time="1.51"/>
+    <testcase classname="checkout" name="sends confirmation" time="2.29"/>
+    <testcase classname="checkout" name="exports order csv" time="0">
+      <skipped message="quarantined 2026-09-03 under QA-5512, flapping on runner image 2026.09"/>
+    </testcase>
+    <testcase classname="checkout" name="splits payment across cards" time="3.20">
+      <failure message="expected two charge records, received 1">AssertionError at checkout.spec.ts:318</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="search" tests="7" failures="0" errors="0" skipped="1" time="10.31" timestamp="2026-09-05T02:00:37">
+    <testcase classname="search" name="returns results" time="1.31"/>
+    <testcase classname="search" name="paginates" time="1.08"/>
+    <testcase classname="search" name="ranks by relevance" time="3.84"/>
+    <testcase classname="search" name="filters by category" time="1.47"/>
+    <testcase classname="search" name="sorts by price" time="1.35"/>
+    <testcase classname="search" name="shows typeahead suggestions" time="0">
+      <skipped message="feature flag typeahead_v2 is off in ci"/>
+    </testcase>
+    <testcase classname="search" name="handles empty results" time="1.26"/>
+  </testsuite>
+  <testsuite name="inventory" tests="7" failures="1" errors="0" skipped="0" time="12.88" timestamp="2026-09-05T02:00:48">
+    <testcase classname="inventory" name="decrements on order" time="2.26">
+      <failure message="expected stock 41, received 42">AssertionError at inventory.spec.ts:59</failure>
+    </testcase>
+    <testcase classname="inventory" name="restocks on cancel" time="1.88"/>
+    <testcase classname="inventory" name="reserves during checkout" time="2.37"/>
+    <testcase classname="inventory" name="releases expired reservation" time="2.11"/>
+    <testcase classname="inventory" name="shows low stock badge" time="1.62"/>
+    <testcase classname="inventory" name="syncs with warehouse feed" time="0.78"/>
+    <testcase classname="inventory" name="audits stock changes" time="1.86"/>
+  </testsuite>
+  <testsuite name="profile" tests="8" failures="2" errors="0" skipped="0" time="13.58" timestamp="2026-09-05T02:01:01">
+    <testcase classname="profile" name="updates display name" time="1.29"/>
+    <testcase classname="profile" name="uploads avatar" time="2.04">
+      <failure message="expected avatar url to match /cdn/.*\.png, received ''">AssertionError at profile.spec.ts:88</failure>
+    </testcase>
+    <testcase classname="profile" name="changes email with confirmation" time="2.11"/>
+    <testcase classname="profile" name="changes password" time="1.68"/>
+    <testcase classname="profile" name="deletes account" time="1.54"/>
+    <testcase classname="profile" name="exports personal data" time="1.98"/>
+    <testcase classname="profile" name="sets timezone" time="1.09"/>
+    <testcase classname="profile" name="regenerates api token" time="1.85">
+      <failure message="expected 201, received 500">AssertionError at profile.spec.ts:203</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

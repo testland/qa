@@ -1,0 +1,41 @@
+{
+  "context": "Four live mutants and a board that already says 'one new test per mutant'. Predicted baseline failure: the agent accepts the board's shape and drafts four new tests, because four survivors plus four cards is a symmetrical, obviously-actionable framing and every one of the four does have a separating input. Mutant 24 (rates.py:24, the express surcharge + turned into -) is the one that breaks the symmetry: test_express_adds_surcharge already calls order_total(20.0, 2.0, True, 0.0), which is the separating input, and asserts only assertGreater(total, 0) - the original returns 28.4 and the mutant returns 19.4, and both are greater than zero. The suite is not missing that case; the assertion is not looking at it. Adding a fifth test there kills the mutant and leaves assertGreater(total, 0) in place to hide the next surcharge regression, which is the failure this rubric is built to catch. The other three are genuine gaps and the agent is also predicted to under-specify mutant 27 (rates.py:25, * turned into /), where the reason it survives is that every covering test passes discount_rate 0.0, so (1 - 0.0) is 1.0 and multiplying or dividing by 1.0 agree - the fix is a non-zero discount rate, not a stricter assertion on the existing inputs.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Action document produced with one entry per mutant",
+      "max_score": 4,
+      "description": "docs/mut-0909-actions.md exists and carries four separate entries, one per live mutant (12, 19, 24, 27), each tied to a file and line. A single blended recommendation such as 'strengthen the tests for rates.py' scores zero for this item."
+    },
+    {
+      "name": "MUST NOT add a new test beside the loose assertion",
+      "max_score": 32,
+      "description": "For mutant 24 (rates.py:24) the recommendation MUST be to replace the assertGreater(total, 0) line inside the existing test_express_adds_surcharge with an exact check - assertEqual(order_total(20.0, 2.0, True, 0.0), 28.4) or equivalent. Recommending a new, additional test for mutant 24 scores zero for this criterion, even if that new test would kill the mutant, because it leaves the loose assertion in the suite. Full marks require the reason as well: test_express_adds_surcharge already runs the separating input, so the gap is in the assertion and not in the coverage - the original yields 28.4 and the mutant 19.4, both of which satisfy assertGreater(total, 0). Recommending the tightening without saying why this one differs from the other three scores at most half."
+    },
+    {
+      "name": "Separating inputs named for the three real gaps",
+      "max_score": 22,
+      "description": "Mutant 12 needs base_rate(20.0), which the original returns as 12.0 and the mutant raises OverweightParcel on. Mutant 19 needs a subtotal of exactly 75.0, where the original gives free shipping and returns 75.0 and the mutant charges 3.9 for a 2.0 kg parcel. Mutant 27 needs a non-zero discount_rate, for example order_total(20.0, 2.0, False, 0.1) returning 21.9. Two of the three named with the exact value and the expected result scores at most half; naming no concrete values and saying only 'test the boundary' scores zero."
+    },
+    {
+      "name": "The discount mutant explained by the identity operand",
+      "max_score": 14,
+      "description": "The entry for mutant 27 states that it survives because every covering test passes discount_rate 0.0, which makes (1 - discount_rate) equal 1.0, and multiplying or dividing by 1.0 produce the same value - so no assertion on the existing inputs, however strict, could ever kill it. Classifying mutant 27 as a loose assertion, or recommending that an existing assertion be tightened for it, scores zero here."
+    },
+    {
+      "name": "The board is corrected, not ratified",
+      "max_score": 12,
+      "description": "The document says plainly that the four rows are not four new tests: three cards are new tests and one (SHIP-613 / mutant 24) is a change to a test that already exists. Handing back four new-test cards scores zero. Saying the board needs changing without saying which card and what it becomes scores at most half."
+    },
+    {
+      "name": "Entries are per mutant, not per file",
+      "max_score": 10,
+      "description": "All four live mutants sit in shipping/rates.py, so a file-level summary is the tempting shape. Each entry must remain separately actionable - its own line, input, assertion and destination test. Collapsing two or more mutants into one shared recommendation scores at most half; a single rates.py recommendation scores zero."
+    },
+    {
+      "name": "Frozen files left untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit, add to, or delete anything under shipping/ or tests/. The freeze was stated. Any write into those directories scores zero here, including writing the four proposed tests into tests/test_rates.py."
+    }
+  ]
+}

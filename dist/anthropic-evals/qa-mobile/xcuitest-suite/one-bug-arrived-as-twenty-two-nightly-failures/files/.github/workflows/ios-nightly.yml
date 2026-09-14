@@ -1,0 +1,31 @@
+name: ios-nightly
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  ui-tests:
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run UI tests
+        run: |
+          xcodebuild test \
+            -project Cobalt.xcodeproj \
+            -scheme Cobalt \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -resultBundlePath TestResults.xcresult
+
+      - name: Upload result bundle
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcresult
+          path: TestResults.xcresult
+
+      - name: Clean workspace
+        run: rm -rf TestResults.xcresult DerivedData

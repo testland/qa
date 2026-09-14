@@ -1,0 +1,24 @@
+name: release-scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      digest:
+        required: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: diagnostics
+        run: docker run --rm aquasec/trivy:latest --version
+      - name: scan
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:latest image \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --exit-code 1 \
+              registry.internal/checkout-api@${{ inputs.digest }}

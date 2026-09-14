@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>acme-core</artifactId>
+  <version>7.3.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>modules/pricing</module>
+    <module>modules/checkout</module>
+    <module>modules/legacy-import</module>
+    <module>modules/notify-api</module>
+  </modules>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <pit.threshold>0</pit.threshold>
+    <pit.coverage.threshold>0</pit.coverage.threshold>
+  </properties>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.pitest</groupId>
+          <artifactId>pitest-maven</artifactId>
+          <version>1.17.0</version>
+          <configuration>
+            <mutators>
+              <mutator>ALL</mutator>
+            </mutators>
+            <mutationThreshold>${pit.threshold}</mutationThreshold>
+            <coverageThreshold>${pit.coverage.threshold}</coverageThreshold>
+            <outputFormats>
+              <format>HTML</format>
+              <format>XML</format>
+            </outputFormats>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.pitest</groupId>
+              <artifactId>pitest-junit5-plugin</artifactId>
+              <version>1.2.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

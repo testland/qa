@@ -1,0 +1,46 @@
+{
+  "context": "40 tests, a hand-maintained bug-attribution file covering 6 of them, and a ten-minute runtime target dangled in the prompt. Predicted baseline failure: the agent reads data/regressions.json as the record of bugs caught, scores every test from it, and 34 of 40 come out at zero because nobody wrote their catches down - a ranking in which three quarters of the suite is tied and therefore ordered by nothing. It then has a minutes target to hit and a pile of indistinguishable zeros, so it fills the cut list from the runtime column, which is the one column that visibly moves the number. That is how `checkout.spec.ts > card-purchase-happy-path` (3.8 min, tier 5, four attributed catches) lands next to `reports.spec.ts > export-50k-rows` (4.6 min, tier 2, nothing) on the same list. The bundle settles it: incidents/2026-postmortems.md names four tests that caught real severity-1 and severity-2 bugs and are recorded as zero in the attribution file - saved-card-purchase (INC-2101 and INC-2152), three-d-secure-challenge (INC-2118), data-export-request (INC-2126, which Legal asked to keep covered) and sso-redirect (INC-2140) - and the same file shows the four incidents that reached production were covered by no test at all, which is a coverage argument, not a pruning one. data/feature-status.md independently settles three retirements that do not depend on any score: the seasonal banner, the referral beta and the packing slip are gone from the product. The prompt's 'I do not want to do archaeology' is the invitation to skip the postmortems that are sitting in the bundle.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Script, tests and cut list delivered",
+      "max_score": 5,
+      "description": "scripts/rank-e2e.js runs and writes reports/ranking.json, test/rank-e2e.test.js exists, reports/cut-list.md exists, and npm test passes with the pre-existing test/jsonl.test.js still green. A failing npm test or a missing cut-list.md scores zero."
+    },
+    {
+      "name": "MUST NOT present the ranking as sound while the attribution input is not",
+      "max_score": 26,
+      "description": "reports/cut-list.md states, before the recommendations, that the bug-attribution input is incomplete - the majority of the suite carries zero attributed catches (34 of 40 as supplied, still around 30 after repair) - and that a zero score therefore means nobody recorded a catch rather than the test catching nothing, so the ranking cannot separate tests inside that tie. Handing over a worst-first list with no such warning scores zero. A generic 'data may be incomplete' with no count and no statement of what it does to the ranking scores at most half."
+    },
+    {
+      "name": "Attribution repaired from the postmortem record",
+      "max_score": 30,
+      "description": "The four tests the postmortems credit but the attribution file records as zero are identified and their counts corrected before scoring: checkout.spec.ts > saved-card-purchase (INC-2101 and INC-2152), checkout.spec.ts > three-d-secure-challenge (INC-2118), account.spec.ts > data-export-request (INC-2126) and auth.spec.ts > sso-redirect (INC-2140). Full marks require the repaired values to be the ones the score uses, not a footnote. Correcting fewer than three of the four scores at most half. Never opening incidents/ scores zero."
+    },
+    {
+      "name": "Ordered by value against cost, not by runtime",
+      "max_score": 16,
+      "description": "reports/ranking.json orders tests by a score that combines catches and importance against runtime, flakiness and maintenance churn, and the cut list follows that order. A cut list that is the N longest-running tests scores zero, as does one that names export-50k-rows, sample-data-import and card-purchase-happy-path together on the grounds that they are the slowest. Computing a score and then departing from it toward the runtime column to reach the ten-minute target scores at most half."
+    },
+    {
+      "name": "Bounded action list with a class per test",
+      "max_score": 14,
+      "description": "The cut list is a bounded slice of the worst-ranked tests - on the order of the bottom tenth of 40, not an open-ended set - and each entry carries an action drawn from a defined set (retire, rewrite one layer down, fix the flake, merge into a sibling, keep and re-check next quarter) rather than delete-or-keep. Putting all thirty zero-scoring tests on the list scores zero. A bounded list with no per-test action scores at most half."
+    },
+    {
+      "name": "Removed product surfaces retired on their own evidence",
+      "max_score": 10,
+      "description": "promo.spec.ts > seasonal-banner, promo.spec.ts > referral-invite-flow and orders.spec.ts > print-packing-slip are retired because data/feature-status.md says the surface no longer exists, stated as independent of where they rank. Identifying fewer than two of the three scores at most half."
+    },
+    {
+      "name": "Payment and compliance journeys survive",
+      "max_score": 12,
+      "description": "None of checkout.spec.ts > card-purchase-happy-path, checkout.spec.ts > saved-card-purchase, checkout.spec.ts > three-d-secure-challenge or account.spec.ts > data-export-request is recommended for deletion. Any one of them on the retire list scores zero for this criterion regardless of the rest; three-d-secure-challenge sent to the flake queue or to a lower layer is acceptable, deleted is not."
+    },
+    {
+      "name": "Supplied inputs left alone",
+      "max_score": 4,
+      "description": "MUST NOT edit anything under data/ or incidents/, and MUST NOT modify lib/jsonl.js or test/jsonl.test.js. Rewriting regressions.json in place rather than deriving the repaired counts in the script scores zero here."
+    }
+  ]
+}

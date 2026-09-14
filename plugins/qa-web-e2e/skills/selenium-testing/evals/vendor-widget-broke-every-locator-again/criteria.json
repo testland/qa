@@ -1,0 +1,47 @@
+{
+  "context": "Locator work against markup the team cannot edit, which removes the reflex answer before it can be given. Predicted baseline failure: with 'add a test attribute' unavailable, the agent reaches for whatever looks most stable in the current snapshot and picks badly - most often the element ids, which look like durable hooks and are not (pw-card-7c10 became pw-card-b391, pw-exp-4d22 became pw-exp-1f07), or a structural path, which the July wrapper div has already invalidated once. The two snapshots are the whole point and are predicted to go unread as a diff: across them the hashed classes, the ids and the depth all changed, while name, autocomplete, aria-label, the button's type, the alert role and the visible label text did not. Two controls have nothing durable of their own - the CVC input lost its maxlength and keeps only a hashed class and an inputmode it shares with the expiry field, and the save-card checkbox was the only checkbox in June and is one of two now, so `input[type=checkbox]` is a selector that works today and breaks on the next build. Those two have to be reached through a stable neighbour, which is the part a baseline answer is least likely to produce. Separately, the six dead agents are a pinned driver binary from a Chrome version that no longer exists on those machines, and the predicted wrong fixes are to pin a newer binary, to re-pin the browser, or to chase the group policy that is holding the five working agents back."
+  ,
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "PaymentPage.java is rewritten, the agent failure is addressed in the provided files, and docs/vendor-widget-locators.md exists with a per-control entry. A document that gives general locator advice without naming the six controls on this component scores zero for this item."
+    },
+    {
+      "name": "Durable attributes used where the snapshots show one",
+      "max_score": 26,
+      "description": "Card number, expiry, the pay button and the error element are located by hooks that are identical in both snapshots - the name or autocomplete or aria-label attributes, the submit type, the alert role - rather than by anything that changed. Any hashed class name surviving in PaymentPage.java scores zero for this criterion, as does any absolute or index-based path. Using the element ids scores zero: both ids differ between the two snapshots. A locator that merely happens to match the current snapshot without evidence of stability scores at most half."
+    },
+    {
+      "name": "Hookless controls reached through a stable neighbour",
+      "max_score": 20,
+      "description": "The CVC input and the save-card checkbox are located relative to something durable - the visible label text beside them, via a relationship query or a relative locator anchored on a stable element. Locating either by a hashed class, by sibling index, or by a bare input[type=checkbox] that the second snapshot already shows is ambiguous scores zero. Locating them by an attribute that is present in only one of the two snapshots, such as the CVC field's maxlength, scores at most half."
+    },
+    {
+      "name": "MUST NOT keep a hardcoded driver binary path",
+      "max_score": 20,
+      "description": "From the skill's anti-pattern on a hardcoded ChromeDriver path: the pinned webdriver.chrome.driver system property must go, replaced by driver resolution that tracks the installed browser - either the resolver bundled with this version of the library or an explicit driver-manager dependency. Repointing the property at a newer binary, adding a version constant, or pinning the browser version on the agents instead scores zero. Removing the property without saying what now resolves the driver scores at most half."
+    },
+    {
+      "name": "Snapshots read as a diff",
+      "max_score": 16,
+      "description": "The document states which attributes survived the vendor build and which did not, naming at least the hashed classes, the ids and the added wrapper depth as the things that changed. Asserting a hook is stable with no reference to the two snapshots scores at most half; getting the direction wrong - for example calling the ids stable - scores zero."
+    },
+    {
+      "name": "Agent split diagnosed, not just patched",
+      "max_score": 10,
+      "description": "The answer connects the six failing agents to the Chrome update and the five passing ones to the group policy pin, and says that the surviving five are passing for a reason that will expire rather than because they are configured correctly. Treating the five as the desired state scores zero."
+    },
+    {
+      "name": "MUST NOT make the vendor the dependency that unblocks this",
+      "max_score": 8,
+      "description": "Given an eleven-day median response and markup the team does not build, asking the vendor to add test attributes cannot be the remedy. Making it the plan, or delivering a locator strategy that only works once the vendor acts, scores zero. Raising it as a separate longer-term request alongside a strategy that works against today's markup is fine and costs nothing here."
+    },
+    {
+      "name": "Login test untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify LoginTest.java. It passes, it uses the team's own markup, and the request excluded it explicitly. Any edit to it scores zero here."
+    }
+  ]
+}

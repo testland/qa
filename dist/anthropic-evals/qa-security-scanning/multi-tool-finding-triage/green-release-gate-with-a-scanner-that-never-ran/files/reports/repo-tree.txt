@@ -1,0 +1,16 @@
+$ git ls-files | grep -Ev "^(src|web|test)/" | sort
+.checkov.yaml
+.github/workflows/deploy.yml
+.github/workflows/security.yml
+.gitleaks.toml
+.semgrep.yml
+ci/gate.mjs
+docs/security.md
+infra/modules/network/main.tf
+infra/modules/network/variables.tf
+infra/modules/rds/main.tf
+infra/prod/main.tf
+package-lock.json
+package.json
+test/gate.test.js
+trivy.yaml

@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent writes a competent-looking idle-tracking class, keeps it in `androidTest` next to the one that is already there, drives the counter from the test the way the supplied file does, and leaves `app/build.gradle` untouched. That answer cannot work and in most shapes does not even build. The count has to move where the network work actually starts and finishes - the two `enqueue` call sites in `OrdersRepository`, which is main-source-set code - and the moment production code names an idle-tracking type, the module needs that library on a main-source-set configuration. The supplied `app/build.gradle` carries the framework only under `androidTestImplementation`, so an agent that wires the counter into the repository without adding the dependency to `implementation` or `debugImplementation` has produced a module that does not compile, and is likely to report it as fixed. Two further planted defects push the same way. `registerIdleTransitionCallback` has an empty body, so the framework registers interest in a transition nobody ever announces - which is exactly why every test now sits for 26 seconds and throws a timeout instead of failing fast, and a rewrite that forgets to store and fire the callback reproduces the hang verbatim. And the resource is incremented once in `@Before` and decremented nowhere, which is why a test that touches no network at all, `showsEmptyStateForNewAccount`, flipped from passing in build 4471 to timing out in build 4502. The framing pushes hard the other way: a three-second wait that was green for years and a timeout bump that would hide the symptom on a fast emulator are both offered ready-made. The interceptor timings rule the wait out on their own - callbacks land 3-9 ms after a 612 ms response, so nothing here is slow, it is invisible.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Idle tracking reachable from the code that does the fetching",
+      "max_score": 28,
+      "description": "The count is incremented and decremented at the `enqueue` call sites in `OrdersRepository` - or by bridging OkHttp's dispatcher at the client - and `app/build.gradle` is changed so that main-source-set code can legally reference the type, by putting the idling library on `implementation` or `debugImplementation` rather than only on `androidTestImplementation`. Leaving `app/build.gradle` unchanged while production code names an idle-tracking type scores zero: the module does not compile, and an answer that claims green tests on top of that is worse than one that changes nothing. Keeping the increment in the test's `@Before`, or anywhere else the test drives by hand, also scores zero - the test cannot know when a dispatcher thread has delivered a callback, which is the whole failure. Moving the class into the main source set but leaving the repository unwired scores at most half."
+    },
+    {
+      "name": "Idle transition is actually announced",
+      "max_score": 20,
+      "description": "The replacement stores the callback handed to `registerIdleTransitionCallback` and invokes its idle-transition method when the in-flight count falls to zero. Leaving that method with an empty body scores zero - it is the defect that turned a fast failure into a 26-second timeout, and reproducing it fixes nothing. Storing the callback but never calling it, or calling it on every decrement rather than on the transition to zero, scores at most half. Using the framework's own counting implementation instead of a hand-written class is full marks, since it announces the transition itself."
+    },
+    {
+      "name": "MUST NOT wait or raise the timeout",
+      "max_score": 20,
+      "description": "MUST NOT use `Thread.sleep`, `SystemClock.sleep`, a polling or retry loop, or any fixed-duration wait, and MUST NOT raise the idle timeout through an idling policy or any equivalent. Doing either scores zero for this criterion however sound the rest of the answer is. Recommending either as a fallback or a stopgap scores at most half. Full marks also require rejecting both proposals on the evidence rather than on principle: the interceptor timings show a 612 ms response with the callback delivered 3-9 ms later, so neither test is waiting on anything slow, and a longer wait only makes the hang longer."
+    },
+    {
+      "name": "Every completion path counted down",
+      "max_score": 14,
+      "description": "The decrement happens on the failure path as well as the success path - both callbacks of both `enqueue` blocks - and on the branch in `loadOrderDetail` that early-returns when the response body is null. Counting down only on success scores zero here: the interceptor log already records a 404 among the three calls, so the first failed or empty response wedges every subsequent interaction at the timeout, which is the bug that is already in the file."
+    },
+    {
+      "name": "Collateral damage to the passing test noticed",
+      "max_score": 12,
+      "description": "The answer notices that `showsEmptyStateForNewAccount` passed in build 4471 and timed out in build 4502 although it touches no network, attributes it to the unconditional increment in `@Before`, and delivers it green again without editing the test body. An answer that leaves that test failing, or that treats its failure as unrelated to Priya's change, scores zero."
+    },
+    {
+      "name": "One shared instance, registered and unregistered",
+      "max_score": 12,
+      "description": "A single instance is shared between the production call sites and the test, registered before the interactions that need it and unregistered afterwards. The supplied file constructs a new instance per test and never unregisters; keeping either of those, or having the test register one instance while production code counts against a different one, scores at most half. Registering nothing at all scores zero."
+    },
+    {
+      "name": "Explains what the framework does and does not track",
+      "max_score": 10,
+      "description": "`docs/orders-async-fix.md` names the synchronisation conditions the framework checks unaided - an empty UI message queue, no running `AsyncTask` instances, plus any registered idle resources - and therefore why deleting the last `AsyncTask` removed the only thing it could see here. A write-up that calls the tests 'flaky' or 'racy' without naming what the framework tracks scores at most half; one that claims the framework waits for network calls on its own scores zero."
+    },
+    {
+      "name": "Assertions left intact",
+      "max_score": 5,
+      "description": "MUST NOT weaken, delete, or loosen any assertion - the `isDisplayed()` checks on `order_row_0` and `empty_orders_message`, the `withText(\"Refunded\")` check on `status_badge`, or the click on `order_row_2`. Any such change scores zero here."
+    }
+  ]
+}

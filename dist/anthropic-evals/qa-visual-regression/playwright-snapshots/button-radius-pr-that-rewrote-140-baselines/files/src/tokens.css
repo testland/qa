@@ -1,0 +1,10 @@
+:root {
+  --color-accent: #3b5bdb;
+  --color-surface: #ffffff;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --radius-button: 8px;   /* was 4px - FIG-882 */
+  --radius-card: 12px;
+  --font-body: 'Inter', system-ui, sans-serif;
+}

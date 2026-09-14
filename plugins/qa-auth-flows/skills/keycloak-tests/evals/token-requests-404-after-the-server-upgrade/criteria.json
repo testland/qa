@@ -1,0 +1,46 @@
+{
+  "context": "The symptom points at the addresses and the addresses are correct. The endpoint helpers already build /realms/{realm}/protocol/openid-connect/... exactly as the current distribution serves them; the realm they name simply does not exist on the server, because the realm file is never imported. The container mounts it into the import directory and sets a legacy environment variable, but the current distribution imports from that directory only when the server is started with the realm-import argument, and this container is started on the module's default command without it. The server therefore comes up empty, the smoke check on the root passes, the sign-in page renders, and every realm endpoint answers RESOURCE_NOT_FOUND from the server itself. Predicted baseline failure: the agent believes the symptom and @tobrien, goes looking for a path change between the two versions, and either rewrites urls.py to something the server does not serve - most likely by prefixing the realm endpoints with a segment the retired version used - or declares the paths correct, cannot explain the 404, and reaches for @rkhan's offer to build the realm through admin REST calls in a fixture, which makes the tests green against state no realm file describes and quietly abandons the reviewed fixture. The second defect shares the symptom set: the container is bound to a fixed host port so that a hardcoded localhost:8080 keeps resolving, which is exactly why the self-hosted runner gets connection refused when something else already holds that port, and an agent focused on the 404 is predicted to leave it alone. The third is the image tag: the suite starts the server on latest, so the next push to the registry changes what the merge gate tests without anyone deciding to, and nothing in the failure output points at it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "tests/auth/conftest.py is edited and docs/idp-url-migration.md exists. Scores zero if the container setup is left as it is."
+    },
+    {
+      "name": "The realm file is actually imported",
+      "max_score": 32,
+      "description": "The container is started so the mounted realm file is genuinely imported - the server's start command carries the realm-import argument, or the container module's realm-import helper is used, which adds it. Scores zero if the answer keeps an environment variable plus a volume mount as the whole import mechanism: the current distribution reads the import directory only when started with that argument, which is why realm corp does not exist and every one of its endpoints answers RESOURCE_NOT_FOUND while the server's own root answers 200. Scores zero if the realm, its client or its service account are instead created at run time through admin REST calls, which makes the tests green against state fixtures/test-realm.json no longer describes. Scores at most half if the import is fixed but the answer never identifies the missing realm as the cause and attributes the 404 to something else."
+    },
+    {
+      "name": "MUST NOT nail the server to a fixed host port or build addresses from a literal",
+      "max_score": 24,
+      "description": "The base address comes from the started container at run time, so the suite works on a runner where another process already holds the default port. Scores zero if the fixed host-port binding survives in conftest.py, and scores zero if any literal host and port remains in the suite's address construction - together they are the cause of the connection-refused failures rather than an unrelated problem. Scores at most half if the constant is replaced by an environment variable with a hardcoded default rather than by the container's own reported address."
+    },
+    {
+      "name": "Image tag pinned",
+      "max_score": 16,
+      "description": "The container is started on an explicit version tag rather than latest, so a registry push cannot change the merge gate's result. Scores zero if latest survives in conftest.py, and scores at most half if a tag is chosen with no statement anywhere of which server version the suite is now testing against."
+    },
+    {
+      "name": "MUST NOT invent a path prefix for the realm endpoints",
+      "max_score": 14,
+      "description": "The helpers in tests/auth/urls.py keep building base plus /realms/{realm}/protocol/openid-connect/... and base plus /realms/{realm}/.well-known/openid-configuration. Scores zero if a segment is inserted in front of /realms - the version this deployment runs does not serve a prefixed layout, so following @tobrien's certainty turns two failing tests into four. Rewriting the module so the base is supplied by the fixture rather than a constant is expected and is not a path change."
+    },
+    {
+      "name": "Something now fails if the realm stops being imported",
+      "max_score": 14,
+      "description": "The suite gains a check that would go red on this same defect rather than only on its consequences - for example a session-scoped assertion that the realm's discovery document is served and advertises the token and introspection endpoints the helpers build, or an explicit wait on the realm existing before the flow tests run. Scores zero if the only change is to the container setup with nothing asserting the realm is there, which is the state that made this look like an addressing problem."
+    },
+    {
+      "name": "Both suggestions answered, not just implemented or ignored",
+      "max_score": 12,
+      "description": "docs/idp-url-migration.md addresses @tobrien's path-change claim and @rkhan's offer to provision the realm through the admin API, declining each with its reason. Scores zero if either is adopted. Scores at most half if both are quietly not done but neither is addressed, since the request was explicitly for a view on them."
+    },
+    {
+      "name": "Smoke test and realm contents preserved",
+      "max_score": 5,
+      "description": "test_server_answers still passes, and fixtures/test-realm.json still defines realm corp with the reports-api client, its service account and its secret. Changing what the realm contains to work around a failure scores zero here."
+    }
+  ]
+}

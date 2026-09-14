@@ -1,0 +1,6 @@
+{
+  "reset.subject": "Reset your password",
+  "reset.body": "Click the link below to choose a new password.",
+  "reset.cta": "Choose a new password",
+  "reset.expiry": "This link stops working in 30 minutes."
+}

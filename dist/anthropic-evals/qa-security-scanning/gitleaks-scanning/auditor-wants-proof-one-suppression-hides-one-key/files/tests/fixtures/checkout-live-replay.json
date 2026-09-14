@@ -1,0 +1,7 @@
+{
+  "_comment": "Replay of a real checkout session captured from production on 2025-08-19 to reproduce VAN-3311. Values below are masked in this evidence bundle; the committed file carries the literal captured values.",
+  "sessionId": "cs_live_[REDACTED-IN-EVIDENCE-BUNDLE]",
+  "stripeKey": "sk_live_[REDACTED-IN-EVIDENCE-BUNDLE]",
+  "amountMinor": 24900,
+  "currency": "eur"
+}

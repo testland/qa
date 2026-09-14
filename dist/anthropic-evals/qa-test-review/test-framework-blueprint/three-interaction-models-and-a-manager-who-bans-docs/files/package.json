@@ -1,0 +1,12 @@
+{
+  "name": "ardent-scheduling",
+  "version": "4.11.3",
+  "private": true,
+  "scripts": {
+    "test:unit": "node --test \"test/**/*.test.js\"",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.0"
+  }
+}

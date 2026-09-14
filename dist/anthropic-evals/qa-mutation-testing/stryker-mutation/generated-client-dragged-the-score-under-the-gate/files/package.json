@@ -1,0 +1,20 @@
+{
+  "name": "orders-api",
+  "version": "12.3.0",
+  "private": true,
+  "scripts": {
+    "codegen": "openapi-typescript-codegen --input openapi.yaml --output src/api/generated --client fetch",
+    "prebuild": "npm run codegen",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "jest",
+    "mutation": "stryker run"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "8.6.0",
+    "@stryker-mutator/jest-runner": "8.6.0",
+    "jest": "29.7.0",
+    "openapi-typescript-codegen": "0.29.0",
+    "ts-jest": "29.2.5",
+    "typescript": "5.6.2"
+  }
+}

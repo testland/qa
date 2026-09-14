@@ -1,0 +1,17 @@
+# Drafted by Wendell (contractor) 2026-09-11. Not merged.
+name: DAST deep scan (live store)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 0"
+
+jobs:
+  deep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: zaproxy/action-full-scan@v0.13.0
+        with:
+          target: https://shop.harlowgoods.com
+          cmd_options: '-j -m 20 -r deep-report.html'

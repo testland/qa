@@ -1,0 +1,30 @@
+{
+  "capturedAt": "2026-09-10T16:02:00Z",
+  "model": "openai:chat:gpt-5.4-mini-2026-04-02",
+  "datasetFile": "datasets/golden.csv",
+  "results": [
+    { "id": "refund-window-basic", "success": true },
+    { "id": "refund-window-digital", "success": true },
+    { "id": "cancel-flow", "success": true },
+    {
+      "id": "shipping-cost",
+      "success": false,
+      "output": "Returns cost you nothing — we email a prepaid label with your confirmation.",
+      "assertion": "__expected"
+    },
+    { "id": "policy-json", "success": true },
+    { "id": "escalation-tone", "success": true },
+    {
+      "id": "refund-window-eu",
+      "success": false,
+      "output": "The EU statutory withdrawal period is 14 days, but our returns policy gives you 30 days from delivery in Germany, the same as everywhere else we ship.",
+      "assertion": "__expected"
+    },
+    {
+      "id": "refund-partial-shipment",
+      "success": false,
+      "output": "You will need to send the whole order back together — we cannot process a return for only some of the items in an order.",
+      "assertion": "__expected"
+    }
+  ]
+}

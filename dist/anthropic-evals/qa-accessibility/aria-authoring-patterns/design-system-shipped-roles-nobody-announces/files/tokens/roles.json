@@ -1,0 +1,7 @@
+{
+  "collapsible": { "role": "button", "state": "aria-pressed" },
+  "counter": { "role": "spinbutton", "state": "aria-valuenow" },
+  "menu-trigger": { "role": "menu", "state": "aria-expanded" },
+  "toggle": { "role": "switch", "state": "aria-checked" },
+  "hint": { "role": "tooltip", "state": null }
+}

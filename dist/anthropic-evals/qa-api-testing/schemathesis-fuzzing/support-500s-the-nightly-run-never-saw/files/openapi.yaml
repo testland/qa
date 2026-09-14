@@ -1,0 +1,108 @@
+openapi: 3.0.3
+info:
+  title: Kestrel Freight API
+  version: 5.2.0
+x-generated-at: '2026-09-12T03:02:11Z'
+paths:
+  /v1/health:
+    get:
+      operationId: health
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string, enum: [ok] }
+  /v1/shipments:
+    post:
+      operationId: createShipment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [weight_kg, destination]
+              properties:
+                weight_kg: { type: number, minimum: 0, maximum: 1200 }
+                destination:
+                  type: object
+                  required: [postcode]
+                  properties:
+                    postcode: { type: string, maxLength: 12 }
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Shipment' }
+        '400':
+          description: rejected
+  /v1/labels:
+    post:
+      operationId: buyLabel
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [shipment_id]
+              properties:
+                shipment_id: { type: string }
+      responses:
+        '201':
+          description: label purchased
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Label' }
+        '400':
+          description: rejected
+  /v1/labels/{id}:
+    get:
+      operationId: getLabel
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: label
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Label' }
+        '404':
+          description: unknown label
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
+components:
+  schemas:
+    Shipment:
+      type: object
+      required: [id, weight_kg, status]
+      properties:
+        id: { type: string }
+        weight_kg: { type: number }
+        status: { type: string, enum: [draft, booked, cancelled] }
+    Label:
+      type: object
+      required: [id, shipment_id, tracking_number, status]
+      properties:
+        id: { type: string }
+        shipment_id: { type: string }
+        tracking_number: { type: string }
+        status: { type: string, enum: [purchased, voided] }

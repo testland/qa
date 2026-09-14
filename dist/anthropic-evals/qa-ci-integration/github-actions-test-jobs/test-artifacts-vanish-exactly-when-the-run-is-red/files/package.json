@@ -1,0 +1,10 @@
+{
+  "name": "ledger-api",
+  "version": "2.6.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/*.test.mjs contract/*.test.mjs",
+    "test:unit": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results/unit.xml test/*.test.mjs",
+    "test:contract": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results/contract.xml contract/*.test.mjs"
+  }
+}

@@ -1,0 +1,6 @@
+# Baselined 2026-06-04 from commit a91f3c2. Floors set 2 points under the
+# observed run.
+faithfulness: 0.92
+answer_relevancy: 0.89
+context_recall: 0.87
+context_precision: 0.81

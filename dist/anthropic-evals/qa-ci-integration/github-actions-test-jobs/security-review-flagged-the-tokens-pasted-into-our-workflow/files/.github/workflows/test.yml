@@ -1,0 +1,62 @@
+name: test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  CI: true
+  TZ: UTC
+  NPM_TOKEN: npm_FIXTUREnotarealtoken00000000000000
+  SLACK_WEBHOOK: https://hooks.slack.com/services/T00000000/B00000000/FIXTUREnotarealwebhook
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci
+      - run: npm test
+      - name: Label the run
+        run: ./scripts/label-run.sh "${{ github.event.pull_request.title }}"
+      - name: Report to the dashboard
+        run: ./scripts/report.sh
+        env:
+          DASHBOARD_TOKEN: ${{ secrets.DASHBOARD_TOKEN }}
+
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: ci_local_only
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: [5432:5432]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci
+      - run: npm run test:integration
+        env:
+          DATABASE_URL: postgres://postgres:ci_local_only@localhost:5432/postgres
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [test, integration]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci
+      - run: npm publish
+      - run: ./scripts/notify.sh "wavelet-cli published"

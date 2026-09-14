@@ -1,0 +1,41 @@
+{
+  "context": "Both symptoms have one cause and it is a documented property of the tool that an unaided agent is not predicted to know: at the `assert` level, `assertions` and `assertMatrix` are mutually exclusive, so declaring the matrix silently retires the whole Web Vitals block - and within the matrix the first pattern that matches a URL wins, so the catch-all `.*` written first means the checkout entry beneath it is never reached. Predicted baseline failure: the agent reads the config, sees both blocks present and intact, agrees with the PR author that the perf assertions were left alone, and goes looking for the cause somewhere else - a Lighthouse version change, the collect step, budgets, flaky runs, or the theory that performance passed on every URL that night. The logs make that theory untenable and an unaided reading tends not to notice: `logs/lhci-before.txt` prints `categories:performance`, `largest-contentful-paint`, `cumulative-layout-shift` and `total-blocking-time` verdicts and one LCP failure, while `logs/lhci-after.txt` prints exactly one assertion per URL and the string `performance` appears nowhere in it - the Web Vitals assertions are not passing, they are not running, which is why #1946 took LCP to 4.1s through a green job. The same log shows checkout asserted at `>=0.9` and found 0.93, the loose bar applied to the URL the author thought he had pinned at 0.98. The third planted decision is the marketing request: raising the category to a perfect score puts every pull request at the mercy of one moderate-severity audit, and the correct answer is to decline it and say what to do instead.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 5,
+      "description": "`.lighthouserc.js` is changed, `docs/lighthouse-ci-fix.md` exists, `lib/urls.js` and `routes.json` are untouched, `test/urls.test.js` is unedited and `npm test` still passes. Leaving the config as it stands scores zero for this item."
+    },
+    {
+      "name": "The two assertion blocks cannot coexist",
+      "max_score": 30,
+      "description": "The write-up identifies that declaring both `assertions` and `assertMatrix` under `assert` is what silenced the Web Vitals gating, and the delivered config no longer has both - the performance and metric assertions are carried into the matrix entries (or the matrix is dropped in favour of a single assertions block plus another mechanism for the checkout bar). A config that still declares both keys scores zero. Attributing the missing perf verdicts to anything else - a version bump, caching, the collect step, flaky runs, or the pages simply having passed - scores zero regardless of what else is fixed. Rearranging the config so it happens to work without ever naming why the perf assertions stopped running scores at most half."
+    },
+    {
+      "name": "The checkout bar is reachable",
+      "max_score": 24,
+      "description": "The delivered config makes the strict checkout threshold actually apply: the specific pattern is evaluated before the catch-all, or the patterns are made non-overlapping. Leaving `.*` ahead of the checkout pattern scores zero. Stating that checkout was being matched by the catch-all but not changing the config so the strict bar applies scores zero as well; fixing the order without explaining to the reporter why his 0.98 never took effect scores at most half."
+    },
+    {
+      "name": "MUST NOT hold the category to a perfect score",
+      "max_score": 18,
+      "description": "MUST NOT grant the marketing request by asserting `categories:accessibility` at a perfect score on any pattern. The category score is a severity-weighted pass rate over a curated audit subset, so a single moderate-severity audit failure anywhere on a page then fails the build, and every pull request is blocked on work nobody has budgeted. Any perfect-score category assertion in the delivered config scores zero. Declining in prose while leaving it in the config scores zero. Declining with no alternative offered - a starting threshold that is tightened over time - scores at most half."
+    },
+    {
+      "name": "Per-audit assertions added",
+      "max_score": 14,
+      "description": "The config asserts specific accessibility audits by id at error level, not only the category score, so that a regression in a named audit is visible instead of being absorbed into a rounded category number. A config that gates on the category score alone scores zero. Adding audit ids only to the checkout entry, leaving the other pages on the category score alone, scores at most half."
+    },
+    {
+      "name": "Web Vitals gating shown to be restored",
+      "max_score": 12,
+      "description": "The write-up states that the metric assertions apply to every collected URL again, and names the consequence of the two weeks they did not - the LCP regression in #1946 went through a green job. A deliverable that restores perf assertions to only one pattern, leaving other URLs ungated, scores zero. Fixing it without connecting it to #1946, so the reader cannot tell the production incident is explained, scores at most half."
+    },
+    {
+      "name": "Accessibility score not equated with conformance",
+      "max_score": 10,
+      "description": "The note does not present a Lighthouse accessibility score, at any threshold, as evidence of WCAG conformance for the compliance pack - the category runs a curated subset of automated rules and reaches only part of WCAG. Any statement in the deliverable that a given score means the page is conformant or compliant scores zero for this item."
+    }
+  ]
+}

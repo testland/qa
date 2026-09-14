@@ -1,0 +1,11 @@
+pytest tests/llm/test_policy_grounding.py -q    2026-09-10, most recent run
+
+tests/llm/test_policy_grounding.py::test_answer_is_supported_by_retrieved_chunks[refund-window] PASSED
+tests/llm/test_policy_grounding.py::test_answer_is_supported_by_retrieved_chunks[seat-removal] PASSED
+tests/llm/test_policy_grounding.py::test_answer_is_supported_by_retrieved_chunks[data-export] PASSED
+tests/llm/test_policy_grounding.py::test_answer_does_not_contradict_written_policy[refund-window] PASSED
+tests/llm/test_policy_grounding.py::test_answer_does_not_contradict_written_policy[seat-removal] PASSED
+tests/llm/test_policy_grounding.py::test_answer_does_not_contradict_written_policy[data-export] PASSED
+tests/llm/test_policy_grounding.py::test_retrieval_covers_the_answer_we_expect SKIPPED
+tests/llm/test_policy_grounding.py::test_answer_addresses_the_question PASSED
+========================= 7 passed, 1 skipped in 104.38s ======================

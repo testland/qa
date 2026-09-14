@@ -1,0 +1,17 @@
+# Frames off the ingest host, 2026-09-11 02:14-03:12 UTC. One line per frame as
+# it went onto the shard wire link, followed by what the dashboard asked for
+# next on the same shard. Captured while chasing a different ticket (OPS-2210).
+
+02:14:07 shard=eu-3  ingest.shard_frame -> '41.5;39.0;40.25;38.75;41.0;40.5;39.5;38.0;40.75;41.25;39.75;40.0'
+02:14:07 shard=eu-3  dashboard.p95_last_minute(frame) -> 41.5
+02:14:07 shard=us-1  ingest.shard_frame -> 'nan'
+02:14:07 shard=us-1  dashboard.p95_last_minute(frame) -> ERROR IndexError
+02:19:41 shard=eu-2  ingest.shard_frame -> '0.0'
+02:19:41 shard=eu-2  dashboard.p95_last_minute(frame) -> ERROR IndexError
+02:31:02 shard=us-3  ingest.shard_frame -> '12.5;nan;13.0'
+02:31:02 shard=us-3  dashboard.p95_last_minute(frame) -> ERROR IndexError
+03:12:55 shard=eu-1  ingest.shard_frame -> '88.0;91.5;90.0;89.25;90.5;88.5;89.0;91.0;90.25;88.75;89.5;90.75'
+03:12:55 shard=eu-1  dashboard.p95_last_minute(frame) -> 91.5
+
+# OPS-2210 note: us-1 and eu-2 are the two shards that went quiet overnight
+# after the tenant migration. They have been like this for nine days.

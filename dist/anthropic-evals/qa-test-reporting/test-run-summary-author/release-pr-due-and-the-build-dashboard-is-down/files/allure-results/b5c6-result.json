@@ -1,0 +1,13 @@
+{
+  "uuid": "a1f2c0de-0008-4000-8000-000000000008",
+  "historyId": "gate.search.add-to-cart",
+  "name": "Add to cart from search",
+  "fullName": "gate.search.SearchGate#addToCart",
+  "status": "passed",
+  "start": 1789182139000,
+  "stop": 1789182160000,
+  "labels": [
+    { "name": "suite", "value": "Search" },
+    { "name": "severity", "value": "normal" }
+  ]
+}

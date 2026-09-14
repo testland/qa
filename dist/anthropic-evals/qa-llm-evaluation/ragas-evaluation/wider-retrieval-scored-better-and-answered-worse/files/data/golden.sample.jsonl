@@ -1,0 +1,6 @@
+{"id": "hb-03", "route": "handbook", "user_input": "What is the on-call allowance for engineering?", "reference": "Engineering on-call is paid at 120 per weekend rotation, claimed through Workday."}
+{"id": "hb-11", "route": "handbook", "user_input": "How much notice do I give for parental leave?", "reference": "Parental leave requires 8 weeks written notice to your manager and to People Ops."}
+{"id": "hb-19", "route": "handbook", "user_input": "Can I carry annual leave into next year?", "reference": "Up to 5 days carry over and expire on 31 March."}
+{"id": "ct-02", "route": "contracts", "user_input": "What is the termination notice period in the Northwind MSA?", "reference": "Either party may terminate the Northwind MSA on 90 days written notice."}
+{"id": "ct-08", "route": "contracts", "user_input": "Does the Contoso agreement cap our liability?", "reference": "Liability under the Contoso agreement is capped at fees paid in the preceding 12 months."}
+{"id": "ct-15", "route": "contracts", "user_input": "Is there an auto-renewal clause with Fabrikam?", "reference": "The Fabrikam agreement auto-renews for successive 12 month terms unless notice is given 60 days before the term ends."}

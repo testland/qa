@@ -1,0 +1,114 @@
+[
+  {
+    "scanner": "semgrep",
+    "rule_id": "js/sql-injection",
+    "severity": "high",
+    "message": "User input concatenated into a SQL string",
+    "file": "src/api/orders.js",
+    "line": 88,
+    "cwe": "CWE-89"
+  },
+  {
+    "scanner": "sastpro",
+    "rule_id": "SQLI-001",
+    "severity": "critical",
+    "message": "SQL query built from an untrusted request parameter",
+    "file": "src/api/orders.js",
+    "line": 88,
+    "cwe": "CWE-89"
+  },
+  {
+    "scanner": "semgrep",
+    "rule_id": "js/sql-injection",
+    "severity": "high",
+    "message": "User input concatenated into a SQL string",
+    "file": "src/api/orders.js",
+    "line": 141,
+    "cwe": "CWE-89"
+  },
+  {
+    "scanner": "semgrep",
+    "rule_id": "js/hardcoded-secret",
+    "severity": "medium",
+    "message": "Hardcoded credential assigned to a module constant",
+    "file": "src/api/orders.js",
+    "line": 12,
+    "cwe": "CWE-798"
+  },
+  {
+    "scanner": "semgrep",
+    "rule_id": "js/generic-api-key",
+    "severity": "medium",
+    "message": "Generic API key literal in source",
+    "file": "src/api/orders.js",
+    "line": 12,
+    "cwe": "CWE-798"
+  },
+  {
+    "scanner": "sastpro",
+    "rule_id": "XSS-014",
+    "severity": "medium",
+    "message": "Unescaped value written to the response body",
+    "file": "web/render.js",
+    "line": 30,
+    "cwe": "CWE-79"
+  },
+  {
+    "scanner": "semgrep",
+    "rule_id": "js/xss",
+    "severity": "high",
+    "message": "Reflected cross-site scripting in template output",
+    "file": "web/render.js",
+    "line": 30,
+    "cwe": "CWE-79"
+  },
+  {
+    "scanner": "sastpro",
+    "rule_id": "PATH-009",
+    "severity": "high",
+    "message": "Path traversal in the upload filename handler",
+    "file": "web/upload.js",
+    "line": 77,
+    "cwe": "CWE-22"
+  },
+  {
+    "scanner": "trivy",
+    "rule_id": "CVE-2023-45857",
+    "severity": "medium",
+    "message": "axios inserts the XSRF-TOKEN header into cross-origin requests",
+    "package": "npm:axios@1.5.0",
+    "cve": "CVE-2023-45857"
+  },
+  {
+    "scanner": "sastpro",
+    "rule_id": "SCA-AXIOS-1",
+    "severity": "medium",
+    "message": "axios leaks the CSRF token to third-party hosts",
+    "package": "npm:axios@1.5.0",
+    "cve": "CVE-2023-45857"
+  },
+  {
+    "scanner": "trivy",
+    "rule_id": "CVE-2023-45857",
+    "severity": "medium",
+    "message": "axios inserts the XSRF-TOKEN header into cross-origin requests",
+    "package": "npm:axios@0.21.1",
+    "cve": "CVE-2023-45857"
+  },
+  {
+    "scanner": "trivy",
+    "rule_id": "CVE-2025-29927",
+    "severity": "critical",
+    "message": "Next.js middleware authorization bypass via a crafted internal header",
+    "package": "npm:next@14.2.3",
+    "cve": "CVE-2025-29927"
+  },
+  {
+    "scanner": "trivy",
+    "rule_id": "CVE-2025-27152",
+    "severity": "high",
+    "message": "axios follows an absolute url in the url parameter, bypassing baseURL",
+    "package": "npm:axios@1.5.0",
+    "cve": "CVE-2025-27152"
+  }
+]

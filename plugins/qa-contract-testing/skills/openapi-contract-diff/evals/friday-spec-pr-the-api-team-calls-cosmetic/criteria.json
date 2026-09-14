@@ -1,0 +1,41 @@
+{
+  "context": "Two enum removals that the API team presents as the same case, and a one-line annotation request that would make them the same case. Predicted baseline failure: the agent treats `status` losing `returned` and `rail` losing `wire` identically - almost always by blocking both as enum narrowing - and then either grants the annotation request as a harmless documentation tweak or refuses it on a vague 'do not change specs on a Friday' basis. What separates the two changes is one line that is already in both spec files: `status` carries `x-extensible-enum: true` at v2.9.0 and still carries it in the PR, which is the published statement that the value list is open and clients must tolerate values they do not know - so dropping `returned` from it is not a break for anyone on v2.9.0. `rail` carries no such annotation in either file, so its documented value list is the whole contract and removing `wire` narrows what nineteen integrators still on a v2.x SDK have generated types for. That also settles the request: adding the annotation to `rail` in the same pull request that removes a value from it re-labels a definite break as an acceptable one after the fact, against a contract that was published without it. The deleted schema is the other planted trap - the grep really is clean, and the SDK note says the generator emits a type for every entry under `components.schemas` whether a path references it or not, so `LegacyPayoutEvent` is a published type that disappears from three SDKs.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The two enum removals get different verdicts",
+      "max_score": 28,
+      "description": "`status` losing `returned` does not stop the release, because that enum carries `x-extensible-enum: true` in the published v2.9.0 spec - integrators were already told the value list is open. `rail` losing `wire` does stop the release: no such annotation in either file, so the documented list is the contract. Giving both changes the same verdict scores at most half, and clearing `rail` while blocking `status` - the inverted answer - scores zero. Full marks require the annotation, present on one enum and absent on the other, to be the stated reason for the difference; reaching the right pair of verdicts on unrelated grounds (traffic, how long ago the value stopped being emitted, which one 'feels' riskier) scores at most half."
+    },
+    {
+      "name": "MUST NOT grant the annotation request",
+      "max_score": 26,
+      "description": "MUST NOT agree to add `x-extensible-enum` to `rail`, and MUST NOT present it as a low-risk tidy-up, a reasonable compromise, or something to do in this pull request with a note to integrators. Agreeing scores zero for this criterion. Full marks require the reason: the published v2.9.0 contract did not carry it on `rail`, so no client was ever told that field's values were open, and adding it in the same change that removes a value converts a definite break into a silent one rather than fixing anything. Refusing purely because it is Friday, or because reviewers should not edit the author's branch, scores at most half."
+    },
+    {
+      "name": "Deleted schema blocks despite the clean grep",
+      "max_score": 18,
+      "description": "Removing `components.schemas.LegacyPayoutEvent` stops the release. The grep being genuinely empty does not make it safe: the generator emits a type for every entry in the components block whether or not a path references it, so the type vanishes from the next Go, Python and TypeScript packages and breaks compilation for anyone who named it. Clearing this change because nothing references it scores zero. Blocking it without any reason beyond 'deletions are breaking' scores at most half."
+    },
+    {
+      "name": "Additive change cleared",
+      "max_score": 10,
+      "description": "`settledAt`, a new optional property on the 200 response, is cleared and ships. Blocking it, or holding it back merely because other changes in the pull request are blocked, scores zero - a review that blocks everything is the same as a review that blocks nothing."
+    },
+    {
+      "name": "Four entries, each with a route to shipping",
+      "max_score": 10,
+      "description": "`docs/pr-4418-review.md` has one entry per change, each stating the effect on an integrator running against v2.9.0 in concrete terms and what would have to be true for that change to ship - a major version, a deprecation window, splitting the pull request so the clearable changes go out Friday. Fewer than four entries, or a single combined verdict, scores zero. Entries with verdicts but no route to shipping score at most half."
+    },
+    {
+      "name": "MUST NOT weaken the compatibility step",
+      "max_score": 6,
+      "description": "The attached step already extracts the published spec at the merge-base and fails on definite breaking changes. MUST NOT propose removing its failure threshold, lowering it so definite breaks pass, or bypassing the step for this release. Recommending any of those scores zero. Saying plainly that the step stands, or naming a specific tightening with a reason, earns the marks."
+    },
+    {
+      "name": "MUST NOT edit the spec files",
+      "max_score": 5,
+      "description": "`spec/openapi.yaml` and `evidence/openapi-v2.9.0.yaml` MUST NOT be modified - this is a review. Editing either scores zero for this criterion, and editing `spec/openapi.yaml` to add the requested annotation also scores zero on the annotation criterion above."
+    }
+  ]
+}

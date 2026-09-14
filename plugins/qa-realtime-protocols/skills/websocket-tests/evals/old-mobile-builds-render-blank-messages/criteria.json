@@ -1,0 +1,41 @@
+{
+  "context": "Two defects sit in src/negotiate.js and the existing green suite is green precisely because it hides the first one. selectSubprotocol reads headers['Sec-WebSocket-Protocol'] with capitals, while the log shows the handler receives sec-websocket-protocol lowercased, so the offer list is empty for every real request and the `match || SUPPORTED[0]` fallback then answers chat-v2 to everyone - including device C, which offered no subprotocol at all and must not be answered with one, and device A, which offered only chat-v1. The existing tests pass because they hand-build a headers object with the capitalised key, which no runtime ever produces. Predicted baseline failure: the agent believes the existing suite, concludes negotiation is fine, and looks for the bug in src/frames.js or blames the 3.x client's parser - or it notices the fallback, deletes it, and ships without ever driving the handler with a request shaped the way the log shows them arriving, so the case-sensitivity defect survives untouched and the new tests are green against headers no client sends. A third predicted failure is proving the fix by encoding a message and checking the field names, which passes whatever the handshake answered, instead of asserting the negotiated value on the response itself.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "test/negotiate.upgrade.test.js and docs/subprotocol-matrix.md both exist and src/negotiate.js has been changed. Producing no new test file scores zero."
+    },
+    {
+      "name": "Driven with requests shaped the way they arrive",
+      "max_score": 30,
+      "description": "At least one new test passes headers spelled as the log shows them reaching the handler - lowercase sec-websocket-protocol - and asserts that a client offering only chat-v1 is answered chat-v1. That single case is what separates a real fix from a plausible one. If every new test constructs headers with the capitalised key the existing suite uses, this scores zero regardless of how correct src/negotiate.js now is, because the suite reproduces the blind spot that shipped the bug. Changing the source to read the lowercase key while still testing only the capitalised form scores at most half. Making the lookup case-insensitive so both spellings resolve, and covering the lowercase form in a test, is full marks."
+    },
+    {
+      "name": "MUST NOT answer with a value the client never offered",
+      "max_score": 20,
+      "description": "The `match || SUPPORTED[0]` fallback MUST NOT survive in any form. A client that offered nothing - device C in the log - must get a response with no subprotocol header at all, and a client that offered only values we do not support must not be handed chat-v2; either no selection or a refused handshake is acceptable, silently substituting a protocol the client did not ask for is not. Any default-to-newest path left in the delivered source scores zero for this criterion. Removing the fallback with no test covering the no-offer case scores at most half."
+    },
+    {
+      "name": "MUST NOT prove the fix through message round-trips alone",
+      "max_score": 14,
+      "description": "The delivered suite MUST NOT rest on encoding and decoding a message and checking the field names; the value the server selected has to be asserted on the handshake response itself. A suite in which no assertion reads the negotiated subprotocol off the response scores zero here. Asserting the selected value but never checking that the frame shape follows from it scores at most half - the two together are what the 3.x users are missing."
+    },
+    {
+      "name": "Cause traced to the header lookup",
+      "max_score": 14,
+      "description": "The answer states that the offer list is empty for every real request because the lookup is case-sensitive against a name the runtime delivers lowercased, and that this - not the fallback alone, and not the client - is why 2.9.0, 3.0.1 and 3.4.2 are all affected identically while 4.x is not. Naming only the fallback as the cause scores at most half. Attributing the blank bodies to the 3.x client's parser, to src/frames.js, or to the store rollout scores zero."
+    },
+    {
+      "name": "Matrix covers every offer, not just the reported one",
+      "max_score": 12,
+      "description": "docs/subprotocol-matrix.md has a row for each offer the server can receive - both versions, v1 only, v2 only, an unsupported value, and no offer at all - each with what is answered and the frame shape that follows. A document covering only the 3.x case scores zero; one that lists the offers but omits the resulting frame shape scores at most half."
+    },
+    {
+      "name": "Existing suite and frame encoder untouched",
+      "max_score": 8,
+      "description": "test/negotiate.basic.test.js is byte-identical to the fixture and still passes, src/frames.js is unchanged, and npm test passes. Editing the basic test to accommodate a new lookup, or editing the encoder, scores zero - the encoder is correct and the old tests, however misleading, describe behaviour that must keep working."
+    }
+  ]
+}

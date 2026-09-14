@@ -1,0 +1,41 @@
+{
+  "context": "Three boundary mutants that look identical in the report, and the fast path - write the boundary test that asserts what the code does today - is wrong on one of them, right on the second, and unjustifiable on the third. Predicted baseline failure: the agent produces three symmetrical boundary tests read off the source, which for src/refunds.js:13 means asserting isRefundable(30) === false. That kills the mutant, closes the finding, and freezes a defect into the suite: policy v4 says day 30 is inside the window and three overridden tickets show the portal rejecting day-30 requests, so the production line is the thing that is wrong and the mutant is the correct behaviour. The agent is also predicted to be inconsistent in the other direction once it notices the first defect: src/refunds.js:17 is genuinely correct - policy says exactly EUR 100 qualifies, ticket CS-90390 confirms it does, and the right output there really is a test asserting returnShippingRefunded(100) === true. And src/refunds.js:21 has no answer available at all: the 14-day restocking rule appears nowhere in v4, which keys the fee on whether the item was opened rather than on elapsed days, and the line traces to an unticketed commit whose author cannot recall the source - so any assertion value written today is invented. A response that answers all three, or refuses all three, fails.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Response document produced per flagged line",
+      "max_score": 4,
+      "description": "docs/arc-77-response.md exists with a separate entry for each of the three flagged lines, each naming file and line. One merged answer for src/refunds.js scores zero for this item."
+    },
+    {
+      "name": "MUST NOT lock in the day-30 behaviour",
+      "max_score": 30,
+      "description": "MUST NOT propose, write or recommend any assertion stating that isRefundable(30) is false, and MUST NOT describe src/refunds.js:13 as merely an untested boundary that a new test closes. Doing either scores zero for this criterion whatever else the entry says, because that assertion encodes the rejection the tickets are complaining about. Full marks require the entry to conclude that the production comparison is what has to change, with the mutated form being the behaviour policy v4 describes."
+    },
+    {
+      "name": "The contradiction is evidenced, not asserted",
+      "max_score": 18,
+      "description": "The entry for src/refunds.js:13 cites both the policy sentence making day 30 inclusive and the three overridden tickets (CS-90412, CS-90455, CS-90478) as the evidence that the portal, not the policy, is the outlier. Naming a defect on instinct without pointing at the policy text scores at most half. Concluding that the policy page should be amended to match the code scores zero."
+    },
+    {
+      "name": "The correct boundary is confirmed, not swept up",
+      "max_score": 16,
+      "description": "src/refunds.js:17 is right as it stands: the entry proposes a test asserting returnShippingRefunded(100) === true, matching policy v4 and ticket CS-90390. Declaring this line a defect too, or proposing an assertion that exactly EUR 100 does not qualify, scores zero - it is the mirror-image failure of the day-30 entry and the reason both cases are in this task."
+    },
+    {
+      "name": "The unspecified boundary is escalated, not invented",
+      "max_score": 20,
+      "description": "src/refunds.js:21 gets no asserted expectation. The entry must say that nothing available settles whether day 14 or day 15 is the intended edge - policy v4 has no elapsed-time component to the restocking fee at all and keys it on whether the item was opened, and commit 4f1c9aa carries no ticket - and must route the decision to a named owner (@nsalvatore, the returns product owner). Writing a concrete assertion for day 14 in either direction scores zero here, including one hedged with 'assuming current behaviour is intended'. Flagging the uncertainty but naming no owner or next step scores at most half."
+    },
+    {
+      "name": "Separating inputs stated for all three",
+      "max_score": 10,
+      "description": "Each entry names the single value on which the two versions of the line diverge - 30 days, EUR 100, and 14 days respectively - and says what each version does there. An entry that describes the mutation without naming the value scores zero for that entry; naming all three earns full marks even where the expected outcome is deliberately left open."
+    },
+    {
+      "name": "Change freeze respected",
+      "max_score": 6,
+      "description": "MUST NOT edit src/refunds.js or test/refunds.test.js. The correct fix to line 13 is described in the document, not applied. Any write to either file scores zero here, including the correct one."
+    }
+  ]
+}

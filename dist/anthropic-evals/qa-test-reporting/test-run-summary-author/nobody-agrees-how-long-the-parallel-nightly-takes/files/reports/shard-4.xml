@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nightly-e2e">
+  <testsuite name="shard-4" tests="10" failures="2" errors="0" skipped="0" time="613.8" timestamp="2026-09-12T01:00:09">
+    <testcase classname="e2e/admin/bulk-import.spec.ts" name="imports 5k rows from csv" time="180.5">
+      <failure message="Timeout 180000ms exceeded waiting for import job to report complete">TimeoutError at bulk-import.spec.ts:71</failure>
+    </testcase>
+    <testcase classname="e2e/admin/audit-log.spec.ts" name="paginates audit log" time="11.3">
+      <failure message="expected page 2 to start at entry 51, received 41">AssertionError at audit-log.spec.ts:29</failure>
+    </testcase>
+    <testcase classname="e2e/admin/users.spec.ts" name="invites a user" time="54.7"/>
+    <testcase classname="e2e/admin/users.spec.ts" name="deactivates a user" time="62.1"/>
+    <testcase classname="e2e/admin/roles.spec.ts" name="assigns a role" time="48.9"/>
+    <testcase classname="e2e/admin/roles.spec.ts" name="removes a role" time="57.3"/>
+    <testcase classname="e2e/admin/billing.spec.ts" name="changes plan" time="51.8"/>
+    <testcase classname="e2e/admin/billing.spec.ts" name="downloads receipts" time="45.2"/>
+    <testcase classname="e2e/admin/audit-log.spec.ts" name="filters audit log" time="56.4"/>
+    <testcase classname="e2e/admin/bulk-import.spec.ts" name="rejects malformed csv" time="45.6"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,21 @@
+# Alerts the pull-request check does not fail on.
+# One line per rule: id, action, url pattern. Comments after #.
+
+10049	IGNORE	*	# cookie without HttpOnly - legacy session cookie, ops-2231
+40012	IGNORE	*	# only ever fires on the old admin pages
+10063	IGNORE	*
+10096	IGNORE	*	# timestamp disclosure, noisy, agreed with dan
+10038 IGNORE *	# content security policy missing on the marketing pages
+10202	SKIP	*	# anti-csrf tokens, the framework handles this
+90022	INFO	*
+10035	IGNORE	https://app.veridianpay.dev/legacy/*	# strict transport security on the legacy host, ops-2184
+10021	IGNORE	*	# x-frame-options, we set frame-ancestors instead
+10027	IGNORE	*	# information disclosure in the build banner, ops-2307
+10015	IGNORE	*	# cache-control on the docs pages
+10017	IGNORE	*	# cross-domain script include, the analytics vendor
+10098	IGNORE	*	# cross-domain misconfiguration, ops-2199
+10109	IGNORE	*	# modern web application, informational
+10023	IGNORE	*	# information disclosure via suspicious comments in the bundle
+10055	IGNORE	*	# content security policy wildcard directive, ops-2312
+10040	IGNORE	*	# secure pages include mixed content on /legacy/report
+10054	IGNORE	https://app.veridianpay.dev/*	# cookie without SameSite, session cookie, ops-2231

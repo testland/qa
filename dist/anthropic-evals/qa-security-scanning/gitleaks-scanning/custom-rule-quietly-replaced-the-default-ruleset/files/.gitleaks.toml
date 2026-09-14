@@ -1,0 +1,23 @@
+# payments-core secret-scanner config
+# Owner: platform-security. Changed 2026-08-19 (PLAT-4471).
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+description = "Northvale internal service token (svc_ prefix)"
+regex = '''svc_[a-zA-Z0-9]{40}'''
+keywords = ["svc_"]
+tags = ["internal", "platform"]
+
+[[rules.allowlists]]
+description = "SDK init fixtures hard-code a dummy service token"
+paths = ['''tests/fixtures/.*\.json$''']
+
+[[rules]]
+id = "private-key"
+description = "Northvale signing-key envelope (NVKEY block)"
+regex = '''-----BEGIN NVKEY-----[\s\S]{32,}?-----END NVKEY-----'''
+keywords = ["NVKEY"]
+tags = ["internal", "platform"]

@@ -1,0 +1,49 @@
+name: contracts
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+  PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+
+jobs:
+  consumer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Consumer tests
+        run: npm test --workspace=packages/notifications-worker
+      - name: Publish the contract
+        run: |
+          npx pact-broker publish ./packages/notifications-worker/pacts \
+            --consumer-app-version=${{ github.sha }} \
+            --branch=${{ github.ref_name }}
+
+  provider:
+    needs: consumer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Verify
+        run: |
+          npm run start:orders-api &
+          npx wait-on http://localhost:8081/health
+          node services/orders-api/verify-orders-api.js
+
+      - name: Can we deploy?
+        if: false
+        run: |
+          pact-broker can-i-deploy \
+            --pacticipant orders-api \
+            --version ${{ github.sha }} \
+            --to-environment production

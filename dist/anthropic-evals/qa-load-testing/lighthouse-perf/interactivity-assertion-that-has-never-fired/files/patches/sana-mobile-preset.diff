@@ -1,0 +1,15 @@
+branch: sana/mobile-preset
+1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.lighthouserc.js b/.lighthouserc.js
+index 3f9a2c1..b7d41e0 100644
+--- a/.lighthouserc.js
++++ b/.lighthouserc.js
+@@ -12,7 +12,7 @@ module.exports = {
+       numberOfRuns: 3,
+       settings: {
+-        preset: 'desktop',
++        preset: 'mobile',
+         chromeFlags: '--no-sandbox',
+       },
+       startServerCommand: 'npm run start',

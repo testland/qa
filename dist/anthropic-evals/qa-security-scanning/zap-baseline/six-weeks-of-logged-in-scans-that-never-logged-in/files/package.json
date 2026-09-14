@@ -1,0 +1,8 @@
+{
+  "name": "brightpath-console-ci",
+  "version": "8.0.3",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

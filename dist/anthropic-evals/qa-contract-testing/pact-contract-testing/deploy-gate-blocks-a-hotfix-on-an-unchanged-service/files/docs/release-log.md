@@ -1,0 +1,12 @@
+# Production release log (maintained by hand by the platform team)
+
+| Date       | Service        | Version | Note                              |
+|------------|----------------|---------|-----------------------------------|
+| 2026-06-02 | refunds-worker | 6d10b4e | idempotency keys                  |
+| 2026-06-19 | checkout-web   | 2a77b01 | cart fixes                        |
+| 2026-07-30 | payments-api   | 7b2d914 | fee rounding                      |
+| 2026-08-27 | checkout-web   | a91f3c2 | checkout rewrite — current        |
+| 2026-09-01 | payments-api   | 3c0ab41 | webhook signature rotation — current |
+
+`checkout-web` ships from its own repo on its own schedule; their next release
+window is Wednesday 2026-09-17. `refunds-worker` has not shipped since June.

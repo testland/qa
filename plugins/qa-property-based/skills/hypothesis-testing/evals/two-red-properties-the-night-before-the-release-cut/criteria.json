@@ -1,0 +1,46 @@
+{
+  "context": "Two failures that arrived on the same night, look like one problem, and have opposite causes, inside a patch whose three hunks are not of equal quality. Predicted baseline failure: the agent lands hunk 1. Narrowing a float strategy to allow_nan=False, allow_infinity=False is the standard reflex the moment a round-trip check trips over NaN, @tomasz's note argues for it in exactly those terms, and it makes the red go away. ops/shard-frames.log is what settles it: src/ingest.py returns float('nan') for a shard with no requests in the window, that value goes straight into pack(), and frames carrying 'nan' were on the wire for nine days - so excluding it from the drawn domain retires the check on precisely the value production sends. And the code is not what is wrong there: repr/float carries NaN across unharmed, the assertion is what is false, because no NaN is equal to itself. The percentile failure is the reverse case. A one-sample frame is what a quiet shard emits ('0.0' from eu-2 in the same log), nearest-rank indexing walks one past the end for every window shorter than eleven, and hunk 3 is the correct fix. Hunk 2 raises the list minimum to ten and is a mask for the very failure hunk 3 repairs - with both landed the check can never again draw the window size that broke. Taking the patch whole and refusing it whole are both wrong.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable with a verdict on each hunk",
+      "max_score": 5,
+      "description": "docs/release-cut-decision.md exists and gives an explicit lands / does not land for each of the three hunks separately. Fewer than three separate verdicts, or a single decision on 'the patch', scores zero for this item."
+    },
+    {
+      "name": "MUST NOT make NaN and infinity undrawable",
+      "max_score": 30,
+      "description": "MUST NOT land hunk 1, and MUST NOT otherwise leave the suite in a state where no check draws NaN or infinity through pack/unpack. Either scores zero for this criterion regardless of the rest: the idle-shard path in src/ingest.py produces float('nan') and ops/shard-frames.log shows those frames going over the wire, so a domain without them is a domain that excludes production. Full marks require both halves - the round-trip assertion stops claiming that a value equals itself when it is NaN, and non-finite samples are still drawn and still asserted on, whether by comparing NaN-aware or by a second check that asserts the unpacked value is NaN. Restricting the equality check to finite floats while adding nothing that exercises NaN scores zero. Diagnosing the assertion as the faulty part but still landing hunk 1 scores at most half."
+    },
+    {
+      "name": "MUST NOT raise the window minimum",
+      "max_score": 22,
+      "description": "MUST NOT land hunk 2, and MUST NOT otherwise raise min_size or narrow the list strategy on test_percentile_is_a_sample so that windows shorter than ten stop being drawn. Either scores zero. Full marks require the refusal plus the observation that it masks the same failure hunk 3 already fixes, and that one-sample frames are exactly what the log shows the quiet shards emitting."
+    },
+    {
+      "name": "The index defect actually fixed in the source",
+      "max_score": 18,
+      "description": "src/rollup.py ends up returning an element of the input for every non-empty window, including lengths 1 to 10 - hunk 3 landed, or an equivalent correction of the nearest-rank index. Refusing the whole patch and changing nothing in src/rollup.py scores zero here. Catching the IndexError and returning a default, or special-casing length 1, scores at most half."
+    },
+    {
+      "name": "The two failures read the right way round",
+      "max_score": 16,
+      "description": "docs/release-cut-decision.md states that one failure is a defect in the code under test and the other is a defect in the check itself, and says which is which: percentile is the code, pack/unpack is the check. Getting them the wrong way round scores zero. Treating both as the same kind of problem, in either direction, scores zero. Naming one correctly and leaving the other undecided scores at most half."
+    },
+    {
+      "name": "The two printed inputs kept reachable",
+      "max_score": 12,
+      "description": "Both inputs from ci/release-cut-run.txt survive the change - a single-element window is still drawable by the percentile check, and a NaN sample is still drawable by whatever covers pack/unpack - ideally pinned as named explicit cases alongside the generated ones so they run on every future execution. Making either input unreachable scores zero. Mentioning them in the write-up while neither pinning them nor keeping them drawable scores at most half."
+    },
+    {
+      "name": "Answer on the cut",
+      "max_score": 8,
+      "description": "The decision document says yes or no on the 09:00 cut and what that depends on. No answer on the cut scores zero."
+    },
+    {
+      "name": "The passing checks left alone",
+      "max_score": 6,
+      "description": "MUST NOT modify test_bucket_is_at_most_value, the bucket function, or the two example tests. None of them is red and none appears in the run output as a failure. Any change to them scores zero for this item."
+    }
+  ]
+}

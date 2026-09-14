@@ -1,0 +1,10 @@
+{
+  "Total": { "transaction": "Total", "sampleCount": 61749, "errorCount": 0, "pct1ResTime": 2118.0, "pct2ResTime": 2904.0, "pct3ResTime": 31402.0 },
+  "GET /reporting/export": { "transaction": "GET /reporting/export", "sampleCount": 1204, "errorCount": 0, "meanResTime": 18402.1, "pct1ResTime": 29880.0, "pct2ResTime": 31402.0, "pct3ResTime": 38910.0 },
+  "GET /reporting/ledger": { "transaction": "GET /reporting/ledger", "sampleCount": 1198, "errorCount": 0, "meanResTime": 4102.4, "pct1ResTime": 5990.0, "pct2ResTime": 6402.0, "pct3ResTime": 7880.0 },
+  "GET /admin/audit-log": { "transaction": "GET /admin/audit-log", "sampleCount": 2410, "errorCount": 0, "meanResTime": 3204.8, "pct1ResTime": 4510.0, "pct2ResTime": 4918.0, "pct3ResTime": 5602.0 },
+  "GET /admin/users": { "transaction": "GET /admin/users", "sampleCount": 2388, "errorCount": 0, "meanResTime": 1402.2, "pct1ResTime": 1988.0, "pct2ResTime": 2118.0, "pct3ResTime": 2640.0 },
+  "POST /checkout/pay": { "transaction": "POST /checkout/pay", "sampleCount": 8802, "errorCount": 0, "meanResTime": 1902.5, "pct1ResTime": 2710.0, "pct2ResTime": 2904.0, "pct3ResTime": 3410.0 },
+  "GET /search/facets": { "transaction": "GET /search/facets", "sampleCount": 9140, "errorCount": 0, "meanResTime": 1188.7, "pct1ResTime": 1770.0, "pct2ResTime": 1902.0, "pct3ResTime": 2244.0 },
+  "POST /auth/token": { "transaction": "POST /auth/token", "sampleCount": 4402, "errorCount": 0, "meanResTime": 502.1, "pct1ResTime": 744.0, "pct2ResTime": 812.0, "pct3ResTime": 998.0 }
+}

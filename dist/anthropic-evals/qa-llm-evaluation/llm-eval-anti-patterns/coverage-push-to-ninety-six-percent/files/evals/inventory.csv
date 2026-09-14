@@ -1,0 +1,14 @@
+group,cases,passing,failing,first_added
+greeting-and-handoff,22,22,0,2026-02-09
+order-status,24,23,1,2026-02-09
+bulk-export,6,0,6,2026-01-27
+password-reset,19,19,0,2026-03-02
+invoice-explain,27,26,1,2026-07-21
+refund-amount,11,0,11,2026-08-04
+plan-compare,18,17,1,2026-08-11
+escalation,16,15,1,2026-08-11
+tone,9,9,0,2026-08-25
+
+# totals 152 cases, 131 passing, 21 failing
+# order-status rows os-101..os-109 are byte-identical to os-011..os-019,
+#   introduced by the merge on 2026-07-14

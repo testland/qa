@@ -1,0 +1,41 @@
+{
+  "context": "Five changes, three to reject and two to keep, delivered as a green suite by someone who is no longer reachable. Predicted baseline failure is change 3. It is the only one whose harm nothing in the tree reports: removing the stand-in's re-check of the callback URL at the token step breaks no test, changes no output, and comes with a rationale that sounds like exactly the kind of over-strict harness people do delete ('the client sends the same value both times', 'nothing in the suite was covering it'). An agent reviewing by diff-plus-green-run has no signal, and the contractor is right about the facts and wrong about the conclusion: binding the issued code to the callback URL it was issued for is what stops a code intercepted at one registered callback from being spent against another, and 'nothing was covering it' is the reason to write a test, not the reason to delete the check. The same file still stores `redirectUri` on every pending code and never reads it, which is the only trace left. Change 1 is predicted to be rejected correctly but repaired badly: the verifier was held in module-level state, so the naive restoration reintroduces the real bug and the shipped test about two tabs fails. Change 2 is the well-known one and should be caught. Changes 4 and 5 are genuine housekeeping, and an agent that rejects them to look thorough has failed in the opposite direction — un-skipping a passing test with no ticket behind it is the right call, not a suspicious one.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Change 3 rejected and the binding restored",
+      "max_score": 26,
+      "description": "Change 3 must be rejected and `src/mockIdp.js` must once again refuse a code that was issued for one callback URL and presented at the token step with another, with a test that exercises it. Nothing in the supplied suite fails while the comparison is missing, so concluding it is harmless because the tree is green scores zero, as does accepting the change, as does rejecting it in `docs/pr-812-review.md` while leaving the file as the contractor left it. Restoring the comparison with no test covering it scores at most half. Full marks require the reason: the code is bound to the callback URL it was issued for, and the stand-in dropping that check silently removes the only coverage the suite had of it."
+    },
+    {
+      "name": "Change 1 rejected and the proof key restored without shared state",
+      "max_score": 22,
+      "description": "Change 1 must be rejected and the authorize request and exchange must once again carry the challenge, the method and the verifier. Scores zero if the delivered `src/authFlow.js` still sends no `code_challenge`. Scores at most half if the proof key is restored but the verifier is kept in module-level state, which is objectively detectable: the shipped test 'two tabs can each start a login and the first one still completes' fails, because the second login overwrites the first login's verifier. Full marks require the verifier to be carried per flow and the review to say that the module-level variable — not the parameters themselves — was what was actually wrong."
+    },
+    {
+      "name": "MUST NOT leave prefix matching in place",
+      "max_score": 16,
+      "description": "MUST NOT ship a registered-callback check that matches by prefix, and MUST NOT leave a bare origin in the registered list: `https://app.acme.io.evil.test/steal` passes both. Scores zero if `isRegistered` still matches by prefix or `REGISTERED` still contains `https://app.acme.io`. Full marks require a concrete alternative for preview deploys given what the prompt supplies — register each preview callback through the provider's API on deploy and remove it on teardown, well inside the 50-URL ceiling, or route previews through one registered callback. Rejecting the change with no workable alternative scores at most half."
+    },
+    {
+      "name": "Changes 4 and 5 accepted and kept",
+      "max_score": 12,
+      "description": "Changes 4 and 5 must be accepted and left in the tree. Re-skipping the test the contractor un-skipped, inlining the extracted setup helper, or restoring the removed debug line scores zero — rejecting sound housekeeping to look thorough is the mirror failure of waving the rest through. Accepting them in prose but reverting them in the files also scores zero."
+    },
+    {
+      "name": "Tree green with the checks restored",
+      "max_score": 10,
+      "description": "`npm test` is run on the delivered tree, the result is recorded, and it is green with the restored checks in place. Scores zero if the tree is red, or if green was reached by deleting or skipping a test rather than by fixing what the restoration exposed. Removing the preview-callback test is not a deletion for this purpose: it arrived with change 2 and goes back with it unless that specific preview URL is registered explicitly."
+    },
+    {
+      "name": "Five verdicts, in order, each with a reason",
+      "max_score": 6,
+      "description": "`docs/pr-812-review.md` covers all five changes separately and in order, each with an explicit accept or reject. A review that groups them, skips one, or gives a verdict with no reason scores at most half; fewer than four of the five addressed scores zero."
+    },
+    {
+      "name": "Review document produced",
+      "max_score": 4,
+      "description": "`docs/pr-812-review.md` exists at that path and describes the tree actually handed back."
+    }
+  ]
+}

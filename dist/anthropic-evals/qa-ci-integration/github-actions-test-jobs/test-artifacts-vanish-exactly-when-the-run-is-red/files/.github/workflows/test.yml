@@ -1,0 +1,57 @@
+name: test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci
+      - run: mkdir -p test-results logs coverage
+
+      - name: Unit suite
+        id: unit
+        continue-on-error: true
+        run: npm run test:unit
+
+      - name: Contract suite
+        id: contract
+        continue-on-error: true
+        run: npm run test:contract
+
+      - name: Upload junit + debug logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results/
+            logs/
+
+      - name: Push coverage to the dashboard
+        if: always()
+        run: ./scripts/push-coverage.sh coverage/
+        env:
+          COVERAGE_TOKEN: ${{ secrets.COVERAGE_TOKEN }}
+
+      - name: Push preview image
+        if: always()
+        run: ./scripts/publish-preview.sh
+        env:
+          REGISTRY_TOKEN: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Update the :latest tag
+        if: always()
+        run: ./scripts/promote-latest.sh ${{ github.sha }}
+        env:
+          REGISTRY_TOKEN: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Fail the job if anything failed
+        if: failure()
+        run: exit 1

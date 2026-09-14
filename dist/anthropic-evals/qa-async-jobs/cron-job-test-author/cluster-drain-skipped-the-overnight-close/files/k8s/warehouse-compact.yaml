@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: warehouse-compact
+  namespace: platform
+  labels:
+    owner: platform
+spec:
+  schedule: "0 * * * *"
+  startingDeadlineSeconds: 900
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: compact
+              image: registry.internal/platform/warehouse-compact:2026.08.1
+              args: ["--partitions", "orders,events"]
+              resources:
+                requests:
+                  cpu: "4"
+                  memory: 16Gi

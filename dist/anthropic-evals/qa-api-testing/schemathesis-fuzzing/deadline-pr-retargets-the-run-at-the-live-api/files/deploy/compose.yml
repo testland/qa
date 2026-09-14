@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      retries: 30
+
+  api:
+    build: .
+    command: ["./ledger", "serve", "--migrate-on-boot"]
+    ports: ["8080:8080"]
+    environment:
+      DATABASE_URL: postgres://postgres:dev@db:5432/ledger
+    depends_on:
+      db:
+        condition: service_healthy
+
+  seed:
+    build: .
+    command: ["./scripts/seed-staging.sh"]
+    environment:
+      DUMP_URL: s3://nw-dumps/latest/ledger.sql.gz
+    depends_on:
+      api:
+        condition: service_started

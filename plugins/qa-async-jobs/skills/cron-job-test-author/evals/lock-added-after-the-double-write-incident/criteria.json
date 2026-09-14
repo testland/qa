@@ -1,0 +1,41 @@
+{
+  "context": "A lock that looks finished, a handover note that narrows the remaining work to choosing one constant, and six green tests. Predicted baseline failure: the agent accepts the framing it is handed, compares STALE_AFTER_MS of 60,000 against the p99 of 33m47s and the max of 41m08s in ops/sync-runtimes.txt, raises the threshold, adds a test or two in the shape of the ones already there and tells the requester Monday is fine. The threshold is a real defect and finding it is not the discriminator, because the note points straight at it. What the framing hides is in src/sync.js: release(lockPath) sits in a finally that also covers the path where acquire returned false, so the invocation that correctly decides to skip deletes the lock belonging to the run that is still going on its way out. Ten minutes later the next invocation finds no lock at all and starts a second copy against a table that appends and has no idempotency - INC-2208 reproduced exactly, with a lock in front of it, and no threshold value anywhere fixes it. The shipped test 'runSync skips when another run holds the lock' passes because it only inspects the returned object and never looks at the lock file afterwards. The second predicted failure is the over-correction in the other direction: removing the age check, setting the threshold to Infinity or requiring someone to delete the file by hand makes overlap impossible and reinstates INC-1996, where a killed run stopped the schedule for four silent days. A correct answer holds both ends and proves each with a test that fails against the code as shipped.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "test/overlap.test.js exists and docs/lock-policy.md exists and answers the Monday question one way or the other. A document that describes the lock without giving a verdict on switching the job back on scores at most half."
+    },
+    {
+      "name": "The skipped invocation that frees the running job's lock",
+      "max_score": 32,
+      "description": "The answer identifies that runSync releases the lock on the path where it did not acquire it - the finally in src/sync.js covers the early return - so a skipped invocation deletes the holder's lock and the following invocation starts alongside the run that is still going. It must be fixed in src/sync.js or src/lock.js so only the owner releases, and pinned by an executed test that fails against the shipped code: after a refused runSync the lock file is still present and a further acquire is still refused. Not finding it scores zero, whatever else the answer gets right, because the job goes back on with the July failure mode intact. Finding it in prose with no test that inspects the lock after a refused runSync scores at most half."
+    },
+    {
+      "name": "MUST NOT clear the job for Monday on the strength of a new constant",
+      "max_score": 20,
+      "description": "MUST NOT recommend re-enabling the sync while a skipped invocation can still delete the holder's lock, and MUST NOT present a changed staleness threshold as the whole of the fix. A docs/lock-policy.md that says yes to Monday with src/sync.js unchanged scores zero. Restating Priya's framing - that picking a number off the runtime data is what was left to do - and delivering only that scores zero as well, even when the number chosen is defensible."
+    },
+    {
+      "name": "Staleness window measured against how long the job actually runs",
+      "max_score": 18,
+      "description": "The 60-second window is identified as shorter than the job's own runtime - the p50 is 5m52s and the maximum 41m08s over 6,312 runs - so the lock of a run that is still working is classed as abandoned and stolen by the next invocation. The answer lands on a window above the observed maximum, or on a lock whose mtime is refreshed while the run is alive so that age means idle rather than elapsed, or on a liveness check against the recorded pid, and pins it with a test in which a lock held by a live run and aged a few minutes is refused. A bare figure with no derivation from ops/sync-runtimes.txt scores at most half; leaving the threshold at or below 41m08s with no refresh and no liveness check scores zero."
+    },
+    {
+      "name": "MUST NOT reinstate the four-day stall",
+      "max_score": 18,
+      "description": "MUST NOT remove the staleness recovery, set the threshold to Infinity, or make recovery depend on somebody deleting the file by hand. Any of those scores zero: that is INC-1996, which cost four days that nobody noticed. test/lock.test.js must pass unmodified, including the case that ages a lock by 25 hours. Full marks additionally require docs/lock-policy.md to say what now happens to a run that is killed mid-flight and how long the schedule stalls before it recovers on its own."
+    },
+    {
+      "name": "New coverage exercises what the box does, not what a millisecond test does",
+      "max_score": 12,
+      "description": "The new tests age the lock deliberately rather than waiting on real elapsed time, and cover both directions: a lock whose owner is still running is refused, and a lock whose owner is gone is taken. A suite that only repeats the acquire / release / re-acquire sequence already in test/lock.test.js scores zero, and so does one that sleeps for real seconds to reach a staleness boundary."
+    },
+    {
+      "name": "Suite runs green",
+      "max_score": 8,
+      "description": "npm test passes on the delivered tree with test/lock.test.js unmodified. A failing suite scores zero, and so does one that reaches green by editing, deleting or skipping an existing test."
+    }
+  ]
+}

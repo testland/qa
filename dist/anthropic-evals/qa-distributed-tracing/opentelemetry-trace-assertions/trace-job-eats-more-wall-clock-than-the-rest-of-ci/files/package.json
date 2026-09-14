@@ -1,0 +1,8 @@
+{
+  "name": "checkout-api",
+  "version": "4.7.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

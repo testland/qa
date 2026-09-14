@@ -1,0 +1,196 @@
+# Gate went red the day we generated the API client, and nothing else changed
+
+## Problem Description
+
+`orders-api` has had a mutation gate at 70 since February and it has been quiet.
+On 10 September we switched the hand-rolled HTTP client for one generated from
+our OpenAPI spec (`npm run codegen`, output in `src/api/generated`, regenerated
+by a prebuild hook so nobody edits it by hand). The 11 September run came out at
+69.03 and the build has been red every night since.
+
+Nothing about the tests changed that week. Nothing in `src/orders` or
+`src/billing` changed either — the switch was one import path in two files.
+
+I have both run summaries, the config, the codegen setup, one of the generated
+files, the file that holds our long-standing no-coverage mutants, and Thursday's
+thread. I have to give an answer at the release sync on Monday morning and the
+four opinions in that thread all sound reasonable to the people who hold them,
+which is why nobody has moved in five days.
+
+What I want back is a change I can put up as a PR and an answer for each of the
+four, including why the ones that are wrong are wrong — Dinah is going to push
+back on anything that does not let the build go green this week, and Sam's point
+about consistency is the one I am least sure how to argue with.
+
+Worth knowing: the generated client is regenerated from `openapi.yaml` on every
+build, our tests mock the transport so its body never executes under test, and
+the spec itself is contract-tested in the platform repo where it is published.
+
+## Output Specification
+
+1. Edit `stryker.conf.json`. Change only what the fix requires.
+2. Write `docs/mutation-gate-decision.md` — what the 9-point drop actually is,
+   an explicit verdict on each of the four proposals in the thread, and the
+   score you expect the next run to print.
+3. Do not edit anything under `src/api/generated/`, and do not change the
+   codegen command or the prebuild hook.
+
+## Input Files
+
+Extract the following files before beginning.
+
+=============== FILE: reports/mutation-2026-09-08.md ===============
+# orders-api — nightly mutation run, build 2211, 2026-09-08 (last green)
+
+| State         | Count |
+|---------------|-------|
+| Killed        |   690 |
+| Timeout       |    12 |
+| Survived      |   180 |
+| No coverage   |    18 |
+| Ignored       |     0 |
+| Compile error |     0 |
+
+**Mutation score: 78.00%** — threshold break 70, build green.
+
+Per directory:
+
+| Path                 | Killed | Timeout | Survived | No coverage |
+|----------------------|--------|---------|----------|-------------|
+| src/orders/          |    511 |       9 |      121 |           0 |
+| src/billing/         |    142 |       3 |       44 |          18 |
+| src/http/            |     37 |       0 |       15 |           0 |
+
+All 18 no-coverage mutants are in `src/billing/refunds.ts`. They have been in
+the report since the file was written in 2025 and have never been assigned.
+
+=============== FILE: reports/mutation-2026-09-11.md ===============
+# orders-api — nightly mutation run, build 2231, 2026-09-11 (red)
+
+| State         | Count |
+|---------------|-------|
+| Killed        |   690 |
+| Timeout       |    12 |
+| Survived      |   180 |
+| No coverage   |   135 |
+| Ignored       |     0 |
+| Compile error |     0 |
+
+**Mutation score: 69.03%** — threshold break 70, build FAILED.
+
+Per directory:
+
+| Path                 | Killed | Timeout | Survived | No coverage |
+|----------------------|--------|---------|----------|-------------|
+| src/orders/          |    511 |       9 |      121 |           0 |
+| src/billing/         |    142 |       3 |       44 |          18 |
+| src/http/            |     37 |       0 |       15 |           0 |
+| src/api/generated/   |      0 |       0 |        0 |         117 |
+
+Test count is 843 in both runs. `src/http/` is the old hand-rolled client, kept
+for the two legacy callers.
+
+=============== FILE: stryker.conf.json ===============
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "testRunner": "jest",
+  "coverageAnalysis": "perTest",
+  "reporters": ["progress", "clear-text", "html", "json"],
+  "mutate": ["src/**/*.ts", "!src/**/*.test.ts"],
+  "thresholds": { "high": 85, "low": 75, "break": 70 }
+}
+
+=============== FILE: package.json ===============
+{
+  "name": "orders-api",
+  "version": "12.3.0",
+  "private": true,
+  "scripts": {
+    "codegen": "openapi-typescript-codegen --input openapi.yaml --output src/api/generated --client fetch",
+    "prebuild": "npm run codegen",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "jest",
+    "mutation": "stryker run"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "8.6.0",
+    "@stryker-mutator/jest-runner": "8.6.0",
+    "jest": "29.7.0",
+    "openapi-typescript-codegen": "0.29.0",
+    "ts-jest": "29.2.5",
+    "typescript": "5.6.2"
+  }
+}
+
+=============== FILE: src/api/generated/OrdersService.ts ===============
+/* generated by openapi-typescript-codegen -- do not edit */
+/* regenerated on every build from openapi.yaml */
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+import type { Order } from '../models/Order';
+
+export class OrdersService {
+  public static getOrder(id: string): CancelablePromise<Order> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/orders/{id}',
+      path: { id: id },
+      errors: { 404: 'Order not found' },
+    });
+  }
+
+  public static listOrders(
+    limit: number = 50,
+    cursor?: string,
+  ): CancelablePromise<Array<Order>> {
+    return __request(OpenAPI, {
+      method: 'GET',
+      url: '/orders',
+      query: { limit: limit, cursor: cursor },
+    });
+  }
+}
+
+=============== FILE: src/billing/refunds.ts ===============
+import type { Charge, RefundOutcome } from './types';
+
+const WINDOW_DAYS = 45;
+const MS_PER_DAY = 86400000;
+
+export function isRefundable(charge: Charge, now: Date): boolean {
+  const ageDays = (now.getTime() - charge.capturedAt.getTime()) / MS_PER_DAY;
+  if (ageDays > WINDOW_DAYS) return false;
+  if (charge.disputed) return false;
+  return charge.capturedCents > charge.refundedCents;
+}
+
+export function refundCents(charge: Charge, requestedCents: number): RefundOutcome {
+  const remaining = charge.capturedCents - charge.refundedCents;
+  if (requestedCents <= 0) return { ok: false, cents: 0, reason: 'non-positive' };
+  if (requestedCents > remaining) return { ok: false, cents: 0, reason: 'exceeds-remaining' };
+  const fee = charge.feeRefundable ? 0 : Math.round(charge.feeCents * (requestedCents / charge.capturedCents));
+  return { ok: true, cents: requestedCents - fee, reason: 'ok' };
+}
+
+=============== FILE: docs/thread-2026-09-11.md ===============
+# #orders-api, Thursday 11 September
+
+**Dinah (EM):** Drop the break number to 65 for the quarter. The code did not
+get worse on Tuesday, the measurement did, and a red nightly that everyone knows
+to ignore is worse than a number that is 5 lower. We can put it back at 70 when
+somebody has time for this.
+
+**Owen (orders):** The honest fix is tests. 117 uncovered mutants means 117
+untested behaviours. I priced it: a contractor can write the client test suite
+in a fortnight and then the number goes back up on its own merits.
+
+**Kirsty (platform):** Just put a disable comment at the top of every file in
+`src/api/generated`. One line each, the tool stops counting them, done this
+afternoon and nothing else moves.
+
+**Sam (billing):** Whatever you do to the generated files, do the same to
+`src/billing/refunds.ts`. It has been sitting there with 18 no-coverage mutants
+since 2025 and nobody has ever been going to write those tests either. Either
+both are excluded or neither is, otherwise we are just picking favourites.

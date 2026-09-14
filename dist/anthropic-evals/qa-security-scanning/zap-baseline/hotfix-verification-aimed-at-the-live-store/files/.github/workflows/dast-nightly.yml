@@ -1,0 +1,21 @@
+name: DAST nightly (staging)
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  full-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Policy check
+        run: node scripts/scan-policy.js zap-full-scan.py staging
+      - uses: zaproxy/action-full-scan@v0.13.0
+        with:
+          target: https://staging.harlowgoods.dev
+          cmd_options: '-J zap-full.json'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: zap-full, path: zap-full.json }

@@ -1,0 +1,42 @@
+{
+  "context": "The suite already carries a deterministic assertion on the case that broke production, and it already failed. Predicted baseline failure: the agent reads 'llm-rubric only' as the defect, adds is-json to the three JSON cases, declares the suite fixed, and ships something that would have reported green on the incident run all over again — because eval/promptfooconfig.yaml sets defaultTest.threshold to 0.5, and a promptfoo test fails only when the combined score of its assertions falls below that number. results/pr-1180.json settles it in one line: sum-json-login has componentResults showing starts-with failed, score 0.5, success true. One failing structural assertion out of two is exactly 0.5, so it passed. Adding a third assertion makes two of three, 0.667, and it passes again. The agent is further predicted to reach for starts-with as the structural check because the incident was a code fence, which leaves sum-json-refund-fields green — its output opens with a brace and then appends a sentence after the object, so only a check that actually parses the payload catches it — and to answer Finance by refusing the sampling outright rather than noticing that moving the three parsed cases onto deterministic assertions removes their grading cost instead of sampling it. The mirror-image failure is applying the structural check to all eight, which would fail the five prose cases that no machine reads."
+  ,
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave a case able to pass with a structural assertion failing",
+      "max_score": 32,
+      "description": "MUST NOT deliver a configuration in which a failed deterministic assertion can be outvoted by a passing graded one. Full marks require identifying defaultTest.threshold at 0.5 as the reason the suite reported 8 of 8 while sum-json-login's starts-with assertion failed — the captured run records score 0.5 and success true on that case — and changing it so every assertion on the parsed cases must pass. Adding assertions while leaving the combined-score threshold at 0.5 scores zero for this criterion: the added assertions still cannot fail the run. Removing the threshold without saying what it was doing scores at most half."
+    },
+    {
+      "name": "A check that actually parses the payload, on all three parsed cases",
+      "max_score": 22,
+      "description": "sum-json-login, sum-json-billing and sum-json-refund-fields each gain an assertion that rejects a body JSON.parse would throw on. Relying on starts-with alone scores at most half: sum-json-refund-fields opens with a brace and still appends prose after the closing one, so it stays green. Covering only sum-json-login, the case named in the incident, scores at most half. Leaving all three on graded assertions alone scores zero."
+    },
+    {
+      "name": "MUST NOT apply the structural check to the prose cases",
+      "max_score": 14,
+      "description": "MUST NOT add a JSON or shape assertion to any of the five sum-prose-* cases. They return prose a human reads, nothing parses them, and the assertion would fail every one of them. Adding it to any prose case scores zero here."
+    },
+    {
+      "name": "Finance answered with where the money actually comes from",
+      "max_score": 20,
+      "description": "Rejects running a random 3 of 8 per pull request — a gate that samples the cases it gates cannot catch the case it skipped, and the three parsed cases are the ones that took production down — and names the saving the repair itself produces: deterministic assertions are evaluated locally and remove grading cost on those cases rather than sampling it. Accepting the proposal as written scores zero. Refusing with no alternative costing scores at most half."
+    },
+    {
+      "name": "Write-up names the cases the captured run now fails",
+      "max_score": 12,
+      "description": "docs/assertion-plan.md states per case what it carries and why, and identifies both sum-json-login (fenced payload) and sum-json-refund-fields (prose appended after the object) as cases the recorded run would now fail, with the assertion each fails on. Naming only one of the two scores at most half. Naming neither scores zero."
+    },
+    {
+      "name": "Tests that would have caught the pre-incident suite",
+      "max_score": 10,
+      "description": "node --test passes with the shipped tests, and at least one added test fails when pointed at the suite as it stood on 2026-09-08 rather than merely restating the shipped lint rules. A suite that does not run, or added tests that pass equally against the old configuration, scores zero."
+    },
+    {
+      "name": "Captured evidence untouched",
+      "max_score": 5,
+      "description": "MUST NOT modify results/pr-1180.json. Any edit to it scores zero here, including rewriting an output to make a new assertion pass."
+    }
+  ]
+}

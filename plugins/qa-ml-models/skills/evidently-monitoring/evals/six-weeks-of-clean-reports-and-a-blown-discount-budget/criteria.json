@@ -1,0 +1,41 @@
+{
+  "context": "A monitor whose column list is complete, whose reference is genuinely pinned, and which still stayed silent through six weeks of the thing it was watching. Predicted baseline failure: the agent looks for a missing column, finds none - the model's own output is in the monitored set and `tests/test_columns.py` asserts it - and then either follows Tomás downstream into the pricing service or falls back on 'tighten the thresholds'. The silence is decided in `alerting.py`: the notify call is taken on the share of failing per-column tests against the library's dataset-level default of half the columns, so with 22 monitored columns one column has to fail together with ten others before anyone hears about it. The 2026-08-14 dump shows `score` at 0.318 against a 0.1 threshold with `notified: false` and every input feature passing - the report saw it every night and the decision rule threw it away. The second predicted failure is the attractive repair: lowering the share constant. Dropping it to 0.05 makes any single one of the 21 input features page every time it wobbles, which is how this team ends up with the job muted; the disposition has to depend on which column moved, not on how many did. The third is accepting Tomás's point 3 - a fourteen-day label delay does not make acceptance unmonitorable, it means the quality check runs on a window fourteen days behind, and `label` is backfilled through 2026-08-16 in the attached summary, so that check was available throughout. The dating is determinate: the share scored below 0.5 steps from 17.9% to 36.8% in the week of 2026-08-03, the week v8 was promoted with Platt scaling replacing isotonic, while realised acceptance holds at 63.4-63.9% and mean premium does not move; the bundle widening Tomás suspects landed 2026-08-12, nine days after the spend had already doubled.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "At least one file under monitoring/ is changed, the test suite still runs, and docs/quote-acceptance-finding.md exists. A document with no code change scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave the notify decision on a dataset-level share",
+      "max_score": 30,
+      "description": "The answer identifies that `drift_detected` requires half the monitored columns to fail before anyone is notified, so a single column - the model's own output at 0.318 against a 0.1 threshold on 2026-08-14 - could never reach anybody, and the delivered code replaces that rule with a disposition that depends on which column moved. MUST NOT deliver a nightly job whose notification still turns on a fraction of failing columns. Scores zero if the share rule survives in the delivered code, and zero if the answer's diagnosis is that a column was missing from the monitored set, since it was not. Scores at most half if the only change is a smaller share constant, or a lower per-column threshold applied to everything: that pages on any of the 21 input features wobbling and is the same undifferentiated rule with a new number."
+    },
+    {
+      "name": "A quality check built around the fourteen-day label delay",
+      "max_score": 22,
+      "description": "MUST NOT accept Tomás's point 3. A second scheduled job compares predictions against observed labels on a window old enough to have them - a classification-performance comparison against the reference, offset by the lag `monitoring/columns.py` already declares - and it exists as code with its own window, not as a recommendation. Scores zero if the answer agrees that the delay makes acceptance not worth monitoring, and zero if it only adds `label` to the nightly column list without ever evaluating predicted against actual. Scores at most half if such a check is described in the document with no scheduled window or lag offset expressed in code."
+    },
+    {
+      "name": "The finding is dated and Tomás's theory is answered",
+      "max_score": 16,
+      "description": "The document ties the step from 17.9% to 36.8% of quotes scored below 0.5 in the week of 2026-08-03 to the v8 promotion on that date - against flat feature means, realised acceptance steady at 63.4-63.9% and unchanged mean premium - and states that the multi-policy bundle widening on 2026-08-12 post-dates the step by nine days and so cannot have caused it. Scores zero if the pricing service is offered as the leading explanation. Scores at most half if the coincidence with v8 is noted but the bundle theory is left unanswered, or if no dates appear."
+    },
+    {
+      "name": "The green nights are bounded correctly",
+      "max_score": 12,
+      "description": "The document separates what the six weeks of quiet nights do establish - the input distributions held against the June snapshot - from what they cannot, which is anything about the model's behaviour, because the one column that moved was discarded by the notification rule rather than by the report. Scores zero if the write-up repeats Tomás's inference that unchanged inputs imply unchanged model behaviour, or treats the quiet nights as evidence the model was healthy."
+    },
+    {
+      "name": "Tests brought in line rather than deleted",
+      "max_score": 10,
+      "description": "tests/test_alerting.py no longer asserts that a single failing column is nothing to report, and the suite passes under `pytest -q`. Scores zero if that file is deleted, emptied, or marked skip/xfail, and zero if the assertion that one failing column in twenty-two means no notification is left standing while the production code changes around it."
+    },
+    {
+      "name": "MUST NOT rebaseline onto the affected window",
+      "max_score": 10,
+      "description": "MUST NOT regenerate or refresh `ref_2026-06-01_to_2026-06-28` from August or September traffic to make the comparison agree with current behaviour. The reference is replaced only after a promotion that has been validated, and replacing it now bakes the unexplained score shift into the baseline. Scores zero if the answer refreshes the reference to a recent window."
+    }
+  ]
+}

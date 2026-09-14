@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <context>
+    <name>console-auth</name>
+    <desc>Nightly authenticated scan of the ops console. Exported 2026-08-01 by marek.</desc>
+    <inscope>true</inscope>
+    <incregexes>https://console\.brightpath\.dev/.*</incregexes>
+    <excregexes>https://console\.brightpath\.dev/login.*</excregexes>
+    <excregexes>https://console\.brightpath\.dev/api/session.*</excregexes>
+    <excregexes>https://console\.brightpath\.dev/admin/purge.*</excregexes>
+    <authentication>
+      <type>formBasedAuthentication</type>
+      <loginurl>https://console.brightpath.dev/api/session</loginurl>
+      <loginRequestData>username={%username%}&amp;password={%password%}</loginRequestData>
+      <usernameParam>username</usernameParam>
+      <passwordParam>password</passwordParam>
+    </authentication>
+    <verification>
+      <strategy>EACH_RESP</strategy>
+      <loggedInRegex></loggedInRegex>
+      <loggedOutRegex></loggedOutRegex>
+      <pollFrequency>60</pollFrequency>
+    </verification>
+    <session>
+      <type>httpAuthSessionManagement</type>
+    </session>
+    <users>
+      <user>
+        <name>scanner</name>
+        <enabled>true</enabled>
+        <credentials>
+          <username>scanner@brightpath.dev</username>
+          <password>Sc4nner!Nightly2026</password>
+        </credentials>
+      </user>
+    </users>
+  </context>
+</configuration>

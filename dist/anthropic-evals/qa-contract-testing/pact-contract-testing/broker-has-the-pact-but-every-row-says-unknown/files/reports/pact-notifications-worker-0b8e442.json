@@ -1,0 +1,26 @@
+{
+  "_source": "downloaded from broker.internal - the contract published by notifications-worker 0b8e442",
+  "consumer": { "name": "notifications-worker" },
+  "provider": { "name": "orders-api" },
+  "interactions": [
+    {
+      "description": "a request for unsent notifications",
+      "providerStates": [{ "name": "there are two unsent notifications" }],
+      "request": { "method": "GET", "path": "/notifications", "query": { "sent": ["false"] } },
+      "response": {
+        "status": 200,
+        "body": [{ "id": 1, "sent": false, "orderId": 5501, "channel": "email" }],
+        "matchingRules": {
+          "body": {
+            "$": { "matchers": [{ "match": "type", "min": 1 }] },
+            "$[*].id": { "matchers": [{ "match": "type" }] },
+            "$[*].sent": { "matchers": [{ "match": "type" }] },
+            "$[*].orderId": { "matchers": [{ "match": "type" }] },
+            "$[*].channel": { "matchers": [{ "match": "type" }] }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": { "pactSpecification": { "version": "3.0.0" }, "pactJs": { "version": "13.1.4" } }
+}

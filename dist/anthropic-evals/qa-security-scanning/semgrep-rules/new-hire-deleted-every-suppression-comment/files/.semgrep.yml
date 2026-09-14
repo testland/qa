@@ -1,0 +1,8 @@
+rules: []
+
+# Registry rulesets are passed on the command line; this file exists for the
+# path configuration and for custom rules when we get round to writing any.
+paths:
+  exclude:
+    - node_modules
+    - dist

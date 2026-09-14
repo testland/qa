@@ -1,0 +1,16 @@
+PagerDuty incident export - INC-2291 "payments-gateway authorization failures"
+Service: payments-gateway (prod)    Urgency: high
+All times UTC, 2026-09-04.
+
+16:12:41  change   payments-config PR #8871 merged (GitHub webhook)
+16:13:58  deploy   config-sync applied payments-config@a91f2c to prod
+16:14:20  metric   gateway_auth_error_rate crossed 5% (Datadog monitor 77-ERR)
+16:17:05  trigger  INC-2291 opened, auto-paged payments primary (Datadog -> PagerDuty)
+16:17:44  ack      acknowledged by m.okonkwo
+16:22:10  note     "error is gateway timeout, not declines from the issuer" (m.okonkwo)
+16:31:02  note     "timeouts.yml changed 8000 -> 800 in #8871" (j.alvarez)
+16:39:50  status   severity set SEV-2 by m.okonkwo
+16:47:12  action   revert PR #8872 merged
+16:48:30  deploy   config-sync applied payments-config@7be104 to prod
+16:52:06  metric   gateway_auth_error_rate back under 0.4% (Datadog monitor 77-ERR)
+16:55:00  resolve  INC-2291 resolved by m.okonkwo

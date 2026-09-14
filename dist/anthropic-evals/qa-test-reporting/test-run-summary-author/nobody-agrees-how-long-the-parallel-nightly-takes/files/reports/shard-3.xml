@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nightly-e2e">
+  <testsuite name="shard-3" tests="10" failures="1" errors="0" skipped="0" time="391.5" timestamp="2026-09-12T01:00:05">
+    <testcase classname="e2e/profile/avatar.spec.ts" name="uploads avatar" time="9.8">
+      <failure message="expected avatar url to be set, received empty string">AssertionError at avatar.spec.ts:33</failure>
+    </testcase>
+    <testcase classname="e2e/profile/settings.spec.ts" name="updates display name" time="44.2"/>
+    <testcase classname="e2e/profile/settings.spec.ts" name="sets timezone" time="38.7"/>
+    <testcase classname="e2e/profile/security.spec.ts" name="changes password" time="51.3"/>
+    <testcase classname="e2e/profile/security.spec.ts" name="rotates api token" time="42.9"/>
+    <testcase classname="e2e/profile/privacy.spec.ts" name="exports personal data" time="36.4"/>
+    <testcase classname="e2e/profile/privacy.spec.ts" name="deletes account" time="47.1"/>
+    <testcase classname="e2e/profile/notifications.spec.ts" name="toggles email alerts" time="39.6"/>
+    <testcase classname="e2e/profile/notifications.spec.ts" name="toggles push alerts" time="43.8"/>
+    <testcase classname="e2e/profile/settings.spec.ts" name="changes locale" time="37.7"/>
+  </testsuite>
+</testsuites>

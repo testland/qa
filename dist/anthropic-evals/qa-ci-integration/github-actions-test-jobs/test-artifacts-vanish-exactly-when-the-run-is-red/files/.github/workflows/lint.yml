@@ -1,0 +1,15 @@
+name: lint
+
+on:
+  pull_request:
+    paths: ['src/**', '.eslintrc.json']
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci
+      - run: npx eslint src

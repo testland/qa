@@ -1,0 +1,41 @@
+{
+  "context": "Three remediation proposals from the only engineer willing to work on the harness, two of which sound like exactly the right instincts and would each remove the suite's remaining ability to fail. Predicted baseline failure: the agent endorses proposals 1 and 2. Proposal 1 is attractive because 240 really is not a case count and cutting the repeat multiplier to 1 makes the number honest — but repeating the case set against a stochastic system is the right behaviour, and what is wrong is summing the repeats into a denominator and printing a bare total instead of a central estimate with an interval over the 20 draws; setting repeats to 1 fixes the label by throwing away the only thing in the harness that could have measured run-to-run spread, and leaves twelve cases across six behaviours. Proposal 2 is attractive because exact matching on generated prose is a genuine defect and three of the twelve cases really do have it — sum-01 and sum-02 assert substrings of a summary, exp-02 matches a prose opener — but cls-01 and cls-02 assert a closed-form enum label chosen from a stated set, which is exactly where a deterministic assertion belongs, and moving them onto the grader would delete the only two assertions in the file that can currently fail for the right reason. The correct answer splits the case file rather than endorsing or refusing proposal 2 whole. Proposal 3 is the one that is right and the most urgent, for a reason Dan does not give: with no key, `complete` returns a canned string and `judge` returns true unconditionally, so no result in evals/last-run.txt was ever produced by a model. A baseline is also predicted to repeat 'the number is inflated' without enumerating the six cases that cannot fail — sum-02 and han-02 spell the key `expects` so `scoreOne` receives undefined and returns true, exp-02's `matches:` kind falls through to the trailing `return true`, and ref-02, exp-01 and tone-01 are graded by a function that returns true — and without noticing that the canned replies for ref-02 and tone-01 contradict their own rubrics.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT endorse dropping the repeat loop",
+      "max_score": 28,
+      "description": "Proposal 1 must be refused. Recommending `EVAL_REPEATS` be set to 1, or that the harness report 12 / 12, or any variant that removes repeated execution of the case set, scores zero for this criterion regardless of the rest. Full marks require the distinction: repetition is the right response to a model whose output varies, and what is wrong is folding repeats into the denominator and printing one bare total, so the fix is to keep the repeats and report a central estimate with a spread across them while stating the case count separately — twelve cases across six behaviours, which is the real coverage finding. Refusing proposal 1 without saying how the repeats should be reported instead scores at most half."
+    },
+    {
+      "name": "MUST NOT move the closed-form label assertions onto the grader",
+      "max_score": 24,
+      "description": "Proposal 2 must not be accepted whole. Recommending that cls-01 and cls-02 be graded by a rubric scores zero for this criterion: both assert one label from a set named in the prompt, which is closed-form output where a deterministic assertion is correct and is currently the only assertion in the file able to fail for the right reason. Full marks require the split — the open-ended cases (sum-01, sum-02, exp-02, and the reply cases) do need a rubric stating the acceptance criterion, with a similarity check against a reference for the paraphrase-tolerant ones, while the enum labels keep their `equals` assertion. Refusing proposal 2 outright, and leaving the substring assertions on the summarisation output as they are, scores at most half."
+    },
+    {
+      "name": "The number was never produced by a model",
+      "max_score": 20,
+      "description": "The review states that with no key present `complete` returns a fixture string and `judge` returns true without any request, so every 240 / 240 in evals/last-run.txt is a replay of a dictionary and the `model=gpt-4o` line names a model that was never called. Full marks require at least one canned reply shown to contradict its own rubric — ref-02 returns 'the duplicate charge was correct and no refund is due' against a rubric demanding that a refund is due and the amount named, and tone-01 returns 'You should have read the documentation before asking' against a rubric demanding an apology and no blame — so the fixtures would fail a real grader. Treating the pass rate as a measured result of the model scores zero."
+    },
+    {
+      "name": "Every silently-passing case enumerated",
+      "max_score": 16,
+      "description": "The review lists the six of twelve cases that cannot fail and the branch responsible for each: sum-02 and han-02 use the key `expects` rather than `expect`, so `scoreOne` receives undefined and returns true at the first line; exp-02 uses the `matches:` kind, which no branch handles, so it reaches the trailing `return true`; ref-02, exp-01 and tone-01 are routed to `judge`, which returns true with no key. Naming fewer than four of the six scores at most half; naming none scores zero. Each finding must cite the file and line."
+    },
+    {
+      "name": "The one proposal that is right is approved",
+      "max_score": 10,
+      "description": "Proposal 3 is approved, and its urgency is stated in the terms the review establishes: without a key nothing calls a model, so this is a prerequisite for any number from this harness meaning anything, not an infrastructure nicety to be done whenever. Refusing all three proposals scores zero here."
+    },
+    {
+      "name": "Grader is the system under test",
+      "max_score": 8,
+      "description": "The review flags `export const JUDGE = MODEL;` in evals/model.mjs — the same identifier grades the output it produced, so the three graded cases carry a self-preference bias once the key is wired in — and names the fix as a grader from a different family recorded explicitly. Missing it scores zero for this item."
+    },
+    {
+      "name": "Deliverables produced and the harness actually executed",
+      "max_score": 5,
+      "description": "All four documents exist and docs/observed-run.md carries the literal output and exit codes of commands actually run against the attached files, including the runner and its unit tests. A review that only reads the code, or that reports output the attached files do not produce, scores zero for this item."
+    }
+  ]
+}

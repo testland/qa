@@ -1,0 +1,28 @@
+# acme-ledger, Gradle stage, build 318, release/4.9
+
+>> Line Coverage (for mutated classes only): 6,509/9,012 (72%)
+>> Generated 9,640 mutations Killed 5,591 (58%)
+>> Mutations with no coverage 2,704. Test strength 64%
+>> Ran 21,884 tests (2.27 tests per mutation)
+
+Classes mutated: 517
+
+Breakdown by package:
+
+| package                       | classes | generated | survived |
+|-------------------------------|---------|-----------|----------|
+| com.acme.ledger.core          | 53      | 812       | 190      |
+| com.acme.ledger.core.posting  | 49      | 771       | 161      |
+| com.acme.ledger.core.balance  | 44      | 690       | 172      |
+| com.acme.ledger.core.journal  | 42      | 645       | 178      |
+| com.acme.ledger.importer      | 57      | 1,104     | 560      |
+| com.acme.ledger.reconcile     | 66      | 1,208     | 604      |
+| com.acme.ledger.export        | 48      | 902       | 441      |
+| com.acme.ledger.api           | 38      | 744       | 382      |
+| com.acme.ledger.audit         | 23      | 452       | 231      |
+| com.acme.ledger.config        | 15      | 310       | 158      |
+| com.acme.ledger.notify        | 68      | 1,588     | 600      |
+| com.acme.ledger.testsupport   | 14      | 414       | 372      |
+
+Build outcome: FAILED — mutation score of 58 is below the threshold of 85.
+(The Gradle stage has failed on every build since it was added in April.)

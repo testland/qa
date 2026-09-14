@@ -1,0 +1,3 @@
+quarter,window_start,window_end,success,failure,cancelled,skipped
+2026-Q3,2026-07-01,2026-09-30,812,88,96,11
+2026-Q2,2026-04-01,2026-06-30,769,58,71,9

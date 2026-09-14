@@ -1,0 +1,38 @@
+# Accepted dependency exceptions. Reviewed 2026-06-11 (exception review).
+waivers:
+  - cve: CVE-2024-21538
+    package: npm:cross-spawn@7.0.3
+    reason: "ReDoS reachable only from CLI argument parsing we do not use; upgrade lands in 9.5"
+    expires: 2027-03-31
+    approved_by: security@example.com
+
+  - cve: CVE-2025-41220
+    package: deb:ghostscript@10.02.1
+    reason: "Conversion worker runs sandboxed under seccomp; no untrusted PostScript reaches it"
+    expires: 2027-06-30
+    approved_by: security@example.com
+
+  - cve: CVE-2025-27789
+    package: npm:@babel/helpers@7.26.9
+    reason: >
+      Reached only by the docs build; the generated helper is never
+      emitted into the shipped bundle
+    expires: 2027-01-31
+    approved_by: platform-team
+
+  - cve: CVE-2024-4068
+    package: npm:braces@3.0.2
+    reason: "Transitive through the test runner; not in the shipped bundle"
+    approved_by: security@example.com
+
+  - cve: CVE-2023-45857
+    package: npm:axios@1.5.0
+    reason: "Accepted at the June review pending the 1.6 upgrade"
+    expires: 2026-08-31
+    approved_by: security@example.com
+
+  - cve_pattern: "CVE-2025-*"
+    package_pattern: "*"
+    reason: "Blanket carve-out agreed for the 9.4 release window"
+    expires: 2026-12-31
+    approved_by: dana@example.com

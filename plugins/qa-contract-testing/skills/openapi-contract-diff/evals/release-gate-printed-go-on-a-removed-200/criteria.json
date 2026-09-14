@@ -1,0 +1,36 @@
+{
+  "context": "Predicted baseline failure: the agent reaches for the visible `process.exit(0)`, makes it exit on the verdict, adds a test, and ships a gate that still prints GO on the attached report. The defect that actually produced the 4.7.0 release is the severity table at the top of the script, which maps `1` to ERR, `2` to WARN and `3` to INFO. The tool's JSON report encodes severity the other way round - `3` is a definite breaking change, `2` a potential one, `1` non-breaking - so the two level-3 findings in the 2026-09-04 report were graded INFO and dropped on the floor, while the level-2 header removal came out as a warning, which is why the printed output looked plausible enough for a release engineer to act on. Nothing in the fixture states the encoding: the committed tests exercise only an empty report and the rendering order, and the artifact contains no level-1 finding to compare against, so an agent that does not already know the convention has no reason to distrust a named constant sitting in the file. The `?? 'INFO'` default compounds it by grading any level the table does not cover as non-blocking. Two further paths keep the pipeline green even once the verdict is right: the unconditional `process.exit(0)` at the bottom of the script, and the `|| true` on the `gate` script in package.json, which the checklist shows is the only thing the pipeline actually reads.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Severity encoding corrected",
+      "max_score": 28,
+      "description": "Level 3 is the definite-breaking tier, level 2 potential, level 1 non-breaking, so both level-3 findings in `artifacts/breaking-2026-09-04.json` come out as blockers. Leaving the inverted table in place scores zero for this criterion, whatever else is fixed. Deciding what blocks by matching finding ids or the `text` field instead of the severity level scores zero - the next release will carry ids this list has never seen. Correcting the mapping but leaving a level the table does not cover graded as non-blocking scores at most half; an unrecognised severity must be treated as blocking."
+    },
+    {
+      "name": "MUST NOT leave a path that exits 0 on a blocking report",
+      "max_score": 24,
+      "description": "MUST NOT ship a gate that can report a blocking verdict and still let the pipeline continue. Both paths have to go: the unconditional `process.exit(0)` at the bottom of the script, and the `|| true` on the `gate` script in package.json, which is what the pipeline actually runs. Either one surviving scores zero for this criterion - fixing the script while leaving `|| true` in place changes nothing about the release that shipped. Making the exit status conditional on the verdict without ever touching package.json scores zero on the same grounds."
+    },
+    {
+      "name": "Advisory findings stay advisory and stay visible",
+      "max_score": 16,
+      "description": "The level-2 header removal is printed but does not stop the release, and a report whose findings are all non-breaking exits 0. Blocking on every finding scores zero - it recreates the spring version the team stopped running. Silently dropping the advisory findings from the printed output to keep things quiet scores at most half."
+    },
+    {
+      "name": "Regression test over the real artifact",
+      "max_score": 14,
+      "description": "`test/contract-gate.test.js` gains a test that feeds the attached 2026-09-04 report - or findings with the same severity levels - and asserts both that the verdict blocks and that the two definite breaks appear as blockers, plus a case establishing that a non-breaking report still passes. A test that only asserts the verdict string, with nothing pinning the severity levels that caused the incident, scores at most half. No new test scores zero."
+    },
+    {
+      "name": "MUST NOT rewrite the committed tests",
+      "max_score": 8,
+      "description": "The two tests already in `test/contract-gate.test.js` MUST NOT be edited, renamed, deleted or skipped, and must still pass against the fixed script. Changing either one to accommodate a rewrite scores zero for this criterion."
+    },
+    {
+      "name": "Stays on the built-in runner",
+      "max_score": 5,
+      "description": "`node --test` remains the whole command and no dependency is added to package.json. Introducing a test framework, an assertion library or a CLI argument parser scores zero."
+    }
+  ]
+}

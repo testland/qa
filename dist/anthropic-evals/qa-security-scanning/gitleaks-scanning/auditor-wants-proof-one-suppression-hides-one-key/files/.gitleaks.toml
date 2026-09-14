@@ -1,0 +1,9 @@
+# vantage-api secret-scanner config
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "dummy Stripe test key in the SDK fixtures"
+paths = ['''tests/fixtures/.*''']
+regexes = ['''sk_test_[0-9a-zA-Z]{24}''']
+stopwords = ['''EXAMPLE''']

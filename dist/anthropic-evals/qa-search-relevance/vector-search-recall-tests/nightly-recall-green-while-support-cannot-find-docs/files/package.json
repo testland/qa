@@ -1,0 +1,9 @@
+{
+  "name": "helpcentre-search",
+  "version": "4.2.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "recall": "node -e \"const c=require('./data/corpus.json'),q=require('./data/queries.json');const{ingest}=require('./src/ingest');const{measureRecall}=require('./src/recall');console.log('recall@10',measureRecall(ingest(c),q).toFixed(3))\""
+  }
+}

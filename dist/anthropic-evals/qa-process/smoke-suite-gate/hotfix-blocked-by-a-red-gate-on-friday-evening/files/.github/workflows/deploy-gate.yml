@@ -1,0 +1,32 @@
+name: deploy-gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Deploy ephemeral env
+        id: deploy
+        run: ./scripts/deploy-ephemeral.sh ${{ github.head_ref || github.sha }}
+      - name: Gate
+        env:
+          BASE_URL: ${{ steps.deploy.outputs.url }}
+          VERIFY_EMAIL: ${{ secrets.VERIFY_EMAIL }}
+          VERIFY_PASSWORD: ${{ secrets.VERIFY_PASSWORD }}
+        run: npx playwright test e2e/smoke/ --retries=2 --workers=2
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gate-results
+          path: playwright-report/
+      - name: Promote to production
+        run: ./scripts/promote.sh ${{ github.sha }}

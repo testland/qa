@@ -1,0 +1,46 @@
+{
+  "context": "The manager states an instruction that sounds like it forbids the fix, and the fix is the thing that satisfies what he actually asked for. Predicted baseline failure: the agent reads \"I do not want the run stopping at the first red test, we changed that deliberately in April and I am not undoing it\" as a constraint on the setUp flag, leaves continueAfterFailure = true in place, adds waits to the three appointment tests and calls it done — which leaves the cascade mechanism intact for the next backend change. The log settles it: all 22 failures sit inside three test methods, each one a chain of consequences of a first missed tap, while the two healthy tests ran and reported normally in the same execution. Test methods are independent and each gets its own app launch; the flag governs only whether the steps AFTER a failure inside one method keep executing. Setting it back to false costs the manager nothing he asked for - every test in the run still reports on the same morning - and converts each broken test from eight lines of noise into one line naming the step that broke. A correct answer has to say that explicitly, not just flip the flag. Two further predicted misses: the unreproducible date-picker failure is a floating OS - the destination says OS=latest and the runner image moved from 17.5 to 18.0 on the exact date the failures started, so nothing is pinned and Nadia's machine can never match the runner; and the result bundle is uploaded only when the job succeeds and deleted in a cleanup step, so the evidence exists for every night except the nights anyone needs it. Sanjay's automatic reruns must be refused: rerunning a tap that misses because the list has not loaded turns a real defect into an intermittent pass.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave failures cascading",
+      "max_score": 32,
+      "description": "MUST NOT leave `continueAfterFailure = true` in CobaltUITests/AppointmentsUITests.swift - it is the mechanism that turned one missed tap into eight failure lines per test. Leaving it true, or leaving it unaddressed, scores zero for this criterion regardless of everything else delivered. Full marks require the document to also hold the manager's actual requirement: every test method still runs and still reports in the same run because methods are independent of one another, so he loses nothing on the morning after - only the steps after the first failure inside one method stop. An answer that flips the flag but tells him the run will now stop at the first failing test scores at most half, because it is wrong about what the flag does and invites him to revert it."
+    },
+    {
+      "name": "Late-loading list waited for, not slept past",
+      "max_score": 20,
+      "description": "The three appointment tests wait for the first row to be present with an explicit timeout before tapping it, so the 420-610 ms pagination round-trip is absorbed and a genuinely missing row still fails the test. Using a fixed pause - Thread.sleep, sleep(), usleep - scores zero here. So does deleting or weakening the assertions that follow, or reducing a test to only the part that still passes."
+    },
+    {
+      "name": "Floating simulator OS pinned",
+      "max_score": 16,
+      "description": "The destination in the workflow no longer says OS=latest: an explicit runtime version is pinned so the runner and a developer machine agree, and the document connects the date-picker failures to the image moving from 17.5 to 18.0 on 2026-09-05. Leaving OS=latest in place scores zero. Pinning the version without giving Nadia a way to reproduce the runner's configuration locally, or without connecting it to the 2026-09-05 date, scores at most half."
+    },
+    {
+      "name": "MUST NOT lose the run record for failed nights",
+      "max_score": 14,
+      "description": "MUST NOT keep the result bundle upload conditional on the job succeeding, and MUST NOT let the cleanup step delete the bundle before it is uploaded. The upload must run whatever the outcome - if: always() or equivalent - since the screenshots and per-test detail inside it are what a failed night is diagnosed from. Any delivered workflow where a failing run leaves no bundle behind scores zero here."
+    },
+    {
+      "name": "Automatic reruns refused",
+      "max_score": 12,
+      "description": "The document refuses Sanjay's rerun-before-paging proposal and gives the reason: the tap misses because the app has not finished loading, so a rerun converts a reproducible defect into an intermittent pass and the next one like it is invisible. Adding test repetition or a retry-on-failure option to the workflow or the scheme scores zero for this criterion whatever the document says. Refusing it with no reason scores at most half."
+    },
+    {
+      "name": "The arithmetic of 23 explained",
+      "max_score": 10,
+      "description": "docs/nightly-answer.md accounts for the number: 22 failures across exactly three test methods, each a chain from one missed first tap, plus one unrelated failure from the image change - and states what the same night would have reported after the change. An answer that describes the cause without mapping it to the count scores at most half."
+    },
+    {
+      "name": "Healthy tests left alone",
+      "max_score": 6,
+      "description": "MUST NOT rewrite, weaken or re-time testEmptyStateForNewPatient or testOpensPatientRecord. Both already wait for an element and assert its value, both passed on the failing night, and neither appears in the incident. Any change to their assertions scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The edited test file, the edited workflow and docs/nightly-answer.md are all delivered, with all six test methods still present under their original names. A missing deliverable or a deleted test scores zero for this item."
+    }
+  ]
+}

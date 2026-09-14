@@ -1,0 +1,41 @@
+{
+  "context": "The nightly number is produced by grading the index against itself: src/recall.js builds its reference answer by re-querying the same index with every cell probed, so any document that never entered the index is absent from both sides of the comparison and cannot lower the score. Predicted baseline failure: the agent reads the 0.975, reads Priya's note, and treats this as a tuning problem - it raises nProbe, or it finds the 2026-08-19 language filter in src/ingest.js, fixes it, re-runs the same self-referential harness, sees a green number and declares the matter closed. Either way it leaves the measurement intact, which is the thing that hid the defect for eight weeks. The planted evidence settles it: src/ingest.js drops every document whose lang is not exactly 'en', which is 16 of the 44 in data/corpus.json - doc-003, doc-019 and doc-036, the three ids in the support report, are all en-GB or en-AU. Against a brute-force reference over the whole corpus file the real figure is 0.692, not 0.975, and Priya's change moves it to 0.700 while doubling per-query comparisons from 14.25 to 28, because the missing documents are not in the unprobed cells - they are not in the index at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "test/recall.test.js and docs/retrieval-2026-09.md both exist, and src/ingest.js has been changed. Missing the report scores zero for this item."
+    },
+    {
+      "name": "MUST NOT grade the index against its own output",
+      "max_score": 32,
+      "description": "The reference answer the recall figure is measured against MUST NOT come from src/annIndex.js at any nProbe, k or configuration. It has to be computed directly from the vectors in data/corpus.json by exact comparison against every document in that file. Leaving groundTruth() calling index.search(), or replacing it with anything else that reads through the index, scores zero for this criterion no matter what else the answer gets right. Computing an exact reference but running it only over the documents that survived ingest - the corpus filtered by lang, or the points the index happens to hold - scores at most half, because it reproduces the same blind spot with more code."
+    },
+    {
+      "name": "New test is red on the repository as delivered",
+      "max_score": 18,
+      "description": "test/recall.test.js must fail before the ingest fix and pass after it. This is checkable by stashing the ingest change and running the test. A test that is already green on the delivered repository scores zero here - it demonstrates the reference answer is still coming from the index, since nothing else in the repository can make 0.95 pass while 16 of 44 documents are unreachable."
+    },
+    {
+      "name": "Cause named with the count",
+      "max_score": 16,
+      "description": "The report names the language filter added on 2026-08-19 in src/ingest.js as the cause and states how much of the corpus it removes - 16 of 44 documents, index size 28 - and connects it to doc-003 / doc-019 / doc-036 being en-GB or en-AU. 'Some documents are missing from the index' with no count and no mention of the lang comparison scores at most half. Attributing the tickets to index tuning, cell coverage or embedding quality scores zero."
+    },
+    {
+      "name": "Priya's nProbe change answered with measurements",
+      "max_score": 18,
+      "description": "The report rejects raising nProbe to 4 as the fix and shows the numbers behind it: probing every cell leaves recall essentially where it was (about 0.69 to 0.70 against an independent reference on the delivered repository) while roughly doubling per-query comparisons, because the missing documents are not in the unprobed cells. Rejecting it on reasoning alone with no measured recall or cost figure scores at most half. Accepting the change, adopting it as part of the fix, or leaving nProbe raised in the final state scores zero."
+    },
+    {
+      "name": "Index model and its tests untouched",
+      "max_score": 8,
+      "description": "MUST NOT edit src/annIndex.js or test/annIndex.test.js. Any change to either - including 'harmless' ones such as adding an exact-search mode to the index or relaxing an existing assertion - scores zero here, because the whole question is whether the index can be trusted to report on itself."
+    },
+    {
+      "name": "Suite green at the end",
+      "max_score": 5,
+      "description": "npm test passes, with the six delivered tests in test/annIndex.test.js still present and passing. Deleting, skipping or weakening any of them to get to green scores zero."
+    }
+  ]
+}

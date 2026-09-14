@@ -1,0 +1,29 @@
+{
+  "_window": "PRs touching the test over the 12 months to 2026-09-08. Compiled by D. Osei, 2026-09-09.",
+  "prs_12m": {
+    "checkout.spec.ts > card-purchase-happy-path": 7,
+    "checkout.spec.ts > saved-card-purchase": 4,
+    "checkout.spec.ts > apply-discount-code": 6,
+    "cart.spec.ts > line-item-edit": 3,
+    "cart.spec.ts > persist-cart-across-sessions": 4,
+    "auth.spec.ts > login-with-password": 3,
+    "auth.spec.ts > sso-redirect": 9,
+    "auth.spec.ts > password-reset-email": 4,
+    "account.spec.ts > change-password": 2,
+    "account.spec.ts > data-export-request": 4,
+    "search.spec.ts > keyword-results": 3,
+    "search.spec.ts > facet-filters": 6,
+    "search.spec.ts > empty-state-copy": 8,
+    "reports.spec.ts > export-50k-rows": 4,
+    "reports.spec.ts > scheduled-email-report": 6,
+    "admin.spec.ts > audit-log-download": 11,
+    "admin.spec.ts > user-role-change": 3,
+    "admin.spec.ts > bulk-import-10k-rows": 14,
+    "orders.spec.ts > refund-to-original-method": 9,
+    "orders.spec.ts > cancel-within-window": 2,
+    "notifications.spec.ts > in-app-toast": 8,
+    "promo.spec.ts > seasonal-banner": 12,
+    "pricing.spec.ts > currency-switch": 4,
+    "settings.spec.ts > api-key-rotation": 3
+  }
+}

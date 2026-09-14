@@ -1,0 +1,8 @@
+"transfer.amount.placeholder" = "Amount";
+"transfer.recipient.title" = "Choose recipient";
+"transfer.pay.title" = "Pay";
+"transfer.error.insufficient" = "Not enough funds in this account";
+"transfer.confirmed.format" = "Transfer sent. Reference %@";
+"transfer.cancel.title" = "Cancel";
+"accounts.transfer.button" = "Transfer money";
+"accounts.balance.accessibility" = "Available balance";

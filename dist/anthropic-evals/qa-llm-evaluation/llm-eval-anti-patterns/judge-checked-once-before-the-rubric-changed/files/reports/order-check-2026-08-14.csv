@@ -1,0 +1,27 @@
+# Each pair judged twice, once in each order. Same rubric, same grader,
+# same two replies both times. Nothing else varied.
+pair_id,response_1,response_2,winner
+p01,A,B,B
+p01,B,A,A
+p02,A,B,B
+p02,B,A,A
+p03,A,B,B
+p03,B,A,A
+p04,A,B,B
+p04,B,A,B
+p05,A,B,B
+p05,B,A,A
+p06,A,B,B
+p06,B,A,A
+p07,A,B,A
+p07,B,A,A
+p08,A,B,B
+p08,B,A,A
+p09,A,B,B
+p09,B,A,A
+p10,A,B,B
+p10,B,A,A
+p11,A,B,A
+p11,B,A,A
+p12,A,B,B
+p12,B,A,A

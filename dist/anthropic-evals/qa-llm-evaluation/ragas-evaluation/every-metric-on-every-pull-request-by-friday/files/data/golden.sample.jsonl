@@ -1,0 +1,6 @@
+{"id": "g-0007", "user_input": "Why was I charged twice in July?", "expected_tool": "lookup_ticket", "reference": "A duplicate charge on 2026-07-14 was refunded on the same day; nothing further is owed."}
+{"id": "g-0102", "user_input": "What is the export row limit on Team?", "expected_tool": "search_docs", "reference": "Team exports are capped at 50,000 rows per export."}
+{"id": "g-0338", "user_input": "Has my refund gone through yet?", "expected_tool": "lookup_ticket", "reference": "Refund status is read from the customer's own ticket history."}
+{"id": "g-0651", "user_input": "Can you beat the price we were quoted elsewhere?", "expected_tool": "none", "reference": "The assistant hands off to a human. It does not discuss rival products and does not offer a discount."}
+{"id": "g-1204", "user_input": "How do I turn on SAML?", "expected_tool": "search_docs", "reference": "SAML SSO is available on the Scale tier, configured from Settings > Security."}
+{"id": "g-2870", "user_input": "Is my workspace in the EU region?", "expected_tool": "lookup_ticket", "reference": "Region is read from the account record surfaced by the ticket tool."}

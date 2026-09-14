@@ -1,0 +1,36 @@
+{
+  "context": "One invocation asked to be two artifacts with opposite requirements, under cost pressure not to add a second tool. Predicted baseline failure: the agent reviews the draft, finds a well-formed CycloneDX 1.5 document that validates and loads in the customer's portal, and signs it off — possibly tightening the release notes or adding the digest to the response — because nothing about the file looks broken. What it is predicted to miss is that the flags that make the step a good gate are the flags that make its output a bad inventory: the emitted document records four vulnerabilities against an image the nightly run on the same digest reports 156 on, because the severity threshold and the available-fix filter were applied to the run that produced it. Sending it answers 4.1 with a document asserting the released image has four known vulnerabilities, which is the incomplete inventory that restarts their ten-day clock. The second predicted miss is the scope boundary: an all-in-one image scanner emits this format as an annotated by-product of a scan, and a customer-facing inventory is the job of a dedicated bill-of-materials generator, which is exactly the second binary the requester has been argued out of adding. The third is the over-correction — an agent that does spot the filtering is predicted to fix it by deleting the threshold and the fix filter from the one shared step, which repairs the inventory and destroys the gate that answers 4.2.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Customer inventory no longer produced by the gating run",
+      "max_score": 28,
+      "description": "The document sent to the customer is produced by an invocation that carries no severity threshold and no available-fix filter, separate from the one whose exit status gates the release. Scores zero if the delivered workflow still emits the customer artifact from a run carrying either filter, or if the draft is signed off as it stands. Noting the problem in the response document while leaving the workflow emitting the filtered file scores at most half."
+    },
+    {
+      "name": "MUST NOT strip the gate to fix the inventory",
+      "max_score": 20,
+      "description": "MUST NOT resolve the conflict by removing the severity threshold or the available-fix filter from the step that fails the build. With 117 of 156 findings carrying no published fix, an unfiltered blocking step fails every release on findings nobody can act on, and 4.2 asks specifically about high-severity vulnerabilities that have a fix. Scores zero if the delivered workflow has no blocking invocation left, or if the blocking invocation no longer carries both a severity threshold and the available-fix filter."
+    },
+    {
+      "name": "Scope boundary stated rather than quietly assumed",
+      "max_score": 22,
+      "description": "The response says plainly what the emitted document is: a scan artifact that carries the scanner's own component list and findings, produced as a by-product of scanning rather than by a dedicated inventory generator. Full marks route 4.1 to a purpose-built bill-of-materials step — naming a specific product is not required, describing what it has to do is — and state the trade-off against the engineer's objection to a second binary. Keeping it in the existing scanner but removing the filters and disclosing the limitation in writing scores at most half. Telling the customer the emitted file is a complete inventory of the image scores zero."
+    },
+    {
+      "name": "The four-against-156 discrepancy named with numbers",
+      "max_score": 14,
+      "description": "The answer sets the four vulnerabilities in the emitted document against the 156 the nightly run reports on the identical digest sha256:6ae0b31d77c4, and identifies that gap as what would get the submission returned. Concluding only that the file 'may be incomplete' without the comparison the two attachments make available scores at most half; treating the file's validity as CycloneDX 1.5 or its acceptance by the portal as evidence of completeness scores zero."
+    },
+    {
+      "name": "Both questions answered separately",
+      "max_score": 10,
+      "description": "docs/customer-review-section-4.md answers 4.1 and 4.2 as two questions with two artifacts, states the production date and the image digest 4.1 asks for, and says what evidence backs the gate claim. A single combined answer pointing at one file scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The workflow is edited and docs/customer-review-section-4.md is written."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "Nothing in this dump is labelled. The log is exit codes and job results with no commentary, and Chaitanya's position - that the vendor's numbers are CI noise and alerting belongs on the dashboard - makes leaving the allow-list in place the comfortable answer. Predicted baseline failure: the agent finds `continue-on-error: true`, calls that the bug, tightens the unknown-code branch, and stops. Two things it is predicted to miss. First, the invocation passes a flag that makes a build carrying visual changes exit 0, and the evidence is the shape of the log rather than any note in it: across 30 runs there is not one exit 1, even on 2026-03-02, 2026-05-19 and 2026-08-07, the three days the regressions merged. The tool saw all three; the flag turned each of them into a zero, and the 261-build unreviewed queue with no rota is the other half of that flag's precondition - review in the vendor UI is not happening and never has. Second, the allow-list passes the codes that mean nothing was photographed at all: 4 is no stories found and appears on three consecutive days in July, 21-23 are Storybook build and load failures, 2 is component errors, 11 is an account quota or payment problem in August. Those runs reported green while comparing nothing, so several of the 412 greens are vacuous. An agent working from the code alone, without the exit-code semantics, cannot tell those apart from transient network errors.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Suppressed change signal found and removed",
+      "max_score": 32,
+      "description": "The write-up identifies that the CLI is invoked with the flag that exits 0 when a build has visual changes, and the delivered `scripts/visual-gate.mjs` no longer does so - or retains it only alongside a named owner and a stated review cadence. Leaving the invocation unchanged scores zero for this criterion no matter what else is fixed. Full marks require the evidence: no exit 1 appears anywhere in the 30 logged runs even though three visual changes are known to have merged on the logged dates, so a changed build and a clean build were indistinguishable to CI. Removing the flag without connecting it to the missing exit 1 or to the incident dates scores at most half."
+    },
+    {
+      "name": "MUST NOT pass codes where nothing was compared",
+      "max_score": 26,
+      "description": "The corrected `verdict` MUST NOT return ok for 4, 2, 3, 21, 22, 23, 11 or 12. Returning ok for 4 scores zero for this criterion. Full marks require the write-up to say what at least two of those codes mean - 4 is no stories found, 11/12 are account quota or payment, 21-23 are Storybook build or load failures - and to point at evidence in the log, such as runs 1089-1091 reporting green on three consecutive days without a single story being photographed. Blocking only the Storybook build family while 4 or 11 still pass scores at most half."
+    },
+    {
+      "name": "Unreviewed queue reconciled with a named owner",
+      "max_score": 12,
+      "description": "The follow-up says what happens to the 261 unreviewed builds and who looks at new ones, with an owner and a cadence, or states that CI now blocks on changes so review in the vendor UI is no longer what stands between a regression and production. Leaving review 'in the UI' with nobody named and no cadence scores zero, since that is the state the dump is already in."
+    },
+    {
+      "name": "Step outcome no longer discarded",
+      "max_score": 10,
+      "description": "`continue-on-error: true` is removed from the snapshot step so the job's result follows the gate's verdict. Leaving it in place scores zero for this item, and no other fix can compensate - the step's exit status is thrown away before it reaches the job."
+    },
+    {
+      "name": "Tests inverted and passing",
+      "max_score": 12,
+      "description": "`node --test test/` passes at the end and `test/visual-gate.test.mjs` asserts the corrected mapping, including at least that 4 blocks and that one of 2 / 11 / 21 blocks. A suite that still asserts 4 or 11 does not block scores zero, as does one that fails to run."
+    },
+    {
+      "name": "Distinct mechanisms separated with evidence",
+      "max_score": 8,
+      "description": "`docs/inc-4522-followup.md` lists the reasons as separate mechanisms rather than one narrative, each with the line of evidence that shows it. Naming fewer than three distinct mechanisms scores at most half."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "All four outputs exist: the fixed script, the updated test file, the fixed workflow, and the follow-up document."
+    }
+  ]
+}

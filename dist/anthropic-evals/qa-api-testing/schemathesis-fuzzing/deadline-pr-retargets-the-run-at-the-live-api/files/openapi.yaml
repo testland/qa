@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: Northwind Ledger API
+  version: 1.9.0
+paths:
+  /v1/accounts:
+    get:
+      operationId: listAccounts
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500 }
+      responses:
+        '200':
+          description: accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, next]
+                properties:
+                  items: { type: array, items: { type: object } }
+                  next: { type: string, nullable: true }
+        '400': { description: bad request }
+  /v1/exports/{id}/download:
+    get:
+      operationId: downloadExport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: file }
+        '404': { description: unknown export }
+  /v1/statements/{id}/pdf:
+    get:
+      operationId: statementPdf
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: pdf }
+        '404': { description: unknown statement }
+  /v1/transfers:
+    post:
+      operationId: createTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [from, to, amount_cents]
+              properties:
+                from: { type: string }
+                to: { type: string }
+                amount_cents: { type: integer, minimum: 1 }
+      responses:
+        '201': { description: created }
+        '400': { description: rejected }

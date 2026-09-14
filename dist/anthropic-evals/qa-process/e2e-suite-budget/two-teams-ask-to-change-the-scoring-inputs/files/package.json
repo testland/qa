@@ -1,0 +1,5 @@
+{
+  "name": "e2e-review",
+  "private": true,
+  "scripts": { "test": "node --test" }
+}

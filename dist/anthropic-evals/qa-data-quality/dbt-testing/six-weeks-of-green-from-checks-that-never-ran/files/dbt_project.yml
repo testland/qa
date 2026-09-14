@@ -1,0 +1,22 @@
+name: 'ledger'
+version: '2.4.0'
+config-version: 2
+
+profile: 'ledger'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  ledger:
+    +materialized: view
+    marts:
+      +materialized: table

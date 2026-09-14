@@ -1,0 +1,51 @@
+{
+  "context": "A blocking check that prints ERROR findings and still exits 0, with every ordinary explanation pre-eliminated in the prompt: branch protection is exported and lists the check, no continue-on-error is set, and the log shows a clean scan of 118 files. Predicted baseline failure: the agent cannot name the cause, so it takes one of the two wrong explanations the prompt hands it (a too-narrow ruleset, answered by switching the pinned rulesets to registry auto-detection) or it invents a third (job-level failure handling, a GitHub cache, an output-artifact problem), and then 'fixes' it by bolting a shell step onto the end that reads semgrep.json and calls exit 1. The settled fact it is predicted to miss is that `semgrep scan` is the local, account-free subcommand that does not return a failing exit code on findings by default, which is why the step succeeded with two ERROR findings printed inside it; the CI-facing subcommand `semgrep ci` is what returns failing codes on findings, and `semgrep scan` can only gate at all with an explicit error flag. Nothing about the ruleset, the cache, or the artifact upload changes an exit code, so any answer built on those leaves PR #812 mergeable.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "`.github/workflows/sast.yml` is edited and `docs/gate-evidence.md` exists and is written as an answer to an external questionnaire rather than a note to self. Missing either file scores zero for this item."
+    },
+    {
+      "name": "Root cause is the subcommand's exit-code behaviour",
+      "max_score": 30,
+      "description": "docs/gate-evidence.md states that the scanning subcommand used in the workflow does not return a failing exit code when it reports findings — that this is its documented default and not a misconfiguration — and that this is why a step which printed two ERROR findings completed with exit code 0. Naming the exit-code semantics but attributing them to a missing flag on an otherwise correct command scores at most half. Attributing the green check to the ruleset, to GitHub caching, to branch protection, to the artifact upload, or to anything that does not change the process exit code scores zero for this criterion regardless of what the workflow ends up saying."
+    },
+    {
+      "name": "MUST NOT keep `semgrep scan` as the gating command",
+      "max_score": 24,
+      "description": "The blocking step MUST NOT still be a bare `semgrep scan` invocation. Full marks require the CI subcommand (`semgrep ci`) as the gating command. Retaining `semgrep scan` with an explicit `--error` flag added scores at most half — it does gate, but it is the command the practice warns against for pipelines. Gating by adding a separate shell/jq/python step that parses semgrep.json and exits non-zero, while the scan step itself still cannot fail, scores zero: the tool's own exit code is still being discarded. Leaving the command untouched scores zero."
+    },
+    {
+      "name": "MUST NOT blame the pinned rulesets or move to auto-detection",
+      "max_score": 14,
+      "description": "MUST NOT replace or supplement `--config p/owasp-top-ten` / `--config p/javascript` with registry auto-detection (`--config auto`) as part of the fix. The findings were already produced by the pinned rulesets and are visible in the attached log, so widening the ruleset explains nothing and trades pinned, owned rulesets for ones that drift between runs. Adopting the platform lead's auto-detection suggestion scores zero here; silently dropping one of the two pinned rulesets scores at most half."
+    },
+    {
+      "name": "The two ruled-out hypotheses stay ruled out",
+      "max_score": 10,
+      "description": "The answer does not edit `config/branch-protection.json`, does not propose re-adding the check to required status checks, and does not propose clearing a cache. Full marks also require saying briefly why the attached evidence excludes them — the check is already required and the findings were already printed. Changing branch-protection settings as part of the fix scores zero."
+    },
+    {
+      "name": "Findings reach a reviewable surface",
+      "max_score": 10,
+      "description": "The workflow still emits machine-readable output for review after the change — SARIF uploaded to code scanning, or the JSON artifact retained — and the upload runs even when the gating step fails (`if: always()` or equivalent). A fix that makes the step fail and thereby skips the report upload entirely scores at most half, because the questionnaire answer then has no artifact behind it."
+    },
+    {
+      "name": "MUST NOT neutralise the probe",
+      "max_score": 8,
+      "description": "MUST NOT modify, delete, move, `--exclude`, or add a `paths.exclude` entry for `security/gate-probe/probe.js`, and MUST NOT add a suppression comment to it. Any of those scores zero here: the probe is the only instrument that shows whether the check blocks, and excluding it makes the questionnaire answer false."
+    },
+    {
+      "name": "Re-proof procedure is reproducible",
+      "max_score": 9,
+      "description": "docs/gate-evidence.md gives the concrete steps to repeat the experiment — push the probe branch, open the PR, observe the check fail — and states the exit code the fixed step now returns on findings. An answer that says only 'the gate now works' with no repeatable procedure scores zero for this item."
+    },
+    {
+      "name": "Application code and tests untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `src/reports/export.js`, `test/export.test.js`, or `package.json` test wiring. None of them appears in the findings and none is implicated in the exit code. `npm test` must still pass. Any change to the test file scores zero here."
+    }
+  ]
+}

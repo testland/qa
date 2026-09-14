@@ -1,0 +1,36 @@
+$ for b in $(cat /tmp/merged-branches); do echo "== $b"; git log --oneline --first-parent main..origin/$b; done
+(captured 2026-09-02, before the branches were deleted)
+
+== 3311 badge-label-spacing
+9f1a044 feat(badge): tighten the label spacing at small size
+2c70b81 chore(deps): move date-fns onto the 4.x line
+
+== 3314 theme-provider-decorator
+5d3b2ae chore(storybook): wrap every story in the theme provider
+
+== 3317 table-density
+4b9e1c2 Merge branch 'main' into table-density
+7e0cd51 feat(table): compact density option
+a10f9c7 fix(table): keep the header sticky when compact
+
+== 3319 variable-font-swap
+b4477de chore(assets): replace the static font files with the variable build
+61d0a02 feat(text): use the variable axis for weight
+
+== 3322 a11y-addon
+77c3e10 chore(storybook): add the accessibility addon to the addons list
+
+== 3323 storybook-8
+0aa51e3 chore: move the storybook packages to 8.3.5
+f2b1c99 chore(storybook): update main.js for the 8.x framework field
+
+== 3324 card-radius
+3ccb1a7 feat(card): round the outer corners
+d90e88e chore(deps): date-fns 3.6 -> 4.1
+
+== 3327 modal-focus-trap
+5a01f7c fix(modal): restore focus to the trigger on close
+
+== 3329 tooltip-delay
+b7e2d54 feat(tooltip): configurable open delay
+1d3ff02 test(tooltip): story for the delayed variant

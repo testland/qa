@@ -1,0 +1,46 @@
+{
+  "context": "A coverage audit whose register deliberately mixes one project-execution row in among the product rows, and whose loudest-looking coverage is on the least important risk. Predicted baseline failure: the agent produces a tidy per-risk table, reports PJ-003 (the ledger engineer's parental leave, score 20) as a high-scoring risk with zero test coverage and puts it on the blocking list, praises R-014 as the best-covered row because six tagged tests and a manual case point at it, counts the single Datadog entry against R-002 as coverage, and then either signs off because 'every serious row has something' or blocks for the wrong reason. The fixture settles each of these. PJ-003 is a staffing risk: it affects project execution, no test can mitigate it, and it does not belong in a test-coverage mapping at all - it belongs in a project register with a response strategy. R-014 scores 4, below the level worth mapping, and seven coverage items against it is redundancy to audit rather than a pattern to copy. R-002's only monitor is payout-batch-duration-p99, a latency monitor that would not observe a duplicate payment, while tests/payout-batch.test.js does exercise the already-paid skip path but carries no tag, so the tag-derived depth under-reports and cannot settle R-002 either way. R-005, the 1099-K threshold at score 16, has no test, no manual case and no monitor anywhere in the fixture, and that single fact decides Friday. Two tests are still tagged risk:R-009, a risk retired on 2026-04-02, and tests/ledger.test.js is tagged risk:R-11 against a register that uses R-011, both of which a grep-only pass reports wrongly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Coverage report and verdict produced",
+      "max_score": 5,
+      "description": "docs/risk/coverage-2026-06.md lists the risks ordered by score with what backs each one and how deeply, and docs/risk/signoff-2026-06.md gives a single go or no-go with owners on the actions. A report with no per-risk depth figure, or a sign-off document that lists findings without reaching a verdict, scores at most half."
+    },
+    {
+      "name": "MUST NOT treat the parental-leave row as a test-coverage gap",
+      "max_score": 26,
+      "description": "MUST NOT report PJ-003 as an uncovered or orphan risk in the coverage mapping, and MUST NOT recommend writing tests, cases or monitors for it. Doing either scores zero for this criterion. Full marks require PJ-003 to be excluded from the coverage mapping as a project-execution risk with the reason given, and routed to project-level handling with a response strategy and an owner instead. Silently dropping it from the report without saying why it was excluded scores at most half - Helena asked about it by name and needs an answer."
+    },
+    {
+      "name": "The 1099-K row identified as the uncovered critical risk and Friday called off",
+      "max_score": 26,
+      "description": "R-005 (score 16) is identified as having no automated test, no manual case and no monitor, and that finding drives a no-go for Friday. Reaching a go verdict scores zero for this criterion. Identifying R-005 as uncovered but still recommending release, or recommending release 'with follow-up', scores zero. Reporting R-005 as uncovered and calling no-go but attributing the block to a different row as well as or instead of R-005 scores at most half."
+    },
+    {
+      "name": "Monitor-only coverage on the double-pay risk judged insufficient",
+      "max_score": 22,
+      "description": "R-002 (score 20) is not treated as covered on the strength of one monitor. Full marks require all three observations: a single monitor is minimal depth and minimal depth does not stand up at this score, payout-batch-duration-p99 measures batch latency and would not observe a duplicate payment, and tests/payout-batch.test.js already exercises the already-paid skip path but carries no risk tag so the tag-derived mapping under-reports. Counting the monitor as adequate coverage for a score-20 risk scores zero. Naming only the depth number without questioning whether that monitor would catch this failure scores at most half."
+    },
+    {
+      "name": "Tests pointing at a retired risk found",
+      "max_score": 14,
+      "description": "The two tests in tests/legacy-csv-export.test.js tagged risk:R-009 are identified as pointing at a risk retired on 2026-04-02, reported separately from the risk-side findings, and put up for audit rather than counted as coverage. Missing them entirely scores zero. Counting R-009 as an eighth covered risk in the report scores zero."
+    },
+    {
+      "name": "Heaviest coverage recognised as redundancy, not as a pattern to copy",
+      "max_score": 12,
+      "description": "R-014 (score 4) is not held up as the best-covered row. Full marks require both halves: it sits below the score worth mapping at all, and six tagged tests plus a manual case against a score-4 UX row is depth to audit for redundancy rather than to replicate. Presenting R-014 as an example for other risks to follow, or as evidence the release is well covered, scores zero."
+    },
+    {
+      "name": "Low-score row with no coverage not reported as an orphan",
+      "max_score": 8,
+      "description": "R-016 (score 3) has nothing behind it and is correctly left out of the orphan findings or explicitly marked as below the threshold worth mapping. Listing R-016 alongside R-005 as a coverage gap needing action before Friday scores zero - it makes the report say that a score-3 row and a score-16 row need the same response."
+    },
+    {
+      "name": "Tag drift on the ledger test found",
+      "max_score": 8,
+      "description": "tests/ledger.test.js is tagged risk:R-11 while the register uses R-011, so a tag-matching pass reports R-011 as uncovered when a test exists. Reporting R-011 as an orphan without noticing the near-miss tag scores zero; noticing the mismatch but not recommending the tag be corrected scores at most half."
+    }
+  ]
+}

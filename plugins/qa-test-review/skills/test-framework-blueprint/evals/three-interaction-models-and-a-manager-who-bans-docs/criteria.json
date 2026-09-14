@@ -1,0 +1,41 @@
+{
+  "context": "Two predicted baseline failures, and they are independent. The first is that the agent keeps two of the three interaction models and calls the result a layered architecture - screen objects for simple pages, the task/actor layer for multi-step flows, the store hook for setup - because that division sounds sophisticated, each model has a defensible-sounding niche, and consolidating 210 specs onto one model is the more expensive and less diplomatic recommendation. The attachments settle which single model and rule the third out on its own terms: reports/suite-inventory.md gives 210 specs today against a submitted planning estimate of 380-420 by the end of 2027, and four roles - patient, scheduler, clinician, billing admin - sharing the same scheduling, messaging and upload interactions; the store-dispatch style belongs to a different runner's idiom, and audit finding 4 records that the hook is stripped from production builds, so the 31 specs depending on it cannot run against a release artifact and two of them sit in a release smoke set that has consequently never run against a release build. The second predicted failure is compliance with Jen. Her objection is sympathetic and she is the manager, so the agent is predicted to produce a code plan and no written convention. Audit finding 2 settles that: the documented-versus-actual drift check has now failed to run for three consecutive quarters, each time for the same reason - there is no documented side to compare the code against. The document is not a wiki page, it is the input to a control the team already pays for and already runs. An answer that skips it has removed the only thing that would catch this suite drifting again next year.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/re-architecture.md and docs/migration-order.md both exist, and every additional file created is named with a stated reason. Producing no migration order scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave two interaction models standing",
+      "max_score": 30,
+      "description": "The design MUST NOT keep more than one interaction model, in any framing - 'screen objects for simple pages and tasks for the complex flows', 'store dispatch for setup only', or an end state that still has two. Any such split scores zero for this criterion regardless of the rest. Full marks require exactly one model named as the destination for all 210 specs, with the other two named as rejected and the specific reason each lost. Choosing one but leaving an open-ended 'existing specs stay as they are' carve-out, so both continue to exist indefinitely, scores at most half."
+    },
+    {
+      "name": "Written convention produced over the manager's objection",
+      "max_score": 24,
+      "description": "A conventions document is created in the repository and docs/re-architecture.md answers Jen directly on the ground the audit gives: the drift check has been skipped three quarters running because there is no documented side to compare the code against, so this document is the input to a control the team already runs, not a wiki page. Complying with 'the code is the doc' and producing no conventions file scores zero. Producing the file but justifying it only as general good practice, with no reference to the audit finding, scores at most half."
+    },
+    {
+      "name": "Model chosen from the inventory rather than from preference",
+      "max_score": 16,
+      "description": "The chosen model is argued from the figures in reports/suite-inventory.md - the 380-420 projection and the four roles sharing interactions - and the store-dispatch style is rejected on its own terms: an idiom belonging to a different runner, plus a hook stripped from production builds. A choice presented with no reference to suite size or to the roles scores at most half; a choice that ignores the production-build finding entirely scores zero for that half."
+    },
+    {
+      "name": "The 31 store-dispatch specs are given a route back",
+      "max_score": 14,
+      "description": "The migration order says what happens to the 31 specs using window.__ardent.store and moves the two that sit in the release smoke set first, because the audit records that the smoke set has never run against a release build. Leaving those 31 specs unaddressed scores zero; addressing them without prioritising the smoke-set two scores at most half."
+    },
+    {
+      "name": "Migration staged, with a condition gating each step",
+      "max_score": 10,
+      "description": "The order moves the suite in stages, each with a stated precondition, and does not propose rewriting 210 specs in one change. A single 'migrate everything to the new model' step scores zero. Stages with no preconditions attached score at most half."
+    },
+    {
+      "name": "MUST NOT pull the unit tier into scope",
+      "max_score": 6,
+      "description": "The 96 tests under test/ are owned by the service teams, were explicitly out of scope for the audit, and pass today. MUST NOT bring them into this framework's scope, re-runner them, or modify them. Doing any of those scores zero here."
+    }
+  ]
+}

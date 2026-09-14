@@ -1,0 +1,16 @@
+{
+  "name": "@harborlight/ds",
+  "version": "4.7.2",
+  "private": true,
+  "scripts": {
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "build-storybook": "storybook build",
+    "test": "node --test test/"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "8.3.5",
+    "chromatic": "11.10.2",
+    "storybook": "8.3.5",
+    "vite": "5.4.8"
+  }
+}

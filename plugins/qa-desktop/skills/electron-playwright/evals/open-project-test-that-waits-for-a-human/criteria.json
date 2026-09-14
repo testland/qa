@@ -1,0 +1,41 @@
+{
+  "context": "A native OS file picker is not a DOM element, is not in any renderer, and cannot be reached from the page - and the one move that works has a second step most attempts miss. Predicted baseline failure has two halves. The first is the choice of move: the agent keeps trying to drive the picker, with `keyboard.type` replaced by `setInputFiles`, a file-chooser handler, a headed-only workaround or an OS-automation dependency, or else it adds a test-only channel or environment branch to `src/main/ipc.ts` so the dialog can be bypassed - which the prompt forbids, pushing an unaided agent harder toward the first group, all of which keep the thirty-second hang. The second half is the one that separates a lucky attempt from a working one. The dialog has to be replaced inside the already-running main process through the application handle's evaluate, and the replacement has to return the directory the test just created - which is a different path on every run, generated in the test process. The function passed to that evaluate is serialised and executed in the main process, where nothing from the test's scope exists, so a replacement that closes over the test's path variable throws a reference error inside the main process the moment the handler fires and the test hangs exactly as it did before; the path has to be handed over as the evaluate call's argument. With a hard-coded literal the mistake is invisible, which is why the prompt removes the fixed path. The third trap is that the internal-id selectors are expected to survive untouched, because the prompt frames the June breakage as a version-pinning question rather than as a locator question.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Dialog answered from the main process with the run's own path supplied at call time",
+      "max_score": 34,
+      "description": "MUST NOT attempt to drive the OS picker - typing into it, `setInputFiles`, a file-chooser handler, a robot or OS-automation dependency, or any headed-only workaround - and MUST NOT add a test hook, environment branch or extra channel to `src/main/ipc.ts`. Either scores zero for this criterion regardless of the rest, as does installing the replacement from the renderer, which has no dialog module. Full marks require `dialog.showOpenDialog` to be replaced inside the running main process through the application handle's evaluate, before the action that opens it, returning the not-cancelled shape with the directory the test created for this run - and that directory must reach the main process as the evaluate call's argument. Closing over the test-scope path variable inside the evaluated function scores at most half: the function is serialised and runs where that variable does not exist, so the handler throws and the test hangs as before. A hard-coded literal path rather than the directory the test created also scores at most half."
+    },
+    {
+      "name": "Main-process assertion retained",
+      "max_score": 14,
+      "description": "The test still checks something only the main process knows - the window title through the window's own main-process handle, or the recorded recent-project list through the application handle's evaluate - so a renderer that paints the right heading over a main process that recorded nothing still fails. Zero if every surviving assertion reads renderer DOM. Zero as well if the recorded-open check is dropped because the rewrite made it awkward; the prompt requires it kept."
+    },
+    {
+      "name": "Second window awaited by its own event",
+      "max_score": 8,
+      "description": "The Preferences window is obtained by awaiting the application's window event, raced with the click that opens it or awaited before the window list is read - not by indexing the window list after a delay. Any fixed wait or sleep left in the file scores zero, as does a longer timeout, a poll over the window list, or the second entry still being read positionally."
+    },
+    {
+      "name": "Internal runtime ids replaced with accessible locators",
+      "max_score": 8,
+      "description": "MUST NOT keep any `__electron_id` selector - those ids are runtime internals with no stability contract and no relationship to the markup, which is why they all changed at once in June. Every locator must be rebuilt from the supplied HTML using role, label or accessible name. Any surviving internal-id selector, including inside a renamed or relocated helper, scores zero; swapping them for `[data-action=...]` attribute selectors rather than accessible roles scores at most half."
+    },
+    {
+      "name": "Version-pinning plan answered on its merits",
+      "max_score": 10,
+      "description": "The note separates the two things the team has conflated: pinning the desktop runtime and upgrading deliberately is good practice, but it is not the remedy for what happened in June, because the ids were never a supported interface and freezing the version to preserve them buys nothing while giving up security and platform fixes. Endorsing 'pin at 31 and never move' as the fix scores zero; saying only 'do not pin' without separating the two reasons scores at most half."
+    },
+    {
+      "name": "Temporary project directory created and removed",
+      "max_score": 6,
+      "description": "The test creates its own project directory under the system temporary location at run time and removes it when the test finishes, in teardown rather than as the last line of the body. Reusing a fixed path, writing into the repository, or leaving the directory behind scores at most half; not creating one at all scores zero."
+    },
+    {
+      "name": "Out-of-scope files untouched",
+      "max_score": 5,
+      "description": "MUST NOT modify `tests/e2e/quit.spec.ts` or anything under `src/`. Both were declared out of scope and the shipped artefact must not learn it is under test. Any edit scores zero here."
+    }
+  ]
+}

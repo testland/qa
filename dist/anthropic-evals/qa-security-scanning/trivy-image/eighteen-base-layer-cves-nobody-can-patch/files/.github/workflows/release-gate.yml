@@ -1,0 +1,22 @@
+name: release-gate
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  image-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker build -t checkout-api:${{ github.ref_name }} .
+      - name: scan
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${{ github.workspace }}:/work -w /work \
+            aquasec/trivy:0.58.2 image \
+              --severity HIGH,CRITICAL \
+              --format table \
+              --exit-code 1 \
+              checkout-api:${{ github.ref_name }}

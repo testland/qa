@@ -1,0 +1,17 @@
+# api.parcelly.com edge log, 09:46:58 - 09:47:12 UTC, filtered to /graphql
+# columns: time method path status bytes origin
+
+09:46:58  OPTIONS  /graphql  204  0      https://parcelly.com
+09:46:58  POST     /graphql  200  1483   https://parcelly.com
+09:47:01  OPTIONS  /graphql  204  0      https://app.parcelly.com
+09:47:02  OPTIONS  /graphql  204  0      https://app.parcelly.com
+09:47:02  OPTIONS  /graphql  204  0      https://app.parcelly.com
+09:47:04  OPTIONS  /graphql  204  0      https://parcelly.com
+09:47:04  POST     /graphql  200  2210   https://parcelly.com
+09:47:06  OPTIONS  /graphql  204  0      https://app.parcelly.com
+09:47:09  OPTIONS  /graphql  204  0      https://app.parcelly.com
+09:47:12  OPTIONS  /graphql  204  0      https://app.parcelly.com
+
+# 4,118 rows in the window with origin=https://app.parcelly.com. None of them
+# is a POST. No 4xx and no 5xx anywhere in the window.
+# 09:51 DNS rolled back to parcelly.com.

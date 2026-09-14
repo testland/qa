@@ -1,0 +1,19 @@
+description: billing assistant suite, 212 cases across 9 groups
+
+providers:
+  - openai:gpt-4o
+  - anthropic:messages:claude-sonnet-4-6
+
+defaultTest:
+  options:
+    provider: openai:gpt-4o-mini
+  assert:
+    - type: latency
+      threshold: 1800   # product SLO is 2.0s p95 end to end; 1.8s leaves routing headroom
+    - type: cost
+      threshold: 0.004  # finance ceiling is $0.0045 per assisted reply
+
+tests:
+  - file://cases/refunds.yaml
+  - file://cases/invoices.yaml
+  - file://cases/handoff.yaml

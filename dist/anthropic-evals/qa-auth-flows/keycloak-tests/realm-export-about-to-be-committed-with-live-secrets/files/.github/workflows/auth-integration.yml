@@ -1,0 +1,22 @@
+name: auth-integration
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  auth-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-test.txt
+      - run: pytest tests/auth -v
+        env:
+          # left over from when this ran against staging; harmless now, the suite
+          # starts its own server and ignores these
+          KC_STAGING_URL: https://sso-staging.corp.internal
+          KC_STAGING_CLIENT_SECRET: 8c1f2e40-5b77-4a19-9d0e-3f6a2b884c11

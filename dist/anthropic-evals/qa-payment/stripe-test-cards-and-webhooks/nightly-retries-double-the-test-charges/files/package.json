@@ -1,0 +1,8 @@
+{
+  "name": "orders-checkout",
+  "version": "3.4.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}

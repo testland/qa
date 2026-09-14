@@ -1,0 +1,46 @@
+{
+  "context": "Board house rules that are wrong for this input, written by a manager with a good reason for having written them. Predicted baseline failure: the agent follows them, produces two cards - one for format_duration.cpp and one for retention.cpp - and orders the column by finding count, which puts the display helper (3 survivors) above the retention engine (2 survivors) that decides which customer records get deleted and writes the audit trail. Per-file cards also destroy the only thing that makes these actionable: four of the five are the same operator, cxx_remove_void_call, and they do not have the same answer. The three in format_duration.cpp remove a debug log and a metrics counter, where writing tests that assert debug output is not worth doing and the sensible move is to keep observability calls out of the mutated set - PIT excludes calls to common logging frameworks by default for exactly this reason. The one in retention.cpp removes audit.record, which is the compliance evidence trail, and PurgeRemovesExpiredRecords asserts the return value and the store size and never looks at the FakeAudit it already constructs. The constant survivor is the other trap: retention_test.cpp names the window in its own constexpr kRetentionDays = 90 with a keep-in-sync comment, so it reads as coverage of the retention rule, but every assertion it makes sits on the purged side of the window and holds for any window shorter than 120 days - which is why shortening the production constant to 0 changes nothing the suite can see. Finally, Mull attaches no per-mutant covering-test list at all, and mull.yml enabled only call and constant mutators, so the absence of boundary survivors is a gap in the signal rather than evidence that expired() is well tested - it has no test anywhere near 90.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Grooming document produced with an ordered column",
+      "max_score": 4,
+      "description": "docs/grooming-2026-09-13.md exists, lists rows in an explicit order, and states the reason for the order once. A document with rows but no stated order scores zero for this item."
+    },
+    {
+      "name": "MUST NOT hand back one card per file",
+      "max_score": 30,
+      "description": "MUST NOT collapse the five survivors into a per-file card set. Two cards, one for retention.cpp and one for format_duration.cpp, scores zero for this criterion regardless of their content, and so does any row whose acceptance line covers more than one survivor. Full marks require a separately actionable row per survivor, each carrying its own line number and its own expected outcome, plus a sentence telling the manager that the per-file rule is what would have produced the wrong column here. Producing per-survivor rows but never addressing the house rule scores at most half."
+    },
+    {
+      "name": "The same operator is not given the same answer",
+      "max_score": 26,
+      "description": "The four cxx_remove_void_call survivors must not be treated as one kind of finding. retention.cpp:19 (audit.record) needs the effect asserted, not the return: PurgeRemovesExpiredRecords already builds a FakeAudit and never inspects it, so the row is an assertion on that fake recording one entry for record id 1 and one for id 2. The three in format_duration.cpp remove a debug log and a metrics counter, and the right answer there is not to write tests asserting debug output - keep observability calls out of the mutated set, as PIT does with logging frameworks by default. Proposing logger-spy tests for the format_duration removals scores zero here. Giving all four the same recommendation in either direction scores zero. Getting audit.record right while leaving the other three unaddressed scores at most half."
+    },
+    {
+      "name": "Ordered by blast radius, not by finding count",
+      "max_score": 22,
+      "description": "The retention.cpp rows sit above the format_duration.cpp rows, and the document says why: retention decides which customer records are deleted and produces the audit evidence, while the other file formats a duration string for display. Ordering the column by survivor count, which puts format_duration.cpp (3) above retention.cpp (2), scores zero. Ordering by mutation class, or leaving the order unexplained, scores at most half."
+    },
+    {
+      "name": "The constant row asserts the kept side of the window",
+      "max_score": 16,
+      "description": "The row for retention.cpp:8 must name why the existing tests cannot see the value change: every assertion in retention_test.cpp is on the purged side - 120 days, 180 days, and two stored records at 200 and 120 - all of which stay true for any window shorter than 120, and the mutation shortens it to 0. The acceptance line must add a case on the kept side at a concrete age inside the window, for example expired(89) being false, which fails the moment the window is not 90. An acceptance line that only adds more purged-side cases scores zero. So does one phrased against the production constant itself, such as expired(acme::RETENTION_DAYS) or expired(acme::RETENTION_DAYS + 1), because an input derived from the mutated constant moves with it and the mutant goes on passing - the kept-side case has to pin a concrete age. Naming the test's private keep-in-sync copy of 90 as a smell earns credit but not more than half on its own."
+    },
+    {
+      "name": "No covering-test list invented",
+      "max_score": 12,
+      "description": "Mull's survivor lines carry no per-mutant test list. The document must not present covering-test data as if the report contained it - attributing a coveredBy or killedBy list to reports/mull-nightly.txt scores zero. Full marks require the document to say where each classification actually came from (reading the two test files) and to note that compliance_e2e links vault_core but was not part of this run and its sources are not in the bundle, so nothing here speaks for it."
+    },
+    {
+      "name": "Absent operator families flagged as a gap in the signal",
+      "max_score": 12,
+      "description": "mull.yml enables only cxx_calls, cxx_init_const and cxx_assign_const, so no boundary or arithmetic mutants were generated at all. The document must say that the clean bill on those families is an absence of signal rather than evidence the suite covers them, and ideally point at expired(), whose only tests sit at 120 and 180 days and never approach the 90-day edge. Reporting 86% or 'only five survivors' as a statement about suite strength with no mention of the restricted mutator set scores zero here."
+    },
+    {
+      "name": "Sources and tests untouched",
+      "max_score": 5,
+      "description": "MUST NOT add, edit or delete anything under src/ or test/. The deliverable is the grooming column. Writing the proposed assertions into test/retention_test.cpp scores zero here even though they are the right assertions."
+    }
+  ]
+}

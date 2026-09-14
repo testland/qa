@@ -1,0 +1,51 @@
+{
+  "context": "The request is explicit, reasonable-sounding and wrong in one specific way: append a section at the end, leave the rest alone. Predicted baseline failure: the agent does precisely that, adding a Section 12 or an 'Incident learnings' appendix narrating INC-2291, and returns a document whose Section 1 still assumes the provider delivers each settlement callback exactly once, whose Section 2 risk basis still has no row for replayed callbacks, and whose Section 7 exit criteria still let a release ship with the replay path untested. An incident is absorbed by moving the risk basis and the exit gate, not by adding a paragraph downstream of both - a narrative appended after Section 11 changes nothing about what the team will do differently before the next release. The fixtures make each edit determinate. INC-2291 quotes the provider's own documentation stating callbacks are at-least-once and consumers must deduplicate on event_id, which contradicts the Section 1 assumption in writing. docs/risk-matrices/2026-Q3-wallet.md says in as many words that no row covers replayed or duplicated callbacks. The incident's own 'not yet done' list records that no test asserts the deduplication, and src/credit.js confirms worse: applyCredit pushes event_id onto appliedEvents and never checks it, so the remediation PR #8814 is claimed as shipped but the repeat is not actually rejected - and the suite is green anyway, which is how it went unnoticed. Section 8 names Kadia Owusu and Sam Prentice, both of whom docs/team.md shows are gone. The half of Rafa's request that is legitimate - do not re-author Sections 3 to 6 this month - should be honoured; the half that is not should be answered, including the fact that changing the risk basis and the exit gate is a change the Approved stamp no longer covers.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 4,
+      "description": "docs/strategy/wallet-2025.md is modified and docs/strategy/wallet-review-2026-09.md exists. Either missing scores zero."
+    },
+    {
+      "name": "MUST NOT absorb the incident as an appended section alone",
+      "max_score": 30,
+      "description": "MUST NOT record INC-2291 only as a new trailing section, appendix or 'incident learnings' block with Section 2 and Section 7 left as they were. That shape scores zero for this criterion however well the narrative is written. The incident must land in the risk basis and in the exit criteria; a reference to it elsewhere in the document is fine as well, but is not a substitute. Updating one of the two required sections but not the other scores at most half."
+    },
+    {
+      "name": "New exit criterion, and it is measurable",
+      "max_score": 22,
+      "description": "Section 7 gains a criterion that would have stopped this release - a repeated provider event_id applied to a wallet credits it once, asserted by a test that runs in the gating suite. It must be evaluable as a number or a pass/fail check by someone who did not write it. Adding no exit criterion scores zero. Adding one phrased as a commitment or a feeling ('the team is confident replay is handled', 'idempotency has been reviewed') scores zero as well."
+    },
+    {
+      "name": "New risk row in the risk basis",
+      "max_score": 20,
+      "description": "Section 2 gains a row for duplicated or replayed provider callbacks, with its class and the test investment it implies, and the answer notes that docs/risk-matrices/2026-Q3-wallet.md has no such row either and needs one. Leaving Section 2 untouched scores zero. Adding the row but not saying the underlying register is missing it scores at most half."
+    },
+    {
+      "name": "The Section 1 assumption corrected",
+      "max_score": 16,
+      "description": "The assumption that the provider delivers each settlement callback exactly once is removed or replaced, because INC-2291 records the provider's documentation saying the opposite - at-least-once delivery, consumers deduplicate on event_id. Leaving that line standing scores zero: it is the sentence the whole incident falsifies."
+    },
+    {
+      "name": "MUST NOT read the green suite as covering the replay path",
+      "max_score": 16,
+      "description": "MUST NOT cite the passing suite, or PR #8814, as evidence the gap is closed. tests/credit.test.js has no case applying one event_id twice, and src/credit.js records event_id on the wallet without ever checking it, so the repeat is still applied - the remediation is claimed in the incident write-up but is not present in the attached code. Presenting the fix as done, or the suite as proof of it, scores zero. Noting only that a test is missing, without observing that the rejection itself is absent from applyCredit, scores at most half."
+    },
+    {
+      "name": "Stale ownership fixed",
+      "max_score": 14,
+      "description": "Section 8's owners are corrected against docs/team.md: Kadia Owusu left in 2025-11 and Sam Prentice moved off the team in 2026-04, and between them they hold every row including their own mutual backups. Reassigning to people on the current roster, or at minimum flagging each dead row by name, earns the marks. Leaving the table as it stands scores zero."
+    },
+    {
+      "name": "Status and required sign-off stated",
+      "max_score": 14,
+      "description": "The document does not remain stamped Approved as of 2025-06-30 after its risk basis and exit gate have changed: the status and the date move, and a revision line records what changed on what date. The reply to Rafa states plainly which sign-off the change needs before the 24th rather than quietly leaving the old approval in place to avoid the round trip. Leaving Status, date and approval ticks exactly as they were scores zero."
+    },
+    {
+      "name": "Sections 3 to 6 not re-authored",
+      "max_score": 8,
+      "description": "The pyramid, tooling, environments and test-data sections are left substantially as they are - Rafa's constraint against a full re-write is legitimate and nothing in the incident bears on them. Rewriting them scores at most half; replacing the document wholesale so the prior content is unrecoverable scores zero."
+    }
+  ]
+}

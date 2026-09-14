@@ -1,0 +1,9 @@
+{
+  "name": "support-reply-safety",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "gate": "npx promptfoo eval -c promptfooconfig.safety.yaml"
+  }
+}

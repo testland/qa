@@ -1,0 +1,19 @@
+Lane: ios-es-MX, iPhone 15, iOS 17.5, system language Spanish (Mexico)
+Lane: ios-en-US, iPhone 15, iOS 17.5 - 6 passed, 0 failed
+
+Test Case '-[TransferUITests testOpensTransferFromSummary]' passed (8.402 seconds).
+Test Case '-[TransferUITests testBalanceIsShownOnSummary]' passed (6.771 seconds).
+
+Test Case '-[TransferUITests testSendsATransfer]' failed (14.905 seconds).
+  Failed to get matching snapshot: No matches found for Button "Pay"
+
+Test Case '-[TransferUITests testPickRecipientBeforePaying]' failed (13.221 seconds).
+  Failed to get matching snapshot: No matches found for Button "Choose recipient"
+
+Test Case '-[TransferUITests testRejectsTransferOverBalance]' failed (15.118 seconds).
+  Failed to get matching snapshot: No matches found for Button "Pay"
+
+Test Case '-[TransferUITests testCancelReturnsToSummary]' failed (11.660 seconds).
+  Failed to get matching snapshot: No matches found for Button "Cancel" in NavigationBar
+
+Executed 6 tests, with 4 failures (0 unexpected) in 70.077 seconds

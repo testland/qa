@@ -1,0 +1,41 @@
+{
+  "context": "The dialog really is open when the scan runs, so the easy win - 'you never opened the modal' - is not available and an agent that reaches for it is wrong. The green is manufactured by one line of builder chain, and the trap is a documented property of the wrapper: `AxeBuilder#options()` replaces the option object outright and overrides any earlier `withTags` / `withRules` / `disableRules` call (https://github.com/dequelabs/axe-core-npm/tree/master/packages/playwright). The author chained `.withTags([...]).disableRules([...]).options({ resultTypes: ['violations'] })`, so neither the WCAG 2.2 AA pinning his note promises nor the contrast suppression ever reached axe: the run executed the full default rule set, and the artifact proves it twice over - `toolOptions` carries `resultTypes` and no `runOnly` at all, and best-practice rules that the WCAG tag set would have excluded (`region`, `landmark-one-main`, `page-has-heading-one`, `empty-heading`) are sitting in `passes`. Predicted baseline failure: the agent reads `.withTags(['wcag2a','wcag2aa','wcag22aa'])` in the source, agrees the target is pinned, praises the setup, and reviews the JSON at face value. The second half of the same line compounds it - with `resultTypes` naming only violations, axe returns one instance per rule for `incomplete`, `passes` and `inapplicable` (https://github.com/dequelabs/axe-core/blob/develop/doc/API.md), so the single contrast node the author cites as proof that 'there is essentially nothing left for a human' is an artefact of the option, not a count of anything. An unaided review repeats that inference rather than demolishing it. What the output does show, if read properly, is that `aria-hidden-focus` on `.page-shell` is undecided - which is precisely the customer's complaint about not getting back out - and no engine returns a verdict on where focus went. The asks are deliberately asymmetric so that neither blanket approval nor blanket refusal scores: the sign-off must be refused, and of the two suppressions the author wants blessed, the `#pay-frame` exclusion is legitimate and must survive - the vendor's form is proxied through the team's own domain, so the scan walks into markup the vendor authors and two written refusals are on file - while the page-wide `color-contrast` disable must not, because a gradient background makes axe return the node as undecided rather than as a false positive.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and unit suite green",
+      "max_score": 5,
+      "description": "`docs/pr-814-review.md` exists, `tests/a11y/checkout.spec.ts` is changed or replaced, `npm test` still passes, `test/format-money.test.js` is unedited and `src/components/address-dialog.jsx` is unmodified. Leaving the spec as it stands, or editing the component, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave the rule set discarded by a later builder call",
+      "max_score": 32,
+      "description": "The delivered spec MUST NOT configure the rule set with `withTags` / `disableRules` and then hand a fresh option object to `options()`, which replaces it - the conformance target must actually reach the engine, whether by dropping the `options()` call, by folding `resultTypes` into the same object as `runOnly`, or by ordering the chain so the pinning survives. A delivered spec in which an `options()` call still discards an earlier tag or rule configuration scores zero for this criterion regardless of the rest. The review must also tell the author that the attached run was pinned to nothing and cite the artifact rather than asserting it: `toolOptions` records `resultTypes` and no `runOnly`, and best-practice rules (`region`, `landmark-one-main`, `page-has-heading-one`, `empty-heading`) appear in `passes`, which the WCAG tag set would have excluded. A review that repeats the author's claim that the check is pinned to WCAG 2.2 AA scores zero. Fixing the spec while telling the author nothing about why his pinning never took effect scores at most half."
+    },
+    {
+      "name": "MUST NOT read the truncated result arrays as counts",
+      "max_score": 22,
+      "description": "MUST NOT treat the single node under each `incomplete` rule, or the one node per rule in `passes`, as the number of such items on the page - with only violations requested, axe returns one instance per rule for the other three arrays, so those arrays carry no quantity information at all. Any statement in the deliverable that there is one contrast item to review, that checkout is effectively clean, or that some rule count can be read off `passes` or `inapplicable`, scores zero for this criterion. Full marks require naming the option that produced the truncation and saying that the artifact has to be regenerated before anyone can quantify what needs a human. Saying the artifact is untrustworthy without identifying what made it so scores at most half."
+    },
+    {
+      "name": "Sign-off refused on what the engine does not decide",
+      "max_score": 16,
+      "description": "The review refuses ask 1 and grounds the refusal in the ticket rather than in the test setup: LED-3391 is about where focus lands and whether the rest of the page is inert while the dialog is open, `aria-hidden-focus` on `.page-shell` came back undecided rather than passing, and no automated engine returns a verdict on focus order - so closing the ticket needs a keyboard and screen-reader pass by a person. Signing off, or accepting the green result as evidence the ticket is fixed, scores zero. Refusing without naming what a human still has to check scores at most half."
+    },
+    {
+      "name": "The vendor frame exclusion kept, and documented in place",
+      "max_score": 14,
+      "description": "MUST NOT remove the `#pay-frame` exclusion from the delivered spec. The vendor's form is proxied through the team's own domain, so the scan walks straight into markup the vendor authors and deploys, and two written refusals are on file - dropping the exclusion reds the job on bytes nobody at this company can change. Removing it, or refusing both of the author's asks so that the reviewer says no to everything, scores zero here. Keeping it as a bare selector, with no written reason and no revisit trigger next to it in the spec, scores at most half; widening it beyond the frame - excluding a container, or switching rules off page-wide to achieve the same effect - scores zero."
+    },
+    {
+      "name": "MUST NOT carry the blanket contrast suppression forward",
+      "max_score": 12,
+      "description": "MUST NOT bless the second suppression. A gradient behind a button makes axe return that node as undecided, not as a false positive, so the rule is not misfiring, and switching it off across checkout hides every genuine contrast failure on a surface the contract holds to AA. A delivered spec that still disables `color-contrast` for the page scores zero, and so does a review that endorses keeping it. Granting both suppressions because one of them is justified scores zero here."
+    },
+    {
+      "name": "MUST NOT fold every route into one check",
+      "max_score": 10,
+      "description": "MUST NOT adopt, or endorse in the review, the author's follow-up plan of folding `/cart`, `/checkout/confirm` and the account pages into the same test - one failure would then red the whole check and hide the rest, and a red job would not name what broke. A deliverable that loops routes or states inside a single test, or a review that agrees with the plan, scores zero. Splitting the tests without telling the author why the plan was rejected scores at most half."
+    }
+  ]
+}

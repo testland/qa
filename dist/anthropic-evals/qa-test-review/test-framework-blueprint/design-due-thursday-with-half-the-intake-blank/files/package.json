@@ -1,0 +1,12 @@
+{
+  "name": "lanehub",
+  "version": "2.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\"",
+    "dev:api": "tsx watch api/server.ts"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: fct_subscriptions
+    description: One row per subscription, current state.
+    columns:
+      - name: subscription_id
+        description: Primary key.
+        tests:
+          - not_null
+
+      - name: account_id
+        description: Owning account.
+        data_tests:
+          - not_null
+
+      - name: status
+        description: Lifecycle state of the subscription.
+        tests:
+          - accepted_values:
+              values: ['trialing', 'active', 'past_due', 'canceled']
+        data_tests:
+          - not_null
+
+      - name: mrr_amount
+        description: Monthly recurring revenue in major units.
+        data_tests:
+          - not_null
+
+  - name: fct_invoices
+    description: One row per issued invoice.
+    columns:
+      - name: invoice_id
+        tests:
+          - unique
+          - not_null
+
+      - name: subscription_id
+        tests:
+          - relationships:
+              to: ref('fct_subscriptions')
+              field: subscription_id
+
+      - name: line_count
+        description: Number of line items on the invoice.
+        tests:
+          - not_null
+
+  - name: dim_accounts
+    description: One row per account.
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
+          - not_null
+
+      - name: region
+        data_tests:
+          - accepted_values:
+              values: ['emea', 'amer', 'apac']

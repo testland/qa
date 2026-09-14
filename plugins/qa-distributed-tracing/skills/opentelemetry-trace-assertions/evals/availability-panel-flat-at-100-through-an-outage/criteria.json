@@ -1,0 +1,56 @@
+{
+  "context": "The catch block in src/rates.js logs and returns null without touching the span, so rates.fetch ends with its status still UNSET - and docs/slo.md states in as many words that UNSET is counted as a successful span. That is the whole incident: 1.1M failed dependency calls, every one of them recorded as a success. The span is also left at the default in-process kind although it is a call to a remote service, and nothing on the parent records that the price came from cache instead of the provider. Predicted baseline failure: the agent writes trace tests that describe the spans as they are emitted today - name, pair, url, maybe the log line - and they pass first time against the unchanged source, which is the one outcome that cannot catch a repeat. The near-miss variant is to fix it by making the conversion fail, or by marking pricing.convert itself as an error: that moves the panel, but pricing.convert returned a correct price from a cached rate and test/pricing.test.js pins that it must keep doing so. The third predicted miss is error.type - a recorded exception event is not a status and is not in the availability computation either.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite green",
+      "max_score": 5,
+      "description": "test/pricing.trace.test.js exists covering both paths, src/ is changed, docs/inc-2410-followup.md exists and `npm test` passes. A red suite, or trace tests added with no source change, scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT leave the failed dependency call ending as a success",
+      "max_score": 30,
+      "description": "On the provider-down path the rates.fetch span MUST NOT end with the status it ends with today, and the delivered test MUST NOT assert that status as correct. Full marks require the span for the failed call to end with an error status and the new test to assert that status explicitly, so the availability computation in docs/slo.md sees it. A test that passes unchanged against the source as shipped scores zero for this criterion. Recording the exception as an event only, and leaving the status untouched, scores at most half - the runbook says an unset status is counted as a successful span."
+    },
+    {
+      "name": "The failure is identified on the span",
+      "max_score": 16,
+      "description": "The failing span carries error.type taken from the thrown error, and the test asserts it, so the outage can be broken down by cause rather than counted. Recording only the exception or a free-text status message, with no attribute naming the error type, scores at most half. Nothing at all identifying the failure scores zero."
+    },
+    {
+      "name": "MUST NOT break the fallback to make the trace honest",
+      "max_score": 14,
+      "description": "The cached-rate fallback MUST NOT be removed, rethrown, or made conditional. test/pricing.test.js must still pass unmodified: a conversion with a dead provider still returns 8600 at the cached rate. Editing that file, or changing convert so the call fails, scores zero for this criterion."
+    },
+    {
+      "name": "The conversion is not reported as failed",
+      "max_score": 12,
+      "description": "pricing.convert returned a correct price and keeps a successful status, while the degradation is recorded on it as an attribute - which rate source was used - so cache-served conversions are queryable. Marking pricing.convert itself as an error scores at most half: it reports the service as down while it is serving orders correctly and burns the budget on every fallback. Leaving no record on the parent at all that the price came from cache also scores at most half."
+    },
+    {
+      "name": "The remote call is marked as a remote call",
+      "max_score": 10,
+      "description": "rates.fetch is an outgoing call to another service and carries the span kind for that, not the default in-process kind, and the test asserts it. Leaving the kind at the default scores zero for this criterion."
+    },
+    {
+      "name": "Healthy path covered as well",
+      "max_score": 8,
+      "description": "The test also exercises a responding provider and asserts that the trace carries no error status and records the live rate source. Covering only the failure path scores zero here - nothing then stops an implementation that marks every fetch as an error."
+    },
+    {
+      "name": "Spans reached by name",
+      "max_score": 6,
+      "description": "The new test resolves spans through a name lookup rather than indexing into the finished-span array or relying on the order spans ended in. Any positional index scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT edit the SLO formula or the vendored mirror",
+      "max_score": 5,
+      "description": "docs/slo.md and vendor/tracing-sdk.js MUST NOT be modified. Rewriting the availability query so it counts something our service already emits - warning logs, an unset status - scores zero here, as does any edit to the vendored file."
+    },
+    {
+      "name": "Follow-up note written",
+      "max_score": 4,
+      "description": "docs/inc-2410-followup.md is ten lines or fewer and says what the traces failed to carry during the window rather than restating the incident timeline."
+    }
+  ]
+}

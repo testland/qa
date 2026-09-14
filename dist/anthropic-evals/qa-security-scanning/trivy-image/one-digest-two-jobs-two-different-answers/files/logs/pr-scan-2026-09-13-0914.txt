@@ -1,0 +1,21 @@
+Run docker run --rm aquasec/trivy:latest --version
+Version: 0.58.2
+Vulnerability DB:
+  Version: 2
+  UpdatedAt: 2026-09-11 06:12:41 +0000 UTC
+  NextUpdate: 2026-09-11 12:12:41 +0000 UTC
+  DownloadedAt: 2026-09-11 07:40:03 +0000 UTC
+
+Run docker run --rm ... image ...
+2026-09-13T09:14:02Z INFO  Vulnerability scanning is enabled
+2026-09-13T09:14:02Z INFO  Secret scanning is enabled
+2026-09-13T09:14:03Z INFO  DB cache hit, skipping download
+2026-09-13T09:14:39Z INFO  Detected OS family="debian" version="12.7"
+
+registry.internal/checkout-api@sha256:c41e7b9a0f28 (debian 12.7)
+Total: 0 (HIGH: 0, CRITICAL: 0)
+
+app/package-lock.json (npm)
+Total: 0 (HIGH: 0, CRITICAL: 0)
+
+Process exited with code 0

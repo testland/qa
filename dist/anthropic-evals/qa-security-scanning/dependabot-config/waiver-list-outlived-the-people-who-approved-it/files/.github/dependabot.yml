@@ -1,0 +1,39 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    ignore:
+      # Reason: react 19 needs the router v7 migration, scheduled for Q1 2027
+      # Approved-by: alice@acme.com
+      # Re-review-date: 2026-12-01
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+
+      # Reason: axios 1.x changes the redirect handling our checkout relies on
+      # Approved-by: dmitri@acme.com
+      # Re-review-date: 2025-11-01
+      - dependency-name: "axios"
+        versions: [">=1.0.0"]
+
+      - dependency-name: "lodash"
+
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "pip"
+    directory: "/services/ranker"
+    schedule:
+      interval: "weekly"
+    ignore:
+      # Reason: django 5.0 drops Python 3.9, our base image is pinned to 3.9
+      # Approved-by: marta@acme.com
+      # Re-review-date: 2026-10-15
+      # Ticket: PLAT-2210 (base image upgrade)
+      - dependency-name: "django"
+        versions: [">=5.0"]
+
+      - dependency-name: "boto3"
+        update-types: ["version-update:semver-patch"]

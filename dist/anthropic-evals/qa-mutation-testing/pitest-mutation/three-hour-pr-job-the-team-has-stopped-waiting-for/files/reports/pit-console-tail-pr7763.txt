@@ -1,0 +1,17 @@
+================================================================================
+- Statistics
+================================================================================
+>> Line Coverage (for mutated classes only): 9,116/10,442 (87%)
+>> Generated 41,880 mutations Killed 29,357 (70%)
+>> Mutations with no coverage 1,904. Test strength 73%
+>> Ran 214,509 tests (5.12 tests per mutation)
+
+- Timings
+> scan classpath                  : 6 seconds
+> coverage and dependency analysis: 4 minutes and 11 seconds
+> build mutation tests            : 1 minute and 2 seconds
+> run mutation analysis           : 3 hours, 35 minutes and 50 seconds
+> Total                           : 3 hours, 41 minutes and 9 seconds
+
+(The same block from PR 7733 — 1 file changed — reports 41,880 generated and a
+total of 3 hours, 19 minutes and 2 seconds.)

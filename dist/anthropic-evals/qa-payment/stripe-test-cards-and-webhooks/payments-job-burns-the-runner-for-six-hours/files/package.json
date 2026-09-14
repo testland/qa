@@ -1,0 +1,10 @@
+{
+  "name": "orders-api",
+  "version": "4.2.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/unit/*.test.js",
+    "test:webhooks": "node --test test/webhooks/*.test.js"
+  }
+}

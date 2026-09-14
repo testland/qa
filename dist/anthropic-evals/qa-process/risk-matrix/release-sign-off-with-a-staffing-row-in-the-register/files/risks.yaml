@@ -1,0 +1,82 @@
+release: "2026-06 marketplace payouts"
+owner: Helena Vogt
+reviewers: [Ade Balogun, Tomas Rye]
+scale: "impact 1-5 x likelihood 1-5"
+block_threshold: 15
+
+active:
+  - id: R-002
+    title: Payout batch double-pays a seller when a run is retried
+    category: business
+    impact: 5
+    likelihood: 4
+    score: 20
+    mitigation: Idempotency key per payout line
+    owner: Ade Balogun
+    last_review: 2026-06-08
+
+  - id: R-005
+    title: Seller 1099-K generated against the wrong reporting threshold
+    category: regulatory
+    impact: 4
+    likelihood: 4
+    score: 16
+    mitigation: Finance UAT before filing season
+    owner: Helena Vogt
+    last_review: 2026-06-08
+
+  - id: R-007
+    title: Payout webhook accepted without signature verification
+    category: security
+    impact: 5
+    likelihood: 3
+    score: 15
+    mitigation: HMAC verification on every inbound webhook
+    owner: Ade Balogun
+    last_review: 2026-06-08
+
+  - id: R-011
+    title: Ledger balance drifts when two payout runs overlap
+    category: technical
+    impact: 4
+    likelihood: 3
+    score: 12
+    mitigation: Row-level lock on the ledger account
+    owner: Tomas Rye
+    last_review: 2026-06-08
+
+  - id: R-014
+    title: Payout confirmation email renders the wrong currency symbol
+    category: ux
+    impact: 2
+    likelihood: 2
+    score: 4
+    mitigation: Locale-aware formatter
+    owner: Ade Balogun
+    last_review: 2026-06-08
+
+  - id: R-016
+    title: Bank file upload rejects seller names with non-ASCII characters
+    category: integration
+    impact: 3
+    likelihood: 1
+    score: 3
+    mitigation: UTF-8 transliteration on export
+    owner: Tomas Rye
+    last_review: 2026-06-08
+
+  - id: PJ-003
+    title: Only engineer who knows the ledger is on parental leave from 2026-06-22
+    category: people
+    impact: 4
+    likelihood: 5
+    score: 20
+    mitigation: Knowledge-transfer sessions, pair rotation
+    owner: Helena Vogt
+    last_review: 2026-06-08
+
+retired:
+  - id: R-009
+    title: Legacy payout CSV export corrupts amounts over 1e6
+    retired: 2026-04-02
+    why: CSV export removed in v7.0; sellers use the bank file

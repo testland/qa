@@ -1,0 +1,51 @@
+{
+  "context": "A half-written delivery page whose structure is wrong in a way its author is proud of, handed over with an explicit instruction not to restructure it. Predicted baseline failure: the agent fills in the blanks as laid out, leaving escape-defect rate sitting inside a DORA table as a fifth key and pass rate and flake debt in a neighbouring 'quality keys' table under the same delivery heading. Defect leakage and suite health are not measures of delivery performance, and DORA's current guidance documents five metrics - change lead time, deployment frequency, failed deployment recovery time, change fail rate and deployment rework rate - so both the count and the naming in the draft are wrong before a single number goes in. The second predicted failure is the deployment denominator: the log holds eighteen rows across three different kinds of event, seven production releases, eight staging pushes and three feature-flag flips, and an agent that counts eighteen reports a deployment frequency, a change fail rate of about 11% and an escape rate of about 0.17 that all describe no real thing. On production releases the figures are seven, 29% and 0.43. The third is the two metrics that cannot be computed here: the prompt says there is no incident feed, and the PR export carries opened and merged timestamps for four of the seven releases, not commit timestamps for any of them, so change lead time and failed deployment recovery time have to be marked partial rather than estimated from what happens to be lying around.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/delivery-metrics.md is filled in, quality-digest/2026-09-30.md exists and ends with a single-line machine-readable summary, and docs/delivery-metrics-review.md lists the changes made to the draft. Missing the review file scores at most half for this item; missing either page scores zero."
+    },
+    {
+      "name": "MUST NOT file escape rate, pass rate or flake debt under a DORA heading",
+      "max_score": 32,
+      "description": "Escape-defect rate is removed from the DORA table and reported in its own defect-leakage section, and pass rate and flake debt are likewise not presented as delivery keys. Leaving escape rate in the table as a fifth key scores zero for this criterion regardless of how good the numbers are, and so does a 'quality keys' table presented as a second set of DORA keys. Full marks require the separation plus a stated reason that delivery performance and defect leakage answer different questions. Moving escape rate out but leaving pass rate or flake debt under the delivery heading scores at most half."
+    },
+    {
+      "name": "Deployment definition stated and the three event kinds not blended",
+      "max_score": 22,
+      "description": "The page states which of the three kinds in the log counts as a deployment and uses that same definition for deployment frequency, change fail rate and escape rate. On production releases that is 7 deployments, a change fail rate of 2 of 7 (about 29%), and an escape rate of 3 of 7 (about 0.43). Reporting 18 deployments, or a change fail rate of about 11%, scores zero for this criterion. Using production releases without saying anywhere that staging pushes and flag flips were excluded, and that the word means different numbers to different teams, scores at most half."
+    },
+    {
+      "name": "Uncomputable delivery figures marked partial rather than estimated",
+      "max_score": 20,
+      "description": "Change lead time and failed deployment recovery time are reported as not computed, naming what is missing: no commit timestamps anywhere in the inputs, and no incident records. Filling the lead-time cell from prs/merge-times.csv scores zero for this criterion - those are PR opened and merged times for four of the seven releases, not the committed-to-deployed interval, and the note in that file says tagging only began on 2026-08-17. Filling the recovery-time cell from the intervention flag, which carries no resolution timestamp, also scores zero. Deleting the two rows entirely rather than marking them partial scores at most half."
+    },
+    {
+      "name": "The metric set named correctly",
+      "max_score": 16,
+      "description": "The review note says the draft's framing is wrong: current DORA guidance documents five metrics, not four, and names them as change lead time, deployment frequency, failed deployment recovery time, change fail rate and deployment rework rate, with escape rate not among them. Keeping 'MTTR' as the name of a DORA metric scores at most half. Asserting the four-key framing as current scores zero. Reporting deployment rework rate from the trigger column - 1 incident-driven release of 7, about 14% - earns the top of the band."
+    },
+    {
+      "name": "Escapes counted on the window and on reaching production",
+      "max_score": 14,
+      "description": "Escapes for Q3 is 3: ORD-9101, ORD-9140 and ORD-9172. ORD-9088 was created 2026-06-24 and belongs to Q2, and ORD-9155 never reached production, so a count of 4 or 5 scores zero for this criterion. A count of 3 without naming which defects it covers scores at most half."
+    },
+    {
+      "name": "Headline is the worst area",
+      "max_score": 14,
+      "description": "The quality page's headline for the quarter is RED, set by the escape count of 3, against pass rate 90% GREEN, trend about -3 pp AMBER, 2 stale quarantine entries AMBER and 1 new flake AMBER. An AMBER headline, or a blended or averaged overall score, scores zero here. RED without naming the area that set it scores at most half."
+    },
+    {
+      "name": "Summary line and pass-rate arithmetic",
+      "max_score": 12,
+      "description": "The trailing summary line carries team=orders, the Q3 window, pass_rate about 0.90 computed as 812 over 812 plus 88, delta_pp about -3 against the attached Q2 row of 0.93, escapes=3, deployments=7, flake_debt=5 as (2 stale x 2) + 1 new, rag=RED and the threshold basis. Omitting the line scores zero. A pass rate computed over all 1007 runs, cancelled and skipped included, scores zero for this criterion."
+    },
+    {
+      "name": "Every figure names its source and no new tracking proposed",
+      "max_score": 6,
+      "description": "Each filled cell and each page figure names the file it came from. Proposing new instrumentation, an incident-feed export, or commit-timestamp collection as part of the deliverable is outside what was asked; recording the missing feeds as open items is the correct handling and anything more scores at most half here."
+    }
+  ]
+}

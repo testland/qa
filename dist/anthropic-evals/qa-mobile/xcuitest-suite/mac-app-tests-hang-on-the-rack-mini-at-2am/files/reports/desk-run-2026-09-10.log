@@ -1,0 +1,28 @@
+=== @marek, screen-shared into the mini, logged in as ci-runner, run by hand ===
+Test Case '-[DashboardUITests testOpensLedgerWindow]' passed (7.115 seconds).
+Test Case '-[DashboardUITests testFiltersByAccount]' passed (9.402 seconds).
+
+Test Case '-[DashboardUITests testExportsLedgerToCSV]' started.
+    t =     6.02s Click "File" MenuBarItem
+    t =     7.88s Click "export-ledger" MenuItem
+    (a system dialog is on screen: "Ledgerwood.app wants access to control
+     System Events.app. Allowing control will provide access to documents and
+     data in System Events.app, and to perform actions within that app."
+     Buttons: Don't Allow / OK. The interruption handler did not run.)
+    t =    38.01s Assertion Failure: Failed to get matching snapshot:
+                  No matches found for Button "export-confirm"
+Test Case '-[DashboardUITests testExportsLedgerToCSV]' failed (38.440 seconds).
+
+Test Case '-[DashboardUITests testDashboardScrollPerformance]' started.
+    measured [Clock Monotonic Time, s] average: 0.254, relative standard deviation: 3.1%
+    Assertion Failure: Time average is 42.7% worse (max allowed: 10.000%).
+    Baseline for 'testDashboardScrollPerformance()' recorded 2024-11-03,
+    average 0.178 s.
+Test Case '-[DashboardUITests testDashboardScrollPerformance]' failed (11.204 seconds).
+
+Executed 4 tests, with 2 failures (0 unexpected) in 66.161 seconds
+
+Note from @marek: the same scroll measures 0.176-0.181 on my Intel MacBook Pro
+on the same commit, which is where the stored baseline came from. The permission
+dialog appears on the first run after a reinstall and again whenever the CI user
+is reset; if I click OK by hand the export test passes.

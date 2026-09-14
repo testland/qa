@@ -1,0 +1,13 @@
+name: trace-tests
+on: [push]
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    # raised from 2 on 2026-09-02, the job kept tripping the limit
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test

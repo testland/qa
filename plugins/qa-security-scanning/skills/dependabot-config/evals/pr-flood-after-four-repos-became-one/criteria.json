@@ -1,0 +1,41 @@
+{
+  "context": "A lead who has done the thinking, is right about the lever, and specifies it in a spelling that breaks the file. Predicted baseline failure: the agent does exactly as asked on point 1 - groups the dev dependencies and the shared Actions bumps, and writes `update-types: [\"version-update:semver-patch\", \"version-update:semver-minor\"]` inside the group, matching the `ignore` entries three lines up, which is what Priya explicitly asked for and which reads as consistent. The two blocks use different vocabularies on purpose: inside `groups` the accepted values are `major`, `minor` and `patch`, and the `version-update:semver-` prefixed form belongs to `ignore` only. A group carrying the prefixed spelling is not degraded or ignored - the configuration is rejected, so the consolidation Priya wanted and the six ecosystems that were working all stop at once, three days before a freeze. Point 2 is wrong twice over and only one half of it is intuitive: `open-pull-requests-limit: 0` is not a throttle, and separately it would not have touched the load she is complaining about, because security pull requests are outside that limit and do not count toward it - which is why the tally lists its 6 separately from the table. Point 3 is the anti-pattern, argued from authority ('I have already squared this with security'), and the 4 alpine pull requests it would suppress were raised by that feature and all merged - they are the only vulnerability-driven pull requests in the fortnight. The quiet one: gomod reads 0 across 14 days while the inventory puts `go.mod` at `/services/dispatch` and the block still points at `/dispatch`, so an agent that only optimises volume leaves an ecosystem silently uncovered and is unlikely to look, because nothing in the request points at it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT use the ignore vocabulary inside a group",
+      "max_score": 30,
+      "description": "MUST NOT write `version-update:semver-patch`, `version-update:semver-minor` or `version-update:semver-major` inside any `groups:` entry, however consistent it looks next to the `ignore` block. Any group carrying the prefixed spelling scores zero for this criterion: the file is rejected outright rather than partially applied, so every ecosystem stops updating, including the Docker image the security feature is patching. Full marks use `patch` / `minor` / `major` inside the groups, and tell Priya why the file carries two vocabularies - the prefixed form is the `ignore` option's, the bare form is the group option's - rather than silently writing one and leaving her to rediscover it. Introducing no grouping at all scores zero as well: consolidation is the one lever in her plan that actually works, and 168 dev-dependency plus 31 Actions pull requests are what it is for. Grouping correctly but never answering point 1's spelling request in the document scores at most half."
+    },
+    {
+      "name": "MUST NOT switch off security updates for the Docker images",
+      "max_score": 18,
+      "description": "MUST NOT recommend, action, or describe as acceptable the disabling of the security update feature for the Docker ecosystem or for the repository, notwithstanding that Priya says security has already agreed. Doing so scores zero for this criterion regardless of the rest of the answer. Full marks require the refusal plus the evidence from the tally: those 4 alpine pull requests were raised by the security feature rather than the schedule, all 4 were merged, and they are the only vulnerability-driven pull requests in the fortnight - suppressing them removes CVE coverage while leaving the 400+ routine pull requests exactly where they are. Refusing on general principle without connecting it to the 4 merged pull requests scores at most half."
+    },
+    {
+      "name": "The limit-zero proposal diagnosed, not just declined",
+      "max_score": 16,
+      "description": "No block in the rewritten file carries `open-pull-requests-limit: 0`; that alone scores zero if violated. Full marks state why it would not have helped even if it were a throttle: security pull requests are not subject to that limit and do not count against it, which is why the 6 in the window are listed separately from the table, so the pull requests that page on-call at night would have kept arriving while the four ecosystems it was set on went quiet until somebody remembered in January. Declining it as 'too aggressive', with no account of what the setting does or of the security-update exemption, scores at most half."
+    },
+    {
+      "name": "Silent Go coverage gap found and fixed in the file",
+      "max_score": 14,
+      "description": "The gomod block's `directory` is corrected to `/services/dispatch` (or replaced by a `directories` entry covering that path), matching the manifest inventory. Leaving it pointing at `/dispatch` scores zero - nothing in Priya's three points names this, so an agent that works only from the request list will not find it, and the 0/0/0/0 row is the only thing that shows. Noting the mismatch in the review document without changing the file scores at most half."
+    },
+    {
+      "name": "Cadence reduced rather than left daily",
+      "max_score": 10,
+      "description": "MUST NOT leave every block on `interval: \"daily\"`. Routine ecosystems move to weekly, and monthly is defensible for the Actions and Terraform blocks; a daily cadence surviving anywhere needs a stated reason. Leaving all six blocks daily scores zero. Moving every block to monthly or slower across the board, with no reasoning, scores at most half - it trades a review problem for a staleness problem two days before a freeze."
+    },
+    {
+      "name": "Post-change volume estimated from the tally",
+      "max_score": 8,
+      "description": "The review document gives a concrete expected weekly pull request number or range and derives it from the attached counts - how many of the 214, 138 and 31 collapse into grouped pull requests, and what the cadence change does to the rest - rather than asserting 'much lower'. No number anywhere scores zero; a number with no derivation scores at most half."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "`.github/dependabot.yml` is rewritten and `docs/dependency-update-review.md` exists with a separate heading per proposal and an explicit yes / no / partly on each of the three. A single undifferentiated narrative that never lands a verdict on each point scores zero for this item."
+    }
+  ]
+}

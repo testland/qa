@@ -1,0 +1,33 @@
+$ pytest tests/
+============================= test session starts ==============================
+collected 4 items
+
+tests/test_emails.py E                                                   [ 25%]
+tests/test_ids.py .                                                      [ 50%]
+tests/test_orders.py .                                                   [ 75%]
+tests/test_passwords.py .                                                [100%]
+
+==================================== ERRORS ====================================
+_________________ ERROR at setup of test_normalise_keeps_it_valid ______________
+hypothesis.errors.FailedHealthCheck: It looks like your strategy is filtering out
+a lot of data. Health check found 50 filtered examples but only 3 good ones. This
+will make your tests much slower, and because of the lack of diversity of examples
+may also make them less effective at finding bugs.
+
+See https://hypothesis.readthedocs.io/en/latest/reference/api.html#hypothesis.HealthCheck
+for more information about this. If you want to disable just this health check,
+add HealthCheck.filter_too_much to the suppress_health_check settings for this
+test.
+
+========================= durations (slowest first) ============================
+2440.15s  tests/test_passwords.py::test_hash_password_verifies
+  41.30s  tests/test_orders.py::test_total_is_order_independent
+   8.06s  tests/test_ids.py::test_short_id_is_url_safe
+   3.12s  tests/test_emails.py::test_normalise_keeps_it_valid
+================== 1 error, 3 passed in 2494.61s ===============================
+
+# What 'chore: make the generated inputs realistic' changed, per git show:
+#   tests/test_passwords.py   max_examples 300 -> 5000
+#   tests/test_emails.py      fixed list of 5 addresses -> generated text
+#                             plus preconditions
+# The same job on 2026-09-01, before that commit: 199.02s total, 4 passed.

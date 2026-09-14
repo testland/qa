@@ -1,0 +1,8 @@
+{
+  "name": "settlement-reconciler",
+  "version": "3.2.1",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

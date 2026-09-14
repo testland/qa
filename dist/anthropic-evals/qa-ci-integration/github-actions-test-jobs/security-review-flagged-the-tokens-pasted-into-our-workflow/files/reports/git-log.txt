@@ -1,0 +1,11 @@
+$ git log --oneline --follow .github/workflows/test.yml
+9c41ab2 2026-07-16 tom.k  ci: publish to npm on main
+5f7de10 2026-06-02 tom.k  ci: add integration job with postgres service
+a0ce884 2026-05-19 dana.r ci: run the suite on pull requests
+
+$ git log --format='%H %ad' -1 9c41ab2
+9c41ab29d0e4b7c8a1f3e6b20d5c7a84f9e1b3c6 Thu Jul 16 09:22:41 2026 +0000
+
+$ gh api repos/wavelet/wavelet-cli --jq '.forks_count, .visibility'
+31
+public

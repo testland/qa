@@ -1,0 +1,10 @@
+$ pytest tests/
+============================= test session starts ==============================
+collected 24 items
+
+tests/test_pricing_equivalence.py ....                                   [ 16%]
+tests/test_pricing_v1.py ....................                            [100%]
+
+============================== 24 passed in 4.10s ==============================
+
+commit 3f9d02c - @sofia, "equivalence checks for the v2 cutover"

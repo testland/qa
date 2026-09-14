@@ -1,0 +1,21 @@
+Collected 2026-09-11. All times UTC. Four systems, pasted as exported.
+
+--- Zendesk, tickets tagged settlement-mismatch, 2026-09-11 ---
+88412  09:40:12  "payout for 09-10 has no orders attached"      merchant 4471
+88419  10:05:02  "missing order records for yesterday"          merchant 1180
+88423  10:07:48  "payout total does not match our own orders"   merchant 9902
+
+--- PagerDuty, INC-2310 ---
+10:22:30  triggered manually by a.solberg; severity set SEV-2
+11:40:12  resolved by a.solberg, note "nightly job disabled pending a fix"
+
+--- Slack #inc-2310 ---
+10:51 a.solberg: job log says drained 5400, written 500. that is the gap
+11:14 m.vang: reading the code now
+11:29 m.vang: page_size is 500 in config/reconciler.yml. that is the whole bug,
+      I will take it to 10000 tonight
+11:33 a.solberg: disabling the nightly job until we have a fix
+11:52 a.solberg: partner call at 11:30 went fine, they want the write-up today
+
+--- Scheduler audit (argo-cron) ---
+2026-09-11T11:40:00Z  job nightly-reconcile suspended by a.solberg

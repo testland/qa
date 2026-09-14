@@ -1,0 +1,17 @@
+{
+  "uuid": "a1f2c0de-0001-4000-8000-000000000001",
+  "historyId": "gate.checkout.saved-card",
+  "name": "Checkout with saved card",
+  "fullName": "gate.checkout.CheckoutGate#savedCard",
+  "status": "failed",
+  "statusDetails": {
+    "message": "expect(orderConfirmation).toBeVisible() failed: element not found after 15000ms",
+    "trace": "at gate/checkout.spec.ts:64:22"
+  },
+  "start": 1789182006000,
+  "stop": 1789182041000,
+  "labels": [
+    { "name": "suite", "value": "Checkout" },
+    { "name": "severity", "value": "critical" }
+  ]
+}

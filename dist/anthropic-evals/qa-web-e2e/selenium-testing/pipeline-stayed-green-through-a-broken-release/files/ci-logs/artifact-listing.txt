@@ -1,0 +1,8 @@
+$ unzip -l surefire-reports.zip
+Archive:  surefire-reports.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+     1874  2026-09-05 08:31   TEST-com.shop.e2e.SmokeTest.xml
+      612  2026-09-05 08:31   com.shop.e2e.SmokeTest.txt
+---------                     -------
+     2486                     2 files

@@ -1,0 +1,12 @@
+pytest tests/llm/test_policy_grounding.py -q    2026-06-19, before the skips were added
+
+=================================== ERRORS ====================================
+___ ERROR at test_answer_does_not_contradict_written_policy[refund-window] ____
+deepeval.errors.MissingTestCaseParamsError: Unable to evaluate test case because
+'context' is missing. Provide the missing parameter(s), or pass
+--skip-on-missing-params to skip evaluating this test case.
+_____________ ERROR at test_retrieval_covers_the_answer_we_expect _____________
+deepeval.errors.MissingTestCaseParamsError: Unable to evaluate test case because
+'expected_output' is missing. Provide the missing parameter(s), or pass
+--skip-on-missing-params to skip evaluating this test case.
+========================= 4 passed, 4 errors in 96.12s =========================
