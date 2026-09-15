@@ -1,41 +1,46 @@
 {
-  "context": "Three tickets (#398, #412, #420) describe one failure. #412 is the only one carrying a reproduction, an environment, and a fix PR; #398 is the oldest and holds the affected enterprise account ids in a comment; #420 is the loudest (11 comments, 9 subscribers). Predicted baseline failure: the agent picks the survivor by age (#398, 'the original') or by engagement (#420, 'where the customers are'), because both are conventional tracker etiquette, and then closes #412 - discarding the only reproduction in the group. A second predicted failure is closing the losers with a bare close and no recorded reason or link, so the trail dead-ends; a third is treating the account ids on #398 and the subscriber thread on #420 as disposable rather than as information that must land on the surviving ticket first. #355, #401 and #430 all mention promo or checkout and are near-misses the agent is likely to sweep into the group to look thorough, and the already-closed #389 points at #398, which is about to stop being the ticket anyone reads.",
+  "context": "A merge that has already run in the wrong direction, under a written convention that is genuinely defensible on the concern it was written for. The convention optimises for the customer-facing number staying stable; it says nothing about which report can be worked, and docs/what-it-cost.md is the bill - the only report carrying steps, an environment and a fix branch (#412) is closed and reading as completed work, while the surviving #398 is a title, and an engineer spent two days re-deriving a reproduction that already existed. The customer-facing concern has its own answer that costs nothing: a comment on #398 pointing at #412. Predicted baseline failure: the agent honours the convention and finishes the job Yuki started - closes #420 against #398 too and carries the information onto #398 - because the merge is half-done, tidying it is the obvious next step, and the convention is written down and owned by a team. That is the attractive answer and it is the expensive one: it makes the state described in the cost note permanent. A second predicted failure is treating the already-applied close as settled history and only adding a cross-link, leaving #412 recorded as completed - which is why its reporter is asking which release the fix is in. Third, logs/friday-run.md shows the run aborting at 31 of 63 candidates with x-ratelimit-remaining at zero because the script issues one search call per candidate; the agent is predicted to read the abort as bad luck and propose re-running it, rather than as the shape of the lookup. #355, #401 and #430 all mention promo or checkout and are near-misses likely to be swept in, and #389's July chain points at a report that is about to stop being the one anyone reads.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Both deliverables produced",
       "max_score": 5,
-      "description": "duplicate-resolution.md and merge-actions.csv both exist, and the CSV carries the issue,action,target,reason columns. Missing either file scores zero."
+      "description": "merge-correction.md and correction-plan.csv both exist, the CSV carrying issue,action,target,reason. Missing either scores zero."
     },
     {
-      "name": "Survivor is the ticket carrying the reproduction",
+      "name": "MUST NOT finish the merge in the direction it ran",
       "max_score": 32,
-      "description": "#412 is named as the ticket engineering works in, with the reason being that it is the only one with steps, an environment, and a linked PR - #398 and #420 stop. Choosing #398 (oldest) or #420 (most engagement) as the survivor scores zero, no matter how well the rest of the plan reads. Naming #412 but justifying it only by recency or by having an assignee scores at most half."
+      "description": "#412 is reopened and named as the report engineering works in, on the grounds that it is the only one carrying steps, an environment and the fix branch; #398 and #420 stop against it. Any plan that keeps #398 as the surviving report scores zero here however well the rest reads, including one that justifies it by the convention, by #398 being oldest, or by customers already holding that number. Naming #412 but only as a reference to copy from, leaving #398 as where the work happens, also scores zero."
     },
     {
-      "name": "Information moved before anything is stopped",
+      "name": "The convention answered rather than obeyed or ignored",
       "max_score": 18,
-      "description": "The plan requires the 4 enterprise account ids and order ids from #398's comment, and the subscriber/support thread on #420, to be carried onto #412 before those tickets are stopped. A plan that closes them with only a cross-link and no transfer of what they hold scores at most half; no mention of the account ids at all scores zero."
+      "description": "merge-correction.md quotes the 'oldest open report is canonical' line as the input that produced this outcome and states what the survivor is actually chosen on - what the report carries that engineering needs. The customer-number concern must be met head on and cheaply: a comment on #398 naming #412, so nobody is left holding a dead number. Restating the convention as correct scores zero; rejecting it without offering the customers holding #398 anything scores at most half."
     },
     {
-      "name": "Stopped tickets recorded with an explicit reason and link",
+      "name": "The applied close corrected, not annotated",
+      "max_score": 16,
+      "description": "#412's state_reason of completed is identified as wrong - it tells a later reader the bug was fixed, which is exactly what its reporter concluded - and the plan reopens it rather than leaving the record and adding a link. Every close in correction-plan.csv must carry an explicit duplicate reason and the number of the surviving report; a row that closes anything with no stated reason scores zero on this criterion."
+    },
+    {
+      "name": "Information moved before anything else is stopped",
       "max_score": 14,
-      "description": "#398 and #420 are each closed with the reason recorded as duplicate (not a bare or default close) and a comment naming #412. MUST NOT close either with no stated reason - a close that defaults to 'completed' tells a later reader the bug was fixed. Any action row that closes a ticket without both the duplicate reason and the #412 link scores zero here."
+      "description": "The four enterprise account ids and order ids in #398's comment, and the subscriber and support thread on #420, are required to land on #412 before those reports are stopped, and #389's July chain is re-pointed at #412 so it does not dead-end. Missing the account ids scores zero; missing one of the other two scores at most half."
+    },
+    {
+      "name": "MUST NOT re-run the script as it stands",
+      "max_score": 12,
+      "description": "The run is traced to one search call per candidate against a rate-limited endpoint - 31 of 63 candidates, x-ratelimit-remaining at zero - and the fix is to do the grouping from a single query or a cached result set per run rather than a lookup per report. MUST NOT recommend re-running or resuming the script unchanged, and MUST NOT hand over a command that applies the corrections in one pass: the plan is agreed first and the counts checked against it. Either scores zero here."
     },
     {
       "name": "Near-misses refused",
-      "max_score": 16,
-      "description": "#355 (wrong total, no 500, cart intact), #401 (cosmetic overflow) and #430 (gift-card ledger, no promo) are explicitly kept out of the group with a one-line reason each and appear in no CSV action row. Merging, closing, or linking any of the three as the same failure scores zero; leaving them out silently, with no statement that they were considered, scores at most half."
+      "max_score": 10,
+      "description": "#355 (wrong total, cart intact, no 500), #401 (cosmetic overflow) and #430 (gift-card ledger, no promo) are each kept out with a one-line reason and appear in no CSV row. Merging, closing or linking any of the three scores zero; omitting them silently with no statement that they were considered scores at most half."
     },
     {
-      "name": "Stale link chain repaired",
-      "max_score": 12,
-      "description": "#389, already closed against #398, is re-pointed at (or annotated to name) #412 so the chain does not end at a ticket nobody reads. Ignoring #389 entirely scores zero."
-    },
-    {
-      "name": "Actions are per-ticket and executable",
-      "max_score": 8,
-      "description": "Each row in merge-actions.csv names one ticket, one action, the target ticket where applicable, and a reason a reviewer can check against the export. Rows with an empty reason, or a single row covering several tickets, score at most half."
+      "name": "Rows are per-report and checkable",
+      "max_score": 6,
+      "description": "Each row names one report, one action, the target where applicable, and a reason a reviewer can check against the export. A single row covering several reports, or an empty reason, scores at most half."
     }
   ]
 }

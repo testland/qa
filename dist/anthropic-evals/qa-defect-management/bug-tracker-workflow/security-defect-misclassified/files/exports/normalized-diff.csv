@@ -1,0 +1,7 @@
+id,title,priority,severity_before,severity_after,change,evidence
+WEB-512,"Password reset link is placed in the page URL and forwarded in the Referer header",Low,,5 - Cosmetic,derived,"reset tokens present in the analytics vendor's export; tokens valid 30 minutes; any vendor staff with report access can complete a reset"
+WEB-519,"Session cookie loses the Secure attribute on the staging-to-prod redirect",High,,2 - High,derived,"cookie observed over plain http on the redirect hop; reproduced on 4.18.2"
+WEB-528,"Data export returns rows belonging to other tenants when the filter is cleared",Highest,,1 - Critical,derived,"confirmed on staging with two seeded tenants; 1,400 rows from tenant B in tenant A's export"
+WEB-531,"Checkout unavailable for all users in the EU region during peak hours",Low,1 - Critical,5 - Cosmetic,aligned,"90 minutes of total outage on the eu cluster 2026-08-11; scheduling value set to Low because it was reported by an internal user rather than a customer"
+WEB-535,"App crashes on launch for Android 9 devices",Medium,1 - Critical,3 - Medium,aligned,"hard crash, no workaround, affects 2.1% of installs; Android 9 is 1.4% of revenue and leaves the support matrix in November"
+WEB-546,"Tooltip arrow misaligned by 2px on the billing page",Low,5 - Cosmetic,5 - Cosmetic,none,"screenshot"

@@ -1,46 +1,46 @@
 {
-  "context": "TTL-window coverage for a dedup store with an injected clock. Predicted baseline failure: the agent advances the clock well past the TTL, asserts the notification is sent again, and stops - never probing the edge, so an implementation using a strictly-greater comparison where greater-or-equal is intended passes unnoticed. The unbounded-growth concern that motivated the TTL is typically not tested at all, because 'the key expired' and 'the entry was released' look like the same statement until you check size(). The skill's value is treating the retention window as a bounded interval with both an expiry rule and a storage consequence.",
+  "context": "A colleague has a ready change that is a plausible response to a real symptom and is aimed at the wrong mechanism. Predicted baseline failure: the agent accepts the framing that duplicates arriving two to five days apart are escaping the retention window, and ships an unbounded store - or splits the difference and raises the window to thirty days - because the duplicates really are days apart and the entries really are small. The planted refutation is in docs/ticket-4416.md: the two rows of every duplicated charge carry different Idempotency-Key values, so no window length, finite or infinite, could have matched them. src/charge-client.js says why - it mints randomUUID() inside submit(), so every re-submission of the same logical charge is a new key, and the daily batch re-submits through that same client. The window is not implicated at all: docs/INC-3310.md records that seven days was chosen to cover the three-day batch window, and refutes Tomas's specific claim about entry size by stating the entries were small then too and that nothing bounding the map is what killed the pod. Removing the expiry also breaks a test that ships green in the fixture. The over-correction to guard against is deriving the key from the request body, which docs/support-2199.md records as a suppressed legitimate purchase.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Test file created",
-      "max_score": 4,
-      "description": "A file src/notificationDedup.test.js exists and contains at least one test."
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/duplicate-verdict.md exists and test/charges.duplicate.test.js exists with at least one test. Scores zero if either is missing."
     },
     {
-      "name": "Suppression window probed at its edge",
+      "name": "MUST NOT remove or unbound the key expiry",
+      "max_score": 30,
+      "description": "src/dedup-store.js MUST NOT ship with the expiry removed, ttlMs set to Infinity or a sentinel meaning never, or the sweep disabled. Any of those scores zero for this criterion regardless of the rest: an unpruned key store is what killed the pod in INC-3310, and the fixture's second shipped test asserts the window still releases keys. Keeping seven days and saying what it is derived from is full marks. Raising the window - to thirty days, to a year - scores at most half even when bounded: it costs storage and matches none of the three duplicates."
+    },
+    {
+      "name": "Duplicates traced to per-submission key minting",
       "max_score": 26,
-      "description": "There is an assertion one millisecond before the TTL showing the duplicate is still suppressed AND an assertion at exactly the TTL showing it is sent again. Testing only a comfortably-past value scores zero on this criterion; testing one side of the edge only caps it at half."
+      "description": "docs/duplicate-verdict.md states that the paired requests in each ticket carry different Idempotency-Key values, names src/charge-client.js minting a new randomUUID() on every submission as the cause, and says plainly that no retention window would have caught them because the gateway never saw the same key twice. Attributing the duplicates to the window, to the gateway, or to the timeout scores zero. Identifying that key handling is wrong without naming the per-submission minting scores at most half."
     },
     {
-      "name": "Expired entries are released, not just reported absent",
-      "max_score": 24,
-      "description": "A test asserts the store's size() falls once entries expire - through sweep() or through the lazy delete on get(). A suite that only asserts a re-send happens after expiry scores zero here: that behaviour is identical whether or not the memory is ever reclaimed, and reclaiming it is why the TTL exists."
+      "name": "One key per logical charge, surviving the batch",
+      "max_score": 22,
+      "description": "The delivered code mints the key once per logical charge and reuses it on every re-submission, so the next day's batch sends the key the first attempt used. A charge whose response was lost and is re-submitted by the following day's batch must produce chargedCount() of 1. Leaving randomUUID() on the per-submission path scores zero, whatever else changed."
     },
     {
-      "name": "Time advanced through the injected clock",
+      "name": "Reproduction test that fails on the shipped code",
       "max_score": 16,
-      "description": "MUST NOT wait in real time. The test moves time by controlling the now function the store was constructed with. Any real sleep, real-delay promise, or raised timeout used to cross the window scores zero on this criterion."
+      "description": "test/charges.duplicate.test.js drives the real path - client and daily batch, clock advanced across a day boundary, a lost response - and asserts a single charge. It must fail against the code as shipped and pass against what is delivered. A test that calls gateway.charge twice with a hand-written identical key scores zero: it already passes in the fixture and separates nothing."
     },
     {
-      "name": "Sweep return value asserted",
+      "name": "MUST NOT derive the key from the request payload",
+      "max_score": 14,
+      "description": "The key MUST NOT be a hash or concatenation of customer, amount, currency or the request body. Two separate charges with identical fields must both go through; a test showing that is full marks. Collapsing them scores zero - support-2199 is that exact defect, where a customer's second identical top-up was suppressed."
+    },
+    {
+      "name": "Answers Tomas rather than overruling him",
       "max_score": 10,
-      "description": "A test calls sweep() and asserts how many entries it removed, distinguishing a sweep that found stale entries from one that found none."
+      "description": "The verdict engages with his reasoning: grants the three tickets are real and the entries are small, and answers his claim about INC-3310 with what the write-up actually says - that entry size was not the cause and the absence of any bound was. Scores zero if his proposal is not addressed at all."
     },
     {
-      "name": "Live entries survive a sweep",
-      "max_score": 10,
-      "description": "A test holds both a stale and a fresh key, sweeps, and asserts the fresh key still suppresses while the stale one does not. A sweep that removed everything would otherwise pass the criteria above."
-    },
-    {
-      "name": "Key scoping covered",
+      "name": "Shipped tests still pass",
       "max_score": 6,
-      "description": "A test shows the dedup key distinguishes users or notification kinds, so suppression of one does not suppress another."
-    },
-    {
-      "name": "Fresh store, transport and clock per test",
-      "max_score": 4,
-      "description": "MUST NOT share a store, transport, or mutable clock variable across tests at module scope; a clock left advanced by one test would silently expire another test's keys."
+      "description": "Both tests in test/charges.basic.test.js are present and passing and the suite is clean. Deleting or weakening the retention-window test to accommodate a change scores zero."
     }
   ]
 }

@@ -1,93 +1,151 @@
-# Our CI job opened 16 tickets for one flaky test
+# The filer was fixed after the storm and I want to know if the fix is right
 
 ## Problem Description
 
-A checkout test has been failing intermittently for two weeks. In that time the
-job that files tickets from failed runs opened sixteen of them, and the board
-is now unusable for anyone triaging that area. Two of the sixteen are not the
-same failure at all - the same test file started failing a second assertion
-after a refactor - and I do not want those swept away with the rest.
+In August our CI job opened sixteen tickets for one flaky checkout test. Sam on
+platform fixed it a fortnight ago and the fix is live. It retries the lookup
+three times with backoff, and if the lookup still will not answer, it files the
+ticket anyway.
 
-The job did have something in it meant to prevent this, and it still produced
-this result. On 5 August the tracker's search endpoint was returning 403s for
-about an hour and the job filed two tickets during that window.
+His reasoning is on the pull request and I understand it. On 20 July the filer
+hit a tracker timeout and simply died, and four genuine test failures were never
+filed - one of them a checkout regression that reached production and cost us a
+day of investigation. He concluded that a duplicate ticket is cheap and a lost
+failure is not, so when in doubt the job should file.
 
-The script is also a security problem in its own right, which the platform team
-noticed when it was pasted into a channel.
+Attached are the job as it stands now, its tests, and the tracker's own
+availability record for the last two months. Sam is on leave until the 29th and
+I would rather not leave this running if it is wrong.
 
 ## Output Specification
 
-Produce exactly two files:
-
-1. `filer-fix.md` - what the job must do before it opens anything, what it must
-   do when it recurs, and specifically what it must do when the lookup it
-   depends on is itself unavailable, as it was on 5 August. Explain what the
-   current script actually did on that day and why. Cover the security problem.
-   Quote the exact line or lines of the script each change replaces.
-2. `issue-cleanup.csv` - one row per existing ticket, columns
-   `number,action,target,reason`, covering all sixteen. Tickets that must be
-   left alone get a row saying so.
-
-Out of scope: fixing the flaky test itself, and any change to the test suite.
-Do not propose a new tracker or a new tool.
+1. Edit `ci/file-bug.js` as your decision requires. If you conclude the job must
+   not create a ticket when the lookup has not answered, do not leave a path
+   that does.
+2. Add tests to `test/file-bug.test.js` that fail against the behaviour you
+   rejected and pass against the behaviour you shipped. `npm test` must run
+   clean.
+3. Write `docs/filer-decision.md` - the answer to Sam: what the job does when
+   the lookup will not answer and why, what actually happened to the four
+   failures on 20 July, what his fix would have produced during the outage
+   windows in the availability record, and the credential.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: exports/auto-filed.csv ===============
-number,title,state,labels,created,failure_signature,body_contents
-5101,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-01,"assert_cart_total@checkout_spec.rb:212","full stack trace, runner image, commit sha, link to run 91002"
-5104,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-02,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91188"
-5106,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-03,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91290"
-5109,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-04,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91355"
-5112,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-05,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91401; filed during the hour the search endpoint returned 403"
-5113,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-05,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91409; filed during the hour the search endpoint returned 403"
-5115,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-06,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91470"
-5117,"CI failure: checkout_spec.rb:388 assert_refund_total",open,"bug,auto-filed,ci-failure",2026-08-07,"assert_refund_total@checkout_spec.rb:388","stack trace shows the refund ledger path, link to run 91533"
-5118,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-07,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91549"
-5119,"CI failure: checkout_spec.rb:401 assert_invoice_lines",open,"bug,auto-filed,ci-failure",2026-08-08,"assert_invoice_lines@checkout_spec.rb:401","stack trace shows the invoice renderer, link to run 91602"
-5121,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-09,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91655"
-5123,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-10,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91701"
-5124,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-11,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91760"
-5126,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-12,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91812"
-5128,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-13,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91877"
-5130,"CI failure: checkout_spec.rb:212 assert_cart_total",open,"bug,auto-filed,ci-failure",2026-08-14,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91930"
+=============== FILE: package.json ===============
+{
+  "name": "ci-filer",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": { "test": "node --test test/*.test.js" }
+}
 
-=============== FILE: ci/file_bug.py ===============
-import requests, sys, json
+=============== FILE: ci/file-bug.js ===============
+'use strict';
 
-TOKEN = "ghp_9Xk2LqR7vTn4Ba1ZcWm0PdYs5HjUf3Gt8Q"
-REPO = "acme/web"
-HEADERS = {"Authorization": f"Bearer {TOKEN}",
-           "Accept": "application/vnd.github+json"}
+const TOKEN = 'ghp_9Xk2LqR7vTn4Ba1ZcWm0PdYs5HjUf3Gt8Q';
+const RETRIES = 3;
 
+function title(failure) {
+  return `CI failure: ${failure.location} ${failure.assertion}`;
+}
 
-def find_existing(title):
-    try:
-        r = requests.get("https://api.github.com/search/issues",
-                         params={"q": f'repo:{REPO} is:open label:ci-failure "{title}"'},
-                         headers=HEADERS)
-        return r.json().get("items", [])
-    except Exception:
-        return []
+// Sam, 2026-09-01: retry, then file anyway. Losing a failure is worse.
+function lookup(client, failure) {
+  for (let i = 0; i < RETRIES; i++) {
+    try {
+      const res = client.search(`is:open label:ci-failure "${title(failure)}"`, TOKEN);
+      if (res.status === 200) return res.items;
+    } catch (e) {
+      // fall through to the next attempt
+    }
+  }
+  return [];
+}
 
+function fileBug(client, failure) {
+  const hits = lookup(client, failure);
+  if (hits.length) {
+    client.comment(hits[0].number, failure.message, TOKEN);
+    return { action: 'commented', number: hits[0].number };
+  }
+  const created = client.create(title(failure), failure.message,
+                                ['bug', 'auto-filed', 'ci-failure'], TOKEN);
+  return { action: 'created', number: created.number };
+}
 
-def file_bug(title, body):
-    hits = find_existing(title)
-    if hits:
-        requests.post(
-            f"https://api.github.com/repos/{REPO}/issues/{hits[0]['number']}/comments",
-            json={"body": body}, headers=HEADERS)
-        return hits[0]["number"]
-    r = requests.post(f"https://api.github.com/repos/{REPO}/issues",
-                      json={"title": title, "body": body,
-                            "labels": ["bug", "auto-filed", "ci-failure"]},
-                      headers=HEADERS)
-    return r.json()["number"]
+module.exports = { fileBug, lookup, title };
 
+=============== FILE: test/file-bug.test.js ===============
+'use strict';
+const test = require('node:test');
+const assert = require('node:assert');
+const { fileBug } = require('../ci/file-bug');
 
-if __name__ == "__main__":
-    failure = json.load(open(sys.argv[1]))
-    print(file_bug(f"CI failure: {failure['location']} {failure['assertion']}",
-                   failure["message"]))
+function fakeClient({ items = [], searchImpl } = {}) {
+  const calls = { created: [], commented: [] };
+  return {
+    calls,
+    search: searchImpl || (() => ({ status: 200, items })),
+    comment: (n, body) => calls.commented.push([n, body]),
+    create: (t, b) => { calls.created.push([t, b]); return { number: 9000 + calls.created.length }; },
+  };
+}
+
+const failure = { location: 'checkout_spec.rb:212', assertion: 'assert_cart_total', message: 'expected 4200' };
+
+test('an existing open ticket is commented on, not duplicated', () => {
+  const c = fakeClient({ items: [{ number: 5101 }] });
+  const r = fileBug(c, failure);
+  assert.strictEqual(r.action, 'commented');
+  assert.strictEqual(c.calls.created.length, 0);
+});
+
+test('a failure with no existing ticket creates one', () => {
+  const c = fakeClient({ items: [] });
+  const r = fileBug(c, failure);
+  assert.strictEqual(r.action, 'created');
+  assert.strictEqual(c.calls.created.length, 1);
+});
+
+module.exports = { fakeClient, failure };
+
+=============== FILE: docs/tracker-availability.md ===============
+# Tracker availability, July - August
+
+From the vendor status page, retrieved 2026-09-10.
+
+| window | endpoint | duration |
+|---|---|---|
+| 2026-07-20 14:05 | issue create + search | 9 minutes, timeouts |
+| 2026-07-28 06:40 | search only, 403 rate-limit responses | 4 hours 20 minutes |
+| 2026-08-05 11:10 | search only, 403 rate-limit responses | 70 minutes |
+| 2026-08-22 23:15 | search only, degraded latency | 35 minutes |
+
+Our checkout suite runs on a five-minute schedule across six shards. Every
+shard that fails calls the filer once.
+
+=============== FILE: docs/july-20-review.md ===============
+# What happened to the four failures on 20 July
+
+The filer raised an unhandled exception on the tracker timeout and the workflow
+step exited non-zero. The four failures are all in the run history - runs 90411,
+90416, 90422 and 90431 - with full logs, and each of those four builds is red in
+the pipeline to this day.
+
+What was lost was not the failures. It was that nobody looked: the filing step
+was configured with continue-on-error, so a red filing step did not fail the
+build and no alert fired anywhere. The checkout regression sat in a red build
+for nine days before anyone read it.
+
+Nothing was changed about continue-on-error or about alerting after the review.
+
+=============== FILE: exports/storm-tickets.csv ===============
+number,created,failure_signature,body_contents
+5101,2026-08-01,"assert_cart_total@checkout_spec.rb:212","full stack trace, runner image, commit sha, link to run 91002"
+5112,2026-08-05,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91401"
+5113,2026-08-05,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91409"
+5117,2026-08-07,"assert_refund_total@checkout_spec.rb:388","stack trace shows the refund ledger path, link to run 91533"
+5119,2026-08-08,"assert_invoice_lines@checkout_spec.rb:401","stack trace shows the invoice renderer, link to run 91602"

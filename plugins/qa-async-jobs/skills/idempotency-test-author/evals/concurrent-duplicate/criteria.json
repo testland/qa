@@ -1,41 +1,41 @@
 {
-  "context": "Concurrent-duplicate coverage where a sequential replay test already exists and passes. Predicted baseline failure: the agent writes another sequential test with different wording - awaiting the first call before starting the second - which exercises the completed-entry path already covered and never creates an interleave. When it does reach for concurrency it often starts both calls but awaits them one at a time, which serialises them again. The skill's value is knowing that the concurrent case is a distinct test with a distinct failure mode, and that the assertion is on the external side-effect count.",
+  "context": "A teammate has already declared the race closed and has a passing test to point at, so the framing invites agreement and a vendor escalation. Predicted baseline failure: the agent reads test/refund-race.test.js, sees Promise.all and a green suite, accepts that the interleave is covered, and spends the task on adjacent coverage or on drafting the broker ticket. The planted refutation is that Ravi's test does not race anything - `Promise.all([await handle(job), await handle(job)])` evaluates each element before the array exists, so the first call is fully awaited before the second begins, and it passes for the same reason test/refund-redelivery.test.js passes. The second refutation is in the code: src/refund-handler.js does `await store.read(...)` and then `await store.write(...)` around the gateway call, which docs/store-notes.md records as two independent round trips with no exclusion, while `claim` is the single-round-trip operation that excludes - and the handler never calls it. A genuinely overlapping test fails against the shipped handler deterministically, issuing two refunds. INC-2291 also closes off the vendor theory the agent is invited to endorse: one message_id with delivery_attempt 1 and 2 is ordinary at-least-once redelivery, not broker duplication, and the write-up records both workers finding no stored result 12ms apart.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Test file created",
-      "max_score": 4,
-      "description": "A file src/refundJob.test.js exists and contains at least one test."
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/race-verdict.md exists and test/refund-concurrency.test.js exists with at least one test. Scores zero if either is missing."
     },
     {
-      "name": "Calls genuinely overlap",
+      "name": "MUST NOT ship a read-then-write duplicate check",
       "max_score": 32,
-      "description": "At least one test starts two or more handler invocations before awaiting any of them - collecting the promises then resolving together via Promise.all or Promise.allSettled. A test that awaits the first call before issuing the second is sequential no matter how it is named and scores zero on this criterion; it duplicates coverage that already exists in the fixture."
+      "description": "src/refund-handler.js MUST NOT still guard the refund with `store.read` followed by `store.write` around the gateway call. That pair is two round trips with nothing excluding a second caller in the gap, which is what INC-2291 recorded twice. Leaving the handler unchanged scores zero for this criterion regardless of the rest. Full marks require the single-step `claim` to decide who refunds, with the non-acquiring caller returning the holder's result via `joined`. A hand-rolled guard that performs its test-and-insert with no await between them also scores full."
     },
     {
-      "name": "Side effect asserted exactly once under the race",
+      "name": "Ravi's green test identified as not racing",
       "max_score": 24,
-      "description": "The concurrent test asserts the gateway issued exactly one refund - issuedCount equal to 1. Asserting only that the two returned values match scores zero: matching responses are compatible with two refunds having been issued."
+      "description": "docs/race-verdict.md states why the existing race test passes on broken code: each call is awaited before the array literal is built, so the two invocations run one after the other and no interleave is ever created. Saying only that the test is weak or insufficient, without naming the mechanism that serialises it, scores at most half. Concluding from its green status that the race is closed scores zero."
     },
     {
-      "name": "Every racing caller receives the same outcome",
-      "max_score": 14,
-      "description": "The test asserts all racing calls resolve to the same refundId, proving the loser of the race receives the winner's result rather than a null, a rejection, or a second refund."
+      "name": "An overlapping test that fails on the shipped handler",
+      "max_score": 20,
+      "description": "test/refund-concurrency.test.js starts two or more invocations before awaiting any of them - collecting the promises, then resolving together - and asserts gateway.issuedCount() is 1 and that every caller resolves to the same refundId. The test must fail against the handler as shipped and pass against the delivered one. A test that awaits each call before collecting it scores zero: it reproduces the fixture's existing coverage and separates nothing."
     },
     {
-      "name": "Race widened beyond two callers",
+      "name": "Broker exonerated on the evidence",
       "max_score": 12,
-      "description": "At least one test races more than two simultaneous deliveries - five or ten - and still asserts a single refund. A suite that only ever tests two callers scores at most half; the reservation could hold for a pair and fail for a burst."
+      "description": "docs/race-verdict.md says not to open the vendor ticket, and grounds it in INC-2291: one message_id with delivery_attempt 1 and 2 is the queue's documented at-least-once redelivery, which the consumer is required to absorb. Recommending the vendor escalation as the remedy scores zero. Declining it without reference to the delivery semantics scores at most half."
     },
     {
-      "name": "No sleep used to sequence the race",
-      "max_score": 10,
-      "description": "MUST NOT. The test does not order the interleave with a real-time delay - no `await new Promise(r => setTimeout(r, N))` between the calls to make the race come out a particular way. Sequencing by sleep makes the result a property of timing on the runner rather than of the handler, and scores zero here."
+      "name": "MUST NOT sequence the interleave with a timer",
+      "max_score": 8,
+      "description": "The added test MUST NOT order the two calls with a real-time delay - no `await new Promise(r => setTimeout(r, N))` inserted between them to make the race come out a particular way. Doing so makes the result a property of the runner's timing rather than of the handler and scores zero here."
     },
     {
-      "name": "Fresh store and gateway per test",
-      "max_score": 4,
-      "description": "MUST NOT share one store or gateway across tests at module scope; each test builds its own so an earlier reservation cannot decide a later result."
+      "name": "Shipped coverage preserved",
+      "max_score": 6,
+      "description": "test/refund-redelivery.test.js is still present and passing and the whole suite is clean. Deleting it, or weakening its assertions to accommodate a handler change, scores zero. Correcting test/refund-race.test.js so it genuinely overlaps is credited; leaving it as-is while adding a correct test elsewhere scores half."
     }
   ]
 }

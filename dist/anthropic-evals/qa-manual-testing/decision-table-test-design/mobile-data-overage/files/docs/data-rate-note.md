@@ -2,8 +2,8 @@
 
 Customers on an unlimited plan are never charged for data.
 
-Once a customer passes 100 GB within a billing cycle, connection speed is
-reduced to 1 Mbit for the remainder of that cycle.
+Once a customer passes 100 GB within a billing cycle, connection speed is reduced
+to 1 Mbit for the remainder of that cycle.
 
 The Speed Pass add-on removes the fair-use speed reduction. It does not change
 what data costs.

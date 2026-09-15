@@ -1,0 +1,13 @@
+order_ref,channel,destination,residential,gross_kg,tail_lift,island
+WEB-44210,web,Hamburg,no,180,no,no
+EDI-90114,edi,Bremen,no,320,yes,no
+WEB-44233,web,Kiel,yes,140,yes,no
+EDI-90117,edi,Dortmund,no,640,yes,no
+EDI-90121,edi,Essen,no,410,yes,no
+WEB-44251,web,Sylt,no,210,no,yes
+EDI-90140,edi,Norderney,yes,180,no,yes
+WEB-44288,web,Rostock,yes,720,yes,no
+EDI-90162,edi,Lubeck,no,880,no,no
+EDI-90177,edi,Borkum,no,650,no,yes
+WEB-44301,web,Flensburg,yes,95,no,no
+EDI-90184,edi,Emden,no,540,yes,no

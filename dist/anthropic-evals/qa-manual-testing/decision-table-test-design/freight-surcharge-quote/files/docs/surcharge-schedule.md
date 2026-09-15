@@ -1,18 +1,16 @@
-# Pallet freight surcharge schedule (list pricing)
+# Pallet freight surcharge schedule (list pricing, 2026 H2)
 
-Base surcharge on a standard dock-to-dock delivery: EUR 0.
+A dock-to-dock mainland delivery under 500 kg carries no surcharge.
 
-Residential delivery carries an access surcharge of EUR 25.
+Residential delivery carries an access surcharge of EUR 25. It is not applied to
+island destinations, which are quoted per shipment.
 
-A delivery requiring a tail lift adds EUR 40.
+A tail lift adds EUR 40. At a residential address the lift is charged at EUR 65
+rather than EUR 40, because the driver works without a dock.
 
-At a residential address the tail lift is charged at EUR 60 rather than EUR 40,
-because the driver works without a dock.
-
-Island destinations carry a ferry surcharge of EUR 90. The residential access
-surcharge is not applied to island destinations.
+Island destinations carry a ferry surcharge of EUR 95.
 
 Shipments over 500 kg carry a heavy-goods surcharge of EUR 30. Island shipments
-are quoted per shipment and carry no heavy-goods surcharge.
+carry no heavy-goods surcharge.
 
 Surcharges that apply are added together and shown as one line on the invoice.

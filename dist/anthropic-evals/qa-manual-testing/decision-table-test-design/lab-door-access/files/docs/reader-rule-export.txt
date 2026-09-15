@@ -1,0 +1,21 @@
+Reader 4-NORTH-LAB - exported rule set (outgoing unit, firmware 2.11)
+
+The unit evaluates four attributes and nothing else. It has no notion of a kind
+of person; "contractor with clearance" is not a value it can hold.
+
+  badge.employmentType    PERMANENT | CONTRACTOR
+  badge.labClearance      true | false
+  clock.coreHours         true between 07:00 and 19:00 local
+  door.escortPresent      true when a second valid badge is presented within 20s
+
+Outputs raised per decision:
+
+  door.grant              true | false
+  display.message         set to "contact your site manager" when grant = false
+  log.reviewEntry         written when grant = true and door.escortPresent = true
+  notify.siteManager      raised when grant = true and clock.coreHours = false
+
+The replacement unit takes the same four attributes and raises the same four
+outputs. The rule expressions themselves were keyed in by hand in 2019 by a
+contractor who has left and are not recoverable from this export, which is why
+the policy text is the only specification we have.

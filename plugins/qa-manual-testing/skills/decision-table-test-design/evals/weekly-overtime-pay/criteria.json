@@ -1,41 +1,46 @@
 {
-  "context": "Five facts - over 40 hours, public holiday work, salaried rather than hourly, shift starting after 22:00, union member - describe 32 weeks, which reduce to 16 genuinely different pay cases: night premium and union membership both stop mattering for salaried staff, and union membership stops mattering for hourly staff in a week with no holiday work. Predicted baseline failure: the agent writes an accurate narrative of the five rules and a test list of six to ten illustrative weeks with no stated relationship to the 32 - so the works council's question is answered with 'these look representative'. The opposite failure is nearly as common: 32 rows written out one per arrangement, including four separate salaried night-shift union weeks that are the same case. Neither is visibly wrong; both leave the count unjustified, and both usually price the hourly overtime-plus-holiday week that the extract never resolves.",
+  "context": "Ruth's directive is right about the history and wrong about the remedy, and the attractive answer is to comply with it. Predicted baseline failure: the agent accepts thirty-two weeks as the safe, thorough, politically easy answer, writes them out, and hands payroll a list containing eight weeks nobody can set up. docs/hr-contract-fields.md says unionMember exists on the hourly contract type only, with 370 salaried records and none carrying the field, and src/weekly-pay.js throws outright when a salaried contract carries it - so the eight salaried union arrangements are not weeks, they are a shape the payroll record cannot hold. The remaining twenty-four collapse to sixteen genuinely different treatments, because the calculator returns the same object for a salaried week whatever the night shift does, and the same object for an hourly non-holiday week whatever the union flag says. The trap punishes the opposite reflex too: an agent that reduces enthusiastically merges union membership into the holiday rows, which is exactly DEF-2211, and the shipped regression test fails. Thirty-two is unrunnable, twelve is DEF-2211 again, sixteen is the answer and the calculator can prove it.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverable exists",
+      "name": "Deliverables produced",
       "max_score": 5,
-      "description": "A file named overtime-rules-analysis.md exists and contains a table of pay cases. Scores zero if absent or if it contains only per-rule prose."
+      "description": "docs/test-scope-reply.md exists and test/weekly-pay.test.js has at least one added test. Scores zero if either is missing."
     },
     {
-      "name": "Total number of weeks stated",
-      "max_score": 18,
-      "description": "The document states that the five facts describe 32 different weeks before any reduction. Scores zero if no total appears. Scores at most half if a number appears that is not 32 and is not derived from a stated restructuring of the facts."
+      "name": "MUST NOT hand payroll the unreduced thirty-two",
+      "max_score": 30,
+      "description": "Anti-pattern guard: a table whose rules grow with the facts is reduced before it is handed over, not enumerated. The week list given to payroll MUST NOT be thirty-two arrangements written out one each, and MUST NOT contain any salaried week carrying a union flag. Scores zero on either count. Scores at most half if a reduced list is produced but weeks that cannot be set up are still listed as blocked items for payroll to attempt."
     },
     {
-      "name": "Reduction to sixteen cases with named reasons",
-      "max_score": 32,
-      "description": "The table lands on 16 genuinely different cases and the document names which fact stops mattering for which group: night premium and union membership for salaried employees (16 weeks reducing to 4 cases), and union membership for hourly employees in a week with no holiday work (8 weeks reducing to 4 cases). Scores zero if no reduction is attempted and the document offers an unexplained sample of weeks. Scores at most half if a reduced table is produced without naming which fact was dropped where, or if the arithmetic between 32 and the table size does not reconcile."
+      "name": "Thirty-two, twenty-four, sixteen reconciled",
+      "max_score": 24,
+      "description": "The reply accounts for all thirty-two: eight cannot exist as contracts, and the surviving twenty-four produce sixteen distinct treatments. It names which fact stopped mattering where - the night shift and union membership for salaried weeks, union membership for hourly weeks with no holiday worked. Scores zero if no reconciliation between thirty-two and the list size appears. Scores at most half if a reduced list appears without naming which fact was dropped where, or if the arithmetic does not add up."
     },
     {
-      "name": "MUST NOT hand over one case per arrangement",
+      "name": "The union holiday rate kept separable",
       "max_score": 20,
-      "description": "Anti-pattern guard. The list QA is asked to run must not be 32 individually written weeks, four of which are the same salaried week retyped with different night and union flags. Scores zero if the deliverable enumerates all 32 as separate test weeks with no reduction. Note this criterion is about the test list, not the enumeration: accounting for all 32 while testing 16 is the intended result and scores full marks."
+      "description": "Union membership remains a distinguishing fact in every hourly week where a public holiday is worked, so the reduced list still separates 2.5x from 2x. Scores zero if the reduction merges union membership away wherever a holiday is worked - that is DEF-2211 a second time - and scores zero if the shipped DEF-2211 regression test is weakened or deleted to accommodate the reduction."
     },
     {
-      "name": "Overtime-plus-holiday gap raised",
-      "max_score": 22,
-      "description": "The document flags that the extract never says how the 1.5x overtime rate and the 2x or 2.5x holiday rate interact for an hourly employee who works a public holiday in a week over 40 hours, and lists those four cases as open. Scores zero if a combined treatment is stated as expected behaviour - whichever is higher, multiplied together, holiday hours excluded from the 40 - since the extract supports none of those. Scores at most half if raised for only the union or only the non-union variant."
+      "name": "The eight impossible weeks shown, not asserted",
+      "max_score": 16,
+      "description": "An added test, or an executed run cited in the reply, shows that a salaried contract carrying a union flag is rejected by src/weekly-pay.js, or the reply cites the HR field export. Scores zero if the eight weeks are dropped with no evidence beyond the reduction arithmetic. Scores at most half if the evidence is only the works agreement sentence that the union rate applies to hourly employees, since that explains the pay and not the impossibility."
     },
     {
-      "name": "Coverage stated against the case count",
-      "max_score": 14,
-      "description": "The document states what its test list covers in terms of the case count - every one of the genuinely different cases, with the open ones marked as blocked - rather than describing the list as representative or thorough. Scores zero if no coverage statement tied to a number appears."
+      "name": "Salaried accruals appear as treatments",
+      "max_score": 10,
+      "description": "Time off in lieu at 1x and the day in lieu appear as the treatment for salaried weeks, including the week that accrues both. Scores zero if salaried rows carry 'no overtime' or 'not applicable' with no accrual, since the accrual is what payroll has to produce."
     },
     {
-      "name": "Salaried treatments are results, not absences",
-      "max_score": 12,
-      "description": "Time off in lieu at 1x and the day in lieu appear as pay treatments in the table for salaried weeks. Scores zero if salaried rows carry 'no overtime' or 'not applicable' with no accrual result, since the accrual is what payroll has to produce."
+      "name": "Ruth answered on her own terms",
+      "max_score": 10,
+      "description": "The reply grants that DEF-2211 happened the way she says and shows how this reduction differs from the one that caused it - the fact she lost is kept, and the arrangements dropped are dropped because the record cannot hold them rather than because someone judged them low risk. Scores zero if her directive is simply overridden without engaging with it."
+    },
+    {
+      "name": "Suite runs clean",
+      "max_score": 5,
+      "description": "npm test passes with the shipped three tests intact alongside whatever is added. Scores zero if the suite fails or a shipped test was removed."
     }
   ]
 }

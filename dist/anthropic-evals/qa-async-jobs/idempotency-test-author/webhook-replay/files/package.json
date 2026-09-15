@@ -1,8 +1,7 @@
 {
-  "name": "billing-worker",
+  "name": "billing-ingest",
   "version": "2.7.3",
   "private": true,
-  "scripts": {
-    "test": "node --test"
-  }
+  "type": "commonjs",
+  "scripts": { "test": "node --test" }
 }

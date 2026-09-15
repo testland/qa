@@ -1,46 +1,46 @@
 {
-  "context": "The policy is written as four sentences about four kinds of person, each sentence bundling employment type, clearance, hour and escort together. The reader actually turns on four separate facts - permanent employee or contractor, lab clearance held, inside core hours, escort present - giving 16 situations. Predicted baseline failure: the agent lifts the policy's own phrasing into its input list, producing rows such as 'contractor with lab clearance' or 'employee outside core hours', which are two facts glued together. Once the inputs are compound, the situations stop being enumerable: the document ends up with four or five scenarios mirroring the four policy sentences, every one of them accurate, and the escorted out-of-hours cleared contractor - the situation the policy never covers - has nowhere to appear. Nothing on the page looks wrong, because everything on the page is a faithful restatement of a sentence that exists.",
+  "context": "Tomas's list is a faithful restatement of section 4 and that is precisely why it cannot be checked. Predicted baseline failure: the agent walks his seven attempts against the seven sentences, finds each one accurate, endorses the list and perhaps adds an attempt or two of its own in the same shape - 'escorted contractor with clearance' - inheriting the compound rows without noticing. docs/reader-rule-export.txt says the unit holds four atomic attributes and no notion of a kind of person, so 'contractor with lab clearance' is two facts glued together and a list built from glued facts cannot be shown to cover anything. Two things fall out once the facts are separated, and both are in docs/door-log-extract.md. The 08-19 21:37 entry is a cleared contractor, out of hours, with an escort - granted by the outgoing unit, queried by the site manager at the time, and settled by no sentence of section 4; Tomas has no attempt in that shape. The 08-07 23:05 entry is a cleared permanent employee at night raising an out-of-hours notification - an output his 10:00 attempt cannot observe, which is exactly the consequence of his stated rule that the hour is not a variable for permanent employees. Both errors survive a sentence-by-sentence read, because every sentence has been used.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Deliverable exists",
       "max_score": 5,
-      "description": "A file named door-access-analysis.md exists and contains a per-situation table. Scores zero if absent or if the content is a restatement of the policy in bullet form."
+      "description": "docs/reader-swap-review.md exists and carries a per-situation result. Scores zero if absent or if the content is section 4 restated in bullets."
     },
     {
-      "name": "MUST NOT list compound facts as inputs",
-      "max_score": 28,
-      "description": "Anti-pattern guard. Each listed input is a single yes/no question the reader can evaluate on its own: permanent employee, holds lab clearance, inside core hours, escort present. Scores zero if any input row bundles two of these - 'contractor with clearance', 'employee outside core hours', 'unescorted contractor' - because a bundled row makes the situations impossible to enumerate. Scores at most half if the four atomic facts are named but the table's rows are still keyed by the policy's four sentences rather than by the facts."
+      "name": "MUST NOT carry the compound rows over as the facts",
+      "max_score": 30,
+      "description": "Anti-pattern guard: each fact is one yes/no question the reader can answer on its own - permanent employee, holds lab clearance, inside core hours, escort present. Scores zero if any fact in the review bundles two of these ('contractor with clearance', 'unescorted contractor', 'escorted employee without clearance'), and scores zero if the handover list is endorsed as covering section 4. Scores at most half if the four atomic attributes are named but the situations are still keyed to Tomas's kinds of person."
     },
     {
-      "name": "All sixteen situations accounted for",
-      "max_score": 27,
-      "description": "All 16 combinations of the four facts are traceable in the table, each with a stated result or an explicit note that the policy does not settle it. Situations may be merged where a fact provably makes no difference, provided the merge names that fact. Scores zero if fewer than 16 can be traced, or if the table has one row per policy sentence. Scores at most half if 16 appear with several carrying no result."
-    },
-    {
-      "name": "The escorted out-of-hours cleared contractor is raised",
+      "name": "The 08-19 situation raised as unsettled",
       "max_score": 22,
-      "description": "The document identifies that a contractor who holds clearance, arriving outside core hours, accompanied by an escort, is not settled by the policy: the escort sentence is written for contractors without clearance, and the clearance sentence is limited to core hours. Scores zero if that situation is given a confident result - granted or refused - with no note. Scores at most half if raised only as a general remark that the policy has gaps, without pinning it to that situation."
+      "description": "The review identifies the cleared contractor, outside core hours, with an escort as a situation section 4 does not settle - the contractor sentence is limited to core hours and the escort sentence is written for people without clearance - and puts it to the security lead rather than deciding it. Scores zero if that situation is given a confident granted or refused result. Scores at most half if raised as a general remark that the policy has gaps without pinning it to that situation, or if the 08-19 log entry is not used as evidence that it occurs."
     },
     {
-      "name": "Refusal is a result in its own right",
+      "name": "All sixteen situations traceable",
+      "max_score": 20,
+      "description": "All sixteen combinations of the four attributes appear with a result, or are explicitly merged with the attribute that stopped mattering named, or are marked unsettled. Scores zero if the review carries one row per policy sentence, or if fewer than sixteen can be traced. Scores at most half if sixteen appear and several carry no result."
+    },
+    {
+      "name": "The hour kept as a variable for permanent employees",
+      "max_score": 18,
+      "description": "The review contradicts Tomas's stated reason for testing permanent employees only at 10:00: an entry outside core hours raises a notification to the site manager, so the hour changes the result for a cleared permanent employee even though it never changes whether the door opens. Scores zero if the review repeats that the hour is not a variable for permanent employees, and scores zero if the attempts schedule no out-of-hours entry by a cleared permanent employee."
+    },
+    {
+      "name": "Employment type merged where clearance is absent",
       "max_score": 12,
-      "description": "The reader's refusal, with the 'contact your site manager' display, appears as a distinct result alongside entry, and refused situations are present in the table. Scores zero if the table lists only the situations where the door opens."
+      "description": "The review states that permanent against contractor changes nothing once lab clearance is absent, and merges or annotates those eight situations rather than running Tomas's attempts 5 and 6 as two different checks. Scores zero if the two are scheduled as separate checks with no note that they are one case."
     },
     {
-      "name": "Escort not marked as irrelevant where it changes the log",
-      "max_score": 14,
-      "description": "Because every escorted entry is written to the review log, the escort fact changes the result in every situation where entry is granted - a cleared permanent employee badging in alone and badging in escorted are two different results. The document must not merge those. Scores zero if escort is marked as making no difference for cleared employees. Merging escort in situations where entry is refused for another reason is correct and is not penalised."
-    },
-    {
-      "name": "Core hours identified as irrelevant for permanent employees",
-      "max_score": 12,
-      "description": "The document states that the hour makes no difference to any permanent employee's result - cleared or not, escorted or not - and merges or annotates accordingly. Scores zero if the document schedules separate in-hours and out-of-hours checks for permanent employees as though the policy distinguished them."
-    },
-    {
-      "name": "Badge-in attempts tie back to situations",
+      "name": "All four reader outputs treated as results",
       "max_score": 10,
-      "description": "Each proposed physical badge-in names the situation it exercises and what result is expected. Scores zero if the attempts are listed with no mapping back to the table, or if only the granted situations are scheduled to be tried."
+      "description": "Grant, the 'contact your site manager' display, the review log line and the out-of-hours notification each appear as a result the attempts verify. Scores zero if the review carries only whether the door opens."
+    },
+    {
+      "name": "Attempts map back to situations",
+      "max_score": 8,
+      "description": "Each badge-in attempt names the situation it exercises and the expected value of every output, and the unsettled situation appears as blocked rather than being quietly dropped. Scores zero if the attempts are listed with no mapping, or if only the situations where the door opens are scheduled."
     }
   ]
 }

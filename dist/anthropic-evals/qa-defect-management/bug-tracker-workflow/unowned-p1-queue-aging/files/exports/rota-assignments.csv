@@ -1,0 +1,5 @@
+id,assigned_at,assigned_to,acknowledged,what_happened_since
+BUG-771,2026-08-06,d.novak,no,"d.novak's leave started 2026-08-06 and runs to 2026-08-24; no activity on the item"
+BUG-782,2026-08-06,m.oyelaran,no,"no activity"
+BUG-790,2026-08-11,l.fontaine,no,"unassigned by l.fontaine 2026-08-12, reassigned by the rule 2026-08-13, no comment either time"
+BUG-799,2026-08-05,f.okafor,no,"reassigned by the rule three times; no comment on any of them"

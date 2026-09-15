@@ -1,0 +1,9 @@
+id,title,severity,reporter,reporter_kind,environment,build,attachments,dev_attempt_recorded
+QA-2210,"App logs the user out at random",2 - High,support.desk,shared inbox,,,none,"tried for 40 minutes, no repeat"
+QA-2214,"Camera permission dialog appears twice on first launch",3 - Medium,f.okafor,person,"iOS 18.1 / iPhone 13 / app 7.4.0",9912,"screen recording, device log","2 physical devices and 3 simulator images at builds 9912 and 9930, dialog appears once"
+QA-2219,"Card charged twice when the payment sheet is dismissed",1 - Critical,support.desk,shared inbox,,,none,"none recorded"
+QA-2223,"Report export is empty for some users",2 - High,l.fontaine,person,prod,,"video link expired 2026-07-30","no steps left to follow once the video went"
+QA-2231,"Checkout suite failure: assert_total_matches",2 - High,ci.pipeline,automation account,,,"link to pipeline run 88214","could not repeat locally"
+QA-2236,"Notifications stop after the app is backgrounded overnight",3 - Medium,f.okafor,person,"Android 14 / Pixel 7 / app 7.4.1",10044,"battery stats export","reproduced the setup, waited 8 hours, notifications delivered"
+QA-2240,"Search box freezes",3 - Medium,alerts@statuspage,automation account,,,none,"nothing to go on"
+QA-2244,"Payout webhook retried 9 times for one event",2 - High,ci.pipeline,automation account,,,"link to pipeline run 89970","could not repeat locally"

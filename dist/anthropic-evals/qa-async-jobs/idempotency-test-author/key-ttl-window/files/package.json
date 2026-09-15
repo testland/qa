@@ -1,8 +1,7 @@
 {
-  "name": "notifications",
-  "version": "3.2.0",
+  "name": "charges-submitter",
+  "version": "4.1.0",
   "private": true,
-  "scripts": {
-    "test": "node --test"
-  }
+  "type": "commonjs",
+  "scripts": { "test": "node --test" }
 }

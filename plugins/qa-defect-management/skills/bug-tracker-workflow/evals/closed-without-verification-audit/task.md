@@ -1,60 +1,123 @@
-# Bugs are coming back after we close them
+# The rule that closes a ticket when the deploy goes green
 
 ## Problem Description
 
-Two defects we closed last sprint were reported again by customers within
-eight days. The engineering manager wants to know how many of the tickets we
-closed in the last six weeks were actually confirmed by anyone before they
-were closed, and which ones have to go back.
+Six weeks ago Tomás, who runs our releases, merged a nightly rule that closes
+defects by itself. For every ticket in its query whose fix PR is merged and
+whose deploy job reported success, it moves the ticket to Closed.
 
-The export below is every bug our team closed since 2026-07-01, with the
-sequence of states each one passed through and who signed off. Some of these
-closures are fine and I do not want them disturbed - the team is already
-sensitive about tickets being reopened for bookkeeping reasons.
+His argument was the audit he did first, and it is not a bad one. He read all
+212 tickets we closed by hand in the previous quarter: 94% of the verification
+comments on them said nothing checkable - "looks good", "merged, should be
+fine" - and 31 of those comments were written by the same engineer who wrote
+the fix. His conclusion was that the human confirmation step is a rubber stamp
+and a green deploy is at least a signal that something real happened.
 
-Whatever we do next touches a lot of tickets at once, so the manager wants to
-see the list and the count before anyone runs anything against the tracker.
+Four of the tickets the rule has closed have come back. Our support lead wrote
+up what she found on each of them; that note is attached along with the rule,
+its tests, and the list of everything it has closed so far.
+
+Decide whether the rule stays, and implement what you conclude. I would rather
+be told the rule is wrong now than argue about it again in November.
 
 ## Output Specification
 
-Produce exactly two files:
-
-1. `verification-gate-audit.md` - for every closed ticket in the export,
-   whether its closure holds up, and for the ones that do not, exactly what is
-   missing and what state it should be sitting in instead. Say explicitly which
-   closures you are leaving alone and why, so nobody re-litigates them. Include
-   the count of tickets your plan would move and the check the manager should
-   run against that count before anything is applied.
-2. `reopen-plan.csv` - one row per ticket to be moved, columns
-   `key,current_state,target_state,who_acts_next,reason`.
-
-Out of scope: severity and priority, sprint planning, and the CI filing job.
-Do not propose changes to the workflow configuration itself.
+1. Edit `automation/auto-close.js` as your decision requires. If you conclude
+   the rule must not close tickets on the signal it currently uses, do not
+   leave a path that does.
+2. Add tests to `test/auto-close.test.js` that fail against the behaviour you
+   rejected and pass against the behaviour you shipped. `npm test` must run
+   clean.
+3. Write `docs/closure-rule-decision.md` - the answer to Tomás: what may close
+   a ticket and what may not, what his 94% figure does and does not establish,
+   what happens to the tickets already closed, and what to do about the
+   content-free confirmations instead.
 
 ## Input Files
 
 Extract the following files before beginning.
 
-=============== FILE: exports/closed-bugs.csv ===============
-key,summary,status,resolution,severity,priority,assignee,verified_by,verified_at,fix_version,transition_history,closed_at
-ENG-4101,"Session drops when switching workspaces",Closed,Done,2 - High,P2,d.novak,,,"2026.07.02","New|Open|Assigned|In Progress|Fixed|Closed",2026-07-08
-ENG-4108,"Invoice PDF missing tax line for VAT-exempt accounts",Closed,Done,2 - High,P2,s.park,q.alvarez,2026-07-14,"2026.07.16","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-07-16
-ENG-4112,"Search returns results from deleted projects",Closed,Won't Do,3 - Medium,P3,,,,"","New|Closed",2026-07-11
-ENG-4115,"Bulk import silently drops rows over 10k",Closed,Done,1 - Critical,P1,m.oyelaran,,,"","New|Open|Assigned|Closed",2026-07-19
-ENG-4120,"Webhook retries fire twice after a 502",Closed,Done,2 - High,P2,d.novak,d.novak,2026-07-23,"2026.07.23","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-07-23
-ENG-4122,"Timezone offset wrong on the audit log export",Closed,Done,3 - Medium,P3,l.fontaine,q.alvarez,2026-07-27,"2026.07.30","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-07-30
-ENG-4130,"SSO login loops for users in two directories",Closed,Done,1 - Critical,P1,s.park,ci-bot,2026-08-03,"2026.08.06","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-08-03
-ENG-4133,"Keyboard shortcut conflicts with browser find",Closed,Won't Do,4 - Low,P4,,,,"","New|Open|Deferred|Closed",2026-08-04
-ENG-4136,"Export job times out over 500k rows",Closed,Done,2 - High,P2,m.oyelaran,q.alvarez,2026-08-07,"2026.08.10","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-08-10
-ENG-4140,"Password reset accepts an expired token",Closed,Done,1 - Critical,P1,s.park,,,"2026.08.11","New|Open|Assigned|In Progress|Fixed|Closed",2026-08-11
-ENG-4144,"Column sort resets after inline edit",Closed,Done,4 - Low,P4,l.fontaine,q.alvarez,2026-08-12,"2026.08.13","New|Open|Assigned|In Progress|Fixed|Verified|Closed",2026-08-13
+=============== FILE: package.json ===============
+{
+  "name": "closure-rule",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": { "test": "node --test test/*.test.js" }
+}
 
-=============== FILE: exports/verification-notes.csv ===============
-key,note
-ENG-4101,"closed by the assignee with the comment 'merged, should be fine'"
-ENG-4112,"one comment from the reporter, no triage comment, closed the same hour it was filed"
-ENG-4115,"no PR linked; assignee comment reads 'lost track of this, closing for now'"
-ENG-4120,"verification comment written by the same engineer who wrote the fix"
-ENG-4130,"verified_at is 3 minutes after the Fixed transition; ci-bot posts 'deploy succeeded' and the automation moves the ticket on"
-ENG-4133,"product manager comment 2026-08-01 accepting the behaviour for this release, review at next planning"
-ENG-4140,"customer-reported; reset flow retested by nobody; the fix PR touched the token TTL only"
+=============== FILE: automation/auto-close.js ===============
+'use strict';
+
+const TERMINAL = 'Closed';
+
+function decide(ticket) {
+  if (ticket.state === TERMINAL) return { action: 'none', why: 'already closed' };
+  if (!ticket.pr_merged) return { action: 'none', why: 'no merged fix' };
+  if (ticket.deploy_status === 'succeeded') {
+    return { action: 'close', why: `deploy ${ticket.deploy_id} succeeded` };
+  }
+  return { action: 'none', why: 'deploy not green' };
+}
+
+// Nightly. Whatever the query returns gets decided and applied in the same pass.
+function run(tickets, apply) {
+  const decisions = tickets.map(decide);
+  decisions.forEach((d, i) => {
+    if (d.action === 'close') apply(tickets[i].key, TERMINAL, d.why);
+  });
+  return decisions;
+}
+
+module.exports = { decide, run, TERMINAL };
+
+=============== FILE: test/auto-close.test.js ===============
+'use strict';
+const test = require('node:test');
+const assert = require('node:assert');
+const { decide } = require('../automation/auto-close');
+
+test('a ticket with no merged fix is left alone', () => {
+  const d = decide({ key: 'ENG-1', state: 'Fixed', pr_merged: false, deploy_status: 'succeeded' });
+  assert.strictEqual(d.action, 'none');
+});
+
+test('a ticket that is already closed is not touched again', () => {
+  const d = decide({ key: 'ENG-2', state: 'Closed', pr_merged: true, deploy_status: 'succeeded' });
+  assert.strictEqual(d.action, 'none');
+});
+
+=============== FILE: data/auto-closed.csv ===============
+key,summary,fix_service,deploy_service,flag,flag_enabled_in_prod,confirmed_by,fix_author,returned
+ENG-4101,"Session drops when switching workspaces",sessions,sessions,,,,d.novak,no
+ENG-4108,"Invoice PDF missing tax line for VAT-exempt accounts",billing,billing,,,q.alvarez,s.park,no
+ENG-4115,"Bulk import silently drops rows over 10k",importer,importer,import_v2,no,,m.oyelaran,yes
+ENG-4120,"Webhook retries fire twice after a 502",webhooks,webhooks,,,d.novak,d.novak,no
+ENG-4130,"SSO login loops for users in two directories",auth,notifications,,,,s.park,yes
+ENG-4136,"Export job times out over 500k rows",reporting,reporting,,,q.alvarez,m.oyelaran,no
+ENG-4140,"Password reset accepts an expired token",auth,auth,reset_v3,no,,s.park,yes
+ENG-4144,"Column sort resets after inline edit",web,web,,,q.alvarez,l.fontaine,no
+ENG-4151,"Duplicate charge when the payment sheet is dismissed",payments,payments,,,,r.mehta,yes
+
+=============== FILE: docs/returned-defects.md ===============
+# The four that came back - support lead's note, 2026-08-28
+
+The rule has closed 38 tickets since 2026-07-15. Four were reported again by
+customers, all within eleven days of being closed.
+
+- **ENG-4115.** Deploy went green. The fix ships behind `import_v2`, which is
+  still off in production and is scheduled for October. Nothing about the
+  customer-visible behaviour changed on the day we closed it.
+- **ENG-4130.** Deploy went green - for `notifications`. The fix is in `auth`,
+  which had not deployed since the Tuesday before. The rule matched on the
+  ticket's most recent successful deploy job, not on the service the fix
+  touched.
+- **ENG-4140.** Deploy went green and the fix is behind `reset_v3`, off in
+  production. Same shape as ENG-4115.
+- **ENG-4151.** Deploy went green and the change was live. It did not fix the
+  defect - the double charge happens on a path the PR did not touch. Nobody
+  tried the flow before or after.
+
+Of the 34 that did not come back, 21 had an independent confirmation recorded
+on them anyway, from someone other than the author, before the rule reached
+them. The rule's contribution on those was to close a ticket that was already
+confirmed.

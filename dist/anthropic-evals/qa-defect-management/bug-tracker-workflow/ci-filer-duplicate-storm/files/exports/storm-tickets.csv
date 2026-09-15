@@ -1,0 +1,6 @@
+number,created,failure_signature,body_contents
+5101,2026-08-01,"assert_cart_total@checkout_spec.rb:212","full stack trace, runner image, commit sha, link to run 91002"
+5112,2026-08-05,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91401"
+5113,2026-08-05,"assert_cart_total@checkout_spec.rb:212","one-line failure, link to run 91409"
+5117,2026-08-07,"assert_refund_total@checkout_spec.rb:388","stack trace shows the refund ledger path, link to run 91533"
+5119,2026-08-08,"assert_invoice_lines@checkout_spec.rb:401","stack trace shows the invoice renderer, link to run 91602"

@@ -1,46 +1,46 @@
 {
-  "context": "One customer email containing three unrelated failures - a missing export column, a sign-in redirect loop for two named-but-unidentified users, and a slow report page - each underspecified. Predicted baseline failure: the agent writes one tidy report titled something like 'Multiple issues in payroll portal', lists the three symptoms as bullets under a single description, assigns them one shared urgency, and fills in the blanks that make each one look complete: an identity provider for the sign-in loop, a load time in seconds for the slow page, an export template name. The result is a single tracker item that will close when one third of it is fixed.",
+  "context": "A shipped, already-merged process change removes the impact classification from intake and keeps only the queue position, justified by a real measurement: the two fields agreed in 94.2% of 1,120 closed defects. Predicted baseline failure: the agent agrees, or hedges and leaves the merged code as it is, because 94% redundancy is a strong-looking argument, the change is already live, nobody has objected, and the author explicitly set the bar at justifying the 5.8%. What the unaided agent is predicted to miss is that the 5.8% is not the weak side of the argument but the whole of it, and that two attached documents settle it outright. docs/support-sla.md binds the contractual acknowledgement and workaround clock to severity by its definitions, states that the supplier's own scheduling order is not a term of the agreement, and notes the annual assurance sample is drawn on the severity band and nothing else. docs/incident-pw-318.md is the same fact as history: under the pilot of this exact scheme a defect that was Critical by clause 7.2 - payroll output incorrect - was logged P3 as a defensible scheduling call, and because no field remained in which Critical could exist, the 4 business hour clock never started and the customer was acknowledged on day 9. The intake cost has its own answer the agent is predicted to ignore: her own 94.2% is the right justification for defaulting one field from the other with an override, which removes the 38 seconds without removing the field.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverable exists at the exact path",
+      "name": "Deliverables produced",
       "max_score": 5,
-      "description": "A markdown file exists at reports/palewell-hr-intake.md covering this email. Any other path scores zero."
+      "description": "docs/classification-decision.md and reports/bramblewood-intake.md both exist, and test/triage-gate.test.js has at least one added test. Scores zero if any of the three is missing."
     },
     {
-      "name": "MUST NOT combine the unrelated failures into one item",
-      "max_score": 28,
-      "description": "The export column, the sign-in loop, and the slow report page are three separate failures in three areas. Full points if the file contains three independently assignable write-ups, each with its own title and its own detail. Scores zero if they share one title, one description block, or one set of steps such that closing one would close the others. Listing them as bullets inside a single item scores zero."
+      "name": "MUST NOT leave impact and queue position as one field",
+      "max_score": 30,
+      "description": "The delivered src/bug-record.js MUST store an impact classification separately from the P0-P3 queue value, and src/triage-gate.js MUST check that both are present and scored independently. Scores zero if the single-field scheme is left in place, if docs/classification-decision.md endorses the merge, or if the two fields are restored but defined so that one is derived from the other with no possibility of disagreement. Full marks require both fields in the record and a gate finding that fires when the impact classification is absent."
     },
     {
-      "name": "No invented technical detail per item",
-      "max_score": 25,
-      "description": "The email supplies no identity provider, no browser or version for the two affected employees, no page load timing, no export template name, no employee names or IDs, and no build. Full points if each item carries its own missing facts as unknown. Scores zero if any such value is asserted - a named SSO provider, a numeric load time, a specific export template, an invented employee identifier - even when qualified as 'presumably'."
+      "name": "Derived from clause 7.2 and PW-318, not from general principle",
+      "max_score": 22,
+      "description": "docs/classification-decision.md names the contract as the thing that binds - clause 7.2 fixes the acknowledgement and workaround clock to the severity definitions and says the supplier's scheduling order is not a contractual term - and names PW-318 as the case where the merged field kept a Critical payroll-output defect off that clock for 9 days. Rejecting the change on general good-practice grounds, or only because the fields measure different things, scores at most half. Accepting the change on the strength of the 94.2% figure scores zero here."
     },
     {
-      "name": "Per-item questions for the customer",
-      "max_score": 18,
-      "description": "Each of the three items carries its own list of what Rachel must supply for that item specifically. Full points when the questions are item-specific and answerable in one reply. One shared undifferentiated question list scores at most half. No questions anywhere scores zero."
+      "name": "Test that fails against the rejected scheme",
+      "max_score": 20,
+      "description": "An added test asserts that a record retains its impact classification through makeRecord and that the gate blocks or flags a record which has a queue position but no impact classification. It must pass on the delivered code and fail against the shipped single-field version, where the key is parsed and discarded. A test that only re-exercises the shipped title, surface or commit rules scores zero: those pass under both schemes and separate nothing."
     },
     {
-      "name": "The onset contradiction is surfaced on the slow-page item",
+      "name": "The intake cost is answered on its own terms",
       "max_score": 14,
-      "description": "Rachel writes both 'since Monday' and 'never been quick since we came on board in June'. Full points if the slow-report item records both and marks onset as unresolved, since the two imply different investigations. Scores zero if one date is adopted as the start of the problem without noting the other."
+      "description": "The decision document addresses the 38 seconds an item rather than dismissing it, and proposes a concrete remedy that keeps both fields - defaulting the queue position from the impact band and requiring a reason only for the disagreeing minority is full marks, since the 94.2% is exactly what makes a default safe. Any other concrete mechanism that removes the per-item cost without removing the field scores at least half. Saying only that the cost is worth paying, or not mentioning it, scores zero."
     },
     {
-      "name": "Items are cross-linked as one intake",
+      "name": "Queued email split into independently assignable items",
       "max_score": 10,
-      "description": "The three items reference each other or a shared origin, so the reader can see they arrived in one email from one customer. Full points for explicit cross-references; scores zero if the items are presented with no indication of common origin."
+      "description": "reports/bramblewood-intake.md carries the missing export column, the sign-in redirect loop and the slow reports page as three separate write-ups, each with its own title, its own impact classification and its own queue position, and each carrying the questions Rachel must answer for that item specifically. Scores zero if they share one title or one description block such that closing one would close the others. Scores at most half if they are split but all three carry the same pair of values with no separate reasoning, or if the questions are one undifferentiated list."
     },
     {
-      "name": "Impact and scheduling urgency treated as separate judgements",
-      "max_score": 12,
-      "description": "The three items differ in what they do to the user, and the Friday payroll run is a business constraint rather than a property of any defect. Full points if user impact is assessed per item and the deadline is recorded as scheduling context. Scores zero if a single urgency is applied to all three, or if impact and scheduling order are stated as the same value with no separate reasoning."
-    },
-    {
-      "name": "Titles are single-clause and behavioural",
+      "name": "Onset contradiction surfaced on the slow-page item",
       "max_score": 8,
-      "description": "Each item's title states one observable failure and its surface, with no 'and' joining two failures and no prescribed fix. A title containing two failures scores zero for that item."
+      "description": "Rachel writes both 'since Monday' and 'never been quick since we came on board in June'. Full marks if the slow-reports item records both and marks onset as unresolved, since the two imply different investigations. Scores zero if one date is adopted as the start of the problem without the other. No invented load timing, identity provider, employee identifier or build anywhere in the file; asserting any of those scores at most half for this criterion."
+    },
+    {
+      "name": "Existing behaviour preserved",
+      "max_score": 6,
+      "description": "All four shipped gate tests still pass unchanged and npm test runs clean. MUST NOT weaken, rewrite or delete a shipped test to accommodate the change - in particular the commit-pinning and single-clause-title rules stay as they are. Deleting or loosening any of them scores zero."
     }
   ]
 }

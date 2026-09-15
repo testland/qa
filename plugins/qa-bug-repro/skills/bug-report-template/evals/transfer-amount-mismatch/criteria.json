@@ -1,51 +1,46 @@
 {
-  "context": "A payments complaint whose two load-bearing numbers - what was sent and what was displayed - were never captured, and whose environment is 'the usual browser'. Predicted baseline failure: the agent produces a clean, confident, professional-looking report that silently invents the missing facts - a sent amount and a received amount, a browser and version, an OS - because the template shape pulls for a filled field rather than an empty one. It also flattens 'Occurrences reported: 1' and 'every single time' into whichever one it read last, and asserts the issue reproduces consistently on the strength of a single second-hand observation. The output reads better than the honest version and is unusable for triage.",
+  "context": "An engineer has already diagnosed and filed the defect from two numbers a support agent typed into a chat window, without opening the structured record that exists for the same transfer. His hypothesis is genuinely attractive: 1250.00 against 1205.00 is a digit transposition, which is what a minor-unit formatting defect looks like, and a renderer fix is already in review. Predicted baseline failure: the agent accepts the framing it was handed, writes a tidy report about a statement-line display defect, keeps Minor severity and P3 because nothing is described as lost, and repeats that the customer's money is where it should be. What the unaided agent is predicted not to do is reconcile data/ledger-export.json, where TRF-90c41 debits 125000 and credits only 120500, with the missing 4500 sitting on CLR-HOLD-014 as a HOLD_PENDING_REVIEW posting still marked released false. Money genuinely did not arrive; the printed string is faithful, as the shipped renderer test shows, so the transposition reading is a coincidence of two numbers that happen to differ by the reserve. The export also settles two things the ticket could not: TRF-90d77 is a second customer short-credited the same way, and Sofia's own second screened transfer TRF-90f03 released its hold and balanced, which contradicts her 'every single time'.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverable exists at the exact path",
+      "name": "Deliverables produced",
       "max_score": 5,
-      "description": "A markdown file exists at reports/transfer-amount-mismatch.md and contains a report about this complaint. Any other filename or location scores zero."
+      "description": "reports/transfer-amount-mismatch.md and docs/review-note.md both exist, and test/ledger.test.js has at least one added test. Scores zero if any of the three is missing."
     },
     {
-      "name": "No invented monetary figures",
-      "max_score": 30,
-      "description": "The ticket contains no amounts, no currency, no account numbers and no transfer reference. Full points if the document states the sent and displayed amounts are not known and names them as required from the customer. Scores zero if any specific figure appears as if it were reported - an amount, a difference, a currency symbol attached to a number, a fabricated transfer reference - including inside an illustrative example, a placeholder that reads like data, or a 'for instance' aside."
+      "name": "MUST NOT carry the hand-copied diagnosis instead of the parsed record",
+      "max_score": 32,
+      "description": "The report MUST NOT characterise this as a statement-rendering, formatting, display or transposition defect, MUST NOT state that the money moved correctly or that the customer's balance is intact, and MUST NOT endorse shipping the renderer fix as the resolution. Any of those scores zero for this criterion regardless of the rest, because the ledger export shows the destination account was credited 120500 against a 125000 debit. Full marks require the report to state that the customer is 4500 minor units short and that the shortfall is an unreleased HOLD_PENDING_REVIEW posting on CLR-HOLD-014, not a rendering problem."
     },
     {
-      "name": "No invented environment facts",
+      "name": "Actual and reproduction built from the export, not the chat paste",
+      "max_score": 22,
+      "description": "The Actual section names the three postings of TRF-90c41 by code and amount, and the reproduction pins the build the export names - pay-svc 4.19.2, commit 8f2ad10 - with the transfer reference TRF-90c41 that the chat paste never contained. Reaching the right conclusion but pinning reproduction to 'Production' or to no commit at all scores at most half. Reproducing BANK-3318's environment block verbatim, or presenting the two chat figures as the whole of the evidence, scores zero."
+    },
+    {
+      "name": "Test that settles it",
       "max_score": 20,
-      "description": "The source says only 'on the computer', 'the usual browser', and one ambiguous mention of 'the app'. Full points if browser, browser version, operating system, and web-versus-mobile surface are each carried as unknown. Scores zero if any specific browser name, version number, OS, or device is asserted. Scores at most half if the web-versus-mobile ambiguity is resolved silently in either direction instead of being noted."
+      "description": "An added test in test/ledger.test.js reconciles TRF-90c41 and asserts it is not balanced - delta -4500 - and that it carries an unreleased hold, and it passes on the shipped code. A test that only asserts renderAmount formats 120500 or 125000 correctly scores zero: the renderer is faithful under both hypotheses, so it separates nothing. Asserting only that the two transfers differ, without the customer-visible shortfall, scores at most half."
     },
     {
-      "name": "Outstanding questions are enumerated",
-      "max_score": 18,
-      "description": "The document contains an explicit, itemised list of what must still be obtained - at minimum the two figures, the transfer reference, the browser/surface, and which account products were involved. Full points when the list is specific enough that a support agent could paste it into a reply. Scores at most half if gaps are only implied by phrases like 'more information needed'. Scores zero if no outstanding items are identified anywhere."
-    },
-    {
-      "name": "The frequency contradiction is surfaced",
-      "max_score": 15,
-      "description": "The ticket header records one occurrence while the customer writes 'every single time ... for a while now'. Full points if the document presents both statements and marks the frequency as unresolved. Scores zero if the document adopts one figure as fact without noting the other, or omits frequency entirely."
-    },
-    {
-      "name": "What happened and what should have happened are stated separately",
+      "name": "Severity rescored from impact, priority argued separately",
       "max_score": 12,
-      "description": "The document distinguishes the behaviour the customer observed from the behaviour she expected, as two separate statements, and marks the unquantified halves as unknown rather than merging them into one sentence such as 'the balance is wrong'. A single blurred narrative sentence scores at most half."
+      "description": "Severity is restated from what the defect does to the user - customer funds not credited - and priority is argued from business context (a second affected customer, the customer leaving tomorrow, one reply available). Scores zero if Minor and P3 are carried over unchanged, or if severity and priority are asserted as one judgement or a single value with no separate reasoning."
     },
     {
-      "name": "Second-account claim is marked unverified",
-      "max_score": 10,
-      "description": "The husband's login is hearsay - he was not on the call and filed nothing. Full points if the document records it as an unverified lead and as something to check. Scores zero if it is presented as a confirmed second occurrence or as evidence of scope."
+      "name": "Scope and frequency taken from the export",
+      "max_score": 12,
+      "description": "The report states that two of the three screened-route transfers in the export carry an unreleased hold, names TRF-90d77 as a second affected customer, and resolves the frequency question with evidence rather than leaving it open: the customer's own second screened transfer TRF-90f03 released its hold and balanced, so 'every single time' is not supported. Scores zero if the report repeats 'Occurrences reported: 1' or 'every single time' as established fact, or asserts a rate the export does not support. Naming the second affected transfer without addressing frequency scores at most half."
     },
     {
-      "name": "MUST NOT assert consistent reproduction from one observation",
-      "max_score": 10,
-      "description": "The team has never reproduced this and has one narrated occurrence. Scores zero if the document claims the issue always reproduces, or otherwise presents reproduction as established, without noting that no one on the team has reproduced it and that the rate is unconfirmed."
-    },
-    {
-      "name": "Title names the surface and the observable behaviour",
+      "name": "Answers Ravi rather than overruling him",
       "max_score": 8,
-      "description": "The document's title or summary line identifies where the problem was seen and what was observed, without prescribing a remedy. Titles that name a fix ('correct the balance calculation') or that are undistinguishable ('transfer bug') score zero."
+      "description": "docs/review-note.md engages with his reasoning - grants that 1250 against 1205 really is a transposition-shaped pair and that the renderer is the obvious suspect from two numbers alone - and names the posting that changes the reading. Scores zero if his conclusion is reversed without addressing it, or if the note is a verdict with no reasoning attached."
+    },
+    {
+      "name": "Unknowns still carried and questions listed for the one reply",
+      "max_score": 8,
+      "description": "Browser, browser version, operating system and the web-versus-mobile ambiguity are each carried as unknown, and the report holds an itemised list support can paste into today's single reply - at minimum which surface she used and whether the husband's account should be checked. Scores zero if any browser name, version or OS is asserted, or if the husband's report is presented as a confirmed second occurrence rather than an unverified lead."
     }
   ]
 }

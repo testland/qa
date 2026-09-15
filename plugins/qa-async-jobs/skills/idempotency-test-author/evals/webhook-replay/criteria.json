@@ -1,46 +1,46 @@
 {
-  "context": "Redelivery coverage for a key-deduplicated webhook handler. Predicted baseline failure: the agent adds a second call with the same key and asserts the response looks the same, without asserting the side effect happened only once - so a handler that credits twice but returns a cached-looking response still passes. The key-reuse-with-different-payload branch is usually missed entirely because nothing in the ticket narrative points at it, only the code does. The skill's value is that the side-effect count, not the response shape, is the thing under test.",
+  "context": "A service owner has already diagnosed the discrepancy and issued an instruction based on it. Predicted baseline failure: the agent accepts the premise that a key-deduplicated handler is an idempotent handler - the dedup guard on event_id is right there and the ledger totals prove it works - and either edits the report query as instructed or reports back that the provider is redelivering and should be asked to stop. The planted refutation is that only the ledger credit sits behind the guard. src/payment-webhook.js calls observeDelivery(meter, event) on its first line, before the event id is even checked, and src/billing.js shows that function incrementing billed usage as well as the delivery counter - a running total with no per-event dedup, which is broken by a replay no matter how good the key handling below it is. docs/reconciliation-august.md is the arithmetic: 3 events, 5 deliveries, ledger 7,400, billed usage 13,400, and evt_8814 delivered three times at 3,000. docs/usage-report.md shows the query only sums what the meter was told, so there is nothing in it to fix. The second trap is the obvious over-correction: the delivery counter in the same function is per-delivery on purpose and ops reads it, so moving the whole call behind the guard trades an over-count for a broken ingest dashboard, and docs/provider-redelivery.md closes off asking the provider to stop.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Test file created",
-      "max_score": 4,
-      "description": "A file src/paymentWebhook.test.js exists and contains at least one test."
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/over-count-verdict.md exists and test/payment-webhook.replay.test.js exists with at least one test. Scores zero if either is missing."
     },
     {
-      "name": "Side effect asserted exactly once on replay",
-      "max_score": 30,
-      "description": "A test delivers the same event twice and asserts the ledger was credited exactly once - via appliedCount, or a balance that did not double. Asserting only that the two responses are equal scores zero on this criterion: that is satisfied by a handler which credits twice and returns the same shape both times."
+      "name": "MUST NOT leave a running total outside per-event dedup",
+      "max_score": 32,
+      "description": "The billed-usage total MUST NOT still be incremented on every delivery. Shipping the handler with addBilledUsage reachable before or outside the event-id guard scores zero for this criterion regardless of the rest: a counter-style side effect with no dedup is broken by a replay even though the key handling around it is correct. Full marks require billed usage to be applied exactly once per event id - moved behind the guard, or keyed by event id at the meter so a repeat is a no-op."
     },
     {
-      "name": "Replay returns the original response",
+      "name": "Diagnosis: the report is right and the handler is wrong",
+      "max_score": 24,
+      "description": "docs/over-count-verdict.md says the usage figure is the wrong number, names the unguarded meter call as what produced it, and declines Marcus's instruction to change the report query, citing that the query only sums what the meter was told. Editing the report query, or any SQL, as the remedy scores zero. Concluding the handler is at fault without identifying which call is unguarded scores at most half."
+    },
+    {
+      "name": "Replay test that separates the two counters",
+      "max_score": 20,
+      "description": "test/payment-webhook.replay.test.js delivers one event id three times and asserts billed usage for that account equals a single application, the ledger was credited once, and the delivery count is 3. It must fail against the code as shipped. A test that asserts only the response shape, or only the ledger balance, scores zero: both hold true while the account is being overbilled, which is exactly how this shipped."
+    },
+    {
+      "name": "MUST NOT make the delivery counter idempotent",
       "max_score": 12,
-      "description": "The second delivery is asserted to return the stored response, including the balance recorded at first application, rather than a fresh or empty result."
+      "description": "recordDelivery MUST still fire on every delivery after the fix, including redeliveries. Guarding the whole observeDelivery call - or the whole handler body - behind the event-id check scores zero here: it silences the ingest dashboard ops reads, whose correct August value is 5. The fix must separate the per-delivery counter from the per-event total rather than treating both the same way."
     },
     {
-      "name": "Key reuse with a different payload is covered",
-      "max_score": 22,
-      "description": "A test reuses an existing key with a changed amount, account, or currency and asserts KEY_REUSED_WITH_DIFFERENT_PAYLOAD. Omitting this branch scores zero - it is the difference between deduplicating a redelivery and silently swallowing a genuinely different request."
+      "name": "Provider not blamed",
+      "max_score": 8,
+      "description": "The verdict does not propose asking the provider to stop redelivering, filtering redeliveries at the edge as the fix, or treating redelivery as a provider defect. docs/provider-redelivery.md states delivery is at least once, that a redelivery may follow a 2xx, and that consumers cannot opt out. Proposing any of those as the remedy scores zero."
     },
     {
-      "name": "No credit applied on the mismatch path",
-      "max_score": 12,
-      "description": "The key-reuse test also asserts the ledger was not credited again, proving the rejection happens before the side effect rather than after it."
+      "name": "August invoices answered",
+      "max_score": 8,
+      "description": "The verdict says what to do about the invoices already sent - recompute August usage from the ledger, which the reconciliation shows is the correct total, and credit the difference to the three affected accounts. Any concrete remediation grounded in the ledger being the sound number scores full. Fixing the code and leaving the overbilled customers unmentioned scores zero."
     },
     {
-      "name": "Distinct keys still apply separately",
-      "max_score": 10,
-      "description": "A test shows two different keys for the same account both apply, so deduplication is scoped to the key and has not become a blanket suppression."
-    },
-    {
-      "name": "Missing key covered",
+      "name": "Distinct events still bill separately",
       "max_score": 6,
-      "description": "A test asserts an event without an idempotency key is rejected with MISSING_KEY and applies no credit."
-    },
-    {
-      "name": "Fresh store and ledger per test",
-      "max_score": 4,
-      "description": "MUST NOT share one store or ledger instance across tests at module scope. Each test constructs its own, so a leaked key or balance from an earlier test cannot decide a later one. Shared mutable fixtures score zero on this criterion."
+      "description": "A test shows two different event ids for the same account both add to billed usage, so the fix deduplicates a replay rather than suppressing every event after the first. Each test builds its own store, ledger and meter; sharing one instance across tests at module scope scores zero here."
     }
   ]
 }
