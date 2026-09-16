@@ -46,7 +46,7 @@ around it again.
 
 Extract the following files before beginning.
 
-=============== FILE: .pre-commit-config.yaml ===============
+=============== FILE: hooks/precommit-config.yaml ===============
 repos:
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.24.2
@@ -127,7 +127,7 @@ was on the bridge call and was not watching the terminal.
 > `--no-verify` again so I can get this out before the freeze
 
 =============== FILE: docs/hook-history.md ===============
-# `git log -p --follow -- .pre-commit-config.yaml`
+# `git log -p --follow -- hooks/precommit-config.yaml`
 
 ```
 commit 71ea0c4  2026-07-22  m.oyelaran
@@ -192,7 +192,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 
-const cfg = fs.readFileSync('.pre-commit-config.yaml', 'utf8').replace(/\r/g, '');
+const cfg = fs.readFileSync('hooks/precommit-config.yaml', 'utf8').replace(/\r/g, '');
 
 test('the scanner hook is declared', () => {
   assert.match(cfg, /repo:\s*https:\/\/github\.com\/gitleaks\/gitleaks/);

@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 
-const cfg = fs.readFileSync('.pre-commit-config.yaml', 'utf8').replace(/\r/g, '');
+const cfg = fs.readFileSync('hooks/precommit-config.yaml', 'utf8').replace(/\r/g, '');
 
 test('the scanner hook is declared', () => {
   assert.match(cfg, /repo:\s*https:\/\/github\.com\/gitleaks\/gitleaks/);

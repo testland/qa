@@ -20,7 +20,7 @@
     {
       "name": "Hook filter corrected so no commit can slip past it",
       "max_score": 14,
-      "description": "`.pre-commit-config.yaml` is changed so the hook runs whatever a commit happens to touch — the `exclude` removed, or the hook set to run regardless of the filtered file list. Removing only the `\\.sample$` branch while `^docs/generated/`, `^vendor/` and `\\.example$` still decide whether the hook runs at all scores at most half, since a commit confined to any of them reproduces the incident. Leaving the filter as it is scores zero."
+      "description": "`hooks/precommit-config.yaml` is changed so the hook runs whatever a commit happens to touch — the `exclude` removed, or the hook set to run regardless of the filtered file list. Removing only the `\\.sample$` branch while `^docs/generated/`, `^vendor/` and `\\.example$` still decide whether the hook runs at all scores at most half, since a commit confined to any of them reproduces the incident. Leaving the filter as it is scores zero."
     },
     {
       "name": "Fabricated fixture suppressed the governed way",

@@ -1,4 +1,4 @@
-# `git log -p --follow -- .pre-commit-config.yaml`
+# `git log -p --follow -- hooks/precommit-config.yaml`
 
 ```
 commit 71ea0c4  2026-07-22  m.oyelaran
