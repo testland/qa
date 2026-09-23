@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-realtime-protocols",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Real-time protocol testing: 3 skills (websocket-tests; server-sent-events-tests with k6 load testing in its references; mqtt-tests with STOMP/AMQP broker testing in its references) and 1 agent (realtime-protocol-reviewer). Anchored on RFC 6455, WHATWG SSE, and MQTT v5. gRPC streaming lives in qa-grpc; webhook testing lives in qa-notifications.",
   "author": {
     "name": "testland",
