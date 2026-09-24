@@ -1,0 +1,34 @@
+Verifying a pact between checkout-web and catalog-api
+  [from Pact Broker https://broker.internal]
+  consumer version 5c9d31b (branch main, published 2026-09-11 08:31)
+
+  a request for the products in category 12
+    Given category 12 has products
+      returns a response which
+        has status code 200 (OK)
+        includes headers
+          "Content-Type" with value "application/json" (OK)
+        has a matching body (FAILED)
+
+  a request for the products in category 99
+    Given category 99 is empty
+      returns a response which
+        has status code 200 (OK)
+        includes headers
+          "Content-Type" with value "application/json" (OK)
+        has a matching body (OK)
+
+Failures:
+
+1) Verifying a pact between checkout-web and catalog-api
+   Given category 12 has products
+     a request for the products in category 12
+       1.1) body: $[0].id          Expected 101 (Integer) but received 7001 (Integer)
+       1.2) body: $[0].name        Expected "Aeron Chair" but received "Contract Fixture Chair"
+       1.3) body: $[0].priceCents  Expected 129900 (Integer) but received 100000 (Integer)
+       1.4) body: $[0].sku         Expected "AER-B2-GR" but received "FIX-1"
+
+There were 1 pact failures
+
+Run 27 of 27 since 2026-09-08. Byte-identical output on every run, including the
+eight since 2026-09-10.

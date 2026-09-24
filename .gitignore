@@ -5,4 +5,6 @@ __pycache__/
 
 # Node tooling
 node_modules/
+# eval fixtures ship stub SDKs under node_modules; they are generated output, not deps
+!dist/anthropic-evals/**/node_modules/
 parity-typescript.json
