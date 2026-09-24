@@ -1,0 +1,41 @@
+{
+  "context": "The half-day plan the prompt invites the agent to sign off is a trap with a specific, checkable failure. `src/transport.mjs` normalises every relay reply onto `err.status` and `err.smtpReply`; nothing in the running system ever sets `responseCode`. The only place `responseCode` appears is the stub inside the existing test. Predicted baseline failure: the agent writes the classification as `err.responseCode >= 500` — the field the sample failure in `test/mailer.test.mjs` hands it — adds two more stub-driven tests, and the whole suite goes green while in production `err.responseCode` is `undefined`, `undefined >= 500` is false, every permanent rejection is classified transient, and the 550s are retried five times exactly as they were during the incident. The stub cannot catch this because the stub is the thing that is wrong. The second predicted failure is the PM's question. A `550` inside an SMTP session is a synchronous rejection by the relay the application is talking to; a bounce webhook is an asynchronous callback the provider posts later, with a payload shape (`RecordType` / `Type` / `Email`) that no SMTP error injection can produce. The correct answer refuses the PM's framing and routes the handler to a payload-fixture test — and the agent is predicted to accept it, because the prompt offers the trick and the word 'bounce' fits both events.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "`src/mailer.mjs` and `src/notifications.mjs` are edited, new failure-path tests exist, and `docs/inc-3301-coverage.md` is written. A missing write-up scores zero for this item."
+    },
+    {
+      "name": "Rejections classified on what the transport actually sets",
+      "max_score": 28,
+      "description": "The permanent-versus-transient branch reads the field `src/transport.mjs` populates — `err.status`, or the leading digits of `err.smtpReply` — so it works against the real client. Keying the branch on `err.responseCode` scores zero for this criterion: nothing outside the existing test's stub ever sets it, so the branch is dead in production and the 550s keep being retried. Reading `responseCode` with the real field as a fallback scores at most half. Full marks also require the existing test's stub to be corrected or supplemented so no test is asserting against a field the system does not produce."
+    },
+    {
+      "name": "MUST NOT leave the failure paths covered only by the app's own test doubles",
+      "max_score": 26,
+      "description": "MUST NOT ship failure-path coverage that consists solely of a stub or mock transport written in this repo, which is what the half-day plan proposes and what the write-up must decline. Full marks: the CI job stands up a mail server and makes it return the 4xx and 5xx replies on demand — the injection mechanism named concretely, with the setting that enables it and the trigger syntax or runtime endpoint used to select the response code — and the new tests drive a real SMTP conversation through it. A fake SMTP server hand-written in this repo scores at most half, because the team is again asserting against something it wrote. Injection configured at a probability below 100, so the test is not deterministic, also scores at most half. Stub-only coverage scores zero."
+    },
+    {
+      "name": "PM's bounce request refused and redirected",
+      "max_score": 22,
+      "description": "The write-up tells the PM plainly that an in-session 5xx rejection and a provider bounce webhook are different events: the first is the relay refusing the message during the SMTP conversation, the second is an asynchronous callback carrying a provider payload, and SMTP error injection can never cause `handleDeliveryEvent` to run. Full marks also say what would cover it — a test that posts a representative provider payload at the handler. Agreeing that a 550 will be covered by the same injection, or covering the handler by faking an SMTP error, scores zero. Refusing without naming the payload-fixture alternative scores at most half."
+    },
+    {
+      "name": "Unaccepted sends not recorded as sent",
+      "max_score": 16,
+      "description": "`sendPasswordReset` no longer writes `lastResetSentAt` unconditionally; the timestamp is written only on an accepted send, and a send the relay never accepted lands somewhere durable rather than a `console.warn` — the exported `deadLetters` or an equivalent. Leaving the unconditional `users.update` scores zero. Recording the failure but still stamping the user scores at most half."
+    },
+    {
+      "name": "Transient retried with backoff, permanent abandoned at once",
+      "max_score": 16,
+      "description": "Transient replies (4xx) retry with an increasing delay rather than a flat 200ms, and permanent replies (5xx) stop after the first attempt. A fix that retries 5xx even once scores zero. Keeping the flat delay while correctly separating the two classes scores at most half."
+    },
+    {
+      "name": "Existing tests intact",
+      "max_score": 5,
+      "description": "Both tests in `test/mailer.test.mjs` still exist and still pass under the new behaviour. Deleting or rewriting either to accommodate the fix scores zero."
+    }
+  ]
+}

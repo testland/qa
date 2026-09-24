@@ -1,0 +1,3 @@
+# atlas-mailer secret-scanner config
+[extend]
+useDefault = true

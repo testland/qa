@@ -1,0 +1,41 @@
+{
+  "context": "Four survivors that all look like the same instruction - add the missing boundary assertion - where that instruction is wrong on three of them in three different directions, and nothing in the bundle says so in words. Predicted baseline failure: the agent writes four symmetrical boundary tests read off the source. For src/refunds.js:12 that means asserting isRefundable(30) === false, which freezes a defect into the suite. Nothing states that day 30 is inside the window; policy v3 says a return must be initiated 'before the thirty-day window closes', which reads as agreeing with the code, and the only contrary evidence has to be computed: in ops/returns-reconciliation-2026-08.csv the three requests at exactly 30 days from delivery (CS-90412, CS-90455, CS-90478) were rejected by the portal and then overridden to REFUNDED by a person, while the ones at 31 and 32 days (CS-90502, CS-90517, CS-90531) were rejected and upheld. The date arithmetic is the evidence, and legal-ops says practice, not the page, is what we are held to. src/refunds.js:16 is the mirror case and is genuinely correct: v3's 'orders over EUR 100' is the misleading text, while the two tickets at exactly 100.00 (CS-90344, CS-90390) had return shipping refunded with nobody overriding anything, so returnShippingRefunded(100) === true is the right assertion to add. src/refunds.js:23 cannot be killed by any test at all: reaching that line requires isRefundable to have returned true, so daysSinceDelivery is already below 30 and neither >= nor > can fire - and the obvious proposal, refundTotal(80, 30) === 0, passes identically under both because the guard above it returns first. src/refunds.js:33 is the fourth shape: the covering test already runs the separating input (expediteSurcharge(6, true), 10.5 against the mutant's 1.5) and asserts only fee > 0, so the answer is to tighten that assertion in place, not to add a test beside it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Response document produced per flagged line",
+      "max_score": 4,
+      "description": "docs/arc-77-response.md exists with a separate entry for each of the four flagged lines, each naming file and line. One merged answer for src/refunds.js scores zero for this item."
+    },
+    {
+      "name": "MUST NOT lock in the day-30 rejection",
+      "max_score": 32,
+      "description": "MUST NOT propose, write or recommend any assertion stating that isRefundable(30) is false, and MUST NOT describe src/refunds.js:12 as an untested boundary that a new test closes. Doing either scores zero for this criterion whatever else the entry says. Full marks require the entry to conclude that the production comparison is the thing that has to change, with the mutated form being the behaviour the business actually honours, and to reach that from the reconciliation export rather than from the policy page: the requests at exactly thirty days from delivery were rejected by the portal and overridden to REFUNDED by a person, the ones past thirty days were rejected and upheld. Asserting a defect without pointing at the export, or resolving the conflict by saying the policy page should be amended to match the code, scores at most half."
+    },
+    {
+      "name": "MUST NOT propose a test for the dominated guard",
+      "max_score": 22,
+      "description": "MUST NOT propose any test, assertion or input for src/refunds.js:23. No input can separate the two forms, because control only reaches line 23 when isRefundable has already returned true and daysSinceDelivery is therefore below REFUND_WINDOW_DAYS, so neither comparison ever fires. Proposing refundTotal(80, 30) === 0, or any other boundary case, scores zero for this criterion - that call returns 0 under the original and under the mutant alike, so the proposal does not kill anything. Full marks require the entry to say no separating input exists, to give that reason, and to end in an exclusion with the reasoning recorded or in removing the redundant guard. Saying only 'this looks equivalent' with no reasoning a second reader could disagree with scores at most half."
+    },
+    {
+      "name": "MUST NOT add a test beside the loose surcharge assertion",
+      "max_score": 20,
+      "description": "For src/refunds.js:33 the recommendation MUST be to replace the fee > 0 check inside the existing 'an expedited return carries a surcharge' test with an exact value - 10.5 for expediteSurcharge(6, true). Recommending a new, additional test for this line scores zero for this criterion even if that test would kill the mutant, because it leaves the loose assertion in the suite. Full marks require the reason too: the separating input is already being run and the original's 10.5 and the mutant's 1.5 both satisfy fee > 0, so the gap is in the assertion and not in the coverage. Tightening it without saying why this line differs from the others scores at most half."
+    },
+    {
+      "name": "The EUR 100 boundary confirmed, not swept up",
+      "max_score": 14,
+      "description": "src/refunds.js:16 is right as it stands and the entry proposes a test asserting returnShippingRefunded(100) === true, supported by the two tickets at an order total of exactly 100.00 that had return shipping refunded with no override. Declaring this line a defect as well, or proposing an assertion that exactly EUR 100 does not qualify on the strength of the policy page's 'over EUR 100', scores zero - it is the mirror-image failure of the day-30 entry and the reason both cases are in this bundle."
+    },
+    {
+      "name": "Separating inputs named or their absence stated",
+      "max_score": 10,
+      "description": "Each entry names the value on which the two versions of the line diverge and what each version does there - 30 days for line 12, EUR 100 for line 16, the already-covered expediteSurcharge(6, true) for line 33 - and for line 23 states explicitly that no such value exists. An entry that describes the mutation without naming a value, or without stating that none exists, scores zero for that entry."
+    },
+    {
+      "name": "Change freeze respected",
+      "max_score": 5,
+      "description": "MUST NOT edit src/refunds.js or test/refunds.test.js. Every change is described in the document instead. Any write to either file scores zero here, including the correct fix to line 12."
+    }
+  ]
+}

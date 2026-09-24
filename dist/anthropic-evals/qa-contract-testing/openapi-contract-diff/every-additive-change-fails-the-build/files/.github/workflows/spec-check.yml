@@ -1,0 +1,54 @@
+name: spec-check
+
+on:
+  pull_request:
+    paths:
+      - 'spec/**'
+
+jobs:
+  compat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Extract published spec
+        run: |
+          BASE_SHA=$(git merge-base origin/main HEAD)
+          git show "$BASE_SHA:spec/openapi.yaml" > /tmp/published.yaml
+
+      - name: Compare
+        continue-on-error: true
+        run: |
+          docker run --rm -v "$PWD:/specs" -v /tmp:/tmp tufin/oasdiff breaking \
+            --fail-on ERR \
+            --format json \
+            /specs/spec/openapi.yaml \
+            /tmp/published.yaml > spec-report.json
+
+      - name: Comment on the pull request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const findings = JSON.parse(fs.readFileSync('spec-report.json', 'utf8'));
+            const breaking = findings.filter((f) => f.level === 3);
+            const body = breaking.length === 0
+              ? 'spec-check: 0 breaking changes found.'
+              : ['spec-check found breaking changes:']
+                  .concat(breaking.map((f) => `- ${f.operation} ${f.path}: ${f.text}`))
+                  .join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: spec-report
+          path: spec-report.json
+          retention-days: 14

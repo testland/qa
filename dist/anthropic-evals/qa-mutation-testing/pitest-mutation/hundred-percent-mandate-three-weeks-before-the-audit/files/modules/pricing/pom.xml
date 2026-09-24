@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.acme</groupId>
+    <artifactId>acme-core</artifactId>
+    <version>7.3.0-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <artifactId>pricing</artifactId>
+
+  <properties>
+    <pit.threshold>60</pit.threshold>
+    <pit.coverage.threshold>70</pit.coverage.threshold>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <configuration>
+          <targetClasses>
+            <param>com.acme.pricing.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>com.acme.pricing.*Test</param>
+          </targetTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

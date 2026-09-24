@@ -1,0 +1,10 @@
+{
+  "urls": ["https://staging.shopfront.example/"],
+  "outputDir": "a11y/results",
+  "runOptions": {
+    "runOnly": {
+      "type": "tag",
+      "values": ["wcag2a", "wcag2aa"]
+    }
+  }
+}

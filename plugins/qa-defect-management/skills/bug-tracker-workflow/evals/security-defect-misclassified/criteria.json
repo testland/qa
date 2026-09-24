@@ -1,46 +1,51 @@
 {
-  "context": "The tracker carries two independent fields: how damaging the defect is (Severity) and how soon it gets worked (Priority). The export mixes them up in four different ways. WEB-512 is an account-takeover-grade token leak filed as cosmetic and Low. WEB-519, WEB-528 and WEB-540 have a scheduling value but no damage rating at all (WEB-540 has both stuffed into the title instead). WEB-531 has the damage rating right and the scheduling value wrong for a bad reason ('reported by an internal user'). WEB-535 is the control: critical damage, medium urgency, on purpose, because it hits 2.1% of installs on a platform being retired - it must survive the pass unchanged. WEB-523 and WEB-546 are genuinely cosmetic. Predicted baseline failure: the agent raises WEB-512 and calls it done, usually by moving the priority to the top and leaving the cosmetic severity in place, or by moving severity and treating priority as following automatically - both of which read as decisive and leave the board unable to answer either question. The other predicted failure is the 'they should agree' argument winning: the agent aligns WEB-535's two fields, or fills the blank severities by copying the priority value across, which manufactures damage ratings nobody assessed. WEB-540's title-encoded classification is usually left alone because the information is technically present.",
+  "context": "A manager fixed a real reporting problem by making one field a function of the other. Her audit is accurate - blank and disagreeing values did make the weekly number meaningless - and her conclusion is the wrong one: the number became stable because the rule now manufactures it, not because anyone assessed anything. The refutation sits in two fixtures the agent has to connect. exports/normalized-diff.csv shows what the first run did: a live password-reset token leak (WEB-512) was written into the cosmetic band because the scheduling value happened to be Low, a 90-minute regional outage (WEB-531) was rewritten from Critical to Cosmetic, and a deliberate divergence (WEB-535, critical damage held at medium urgency because the platform leaves the support matrix in November) was flattened. docs/security-review-response.md is the commitment already signed with a customer: the remediation clock and the monthly evidence pack are selected on the damage rating alone, and the security reviewer's note records the arithmetic - the August pack listed two defects where five qualified, which is exactly what the rule left standing. Predicted baseline failure: the agent agrees the fields should be reconciled and keeps the derivation with a carve-out - only when the severity is blank, or unless the ticket carries a security label - because that reads as a balanced fix and it rescues WEB-512. It is still wrong: WEB-531 and WEB-535 have no security label and blank-only still writes damage ratings nobody assessed, as it did for WEB-512 and WEB-519. Second predicted failure: the agent raises WEB-512 on one axis only, usually the scheduling value, leaving the cosmetic damage rating that keeps it out of the evidence pack.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Both deliverables produced",
+      "name": "Deliverables produced",
       "max_score": 5,
-      "description": "classification-review.md and reclassification.csv both exist, the CSV carrying id,field,current_value,proposed_value,basis with one row per changed field. Missing either scores zero."
+      "description": "docs/classification-decision.md exists and test/triage-policy.test.js has at least one added test. Scores zero if either is missing."
+    },
+    {
+      "name": "MUST NOT derive either field from the other",
+      "max_score": 32,
+      "description": "The shipped src/triage-policy.js MUST NOT write a damage rating from a scheduling value, or the reverse, in any surviving path - including one that fires only when the field is blank, and including one gated on a label or an exception list. Any such path scores zero here regardless of the rest, because blank-only derivation is what produced WEB-512's cosmetic rating. Full marks require a blank rating to be surfaced as unassessed and routed to someone who assesses it, with no value written on the ticket's behalf."
+    },
+    {
+      "name": "The stable-number argument answered",
+      "max_score": 20,
+      "description": "docs/classification-decision.md states that the report figure is stable because the rule computes it from the scheduling value, so it now measures scheduling and not damage, and it names what the report must do instead - count only ratings someone recorded and show unassessed tickets as unassessed rather than folding them in. Keeping the rule on the strength of the 61% / 40% audit scores zero here; rejecting it without addressing why her report number was unusable scores at most half."
+    },
+    {
+      "name": "Test that fails against the rejected behaviour",
+      "max_score": 18,
+      "description": "An added test passes a ticket whose damage rating and scheduling value disagree - Critical damage at Low or Medium urgency, as WEB-531 and WEB-535 are - through normalize() and asserts both values come back untouched. A second test asserting a blank rating is not filled earns full marks together with it. A test covering only the already-agreeing or unrecognised-value paths scores zero: both pass under the original rule."
     },
     {
       "name": "WEB-512 corrected on both axes with separate reasoning",
-      "max_score": 30,
-      "description": "WEB-512's damage rating is raised to the top of the scale on the grounds that a live reset token is exposed to a third party (account takeover), AND its scheduling value is raised on its own stated grounds, with the two justifications given separately. Changing only one of the two fields scores at most half. Leaving it in the cosmetic bucket, or arguing the cosmetic label is defensible because there is no visible UI failure, scores zero."
+      "max_score": 16,
+      "description": "WEB-512's damage rating is raised to the top of the scale because a live reset token is exposed to a third party who can complete an account takeover, AND its scheduling value is raised on its own separately stated grounds. Correcting only one of the two scores at most half. Leaving it in the cosmetic band, or defending the band because there is no visible UI failure, scores zero."
     },
     {
-      "name": "Deliberate divergence preserved",
-      "max_score": 18,
-      "description": "WEB-535 (critical damage, medium urgency, 2.1% of installs on a platform being retired) is stated as correctly classified and is absent from reclassification.csv, and the review answers the 'the fields should always agree' argument with it. MUST NOT align WEB-535's two fields in either direction - any proposed change to either of its values scores zero here."
-    },
-    {
-      "name": "Missing damage ratings assessed, not copied",
-      "max_score": 18,
-      "description": "WEB-519, WEB-528 and WEB-540 each receive a damage rating derived from what the defect does - plaintext session cookie, 1,400 cross-tenant rows, missing audit evidence - not from the scheduling value already on the ticket. Any basis that amounts to 'priority is Highest so severity is Critical' scores zero for that row; filling fewer than two of the three scores at most half."
-    },
-    {
-      "name": "WEB-531 scheduling corrected without touching its damage rating",
+      "name": "The signed commitment used as the check",
       "max_score": 14,
-      "description": "WEB-531's Low scheduling value is rejected because who reported an outage does not change how soon a 90-minute regional outage gets worked, while its Critical damage rating is left as it is. Changing its severity scores zero here."
+      "description": "The decision connects the rule to docs/security-review-response.md: the evidence pack and the 72-hour clock select on the damage rating alone, so rewriting that field decides what a customer is told, and the August pack listing two of five qualifying defects is the rule's output. Treating the classification question as internal tidiness, with no reference to the commitment or the missing three, scores zero here."
     },
     {
-      "name": "Classification moved out of the title",
+      "name": "Deliberate divergence restored and defended",
       "max_score": 12,
-      "description": "WEB-540's '[P1][CRITICAL]' title prefix is called out and both values are proposed into the actual fields, with the reason that values living in the title cannot be filtered, sorted, or counted. Leaving the prefix as the record scores zero."
+      "description": "WEB-535 is restored to critical damage at medium urgency and stated to be correct in that shape, with the reason given - a hard crash on 2.1% of installs on a platform leaving the support matrix in November. Proposing to align its two values in either direction scores zero."
     },
     {
-      "name": "Genuinely cosmetic tickets untouched",
-      "max_score": 12,
-      "description": "WEB-523 and WEB-546 are stated as correctly classified. Raising either - a typo and a 2px arrow - because the pass is about escalation scores zero on this criterion."
+      "name": "Rewritten and blank ratings assessed from the evidence",
+      "max_score": 10,
+      "description": "WEB-519, WEB-528 and WEB-531 each get a corrected damage rating justified from that row's evidence column - plaintext session cookie, 1,400 cross-tenant rows, a 90-minute regional outage - and WEB-528's coincidentally correct derived value is stated as a coincidence, not a confirmation that the rule works. Any basis amounting to 'the scheduling value says so' scores zero for that row."
     },
     {
-      "name": "Every proposed change carries a checkable basis",
-      "max_score": 8,
-      "description": "Each CSV row's basis cites something in the export (the evidence column, the affected population, the exposure) rather than restating the new value. Rows whose basis is 'this is critical' score at most half."
+      "name": "Existing tests preserved",
+      "max_score": 5,
+      "description": "Both shipped tests still pass. MUST NOT weaken or delete either to accommodate the change; deleting one scores zero."
     }
   ]
 }

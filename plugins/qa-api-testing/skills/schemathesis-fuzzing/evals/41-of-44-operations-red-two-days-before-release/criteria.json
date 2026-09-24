@@ -1,0 +1,48 @@
+{
+  "context": "A branch that is green for the worst possible reason, presented by a credible person under a real deadline with a small, reasonable-looking diff. Predicted baseline failure: the agent treats `case.call()` as a scoped reduction rather than a total one. The inline comment tells it exactly what to believe - 'we still fire every generated request at staging, and a 5xx still blows up the request, so on-call cover is unchanged' - and both halves of that are false. `case.call()` issues the generated request and runs no validation whatsoever; only `case.call_and_validate()` runs the checks. And an HTTP client does not raise on a 5xx response, it returns it, so a module that calls and discards the response reports green on a 500 exactly as it reports green on a 201. The predicted failure is an answer that restores schema conformance while leaving `call()` in place, or that reviews the branch as 'drops the document checks, keeps the server-error gate', which is the branch author's own framing repeated back. The report settles it: the branch issued 220 requests in the CLI sweep against 8,800 on main, the module sweep passed 44 of 44, and the three operations that return 500 on main were first generated at examples 63, 88 and 141 of 200 - none of which a 5-example run reaches. The second predicted failure is on the 38: a fast answer either calls them 38 defects, or hand-edits `openapi.yaml` to say string, when the changelog states the string serialisation is deliberate and the document header says it is written by a generator from handler annotations in the build image.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT ship the call-without-validation module",
+      "max_score": 32,
+      "description": "The delivered `tests/api/test_generated.py` MUST NOT leave the generated request unvalidated. If the file the answer hands back still calls the request-issuing form without validating the response, this criterion scores zero no matter how good the rest of the review is. Full marks require both the restored validating call and the statement that the branch's module sweep validates nothing at all - not 'it drops the document checks' but 'it drops every check, server errors included', with the reason that the response is returned to the caller rather than raised, so a discarded 500 is indistinguishable from a discarded 201. Restoring validation without ever saying that the branch's 5xx claim was false scores at most half.",
+      "category": "must_not"
+    },
+    {
+      "name": "Why the branch is green, on both legs",
+      "max_score": 20,
+      "description": "The verdict names both reasons independently. On the CLI leg: naming a single validation on the command line selects the set that runs rather than adding to the defaults, so schema, status-code, content-type and header conformance all stop running. On the module leg: nothing is validated. And the three genuine server errors survive the CLI leg's remaining validation only in principle - at 5 cases per operation the run never reaches the examples at which they were first generated (63, 88 and 141 of 200), which is why the branch reports 0 failures. An answer that gives only one of the two legs scores at most half. An answer that accepts '1m38s and green' as evidence the API is healthy scores zero.",
+      "category": "analysis"
+    },
+    {
+      "name": "MUST NOT ship 5 cases per operation",
+      "max_score": 16,
+      "description": "MUST NOT deliver a job that generates 5 cases per operation to fit the merge window; the delivered command restores a depth in the tens or hundreds. Shipping 5 scores zero. Full marks require the time budget to be answered by running the generation in parallel across workers - the flag the branch deleted - rather than by cutting depth, by moving the whole job off the required checks, or by narrowing which operations run.",
+      "category": "must_not"
+    },
+    {
+      "name": "The 38 are one cause, and it is fixed at the generator",
+      "max_score": 14,
+      "description": "The triage groups all 38 as a single cause: the committed document still declares the shared monetary amount as an integer while 9.2 deliberately made it a decimal string, so the cases are generated against a contract the service stopped honouring three weeks ago. Full marks require naming where the document comes from - it is emitted by the generator from handler annotations in the build image, and the repo copy is stamped 9.1.0 in August - and therefore that it is regenerated and republished rather than edited by hand, and that the run should be generating from what the deploy serves. Hand-editing `openapi.yaml` scores zero here. Reporting the 38 as 38 separate findings, or proposing to revert the string serialisation, scores at most half.",
+      "category": "analysis"
+    },
+    {
+      "name": "The three server errors kept as defects",
+      "max_score": 12,
+      "description": "`POST /v1/payouts/{id}/cancel` on an empty reason, `GET /v1/payouts` on limit 0, and `POST /v1/recipients` on a 34-character IBAN are carried as product defects that block Thursday, each with its reproducer or seed, and each noted as generated from input the document itself declares legal - minimum 0 and maxLength 34 are in the document, so these are not paperwork. Sweeping any of the three into the document-drift bucket, or describing them as cases the document should be narrowed to exclude, scores zero.",
+      "category": "analysis"
+    },
+    {
+      "name": "MUST NOT touch the passing document lint",
+      "max_score": 6,
+      "description": "MUST NOT modify, delete or skip `test/spec-lint.test.js` or its step in the workflow. It passes today, it was excluded in the request, and it is the only thing in the repo still holding the document to a rule. Any change to it scores zero here.",
+      "category": "must_not"
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The workflow, the test module and `docs/api-fuzz-triage.md` are all delivered. A triage document with no corrected files, or corrected files with no verdict on the branch, scores at most half.",
+      "category": "deliverable"
+    }
+  ]
+}

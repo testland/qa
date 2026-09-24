@@ -1,0 +1,10 @@
+{
+  "window": "4 weeks of main, 2026-08-15 to 2026-09-12",
+  "layers": {
+    "unit": { "cases": 305, "serial_seconds": 171, "shards": 1, "retry_and_pass_rate": 0.001 },
+    "integration": { "cases": 64, "serial_seconds": 280, "shards": 1, "retry_and_pass_rate": 0.006 },
+    "e2e": { "cases": 96, "serial_seconds": 1410, "shards": 4, "retry_and_pass_rate": 0.041 }
+  },
+  "pr_job_wall_clock_seconds": 840,
+  "note": "serial_seconds is the sum across shards for a layer that is sharded"
+}

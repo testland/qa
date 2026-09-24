@@ -1,0 +1,5 @@
+team,window_start,window_end,success,failure,cancelled,skipped
+checkout,2026-07-01,2026-09-30,1142,104,163,14
+search,2026-07-01,2026-09-30,1490,62,205,18
+identity,2026-07-01,2026-09-30,622,89,88,9
+internal-tools,2026-07-01,2026-09-30,310,96,40,6

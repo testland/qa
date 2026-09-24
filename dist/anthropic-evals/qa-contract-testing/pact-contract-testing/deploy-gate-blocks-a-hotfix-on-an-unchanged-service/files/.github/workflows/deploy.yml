@@ -1,0 +1,73 @@
+name: deploy-payments-api
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+  PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+
+      - name: Verify recorded interactions
+        run: |
+          npm run start:api &
+          npx wait-on http://localhost:8081/health
+          npm run verify:contracts
+
+  staging:
+    needs: contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compatibility check (staging)
+        run: |
+          pact-broker can-i-deploy \
+            --pacticipant payments-api \
+            --version ${{ github.sha }} \
+            --to-environment staging
+      - name: Roll out to staging
+        run: ./scripts/rollout.sh staging ${{ github.sha }}
+      - name: Record the staging deployment
+        run: |
+          pact-broker record-deployment \
+            --pacticipant payments-api \
+            --version ${{ github.sha }} \
+            --environment staging
+
+  production:
+    needs: staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compatibility check
+        run: |
+          pact-broker can-i-deploy \
+            --pacticipant payments-api \
+            --version ${{ github.sha }}
+
+      - name: Roll out
+        run: |
+          kubectl set image deploy/payments-api \
+            api=registry.internal/payments-api:${{ github.sha }}
+          kubectl rollout status deploy/payments-api --timeout=5m
+      - name: Smoke
+        run: ./scripts/smoke.sh https://payments.internal
+      - name: Record the deployment
+        if: always()
+        run: |
+          pact-broker record-deployment \
+            --pacticipant payments-api \
+            --version ${{ github.sha }} \
+            --environment production

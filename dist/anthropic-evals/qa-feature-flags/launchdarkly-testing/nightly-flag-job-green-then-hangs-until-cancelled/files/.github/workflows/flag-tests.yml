@@ -1,0 +1,20 @@
+name: tests
+
+on:
+  push:
+  schedule:
+    - cron: '14 2 * * *'
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LD_SDK_KEY: ${{ secrets.LD_SDK_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm test

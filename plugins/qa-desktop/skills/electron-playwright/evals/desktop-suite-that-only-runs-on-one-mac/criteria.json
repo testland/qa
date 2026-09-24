@@ -1,0 +1,36 @@
+{
+  "context": "Every reflexive remedy for `Failed to initialize display` is already in the repository, correctly applied, and the run is still red - and this time nobody in the prompt says so. Predicted baseline failure: the agent recognises the message as the standard Linux-runner problem, finds the virtual-display wrapper already present, and then takes the flags the requester has explicitly said he is inclined to accept (`--no-sandbox`, `--disable-gpu`, `--disable-dev-shm-usage`), or duplicates the wrapper, or adds a headless switch - none of which supply a display and none of which change the outcome. The cause is the launch helper's environment option, which replaces the child's environment rather than adding to it: it defaults to the parent process's environment, and supplying an object substitutes that object wholesale, so the three Ledgerline variables are the only three the application ever receives and `DISPLAY` never arrives. The near-miss is the second predicted failure and is the more likely one for a strong model: it notices the object is thin and adds `DISPLAY` to it by name, which greens Linux while leaving `HOME`, `PATH` and everything else stripped. The corroborating evidence is not pointed at in the prompt and must be found in the tail of the log: on Priya's own Mac the application launched by the suite reports no preferences file while the same application launched by the OS loads nine keys, and her preferences file is sitting on disk between the two. The second trap is arithmetic. The ten-minute budget is wall clock for the whole job, and the log shows five to eight minutes of checkout, install and build per image before a single test runs, so dividing 34 minutes by a shard count does not reach ten on any image and Windows does not reach it even at eight shards until the uncached `npm ci` is dealt with. An agent that raises the worker count as Karol proposes, or that shards without counting the fixed per-job time, misses it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Child process inherits the runner's environment",
+      "max_score": 32,
+      "description": "MUST NOT leave the launch handing the application a freestanding environment object built only from Ledgerline's own variables. The parent process's environment must be carried forward with the Ledgerline variables added on top, so `DISPLAY`, `HOME`, `PATH` and everything else the runner exported survive into the application. Reaching for `--no-sandbox`, `--disable-gpu`, `--disable-dev-shm-usage`, a headless switch, an `ELECTRON_*` display override, a second display server, or dropping the Linux leg as the remedy scores zero for this criterion regardless of what else is fixed - the attached log already shows the display server answering queries on the same runner in the same job. Naming individual variables to rescue - adding `DISPLAY` (with or without `HOME`) to the same freestanding object - scores at most half: it greens Linux and leaves the rest of the environment stripped. Deleting the environment option outright, which restores inheritance but loses the two variables the application is given, also scores at most half."
+    },
+    {
+      "name": "Ten minutes measured against the whole job, one launch at a time",
+      "max_score": 22,
+      "description": "MUST NOT raise the worker count, remove the pin, or set `fullyParallel: true` to reach the budget - concurrent launches of one desktop application collide on its user-data directory, and Karol's proposal is to be answered no in `docs/desktop-ci-notes.md`. Any configuration permitting more than one concurrent launch per job scores zero here. Full marks require the suite split across parallel CI jobs (a shard index and count passed per job) AND arithmetic in the notes that starts from the per-job time the log shows before any test runs - roughly five and three-quarter minutes on macOS and seven and three-quarter on Windows - carries it into every shard, and lands under ten minutes on all three images, which means that fixed cost has to be cut as well as the test time divided. Arithmetic that divides only the 34 and 32 minutes by a shard count and ignores the checkout, install and build sitting in the same log scores at most half, as does a per-job total that is stated but exceeds ten minutes. Asserting the gate is now fast enough with no figures at all scores zero."
+    },
+    {
+      "name": "Diagnosis names the substitution, not the runner",
+      "max_score": 14,
+      "description": "`docs/desktop-ci-notes.md` states that the launch replaced the application process's environment instead of extending it, so the display variable the job exported never reached the application, and connects that same cause to the application starting with no preferences on a machine whose preferences file exists. Attributing the failure to a missing or misconfigured display server, a missing package on the image, GPU or sandbox behaviour, a runner image change, or flakiness scores zero. Saying only that environment variables were somehow involved, without naming the replacement, scores at most half."
+    },
+    {
+      "name": "Sharded jobs do not collide on their outputs",
+      "max_score": 8,
+      "description": "Splitting the run means several jobs per image, so the uploaded report name and the JUnit output path must be made unique per shard, and the per-shard results collected or merged into one result for the pull request. Leaving every shard uploading under `desktop-report-${{ matrix.os }}` and writing `reports/desktop-junit.xml` scores zero - the uploads collide on name and the pull request gets one shard's verdict. Making the upload name unique but saying nothing about bringing the shards back together scores at most half."
+    },
+    {
+      "name": "Display setup handled without breaking the working legs",
+      "max_score": 6,
+      "description": "A virtual-display wrapper remains on the Linux leg and remains scoped to it. Removing the wrapper entirely scores zero; applying it, or a display variable, to the macOS and Windows legs scores zero, since neither needs one and both currently pass. Dropping the redundant standalone `Xvfb :99` step, or keeping it, are both acceptable - it is the wrapper that matters."
+    },
+    {
+      "name": "Working parts left alone",
+      "max_score": 4,
+      "description": "MUST NOT undo what already works: the artefact path stays derived from the running platform rather than being replaced by a fixed path, the two supplied spec files are unmodified, and the report upload keeps its run-always condition. Any of these regressing scores zero here."
+    }
+  ]
+}

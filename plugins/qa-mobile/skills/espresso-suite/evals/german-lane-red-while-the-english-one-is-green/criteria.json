@@ -1,0 +1,41 @@
+{
+  "context": "A lane everybody assumes is testing German and that has never once run in German. Predicted baseline failure: the agent accepts Miriam's framing, reads the five failures as brittle-selector problems, swaps the text matchers for ids, relaxes or resource-sources the string expectations, and reports the lane green - which is the worst available outcome, because the lane would then be a permanently green job running an English app. The evidence that settles it is spread across three fixtures and is nowhere interpreted: every failure dump on 2026-09-11 prints the English resource value (`text=Create your account`, `text=Continue`, `text=That email address is already registered`) from an app the test believes it put into German; the workflow launches both lanes on the same unmodified pixel_4a AVD with no locale configuration; and the 2026-09-09 run shows `ReceiptTest` and `SearchTest` turning red with German date and thousands separators purely because the German class ran ahead of them in the same process - proving that the `Locale.setDefault` call in `@Before` reaches number and date formatting, leaks to everything downstream, and never touches string resources at all. Two further things are predicted to be missed: `germanTranslationsAreLoaded` compares the screen to `context.getString(...)` and therefore passes in any language, and `cartTotalIsFormattedForTheLocale` fails for a reason that is not the lane's fault.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT green the lane while the app is still running in English",
+      "max_score": 32,
+      "description": "The answer establishes that `Locale.setDefault(Locale.GERMANY)` in `@Before` does not put the app into German - the activity's resources resolve from the device configuration, which the workflow leaves at the AVD default, and the rule has already created the activity before `@Before` runs - and applies the locale where resource resolution actually sees it, before the activity under test is created (device/app locale, or the app's own locale API, driven per lane). Any answer whose fix is to swap the failing text matchers for ids, source the expectations from `getString`, or otherwise make the five failures stop while nothing changes about the language the app renders in, scores zero for this criterion regardless of the rest. Full marks require the diagnosis as well as the change: the lane has been comparing German expectations against an English app for three weeks, so its red is not a German finding. Identifying that the app is rendering English without changing how the locale is applied scores at most half."
+    },
+    {
+      "name": "Frozen price formatter reported as a product defect",
+      "max_score": 20,
+      "description": "MUST NOT make `cartTotalIsFormattedForTheLocale` pass by editing its expected string, accepting either format, or asserting on the label instead of the amount. Doing so scores zero. Full marks require naming the cause - `PriceFormatter` holds one `NumberFormat` built from whatever `Locale.getDefault()` was when the object initialised, and `NorthwindApp.onCreate` forces that to happen at process start - and stating the user-visible consequence, that a customer switching language through `LanguageSettings` gets German text with the old number format. Reporting it as a defect without connecting it to the in-app language switch scores at most half."
+    },
+    {
+      "name": "Vacuously passing test identified",
+      "max_score": 16,
+      "description": "`germanTranslationsAreLoaded` is called out as unable to fail: it asserts the heading equals `context.getString(R.string.signup_heading)`, comparing the app to itself, so it passes in every locale including the English one the lane has actually been running. Full marks require it to be changed into something that can fail. Counting it among the four honest passes, or leaving it untouched and unmentioned, scores zero."
+    },
+    {
+      "name": "Cross-class leak traced and isolation enabled",
+      "max_score": 16,
+      "description": "The answer connects the 2026-09-09 failures in `ReceiptTest` and `SearchTest` - German date and thousands separators in classes that have nothing to do with the German lane - to the process-wide default this class sets and never restores, notes that all of it happened under one pid, and fixes it both at the source (restore the previous default after each test) and structurally (per-test process isolation in `app/build.gradle`). Attributing those two failures to flake, to the shard split, or to the German app build scores zero. Fixing only one of the two levels scores at most half."
+    },
+    {
+      "name": "MUST NOT locate controls by their displayed text",
+      "max_score": 10,
+      "description": "The `onView(withText(\"Weiter\"))` in `continueButtonAdvancesToDelivery` is replaced with a match on the button's id or content description. Leaving it, or replacing it with the English label, scores zero."
+    },
+    {
+      "name": "Answer for Thursday",
+      "max_score": 8,
+      "description": "Miriam and Hendrik get an explicit position on the freeze: what the lane will genuinely cover on Friday, what it will not, and whether the German launch is exposed. Recommending the lane be switched off scores zero. A report that stops at the technical findings without a recommendation scores at most half."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 4,
+      "description": "`docs/de-lane-findings.md` exists and gives a per-test verdict for all nine tests. A document that treats the five failures as one item scores at most half."
+    }
+  ]
+}

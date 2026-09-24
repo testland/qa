@@ -1,0 +1,22 @@
+03:00:11  Running with dbt=1.9.2
+03:00:14  Registered adapter: snowflake=1.9.0
+03:00:19  Found 4 models, 12 data tests, 2 sources, 0 exposures, 0 metrics, 471 macros
+03:00:19
+03:00:21  Concurrency: 4 threads (target='prod')
+03:00:21
+03:00:22  1 of 16 START sql view model analytics.stg_refunds .............. [RUN]
+03:00:22  2 of 16 START sql view model analytics.stg_payments ............. [RUN]
+03:00:48  1 of 16 OK created sql view model analytics.stg_refunds ......... [SUCCESS 1 in 26.11s]
+03:00:51  2 of 16 OK created sql view model analytics.stg_payments ........ [SUCCESS 1 in 28.94s]
+03:01:02  5 of 16 START test not_null_stg_refunds_amount ................. [RUN]
+03:01:04  5 of 16 PASS not_null_stg_refunds_amount ....................... [PASS in 1.88s]
+03:01:04  6 of 16 START test not_null_stg_refunds_refund_id ............. [RUN]
+03:01:06  6 of 16 PASS not_null_stg_refunds_refund_id .................... [PASS in 1.51s]
+03:06:38 15 of 16 PASS not_null_stg_payments_payment_intent_id ........... [PASS in 1.44s]
+03:06:41 16 of 16 PASS unique_stg_payments_payment_id .................... [PASS in 1.02s]
+03:06:42
+03:06:42  Finished running 2 view models, 2 table models, 12 data tests in 0 hours 6 minutes and 20.11s.
+03:06:43
+03:06:43  Completed successfully
+03:06:43
+03:06:43  Done. PASS=16 WARN=0 ERROR=0 SKIP=0 TOTAL=16

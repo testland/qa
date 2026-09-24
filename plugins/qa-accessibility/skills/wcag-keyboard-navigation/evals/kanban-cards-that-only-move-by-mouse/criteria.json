@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent accepts all four backlog items, and in particular treats B-3 as the easy win because it is the one with proof attached — a before-and-after video showing the contractor's explicit tab numbering fixing a real, visible problem. It did fix the symptom. Explicit positive tab positions take the board out of DOM order and put it on a hand-maintained sequence, on a surface whose entire purpose is that cards are created, moved and deleted all day; the module makes the consequence visible in the supplied green test, where a move renumbers position but leaves tabOrder exactly as it was, so the sequence the video proved goes stale on the first drag. The cause of the desync is in the same file: FOCUS_MODE_ORDER lays the columns out right-to-left through CSS while the markup still emits them left-to-right, and the remedy is to bring the emitted order into line rather than number around it. B-4 is the second trap in the other direction: drawing a signature is path-dependent pointer input, which SC 2.1.1 exempts, so the right answer is a refusal Deniz will not like, and an agent that grants every item because the CTO is in the thread never reaches it. B-1 and B-2 are the determinate accepts that stop always-refusing from scoring — there is no keyboard route onto the move API at all, and a card is activated only through an inline onclick attribute, so activate() already handling Enter and Space changes nothing until a real control is emitted.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/board.js is edited, test/board.test.js gains cases, and docs/keyboard-remediation.md has a section for each of B-1..B-4. A document covering fewer than four items scores at most half."
+    },
+    {
+      "name": "MUST NOT number the tab order by hand",
+      "max_score": 32,
+      "description": "MUST NOT extend the contractor's explicit tab positions to the headers, the overflow menus or any new keyboard control, and MUST NOT leave tabindex=\"${card.tabOrder}\" in cardMarkup. Accepting B-3, or emitting any tab position above zero anywhere, scores zero for this criterion however well the other three items are handled. Full marks need three things: B-3 rejected in the write-up, the existing numbering removed from the emitted markup in favour of a control that is focusable in document order, and the real cause named — the columns are reordered visually by FOCUS_MODE_ORDER while the markup order is unchanged, so the emitted order is what has to move. Removing the numbers without addressing the visual/document-order mismatch that produced them scores at most half, because Deniz's video is then unanswered."
+    },
+    {
+      "name": "The signature step is refused",
+      "max_score": 22,
+      "description": "B-4 is rejected: drawing a signature on the pad is path-dependent pointer input, where the value is the path the pointer travels and not the endpoints, and SC 2.1.1 exempts exactly that. Accepting B-4 and bolting a keyboard drawing mode onto createSignaturePad scores zero. Refusing it as \"not worth the effort\" or \"out of scope for this sprint\", without naming the path-dependent exemption, scores at most half — that is an argument Deniz wins."
+    },
+    {
+      "name": "A keyboard route onto the existing move API",
+      "max_score": 20,
+      "description": "B-1 is accepted and a card can be moved between columns from the keyboard through the existing moveCard, which the mobile bridge shares. Reimplementing the reorder arithmetic in a second code path scores at most half. Leaving the board with no keyboard move at all scores zero."
+    },
+    {
+      "name": "MUST NOT keep the card an onclick div",
+      "max_score": 14,
+      "description": "MUST NOT leave the inline onclick attribute in the string cardMarkup returns. B-2 is accepted and the card is emitted as a real button, or as an element wired to the existing activate handler, so that Enter and Space reach openCard. Keeping the onclick attribute scores zero here, even if a key handler is added alongside it: a div carrying role and a label is still not a control."
+    },
+    {
+      "name": "New tests are red against the supplied module",
+      "max_score": 12,
+      "description": "At least one added case fails against src/board.js exactly as supplied — a keyboard-move assertion and a markup assertion that no positive tab position is emitted both do — and passes after the change, with the six supplied tests still green and no dependency added. Cases that pass against both versions score zero for this criterion. Deleting or weakening a supplied test to get the suite green scores zero."
+    },
+    {
+      "name": "The drag path still works",
+      "max_score": 6,
+      "description": "MUST NOT remove or replace onDragEnd, the draggable attribute, or the drag handle. The prompt puts the pointer path out of bounds. Any change that leaves the supplied drag tests failing scores zero here."
+    }
+  ]
+}

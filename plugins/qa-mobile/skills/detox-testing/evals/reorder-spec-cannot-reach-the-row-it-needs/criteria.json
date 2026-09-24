@@ -1,0 +1,41 @@
+{
+  "context": "Three failures, of which the third is a device-state problem dressed as a flaky gesture. Predicted baseline failure: the agent handles the first two (unique row identity, scroll the list to reach the off-screen row), rejects the FlatList props on Nadia's numbers because that argument is handed to it, and then accepts Vik's framing of the third - 'the press-and-hold is unreliable on the minis, so retry it'. The obvious moves from there are all variants of the same mistake: keep the five-attempt helper, shorten it, swap the sleep for a longer timeout, or wrap the press in a wait. The attached evidence rules that out and points somewhere else. The press itself completes with no error and the row is under the touch point in the run's own screenshot, so nothing is unrendered or mistargeted. The failure is CI-only and follows the first position in the file rather than any particular spec - they shuffled the file and it moved. The lane notes say the simulator is booted by a build step with an 11m18s median and then nothing touches it until the test run starts, while the laptops that never fail have someone poking at the simulator all day. The device has gone quiet and the run's first gesture is spent on it; retrying is why Vik's patch appears to work, and it buys a green suite that hides an untouched-device condition every other spec in the suite is also exposed to. The second predicted failure is the row identifier: 'Index 30 out of bounds' invites a bigger index or a rendered list, when the account grows every sprint and 1042 is the 31st today and the 44th next quarter, so any position-based matcher is a dated test.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT retry the eaten gesture",
+      "max_score": 30,
+      "description": "The delivered spec MUST NOT retry the press-and-hold, pause between attempts, or stretch a timeout to get past it - keeping Vik's five-attempt helper, trimming it to fewer attempts, or replacing the sleep with a longer wait all score zero for this criterion regardless of the rest. Full marks require both halves: naming the cause, that the device has been left untouched through the eleven-minute build step and the run's first gesture is being spent on it (which is why the failure follows the first position in the file and not a particular spec, and why laptops with a simulator someone has been using all day never see it), and landing a deliberate wake of the device before the first gesture in the suite setup - device.shake(), a device.openURL(...) launch, or an equivalent explicit interaction. Naming the cause correctly but shipping nothing beyond a runner display-configuration recommendation scores at most half. Attributing it to slow CI hardware, an unreliable gesture, or an unrendered row scores zero."
+    },
+    {
+      "name": "Rows addressable by identity, not position",
+      "max_score": 18,
+      "description": "OrderRow renders a testID derived from the order's own data (e.g. order-row-1042) and the spec matches the row it means by that identifier. Any atIndex(...) left in the delivered spec scores zero for this criterion - the account gains orders every sprint, so an index is a value that expires. Adding the per-row identifier but leaving the spec matching by position scores at most half."
+    },
+    {
+      "name": "The off-screen row is scrolled to",
+      "max_score": 16,
+      "description": "The spec reaches order 1042 by scrolling the list it lives in, not by assuming it is rendered. Full marks for a bounded scroll-until-visible against by.id('order-history-list') - a waitFor on the row's visibility driven by repeated scrolling of that list, with an explicit timeout on the chain. A hand-rolled scroll loop that gets there without fixed pauses scores at most half. A fixed number of scrolls, a scroll with a sleep after it, or a spec that still assumes the row is already present scores zero."
+    },
+    {
+      "name": "MUST NOT land the list props",
+      "max_score": 10,
+      "description": "MUST NOT ship initialNumToRender={100}, windowSize={21} or removeClippedSubviews={false} on the production FlatList. Keeping any of the three scores zero here. Full marks require the review to say so to Nadia and Vik in terms of her measurements - 240ms to 1.9s against a 400ms budget on 18.4% of sessions - rather than simply deferring to her hold."
+    },
+    {
+      "name": "Vik is told what to do instead",
+      "max_score": 8,
+      "description": "docs/pr-901-review.md gives Vik a concrete route for each of the three failures, not just a verdict on his patch: what to put on the row, how the spec gets to a row the list has not rendered yet, and what to do about the first gesture of a run. A review that rejects the patch without a replacement for all three scores at most half; one that rejects it with no replacement at all scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "e2e/reorder.test.js is rewritten and docs/pr-901-review.md exists and addresses the three failures separately. A single undifferentiated write-up scores at most half."
+    },
+    {
+      "name": "Sorting module untouched",
+      "max_score": 5,
+      "description": "MUST NOT edit src/order-history.js or test/order-history.test.js. They are attached because the screen sorts newest-first, which is what makes 1042 the 31st row - they are evidence, not work, and the node --test suite must still pass unchanged. Any edit to either scores zero here."
+    }
+  ]
+}

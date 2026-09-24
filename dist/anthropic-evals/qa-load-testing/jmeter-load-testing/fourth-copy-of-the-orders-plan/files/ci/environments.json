@@ -1,0 +1,6 @@
+[
+  { "name": "dev",        "host": "dev.orders.example.com",        "port": 8443 },
+  { "name": "us-staging", "host": "staging.orders.example.com",    "port": 443  },
+  { "name": "eu-staging", "host": "eu-staging.orders.example.com", "port": 443  },
+  { "name": "prod",       "host": "orders.example.com",            "port": 443  }
+]

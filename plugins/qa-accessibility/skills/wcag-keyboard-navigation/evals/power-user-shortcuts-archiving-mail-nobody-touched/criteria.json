@@ -1,0 +1,36 @@
+{
+  "context": "Predicted baseline failure: the agent reads this as a bug and ships the tech lead's guard, because it is two lines, it is written by the person who owns the file, and it plausibly explains the symptom. SC 2.1.4 offers exactly three ways to conform — a mechanism to turn the shortcut off, a mechanism to remap it onto a non-printable key, or making it active only while the associated component has focus — and a filter on event.target.tagName is none of them. The planted evidence shows the guard does not even close the ticket it is aimed at: the in-house Dragon repro archived a thread because `e` arrived BEFORE the compose field took focus on a slow render, so the target was still the thread list when the guard would have waved it through. The second and larger predicted failure is the Shift claim in the same note. WCAG's normative text scopes the criterion to shortcuts implemented using only letter characters, and it says 'including upper- and lower-case letters' — a shortcut reached by holding Shift produces a character and stays in scope, which is why `?` fires from dictated punctuation in the third repro. An agent that accepts 'two-key combination, therefore out of scope' leaves Shift+E, the destructive one, untreated and writes that into the conformance document. Ctrl+K and Escape are the determinate other half: a genuinely non-printable key is involved in each, they are outside the criterion, and an agent that bolts an off switch onto everything because the head of legal asked has not made a judgement either.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/shortcuts.js is edited, test/shortcuts.test.js gains cases, and docs/shortcut-conformance.md has a row per binding. A document that does not cover every binding in the handler scores at most half."
+    },
+    {
+      "name": "A conforming mechanism, reachable by the user",
+      "max_score": 32,
+      "description": "The character bindings gain at least one of the three mechanisms the criterion accepts: a way for the user to turn them off, a way to remap them onto a combination that includes a non-printable key, or activation restricted to when the associated component has focus. Full marks require the mechanism to be reachable by the affected user — the write-up names where it lives, and the empty Keyboard section on the settings page is the obvious home — and the handler must actually stop dispatching those bindings when it is off or rebound. A mechanism that exists only as an internal flag no caller can set scores at most half. Shipping none of the three scores zero for this criterion regardless of what else is delivered."
+    },
+    {
+      "name": "MUST NOT treat the target-type guard as the fix",
+      "max_score": 24,
+      "description": "MUST NOT present the tagName / isContentEditable guard as the conformance treatment for the character bindings. It is not one of the three mechanisms the criterion accepts, and the supplied repro defeats it on its own facts — `e` arrived while focus was still on the thread list, before the compose field had rendered. Shipping the guard as the only change scores zero. Shipping it alongside a real mechanism, explicitly as a separate usability improvement rather than as the answer to the criterion, is acceptable and loses nothing; shipping it alongside a real mechanism but crediting it as the conformance treatment scores at most half."
+    },
+    {
+      "name": "Shift-reached characters kept in scope",
+      "max_score": 20,
+      "description": "Shift+E and Shift+/ receive the same treatment as the bare character bindings, and docs/shortcut-conformance.md contradicts the note's claim that a Shift combination puts them out of scope: holding Shift produces an upper-case letter or a punctuation character, and the criterion's own wording covers upper- and lower-case letters alike. Leaving either binding untreated scores zero. Treating them but repeating or leaving unchallenged the claim that they were out of scope scores at most half — Shift+E is the destructive one and the ticket shows `?` firing from dictated punctuation."
+    },
+    {
+      "name": "Modified and non-printing bindings left out of scope",
+      "max_score": 14,
+      "description": "docs/shortcut-conformance.md places Ctrl+K / Cmd+K and Escape outside the criterion, naming why — a non-printable key is part of each. Asserting that either one requires treatment in order to conform scores zero, whatever the head of legal asked for. Both must still fire with the new mechanism in its default state; a change that leaves the command palette or Escape dead out of the box scores zero. An off switch whose scope happens to include them is fine so long as the document still classifies them correctly. Leaving them alone but saying nothing about why scores at most half."
+    },
+    {
+      "name": "New tests are red against the shipped handler",
+      "max_score": 12,
+      "description": "At least one added case fails against src/shortcuts.js exactly as supplied — an assertion that a character binding does not dispatch once the mechanism is engaged does — and passes afterwards, with the six supplied tests still green and no dependency added. Cases that pass against both versions score zero for this criterion. Deleting or weakening a supplied test to get the suite green scores zero."
+    }
+  ]
+}

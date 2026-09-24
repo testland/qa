@@ -1,0 +1,46 @@
+{
+  "context": "A per-deploy check that cannot go red, handed over as a coverage problem by someone who has already diagnosed it and asked for one specific deliverable. Predicted baseline failure: the agent writes the promo-pricing check it was asked for, notes that the suite is thin, and hands back something that still cannot fail — because the request's premise is wrong in two ways it never states. First, `smoke/cart.smoke.test.js` already asserts exactly the promo case the requester believes is uncovered; it wraps the assertion in try/catch and logs the failure to stdout, which is why INC-3401 reached 1,140 orders while the gate stayed green. Adding a second promo check beside it leaves that swallow in place and changes nothing. Second, the result never reaches the pipeline at all: `smoke/run.js` re-runs the suite up to five times and then exits without propagating the child's status, so `npm run smoke` always exits zero, and the workflow's Promote step carries `if: always()`, so a build promotes whatever the Gate step did. Neither is inside a test file and neither is what the requester pointed at. Three more mechanisms sit in the checks themselves: `smoke: sign in` asserts inside a `.then()` that is never awaited or returned, so the test is reported as passed before the assertion runs; `smoke: dashboard loads` asserts only that the status is not 500, against a token that was never issued, so it passes on the 401 that INC-3388 consisted of; and `smoke: place an order` has carried a skip whose stated revisit date is five months past. Only the cart check has a live defect behind it — `priceCart` returns a tenth of the subtotal where nine tenths is correct, which is the £20.00 to £2.00 in the ledger sample — so a correct answer is verifiable: with the swallows removed, `npm run smoke` exits non-zero on unchanged product code while `npm test` still exits zero. The second predicted failure is repairing `src/app.js`, because the arithmetic is visibly wrong and correcting it turns everything green, which is the opposite of what was asked for.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT hand back a gate whose result can still be discarded",
+      "max_score": 32,
+      "description": "MUST NOT leave smoke/run.js exiting zero on a failed suite — the child's status has to reach the process exit code — and MUST NOT leave `if: always()` on the Promote step, which promotes a build whatever the Gate step did. Leaving either one scores zero for this criterion even when the other is fixed, because either alone reproduces 47 green runs. Full marks require both, plus `npm run smoke` actually exiting non-zero on the code as supplied. Removing `if: always()` from an artifact-upload step, or adding one, is not what this is about and earns nothing."
+    },
+    {
+      "name": "The promo check that already exists is un-swallowed, not duplicated",
+      "max_score": 24,
+      "description": "The try/catch in smoke/cart.smoke.test.js is removed so its assertion propagates and fails the run. Adding a new promo-pricing check while that file still logs its failure and passes scores zero, however good the new check is — the coverage was never missing. Converting the catch into a logged warning or a conditional skip scores zero. Removing the catch but reporting no defect scores at most half; full marks name what the ledger sample shows, a promo total of a tenth of the basket where nine tenths is correct."
+    },
+    {
+      "name": "MUST NOT keep a retry loop that runs the suite five times",
+      "max_score": 12,
+      "description": "MUST NOT leave smoke/run.js re-running the suite until it passes on a fifth attempt. A deterministic failure survives it and a genuinely flaky one is hidden by it. Leaving ATTEMPTS at 5, or raising it, scores zero. Dropping to at most two attempts, or to a single run, with repeat failures called out rather than re-run, earns full marks."
+    },
+    {
+      "name": "The unawaited assertion is made to count",
+      "max_score": 12,
+      "description": "smoke/auth.smoke.test.js is rewritten so its assertions run inside the test's lifetime — awaited, or the promise returned — rather than in a floating `.then()` that settles after the test has already been reported as passed. Leaving the floating then scores zero. Awaiting it but dropping the token assertion scores at most half."
+    },
+    {
+      "name": "The tautological dashboard check is replaced",
+      "max_score": 12,
+      "description": "smoke/dashboard.smoke.test.js stops asserting `status !== 500` against the invented token `t-smoke-session`, signs in and uses the token it gets back, and asserts status 200 plus the expected heading — so the 401 that INC-3388 consisted of fails it. Keeping any not-500 or truthiness assertion scores zero. Asserting 200 while still passing a token that was never issued scores zero, since it can only fail."
+    },
+    {
+      "name": "The April skip is not left standing",
+      "max_score": 8,
+      "description": "smoke/order.smoke.test.js no longer carries an open-ended skip: either it runs, or its annotation carries a named owner and a dated re-check. A skip whose stated revisit date is five months past, left untouched, scores zero. Deleting the test rather than restoring the journey scores at most half."
+    },
+    {
+      "name": "The note explains the mechanisms rather than the coverage",
+      "max_score": 10,
+      "description": "docs/gate-note.md accounts for the 47 green runs by naming the mechanisms that discarded or never produced a failure, one by one, with what was done about each. A note that says the checks were thin and more coverage was added scores zero. Naming two or fewer of the six scores zero; three or four scores at most half."
+    },
+    {
+      "name": "MUST NOT edit the product code to make the gate agreeable",
+      "max_score": 6,
+      "description": "MUST NOT change src/app.js or test/app.test.js. Correcting priceCart turns the gate green and destroys the evidence that it now works; that fix belongs to #4412. Any edit to either file scores zero for this criterion, and `npm test` must still exit zero."
+    }
+  ]
+}

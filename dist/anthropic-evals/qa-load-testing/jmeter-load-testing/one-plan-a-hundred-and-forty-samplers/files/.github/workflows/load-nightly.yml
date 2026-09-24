@@ -1,0 +1,38 @@
+name: load-nightly
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run the regression suite
+        run: |
+          docker run --rm -v "$PWD:/work" -w /work apache/jmeter:5.6.3 \
+            -n -t plans/regression-all.jmx \
+            -l artifacts/results.jtl \
+            -e -o artifacts/report \
+            -Japi.host=staging.example.com
+
+      - name: Gate
+        run: node ci/gate.mjs artifacts/report/statistics.json ci/thresholds.json
+
+      - name: Notify
+        if: failure()
+        run: ./ci/slack.sh "gate failed"
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: load-nightly
+          path: |
+            artifacts/report/
+            artifacts/results.jtl
+          retention-days: 14

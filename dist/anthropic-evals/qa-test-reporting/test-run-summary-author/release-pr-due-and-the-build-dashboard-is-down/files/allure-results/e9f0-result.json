@@ -1,0 +1,13 @@
+{
+  "uuid": "a1f2c0de-0005-4000-8000-000000000005",
+  "historyId": "gate.checkout.guest",
+  "name": "Guest checkout",
+  "fullName": "gate.checkout.CheckoutGate#guest",
+  "status": "passed",
+  "start": 1789182061000,
+  "stop": 1789182093000,
+  "labels": [
+    { "name": "suite", "value": "Checkout" },
+    { "name": "severity", "value": "critical" }
+  ]
+}

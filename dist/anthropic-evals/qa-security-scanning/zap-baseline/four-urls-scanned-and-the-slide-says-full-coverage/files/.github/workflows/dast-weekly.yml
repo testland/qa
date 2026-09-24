@@ -1,0 +1,21 @@
+name: DAST weekly (staging)
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: zaproxy/action-baseline@v0.13.0
+        with:
+          target: https://staging.northvale.io
+          cmd_options: '-J zap-report.json'
+      - name: Coverage
+        run: node scripts/coverage.js zap-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: zap-weekly, path: zap-report.json }

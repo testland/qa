@@ -1,0 +1,14 @@
+[
+  {
+    "RuleID": "stripe-access-token",
+    "Description": "Stripe Access Token",
+    "File": ".env.example",
+    "StartLine": 7,
+    "Match": "STRIPE_SECRET_KEY=sk_test_***REDACTED***",
+    "Secret": "sk_test_***REDACTED***",
+    "Entropy": 4.31,
+    "Commit": "1f0c9a2e4b",
+    "Author": "d.okafor",
+    "Date": "2024-03-04T09:12:41Z"
+  }
+]

@@ -1,0 +1,48 @@
+<div class="kst-daterange" id="kst-root">
+  <div class="kst-fields">
+    <label for="kst-start">Check in</label>
+    <input id="kst-start" type="text" readonly value="12 Oct 2026" />
+    <label for="kst-end">Check out</label>
+    <input id="kst-end" type="text" readonly value="15 Oct 2026" />
+  </div>
+
+  <div class="kst-header">
+    <button class="kst-nav" id="kst-prev" type="button" aria-label="Previous month">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 2 4 8l6 6" /></svg>
+    </button>
+    <h2 id="kst-month">October 2026</h2>
+    <button class="kst-nav" id="kst-next" type="button" aria-label="Next month">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 2l6 6-6 6" /></svg>
+    </button>
+  </div>
+
+  <table class="kst-grid" role="presentation">
+    <tr>
+      <td><div class="kst-day" id="kst-cell-12" role="gridcell" tabindex="0" aria-selected="true">12</div></td>
+      <td><div class="kst-day kst-in-range" id="kst-cell-13" role="gridcell" tabindex="-1" aria-selected="true">13</div></td>
+      <td><div class="kst-day kst-in-range" id="kst-cell-14" role="gridcell" tabindex="-1" aria-selected="true">14</div></td>
+      <td><div class="kst-day" id="kst-cell-15" role="gridcell" tabindex="-1" aria-selected="true">15</div></td>
+      <td><div class="kst-day kst-sold-out" id="kst-cell-16" role="gridcell" tabindex="-1" aria-disabled="true" aria-selected="false">16</div></td>
+      <td><div class="kst-day" id="kst-cell-17" role="gridcell" tabindex="-1" aria-selected="false">17</div></td>
+      <td><div class="kst-day" id="kst-cell-18" role="gridcell" tabindex="-1" aria-selected="false">18</div></td>
+    </tr>
+    <tr>
+      <td><div class="kst-day" id="kst-cell-19" role="gridcell" tabindex="-1" aria-selected="false">19</div></td>
+      <td><div class="kst-day" id="kst-cell-20" role="gridcell" tabindex="-1" aria-selected="false">20</div></td>
+      <td><div class="kst-day" id="kst-cell-21" role="gridcell" tabindex="-1" aria-selected="false">21</div></td>
+      <td><div class="kst-day" id="kst-cell-22" role="gridcell" tabindex="-1" aria-selected="false">22</div></td>
+      <td><div class="kst-day" id="kst-cell-23" role="gridcell" tabindex="-1" aria-selected="false">23</div></td>
+      <td><div class="kst-day" id="kst-cell-24" role="gridcell" tabindex="-1" aria-selected="false">24</div></td>
+      <td><div class="kst-day" id="kst-cell-25" role="gridcell" tabindex="-1" aria-selected="false">25</div></td>
+    </tr>
+  </table>
+
+  <p class="kst-status" aria-live="polite" hidden></p>
+
+  <div class="kst-footer">
+    <button id="kst-flex" type="button" aria-pressed="false">Flexible dates</button>
+    <a href="/help/how-dates-work" class="kst-help">How our dates work</a>
+    <button id="kst-cancel" type="button">Cancel</button>
+    <button id="kst-apply" type="button" class="kst-primary">Apply</button>
+  </div>
+</div>

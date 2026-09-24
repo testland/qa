@@ -1,0 +1,9 @@
+path,suite,executions,pass_rate,note
+services/promo,unit+integration,1842,0.998,
+services/payments/fallback,chaos+integration,214,1.000,weekly drill plus PR runs
+services/tax/legacy_import,,0,,no automated suite covers this path
+services/inventory/cache,unit+integration,412,0.942,was 0.991 in 2025-Q4
+services/partners/sftp,integration,388,0.995,
+services/admin/audit,unit+integration,96,0.979,
+services/search,unit+integration,1106,0.999,
+services/catalog/import,unit,240,1.000,

@@ -1,0 +1,28 @@
+{
+  "note": "Extract: every route touched by a test in PR #884, with every e2e test covering those routes as of week 36.",
+  "tests": {
+    "promo.spec.ts > seasonal-banner": ["/promo/seasonal"],
+    "promo.spec.ts > referral-invite-flow": ["/referrals/invite"],
+    "orders.spec.ts > print-packing-slip": ["/orders/packing-slip"],
+    "checkout.spec.ts > three-d-secure-challenge": ["/checkout/payment", "/checkout/3ds-challenge"],
+    "account.spec.ts > data-export-request": ["/account/privacy", "/account/export"],
+    "auth.spec.ts > sso-redirect": ["/auth/sso", "/auth/sso/callback"],
+    "search.spec.ts > empty-state-copy": ["/search"],
+    "pricing.spec.ts > tax-line-rendering": ["/checkout/payment"],
+    "reports.spec.ts > export-50k-rows": ["/reports/export"],
+    "onboarding.spec.ts > first-run-checklist": ["/onboarding"],
+    "checkout.spec.ts > card-purchase-happy-path": ["/checkout/payment", "/checkout/confirmation"],
+    "checkout.spec.ts > saved-card-purchase": ["/checkout/payment", "/checkout/confirmation"],
+    "checkout.spec.ts > apply-discount-code": ["/checkout/payment"],
+    "search.spec.ts > keyword-results": ["/search"],
+    "search.spec.ts > facet-filters": ["/search"],
+    "search.spec.ts > sort-order-persistence": ["/search"],
+    "reports.spec.ts > export-csv-small": ["/reports/export"],
+    "reports.spec.ts > date-range-picker": ["/reports"],
+    "onboarding.spec.ts > sample-data-import": ["/onboarding"],
+    "account.spec.ts > change-password": ["/account/security"],
+    "account.spec.ts > email-preferences-toggle": ["/account/privacy"],
+    "auth.spec.ts > login-with-password": ["/auth/login"],
+    "auth.spec.ts > password-reset-email": ["/auth/reset"]
+  }
+}

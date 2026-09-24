@@ -1,0 +1,14 @@
+Run 1204 / job "production" / step "Compatibility check"  (2026-09-12 15:52:06Z)
+
+$ pact-broker can-i-deploy \
+    --pacticipant payments-api \
+    --version e55c108
+
+Computer says yes
+
+CONSUMER        | C.VERSION | PROVIDER     | P.VERSION | SUCCESS? | RESULT#
+----------------|-----------|--------------|-----------|----------|--------
+checkout-web    | d77a01e   | payments-api | e55c108   | true     | 4471
+refunds-worker  | 4c9ee21   | payments-api | e55c108   | true     | 4472
+
+exit status 0

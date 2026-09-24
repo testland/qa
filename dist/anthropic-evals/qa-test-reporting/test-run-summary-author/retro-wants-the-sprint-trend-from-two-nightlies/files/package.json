@@ -1,0 +1,7 @@
+{
+  "name": "sprint-quality-reporting",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,32 @@
+Running 10 tests using 4 workers
+
+  1) [chromium] > tests/dashboard.spec.ts:6:1 > dashboard overview
+
+    Error: Screenshot comparison failed:
+
+      18412 pixels (ratio 0.02 of all image pixels) are different.
+
+    Expected: /home/runner/work/app/app/tests/dashboard.spec.ts-snapshots/overview-1-chromium-linux.png
+    Received: /home/runner/work/app/app/test-results/dashboard-overview-chromium/overview-1-actual.png
+    Diff:     /home/runner/work/app/app/test-results/dashboard-overview-chromium/overview-1-diff.png
+
+  2) [chromium] > tests/settings.spec.ts:11:1 > settings team
+
+    Error: Screenshot comparison failed:
+
+      9330 pixels (ratio 0.01 of all image pixels) are different.
+
+    Expected: /home/runner/work/app/app/tests/settings.spec.ts-snapshots/team-1-chromium-linux.png
+    Received: /home/runner/work/app/app/test-results/settings-team-chromium/team-1-actual.png
+
+  3) [firefox] > tests/dashboard.spec.ts:6:1 > dashboard overview
+
+    Error: Screenshot comparison failed:
+
+      21077 pixels (ratio 0.02 of all image pixels) are different.
+
+    Expected: /home/runner/work/app/app/tests/dashboard.spec.ts-snapshots/overview-1-firefox-linux.png
+    Received: /home/runner/work/app/app/test-results/dashboard-overview-firefox/overview-1-actual.png
+
+  24 failed
+  Viewport for all projects: 1280x800

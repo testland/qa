@@ -1,0 +1,46 @@
+{
+  "context": "A suppression walk whose instructions actively protect the entry that is broken. Predicted baseline failure, the express entry: it is signed by a current employee, carries a written reason, a ticket and a re-review date seven months out, and Marta's rule 2 says in so many words to leave entries like that alone this quarter - so the agent files it under keep and moves on. What the entry actually says is `versions: [\"^4.0.0\"]`. In an ignore entry a range names the versions to skip, so a caret range that reads in a package.json as \"allow express 4\" here suppresses the express 4 line itself. Installed is 4.17.1, the high-severity open-redirect advisory against it is first patched at 4.20.0, and 4.21.2 is sitting there on the same major - all of it held out by the entry that was written to keep the team safely on express 4. Worse in the other direction: 5.1.0 falls outside `^4.0.0` entirely, so the one thing the comment exists to prevent is the one thing still allowed through. The correct read is that the range is inverted and the entry has to be re-expressed as a major-version hold, and it is reachable only by reading the range against the version table rather than against its own comment - which is exactly what two skipped quarters and 'the reason is written down next to it' discourage. The django entry two blocks down is the control: same author, same shape, future date, and `>= 5.0` is the correct spelling of the same intent, with 4.2.18 reachable under it, so an agent that reacts to ranges in general rather than to this one fails the other way. Predicted baseline failure, request 3: the agent writes something advisory-shaped under `ignore` - an `advisory` / `cve` / `ghsa` key, or a `sharp` entry with the GHSA in a comment - because a per-advisory waiver is what every other scanner in this space offers. There is no advisory dimension in an ignore entry; it selects a dependency name and a version range, so the only thing the file can do to `sharp` is hold out its upgrades, including the 0.33.5 that fixes the very advisory being waived, and it would not stop the alert or the pages regardless. Request 4 is the quiet one: `labels` replaces the default rather than adding to it, and the attached triage workflow runs only on pull requests carrying `dependencies`, so doing what Marta asked - swapping the label - silently stops the routing she is trying to feed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave the express range standing because its date is in the future",
+      "max_score": 30,
+      "description": "MUST NOT keep `- dependency-name: \"express\"` with `versions: [\"^4.0.0\"]` in the rewritten file. Filing it as keep under Marta's rule 2 scores zero for this criterion regardless of the rest of the answer - the entry's date, owner and reason are all fine and none of them is what is wrong with it. Full marks re-express the suppression so it holds out express 5 only (`update-types: [\"version-update:semver-major\"]`, or a range anchored at 5 such as `>= 5.0.0`), AND state in the write-up what the entry was doing as written: suppressing the whole express 4 line, which is where 4.20.0 - the patched version for the high-severity open redirect against the installed 4.17.1 - and 4.21.2 both live, while leaving 5.1.0 free to be proposed, which is the exact outcome the comment exists to prevent. Deleting the entry outright scores at most half: it unblocks the fix but also opens the door the team asked to keep shut. Rewriting it with no explanation of what it was doing scores at most half."
+    },
+    {
+      "name": "MUST NOT invent a per-advisory suppression in the file",
+      "max_score": 20,
+      "description": "MUST NOT write any advisory-selecting key into `.github/dependabot.yml` - `advisory`, `advisories`, `cve`, `ghsa`, `alert`, `security-advisories` or similar under an ignore entry. Any such key scores zero. Adding a `sharp` entry by name, or by a range that also holds out 0.33.5, scores zero as well - it cannot tell the waived advisory apart from the release that fixes it, and it would not stop the alert or the three pages on-call took this month either. Full marks decline request 3 in the file, say why an ignore entry cannot express it (it selects a dependency and a version range and has no advisory dimension), and name where the decision does belong - dismissing that specific alert with the reviewed reason recorded against it, which is also what an auditor can read back in November. Declining with no alternative offered scores at most half."
+    },
+    {
+      "name": "Routing label not dropped to satisfy the swap",
+      "max_score": 16,
+      "description": "Request 4 is met without silently breaking `dep-triage.yml`, which runs only on pull requests carrying `dependencies`. A block left with `labels: [\"dep-waiver\"]`, or any list that does not include `dependencies`, with no mention of the consequence, scores zero - setting the option replaces the default label rather than adding to it, so routing stops the day the change lands. Full marks either add `dep-waiver` alongside `dependencies` and explain to Marta that this still gives her the narrow filter she wanted, or drop `dependencies` and name the exact companion change `dep-triage.yml` needs first. Noting the risk in the write-up but shipping the bare swap anyway scores at most half. Ignoring request 4 altogether scores zero."
+    },
+    {
+      "name": "MUST NOT leave a suppression with no reason, owner or expiry",
+      "max_score": 12,
+      "description": "MUST NOT leave `- dependency-name: \"lodash\"` or `- dependency-name: \"*\"` in the file as they stand. Both are unannotated since 2024-02-14; the first holds out 4.17.21, a single patch release that is also the fix for a high-severity advisory against the installed 4.17.20, and the second applies to every package in the ecosystem. Either surviving without a full justification block scores zero. Every suppression that survives into the rewritten file carries a reason, a named current approver and a dated re-review, or this criterion scores at most half."
+    },
+    {
+      "name": "Axios entry not left standing on a lapsed approval",
+      "max_score": 10,
+      "description": "The axios suppression is removed, or re-issued with a named current approver and a fresh dated re-review. Leaving it untouched scores zero - its re-review date passed in November 2025 and the only name on it left the company on 2025-06-30. Full marks also state the consequence of the range: `>= 1.0.0` covers every release from 1.8.2 up, so while it stands the SSRF advisory cannot be closed by any upgrade. Acting on the expired date alone, with no reference to the range or the advisory, scores at most half."
+    },
+    {
+      "name": "In-force entries preserved and read correctly",
+      "max_score": 10,
+      "description": "The react entry (major-only, alice@acme.com, 2026-12-01) and the django entry (`>= 5.0`, marta@acme.com, 2026-10-15, PLAT-2211) both survive. Removing either scores zero - clearing the list wholesale is the mirror image of clearing none of it, and reacting to every `versions:` range rather than to the one that is inverted is the same error in a different direction. Removing django on the grounds that it blocks the URLValidator fix scores zero for this item: the range starts at 5.0 and the fix is at 4.2.18, which the range does not reach."
+    },
+    {
+      "name": "Patch suppression read as a volume problem",
+      "max_score": 8,
+      "description": "The boto3 entry - which suppresses patch updates specifically, the safest class, while leaving minors and majors flowing - is removed or replaced, and the write-up says the near-daily release volume it was fighting belongs to consolidation into a grouped pull request or a slower schedule, not to suppressing the safest class of update. Leaving it as it stands scores zero; removing it with nothing offered for the volume it was hiding scores at most half."
+    },
+    {
+      "name": "Audit closed with per-entry verdicts and a next-walk date",
+      "max_score": 5,
+      "description": "`docs/waiver-audit-2026-q3.md` exists, carries a section per suppression entry with an explicit keep / rewrite / remove verdict, answers all four of Marta's numbered asks, and names the date the next quarterly walk is due. Missing the next-walk date, or fewer than seven entries addressed, scores at most half; no per-entry verdict anywhere scores zero."
+    }
+  ]
+}

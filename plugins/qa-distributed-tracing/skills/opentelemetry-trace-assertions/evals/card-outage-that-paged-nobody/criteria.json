@@ -1,0 +1,51 @@
+{
+  "context": "Two problems sit in this repo and only one of them is signposted. The signposted one is that src/gateway.js emits http.method, http.url, http.status_code and net.peer.name while the shared rules select on http.request.method, http.response.status_code and server.address, so payments-gateway matches nothing. The unsignposted one is test/gateway.trace.test.js, which asserts that the settle span's trace id equals a 32-character literal and the charge span's id equals a 16-character literal, 'replayed from the incident capture'. Those assertions pass on every run only because the vendored id generator is a per-process counter that hands the first span of the process the same values every time; they say nothing about trace shape, they break the moment a case is added above them or a span is created earlier, and in a real SDK they would never have passed twice. Predicted baseline failure: the agent does the rename, extends the file with the 503 and 402 cases, and either copies the id pins onto them - which is what the prompt says reviewers asked for and what the house style models - or leaves the existing pins untouched and never remarks on them, because they are green and green is the bar the task set. The rollout hazard is the second predicted miss: anything reading payments-gateway spans on the old keys stops seeing them the moment the rename lands, and the fraud team's 402 panel is already a live consumer. The third is error.type, which no shipped span carries and which nothing in the repo prompts for.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT assert literal span or trace id values",
+      "max_score": 30,
+      "description": "Ids are generated per run and carry no meaning; a test that pins them asserts that the id generator counted, not that the trace has a shape. Adding any literal trace-id or span-id constant to a new case scores zero for this criterion. Full marks require the two constants already in test/gateway.trace.test.js to be gone, replaced where structure actually matters by an assertion relating spans to each other at run time - the charge span's parent being the settle span, or the two sharing a trace id read off the captured spans - and the reason given somewhere the next reader will see it. Removing the pins but replacing them with nothing, so no case checks that the outgoing call hangs off the settlement at all, scores at most half. Leaving the existing pins in place without comment also scores at most half, even if no new ones are added."
+    },
+    {
+      "name": "Both outgoing calls migrated to the attributes the shared rules select",
+      "max_score": 16,
+      "description": "Both the charge and the void span carry the request method, the full URL, the server address and the response status code under the keys alerts/card-gateway.yaml selects on, and the unused PORT constant is emitted as the server port alongside the address. Migrating only the charge span, which is the one the incident was about, scores at most half. Leaving either span on the old keys scores zero for this criterion."
+    },
+    {
+      "name": "The failure class is on the failing spans",
+      "max_score": 14,
+      "description": "The charge span on the 503 path and the charge span on the 402 path carry an attribute naming the error class, and the tests assert it, so the outage and the declines can be broken down rather than only counted. A status code alone, with no attribute identifying the error, scores zero for this criterion; setting it on one of the two failing paths scores at most half."
+    },
+    {
+      "name": "Status and kind asserted on all three cases",
+      "max_score": 12,
+      "description": "Each of the three delivered cases asserts the span status and the span kind on the outgoing call, since the shared rules select on the kind as well as the attributes. Asserting attributes only, with no status or kind anywhere, scores zero. Asserting them on one case and not the others scores at most half."
+    },
+    {
+      "name": "All three cases delivered and the suite green",
+      "max_score": 10,
+      "description": "A captured charge, a 503 that also exercises the void call, and a 402 decline are all covered, and npm test passes. Two of the three scores at most half; a red suite scores zero for this criterion."
+    },
+    {
+      "name": "Rollout hazard named",
+      "max_score": 10,
+      "description": "docs/inc-2291-followup.md says that anything currently reading payments-gateway spans on the old attribute keys stops seeing them when this lands, and names at least one concrete consumer or mitigation - dashboards and saved searches built on the old keys, a period of emitting both, or a date by which the old keys go. A note that only describes the root cause and the fix scores zero for this criterion."
+    },
+    {
+      "name": "Spans reached by name",
+      "max_score": 8,
+      "description": "Every delivered case resolves spans through a name lookup rather than indexing into the finished-span array or asserting how many spans were produced. Any positional index or span-count assertion scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT edit the shared alert file or the vendored mirror",
+      "max_score": 6,
+      "description": "alerts/card-gateway.yaml and vendor/tracing-sdk.js must not be modified. Adding a payments-gateway rule, or widening a selector so it matches the keys we already emit, scores zero for this criterion - platform-observability refused per-service forks on OBS-2044 and the rules page two other services correctly as they stand."
+    },
+    {
+      "name": "Follow-up note written",
+      "max_score": 5,
+      "description": "docs/inc-2291-followup.md exists and explains why payments-gateway was invisible to rules two other services match unmodified. Restating the incident timeline without naming the attribute mismatch scores zero for this criterion."
+    }
+  ]
+}

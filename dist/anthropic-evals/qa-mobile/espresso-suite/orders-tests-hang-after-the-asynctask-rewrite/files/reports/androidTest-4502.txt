@@ -1,0 +1,52 @@
+### Build 4470 - 2026-08-27, last build before the migration merged
+
+com.northwind.orders.OrdersListTest > loadsOrdersForReturningCustomer PASSED (2.2s)
+com.northwind.orders.OrdersListTest > showsRefundBadgeOnRefundedOrder PASSED (2.6s)
+com.northwind.orders.OrdersListTest > showsEmptyStateForNewAccount PASSED (0.9s)
+
+### Build 4471 - 2026-08-28, immediately after the migration merged
+
+com.northwind.orders.OrdersListTest > loadsOrdersForReturningCustomer FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching:
+view.getId() is <2131231301/com.northwind.orders:id/order_row_0>
+    View Hierarchy:
+    +->RecyclerView{id=2131231299, res-name=orders_list, visibility=VISIBLE, child-count=0}
+    elapsed: 0.41s
+
+com.northwind.orders.OrdersListTest > showsRefundBadgeOnRefundedOrder FAILED
+androidx.test.espresso.AppNotIdleException: Looped for 8619 iterations over 26 SECONDS.
+The following Idle Conditions failed: MAIN_LOOPER_HAS_IDLED.
+    elapsed: 26.0s
+
+com.northwind.orders.OrdersListTest > showsEmptyStateForNewAccount PASSED (0.9s)
+
+### Build 4502 - 2026-09-09, after NetworkIdlingResource was added and registered
+
+com.northwind.orders.OrdersListTest > loadsOrdersForReturningCustomer FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching:
+view.getId() is <2131231301/com.northwind.orders:id/order_row_0>
+    View Hierarchy:
+    +->RecyclerView{id=2131231299, res-name=orders_list, visibility=VISIBLE, child-count=0}
+    elapsed: 0.38s
+
+com.northwind.orders.OrdersListTest > showsRefundBadgeOnRefundedOrder FAILED
+androidx.test.espresso.AppNotIdleException: Looped for 8931 iterations over 26 SECONDS.
+The following Idle Conditions failed: MAIN_LOOPER_HAS_IDLED.
+    elapsed: 26.0s
+
+com.northwind.orders.OrdersListTest > showsEmptyStateForNewAccount PASSED (0.9s)
+
+### logcat, build 4502, captured during showsRefundBadgeOnRefundedOrder
+
+09-09 02:14:07.118 D/OrderStatusTicker: tick
+09-09 02:14:07.121 D/OrderStatusTicker: tick
+09-09 02:14:07.123 D/OrderStatusTicker: tick
+09-09 02:14:07.126 D/OrderStatusTicker: tick
+09-09 02:14:07.128 D/OrderStatusTicker: tick
+... 8926 further lines, same tag, spacing 2-4 ms, up to the point the test threw
+
+### gateway, same build, same emulator
+
+GET /v1/orders                 -> 200 in 612 ms
+GET /v1/orders/NW-10042        -> 200 in 488 ms
+GET /v1/orders/NW-10091        -> 404 in 501 ms

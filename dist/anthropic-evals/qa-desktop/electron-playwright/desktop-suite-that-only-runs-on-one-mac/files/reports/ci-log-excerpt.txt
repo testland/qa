@@ -1,0 +1,71 @@
+desktop-e2e run 63, 2026-09-11, pull request #1184
+
+--- ubuntu-latest --------------------------------------------------
+  Set up job                                            0m05s
+  Run actions/checkout@v5                               0m17s
+  Run actions/setup-node@v4                             0m11s
+  Run npm ci                                            1m22s
+  Run npm run build:desktop                             2m21s
+  Run Start a virtual display                           0m18s
+  Run Show display state                                0m01s
+      DISPLAY=:99
+      name of display:    :99
+      version number:     11.0
+      vendor string:      The X.Org Foundation
+  Run Run desktop suite (Linux)                         0m19s
+      Running 42 tests using 1 worker
+
+        1) [desktop] > launch.spec.ts:5:1 > app window opens
+
+          Error: electron.launch: Process failed to launch!
+          [3311:0911/094402.118460:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
+          Trace/breakpoint trap (core dumped)
+
+        2) [desktop] > workspace.spec.ts:5:1 > recent list keeps five entries
+
+          Error: electron.launch: Process failed to launch!
+          [3402:0911/094404.221781:FATAL:electron_main_delegate.cc(288)] Failed to initialize display.
+          Trace/breakpoint trap (core dumped)
+
+      42 failed, 0 passed (18.7s)
+  Run actions/upload-artifact@v4                        0m14s
+  Job total                                             4m53s
+
+--- macos-latest ---------------------------------------------------
+  Set up job                                            0m05s
+  Run actions/checkout@v5                               0m19s
+  Run actions/setup-node@v4                             0m12s
+  Run npm ci                                            1m47s
+  Run npm run build:desktop                             2m58s
+  Run Run desktop suite (macOS / Windows)              34m08s
+      Running 42 tests using 1 worker
+      42 passed (34m 08s)
+  Run actions/upload-artifact@v4                        0m22s
+  Job total                                            39m51s
+
+--- windows-latest -------------------------------------------------
+  Set up job                                            0m07s
+  Run actions/checkout@v5                               0m36s
+  Run actions/setup-node@v4                             0m21s
+  Run npm ci                                            2m31s
+  Run npm run build:desktop                             3m44s
+  Run Run desktop suite (macOS / Windows)              31m52s
+      Running 42 tests using 1 worker
+      42 passed (31m 52s)
+  Run actions/upload-artifact@v4                        0m29s
+  Job total                                            39m40s
+
+--- 2026-09-12, Priya's machine, macOS 15.6 ------------------------
+
+  $ npx playwright test --config=playwright.electron.config.ts tests/e2e/launch.spec.ts
+    Running 1 test using 1 worker
+    [app stdout] Ledgerline 4.7.2 starting
+    [app stdout] no preferences file found, writing defaults
+    1 passed (46.3s)
+
+  $ ls -l "$HOME/Library/Application Support/Ledgerline/preferences.json"
+    -rw-r--r--  1 priya  staff  2184 12 Sep 09:41 preferences.json
+
+  $ open -a Ledgerline
+    Ledgerline 4.7.2 starting
+    preferences loaded: 9 keys, 5 recent workspaces

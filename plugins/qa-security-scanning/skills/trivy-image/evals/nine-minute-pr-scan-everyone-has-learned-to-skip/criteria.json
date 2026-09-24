@@ -1,0 +1,51 @@
+{
+  "context": "A speed complaint whose real content is where each class of check belongs in the pipeline. Predicted baseline failure: the agent takes the invitation in the prompt at face value and sweeps everything slow onto the nightly slot - licence and configuration scanning both go to the 03:00 cron, the pull-request run gets a severity threshold and a cached database, and the plan announces that all three April commitments are honoured. Two of those three are, and the hardening one is not. Its wording requires configuration coverage of every image that reaches the internal registry before it is published there, and the attached publish workflow pushes to that registry on every merge to main, six to fourteen times a working day. A nightly scan of the main branch inspects images that have already been in the registry for up to a day, and inspects one of them rather than each. The correct placement is the publish path, which nothing in the prompt points at. The second predicted failure is the reduction itself: an agent reaching for the fastest pull-request command is predicted to name vulnerability scanning alone, which silently drops the secret scanning that ran alongside it by default and breaks the one commitment whose owner has said in writing he will not renegotiate it. The third is the available-fix filter: 284 of the 322 vulnerability findings carry no fixed version, so a severity threshold on its own leaves a gate blocking on 37 findings of which 11 can be acted on. The fourth is the unknown-flag failure on the 25th, which the workflow explains - the scanner is pulled from a moving tag - and which an agent that never reads the image reference writes off as infrastructure noise.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Configuration checks land before the image reaches the registry",
+      "max_score": 28,
+      "description": "Configuration scanning covers every image published to the internal registry and runs before the push in .github/workflows/publish.yml - added to that workflow, or to something that gates it. Scores zero if the delivered configuration coverage runs only on the 03:00 schedule, only on the pull-request path, or nowhere: the April wording is 'before that image is published there', and publish.yml pushes on every merge. Moving it to the nightly slot and asserting in the plan that M. Prieto's commitment is met scores zero for this criterion. Placing it on the publish path but after the push step scores at most half."
+    },
+    {
+      "name": "MUST NOT leave the heavy scanners on the pull-request command",
+      "max_score": 18,
+      "description": "MUST NOT deliver a pull-request command that still runs the misconfiguration and licence scanners. If either is named on the pull-request path this scores zero however fast the job became. Reaching the time budget only by caching the vulnerability database, trimming the timeout, or splitting the job into parallel jobs that each still run everything scores zero here as well - nothing left the pull-request path."
+    },
+    {
+      "name": "Unfixable findings filtered out of the gate",
+      "max_score": 16,
+      "description": "The blocking command excludes vulnerabilities with no available fix, so the set that stops a pull request is the 11 actionable HIGH and CRITICAL findings rather than all 37. Absent, scores zero. Applying the same filter to the scheduled full run as well scores at most half - the 284 findings with no published patch then appear nowhere, and the scheduled run is the only place left that can count them."
+    },
+    {
+      "name": "Secret scanning survives the reduction",
+      "max_score": 12,
+      "description": "The pull-request command still scans for secrets on every change, as R. Adeyemi's commitment requires. Scores zero if the delivered pull-request command runs vulnerability scanning alone - naming only the vulnerability scanner drops the secret scanning that was running beside it, and the plan claiming that commitment is met while the command no longer covers it scores zero regardless of what else is right."
+    },
+    {
+      "name": "Licence enumeration still happens at least weekly",
+      "max_score": 10,
+      "description": "Licence scanning runs on a cadence of at least once a week against images published to the registry, and its output is retained. Scores zero if the licence scanner is deleted outright, or if the scheduled path is changed to run the same reduced command as the pull-request path so that nothing enumerates licences at all."
+    },
+    {
+      "name": "Floating scanner tag pinned",
+      "max_score": 10,
+      "description": "The scanner is pulled at a fixed version instead of the moving tag in the workflow, and the plan connects that to the 25th - a new scanner release arrived during the day and the unknown-flag error cleared when a later re-run landed on a settled build. Scores zero if a moving tag survives anywhere on the gating path, or if the failure on the 25th is attributed to the runner, the registry or a transient network problem."
+    },
+    {
+      "name": "Severity threshold on the gating run",
+      "max_score": 8,
+      "description": "The pull-request run blocks on CRITICAL and HIGH only. Scores zero if the 188 MEDIUM and 97 LOW findings can still fail a pull request, or if the threshold is narrowed so far that HIGH stops blocking."
+    },
+    {
+      "name": "Plan states the new blocking set and where each commitment is met",
+      "max_score": 6,
+      "description": "docs/image-scan-plan.md names what blocks a pull request now with a number derived from the attached breakdown, and maps each of the three April commitments to the point in the pipeline that now satisfies it. Scores zero if it lists the new command without saying what a developer will be stopped by, or if a reader cannot tell where licence findings went."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The scan workflow is edited, any coverage that moved exists in a delivered file, and docs/image-scan-plan.md is written."
+    }
+  ]
+}

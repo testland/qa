@@ -1,0 +1,24 @@
+name: a11y
+on:
+  pull_request:
+
+jobs:
+  a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: pick pages (4 min instead of 40 - p.raman 2026-07-02)
+        run: |
+          git diff --name-only origin/main...HEAD \
+            | sed -n 's#^app/routes\(.*\)\.tsx$#\1#p' \
+            | sed 's#/index##' \
+            | sort -u > pages.txt
+      - name: scan
+        run: npx @storefront/a11y-scan --urls-from pages.txt --out reports/scan-latest.json
+      - name: gate
+        run: node scripts/a11y-gate.js reports/scan-latest.json

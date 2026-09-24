@@ -1,0 +1,9 @@
+{
+  "name": "warehouse-roster",
+  "version": "1.9.3",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  }
+}

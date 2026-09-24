@@ -1,0 +1,46 @@
+{
+  "context": "A hint popup on a strip of icon-only buttons, where the person who owns the component has already proposed two shortcuts and the sprint closes Friday. Predicted baseline failure: the agent takes both of Ines's suggestions, or at least the first one. Wiring up the timeout that is already sitting unused in src/strip.js is the cheapest possible answer to Marek's observation 6, it is what the component's owner asked for, it matches what the editor does, and it removes the need to write any dismissal code - so the agent has four separate reasons to say yes and nothing in the prompt telling it not to. A hint that removes itself on a timer is not dismissable by the user and is not persistent while the trigger is still there; observation 4 is the report of that timer already harming a real reader mid-sentence, and observation 5 is the report of the hint not surviving the pointer travelling towards it. The second suggestion is the same failure in a different disguise: the native title attribute is not surfaced on keyboard focus, cannot be dismissed, cannot be hovered and is announced inconsistently, so trading the hint elements for it deletes the fix rather than delivering it. The third thing the agent is predicted to leave alone is aria-live='assertive' on every hint element, which is already in the render and looks like the thing that makes hints get announced - it is the opposite: a hint is announced because the control it belongs to points at it, and a live region on top of that interrupts whatever the user was listening to on every pointer movement across the strip. The determinate half is ordinary and should be done: six buttons with no accessible name, six separate tab stops across one bar of controls, and no way to open a hint from the keyboard at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite green",
+      "max_score": 5,
+      "description": "src/strip.js is edited, docs/view-actions-keyboard.md lists the bindings and answers all six of Marek's observations, and npm test passes. A suite left failing scores at most half. No edit to src/strip.js scores zero."
+    },
+    {
+      "name": "MUST NOT let a hint remove itself on a timer",
+      "max_score": 30,
+      "description": "MUST NOT take Ines's first suggestion. hintTimeout must not survive as a live path that hides an open hint after an interval, and no new timer, delay or auto-hide may be introduced in its place. Any delivered code that hides a showing hint on elapsed time alone scores zero for this criterion however good the rest is, and so does a docs file that agrees to it. Full marks require all three of: the hint stays up for as long as the pointer or focus that opened it is still there; Esc closes it without moving the pointer or focus off the control; and the docs file gives that as the reason for turning Ines down, tied to observations 4 and 6 rather than to taste. Adding Esc dismissal but keeping the timer scores at most half."
+    },
+    {
+      "name": "MUST NOT trade the hint elements for the native title attribute",
+      "max_score": 14,
+      "description": "MUST NOT take Ines's second suggestion. Delivering title attributes on the buttons in place of the hint elements, or as a belt-and-braces addition alongside them, scores zero. Full marks require the docs file to turn it down with a reason a designer can check: the browser's own tooltip does not appear on keyboard focus, cannot be dismissed or hovered, and is announced inconsistently, so it answers none of observations 3, 5 or 6. Declining it with no reason, or leaving the suggestion unanswered, scores at most half."
+    },
+    {
+      "name": "A hint is reachable from the keyboard",
+      "max_score": 18,
+      "description": "Focus opens the hint for the focused button and moving focus away closes it, so the strip has a keyboard path to the hints and not only a pointer one - verifiable by a test that opens a hint without any pointer call. Leaving the hint reachable only through pointerEnter scores zero. Full marks also require the hint to stay up while the pointer moves from the button onto the hint itself, which is observation 5; handling focus but leaving observation 5 unanswered scores at most half."
+    },
+    {
+      "name": "MUST NOT announce the hints through a live region",
+      "max_score": 12,
+      "description": "MUST NOT leave aria-live='assertive' on the hint elements and MUST NOT substitute a different politeness setting, role='alert' or role='status' for it. Any live-region or alert semantics remaining on a hint scores zero for this criterion. A hint is reached through the description reference the button already carries; a live region on the same element interrupts the user every time the pointer crosses the strip. Removing it silently, with nothing in the docs file, scores at most half."
+    },
+    {
+      "name": "The strip takes one stop in the tab sequence",
+      "max_score": 12,
+      "description": "renderStrip emits tabindex '0' on exactly one button and '-1' on the other five, with left/right arrow movement between them and Home/End to the ends, so crossing the bar costs one press as observation 1 asks. Leaving all six buttons tabbable scores zero. Arrow movement without Home/End, or a '0' pinned to the first button regardless of which one is active, scores at most half. Introducing any positive tabindex to order the strip scores zero."
+    },
+    {
+      "name": "Icon-only buttons get a name",
+      "max_score": 10,
+      "description": "Each button publishes an accessible name drawn from the action's own label - these are the one case where a label attribute is the right answer, because the button carries an icon and no visible text. Leaving the buttons unnamed scores zero. Using the full hint sentence as the name, so the reader hears a paragraph on every arrow press and the description repeats it, scores at most half."
+    },
+    {
+      "name": "Invalidated assertions rewritten rather than removed",
+      "max_score": 8,
+      "description": "The shipped assertions your change invalidates - the three-second timeout test, the assertive live-region assertion, and the all-six-tabbable assertion - are rewritten in place to pin the new contract. Deleting a test or a test file to get the suite green scores zero, and so does leaving an old assertion satisfied by not making the change it was blocking."
+    }
+  ]
+}

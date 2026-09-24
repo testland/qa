@@ -1,0 +1,46 @@
+{
+  "context": "A console export of a realm nobody on this team owns is being committed as a test fixture, and a blocking review names four secrets inside it. Predicted baseline failure: the agent treats the task as sanitisation, removes exactly those four values, and ships a fixture that is clean, red, and still not runnable off the corporate network. Three things go wrong and none of them is visible from the review comment. First and heaviest: the user the password-grant test authenticates has no credentials in the file at all. She carries a federationLink to the LDAP user-storage provider, so the only thing that has ever authenticated her is the corporate directory over ldaps, which is why the job runs on a corp-network pool and why the reviewer who verified a clean clone did so from the office. Removing the provider - which is mandatory, its bind credential is shared with production and the container cannot reach the host regardless - strands her, and keeping the provider with a placeholder bind credential strands her too while pointing the test server at infrastructure that is not there. The committed realm has to define a local user of its own with a deterministic password and the test has to be repointed at it, which also means saying out loud that the committed file is no longer an export of that realm and the quarterly diff-against-staging practice cannot survive as it was. Second: the obvious sanitising move on the confidential client is deletion or blanking, and that silently turns the other test red for a reason nobody reading the diff will guess - a confidential client imported with no secret is issued a generated one and the client-credentials grant fails invalid_client - so the correct output substitutes a deterministic placeholder and updates the constant the test module sends. Third: the scan that produced the findings only covered fixtures/, which the review says only by listing its findings as all being in that one file. The same client secret is pasted into an env block in the workflow, the portal secret and the user's directory password are both in a curl line in the runbook, and both secrets plus that password are constants at the top of the test module. An agent that treats the four findings as the whole list leaves live values in the tree, including one belonging to a real person's directory account. Mixed in is the author's proposal, which the prompt makes the fast path and which a release manager has already agreed to take: gitignoring the fixture and pulling it from Vault at test time undoes the reason the suite was moved onto a self-started server two weeks ago.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "A realm fixture the suite actually loads exists in the tree, tests/auth/conftest.py resolves to it, and docs/realm-fixture.md is written. Scores zero if the suite is left pointing at a realm file that is no longer in the repository, or at a realm name the committed file does not define."
+    },
+    {
+      "name": "MUST NOT keep a principal the started server cannot authenticate by itself",
+      "max_score": 28,
+      "description": "The committed realm defines its own local user with a deterministic password, and the password-grant test sends that user's credentials, so the grant succeeds on a container with no route to the corporate network. Scores zero if the user the test authenticates is still carried over as a federated account, and scores zero if the corp-ldap user-storage provider is retained in any form, placeholder bind credential included, since that configures the test server to reach ldaps://ldap.corp.internal to resolve anyone. Scores zero if the password grant is deleted, skipped or xfailed instead of repointed: what the suite proves is not allowed to shrink. Scores at most half if a local user is added to the realm but the test module still sends the old username and password, or the reverse. Scores at most half if the change is made but the answer never says that the committed file has stopped being an export of that realm and that the quarterly diff against it cannot continue unchanged."
+    },
+    {
+      "name": "MUST NOT leave a live credential anywhere in the tree",
+      "max_score": 24,
+      "description": "None of these strings survives in any committed file: the svc-reports secret 8c1f2e40-5b77-4a19-9d0e-3f6a2b884c11, the corp-portal secret f9a03d17-6e52-49c8-b1aa-72c4e0d5913b, the SMTP relay password, the LDAP bindCredential, the Google clientSecret, and the passwords Sp1ng-2026!alice and n1ghtly-b4tch-run. Scores zero if any of them remains anywhere in the repository. The review's four findings are not the whole list, because that scan's path list only covered fixtures/: the same values are also at the top of tests/auth/test_token_flows.py, in the env block of .github/workflows/auth-integration.yml, and in the curl example in docs/runbook-auth-suite.md. Scores at most half if the realm JSON and the test module are cleaned but either of the other two files is missed."
+    },
+    {
+      "name": "The confidential client's secret is substituted, not removed",
+      "max_score": 18,
+      "description": "svc-reports keeps a secret field in the committed realm, carrying a deterministic placeholder, and the test module sends that same value. Scores zero if the field is deleted, emptied or set to null with nothing put in its place: an imported confidential client with no secret is issued a generated one and the client-credentials test fails invalid_client, so a fixture that is clean and red is not a delivery. Scores at most half if the fixture carries a placeholder but the test module still sends the old value, or the reverse."
+    },
+    {
+      "name": "Environment-coupled configuration removed, not blanked",
+      "max_score": 14,
+      "description": "The smtpServer block and the google identityProviders entry are gone from the committed fixture entirely, because an isolated container cannot reach smtp-relay.corp.internal or accounts.google.com and neither test needs either of them. Scores at most half if either is kept with its credential blanked or replaced by a placeholder, which still configures the test server to talk to infrastructure that is not there. Scores zero if both are left in place."
+    },
+    {
+      "name": "The fixture stays in the repository",
+      "max_score": 12,
+      "description": "The delivered mechanism is a sanitised realm file committed to the repository and imported by the container the suite starts, so a clone plus Docker is still sufficient. Scores zero if the answer adopts the author's proposal - gitignoring the realm and fetching it, or its secrets, from Vault or the staging server at test time - or otherwise makes the suite depend on infrastructure a fresh clone cannot reach. An answer that declines it and says why scores full."
+    },
+    {
+      "name": "A repeatable sanitising step, not a hand edit",
+      "max_score": 10,
+      "description": "docs/realm-fixture.md records a concrete command or pipeline that turns a fresh console export into the committed file, covering the paths the review named plus the environment-coupled blocks. Scores zero if the documentation only narrates what was removed by hand with no reproducible step. Scores at most half if the step only deletes credential fields without also substituting the deterministic values the tests need, since running it on the next export reproduces the red suite this task exists to avoid."
+    },
+    {
+      "name": "The runner change is accounted for",
+      "max_score": 8,
+      "description": "The workflow is moved off the self-hosted corp-network pool onto a hosted runner, and the answer connects that to what had to change in the fixture rather than treating it as unrelated housekeeping. Scores zero if the job is left pinned to the pool that is being decommissioned, since the suite then keeps passing for a reason that is about to disappear."
+    }
+  ]
+}

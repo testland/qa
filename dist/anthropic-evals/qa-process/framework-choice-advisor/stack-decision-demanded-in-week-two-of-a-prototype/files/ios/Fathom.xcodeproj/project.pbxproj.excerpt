@@ -1,0 +1,11 @@
+/* Excerpt - test targets only */
+		A1B2C3D41 /* FathomUITests */ = {
+			isa = PBXNativeTarget;
+			name = FathomUITests;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		A1B2C3D42 /* FathomTests */ = {
+			isa = PBXNativeTarget;
+			name = FathomTests;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};

@@ -1,0 +1,41 @@
+{
+  "context": "Two failures with two different causes, presented together so they look like one async problem with one async answer. Predicted baseline failure: the agent treats both as the same thing, repairs or replaces the idling resource, and declares the hang fixed - because 'network work the framework cannot see' is the reflexive reading of any post-AsyncTask breakage. It does not survive the evidence. The hang is not a network wait at all: `OrderStatusTicker.run` calls `handler.post(this)` on the main looper with no delay, so the main message queue always holds a message that is due, the logcat shows 8931 ticks at 2-4 ms spacing, and the exception names `MAIN_LOOPER_HAS_IDLED` rather than any resource - a condition no idling resource, longer timeout or sleep can satisfy, because the fault is that the screen never goes quiet. The fast failure is the network one, and the reason Priya's class made no difference is subtle and split across two files: `OrdersListTest.setUp` constructs `NetworkIdlingResource()` and registers that object, while `OrdersRepository` increments and decrements the separate instance held in its companion, so the registered resource is permanently idle. There is a third defect in the same file - neither `onFailure` branch decrements, and the gateway shows one seeded order's detail returning 404 - which a fix that only corrects the instance will convert from a silent no-op into a permanent hang.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT answer the twenty-six second hang with a wait, a longer timeout or an idling resource",
+      "max_score": 30,
+      "description": "Giving the two failures the same cause, or wrapping the ticker in an idling resource, scores zero for this criterion regardless of the rest. Full marks require the diagnosis and the repair: `OrderStatusTicker` reposts itself to the main handler with no delay, so the main message queue is never empty of work that is due now and the framework's first synchronisation condition can never be met - which is why the exception names the looper and not a resource - and the ticker is fixed so it runs on the cadence the migration note describes rather than continuously. Naming the ticker as the cause but leaving it reposting immediately scores at most half."
+    },
+    {
+      "name": "The registered resource is the one production actually moves",
+      "max_score": 24,
+      "description": "Full marks require all three: the test registers the same instance `OrdersRepository` increments rather than constructing its own, both `onFailure` branches decrement so the 404 on `GET /v1/orders/NW-10091` cannot strand the counter, and the resource is unregistered after each test. Leaving `setUp` constructing and registering a fresh `NetworkIdlingResource()` scores zero. Correcting the instance without the failure-path decrements scores at most half, since that change turns a resource that never blocked into one that blocks forever on the seeded 404."
+    },
+    {
+      "name": "MUST NOT introduce fixed waits or raise any timeout",
+      "max_score": 14,
+      "description": "No `Thread.sleep`, no polling or retry loop, and no change to the idling timeout policy anywhere in the delivered code. Any of those scores zero, including a sleep kept only in the test that hangs, and including a shorter sleep than the three seconds proposed."
+    },
+    {
+      "name": "Explanation separates what the framework tracks from what it does not",
+      "max_score": 12,
+      "description": "`docs/orders-async-fix.md` tells a reviewer why the old code was green without any of this - the framework waited on the message queue and on the task type the migration deleted - and why one of the two remaining failures is a gap in what it can see while the other is the opposite, work it can see and that never ends. An explanation that says only 'the framework needs help with background work' scores at most half. An explanation that attributes the hang to emulator slowness or network latency scores zero."
+    },
+    {
+      "name": "Both proposals answered",
+      "max_score": 8,
+      "description": "Priya's sleep and Karim's ninety-second timeout each get an explicit verdict with the reason it does not hold for these particular failures. Addressing only one, or rejecting both without reference to what the evidence shows, scores at most half."
+    },
+    {
+      "name": "Passing test and assertions left alone",
+      "max_score": 6,
+      "description": "`showsEmptyStateForNewAccount` is not modified and still passes, and no assertion in the class is deleted, relaxed or replaced with a presence check. Any change to the passing test, or any weakened assertion, scores zero."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 4,
+      "description": "`docs/orders-async-fix.md` exists and addresses the two failures separately. A single combined explanation scores at most half."
+    }
+  ]
+}

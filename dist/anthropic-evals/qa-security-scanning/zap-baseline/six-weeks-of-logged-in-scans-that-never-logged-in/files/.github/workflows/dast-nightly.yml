@@ -1,0 +1,25 @@
+name: DAST nightly (console)
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Lint the context file
+        run: node scripts/context-lint.js .zap/context.xml
+      - name: Authenticated crawl
+        run: |
+          docker run --rm -v $(pwd):/zap/wrk/:rw \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py \
+              -t https://console.brightpath.dev \
+              -n /zap/wrk/.zap/context.xml \
+              -J zap-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: zap-nightly, path: zap-report.json }

@@ -1,0 +1,9 @@
+# collected 2026-09-02..2026-09-05 on ci-runner-03, preview build, mobile preset
+route,traffic_class,auth,runs,lcp_median_s,lcp_p95_s,tbt_median_ms,cls_median,sessions_share_pct
+/,cached,public,3,1.9,2.4,120,0.02,31
+/pricing,cached,public,3,2.1,2.6,140,0.03,9
+/search,dynamic,public,3,3.4,4.1,310,0.11,17
+/checkout/details,form-heavy,logged-in,3,2.6,3.0,180,0.02,12
+/checkout/pay,form-heavy,logged-in,3,2.8,3.3,210,0.03,11
+/account/orders,dynamic,logged-in,3,3.1,3.9,260,0.07,14
+/reports/export,api-heavy,logged-in,1,5.2,5.2,690,0.04,6

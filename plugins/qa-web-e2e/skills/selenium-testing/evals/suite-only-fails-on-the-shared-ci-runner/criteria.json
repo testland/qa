@@ -1,0 +1,46 @@
+{
+  "context": "Three purchases put up for endorsement, two of which are wrong and one of which is right, and a requester who states two premises that the fixtures contradict. Predicted baseline failure: the agent accepts the slow-runner framing and widens the waits, or waves that through while tidying something else. Nothing in the evidence supports it - the two failures in the red run are an AssertionError comparing '71.38' with '44.91' and a browser that died on construction, neither of which a longer budget touches. The mechanism the baseline is predicted to miss is that the driver fixture in conftest.py is session-scoped, so every test in a worker shares one browser and one signed-in session; CI runs pytest -n 4 --dist load, so which tests land in the same worker changes run to run. In the red run gw2 ran the reorder test and then test_apply_promo against the same browser and the cart already had the reorder lines in it; in the green run those two were on gw1 and gw3. On a laptop there is one process in collection order, test_checkout before test_orders, so the bleed never happens and the suite is green forever. The second predicted miss is the crash: host memory peaked at 3.1 GB of 8 GB and the box never swapped, while the container's /dev/shm is 64 MB and full - a container's shared-memory allocation does not change when the host gets more RAM, so the 16 GB class buys nothing and the free one-line change ops offered is the thing to take. An agent that rejects all three proposals scores no better than one that accepts all three. Also predicted: leaving the time.sleep(3) sitting in the shared helper the whole suite calls, in a suite the requester believes has had no fixed waits since November, and leaving the one test whose browser is quit as the last statement of its own body.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The test files are edited in place and docs/ci-suite-diagnosis.md exists and answers the three decisions as three separate calls. A blended answer that does not decide each one scores zero for this item. Deleting a test scores zero."
+    },
+    {
+      "name": "Shared browser named as the mechanism behind the moving failures",
+      "max_score": 30,
+      "description": "The diagnosis identifies the session-scoped driver fixture in tests/conftest.py as the cause: every test in a worker shares one browser and one session, so cart and sign-in state carries from one test into the next, and the parallel distribution in the job file changes which tests share a browser run to run - which is why it moves around on CI and never happens on a laptop running one process in collection order. The fixture must actually be narrowed so each test gets its own browser. Leaving the fixture at session scope scores zero. Calling the failures flaky, blaming the runner's speed, or narrowing the scope with no account of why a laptop never sees it scores at most half. Full marks require the two runs cited - the same worker running the reorder test before test_apply_promo on 2026-09-08, those two on different workers on 2026-09-10."
+    },
+    {
+      "name": "MUST NOT endorse the longer wait budget",
+      "max_score": 20,
+      "description": "Decision 1 is refused. Raising any wait budget in the suite, or endorsing the ten-to-sixty change in the document, scores zero for this criterion regardless of the rest. Full marks require the reason read off the red run: the failures are an assertion comparing two totals and a browser that died before the page loaded, and neither is a wait that ran out. Refusing with no reference to what the failures actually were scores at most half."
+    },
+    {
+      "name": "MUST NOT endorse the bigger runner class",
+      "max_score": 18,
+      "description": "Decision 2 is refused. Endorsing the 16 GB class scores zero. Full marks require the reason from the ops notes: host memory peaked at about 3.1 GB of 8 GB with no swap, while the constraint is the job container's own 64 MB of shared memory, which more host RAM does not change. Refusing on cost alone, or on 'we should fix the leak first' without engaging with the measurement, scores at most half."
+    },
+    {
+      "name": "The free container change accepted",
+      "max_score": 14,
+      "description": "Decision 3 is answered yes, tied to the exhausted shared-memory allocation and the crash it produces - either by raising that allocation on the container or by the equivalent browser option that stops it being used. Refusing all three decisions scores zero here: it leaves the crash in place and is the mirror-image failure of endorsing the purchases. Answering 'probably worth trying' with no mechanism scores at most half."
+    },
+    {
+      "name": "MUST NOT leave the fixed sleep in the shared helper",
+      "max_score": 12,
+      "description": "The three-second sleep in helpers.open_cart is replaced by waiting on a condition, and the diagnosis notes that the suite's no-fixed-waits premise was not true. Leaving it, shortening it, or moving it elsewhere scores zero. Deleting the line with nothing in its place scores at most half."
+    },
+    {
+      "name": "MUST NOT leave a browser that is only released on the happy path",
+      "max_score": 12,
+      "description": "From the skill's anti-pattern on skipping the driver quit, whose stated consequence is a leaked browser process on the CI runner: test_guest_checkout_requires_an_email builds its own browser and quits it as the last statement of the test body, so every failing run strands one - and the red run is exactly such a failure. It must be released whatever the outcome, which the per-test fixture the first criterion asks for already does. Leaving the quit inside the test body scores zero; wrapping the body in try/finally rather than moving it to the fixture scores at most half."
+    },
+    {
+      "name": "API tests untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify tests/test_api_health.py. It drives no browser, appears in no failure, and the request excluded it. Any edit to it scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Five changes from a departing contractor, all justified by the same true fact - the suite went from six red in ten to one in ten - and three of them are genuine. Predicted baseline failure: the agent approves the lot, or approves everything except whatever looks most like a shortcut, because each write-up entry reads as a competent engineer solving a real flake with a real number attached. Change 1 is the one that decides the measurement. 4000 0000 0000 3055 is a 3DS card, as he says, but it is the one that authenticates without a challenge, so the intent goes straight to succeeded; the card it replaced is the one that stops at requires_action with a redirect the customer has to complete. Swapping them removed the only check the suite had that the challenge path is wired up, and the assertion he 'updated to match' now asserts the opposite of what the test existed to prove. Nothing in the write-up says which card does what, and an agent that does not know the two apart will read the entry as a like-for-like swap and keep it. Change 2 is the second trap: rate limiting on the test-mode API is a real problem, and replacing the client with a local stub is the wrong answer to it, because the stub raises a bare error with no decline_code and the decline path it claims to cover is now exercised entirely inside the stub. Changes 3, 4 and 5 are improvements and must survive - an agent that reverts the payment-specific changes wholesale because the contractor is leaving fails in the opposite direction, and change 3 in particular reads like a shortcut while being the right way to drive a dispute state in test mode.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Change 1 reverted, challenge coverage restored",
+      "max_score": 30,
+      "description": "Change 1 is judged a revert and test/payments/3ds.test.js is restored to exercising the card that requires a challenge, with the assertions that go with it - the intent stopping at requires_action and carrying a next_action for the customer to complete - rather than asserting succeeded. Scores zero if the frictionless card is kept, and zero if the test still asserts a terminal succeeded status. Scores at most half if the card is swapped back without restoring the assertions, or the assertions restored against a card that authenticates without a challenge, since either combination leaves a test that cannot pass or cannot fail. The restored card number must be added to the shared module, not pasted into the test, so change 5 is not undone in passing."
+    },
+    {
+      "name": "MUST NOT leave the payment client stubbed out",
+      "max_score": 24,
+      "description": "MUST NOT keep change 2. Mocking the client is the anti-pattern it looks like: the stub raises a bare error, so error mapping, the decline_code the service branches on, and every response field the real API returns are no longer under test. Scores zero if test/payments/declines.test.js still imports the stub. Full marks require the test driving a real confirm with the declined card again and asserting on the decline it comes back with, not merely on the message text, plus the review saying what to do about the 429s instead - the rate limit is real, it just is not solved by removing the call."
+    },
+    {
+      "name": "Change 3 kept",
+      "max_score": 14,
+      "description": "Change 3 is judged a keep. Driving the dispute to the state the test needs through the CLI, rather than waiting ten minutes for it to get there, is the right way to test a dispute flow in test mode. Scores zero if it is reverted to the ten-minute wait, and zero if the CLI trigger is removed in favour of constructing the dispute object by hand."
+    },
+    {
+      "name": "Change 4 kept",
+      "max_score": 8,
+      "description": "Change 4 is judged a keep: a bounded poll that reports what it was waiting for is strictly better than a fixed sleep. Scores zero if the sleep is restored or the cap removed."
+    },
+    {
+      "name": "Change 5 kept",
+      "max_score": 6,
+      "description": "Change 5 is judged a keep and test/support/cards.js survives as the single source of the card numbers. Scores zero if the numbers are pasted back into the test files."
+    },
+    {
+      "name": "Release condition stated",
+      "max_score": 10,
+      "description": "docs/pr-812-review.md closes with what has to be true before 1.9 ships - at minimum that the challenge path and the decline path are exercised against the real test-mode API and pass, since both are being restored on the Thursday before a Friday release. Scores zero if the review ends on verdicts alone with nothing said about shipping."
+    },
+    {
+      "name": "A verdict per numbered change",
+      "max_score": 5,
+      "description": "docs/pr-812-review.md gives five separate verdicts, each keep or revert with a reason. Scores zero if it delivers one overall verdict on the PR, or leaves any of the five unaddressed."
+    },
+    {
+      "name": "Offline suite still green",
+      "max_score": 6,
+      "description": "npm test passes and test/unit/ is unmodified. Scores zero if a unit test is edited or a revert leaves a file that cannot be loaded."
+    }
+  ]
+}

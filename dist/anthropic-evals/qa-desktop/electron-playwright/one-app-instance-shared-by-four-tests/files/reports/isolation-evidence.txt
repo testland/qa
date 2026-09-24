@@ -1,0 +1,56 @@
+$ npx playwright test tests/e2e/workspace.spec.ts
+Running 4 tests using 1 worker
+
+  ok 1 workspace create
+
+  2) workspace rename persists
+
+     Error: expect(locator).toBeVisible()
+     Expected: visible
+     Received: hidden
+     waiting for getByRole('heading', { name: 'Payroll 2026' })
+     (the rename dialog reported "name already in use")
+
+  3) recent workspaces lists one entry for this run
+
+     Error: electron.launch: Process failed to launch!
+     [ERROR:SingletonLock] File exists
+     (/Users/marek/Library/Application Support/Ledgerline/SingletonLock)
+
+  4) a second instance focuses the window already open
+
+     Error: electron.launch: Process failed to launch!
+     [ERROR:SingletonLock] File exists
+     (/Users/marek/Library/Application Support/Ledgerline/SingletonLock)
+
+  3 failed, 1 passed (2m 41s)
+
+$ ps -ax | grep -c '[L]edgerline'
+3
+
+$ npx playwright test tests/e2e/workspace.spec.ts --grep "workspace rename"
+  1 failed, 0 passed (24.1s)
+
+$ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
+
+  1) recent workspaces lists one entry for this run
+
+     Error: expect(received).toHaveLength(expected)
+     Expected length: 1
+     Received length: 34
+
+$ rm -rf ~/Library/Application\ Support/Ledgerline
+$ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
+  1 passed (9.4s)
+
+$ npx playwright test tests/e2e/workspace.spec.ts --grep "recent workspaces"
+  1 failed, 0 passed (9.8s)
+     Received length: 2
+
+--- branch spike/drop-single-instance-lock, 2026-09-10 ---
+
+src/main/index.ts: requestSingleInstanceLock() call and the second-instance
+handler both commented out; two copies of the app now run happily side by side.
+
+$ npx playwright test tests/e2e/workspace.spec.ts --grep "second instance"
+  1 passed (11.8s)

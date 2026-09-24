@@ -1,0 +1,17 @@
+services:
+  mail:
+    image: axllent/mailpit:v1.20.0
+    environment:
+      # PR #1043 (2026-07-29): after the mailer grew credentials, local sends
+      # started failing with "must issue a STARTTLS command first". These two
+      # cleared it and CI has been green since.
+      MP_SMTP_AUTH_ACCEPT_ANY: '1'
+      MP_SMTP_AUTH_ALLOW_INSECURE: '1'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+
+  app:
+    build: .
+    env_file: .env.test
+    depends_on: [mail]

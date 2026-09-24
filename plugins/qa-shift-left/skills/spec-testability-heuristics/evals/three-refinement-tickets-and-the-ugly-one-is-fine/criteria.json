@@ -1,0 +1,51 @@
+{
+  "context": "The ticket that reads worst is the only one an engineer and a tester could both sign off, and it is baited so that the two most natural reasons to reject it are both out of bounds. Predicted baseline failure: the agent backs Callum. ENG-812 is lowercase, opens with 'esther asked for this on the call again. build it.', carries no user story, no acceptance-criteria structure, no definition of done and the misspelling 'filtes', and on top of that it specifies a CSV escaping rule that is simply wrong - RFC 4180 section 2.7 escapes an embedded double quote by doubling it, and the backslash form the ticket mandates is not read by Excel or by any conforming parser, so the ticket's own stated reason for the rule is false. The agent is predicted to cash that in as a readiness problem and send the ticket back, when the rule is the least ambiguous line on the page: an engineer writes those exact bytes and a tester asserts them, and the two of them agree perfectly about a format that happens to be wrong. Wrong and unfinishable are different failures, and only the second one belongs in this decision; the correction belongs in a note to the author, not in the list of things stopping the ticket. ENG-820 is predicted to be called the best-prepared of the three - it has the user story, the Background, the signed-off Reorder-2026Q1 frames and a definition-of-done checklist - when all four of its acceptance criteria ('intuitive', 'minimal thought', 'best-in-class', 'visually consistent', 'gracefully') are judgements two people make differently and none names a surface, a number or a comparison target. ENG-834 is predicted to be graded ready because it looks like ENG-820 and reads more concretely; in fact its second criterion is finished (7 days, expired, 410) while its first never says what separates the pasted addresses, how many may be pasted at once, or what happens to an address already invited or already a member - a gap the author closes in one sentence in the meeting, which is neither ready nor sent back and is the call an agent that sorts into good and bad never produces. Esther's question is the fourth trap: nothing in any of the three tickets says how many rows any report returns, so the cap cannot be judged from what was supplied, and the agent is predicted to answer it anyway.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT hold ENG-812 over the escaping rule",
+      "max_score": 30,
+      "description": "ENG-812's rule that an embedded double quote is escaped as backslash-quote is wrong - RFC 4180 doubles the quote instead - and it is also completely unambiguous, so an engineer and a tester reading it land in the same place. MUST NOT list it among the things that stop ENG-812 going to the squad, and MUST NOT present it as a defect in how the ticket is written rather than in what it asks for. Either scores zero for this criterion. Calling ENG-812 not ready, or ready only once the escaping is changed, scores zero regardless of the rest. Recording the correction once, outside the list of things holding the ticket up and marked as something the author should fix before anyone builds it, costs nothing and is the better answer. Passing over the rule entirely without noticing it scores at most three quarters."
+    },
+    {
+      "name": "ENG-812 stands as ready, with none of Callum's objections adopted",
+      "max_score": 20,
+      "description": "ENG-812 is the ticket the squad can start on Monday as it stands. MUST NOT raise any of these against it: the missing user-story sentence, the absent acceptance-criteria structure, the lowercase or imperative prose, the misspelling 'filtes', the 'esther asked for this on the call again. build it.' opener, or the absence of a definition of done. Each one raised loses a sixth of this criterion; three or more scores zero, as does endorsing Callum's rejection. Asking for the ticket to be 'tidied up', 'restructured into criteria' or 'rewritten as a user story' counts as raising a problem even where it is phrased as optional."
+    },
+    {
+      "name": "ENG-820 cannot be started, and its shape earns it nothing",
+      "max_score": 18,
+      "description": "ENG-820 is the one the squad cannot start on Monday. Naming it as the best-prepared of the three, or as ready subject to minor edits, scores zero. Full marks require all four of its acceptance criteria raised; three of four scores at most three quarters, two or fewer at most half. Citing the user story, the Background or the definition-of-done checklist as evidence that it is further along scores at most half for this criterion regardless of how many criteria are found."
+    },
+    {
+      "name": "ENG-834 lands between the other two",
+      "max_score": 16,
+      "description": "ENG-834 is neither startable as it stands nor sent back: it needs one answer from the author, on criterion 1, and criterion 2 is explicitly left alone. Giving it the same standing as ENG-820 scores zero. Calling it fully ready with nothing to settle scores zero. Raising criterion 2 - the 7 days, the expired state, the 410 - scores at most half. The stated reason for criterion 1 must be what it never says about its inputs and its people: what separates the pasted addresses, how many may be pasted at once, and what happens to an address already invited or already a member of the org. Flagging criterion 1 as unmeasurable or unclear in general, without naming the missing input domain, scores at most half."
+    },
+    {
+      "name": "Replacement wording is paste-ready and reuses the comparison the ticket already names",
+      "max_score": 14,
+      "description": "Every criterion raised is paired with wording the requester could put into the ticket in the meeting, each naming a surface, a comparison target or a number. A row that returns 'make this measurable', 'define what good means', 'add acceptance criteria' or 'clarify with the author' without supplying the sentence scores zero for that row; no row anywhere supplying wording scores zero for the criterion. Full marks additionally require that the replacement for ENG-820 criterion 3 compares the screen against the Reorder-2026Q1 frames named in that ticket's own Background, rather than against an invented style guide or design system."
+    },
+    {
+      "name": "MUST NOT answer Esther's question",
+      "max_score": 10,
+      "description": "MUST NOT return a verdict on whether 50,000 rows is enough. Nothing supplied says how many rows any report returns, how large the largest account's data set is, or what anyone exports today, so the question cannot be settled from these three tickets. Answering 'yes, 50,000 is plenty' or 'no, raise it' scores zero, as does hedging toward either with a figure of the agent's own. Full marks require saying plainly that it cannot be answered from what was given and naming what would have to be measured to answer it. Ignoring the question without saying anything scores at most half - the requester asked directly."
+    },
+    {
+      "name": "MUST NOT assess the non-claims",
+      "max_score": 10,
+      "description": "MUST NOT assess as acceptance criteria: the 'so that ...' clauses in ENG-820 and ENG-834, ENG-820's Background paragraph, the four Definition-of-done checkboxes, or ENG-812's 'esther asked for this on the call again. build it.' opener. None of them asserts what the system does. Any of them appearing as a row scores zero here. Observing in passing that ENG-820's Background names the comparison target its criteria are missing does not count against this."
+    },
+    {
+      "name": "MUST NOT edit the tickets",
+      "max_score": 6,
+      "description": "tickets/ENG-812.md, tickets/ENG-820.md and tickets/ENG-834.md are byte-identical to the supplied fixtures. Rewriting ENG-820's criteria in place, correcting 'filtes' or the escaping rule in the file, or restructuring ENG-812 scores zero here even where the same wording also appears in the triage document."
+    },
+    {
+      "name": "Deliverable with a standing per ticket",
+      "max_score": 4,
+      "description": "docs/refinement-triage.md exists and carries a distinct standing for each of ENG-812, ENG-820 and ENG-834. Two tickets sharing one verdict paragraph, or a document that covers only some of the three, scores at most half."
+    }
+  ]
+}

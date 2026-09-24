@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: fct_shipments
+    columns:
+      - name: shipment_id
+        data_tests:
+          - unique
+          - not_null
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['label_created', 'in_transit', 'delivered', 'exception']
+      - name: shipped_at
+        data_tests:
+          - not_null
+      - name: delivered_at
+        data_tests:
+          - not_null
+
+  - name: stg_web_sessions
+    columns:
+      - name: session_id
+        data_tests:
+          - unique
+          - not_null
+      - name: landing_path
+        data_tests:
+          - not_null
+
+  - name: fct_orders
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: account_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_accounts')
+                field: account_id
+
+  - name: dim_accounts
+    columns:
+      - name: account_id
+        data_tests:
+          - unique
+          - not_null

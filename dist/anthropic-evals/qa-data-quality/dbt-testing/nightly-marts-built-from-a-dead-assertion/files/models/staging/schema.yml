@@ -1,0 +1,36 @@
+version: 2
+
+sources:
+  - name: stripe
+    schema: raw_stripe
+    tables:
+      - name: payments
+      - name: refunds
+
+models:
+  - name: stg_payments
+    description: One row per Stripe payment, amounts in major units.
+    columns:
+      - name: payment_key
+        description: Surrogate key for the payment.
+        data_tests:
+          - key_populated
+          - unique
+
+  - name: stg_refunds
+    description: One row per Stripe refund.
+    columns:
+      - name: refund_key
+        data_tests:
+          - not_null
+      - name: reason_code
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['duplicate', 'fraudulent', 'requested_by_customer']
+
+  - name: stg_orders
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null

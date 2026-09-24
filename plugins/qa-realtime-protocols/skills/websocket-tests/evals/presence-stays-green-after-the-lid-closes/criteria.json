@@ -1,0 +1,41 @@
+{
+  "context": "src/keepalive.js refreshes lastSeen inside the interval handler immediately after socket.ping(...), so the connection's own outbound heartbeat counts as evidence that the peer is alive, and there is no 'pong' listener anywhere - IDLE_LIMIT_MS is exported and never read. Nothing can ever conclude the peer is gone. Predicted baseline failure: the agent adds a test that sends a ping, calls socket.replyPong(), and asserts the stamp moved - a green test that exercises the fake and proves nothing, because the gateway's defect is what happens when the pong never arrives. The second predicted failure is the ping payload. diagnostics(session) serialises the session id, user, build, region and room list into roughly 190 bytes and that string is handed to socket.ping(), but a ping is a control frame and control-frame payloads are capped at 125 bytes; the fixture's FakeSocket records any payload without complaint, so nothing in the suite or the ops report points at it and an agent that does not already know the cap will not find it. A third predicted error is fixing liveness by watching outbound writes or connection age instead of something the peer actually sent - the connection-age report exists to close that off, since every one of those 41,204 sockets is being written to successfully every 30 seconds.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "test/keepalive.liveness.test.js and docs/keepalive.md both exist and src/keepalive.js has been changed. Producing only the document scores zero."
+    },
+    {
+      "name": "A peer that never answers is reaped, and liveness comes from the peer",
+      "max_score": 32,
+      "description": "The new suite drives a connection that receives pings and never answers, advances the clock past the deadline, and asserts the connection is dropped from the gateway. Full marks also require the source change that makes it possible: the `lastSeen = now()` that follows socket.ping(...) is gone, a 'pong' handler refreshes the stamp, and the interval handler acts on the deadline. If the delivered suite contains no case in which the peer stays silent, this scores zero. If the source still treats sending a ping as evidence of liveness, this scores zero even when a deadline check has been added, because the deadline can then never be reached."
+    },
+    {
+      "name": "MUST NOT settle for the happy-path exchange",
+      "max_score": 16,
+      "description": "The delivered suite MUST NOT rest on a ping being answered by a pong, or on a message round-tripping. A pong the test itself emits demonstrates that testutil/fake-socket.js works, not that the gateway notices an absent one. A new suite whose only added assertions are of that shape scores zero for this criterion. Including a pong-arrives case alongside a pong-missing case is fine and scores full marks."
+    },
+    {
+      "name": "Ping payload brought inside the control-frame limit",
+      "max_score": 22,
+      "description": "The diagnostics blob is no longer carried in the ping frame, because a control-frame payload may not exceed 125 bytes and diagnostics(session) produces far more than that; the observability data still reaches its consumer by another route, such as a data frame or a metrics emit. Full marks require an assertion in the delivered suite that pins the limit - every recorded ping payload within 125 bytes - so the blob cannot be reintroduced silently. Leaving socket.ping(diagnostics(session)) in place scores zero. Shrinking or removing the payload with no assertion pinning the limit, or dropping the diagnostics entirely with no replacement route, scores at most half."
+    },
+    {
+      "name": "Reap actually removes the connection",
+      "max_score": 10,
+      "description": "The unanswered connection ends: dropped outright, or a close frame followed by a bounded grace period after which it is dropped. Both are acceptable - a peer that has gone away cannot echo a close frame, so an unbounded wait on one is not. Calling close() and waiting indefinitely scores at most half. A fix that only logs, only marks presence offline, or leaves the socket in place scores zero."
+    },
+    {
+      "name": "Deadline documented as a number",
+      "max_score": 10,
+      "description": "docs/keepalive.md states the interval, the concrete deadline (a duration or a count of unanswered pings), the action taken when it passes, and what the ping frame now carries. A document with no numeric deadline scores zero; one that gives the deadline but says nothing about the ping payload scores at most half."
+    },
+    {
+      "name": "Call-site contract and existing suite intact",
+      "max_score": 6,
+      "description": "startKeepalive takes the same options, still returns stop / lastSeenAt / idleFor, test/keepalive.basic.test.js is byte-identical to the fixture, and npm test passes. Editing the basic test to accommodate the new behaviour scores zero."
+    }
+  ]
+}

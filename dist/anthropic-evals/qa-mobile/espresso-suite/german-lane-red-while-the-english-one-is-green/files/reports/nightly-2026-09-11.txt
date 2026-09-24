@@ -1,0 +1,44 @@
+### Nightly 2026-09-11 - de-lane job, one instrumentation process, pid 6104 throughout
+
+com.northwind.shop.SignupFlowDeTest > signupHeadingIsGerman FAILED
+androidx.test.espresso.base.DefaultFailureHandler$AssertionFailedWithCauseError:
+'with text: is "Konto erstellen"' doesn't match the selected view.
+Expected: with text: is "Konto erstellen"
+     Got: "AppCompatTextView{id=2131231044, res-name=signup_heading, text=Create your account}"
+    elapsed: 1.1s
+
+com.northwind.shop.SignupFlowDeTest > continueButtonAdvancesToDelivery FAILED
+androidx.test.espresso.NoMatchingViewException: No views in hierarchy found matching: with text: is "Weiter"
+    View Hierarchy:
+    +->AppCompatTextView{id=2131231044, res-name=signup_heading, text=Create your account}
+    +->AppCompatEditText{id=2131231012, res-name=email_field, text=dana@northwind.test}
+    +->AppCompatButton{id=2131231007, res-name=continue_button, text=Continue}
+    elapsed: 1.4s
+
+com.northwind.shop.SignupFlowDeTest > emailValidationMessageIsGerman FAILED
+Expected: with text: is "Bitte gib eine gultige E-Mail-Adresse ein"
+     Got: "AppCompatTextView{id=2131231014, res-name=email_error, text=Please enter a valid email address}"
+    elapsed: 1.6s
+
+com.northwind.shop.SignupFlowDeTest > cartTotalIsFormattedForTheLocale FAILED
+Expected: with text: is "1.234,56 EUR"
+     Got: "AppCompatTextView{id=2131231002, res-name=cart_total, text=EUR1,234.56}"
+    elapsed: 1.9s
+
+com.northwind.shop.SignupFlowDeTest > germanTranslationsAreLoaded PASSED (1.0s)
+com.northwind.shop.SignupFlowDeTest > postcodeFieldAcceptsGermanFormat PASSED (1.2s)
+com.northwind.shop.SignupFlowDeTest > signupSucceedsWithValidDetails PASSED (2.3s)
+com.northwind.shop.SignupFlowDeTest > privacyLinkOpensPolicy PASSED (1.1s)
+
+com.northwind.shop.SignupFlowDeTest > errorBannerShownOnDuplicateEmail FAILED
+Expected: with text: is "Diese E-Mail-Adresse ist bereits registriert"
+     Got: "AppCompatTextView{id=2131231021, res-name=error_banner, text=That email address is already registered}"
+    elapsed: 2.2s
+
+9 tests, 4 passed, 5 failed
+
+### Same night, en-lane job, pid 6231 throughout
+
+com.northwind.shop.SignupFlowEnTest - 9 tests, 9 passed
+com.northwind.shop.ReceiptTest - 4 tests, 4 passed
+com.northwind.shop.SearchTest - 6 tests, 6 passed

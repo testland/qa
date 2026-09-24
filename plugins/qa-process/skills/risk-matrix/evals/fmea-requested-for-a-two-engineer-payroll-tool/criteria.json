@@ -1,0 +1,36 @@
+{
+  "context": "Two heavyweight quantitative methods are requested in the same message and they are not symmetrical: one is over-engineering for a nine-person company and the other is exactly the decision that method exists for. Predicted baseline failure: the agent builds the FMEA because the founder asked for it and it looks rigorous, produces a severity-by-occurrence-by-detectability table with RPN values up to 1000 across eight rows, keeps it on slide 14 as instructed, and computes the LedgerLine case from all three incidents at once. Each of those is settled by the fixture. Two engineers will not maintain a detectability rating per failure mode, FMEA belongs to regulated and safety-critical products, and Dolores Kwan's email explicitly prescribes no method while requiring something the team will keep current and whose change history can be inspected at the interim checkpoint - which a deck slide filled in one evening in February and untouched since cannot supply. Cost of Exposure, by contrast, is the right instrument here because the question is a buy or don't-buy decision in money rather than a score. The arithmetic has a trap: of the three incidents in the 18-month window only two are file corruption, and the quote says in as many words that upstream data errors are not covered, so the $4,800 upstream incident must be excluded from the avoided cost. Including it inflates annual exposure from roughly $13,400 to roughly $16,600 and makes the purchase look better than it is. Finally, seven of the eight draft rows carry impact equal to likelihood, including three separate 5x5 rows, which is the signature of scores assigned as a single gut-feel number rather than two independent judgements.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT deliver an FMEA or RPN ranking",
+      "max_score": 30,
+      "description": "MUST NOT produce a failure-mode table carrying severity, occurrence and detectability ratings or a Risk Priority Number, for any subset of the eight risks. Producing one scores zero for this criterion however well the rest of the answer reads, and producing one alongside a lightweight assessment also scores zero. Full marks require the refusal plus both reasons: the method needs specialised expertise and ongoing detectability judgements that a two-engineer team will not sustain, and SOC 2 is an attestation over controls rather than a regime that demands quantitative failure-mode analysis - the auditor's own email prescribes no method. An answer that refuses FMEA without saying what would justify it (regulated or safety-critical products) scores at most half."
+    },
+    {
+      "name": "LedgerLine argued in money on the incidents the service removes",
+      "max_score": 24,
+      "description": "The buy decision is argued as an annual cost of exposure against the one-time plus recurring mitigation cost, with the arithmetic visible. Full marks require the 2025-11-02 upstream-data incident to be excluded from the avoided cost because the quote states the service does not cover anything upstream of file generation, giving roughly two corruption incidents per 18 months at an average near $10,050 and an annual exposure near $13,400, set against $18,000 one-time plus $2,400 per year, with a payback period stated. Either decision is acceptable when the arithmetic and the residual scope are both shown. Computing exposure from all three incidents scores at most half. Answering the buy question with a risk score or a qualitative recommendation rather than a money figure scores zero."
+    },
+    {
+      "name": "Independently scored impact and likelihood",
+      "max_score": 20,
+      "description": "The answer identifies that seven of the eight draft rows have impact equal to likelihood - three of them at 5 and 5 - treats that as evidence the two dimensions were assigned as one number rather than judged separately, and re-scores them independently in the delivered assessment. Carrying the draft's ratings through unchanged scores zero. Noting the pattern but leaving every rating as it was scores at most half."
+    },
+    {
+      "name": "MUST NOT leave the assessment living in the deck",
+      "max_score": 14,
+      "description": "MUST NOT deliver the assessment as slide 14 or as deck content. It goes into a version-controlled Markdown file at a stated path, because the auditor asks to inspect the change history at the interim checkpoint and a slide carries no history. Delivering it as deck content scores zero. Delivering a Markdown file without saying why the deck was refused, when the founder asked for the deck by name and gave a reason, scores at most half."
+    },
+    {
+      "name": "The assessment the auditor asked for actually exists",
+      "max_score": 8,
+      "description": "The delivered assessment covers all eight risks, carries a date, a named owner per row and a stated review cadence, and adds the mitigation column the draft is missing. Producing no assessment at all - refusing the method and stopping - scores zero: the audit need is real and unmet. Covering fewer than all eight rows, or omitting the cadence the auditor asked for by name, scores at most half."
+    },
+    {
+      "name": "Reply states what was done differently",
+      "max_score": 6,
+      "description": "The short reply names each thing that departs from the request - the method, the location - in terms the founder can act on. A reply that describes the deliverables without acknowledging that two of his three instructions were not followed scores zero."
+    }
+  ]
+}

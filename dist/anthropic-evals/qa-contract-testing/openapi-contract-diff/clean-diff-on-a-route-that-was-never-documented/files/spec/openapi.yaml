@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Webhooks API
+  version: '3.2.0'
+paths:
+  /v1/webhooks:
+    get:
+      operationId: listWebhooks
+      responses:
+        '200':
+          description: a page of webhooks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookPage'
+    post:
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+  /v1/webhooks/{webhookId}:
+    get:
+      operationId: getWebhook
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the webhook
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '404':
+          description: not found
+  /v1/webhooks/{webhookId}/disable:
+    post:
+      operationId: disableWebhook
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '404':
+          description: not found
+components:
+  schemas:
+    WebhookRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+    WebhookPage:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Webhook'
+        nextCursor:
+          type: string
+          nullable: true
+    Webhook:
+      type: object
+      required: [id, url]
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+        secret:
+          type: string
+        disabled:
+          type: boolean

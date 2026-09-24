@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-payment",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Payment platform testing: Stripe test cards + webhooks, Stripe subscription-billing test clocks, the Adyen / PayPal / Braintree sandbox umbrella (payment-gateway-sandboxes), the payment lifecycle state-machine + 3DS flow reference, and the payment-flow-test-author workflow for refund / chargeback / webhook-replay suites. Distinct from qa-compliance/pci-dss-control-test-author (PCI DSS scope + control verification); this plugin is platform-specific sandbox testing + payment flow suites.",
   "author": {
     "name": "testland",

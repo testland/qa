@@ -1,0 +1,31 @@
+$ mull-runner-17 ./build/vault_tests --report-name nightly
+
+[info] Using config file /builds/vault/mull.yml
+[info] Warm up run (threads: 1)
+       [################################] 38/38. Finished in 412ms
+[info] Filter mutants (threads: 8)
+       [################################] 38/38. Finished in 9ms
+[info] Baseline run (threads: 1)
+       [################################] 1/1. Finished in 402ms
+[info] Running mutants (threads: 8)
+       [################################] 38/38. Finished in 3s
+
+[info] Survived mutants (5/38):
+
+/builds/vault/src/retention.cpp:8:24: warning: Survived: Replaced 90 with 0 [cxx_init_const]
+const int RETENTION_DAYS = 90;
+                           ^
+/builds/vault/src/retention.cpp:19:7: warning: Survived: Removed the call to audit.record [cxx_remove_void_call]
+      audit.record("purged", r.id);
+      ^
+/builds/vault/src/format_duration.cpp:10:3: warning: Survived: Removed the call to log.debug [cxx_remove_void_call]
+  log.debug("format_duration");
+  ^
+/builds/vault/src/format_duration.cpp:17:3: warning: Survived: Removed the call to log.debug [cxx_remove_void_call]
+  log.debug("truncate");
+  ^
+/builds/vault/src/format_duration.cpp:18:3: warning: Survived: Removed the call to metrics::count [cxx_remove_void_call]
+  metrics::count("truncate.calls");
+  ^
+
+[info] Mutation score: 86%

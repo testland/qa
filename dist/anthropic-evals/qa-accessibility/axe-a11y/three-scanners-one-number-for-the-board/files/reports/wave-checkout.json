@@ -1,0 +1,49 @@
+{
+  "status": { "success": true, "httpstatuscode": 200 },
+  "statistics": {
+    "pageurl": "https://staging.northwind.example/checkout",
+    "time": 3.41,
+    "totalelements": 612,
+    "errorcount": 3,
+    "contrasterrorcount": 2,
+    "alertcount": 16,
+    "featurecount": 7,
+    "structuralelementcount": 11,
+    "ariacount": 9
+  },
+  "categories": {
+    "error": {
+      "description": "Errors",
+      "count": 3,
+      "items": {
+        "label_missing": { "id": "label_missing", "description": "Missing form label", "count": 1, "selectors": ["#email"] },
+        "alt_missing": { "id": "alt_missing", "description": "Missing alternative text", "count": 1, "selectors": ["main > img.hero"] },
+        "link_empty": { "id": "link_empty", "description": "Empty link", "count": 1, "selectors": ["header nav > a.icon-cart"] }
+      }
+    },
+    "contrast": {
+      "description": "Contrast Errors",
+      "count": 2,
+      "items": {
+        "contrast": { "id": "contrast", "description": "Very low contrast", "count": 2, "selectors": ["main > form#order > button.primary", "footer li:nth-child(1) > a.footer-link"] }
+      }
+    },
+    "alert": {
+      "description": "Alerts",
+      "count": 16,
+      "items": {
+        "redundant_link": { "id": "redundant_link", "description": "Redundant link", "count": 9, "selectors": ["ul.summary a"] },
+        "heading_skipped": { "id": "heading_skipped", "description": "Skipped heading level", "count": 4, "selectors": ["h4.line-title"] },
+        "underline": { "id": "underline", "description": "Underlined text", "count": 3, "selectors": ["span.u"] }
+      }
+    },
+    "feature": {
+      "description": "Features",
+      "count": 7,
+      "items": {
+        "alt_link": { "id": "alt_link", "description": "Linked image with alternative text", "count": 4, "selectors": ["a.brand img"] },
+        "label": { "id": "label", "description": "Form label", "count": 3, "selectors": ["label[for=postcode]"] }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "email": "test-user-1@example.com",
+    "display_name": "Test User One",
+    "country": "IE",
+    "consent_terms": true,
+    "consent_marketing": true,
+    "signup_ip": "203.0.113.41",
+    "precise_location": { "lat": 53.349805, "lon": -6.26031 },
+    "device_fingerprint": "fp_9c21a0e4b7"
+  },
+  {
+    "email": "test-user-2@example.com",
+    "display_name": "Test User Two",
+    "country": "SE",
+    "consent_terms": true,
+    "consent_marketing": false,
+    "signup_ip": "198.51.100.7",
+    "precise_location": { "lat": 59.329323, "lon": 18.068581 },
+    "device_fingerprint": "fp_4471902aa1"
+  },
+  {
+    "email": "test-user-3@example.com",
+    "display_name": "Test User Three",
+    "country": "FR",
+    "consent_terms": true,
+    "consent_marketing": true,
+    "signup_ip": "10.4.19.88",
+    "precise_location": { "lat": 48.856613, "lon": 2.352222 },
+    "device_fingerprint": "fp_1093488cd0"
+  }
+]

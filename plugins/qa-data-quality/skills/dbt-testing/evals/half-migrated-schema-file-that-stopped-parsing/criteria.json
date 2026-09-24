@@ -1,0 +1,36 @@
+{
+  "context": "Two independent things are being measured and the fixture is arranged so that the easy, socially-endorsed route gets both wrong. The parse failure is one column — `fct_subscriptions.status` carries both a `tests:` block and a `data_tests:` block, and the two keys are aliases of one another that cannot coexist on a single resource. The obvious repair is Priya's: collapse everything onto the older key, which is what all 41 other files use, what the staging file everyone copies uses, what two colleagues already back, and a smaller diff. That direction is backwards — the older key is a back-compat alias retained for migration, not the canonical one — and it is being written into a conventions doc that will not be revisited, so the agent that takes the path of least resistance ships the wrong convention permanently. Predicted baseline failure on the second point: parameterized generics. Not one occurrence anywhere in the attached fixture nests its parameters under an `arguments:` key — `accepted_values` and `relationships` appear flat in the marts file, flat in the staging file, and flat in the one otherwise-correct block — so an agent producing something 'recognisable to the analysts' will reproduce the flat form for every assertion it adds, including the new `accepted_values` on `plan_tier`, the new `relationships` on `account_id`, and the parameters of its own range check. Nothing in the prompt or the fixtures supplies the canonical shape; the agent either knows it or writes the legacy one. The third predicted failure is the range check: with third-party packages ruled out and the same bound needed on three more models, the reflex is to inline a fourth copy of the same SQL as a singular assertion rather than define one reusable generic in `macros/`.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Parameterized generics carry their parameters under an arguments key",
+      "max_score": 30,
+      "description": "Every parameterized generic in the rewritten `models/marts/schema.yml` — both `accepted_values` blocks, both `relationships` blocks, and the seat-count range check — nests its parameters (`values`, `to`, `field`, the range bounds) under an `arguments:` key rather than placing them directly under the test name. Any parameterized generic left in, or newly written in, the flat legacy form scores zero for this criterion. Getting it right on the assertions that were added but leaving the pre-existing `accepted_values` on `dim_accounts.region` and `relationships` on `fct_invoices.subscription_id` in the flat form scores at most half — the file was asked to be internally consistent. A `config:` block stays a sibling of `arguments:`, not nested inside it."
+    },
+    {
+      "name": "MUST NOT adopt the legacy key as the project convention",
+      "max_score": 26,
+      "description": "Priya's proposal MUST NOT be endorsed. `docs/schema-yml-migration.md` has to recommend against rolling the project back to the older key and say why — it is a back-compat alias kept so projects can migrate off it, the contractor was moving toward the canonical key rather than away from it, and the recommendation is being written into a conventions doc. Recommending the rollback, or rewriting `models/marts/schema.yml` onto the older key, scores zero for this criterion whatever else is produced. Declining to give a recommendation, or giving one with no reason beyond 'it is newer', scores at most half. The staging file may be left alone; only the recommendation is being scored here."
+    },
+    {
+      "name": "Parse failure located to the column",
+      "max_score": 16,
+      "description": "The document names `fct_subscriptions.status` as the failure and states that the two keys are aliases that cannot both be declared on one resource. Naming the file but not the column scores at most half. Attributing the parse error to the flat parameter form, to a missing `version: 2`, to indentation, or to any column other than `status` scores zero."
+    },
+    {
+      "name": "Range bound defined once and reused",
+      "max_score": 14,
+      "description": "The 1-to-5,000 seat bound is implemented as a reusable generic assertion in a new file under the project's macro path, parameterized on the bounds so the same definition serves `fct_invoices.line_count` and the usage models, and it is called by name from `fct_subscriptions.seat_count`. A fourth hand-written copy of the same SQL, a singular `.sql` assertion under `tests/`, or a hard-coded 1 and 5000 that cannot be reused scores at most half. Pulling in an external package scores zero — it was ruled out explicitly."
+    },
+    {
+      "name": "All four requested assertions present, existing ones preserved",
+      "max_score": 10,
+      "description": "`subscription_id` uniqueness and non-nullity, `plan_tier` value list, `account_id` referential check against `dim_accounts`, and the `seat_count` bound are all present on `fct_subscriptions`, and every assertion already in the file on `fct_invoices` and `dim_accounts` survives the rewrite. Each missing requested assertion loses a quarter of this item; dropping any pre-existing assertion scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The rewritten `models/marts/schema.yml`, the new reusable-definition file, and `docs/schema-yml-migration.md` all exist, and the document covers all three things it was asked to cover. Missing the document, or a document that never reaches a recommendation on Priya's proposal, scores zero for this item."
+    }
+  ]
+}

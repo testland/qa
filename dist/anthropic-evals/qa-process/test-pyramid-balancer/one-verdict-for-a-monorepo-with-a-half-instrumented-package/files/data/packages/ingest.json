@@ -1,0 +1,11 @@
+{
+  "package": "packages/ingest",
+  "exported": "2026-09-15",
+  "runner": "self-hosted-arm",
+  "layers": {
+    "unit": { "cases": 92, "files": 28, "serial_seconds": null, "retry_and_pass_rate": null },
+    "integration": { "cases": 11, "files": 5, "serial_seconds": null, "retry_and_pass_rate": null },
+    "e2e": { "cases": 3, "files": 2, "serial_seconds": null, "retry_and_pass_rate": null }
+  },
+  "notes": "self-hosted runners do not upload timing or retry data to the history API. Case counts are from the junit xml, which is uploaded. There is no timing for this package and there will not be until the runner is reconfigured; ticket OPS-2214, unscheduled."
+}

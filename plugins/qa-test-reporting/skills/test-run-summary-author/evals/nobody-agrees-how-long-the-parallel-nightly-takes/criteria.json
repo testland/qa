@@ -1,0 +1,51 @@
+{
+  "context": "Six XML files sit in `reports/` for a five-shard run, and the prompt endorses globbing the folder as the thing that has never needed thinking about. Predicted baseline failure: the agent globs all six, adds them up, and posts 53 cases with 8 failures and a 84.3% rate. `reports/shard-4.xml` is the attempt that died when the runner was reclaimed - three cases, two passes and an `<error>` - and `reports/shard-4-retry.xml` is the completed re-run of the same shard; both `testsuite` elements carry `name=\"shard-4\"` and both hold `invites a user` at 54.7s and `deactivates a user` at 62.1s, which is the only thing in the fixture that says they are two attempts at one shard. Nothing in the prompt mentions a retry. Counting both double-counts those two passes, inflates the failure count by one because the supplied parser maps `<error>` to failed, and sends `e2e/admin/roles.spec.ts > assigns a role` to a team as something to chase when all that happened to it is that its runner was taken away and it passed 35 seconds later in the re-run. The figures that survive are 50 cases, 41 passed, 7 failed, 2 skipped, 41/48 = 85.4% over tests that executed. The second predicted failure is the flake tagging, which the prompt asks for by name and hands over a rule for: timeout means flake, assertion means real. Applying it labels the 180.5s bulk-import timeout and the 121.9s guest-checkout timeout as environment noise, when those are the two most expensive things in the run and nothing in one night's JUnit XML distinguishes an unstable test from a slow or broken one - a label pasted into Slack is read as a finding, and this is a separate classification step, not something a single run's artifact can settle. Third, duration: the shard `time` attributes sum to 2426.3s excluding the abandoned attempt and 2556.5s including it, which is roughly 40 and 42.6 minutes of machine time across five runners. Earliest shard start is 01:00:04, the last thing to finish is the re-run that began at 01:02:51 and ran 613.8s, so the run took 13m 00.8s of anybody's morning.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite still passes",
+      "max_score": 5,
+      "description": "scripts/nightly.js runs and writes nightly.json, test/nightly.test.js exists, docs/nightly-2026-09-12.md exists, and `npm test` passes with the pre-existing test/junit.test.js still passing. A failing `npm test` scores zero for this item."
+    },
+    {
+      "name": "MUST NOT count the abandoned shard-4 attempt as part of the run",
+      "max_score": 32,
+      "description": "Every figure is computed over 50 cases - 41 passed, 7 failed, 2 skipped - because reports/shard-4.xml and reports/shard-4-retry.xml are two attempts at one shard (both testsuite elements are name=\"shard-4\", and both hold `invites a user` at 54.7s and `deactivates a user` at 62.1s) and the completed re-run supersedes the attempt that was cut short. Any total built from all six files - 53 cases, 43 passed, 8 failed, or a rate of 84.3% / 81.1% - scores zero. MUST NOT put `e2e/admin/roles.spec.ts > assigns a role` in front of a team as a failure: the only thing recorded against it is `runner evicted: spot instance reclaimed`, and it passed in the re-run, so listing it among the failures scores zero here regardless of the counts. Arriving at 50 by dropping the smaller file without identifying the two as attempts at the same shard scores at most half - the rule does not survive the next morning, when the folder has a different shape."
+    },
+    {
+      "name": "MUST NOT tag any failure as a flake or a real bug",
+      "max_score": 20,
+      "description": "The prompt asks for the three to be tagged and supplies the rule - timeout means flake, assertion means real. Applying that rule, or any equivalent labelling, to any of the failures scores zero for this criterion: a single run's JUnit XML carries a status, a message and a duration, none of which separate an unstable test from a defect, and the two the rule would write off as flakes are the 180.5s and 121.9s entries that between them took over five minutes of the run. Full marks require the post to carry what the files actually record for each of the three - the failure message and what it cost - plus a plain statement that whether each is flaky or a real defect is not something this run can settle and needs the separate failure-classification step, rather than the request being silently dropped. Hedged labels ('probably environmental', 'likely a flake') score at most half. Saying nothing at all about the three beyond their names also scores at most half. Recording that shard-4's `<error>` was its runner being reclaimed is not a flake judgement - it is the message in the file - and does not count against this item."
+    },
+    {
+      "name": "MUST NOT hand over the three as bare names",
+      "max_score": 14,
+      "description": "MUST NOT present the three as a list of test names with nothing attached. Each carries why it is on the list: `e2e/admin/bulk-import.spec.ts > imports 5k rows from csv` at 180.5s and `e2e/checkout/guest.spec.ts > completes guest journey` at 121.9s are the two timeouts that between them consumed over five minutes of the run, and `e2e/orders/order-history.spec.ts > renders 200 orders` at 38.4s returned 100 rows where 200 were expected. Names with no stated basis score zero. Taking the first three in file order, which puts the 14.2s facet assertion ahead of the 180.5s bulk-import timeout, scores at most half."
+    },
+    {
+      "name": "Duration is how long the run took, not how much machine time it used",
+      "max_score": 12,
+      "description": "About 13 minutes - earliest shard start 01:00:04 to the last finish, the shard-4 re-run at 01:02:51 plus 613.8s, ending 01:13:04.8. Reporting the sum of the shard `time` attributes - 2426.3s (about 40 minutes), or 2556.5s with the abandoned attempt folded in - scores zero, and so does any figure above about 20 minutes. Quoting the longest single shard time, 613.8s or 10m14s, without accounting for when that shard started scores at most half."
+    },
+    {
+      "name": "Rate computed over tests that executed",
+      "max_score": 10,
+      "description": "41 passed of the 48 that ran = 85.4%. A rate of 41/50 = 82.0% scores zero, and so does any rate whose denominator comes from the 53-case parse. The two that did not execute are reported with the reasons the files record - the wishlist_sharing feature flag being off in CI, and the facet test skipped because the one it depends on failed."
+    },
+    {
+      "name": "The re-run is disclosed under the post",
+      "max_score": 8,
+      "description": "The note below the post says that reports/ holds six files for a five-shard run, which one is not counted, and why, so that the next person globbing `reports/*.xml` understands why the folder reads 53 and the post says 50. A note that walks through the arithmetic but never mentions the extra file scores zero here - the whole point is that the folder no longer matches the post."
+    },
+    {
+      "name": "An owner attached to each of the three",
+      "max_score": 6,
+      "description": "Each of the three carries the owning team resolved through CODEOWNERS by path: @acme/platform-admin for e2e/admin/bulk-import.spec.ts, @acme/payments for e2e/checkout/guest.spec.ts, @acme/orders for e2e/orders/order-history.spec.ts. No owners at all scores zero; owners guessed from the test name rather than resolved through the CODEOWNERS path scores at most half."
+    },
+    {
+      "name": "The post stays a Slack message",
+      "max_score": 5,
+      "description": "The post itself is a short block - a lead line with the counts and rate, then the three with their owners, then the duration - readable on a phone, with the explanatory note kept below it and out of the pasted message. A multi-section report presented as the post scores zero."
+    }
+  ]
+}

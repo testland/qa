@@ -1,0 +1,21 @@
+name: DAST (pull request)
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: zaproxy/action-baseline@v0.13.0
+        with:
+          target: https://review-${{ github.event.number }}.veridianpay.dev
+          rules_file_name: .zap/rules.tsv
+          cmd_options: '-J zap.json'
+      - name: Gate
+        run: node ci/dast-gate.js zap.json .zap/baseline-findings.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: zap-report, path: zap.json }

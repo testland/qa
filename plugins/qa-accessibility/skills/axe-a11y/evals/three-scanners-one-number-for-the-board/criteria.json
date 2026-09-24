@@ -1,0 +1,46 @@
+{
+  "context": "Nothing in the request says the engines overlap; the requester says the opposite, that three independent engines is the part she likes. Predicted baseline failure: the agent accepts that framing, trims what looks like noise - the pa11y notices, or the WAVE alerts, or both - and hands back a smaller additive number. The data does not allow it. Every confirmed defect on checkout is reported by all three under three unrelated codes, and the selectors do not line up either, because pa11y's htmlcs runner emits a full DOM path (`html > body > footer > ul > li:nth-child(1) > a`) where axe emits a generated CSS selector and WAVE emits its own (https://github.com/pa11y/pa11y). So a join on rule code merges nothing and a join on selector string merges only the axe/WAVE half. The reachable key is the page plus the element plus the underlying success criterion - axe's `wcag143` tag, pa11y's `1_4_3` code segment and WAVE's `contrast` category are all SC 1.4.3 - and it yields five distinct defects, not 39. A trap sits on the other side of that merge: there are two different footer links in the fixtures. The Help link is confirmed by all three; the Privacy link is asserted as an error by pa11y, returned as undecided by axe because of a background image, and not reported by WAVE at all. Both carry class `footer-link`, so a sloppier match collapses them, loses the disagreement, and still arrives at five - which is why the number alone does not earn the credit. Three further predicted misses. WAVE counts contrast errors in `contrasterrorcount`, separate from `errorcount` (https://wave.webaim.org/api/docs), so reading `errorcount` as WAVE's error total silently drops the two contrast findings a second time after the intern's comment dropped them once. The requester explicitly instructs that the percentage line be left alone, and doing as asked is wrong: a ratio of rules that happened to pass is not a conformance level when the engine reaches roughly half of WCAG, so that line has to be withdrawn even though she asked for it to stay. And `reports/run.sh` pins axe to `wcag2a,wcag2aa` and pa11y to the htmlcs runner under `WCAG2AA`, both of which are 2.0/2.1 tag sets, so nothing in last night's run evaluated a single WCAG 2.2 criterion and the slide's 2.2 label is unsupported.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 5,
+      "description": "`lib/rollup.js` rewritten, `test/rollup.test.js` added, `docs/board-note.md` written, `npm test` green with no new dependencies, and `test/format.test.js` unedited. A run whose suite fails, or that hard-codes the headline figure rather than deriving it from the three report files, scores zero for this item."
+    },
+    {
+      "name": "One defect under three engine codes counts once, and two elements stay two",
+      "max_score": 30,
+      "description": "The rollup matches findings across engines on the page, the element, and the underlying success criterion, and arrives at five confirmed defects on checkout rather than 39. A rollup that still adds engine outputs together, or that deduplicates within a single engine only, scores zero. Matching on each engine's own rule code scores zero, since no two of them share one. Matching on the raw selector string also scores zero as a method: pa11y emits a DOM path where axe and WAVE emit CSS selectors, so that rule merges the axe/WAVE pair and leaves pa11y's copy of every defect standing. Collapsing the two footer links - `li:nth-child(1)` Help and `li:nth-child(3)` Privacy, which share the class `footer-link` but are different elements in a different state of agreement - scores at most half even if the total lands on five. `docs/board-note.md` must show the correspondence for at least one defect across all three engines, so the board can see where 39 went."
+    },
+    {
+      "name": "MUST NOT leave a conformance percentage on the slide",
+      "max_score": 20,
+      "description": "MUST NOT keep the second slide line, notwithstanding the instruction to leave it alone. A ratio of rules that happened to pass is not a conformance level - an automated engine returns no verdict on roughly half of WCAG, and rules that never ran are not rules that passed - so the figure cannot be defended in front of a board whatever its arithmetic. Any percentage of that kind surviving in the deliverable scores zero, and so does silently recomputing it more carefully. The refusal alone is not enough either: the board was promised a number, the defect count answers that, and an answer that declines to supply any figure or buries the whole request in caveats scores at most half."
+    },
+    {
+      "name": "MUST NOT count review-level output as defects",
+      "max_score": 16,
+      "description": "MUST NOT carry WAVE's 16 alerts - redundant links, skipped heading levels, underlined text - or pa11y's warnings and notices into the headline figure; those categories are flagged for a human to look at, not confirmed failures. Any of them reaching the defect count scores zero. Deleting them outright, so nobody looks at them again, scores at most half: they belong in a separate review count alongside axe's undecided items, with each engine's own severity meaning preserved rather than merged into one bucket."
+    },
+    {
+      "name": "WAVE's contrast errors are not inside its error count",
+      "max_score": 14,
+      "description": "The rollup takes WAVE's contrast findings from the `contrast` category or `contrasterrorcount`, because `errorcount` does not include them - reading `errorcount` as WAVE's error total drops two SC 1.4.3 failures on its own. A rollup that reads only `errorcount` for WAVE scores zero here, as does one that keeps the intern's exclusion of the contrast bucket or a note that endorses his reasoning that contrast is subjective. Removing the intern's comment while still never reading the contrast category scores zero."
+    },
+    {
+      "name": "The disagreement is reported, not resolved by guessing",
+      "max_score": 14,
+      "description": "The Privacy footer link - pa11y calls it a contrast error, axe returns it as undecided because it could not determine the background, WAVE does not report it - is named in the board note as a finding the three engines do not agree on, and is kept out of the confirmed figure without being discarded. Counting it as a confirmed defect scores zero. Dropping it silently scores zero. Reporting it only as part of an undifferentiated needs-review total, without stating that the engines disagree about this specific element, scores at most half."
+    },
+    {
+      "name": "The WCAG 2.2 claim is withdrawn",
+      "max_score": 12,
+      "description": "`docs/board-note.md` states that last night's run evaluated no WCAG 2.2 criterion - axe was pinned to the 2.0/2.1 A and AA tags and pa11y ran htmlcs under a standard that is also 2.0/2.1 - so neither the 2.2 label nor the like-for-like comparison with last quarter is supported, and names the change needed in `reports/run.sh` before next quarter. Leaving a 2.2 claim on the slide unqualified scores zero. Saying the claim is unsupported without identifying what in the run commands makes it so scores at most half."
+    },
+    {
+      "name": "The merge behaviour is tested, including the near-miss",
+      "max_score": 12,
+      "description": "`test/rollup.test.js` contains a case feeding the same defect in under two or more engine codes with differently-spelled selectors and asserting it counts once, and a case proving two distinct elements sharing a class are not merged. A suite that only asserts the total against last night's files scores at most half; no test of the merging behaviour at all scores zero."
+    }
+  ]
+}

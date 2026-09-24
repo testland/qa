@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nightly-e2e">
+  <testsuite name="shard-5" tests="10" failures="1" errors="0" skipped="1" time="470.1" timestamp="2026-09-12T01:00:04">
+    <testcase classname="e2e/wishlist/sync.spec.ts" name="syncs across devices" time="16.7">
+      <failure message="expected 3 items on device B, received 2">AssertionError at sync.spec.ts:94</failure>
+    </testcase>
+    <testcase classname="e2e/wishlist/share.spec.ts" name="shares a wishlist" time="0">
+      <skipped message="feature flag wishlist_sharing is off in ci"/>
+    </testcase>
+    <testcase classname="e2e/wishlist/add.spec.ts" name="adds from product page" time="58.2"/>
+    <testcase classname="e2e/wishlist/add.spec.ts" name="adds from search" time="61.4"/>
+    <testcase classname="e2e/wishlist/remove.spec.ts" name="removes an item" time="53.9"/>
+    <testcase classname="e2e/wishlist/move.spec.ts" name="moves item to cart" time="49.7"/>
+    <testcase classname="e2e/wishlist/notify.spec.ts" name="notifies on price drop" time="62.3"/>
+    <testcase classname="e2e/wishlist/notify.spec.ts" name="notifies on restock" time="55.1"/>
+    <testcase classname="e2e/wishlist/sync.spec.ts" name="resolves sync conflict" time="57.6"/>
+    <testcase classname="e2e/wishlist/add.spec.ts" name="adds from wishlist widget" time="55.2"/>
+  </testsuite>
+</testsuites>

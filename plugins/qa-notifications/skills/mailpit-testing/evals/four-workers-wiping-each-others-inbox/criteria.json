@@ -1,0 +1,46 @@
+{
+  "context": "Four email files share one mail container and every test starts by deleting the whole mailbox, so each worker routinely destroys mail another worker has already had accepted. Nothing in the fixture is pre-diagnosed: the job log is grouped per worker the way the reporter flushes files, the container log is a separate file, and the three failures in run #4471 only separate once the two clocks are interleaved by hand. Predicted baseline failure: the agent reads the run as one timing problem and accepts the attached lock patch, because the patch note reports 19 green out of 20 and it is the only proposal that visibly addresses interleaving. The lock is wrong twice over — it releases as soon as the search hits, so the clear that lands between w2's search at 11.311 and its fetch-by-id at 11.407 survives it untouched, and its own note puts the job at a 10m14s median against the 6m11s the team bought. The deeper miss is that no lock is needed: nothing here requires an empty mailbox, only a mailbox in which a test can find its own message and no other. The three failures have three causes — a clear between the search and the fetch-by-id, a clear one millisecond after an accept, and a fixed 250ms sleep followed by a read of whatever is newest in a shared mailbox — and the fix is a recipient unique to each test with every read scoped to it, after which the whole-mailbox clear has nothing left to do. The second predicted failure is the support lead's check. The nearest example in the file asserts against `Snippet`, the report shows what `Snippet` is — a search summary field, cut mid-word with an ellipsis — and a check copied from the line above it can pass on the recipient's name while never being able to see the sign-in URL it is supposed to verify.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "All three test files are rewritten and `docs/email-suite-parallel-fix.md` exists. Missing the write-up scores zero for this item."
+    },
+    {
+      "name": "Per-test recipient isolation",
+      "max_score": 30,
+      "description": "Each test sends to an address unique to that test invocation — a per-test suffix on the local part, a per-test tag, or an equivalent the capture server can filter on — and every read is scoped to that address or tag, so no test can ever be handed another test's message. Full marks require the uniqueness to be per test invocation and the reads to be filtered by it. Uniqueness only per file or per worker, with a file's tests sharing one address, scores at most half. Leaving both files sending to the fixed `qa@example.com` / `newuser@example.com` and relying on the mailbox being empty scores zero, however the clearing is rearranged."
+    },
+    {
+      "name": "MUST NOT leave an unscoped whole-mailbox delete on a concurrent path",
+      "max_score": 24,
+      "description": "MUST NOT leave `DELETE /api/v1/messages` with no body running on a path that executes while other workers are mid-test. In `beforeEach`, hoisted to a once-per-worker `before`, or wrapped in the proposed lock, it scores zero for this criterion: each of those still destroys mail the container has already accepted for another worker, which is what killed w4's first test one millisecond after the accept at 19.883. Deleting only this test's own message ids once the test has finished with them, or dropping the clear entirely because every read is now scoped, both score full marks."
+    },
+    {
+      "name": "MUST NOT assert against a fixed sleep and a newest-message read",
+      "max_score": 20,
+      "description": "MUST NOT keep the `setTimeout(250)` followed by `latestMessage()` pattern in the no-reply test, in any form. Both halves have to go: a fixed delay is not a guarantee that anything was delivered, and reading whatever is newest in a shared mailbox returns another worker's message — at 25.173 it returned the invite accepted 13ms earlier, and on seven of the 86 runs it returned nothing at all and threw. Keeping either the fixed sleep or the unfiltered newest-message read scores zero. Replacing them with a poll that waits for this test's own message, bounded by a timeout, scores full marks; raising or lowering the sleep value scores zero."
+    },
+    {
+      "name": "Support lead's check reads the message body",
+      "max_score": 20,
+      "description": "The new plain-text assertion runs against the full text part of the message, retrieved as a single message rather than as a search result, and covers both the recipient's name and the whole sign-in URL. Asserting against `Snippet` scores zero: the report shows it cut mid-word with an ellipsis, so such a check can pass on the name while never being able to see the URL. Asserting only the name, or only that some URL is present, scores at most half."
+    },
+    {
+      "name": "Every failure in run #4471 accounted for, with distinct causes",
+      "max_score": 16,
+      "description": "The write-up accounts for all three failures in the run and gives each a distinct cause: the clear that landed between w2's search hit and its fetch-by-id; the clear that removed a message the container had already accepted for w4; and the newest-message read that returned another worker's mail. Giving all three the same cause, or treating any of them as slow delivery, scores zero. Two of three, or naming only two failures, scores at most half. Full marks also account for the seven `Cannot read properties of undefined` runs as the same newest-message read against a momentarily empty mailbox."
+    },
+    {
+      "name": "The two remaining proposals answered on the evidence",
+      "max_score": 14,
+      "description": "The write-up rejects the thirty-second wait and the lock patch, each on something in the fixture. The longer wait fixes none of the three: w4's first test already polled the full five seconds against a message that no longer existed, and the other two failed within a second of their trigger. The lock releases at the search hit, so the fetch-by-id that produced the 404 is still unprotected, and its own note records a 10m14s median against the current 6m11s. Recommending or merging either proposal scores zero. Rejecting both with no reference to the run or the numbers scores at most half."
+    },
+    {
+      "name": "Tests preserved and the job not slowed",
+      "max_score": 5,
+      "description": "All four original tests still exist with assertions no weaker than before, and the workflow still runs at four-way concurrency. Deleting a test, relaxing an assertion, or pinning the email tests to a serial lane scores zero."
+    }
+  ]
+}

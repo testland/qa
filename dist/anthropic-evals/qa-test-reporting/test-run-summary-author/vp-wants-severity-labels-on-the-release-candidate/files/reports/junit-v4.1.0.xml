@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="acme-web v4.1.0-rc.1" tests="44" failures="4" errors="0" skipped="7" time="71.04">
+  <testsuite name="checkout" tests="12" failures="2" errors="0" skipped="1" time="19.23" timestamp="2026-09-08T22:04:11">
+    <testcase classname="checkout" name="adds item to cart" time="0.42"/>
+    <testcase classname="checkout" name="removes item from cart" time="0.38"/>
+    <testcase classname="checkout" name="updates quantity" time="0.51"/>
+    <testcase classname="checkout" name="applies promo code to subtotal" time="1.94">
+      <failure message="expected subtotal 41.30, received 41.31">AssertionError at checkout.spec.ts:88</failure>
+    </testcase>
+    <testcase classname="checkout" name="rejects expired promo code" time="0.44"/>
+    <testcase classname="checkout" name="blocks checkout when cart is empty" time="12.06">
+      <failure message="Timeout 12000ms exceeded waiting for [data-testid=empty-cart-notice]">TimeoutError at checkout.spec.ts:131</failure>
+    </testcase>
+    <testcase classname="checkout" name="calculates tax for EU address" time="0.63"/>
+    <testcase classname="checkout" name="calculates tax for US address" time="0.59"/>
+    <testcase classname="checkout" name="persists cart across reload" time="0.88"/>
+    <testcase classname="checkout" name="shows shipping options" time="0.72"/>
+    <testcase classname="checkout" name="applies free shipping over threshold" time="0.66"/>
+    <testcase classname="checkout" name="offers gift wrap at checkout" time="0">
+      <skipped message="feature flag gift_wrap is off in ci"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="auth" tests="9" failures="1" errors="0" skipped="0" time="36.32" timestamp="2026-09-08T22:04:31">
+    <testcase classname="auth" name="logs in with password" time="0.71"/>
+    <testcase classname="auth" name="rejects wrong password" time="0.45"/>
+    <testcase classname="auth" name="refreshes token before expiry" time="30.11">
+      <failure message="Timeout 30000ms exceeded waiting for token refresh response">TimeoutError at auth.spec.ts:64</failure>
+    </testcase>
+    <testcase classname="auth" name="logs out" time="0.33"/>
+    <testcase classname="auth" name="resets password by email" time="1.22"/>
+    <testcase classname="auth" name="locks account after five attempts" time="0.94"/>
+    <testcase classname="auth" name="sso redirects to idp" time="1.05"/>
+    <testcase classname="auth" name="sso handles idp error" time="0.87"/>
+    <testcase classname="auth" name="remembers device" time="0.64"/>
+  </testsuite>
+  <testsuite name="payments" tests="11" failures="1" errors="0" skipped="3" time="9.40" timestamp="2026-09-08T22:05:08">
+    <testcase classname="payments" name="charges card" time="0.98"/>
+    <testcase classname="payments" name="declines invalid card" time="0.55"/>
+    <testcase classname="payments" name="issues full refund" time="1.31"/>
+    <testcase classname="payments" name="issues partial refund for cancelled line item" time="2.47">
+      <failure message="expected refund state 'refunded', received 'pending'">AssertionError at payments.spec.ts:212</failure>
+    </testcase>
+    <testcase classname="payments" name="retries on gateway timeout" time="1.88"/>
+    <testcase classname="payments" name="records idempotency key" time="0.77"/>
+    <testcase classname="payments" name="completes 3ds challenge flow" time="0">
+      <skipped message="gateway sandbox not available on build agents"/>
+    </testcase>
+    <testcase classname="payments" name="pays with apple pay" time="0">
+      <skipped message="gateway sandbox not available on build agents"/>
+    </testcase>
+    <testcase classname="payments" name="pays with google pay" time="0">
+      <skipped message="gateway sandbox not available on build agents"/>
+    </testcase>
+    <testcase classname="payments" name="stores payment method" time="0.83"/>
+    <testcase classname="payments" name="deletes payment method" time="0.61"/>
+  </testsuite>
+  <testsuite name="search" tests="7" failures="0" errors="0" skipped="2" time="2.44" timestamp="2026-09-08T22:05:18">
+    <testcase classname="search" name="returns results for keyword" time="0.52"/>
+    <testcase classname="search" name="paginates results" time="0.48"/>
+    <testcase classname="search" name="filters by category" time="0.61"/>
+    <testcase classname="search" name="sorts by price" time="0.44"/>
+    <testcase classname="search" name="handles empty results" time="0.39"/>
+    <testcase classname="search" name="shows typeahead suggestions" time="0">
+      <skipped message="feature flag typeahead_v2 is off in ci"/>
+    </testcase>
+    <testcase classname="search" name="expands synonyms" time="0">
+      <skipped message="feature flag typeahead_v2 is off in ci"/>
+    </testcase>
+  </testsuite>
+  <testsuite name="notifications" tests="5" failures="0" errors="0" skipped="1" time="3.65" timestamp="2026-09-08T22:05:21">
+    <testcase classname="notifications" name="sends order confirmation email" time="1.14"/>
+    <testcase classname="notifications" name="sends shipping email" time="0.92"/>
+    <testcase classname="notifications" name="sends refund email" time="0.88"/>
+    <testcase classname="notifications" name="respects unsubscribe" time="0.71"/>
+    <testcase classname="notifications" name="delivers push notification" time="0">
+      <skipped message="no mobile device attached to build agent"/>
+    </testcase>
+  </testsuite>
+</testsuites>

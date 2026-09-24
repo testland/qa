@@ -1,0 +1,6 @@
+vite v6.3.2 building for production...
+dist/assets/vendor-Ck2p9r.js       780.4 kB | gzip: 246.1 kB
+dist/assets/reports-Bn44xw.js      402.9 kB | gzip: 131.6 kB
+dist/assets/index-Dq81mz.js        118.7 kB | gzip:  38.2 kB
+dist/assets/index-Hy20ab.css        71.3 kB | gzip:  12.4 kB
+built in 21.44s

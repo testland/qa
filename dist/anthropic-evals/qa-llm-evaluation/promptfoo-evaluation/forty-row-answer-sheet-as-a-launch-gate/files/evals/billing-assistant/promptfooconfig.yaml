@@ -1,0 +1,37 @@
+description: Billing assistant release gate
+
+prompts:
+  - file://prompt.txt
+
+providers:
+  - openai:gpt-5-mini-0613
+
+defaultTest:
+  assert:
+    - type: cost
+      threshold: 50
+
+tests:
+  - description: refund_window
+    vars:
+      question: How long do I have to request a refund?
+      context: Customers may request a full refund within 30 days of purchase.
+    assert:
+      - type: contains
+        value: '30 days'
+
+  - description: cancel_notice
+    vars:
+      question: How much notice do I need to give on an annual plan?
+      context: Annual plans require 30 days notice of cancellation.
+    assert:
+      - type: contains
+        value: '30'
+
+  - description: explains_a_price_rise
+    vars:
+      question: Why did my invoice go up this month?
+      context: A plan change mid-cycle is prorated to the day and both parts appear on one invoice.
+    assert:
+      - type: llm-rubric
+        value: explains that the change was prorated and that both parts appear on a single invoice

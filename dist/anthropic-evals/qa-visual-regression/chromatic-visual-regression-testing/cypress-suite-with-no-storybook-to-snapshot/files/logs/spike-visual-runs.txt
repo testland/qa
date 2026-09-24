@@ -1,0 +1,28 @@
+spike/visual-jo - "Hosted visual (Ash, spike branch only)" step, last three runs
+
+--- run 4181  2026-09-04 ---
+$ npx chromatic --playwright --exit-zero-on-changes
+  Authenticated with project ledger-console
+  Publishing...
+  Published build 5
+  Build 5 contains 0 snapshots
+  Build 5 passed
+  exit 0
+
+--- run 4186  2026-09-06 ---
+$ npx chromatic --playwright --exit-zero-on-changes
+  Authenticated with project ledger-console
+  Publishing...
+  Published build 6
+  Build 6 contains 0 snapshots
+  Build 6 passed
+  exit 0
+
+--- run 4191  2026-09-09 ---
+$ npx chromatic --playwright --exit-zero-on-changes
+  Authenticated with project ledger-console
+  Publishing...
+  Published build 7
+  Build 7 contains 0 snapshots
+  Build 7 passed
+  exit 0

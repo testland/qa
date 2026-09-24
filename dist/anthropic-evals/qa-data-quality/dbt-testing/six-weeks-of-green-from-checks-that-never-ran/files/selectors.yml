@@ -1,0 +1,5 @@
+selectors:
+  - name: nightly
+    description: what the 03:00 warehouse job builds
+    default: false
+    definition: 'path:models'

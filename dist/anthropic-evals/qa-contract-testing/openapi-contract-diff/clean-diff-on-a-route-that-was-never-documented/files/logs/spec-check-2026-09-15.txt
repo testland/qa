@@ -1,0 +1,12 @@
+npm run spec:check
+
+> webhooks-api@3.2.0 spec:check
+> bash scripts/spec-check.sh
+
+Unable to find image 'tufin/oasdiff:latest' locally
+latest: Pulling from tufin/oasdiff
+Digest: sha256:9f2c1a7e0b44
+Status: Downloaded newer image for tufin/oasdiff:latest
+No breaking changes.
+
+(exit status 0)

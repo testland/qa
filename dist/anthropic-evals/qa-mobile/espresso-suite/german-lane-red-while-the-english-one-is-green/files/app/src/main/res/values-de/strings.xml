@@ -1,0 +1,8 @@
+<resources>
+    <string name="signup_heading">Konto erstellen</string>
+    <string name="continue_label">Weiter</string>
+    <string name="email_invalid">Bitte gib eine gultige E-Mail-Adresse ein</string>
+    <string name="email_taken">Diese E-Mail-Adresse ist bereits registriert</string>
+    <string name="cart_total_label">Gesamtbetrag</string>
+    <string name="privacy_link">Datenschutzerklarung</string>
+</resources>

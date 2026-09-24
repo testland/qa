@@ -1,0 +1,8 @@
+{
+  "name": "auben",
+  "private": true,
+  "scripts": {
+    "test": "cd test && node --test",
+    "smoke": "node smoke/run.js"
+  }
+}

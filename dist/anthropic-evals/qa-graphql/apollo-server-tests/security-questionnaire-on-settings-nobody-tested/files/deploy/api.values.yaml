@@ -1,0 +1,14 @@
+# Corrected 2026-09-03. Read `NODE_ENV: prod` from the chart's first commit
+# (2025-11-14) until that change.
+image:
+  repository: ghcr.io/parcelly/api
+  tag: "2026.09.02"
+
+env:
+  NODE_ENV: production
+  PORT: "4000"
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi

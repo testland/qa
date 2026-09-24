@@ -1,0 +1,10 @@
+key,summary,fix_service,deploy_service,flag,flag_enabled_in_prod,confirmed_by,fix_author,returned
+ENG-4101,"Session drops when switching workspaces",sessions,sessions,,,,d.novak,no
+ENG-4108,"Invoice PDF missing tax line for VAT-exempt accounts",billing,billing,,,q.alvarez,s.park,no
+ENG-4115,"Bulk import silently drops rows over 10k",importer,importer,import_v2,no,,m.oyelaran,yes
+ENG-4120,"Webhook retries fire twice after a 502",webhooks,webhooks,,,d.novak,d.novak,no
+ENG-4130,"SSO login loops for users in two directories",auth,notifications,,,,s.park,yes
+ENG-4136,"Export job times out over 500k rows",reporting,reporting,,,q.alvarez,m.oyelaran,no
+ENG-4140,"Password reset accepts an expired token",auth,auth,reset_v3,no,,s.park,yes
+ENG-4144,"Column sort resets after inline edit",web,web,,,q.alvarez,l.fontaine,no
+ENG-4151,"Duplicate charge when the payment sheet is dismissed",payments,payments,,,,r.mehta,yes

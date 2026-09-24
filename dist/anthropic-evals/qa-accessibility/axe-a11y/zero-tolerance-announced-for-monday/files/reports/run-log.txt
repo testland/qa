@@ -1,0 +1,7 @@
+2026-09-12 01:02:10  scan start  (pilot read from a11y/pilot.json)
+2026-09-12 01:02:44  checkout    exit 0   4
+2026-09-12 01:03:21  dashboard   exit 0   5
+2026-09-12 01:03:58  settings    exit 0   3
+2026-09-12 01:04:07  status      exit 0   0
+2026-09-12 01:04:09  billing     exit 7   net::ERR_CONNECTION_REFUSED staging-billing.atlas.internal:8443
+2026-09-12 01:04:12  scan end    12 violations written

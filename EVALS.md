@@ -39,6 +39,35 @@ rather than a judge. Where the subject is judgement rather than code, plant
 cases whose correct answer is to REFUSE, and mix them with determinate ones so
 that neither always-guessing nor always-refusing scores well.
 
+### A hard scenario is not the same as a discriminating one
+
+The rule above asks what the skill *uniquely* supplies. The way to check a
+scenario obeys it is to run a third arm carrying an **unrelated** skill. If that
+sham arm scores as well as the real one, the scenario rewarded having any skill
+attached and measured nothing about this one.
+
+Measured over 127 scenarios with all three arms, mean lift against no skill is
+**+6.15, of which +2.73 is the sham** - 44% of all apparent lift is attributable
+to nothing. By baseline band, where content is lift minus sham lift:
+
+| baseline | n | raw lift | sham | content |
+|---|:-:|---:|---:|---:|
+| **below 70%** | 23 | +30.64 | **+19.60** | **+11.04 +/-7.27** |
+| 70-85% | 28 | +4.94 | -0.10 | +5.04 +/-5.35 |
+| 85-95% | 35 | -0.38 | -1.30 | +0.92 +/-2.14 |
+| 95%+ | 41 | -1.19 | -1.38 | +0.19 +/-2.05 |
+
+Below 70% is the only band whose content is separable from zero, so that is
+where to aim - and also where **two thirds of the raw lift is sham**, so it is
+the one band where raw lift proves nothing. A scenario there is evidence only
+once a sham arm has run against it. Above 85% the sham arm is nearly pointless;
+there is no lift of any kind to attribute.
+
+Concretely: 8 of those 23 hard scenarios score **zero or negative content**.
+They are expensive, they look like the best scenarios in the set by raw lift,
+and they measure nothing. One gains 78 points against no skill and 78 against an
+unrelated one.
+
 ## Layout
 
 Scenarios live inside the skill they measure, which is also the directory
@@ -117,10 +146,14 @@ rubrics when it did:
 
 ## Running
 
-Locally, the harness in `C:\GitHub\.qa-eval\pilot` runs both arms and applies
-the deterministic gate - delivered, collects, executes, passes - before any
-model grades anything. A run that delivered no test file is not a low score, it
-is not a result.
+Locally, the harness in `C:\GitHub\.qa-eval\pilot` runs three arms - A the real
+skill, B no skill, S an unrelated skill - and applies the deterministic gate
+- delivered, collects, executes, passes - before any model grades anything. A
+run that delivered no test file is not a low score, it is not a result.
+
+Arm S is **required** for any scenario whose measured baseline lands below 70%,
+and optional above 85%. Quoting an A-B figure from the sub-70 band without it
+reports the sham as skill value 64% of the time.
 
 On Tessl, `tessl eval run <skill-dir>` consumes the same files and returns an
 independent judgement plus a registry impact score.

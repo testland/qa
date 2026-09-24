@@ -1,0 +1,11 @@
+{
+  "entries": [
+    { "test": "orders/refund.spec.ts:refunds a partially shipped order", "quarantined_on": "2026-07-30", "ticket": "ORD-3980" },
+    { "test": "orders/split.spec.ts:splits an order across two warehouses", "quarantined_on": "2026-08-21", "ticket": "ORD-4022" },
+    { "test": "orders/tax.spec.ts:applies the reduced rate to digital goods", "quarantined_on": "2026-09-04", "ticket": "ORD-4101" }
+  ],
+  "new_flakes_this_window": [
+    { "test": "orders/checkout.spec.ts:holds stock for ten minutes", "first_seen": "2026-09-09", "ticket": "ORD-4160" },
+    { "test": "orders/invoice.spec.ts:numbers invoices sequentially", "first_seen": "2026-09-12", "ticket": "ORD-4168" }
+  ]
+}

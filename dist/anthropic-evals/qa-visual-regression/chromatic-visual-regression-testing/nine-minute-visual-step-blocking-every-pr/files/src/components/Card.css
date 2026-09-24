@@ -1,0 +1,11 @@
+.hl-card {
+  border: 1px solid var(--hl-border-neutral);
+  background: var(--hl-surface-raised);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.hl-card__title {
+  color: var(--hl-text-muted);
+  font-size: 14px;
+}

@@ -1,0 +1,17 @@
+{
+  "uuid": "a1f2c0de-0002-4000-8000-000000000002",
+  "historyId": "gate.search.misspelled",
+  "name": "Search returns results for misspelled term",
+  "fullName": "gate.search.SearchGate#misspelledTerm",
+  "status": "failed",
+  "statusDetails": {
+    "message": "expected 3 results for 'recieve', received 0",
+    "trace": "at gate/search.spec.ts:31:14"
+  },
+  "start": 1789182042000,
+  "stop": 1789182055000,
+  "labels": [
+    { "name": "suite", "value": "Search" },
+    { "name": "severity", "value": "minor" }
+  ]
+}

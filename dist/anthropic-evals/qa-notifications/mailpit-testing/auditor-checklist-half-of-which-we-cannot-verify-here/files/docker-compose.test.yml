@@ -1,0 +1,16 @@
+services:
+  mail:
+    image: axllent/mailpit:v1.20.0
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+
+  app:
+    build: .
+    environment:
+      SMTP_HOST: mail
+      SMTP_PORT: '1025'
+      UNSUB_BASE: http://app:3000/unsubscribe
+    ports:
+      - '3000:3000'
+    depends_on: [mail]

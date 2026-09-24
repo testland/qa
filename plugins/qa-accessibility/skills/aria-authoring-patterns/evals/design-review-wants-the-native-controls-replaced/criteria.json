@@ -1,0 +1,41 @@
+{
+  "context": "Five requests where the two that sound most like accessibility work are the two that would break it, and the request is framed as design asking for polish rather than as a review. Predicted baseline failure: the agent grants item 2 and item 4 because both are phrased as fixing a screen-reader problem. Item 2 asks for a menu role on a dropdown whose three rows are navigation links to other URLs; adding it is the attractive move because the complaint is literally 'it announces as a list of links'. That is what it is - overriding link semantics with menu-item semantics takes those destinations out of the links list, tells the user to expect an application menu, and changes nothing about the real defect, which is that the trigger never publishes whether the list is open. Item 4 is the second trap: the Save button carries the native disabled attribute, which takes it out of the tab order entirely, so a tooltip attached to it can never be reached or announced by a keyboard or screen-reader user no matter how it is wired. An agent is predicted to add a hint association and consider the item shipped, because the association looks correct in isolation. Items 1 and 5 are the determinate refusals - a single choice from 190 plain text options is what the native control is for, and hand-numbering the tab sequence makes the page's order fragile and global rather than local - and item 3 is the determinate build, a multi-select with avatar and task-count content per row, which is the case where a custom widget is warranted. An agent that refuses everything fails item 3; one that builds everything fails 2 and 4.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite green",
+      "max_score": 5,
+      "description": "docs/design-review-response.md has a section per numbered item, the HTML is edited only where a decision calls for it, and npm test passes. A response that does not answer all five items separately scores at most half. No response document scores zero."
+    },
+    {
+      "name": "MUST NOT turn the Actions dropdown into a menu",
+      "max_score": 30,
+      "description": "MUST NOT put a menu or menubar role on #actions-menu and MUST NOT put a menuitem, menuitemradio or menuitemcheckbox role on any of its three rows. Any of those scores zero for this criterion regardless of what else was done, because all three rows are anchors to other URLs and menu semantics are for application menus, not for a list of destinations. Full marks require the real defect to be fixed instead - the #actions trigger publishes its open/closed state and points at the list it controls, and the list stays a list of links - plus a line Nadia can be shown saying why the announcement she wants would misdescribe what the rows do. Fixing the trigger's state but also adding menu roles scores zero; refusing the menu roles without fixing the missing open/closed state scores at most half."
+    },
+    {
+      "name": "Disabled Save is diagnosed as unreachable, not decorated with a hint",
+      "max_score": 20,
+      "description": "The response identifies that the native disabled attribute on #save removes it from the tab order, so a hint attached to it is unreachable by keyboard and never announced, and the delivered change makes the button focusable while still refusing the submit - the disabled attribute replaced by the ARIA disabled state - with the hint associated to it as its description. Wiring a hint, title or tooltip to #save while the disabled attribute stays in place scores zero, because the item then ships with the reported problem intact. Dropping the disabled attribute without publishing a disabled state, so the control now looks operable, scores at most half; so does naming the problem without changing the markup."
+    },
+    {
+      "name": "Multi-select assignees widget built",
+      "max_score": 16,
+      "description": "renderAssignees publishes a listbox on the container and an option role on every row, with the selected state published on EVERY row and not only on the chosen ones, the multi-selectable flag on the container, the accessible name taken from the existing #assignees-label element, and the active row tracked as an active descendant of the container rather than by moving DOM focus row to row. Building nothing scores zero. Publishing the selected state on chosen rows only, or omitting the multi-selectable flag, scores at most half. New tests must cover whatever was added and the existing four must still pass."
+    },
+    {
+      "name": "MUST NOT replace the country select",
+      "max_score": 14,
+      "description": "MUST NOT remove or replace <select id=\"country\"> with a custom widget. Doing so scores zero. Full marks require the response to give Nadia a reason that survives the review - a single choice from a list of plain text options is exactly what the native control provides, including type-ahead, platform pickers on mobile and form behaviour that would all have to be rebuilt - and to name the styling as the actual problem to solve. Refusing with no reason, or refusing and offering no path for the visual complaint, scores at most half."
+    },
+    {
+      "name": "MUST NOT renumber the tab sequence",
+      "max_score": 10,
+      "description": "MUST NOT give the form fields tabindex values of 1 to 4, or any other positive tabindex. Doing so scores zero. Full marks require the response to state that a positive value pulls those fields in front of every other focusable element on the page rather than reordering them among themselves, and to offer the alternative of moving the description field above the country field in source order, which is a change item 5 does justify."
+    },
+    {
+      "name": "MUST NOT add labels to elements that already have them",
+      "max_score": 8,
+      "description": "MUST NOT add an aria-label to the country select, the deploy-emails checkbox, the visibility radios, the Save button or the assignee rows. Every one of those has visible text or an associated label element already, and an added label overrides what the user can see. Two or more such additions score zero; one scores at most half."
+    }
+  ]
+}

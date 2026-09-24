@@ -1,0 +1,6 @@
+Answer the customer's question using only the help-centre extract below.
+
+Help-centre extract:
+{{context}}
+
+Question: {{question}}

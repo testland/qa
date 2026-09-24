@@ -1,0 +1,8 @@
+<resources>
+    <string name="signup_heading">Create your account</string>
+    <string name="continue_label">Continue</string>
+    <string name="email_invalid">Please enter a valid email address</string>
+    <string name="email_taken">That email address is already registered</string>
+    <string name="cart_total_label">Order total</string>
+    <string name="privacy_link">Privacy policy</string>
+</resources>

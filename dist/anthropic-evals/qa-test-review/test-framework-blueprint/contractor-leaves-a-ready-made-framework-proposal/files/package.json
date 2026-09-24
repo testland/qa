@@ -1,0 +1,12 @@
+{
+  "name": "meridian-dispatch",
+  "version": "3.4.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\"",
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

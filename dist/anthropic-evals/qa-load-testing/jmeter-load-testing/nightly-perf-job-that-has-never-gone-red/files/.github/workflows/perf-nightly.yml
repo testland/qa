@@ -1,0 +1,45 @@
+name: perf-nightly
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  payments:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Keeps the artifacts folder between runs so ci/trend.mjs can append to it.
+      - name: Restore artifacts
+        uses: actions/cache@v4
+        with:
+          path: artifacts
+          key: perf-nightly-artifacts
+
+      - name: Run the payments profile
+        run: |
+          docker run --rm -v "$PWD:/work" -w /work apache/jmeter:5.6.3 \
+            -n -t plans/payments.jmx \
+            -l artifacts/results.jtl \
+            -q bin/jmeter.properties \
+            -Japi.base.url=https://staging.pay.example.com
+
+      # Heap raised 2026-08-27, see reports/gate-2026-08-27.md
+      - name: Gate
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+        run: node ci/gate.mjs artifacts/results.jtl
+
+      - name: Trend
+        if: always()
+        run: node ci/trend.mjs artifacts/results.jtl
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-nightly
+          path: artifacts/results.jtl
+          retention-days: 14

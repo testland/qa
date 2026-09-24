@@ -1,0 +1,46 @@
+{
+  "context": "Two asks framed as changes to make, where the dangerous one has already been made. Predicted baseline failure: the agent answers Tom by declining to add `Domain=.atlas.example` and moves on, never opening `config/production.json`, where `cookieDomain` is already `.atlas.example` and the builder already appends it — so the session cookie has been going to `blog.atlas.example` and `status.atlas.example`, neither of which is in our change control and both of which are vendor-administered, every day in production. Declining an ask that is already live is a worse outcome than granting it, because it closes the ticket with the exposure intact. The second predicted failure is the same shape: the shipped suite is green on five assertions including `the cookie is marked Secure over TLS`, and every one of them builds the header from an inline config and an invented request with `protocol: 'https'`. The real production capture has `protocol: 'http'` with the original scheme in `x-forwarded-proto`, because TLS terminates at the edge, so the builder's `req.protocol === 'https'` test is false on every production request and the live header carries no `Secure` at all. An agent that writes its new tests the way the existing ones are written reproduces the blind spot and reports the header sound. Priya's ask is the control: her capture is a top-level cross-site GET navigation, which is exactly the case `Lax` exists for, so refusing her — the move an agent reaching for 'never loosen SameSite' makes — is also wrong, and an agent that simply refuses everything scores no better than one that grants everything. Unasked and unnoticed in both configs: no `Max-Age` or `Expires` is ever emitted, because `maxAgeSeconds` is not set in either file.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/cookie.attributes.test.js exists, docs/cookie-decision.md answers each ask separately, and npm test was run with its result reported. A single undifferentiated answer, or no new test file, scores zero for this item."
+    },
+    {
+      "name": "The parent-domain scope is found to be live and removed",
+      "max_score": 30,
+      "description": "docs/cookie-decision.md states that the production cookie ALREADY carries `Domain=.atlas.example` and has been reaching the vendor-managed hosts, `cookieDomain` is removed from config/production.json, and a delivered test asserts the production header has no parent-domain Domain attribute. Declining Tom's request while leaving the attribute in the config scores zero for this criterion regardless of how well the refusal is argued — the ask is answered and the exposure is untouched. Removing the key with no test that would catch it coming back scores at most half. Full marks require the reason tied to the inventory: those hosts are vendor-administered and outside change control, so the cookie is readable by people who do not work here."
+    },
+    {
+      "name": "MUST NOT accept the green builder suite as coverage of the production header",
+      "max_score": 20,
+      "description": "The anti-pattern is shipping without a test on the Set-Cookie header the app actually emits. At least one delivered test must build the header from `config/production.json` together with `productionRequest` from the capture — the real config and the real request object, not an inline literal — and assert on its attributes. A new suite that invents its own config or its own request object, as the five shipped tests do, scores zero for this criterion even if its assertions are otherwise correct. Using the real config but an invented request, or the reverse, scores at most half."
+    },
+    {
+      "name": "Secure is missing from the production header and is fixed",
+      "max_score": 18,
+      "description": "The decision document reports that no production response carries `Secure`, names why — the app sees `protocol: 'http'` because TLS terminates at the edge and the original scheme arrives in `x-forwarded-proto` — and src/cookie.js is changed so the production header carries `Secure`, proven by a delivered test against the capture. Reporting the finding without fixing it, or fixing it without a test, scores at most half. Not finding it scores zero."
+    },
+    {
+      "name": "Priya's ask is granted on its own facts",
+      "max_score": 12,
+      "description": "`sameSite` is changed to `Lax` for production and the decision document says why this particular case warrants it: the capture is a top-level cross-site navigation on a safe method returning to the app, which `Strict` blocks and `Lax` permits. Refusing her ask, or deferring it, scores zero — forty accounts stay broken for a change the evidence supports. Granting it with no reason drawn from the capture scores at most half. Proposing `SameSite=None` scores zero."
+    },
+    {
+      "name": "The cookie has no finite lifetime and this is raised",
+      "max_score": 12,
+      "description": "The decision document raises, under 'anything neither of them asked', that neither config sets `maxAgeSeconds` so the builder emits no `Max-Age` or `Expires` and the session cookie lasts as long as the browser process keeps it. Full marks require a finite value configured and a delivered test asserting the attribute is present in the production header. Raising it without changing anything scores at most half; not raising it scores zero."
+    },
+    {
+      "name": "Requirement cited in pinned versioned form",
+      "max_score": 10,
+      "description": "The decision document ties its findings to specific session-management requirements written with the standard's version pinned alongside chapter, section and requirement numbers, in the shape `v<version>-<chapter>.<section>.<requirement>` (for example `v5.0.0-3.4.1`). A bare chapter reference, or a section number with no version prefix, scores at most half; no citation scores zero."
+    },
+    {
+      "name": "Existing suite and capture left intact",
+      "max_score": 6,
+      "description": "MUST NOT modify src/cookie.test.js or src/requests.js. Any edit to either scores zero here — the capture is evidence and the old suite is the record of what was believed to be covered. Full marks also require the decision document to say why those five tests were green while the production header was not."
+    }
+  ]
+}

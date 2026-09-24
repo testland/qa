@@ -1,0 +1,25 @@
+name: integration
+
+on: [push, pull_request]
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      mail:
+        image: axllent/mailpit:v1.20.0
+        ports: ['1025:1025', '8025:8025']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm ci
+      - run: npm run app:start &
+      # 2026-08-03: was --test-concurrency=1, 22 min -> 6 min at 4
+      - run: node --test --test-concurrency=4 tests/
+        env:
+          MAIL_API: http://localhost:8025
+          APP_URL: http://localhost:3000
+          MAIL_DEBUG: '1'
+          SMTP_HOST: localhost
+          SMTP_PORT: '1025'

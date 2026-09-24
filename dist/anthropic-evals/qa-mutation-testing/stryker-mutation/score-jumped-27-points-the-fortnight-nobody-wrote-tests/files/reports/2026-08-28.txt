@@ -1,0 +1,16 @@
+Mutation testing  [====================] 100% (elapsed: 22m, remaining: 0s) 1186/1186 Mutants tested
+
+------------------------------|---------|----------|-----------|------------|----------|-----------|
+Directory                     | % score | # killed | # timeout | # survived | # no cov | # ignored |
+------------------------------|---------|----------|-----------|------------|----------|-----------|
+All files                     |   62.14 |      720 |        17 |        449 |        0 |         0 |
+ src/payouts/                 |    7.00 |       19 |         2 |        279 |        0 |         0 |
+ src/ledger/                  |   82.77 |      288 |         5 |         61 |        0 |         0 |
+ src/invoices/                |   83.62 |      241 |         4 |         48 |        0 |         0 |
+ src/webhooks/                |   74.48 |      172 |         6 |         61 |        0 |         0 |
+------------------------------|---------|----------|-----------|------------|----------|-----------|
+
+Threshold break is 60. Score 62.14, build passed.
+
+Every mutant in this run was executed by at least one test: the no-coverage
+column is zero for every directory, `src/payouts/` included.

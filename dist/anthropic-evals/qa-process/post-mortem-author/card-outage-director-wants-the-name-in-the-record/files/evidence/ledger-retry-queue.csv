@@ -1,0 +1,7 @@
+# client-side retry queue - entries created 2026-09-04, state as of 2026-09-11
+# every gateway timeout in the incident window created exactly one entry
+# chargebacks or refunds raised against window authorizations as of 2026-09-11: 0
+entry_state,count,value_usd
+settled,1798,402910
+session_abandoned_before_retry_succeeded,44,9730
+still_pending,0,0

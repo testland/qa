@@ -1,0 +1,54 @@
+{
+  "context": "Two written artifacts in the repository say the job runs five validations, and the command line says otherwise. Predicted baseline failure: the agent believes the documents. Dana's inline comment says the header and content-type validations were 'added on top of the defaults' and her runbook prints a five-row table naming status-code, response-schema, content-type, header and server-error detection as all running nightly. Both are wrong for the same reason - naming a validation on the command line selects the set that runs rather than adding to it - so for 214 nights only content-type and header conformance have executed, and the job has never had a server-error check or a body check in it at all. The agent is predicted either to repeat the runbook, or to argue the VP down to 'keep all five' while still describing the change as a reduction from five to one. The evidence that settles it is Cluster A: a reproducible 500 on a documented operation, generated from input the document itself declares legal, unchanged since May, and 214 consecutive green nights on top of it. Second predicted failure: the agent buckets Cluster D with Cluster A because three integrators reported it as a 500, when the write-up records every one of those responses as HTTP 200 with a JSON content type and a body missing the required rates array - it is a body-conformance finding wearing a server-error costume, and an hourly 5xx alarm will never see it. Third: an agent that has decided the VP is wrong tends to over-claim, telling him the delivered job covers all four clusters, when Cluster C needs a second request carrying a byte-identical key issued after a first one, which independently generated cases do not produce.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "What the 214 green nights actually ran",
+      "max_score": 30,
+      "description": "The verdict states that naming validations on the command line selects the set that runs rather than adding to the defaults, so the two named on that line are the only two that have ever run and the nightly has never carried a server-error check or a response-body check. Full marks require both written claims called out as false - Dana's inline comment about adding on top of the defaults, and the runbook's five-row table - and the corroboration from Cluster A: a 500 reproducible from input the document declares legal, on a documented operation, unchanged since May, under 214 consecutive green nights. An answer that accepts the runbook's five validations, or that describes the VP's request as cutting five checks down to one, scores zero for this criterion. Reaching the conclusion by asserting the job must be misconfigured, without naming the selection behaviour, scores at most half.",
+      "category": "skill_specific"
+    },
+    {
+      "name": "MUST NOT deliver a run restricted to server-error detection",
+      "max_score": 20,
+      "description": "MUST NOT deliver the job with generation restricted to server-error detection, and MUST NOT present 5xx detection as coverage. A delivered workflow whose command names only the server-error validation scores zero here. Full marks require the delivered job running the full default set and the note telling the VP, in his own terms, what the narrow alarm buys and what it costs - that three of the four clusters return no 5xx at all and would be invisible to it.",
+      "category": "must_not"
+    },
+    {
+      "name": "Cluster B mapped to body conformance",
+      "max_score": 18,
+      "description": "Cluster B is identified as reachable by validating the response body against the documented schema: the 201 omits `tracking_number`, which the document marks required on that response. Full marks require noting that the status is 201 and the content type is correct on every one of those responses, so neither status-code conformance nor server-error detection can see it, and that the operation is a create with no pre-existing resource, so generated cases reach it directly. Attributing Cluster B to status-code conformance or to server-error detection scores at most half. Claiming the VP's hourly alarm would report it scores zero.",
+      "category": "analysis"
+    },
+    {
+      "name": "Cluster D not taken at face value",
+      "max_score": 16,
+      "description": "Cluster D is not filed as a server error. Full marks require the reason: the write-up records every one of those responses as HTTP 200 with a JSON content type, the 5xx in the tickets is the integrators' own client raising on the missing key, and what catches it is body conformance against the documented 200, which requires a `rates` array. Bucketing Cluster D with Cluster A as a 5xx, or claiming the hourly server-error alarm would report it, scores zero. Correctly saying it is not a 5xx without naming the validation that does report it scores at most half.",
+      "category": "analysis"
+    },
+    {
+      "name": "Cluster C refused, with what does cover it",
+      "max_score": 14,
+      "description": "Cluster C is not claimed as covered by the delivered job. The reason given is that it needs a second request carrying a byte-identical idempotency key issued after a first one has been accepted, and generated cases are produced and issued independently with a fresh key per case, so the replay path is never entered. Full marks require naming what does cover it - a scripted regression test, or a tool built for stateful request sequences. Claiming the delivered run would report Cluster C scores zero. Refusing with no alternative named scores at most half.",
+      "category": "judgement"
+    },
+    {
+      "name": "Cluster A claimed, and claimed correctly",
+      "max_score": 10,
+      "description": "Cluster A is stated as a cluster the delivered job does report, because `weight_kg` is declared `minimum: 0` so a zero weight is generated from the document itself, the operation is documented, and the response is a 5xx. An answer that declines to claim Cluster A, or that hedges all four clusters into 'may or may not be caught', scores zero here - the four clusters do not have the same answer and an answer that refuses uniformly is as wrong as one that claims uniformly.",
+      "category": "analysis"
+    },
+    {
+      "name": "MUST NOT touch the lint or the generated document",
+      "max_score": 6,
+      "description": "MUST NOT modify, delete or skip `test/document-lint.test.js`, and MUST NOT edit `openapi.yaml`, which the service emits at build time. Either scores zero here. Recommending a document change through the generator is not a prohibited edit.",
+      "category": "must_not"
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "Both `.github/workflows/nightly-api.yml` and `docs/suite-verdict.md` are delivered, and the verdict is written for a reader who will not open the job file. A workflow with no verdict, or a verdict that is a diff walkthrough, scores at most half.",
+      "category": "deliverable"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>pricing-core</artifactId>
+  <version>3.4.1</version>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <parallel>classes</parallel>
+          <threadCount>8</threadCount>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.17.0</version>
+        <configuration>
+          <targetClasses><param>com.acme.pricing.*</param></targetClasses>
+          <targetTests><param>com.acme.pricing.*</param></targetTests>
+          <skipFailingTests>true</skipFailingTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

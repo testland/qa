@@ -1,0 +1,27 @@
+# Drafted by Sam 2026-09-10. Not merged. 19m on my branch, green.
+name: DAST (pull request)
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - name: Wait for the review deployment
+        run: ./ci/wait-for-review-deploy.sh
+      - name: Scan
+        run: |
+          docker run --rm -v $(pwd):/zap/wrk/:rw \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-full-scan.py \
+              -t https://pr-${{ github.event.number }}.atlas-review.dev \
+              -j -m 20 \
+              -r zap-report.html
+      - name: Comment on the pull request
+        run: node scripts/post-findings.js zap-report.json
+      - uses: actions/upload-artifact@v4
+        with: { name: zap-report, path: zap-report.html }

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ledgerline</title>
+  </head>
+  <body>
+    <header>
+      <h1 id="project-title">No project open</h1>
+      <nav aria-label="Main">
+        <button type="button" data-action="open-project">Open project</button>
+        <button type="button" data-action="preferences">Preferences</button>
+        <button type="button" data-action="quit">Quit</button>
+      </nav>
+    </header>
+    <main>
+      <label for="account-filter">Filter accounts</label>
+      <input id="account-filter" type="search" />
+      <table>
+        <caption>Ledger entries</caption>
+        <thead>
+          <tr>
+            <th scope="col">Account</th>
+            <th scope="col">Debit</th>
+            <th scope="col">Credit</th>
+          </tr>
+        </thead>
+        <tbody id="entries"></tbody>
+      </table>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

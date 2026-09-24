@@ -1,0 +1,22 @@
+diff --git a/eval/regression.config.json b/eval/regression.config.json
+--- a/eval/regression.config.json
++++ b/eval/regression.config.json
+@@ -2,7 +2,7 @@
+   "datasetFile": "datasets/golden-v6.1.0.jsonl",
+   "providers": [
+     {
+-      "id": "openai:chat:gpt-4.1",
++      "id": "openai:chat:gpt-5.4-mini",
+       "config": { "temperature": 0, "seed": 42 }
+     }
+   ],
+@@ -10,8 +10,8 @@
+   "grader": {
+-    "model": "gpt-4.1",
++    "model": "gpt-5.4-mini",
+     "assertionTypes": ["llm-rubric", "g-eval"],
+-    "passScore": 0.75
++    "passScore": 0.55
+   },
+   "gate": {
+     "compareTo": "results/baseline-2026-08-30.json",

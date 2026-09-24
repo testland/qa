@@ -1,0 +1,22 @@
+name: e2e
+
+on:
+  schedule: [{ cron: '0 2 * * *' }]
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: [self-hosted, ci-shared-02]
+    container:
+      image: ghcr.io/shop/e2e-runner:2026.08
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker compose up -d --wait
+      - run: pip install -r requirements.txt
+      - name: run the suite
+        run: pytest -n 4 --dist load tests/ --junitxml=reports/junit.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit
+          path: reports/

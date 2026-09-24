@@ -1,0 +1,39 @@
+{
+  "configurations" : [
+    {
+      "id" : "5E0C1A9E-3D77-4F1B-B0E6-8C9A21D4E5F0",
+      "name" : "Release",
+      "options" : {
+        "maximumTestRepetitions" : 3,
+        "testRepetitionMode" : "retryOnFailure"
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "maximumTestExecutionTimeAllowance" : 600,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Tidewater.xcodeproj",
+      "identifier" : "A1B2C3D4E5F60718293A4B5C",
+      "name" : "Tidewater"
+    },
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Tidewater.xcodeproj",
+        "identifier" : "F0E1D2C3B4A596871A2B3C4D",
+        "name" : "TidewaterUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Tidewater.xcodeproj",
+        "identifier" : "C4D5E6F708192A3B4C5D6E7F",
+        "name" : "AccountUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

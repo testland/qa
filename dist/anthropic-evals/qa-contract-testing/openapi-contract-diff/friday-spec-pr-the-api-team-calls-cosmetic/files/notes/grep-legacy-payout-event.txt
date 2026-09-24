@@ -1,0 +1,8 @@
+rg -n "LegacyPayoutEvent" spec/ src/ sdk/
+spec/openapi.yaml:227:    LegacyPayoutEvent:
+
+rg -n "ref.*LegacyPayoutEvent" .
+(no matches, exit status 1)
+
+Checked at commit 1f3c9ae on the PR branch. Nothing in spec/, nothing in the
+service, nothing in the three SDK source trees points at that schema.

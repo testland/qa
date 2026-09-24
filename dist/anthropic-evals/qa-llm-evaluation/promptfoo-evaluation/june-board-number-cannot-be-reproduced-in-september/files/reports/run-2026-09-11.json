@@ -1,0 +1,28 @@
+{
+  "commit": "a31f0c9",
+  "timestamp": "2026-09-11T14:02:47Z",
+  "config": "evals/assistant/promptfooconfig.yaml",
+  "aliasesResolved": {
+    "openai:gpt-5-mini": "gpt-5-mini-0829",
+    "openai:gpt-5": "gpt-5-0814"
+  },
+  "results": {
+    "rows": 79,
+    "passed": 62,
+    "failed": 17,
+    "passRate": 0.785
+  },
+  "failuresByAssertionType": {
+    "g-eval": 7,
+    "llm-rubric": 6,
+    "contains": 3,
+    "is-json": 1
+  },
+  "gradingCalls": 158,
+  "diffVsBaseline": {
+    "baseline": "reports/run-2026-06-12.json",
+    "rowsNewlyFailing": 11,
+    "rowsNewlyPassing": 0,
+    "gradedScoresWithin0_05OfThreshold": 4
+  }
+}

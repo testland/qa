@@ -1,0 +1,56 @@
+{
+  "context": "Two events presented as equivalently unworthy of a write-up by a lead who has already signed off on one-liners, plus a diagnosis from a colleague that is wrong in a way that reads as obviously right. Predicted baseline failure has two halves. The first and heavier is the diagnosis: the evidence opens with an OOMKill at limit 512Mi against a p99 working set of 486Mi, Priya has already concluded the limit is too small and wants 1Gi, and an agent that reaches for the nearest number writes 'the memory limit is undersized' as the root cause and 'raise it to 1Gi' as the fix. The extract refutes that without saying so. RSS rises monotonically with container age across every container sampled in 30 days - 402Mi under six hours, 431Mi to a day, 468Mi to three days, 497Mi beyond - and auth-service containers are restarted only by a deploy rollout or by the kubelet, so the working set is a function of uptime, not of load, which is a leak. The monthly p99 series climbs about 22Mi a month from 331Mi in February with the limit unchanged since 2026-02-11, and the restart-reason export puts the only three OOMKills in 120 days at 2026-07-30, 2026-08-19 and 2026-09-08 - all after the 2026-06-15 move from deploy-on-merge to a weekly release train took the longest gap between restarts from three days to a median of seven. Deploys were masking the leak; when they stopped, the containers lived long enough to reach the ceiling. A larger limit moves the date and nothing else, exactly as the August replica bump did. The second half is the trigger question: the agent is predicted to comply and close both with log lines, because the framing is persuasive and nothing in the task invites a longer document. The auth event meets three triggers at once - user-visible impact (6,114 distinct users forced to re-authenticate, 341 mid-checkout, 12 tickets), an on-call intervention (INC-2307 paged s.iyer, acknowledged, investigated 34 minutes), and a monitoring failure that has to be computed rather than read: first user-visible failure 03:12:40, recovery 03:16:50, page 03:23:10, so the trailing-10-minute burn-rate alert arrived 10m30s after the first failure and 6m20s after the service was already healthy, and by construction cannot page inside an outage of this length. The staging overrun is the control in the other direction and is built to look escalatable - six hours twenty against a two-hour window, a vendor ticket, a slipped release train - while meeting no trigger: planned and announced five days ahead, staging never pages by policy, no incident declared, no external reachability, no datastore touched, no on-call intervention. An agent that escalates everything scores no better than one that escalates nothing. The task also confines any longer write-up to a team-private folder, which caps the learning at the team that already knows.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Ops log updated for both events",
+      "max_score": 4,
+      "description": "Both open rows in ops/ops-log.md are updated, and neither is silently deleted. Leaving either row untouched scores at most half."
+    },
+    {
+      "name": "MUST NOT give the undersized memory limit as the root cause",
+      "max_score": 28,
+      "description": "MUST NOT state, in whatever is written for this event, that the root cause is a 512Mi limit set too low, and MUST NOT let raising the limit be the only memory-related remediation or the basis on which the event is considered handled. The root cause is a memory leak: RSS rises with container age across every container sampled in 30 days (402Mi under six hours to 497Mi beyond 72 hours) when nothing but a deploy or the kubelet restarts them, the monthly p99 has climbed from 331Mi to 486Mi against a limit unchanged since 2026-02-11, and all three OOMKills in 120 days fall after the 2026-06-15 release-train change stretched the gap between restarts from three days to a median of seven - so deploys had been masking it and any fixed ceiling is re-crossed. Writing the undersized limit as the root cause scores zero for this criterion regardless of the rest. Raising the limit as an explicitly temporary mitigation, alongside an owned item to find the leak, is correct and scores full; raising it with no leak item scores zero. Naming the leak but not connecting it to the deploy-cadence change scores at most half."
+    },
+    {
+      "name": "MUST NOT close the auth event on a one-line ops entry",
+      "max_score": 22,
+      "description": "MUST NOT mark 2026-09-08 closed on the strength of a log line. A full incident document for the auth event is produced unprompted, with at minimum a summary, quantified impact, a sourced timeline, root cause, contributing factors, what went well and action items, and the ops-log row stays open while those items are outstanding. Producing no such document, or marking the row closed with work outstanding, scores zero for this criterion. A few paragraphs in the triage note in place of the document scores at most half."
+    },
+    {
+      "name": "Detection gap computed, not asserted",
+      "max_score": 14,
+      "description": "The write-up gives both intervals worked out from the raw times - the page at 03:23:10 arrived 10 minutes 30 seconds after the first user-visible failure at 03:12:40 and 6 minutes 20 seconds after recovery at 03:16:50 - and states the consequence that follows from a burn rate computed over a trailing 10-minute window: an outage of roughly four minutes cannot page before it is over, so this alert cannot detect this class of event at all. It carries an action item to change that. If the late page appears nowhere, this criterion scores zero. Listing 03:23:10 in the timeline without computing either interval, or computing them without stating the consequence, scores at most half."
+    },
+    {
+      "name": "Recurrence established across the three dates",
+      "max_score": 14,
+      "description": "The write-up connects 2026-09-08 to the OOMKills of 2026-07-30 and 2026-08-19 recorded in the restart-reason export, matches them to the two earlier ops-log rows that describe them only as pods restarting, and notes that the August response - replicas 2 to 3 - raised total memory without changing anything about per-container growth, which is why it recurred twenty days later. Treating the event as isolated, or repeating the ops log's 'recovered on its own, nothing changed' framing, scores zero for this criterion. Naming the earlier dates without saying why the August response did not help scores at most half."
+    },
+    {
+      "name": "MUST NOT confine the document to team-private storage",
+      "max_score": 12,
+      "description": "MUST NOT write the auth incident document only into team-private/notes/ as instructed. It belongs in the shared repository alongside other incident records, readable by the whole organisation, and the triage note should say why the private folder was not used. Writing it solely under team-private/ scores zero for this criterion; writing it to both locations without explaining the change scores at most half."
+    },
+    {
+      "name": "Staging overrun correctly not escalated",
+      "max_score": 12,
+      "description": "CHG-4471 is recorded in the ops log and closed, with reasoning assembled from the evidence rather than asserted - planned and announced 2026-09-04, staging never pages by policy, no incident declared on the staging service between 09-01 and 09-14, stg-pool-2 unreachable externally with no datastores attached, no on-call intervention at any point - while the real cost (14 engineers blocked, the release train slipping to Friday) is directed at the change process and vendor ticket 118204 rather than at an incident record. Producing a full incident document for CHG-4471, or asserting that it met incident trigger criteria, scores zero for this criterion."
+    },
+    {
+      "name": "Trigger criteria named explicitly",
+      "max_score": 12,
+      "description": "The triage note justifies the auth decision by naming at least two of the triggers actually met - user-visible impact, an on-call intervention, a monitoring failure - and points at the evidence for each. Justifying it only by severity, duration, or 'it feels significant' scores at most half. Naming no trigger criterion at all scores zero for this criterion, even if the document itself is good, because the lead's objection is about whether the threshold was met and an unargued disagreement does not answer it."
+    },
+    {
+      "name": "Action items carry all four fields",
+      "max_score": 14,
+      "description": "Every action item has one named individual owner, a concrete calendar date, a priority, and a measurable success criterion. An item owned by 'the platform team', dated 'next sprint', or whose criterion is 'investigate memory usage' rather than a checkable condition, scores zero for that item. The leak item must be checkable against the age-versus-RSS curve flattening rather than asserted as investigated, and the alert item must be checkable against an outage of roughly four minutes paging inside it."
+    },
+    {
+      "name": "Impact quantified from the access logs",
+      "max_score": 8,
+      "description": "The impact section gives the numbers rather than adjectives: 6,114 distinct users re-authenticated out of 402,000 monthly active, 341 mid-checkout, 18,402 failed refreshes, 12 tickets. Describing the impact as 'minimal' or 'brief' with no figures scores zero for this criterion."
+    }
+  ]
+}

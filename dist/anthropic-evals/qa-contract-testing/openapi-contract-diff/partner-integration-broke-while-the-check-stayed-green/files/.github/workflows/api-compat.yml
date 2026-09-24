@@ -1,0 +1,35 @@
+name: api-compat
+
+on:
+  pull_request:
+    paths:
+      - 'spec/**'
+
+jobs:
+  compat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Resolve the spec we are comparing against
+        run: |
+          BASE=$(git merge-base origin/main HEAD)
+          git show "$BASE:spec/openapi.yaml" > /tmp/base.yaml
+
+      - name: Compare
+        run: |
+          docker run --rm -v "$PWD:/specs" -v /tmp:/tmp tufin/oasdiff breaking \
+            --fail-on ERR \
+            --format json \
+            /tmp/base.yaml \
+            /specs/spec/openapi.yaml > oasdiff-report.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-breaking-report
+          path: oasdiff-report.json
+          retention-days: 14

@@ -1,0 +1,46 @@
+{
+  "context": "The fix everyone reaches for is already in the workflow and is being destroyed on every run, and the prompt explicitly tells the agent not to look there. Predicted baseline failure: the agent accepts the user's framing that 'that road is closed', because PLAT-3540 did append `-DwithHistory` in August and the monthly medians did not move — and then spends its answer on scoping, scheduling and the two proposals. What it is predicted not to work out is why the flag did nothing: incremental analysis works off a history file that the flag places under the build directory, the step runs `mvn -B clean` immediately before the analysis so the file is deleted at the start of every run, and the job runs on a fresh hosted runner that the change log states has never had a cache step — so even without `clean` there would be nothing from the previous run to read. Every PR therefore re-mutates all 41,880 mutants from scratch, which is why PR 7733 with one file changed takes 3h19m. Making the flag work means putting the history file somewhere `clean` does not reach and carrying it between runs deliberately. The second predicted failure is leaving `<mutator>ALL</mutator>` in the pom: the change log dates it to 2026-05-19 and the medians step from 1h29m in May to 3h14m in June with no other change, but nothing in the fixture says so in words. Both of the tabled proposals are wrong in the same way — one gives up 15 packages permanently, the other gives up per-PR feedback — and an agent that takes either has answered the runtime question by deleting coverage.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Incremental analysis made to actually work",
+      "max_score": 32,
+      "description": "The answer must diagnose why `-DwithHistory` has had no effect and fix it. Full marks require both halves: the history file put somewhere the build's `clean` does not delete — `historyInputFile`/`historyOutputFile` pointed outside the build directory, or `clean` dropped from the analysis command — AND an explicit mechanism that carries that file from one run to the next on an ephemeral hosted runner, such as a cache step keyed so a pull request restores the base branch's history. Accepting the user's 'that road is closed' and leaving the flag as it is scores zero, and so does 'add `-DwithHistory`', which is already there. Doing one half only — removing `clean` with nothing persisting the file, or adding a cache step while `clean` still deletes it before the analysis runs — scores at most half. A diff-scoped or changed-files-only answer that never addresses the history file scores at most half."
+    },
+    {
+      "name": "MUST NOT keep the complete operator catalogue",
+      "max_score": 20,
+      "description": "`<mutators><mutator>ALL</mutator></mutators>` MUST be removed and replaced with the default or stronger set. Leaving it scores zero. Full marks require the change to be justified from the attached evidence — PLAT-3301 on 2026-05-19 and the median stepping from 1h29m in May to 3h14m in June with no other change — and to note that the added operators buy mutants that are largely irrelevant on this codebase. Removing it with no evidence cited scores at most half."
+    },
+    {
+      "name": "MUST NOT permanently drop the other 15 packages",
+      "max_score": 16,
+      "description": "Marek's proposal MUST be refused: `targetClasses` may not be narrowed to `com.acme.payments.*` as the standing configuration, and `com.acme.ledger` and `com.acme.settlement` must stay in what is measured. Adopting it scores zero, including 'adopt it now and widen later' with no dated mechanism. Full marks require naming what it costs — those packages stop being checked at all rather than being checked less often — and offering the runtime saving by another route."
+    },
+    {
+      "name": "Full run kept on a schedule",
+      "max_score": 14,
+      "description": "A complete, non-incremental run over all 16 packages must survive somewhere — a scheduled job on `main`, with the threshold enforced there. Deleting the pull-request job per Priya's proposal scores zero. Keeping a per-PR job only, with no full run anywhere, also scores zero: incremental runs measure only what changed and the whole-module number has to come from somewhere. Retaining a full run without saying what it gates scores at most half."
+    },
+    {
+      "name": "Escape hatch removed",
+      "max_score": 10,
+      "description": "The `[skip-mut]` condition on the job `if:` must be deleted, so the gate cannot be opted out of from the pull request title. Leaving it in scores zero. Replacing it with a narrower, auditable bypass — a label that a named group can apply — earns full marks; leaving it and merely asking people not to use it scores at most half."
+    },
+    {
+      "name": "Reports kept and machine-readable",
+      "max_score": 8,
+      "description": "The pull-request job uploads `target/pit-reports/` as an artifact so the result is readable without re-running, and `outputFormats` carries XML alongside HTML. Neither present scores zero; one of the two scores half."
+    },
+    {
+      "name": "Expected runtime stated against the target",
+      "max_score": 6,
+      "description": "The document states the pull-request runtime expected after the change and compares it with the 20-minute target the user set, attributing the saving to the specific changes made. A vague 'much faster' scores at most half; no figure at all scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The workflow file is edited and `docs/mutation-ci-decision.md` exists with a separate, explicit verdict on each of the two proposals."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {"id": "q-01", "topic": "refunds", "question": "How long do I have to return this?", "answer": "You can request a full refund within 30 days of purchase.", "expected": "You can request a full refund within 30 days of purchase."},
+  {"id": "q-02", "topic": "refunds", "question": "Is there a deadline on refunds?", "answer": "Refund requests are accepted for 30 days after purchase.", "expected": "Refund requests are accepted for 30 days after purchase."},
+  {"id": "q-03", "topic": "refunds", "question": "What if I miss the refund window?", "answer": "After 30 days it is handled as goodwill at the support lead's discretion.", "expected": "After 30 days refunds are goodwill only, at the support lead's discretion."},
+  {"id": "q-04", "topic": "billing", "question": "When am I charged?", "answer": "On the same day each month, starting from your signup date.", "expected": "Billing runs monthly on your signup anniversary."},
+  {"id": "q-05", "topic": "billing", "question": "Can I get an invoice?", "answer": "TODO", "expected": "Invoices are available under Settings > Billing > Invoices."},
+  {"id": "q-06", "topic": "billing", "question": "Do you take purchase orders?", "answer": "TODO", "expected": "Purchase orders are supported on annual plans; contact sales."},
+  {"id": "q-07", "topic": "seats", "question": "How do I add a teammate?", "answer": "An account owner adds them from Settings > Members; the seat is prorated on your next invoice.", "expected": "An account owner adds members from Settings > Members; new seats are prorated on the next invoice."},
+  {"id": "q-08", "topic": "seats", "question": "How do I add a teammate?", "answer": "I am not able to help with that. Please contact support.", "expected": "An account owner adds members from Settings > Members; new seats are prorated on the next invoice."},
+  {"id": "q-09", "topic": "seats", "question": "Can a member invite others?", "answer": "No, only account owners can invite.", "expected": "Only account owners can invite members."},
+  {"id": "q-10", "topic": "security", "question": "Do you support SSO?", "answer": "SAML SSO is available on the Scale tier, configured from Settings > Security.", "expected": "SAML SSO is available on the Scale tier, configured from Settings > Security."},
+  {"id": "q-11", "topic": "security", "question": "Where is our data held?", "answer": "In the region you picked at signup: EU, US or AP.", "expected": "Account data is held in the region selected at signup: EU, US or AP."},
+  {"id": "q-12", "topic": "security", "question": "Is data encrypted at rest?", "answer": "Yes, at rest and in transit.", "expected": "Data is encrypted at rest and in transit."}
+]

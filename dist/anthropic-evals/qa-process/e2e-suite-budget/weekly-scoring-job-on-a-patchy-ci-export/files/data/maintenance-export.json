@@ -1,0 +1,27 @@
+{
+  "_note": "PRs touching each spec, 2026-06-10 to 2026-09-08. Generated from the tree as of 2026-08-19.",
+  "prs": {
+    "checkout.spec.ts > card-purchase-happy-path": 2,
+    "checkout.spec.ts > saved-card-purchase": 1,
+    "checkout.spec.ts > three-d-secure-challenge": 3,
+    "cart.spec.ts > line-item-edit": 0,
+    "auth.spec.ts > login-with-password": 1,
+    "auth.spec.ts > sso-redirect": 3,
+    "auth.spec.ts > password-reset-email": 0,
+    "account.spec.ts > change-password": 0,
+    "account.spec.ts > data-export-request": 0,
+    "account.spec.ts > avatar-upload": 4,
+    "search.spec.ts > keyword-results": 0,
+    "search.spec.ts > facet-filters": 0,
+    "reports.spec.ts > export-50k-rows": 0,
+    "reports.spec.ts > scheduled-email-report": 0,
+    "admin.spec.ts > audit-log-download": 4,
+    "admin.spec.ts > user-role-change": 0,
+    "admin.spec.ts > bulk-invite-users": 0,
+    "orders.spec.ts > print-packing-slip": 0,
+    "settings.spec.ts > api-key-rotation": 0,
+    "onboarding.spec.ts > sample-data-import": 2,
+    "legacy.spec.ts > coupon-stacking": 6,
+    "beta.spec.ts > invite-flow": 2
+  }
+}

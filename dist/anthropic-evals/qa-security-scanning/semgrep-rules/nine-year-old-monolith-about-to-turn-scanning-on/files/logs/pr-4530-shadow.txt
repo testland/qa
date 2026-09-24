@@ -1,0 +1,8 @@
+2026-09-08T11:04:12.3310Z ##[group]Run semgrep ci --config p/owasp-top-ten --config p/javascript --severity ERROR --baseline-ref origin/main -j 4 --metrics=off
+2026-09-08T11:04:13.0102Z
+2026-09-08T11:04:13.0103Z  ---- Semgrep CLI 1.99.0 ----
+2026-09-08T11:04:13.7741Z Scanning 6 files tracked by git with 1042 rules.
+2026-09-08T11:04:41.2210Z
+2026-09-08T11:04:41.2211Z Ran 1042 rules on 6 files: 0 findings.
+2026-09-08T11:04:44.8802Z ##[endgroup]
+2026-09-08T11:04:45.0110Z Process completed with exit code 0.

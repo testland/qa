@@ -1,0 +1,16 @@
+#inc-2291 - channel export 2026-09-05, times UTC
+
+16:17 m.okonkwo: paged. auth errors on the gateway, 6% and climbing
+16:18 m.okonkwo: checkout is failing for real customers, I can reproduce it on the prod test account
+16:21 j.alvarez: I had the gateway dashboard open for something else. upstream p99 is fine, we are the ones timing out
+16:22 m.okonkwo: right, these are our timeouts, not issuer declines
+16:26 r.bhatt: who approved this
+16:29 j.alvarez: found it. #8871 sets gateway.stripe.timeout_ms 8000 -> 800
+16:31 j.alvarez: the PR only ever asked for one approval. it was green when it merged
+16:33 r.bhatt: the gateway tree is codeowned. that is not supposed to be possible
+16:36 p.raghavan: I am here, sorry - I moved the value thinking the field was seconds. reverting now
+16:39 m.okonkwo: calling it SEV-2, priya is pushing the revert
+16:47 p.raghavan: revert merged, #8872
+16:52 m.okonkwo: error rate is back to baseline
+17:04 j.alvarez: somebody pull up deploy/pipeline.yml and staging/gateway.yml before we write this up. both of them are part of why an 800ms timeout got all the way to prod
+17:12 m.okonkwo: retry queue picked up every failed auth, ops says they are draining fine

@@ -1,0 +1,38 @@
+# Accepted dependency exceptions. Reviewed 2026-06-11 (exception review).
+waivers:
+  - cve: CVE-2024-21538
+    package: npm:cross-spawn@7.0.3
+    reason: "ReDoS reachable only from CLI argument parsing we do not use; upgrade lands in 9.5"
+    expires: 2027-03-31
+    approved_by: security@example.com
+
+  - package: deb:ghostscript@10.02.1
+    reason: "Conversion worker runs sandboxed under seccomp; no untrusted PostScript reaches it"
+    expires: 2027-06-30
+    approved_by: security@example.com
+
+  - cve: CVE-2025-27789
+    package: npm:@babel/helpers@7.26.9
+    expires: 2027-01-31
+    approved_by: platform-team
+    reason: >
+      Reached only by the docs build; the generated helper is never emitted
+      into the shipped bundle.
+      owner: docs guild, tracked in PLAT-2214
+
+  - cve: CVE-2024-4068
+    package: npm:braces@3.0.2
+    reason: "Transitive through the test runner; not in the shipped bundle"
+    approved_by: security@example.com
+
+  - cve: CVE-2023-45857
+    package: npm:axios@1.5.0
+    reason: "Accepted at the June review pending the 1.6 upgrade"
+    expires: 2026-08-31
+    approved_by: security@example.com
+
+  - cve: CVE-2021-23337
+    package: npm:lodash@4.17.20
+    reason: "Command injection in template; template is not used in this service"
+    expires: 2027-02-28
+    approved_by: security@example.com

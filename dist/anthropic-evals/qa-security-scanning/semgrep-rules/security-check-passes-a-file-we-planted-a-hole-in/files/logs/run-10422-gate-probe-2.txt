@@ -1,0 +1,8 @@
+2026-09-09T09:12:41.0021Z ##[group]Run semgrep ci --config p/owasp-top-ten --config p/javascript --baseline-ref origin/main --sarif --output semgrep.sarif --metrics=off
+2026-09-09T09:12:41.6640Z
+2026-09-09T09:12:41.6641Z  ---- Semgrep CLI 1.99.0 ----
+2026-09-09T09:12:42.3312Z Scanning 119 files tracked by git with 1042 rules.
+2026-09-09T09:13:27.4410Z
+2026-09-09T09:13:27.4411Z Ran 1042 rules on 119 files: 0 findings.
+2026-09-09T09:13:28.0022Z ##[endgroup]
+2026-09-09T09:13:28.2210Z Process completed with exit code 0.

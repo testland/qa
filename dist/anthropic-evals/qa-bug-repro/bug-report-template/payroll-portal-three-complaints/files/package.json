@@ -1,0 +1,6 @@
+{
+  "name": "palewell-intake",
+  "version": "2.4.0",
+  "type": "commonjs",
+  "scripts": { "test": "node --test" }
+}

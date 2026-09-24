@@ -1,0 +1,41 @@
+{
+  "context": "Predicted baseline failure: the agent strips the two `IgnoreTopFunction` suppressions out of `leak_test.go`, watches `TestPoolDoesNotLeak` go red, and calls it done. That is the easy third of the problem. Two harder things are predicted to be missed. First, the leak check is deferred inside a test that calls `t.Parallel()`, and a per-test verification cannot attribute goroutines when sibling tests are running concurrently — the goroutines it sees belong to whichever parallel tests happen to be in flight, so it reports leaks that are not this test's and misses ones that are. The package-wide form is a `TestMain` running `goleak.VerifyTestMain(m)`, and the prompt closes the obvious escape by forbidding a return to serial execution, so an agent that merely deletes `t.Parallel()` to make the per-test call work has traded a real constraint away. Second, `helpers_test.go` opens a `database/sql` handle at package load and never closes it, so `database/sql.(*DB).connectionOpener` is alive for the whole test binary; an agent that removes every filter without replacing them with a filter for that specific library goroutine produces a gate that fails on code that is correct. The package-level `goleak.IgnoreCurrent()` is the third trap — a snapshot taken once at load time rather than inside each check. Underneath all of it sits Tobias's claim, which the agent is predicted to concede or to dodge: the race detector finds unsynchronised concurrent access to memory, and `reportDepth` and `drainResults` are not racing on anything — they are simply never stopped. A clean detector run is not evidence about this failure class at all, and the two gates are complementary rather than alternatives.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Leak verification moved off the parallel tests",
+      "max_score": 30,
+      "description": "Leak verification is done package-wide from a `TestMain` calling `goleak.VerifyTestMain(m)`, not per-test. MUST NOT leave a `goleak.VerifyNone(t, ...)` deferred inside a test that also calls `t.Parallel()` — that scores zero here. Removing `t.Parallel()` from any existing test, or otherwise forcing the package to run serially, also scores zero: the prompt states the platform team will not accept it and it trades a real constraint for a broken check. Scores at most half if `TestMain` is added but per-test `VerifyNone` calls are left in place alongside it."
+    },
+    {
+      "name": "Detector claim answered correctly",
+      "max_score": 22,
+      "description": "`docs/leak-gate.md` tells Tobias that the race detector reports unsynchronised concurrent access to memory and says nothing about goroutines that outlive their work, so its silence on this package is expected rather than exculpatory, and that both gates stay because they cover different failure classes. Scores zero if the answer agrees a clean detector run is evidence the package is fine, if it claims the detector would or should have caught this, or if it proposes removing or replacing the detector step with the leak check. Scores at most half if it only asserts the leak is real without explaining why the existing gate was always going to be silent about it."
+    },
+    {
+      "name": "Suppressions distinguished from filters",
+      "max_score": 18,
+      "description": "The two `IgnoreTopFunction` entries naming this package's own `reportDepth` and `drainResults` are gone, and a filter is added for the goroutine that legitimately outlives the tests — the `database/sql` connection opener started by the package-level handle in `helpers_test.go` and never closed. Scores zero if the pool's own goroutines remain filtered out under any mechanism, including a rewritten filter, a skip, or a build tag. Scores at most half if every filter is removed with nothing covering the long-lived `database/sql` goroutine, which leaves the gate failing on correct code."
+    },
+    {
+      "name": "Load-time snapshot removed",
+      "max_score": 12,
+      "description": "The package-level `alreadyRunning = goleak.IgnoreCurrent()` is dropped rather than carried into the new arrangement. A snapshot captured once when the package loads silences whatever was running at that instant for every subsequent check, which is a different thing from naming the library goroutine that is expected. Keeping it scores zero here."
+    },
+    {
+      "name": "Gate wired into CI",
+      "max_score": 10,
+      "description": "`.github/workflows/ci.yml` runs the package's tests in a way that surfaces the new failure, and the existing detector step survives. Deleting or disabling the detector step scores zero. Leaving CI untouched scores at most half if the check is nonetheless reached by the existing `go test ./...` step and the document says so."
+    },
+    {
+      "name": "Owner's file untouched",
+      "max_score": 8,
+      "description": "MUST NOT modify `internal/pool/pool.go`. Stopping the ticker, closing `results`, or adding a stop channel to the pool scores zero here even though it would fix the leak — the ticket asks for the red build that gets the owner to act, and the prompt says so explicitly."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 5,
+      "description": "`docs/leak-gate.md` exists and addresses Tobias directly, stating what the new check catches that the existing one cannot. A file that only lists the code changes scores at most half."
+    }
+  ]
+}

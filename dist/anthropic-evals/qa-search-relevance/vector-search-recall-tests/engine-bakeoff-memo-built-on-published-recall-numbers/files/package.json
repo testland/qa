@@ -1,0 +1,9 @@
+{
+  "name": "archive-search-bakeoff",
+  "version": "0.3.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "bakeoff": "node bench/bakeoff.js"
+  }
+}

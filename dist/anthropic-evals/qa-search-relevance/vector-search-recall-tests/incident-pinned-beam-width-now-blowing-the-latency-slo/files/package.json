@@ -1,0 +1,9 @@
+{
+  "name": "vector-search-tier",
+  "version": "5.4.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "sweep": "node bench/sweep.js"
+  }
+}

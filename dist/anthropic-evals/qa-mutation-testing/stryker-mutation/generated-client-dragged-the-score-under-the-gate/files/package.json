@@ -1,0 +1,18 @@
+{
+  "name": "billing-service",
+  "version": "4.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "codegen": "openapi-generator-cli generate -i openapi.yaml -g javascript -o src/api/generated",
+    "prebuild": "npm run codegen",
+    "build": "node scripts/bundle.js",
+    "test": "node --test test/",
+    "mutation": "stryker run"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "2.13.4",
+    "@stryker-mutator/core": "8.6.0",
+    "@stryker-mutator/tap-runner": "8.6.0"
+  }
+}

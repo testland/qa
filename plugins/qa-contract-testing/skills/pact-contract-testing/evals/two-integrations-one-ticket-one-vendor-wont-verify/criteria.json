@@ -1,0 +1,41 @@
+{
+  "context": "Five items framed so that the two integrations look identical and the vendor's paid add-on looks like the thing that closes the gap. Predicted baseline failure: the agent refuses item 2 on the reflexive ground that a third party will never run verification for us, and then accepts item 3 - because item 3 is a third party offering to run exactly that, on their own infrastructure, for $400 a month, with no engineering effort. An agent holding only the shallow rule loses the whole weight of the scenario at that turn, and one that refuses both without the specific reasons cannot defend either on Monday. The fixture settles item 3 without stating it. The replay executes against the sandbox account; the product page's own FAQ says the sandbox is refreshed from production on the first Tuesday of each month; and Vikram's post-incident note records that the sandbox was still returning the old integer shape on 2026-08-28, two weeks into an outage that started 2026-08-14 - so the replay would have reported a pass throughout INC-2264, which is the one thing the ticket demands any proposal be able to answer. The second half is that the report is delivered to us as JSON and PDF and is pushed to no other system, and there is no Shiplane version anyone can record as deployed, so no verification result ever exists for a Shiplane version and the deploy comparison has no pair to evaluate - registering Shiplane as a participant buys a row that can never be filled in. Items 4 and 5 are the control: an agent that protects itself by refusing the operational asks scores no better than one that grants everything, and item 5 in particular is a plain yes that a defensive agent is likely to push back to the provider's team.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/arch-742-response.md exists and gives a separate explicit verdict on each of the five numbered items, and test/pricing.consumer.spec.js is written. One undifferentiated recommendation covering 'the integrations', or a review that skips an item, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT let the vendor's replay report stand in for verification",
+      "max_score": 30,
+      "description": "MUST NOT register Shiplane as a participant on the strength of the add-on, MUST NOT put its report on the release checklist or any deploy gate, and MUST NOT present it as the provider running verification. Any of those scores zero for this criterion whatever else the answer gets right. Full marks require the two determinate reasons, not a general caution about third parties: first, the replay runs against the sandbox, the product page says the sandbox is refreshed from production monthly, and Vikram's note records it still serving the old integer shape on 2026-08-28 - so a replay would have passed on every day of INC-2264, which is the test the ticket sets; second, the report comes back to us as a file and reaches no other system, and no Shiplane version is ever recorded as deployed, so no result exists for any pair and the comparison the gate performs has nothing to evaluate. Giving only one of those two reasons scores at most half. Buying the add-on purely as an extra early-warning signal, explicitly outside the gate and not as verification, does not score zero here provided both reasons are given."
+    },
+    {
+      "name": "MUST NOT put the vendor under a published contract",
+      "max_score": 14,
+      "description": "MUST NOT finish, rename, or wire test/shiplane.consumer.spec.js into the test script, and MUST NOT publish expectations naming Shiplane as provider. Doing so scores zero here. Full marks require the reason tied to who has to run the replay and where the result has to land, rather than 'they are a third party' - a contract nobody verifies leaves the deploy comparison permanently unable to answer for that participant, or forces it to be told to ignore them, which is the same as not having it."
+    },
+    {
+      "name": "A replacement for the vendor that would have caught INC-2264",
+      "max_score": 14,
+      "description": "The response proposes watching Shiplane's own published OpenAPI document - a scheduled fetch compared against the last accepted copy, failing or alerting on a breaking change - and says why it needs nothing from the vendor and would have fired on the day: they regenerate the document on every release, while the changelog arrived two days after the incident and the sandbox two and a half weeks after it. Proposing only alerting on our own error rate, a synthetic checkout, or defensive parsing of eta_days scores at most half: those detect the outage, not the change. Leaving item 2 refused with no replacement scores zero."
+    },
+    {
+      "name": "The internal test is written and scoped to what we read",
+      "max_score": 18,
+      "description": "test/pricing.consumer.spec.js records a POST /v1/quotes interaction with a starting state drawn from the three the Pricing team already declare, and asserts only the four fields src/quote.js reads - currency, subtotal_cents, discount_amount_cents, total_cents - matched on type rather than on literal fixture values. Asserting fields nothing in src/quote.js touches (tax_cents, breakdown, quote_id, expires_at, pricing_engine_version, experiment_bucket, cache_hit) scores at most half, since each becomes a breakage the Pricing team has to answer for. Pinning exact literal values for the four scores at most half. Inventing a state name when three are documented scores at most half. Refusing item 1, or producing no test file, scores zero."
+    },
+    {
+      "name": "The two operational items answered yes, with reasons",
+      "max_score": 12,
+      "description": "Item 4 is yes - mobile-bff publishes its own expectations under its own consumer name and pricing-service verifies against both - and item 5 is yes: the comparison belongs in our pipeline as well as theirs, because their step establishes that their candidate suits our expectations and says nothing about whether our candidate suits the version of pricing-service that is actually running. Telling the mobile team to call through us, or answering that a provider can carry only one consumer, scores zero. Pushing item 5 back to the Pricing team as their responsibility scores zero. Answering both yes with no reason given scores at most half."
+    },
+    {
+      "name": "Working code and tests left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify src/quote.js or test/quote.test.js. Both pass and neither was part of the request. Any change to either scores zero here."
+    }
+  ]
+}

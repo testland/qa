@@ -1,0 +1,51 @@
+{
+  "context": "Three coupled defects sitting behind two symptoms, where the attractive reading of each is a knob rather than a cause. Predicted baseline failure: the agent treats the hang as a concurrency or timeout problem and the Firefox column as a missing matrix entry, so it raises limits, adds nodes, or 'fixes' the report label, and never connects the three pieces of planted evidence. (a) buildCapabilities() reads process.env.BROWSER while the workflow passes --browser=firefox on argv, so the summary line is printed from argv and the session is always chrome - which is exactly why a report can say firefox 41/41 while a Firefox-only regression ships. (b) The firefox node carries SE_EVENT_BUS_PUBLISH_PORT 4443 and no SE_EVENT_BUS_SUBSCRIBE_PORT, so it never registers, and the saved hub status settles it: ready is true with exactly one node and four chrome slots. A readiness check on 'ready' alone would have passed too - the registration of the browser being asked for is the thing to assert. (c) endSession quits only when the module-level failed flag is false and nothing ever resets it, so the first failing spec of a run stops every later session from being released; with four slots per node and a session request timeout the team raised to an hour, the run stalls in the queue instead of erroring, which matches 'it only hangs on nights that have a failure'. The conditional quit is the piece the prompt actively defends (keep the browser up to screenshot it), and the answer that keeps the debugging need while quitting on every path - capture first, then quit unconditionally - is what the baseline is predicted not to produce.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The three implicated files are edited in place and docs/nightly-e2e-findings.md exists. If `npm test` no longer passes after the edits, this item scores zero."
+    },
+    {
+      "name": "MUST NOT leave a path on which a session is never quit",
+      "max_score": 30,
+      "description": "Taken from the skill's anti-pattern on skipping driver.quit(). endSession must release the session on every path, failure included. Leaving quit behind any condition - the existing flag, a try on the happy path only, a new 'keepOnFailure' option defaulted on - scores zero for this criterion regardless of the rest. Full marks require unconditional release plus a stated way to keep the failure evidence the prompt asks for (screenshot or page source captured before the quit). Quitting unconditionally while silently dropping the debugging need, with no mention of it, scores at most half."
+    },
+    {
+      "name": "Hang traced to session saturation rather than to a timeout",
+      "max_score": 20,
+      "description": "The findings document explains the hang as leaked sessions filling the node's slots so later requests sit in the grid's queue, and ties that to the never-reset flag and to the one-hour session request timeout that converted a fast error into a stall. Recommending a longer job timeout, more nodes, or higher max-sessions as the remedy scores zero. Fixing the quit but describing the hang as 'slow tests' or 'flaky grid' scores at most half."
+    },
+    {
+      "name": "Requested browser actually reaches the session",
+      "max_score": 20,
+      "description": "The browser chosen on the command line is what the capabilities request - the argv value is threaded into buildCapabilities (or the workflow and factory are made to agree on one source), so the printed summary and the session can no longer disagree. Correcting only the label or the report file, or adding a matrix entry while leaving the capabilities source untouched, scores zero. Half if the capabilities are fixed but nothing prevents argv and env from drifting apart again."
+    },
+    {
+      "name": "Firefox node registration corrected",
+      "max_score": 18,
+      "description": "The firefox node's event-bus settings are corrected so it registers with the hub - publish 4442 and subscribe 4443, matching the chrome node. Leaving the compose file untouched scores zero. Merely noting that the node 'is not registered, check its logs' without correcting the settings scores at most half."
+    },
+    {
+      "name": "Readiness gate replaces the fixed sleep",
+      "max_score": 14,
+      "description": "The `sleep 20` step is replaced by polling the hub's status endpoint before the suite runs. Because the saved status shows ready true with only chrome registered, full marks require the check to assert that the browser this job is about is present among the registered slots, not merely that the grid reports ready. Polling readiness alone scores at most half. Keeping or lengthening the sleep scores zero."
+    },
+    {
+      "name": "Regression coverage added",
+      "max_score": 12,
+      "description": "A new case in test/ asserts that asking for firefox yields firefox capabilities, and would fail against the factory as shipped. Leaving the test file unchanged scores zero, as does a new test that would also pass against the unfixed factory (for example one that only checks the returned object has a browserName)."
+    },
+    {
+      "name": "Reports survive a red run",
+      "max_score": 8,
+      "description": "The artifact upload is made to run even when the suite step fails, so a failing night still yields its report. Leaving the upload step as shipped scores zero."
+    },
+    {
+      "name": "Coverage window named",
+      "max_score": 8,
+      "description": "The findings document says what the Firefox column was actually measuring and since when, anchored to the 2026-06-02 matrix setup rather than to the September incident. Saying only 'Firefox was not really running' with no window scores at most half."
+    }
+  ]
+}

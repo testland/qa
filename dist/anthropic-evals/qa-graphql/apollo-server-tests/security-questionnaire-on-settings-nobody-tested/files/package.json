@@ -1,0 +1,12 @@
+{
+  "name": "parcelly-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "graphql": "^16.9.0"
+  }
+}

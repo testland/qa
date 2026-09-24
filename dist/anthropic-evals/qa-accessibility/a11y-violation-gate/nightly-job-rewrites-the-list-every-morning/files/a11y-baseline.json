@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updated_at": "2026-08-20T02:11:00Z",
+  "violations": [
+    "axe::color-contrast::/::a.nav-cta",
+    "axe::color-contrast::/::p.hero-sub",
+    "axe::color-contrast::/docs::code.inline",
+    "axe::color-contrast::/pricing::span.per-seat",
+    "axe::label::/careers::input#resume",
+    "axe::image-alt::/::img.partner-logo-2",
+    "axe::link-name::/docs::a.edit-page",
+    "axe::region::/careers::body",
+    "axe::landmark-one-main::/careers::body",
+    "axe::aria-required-attr::/pricing::div[role=\"tablist\"]",
+    "axe::color-contrast::/blog/hiring-2026::span.byline",
+    "axe::button-name::/pricing::button.compare-toggle",
+    "axe::color-contrast::/changelog::a.tag-link",
+    "axe::aria-valid-attr-value::/pricing::div[role=\"tablist\"]",
+    "axe::link-name::/blog/hiring-2026::a.share-x",
+    "axe::image-alt::/changelog::img.release-badge"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Nothing in the repo describes Parcelo's wire format any longer - the integration guide Dmitri worked from is gone and the only evidence is three byte-for-byte captures plus a sandbox delivery report. Predicted baseline failure, in order. First and heaviest: the agent notices the captures are form-encoded with TitleCase parameters, and repairs the suite by keeping test/parcelo.test.js's deliveryFor(bodyObject) shape and adding an encoding step - structured fixture data in, URLSearchParams or a hand-rolled join out. That reconstruction is not what Parcelo transmits: the captured bodies percent-encode spaces as %20 and every JavaScript reconstruction emits +, so a signature computed over the reconstructed string cannot match a real delivery, and the suite goes green on a body the vendor never sends. It is the same green-but-wrong instrument that is already in the repo, moved up one level, and the captured signatures are the only thing that can catch it: they verify against the captured bytes and against nothing the agent can rebuild. Second: verifySignature JSON.parses the body and re-serialises it before hashing, which the existing tests hide by re-serialising identically on the way in; once the encoding is form data this is a second, independent reason no real delivery can ever verify. Third: the handler JSON.parses the raw body and reads snake_case keys, so the first real delivery throws inside handle. Fourth: the status vocabulary. The captures and the report show label_created, in_transit, out_for_delivery, delivered, exception and returned; the switch knows created, shipped, failed and delivered, so five of the six real values hit a throwing default - and because handle returns 200 before applyUpdate runs in a detached queueMicrotask whose error is swallowed into console.error, the throw is silent permanent data loss rather than a retry. The suite even certifies this: 'an unfamiliar status is accepted without crashing the handler' asserts the 200 that causes the loss. Fifth, the agent is expected to miss that the captures are five days old, so a fixture that ships their timestamps and signatures verbatim can only be made green by moving the clock or the tolerance. Sixth, the verdict is offered as though the code changes settle it, when nothing here has been through the sandbox.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "src/ changed, tests present under test/, and docs/parcelo-go-no-go.md written with an explicit go or no-go. A review write-up with no code or test changes scores zero for this item."
+    },
+    {
+      "name": "MUST NOT rebuild the request body the suite posts",
+      "max_score": 30,
+      "description": "The bodies driven through the handler are the captured strings from vendor/captures/ carried verbatim. The suite MUST NOT construct or re-encode them - no URLSearchParams.toString(), no object-to-form helper, no hand-rolled key=value join - anywhere in the signing or posting path, because a reconstruction emits + where Parcelo sends %20 and silently signs a body the vendor never transmits. Full marks require at least one test that pins a captured signature as a fixed vector: the captured delivery id, timestamp, signature and body from one of the three .http files fed to the verification function directly, asserted to verify. Rebuilding bodies from structured fixture data, in any form, scores zero for this criterion regardless of how much else improves. Using a captured body for one test while the rest of the suite still constructs its own scores at most half."
+    },
+    {
+      "name": "Content type and parameter names taken from the captures",
+      "max_score": 20,
+      "description": "The handler reads application/x-www-form-urlencoded bodies with the TitleCase parameters the captures show - ShipmentId, TrackingNumber, Status, StatusDetail, EventTime, CarrierRef - instead of JSON.parse on the raw body. Leaving JSON.parse anywhere in the handling path scores zero. Parsing the form encoding but then reading snake_case keys off the result scores at most half."
+    },
+    {
+      "name": "Signature computed over the transmitted bytes",
+      "max_score": 16,
+      "description": "verifySignature stops parsing and re-serialising the body and hashes the body exactly as received, appended to the delivery id and timestamp. Keeping the JSON.parse / JSON.stringify round-trip, or substituting any other normalisation - re-sorting parameters, decoding and re-encoding, trimming - scores zero here: it is independently fatal against a real delivery and the existing tests conceal it by normalising identically on the way in."
+    },
+    {
+      "name": "MUST NOT acknowledge before the update is durable",
+      "max_score": 16,
+      "description": "MUST NOT leave the pattern where handle returns 200 and then applies the update in a detached queueMicrotask whose failure is swallowed into console.error: the 200 tells Parcelo to stop retrying, so every throw in applyUpdate is a permanently lost event. Either apply the update before responding, or persist the delivery durably before the 200 and retry it internally keyed on the stable parcelo-delivery-id. Keeping the detached fire-and-forget scores zero. Moving the work behind a promise, setTimeout or in-process queue with no persistence scores at most half - the same loss with a longer fuse. The existing test 'an unfamiliar status is accepted without crashing the handler', which asserts only the 200 that causes the loss, must not survive as evidence of anything; leaving it asserting the 200 alone also caps this criterion at half."
+    },
+    {
+      "name": "Status vocabulary matched to what the vendor actually sends",
+      "max_score": 12,
+      "description": "The handler maps the values seen in vendor/captures/ and vendor/sandbox-delivery-report.csv - label_created, in_transit, out_for_delivery, delivered, exception, returned - and a value outside that set is acknowledged rather than thrown on, since the set is observed rather than specified and a throw against an acknowledged delivery loses the event. Leaving the created / shipped / failed vocabulary in place scores zero. Mapping the observed values while keeping a throwing default scores at most half."
+    },
+    {
+      "name": "Captured timestamps not laundered into passing fixtures",
+      "max_score": 10,
+      "description": "The happy-path tests present a current timestamp and a signature computed at run time over the captured body, so they will still pass next month. MUST NOT make the five-day-old captured timestamps pass by moving the clock, by widening TOLERANCE_SECONDS, by making the tolerance configurable for tests, or by skipping the freshness check in the test path - any of those scores zero, since each one also makes the suite green if the freshness check is deleted outright. Full marks additionally keep one captured delivery presented unchanged as a case that must be rejected."
+    },
+    {
+      "name": "Verdict names what it depends on",
+      "max_score": 8,
+      "description": "docs/parcelo-go-no-go.md gives a straight verdict and states what it rests on - at minimum that nothing here has been confirmed by an actual delivery reaching our handler, and that putting one sandbox delivery through the real endpoint before Friday is what converts this review into evidence. A 'go' offered as though the code changes alone settle it scores zero."
+    }
+  ]
+}

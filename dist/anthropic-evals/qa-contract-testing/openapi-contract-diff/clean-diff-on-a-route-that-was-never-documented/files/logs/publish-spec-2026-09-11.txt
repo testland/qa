@@ -1,0 +1,11 @@
+$ git rev-parse --abbrev-ref HEAD
+release-3.2.0
+
+$ make publish-spec
+aws s3 cp spec/openapi.yaml s3://northwind-webhooks-portal/specs/v3.2.0/openapi.yaml
+upload: spec/openapi.yaml to s3://northwind-webhooks-portal/specs/v3.2.0/openapi.yaml
+aws s3 cp spec/openapi.yaml s3://northwind-webhooks-portal/specs/latest/openapi.yaml
+upload: spec/openapi.yaml to s3://northwind-webhooks-portal/specs/latest/openapi.yaml
+
+$ date -u
+Fri Sep 11 14:02:51 UTC 2026

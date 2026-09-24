@@ -1,0 +1,5 @@
+# services released through ci/release.sh, and their next scheduled release
+notifier        2026-09-10  (rolled back)
+digest-worker   2026-09-22
+billing-mailer  2026-10-01
+invite-service  2026-10-06

@@ -1,0 +1,27 @@
+### Nightly 4712 - 2026-09-11, Pixel 4a emulator API 34, 22m 14s
+### Every line below was emitted by pid 7402.
+
+com.northwind.shop.CartTest > showsSeededLines PASSED (3.1s)
+com.northwind.shop.CartTest > showsSubtotal PASSED (2.8s)
+com.northwind.shop.CartTest > updatesQuantityInPlace PASSED (4.0s)
+
+com.northwind.shop.AccountTest > dismissingOnboardingSticks FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    at androidx.test.espresso.base.UiControllerImpl.loopUntil(UiControllerImpl.java:472)
+    elapsed: 26.0s
+
+com.northwind.shop.AccountTest > showsMembershipTier FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
+
+com.northwind.shop.AccountTest > opensAddressBook FAILED
+androidx.test.espresso.IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+    elapsed: 26.0s
+
+com.northwind.shop.SearchTest - 8 tests, 0 passed, 8 failed
+  all eight: IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+
+com.northwind.shop.OrdersTest - 9 tests, 0 passed, 9 failed
+  all nine: IdlingResourceTimeoutException: Wait for [CartNetworkIdling] to become idle timed out
+
+23 tests, 4 passed, 19 failed

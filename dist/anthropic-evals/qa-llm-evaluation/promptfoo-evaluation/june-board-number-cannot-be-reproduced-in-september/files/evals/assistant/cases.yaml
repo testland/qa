@@ -1,0 +1,32 @@
+- description: refund_window
+  vars:
+    question: How long do I have to send something back?
+    context: Customers may request a full refund within 30 days of purchase.
+  assert:
+    - type: contains
+      value: '30 days'
+
+- description: refund_destination
+  vars:
+    question: Where does the money go back to?
+    context: Refunds are issued to the original payment method within 5 business days.
+  assert:
+    - type: contains
+      value: 'original payment method'
+
+- description: cancel_timing
+  vars:
+    question: When does a cancellation take effect?
+    context: Cancelling takes effect at the end of the current billing period.
+  assert:
+    - type: contains
+      value: 'billing period'
+
+- description: structured_summary
+  vars:
+    question: Summarise my options as JSON with keys action and deadline.
+    context: You may return an item within 30 days or exchange it within 60 days.
+  assert:
+    - type: is-json
+
+# 75 further cases omitted from this extract; the full file is 79 cases.

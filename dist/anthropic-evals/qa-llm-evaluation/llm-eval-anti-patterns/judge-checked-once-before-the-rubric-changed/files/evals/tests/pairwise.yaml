@@ -1,0 +1,15 @@
+# 100 tickets, drawn from the August support queue. One row, expanded over the
+# CSV; both prompts are run against every row.
+- vars:
+    ticket: file://../data/tickets.csv
+
+  assert:
+    # the routing service parses this block, so it has to be machine-checkable
+    - type: is-json
+      value: file://../schema/handoff.json
+
+    - type: llm-rubric
+      provider: openai:gpt-4o-mini   # from the June grader bake-off, left in place
+      value: >
+        Which reply is more helpful to the customer? Consider accuracy, tone
+        and whether the next step is clear.

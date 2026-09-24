@@ -1,0 +1,29 @@
+{
+  "_window": "Real defects attributed to the test over the 12 months to 2026-09-08. Fractional values are near-misses caught in review because the test went red.",
+  "catches": {
+    "checkout.spec.ts > card-purchase-happy-path": 4,
+    "checkout.spec.ts > saved-card-purchase": 2,
+    "checkout.spec.ts > apply-discount-code": 1,
+    "cart.spec.ts > line-item-edit": 1,
+    "cart.spec.ts > persist-cart-across-sessions": 2,
+    "auth.spec.ts > login-with-password": 3,
+    "auth.spec.ts > sso-redirect": 1,
+    "auth.spec.ts > password-reset-email": 1,
+    "account.spec.ts > change-password": 1,
+    "account.spec.ts > data-export-request": 1,
+    "search.spec.ts > keyword-results": 2,
+    "search.spec.ts > facet-filters": 1,
+    "search.spec.ts > empty-state-copy": 0.5,
+    "reports.spec.ts > export-50k-rows": 1,
+    "reports.spec.ts > scheduled-email-report": 1,
+    "admin.spec.ts > audit-log-download": 1,
+    "admin.spec.ts > user-role-change": 1,
+    "admin.spec.ts > bulk-import-10k-rows": 2,
+    "orders.spec.ts > refund-to-original-method": 0.5,
+    "orders.spec.ts > cancel-within-window": 2,
+    "notifications.spec.ts > in-app-toast": 0,
+    "promo.spec.ts > seasonal-banner": 0,
+    "pricing.spec.ts > currency-switch": 1,
+    "settings.spec.ts > api-key-rotation": 1
+  }
+}

@@ -1,0 +1,40 @@
+kestrel-web :: raw attempt records, main branch, 2026-08-28 to 2026-09-11
+retries in effect for this window: 2 (set temporarily by @marek.z while
+piloting the pipeline; the committed config still says 0)
+
+--- run roster ---
+run 4471  2026-08-28  completed  green
+run 4478  2026-08-29  completed  green
+run 4483  2026-08-31  completed  green
+run 4490  2026-09-01  completed  green
+run 4495  2026-09-02  completed  green
+run 4501  2026-09-03  completed  green
+run 4505  2026-09-05  job lost   runner reclaimed 00:38 into the job, no tests started, re-queued by hand as 4506 (green)
+run 4507  2026-09-05  completed  green
+run 4512  2026-09-08  completed  green
+run 4514  2026-09-09  job lost   runner reclaimed 00:22 into the job, no tests started, re-queued by hand as 4515 (green)
+run 4518  2026-09-09  completed  green
+run 4524  2026-09-10  completed  green
+run 4531  2026-09-11  completed  green
+
+--- attempt records: every attempt that did not pass on the first try ---
+run 4478  attempt 1  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4478  attempt 2  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4478  attempt 3  checkout: complete a card purchase   passed
+run 4490  attempt 1  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4490  attempt 2  checkout: complete a card purchase   passed
+run 4495  attempt 1  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4495  attempt 2  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4495  attempt 3  checkout: complete a card purchase   passed
+run 4501  attempt 1  cart: applies a promo code           failed   AssertionError: expected "12.00" received "15.00"
+run 4501  attempt 2  cart: applies a promo code           passed
+run 4507  attempt 1  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4507  attempt 2  checkout: complete a card purchase   passed
+run 4512  attempt 1  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4512  attempt 2  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4512  attempt 3  checkout: complete a card purchase   passed
+run 4531  attempt 1  checkout: complete a card purchase   failed   TimeoutError: expect(getByTestId('order-confirmation')).toBeVisible() timed out 5000ms
+run 4531  attempt 2  checkout: complete a card purchase   passed
+
+(no other attempt in this window failed; every other spec passed on attempt 1
+in every completed run)

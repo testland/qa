@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>runDestinationsByUUID</key>
+  <dict>
+    <key>1B5C2C64-7F1E-4C1A-9E64-9E3F1D2A77B1</key>
+    <dict>
+      <key>localComputer</key>
+      <dict>
+        <key>cpuCount</key><integer>1</integer>
+        <key>cpuKind</key><string>Intel Core i9</string>
+        <key>cpuSpeedInMHz</key><integer>3600</integer>
+        <key>logicalCPUCoresPerPackage</key><integer>16</integer>
+        <key>modelCode</key><string>iMac19,1</string>
+        <key>physicalCPUCoresPerPackage</key><integer>8</integer>
+        <key>platformIdentifier</key><string>com.apple.platform.macosx</string>
+      </dict>
+      <key>targetArchitecture</key><string>x86_64</string>
+    </dict>
+  </dict>
+  <key>classNames</key>
+  <dict>
+    <key>DashboardUITests</key>
+    <dict>
+      <key>testDashboardScrollPerformance()</key>
+      <dict>
+        <key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+        <dict>
+          <key>1B5C2C64-7F1E-4C1A-9E64-9E3F1D2A77B1</key>
+          <dict>
+            <key>baselineAverage</key><real>0.178</real>
+            <key>baselineIntegrationDisplayName</key><string>Local Baseline</string>
+            <key>maxPercentRelativeStandardDeviation</key><real>10</real>
+            <key>maxRegression</key><real>10</real>
+          </dict>
+        </dict>
+      </dict>
+    </dict>
+  </dict>
+</dict>
+</plist>

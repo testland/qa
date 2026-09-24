@@ -1,0 +1,6 @@
+node_modules/
+coverage/
+.env
+.DS_Store
+/pacts/
+*.log

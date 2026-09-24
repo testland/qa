@@ -1,0 +1,14 @@
+date,workflow,success,failure,cancelled,skipped
+2026-09-07,ci,6,0,0,0
+2026-09-08,ci,5,1,1,0
+2026-09-08,ci-merge-queue,7,2,6,1
+2026-09-09,ci,4,0,0,0
+2026-09-09,ci-merge-queue,6,3,5,0
+2026-09-10,ci,5,0,1,0
+2026-09-10,ci-merge-queue,7,2,4,1
+2026-09-11,ci,4,0,0,0
+2026-09-11,ci-merge-queue,6,2,5,0
+2026-09-12,ci,4,0,0,0
+2026-09-12,ci-merge-queue,7,2,4,1
+2026-09-13,ci,3,0,0,0
+2026-09-13,ci-merge-queue,5,2,3,0

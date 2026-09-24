@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  title: Cards API
+  version: '5.4.0'
+paths:
+  /v1/cards:
+    post:
+      operationId: issueCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardRequest'
+      responses:
+        '201':
+          description: issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+  /v1/cards/{cardId}:
+    get:
+      operationId: getCard
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the card
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '404':
+          description: not found
+  /v1/cards/{cardId}/freeze:
+    post:
+      operationId: freezeCard
+      parameters:
+        - name: cardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: frozen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '404':
+          description: not found
+components:
+  schemas:
+    CardRequest:
+      type: object
+      required: [holder, spendLimit]
+      properties:
+        holder:
+          type: string
+        spendLimit:
+          type: integer
+    Card:
+      type: object
+      required: [id, holder, last4, status]
+      properties:
+        id:
+          type: string
+        holder:
+          type: string
+        last4:
+          type: string
+        status:
+          type: string
+          enum: [active, closed]
+        network:
+          type: string

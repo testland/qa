@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mutations partial="false">
+<mutation detected="true" status="KILLED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>lineTotalCents</mutatedMethod>
+  <lineNumber>22</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.math.MathMutator</mutator>
+  <description>Replaced long multiplication with division</description>
+  <killingTest>com.acme.pricing.PriceCalculatorTest.lineTotalMultiplies(PriceCalculatorTest)</killingTest>
+</mutation>
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>lineTotalCents</mutatedMethod>
+  <lineNumber>19</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator</mutator>
+  <description>changed conditional boundary</description>
+  <killingTest/>
+</mutation>
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>tierDiscountPercent</mutatedMethod>
+  <lineNumber>27</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator</mutator>
+  <description>changed conditional boundary</description>
+  <killingTest/>
+</mutation>
+<mutation detected="true" status="KILLED" numberOfTestsRun="2">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>tierDiscountPercent</mutatedMethod>
+  <lineNumber>28</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.returns.PrimitiveReturnsMutator</mutator>
+  <description>replaced int return with 0</description>
+  <killingTest>com.acme.pricing.PriceCalculatorTest.tierDiscountForLargeOrder(PriceCalculatorTest)</killingTest>
+</mutation>
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="1">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>handlingFeeCents</mutatedMethod>
+  <lineNumber>35</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator</mutator>
+  <description>changed conditional boundary</description>
+  <killingTest/>
+</mutation>
+<mutation detected="false" status="SURVIVED" numberOfTestsRun="0">
+  <sourceFile>PriceCalculator.java</sourceFile>
+  <mutatedClass>com.acme.pricing.PriceCalculator</mutatedClass>
+  <mutatedMethod>currencyCode</mutatedMethod>
+  <lineNumber>42</lineNumber>
+  <mutator>org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator</mutator>
+  <description>replaced return value with "" for currencyCode</description>
+  <killingTest/>
+</mutation>
+</mutations>

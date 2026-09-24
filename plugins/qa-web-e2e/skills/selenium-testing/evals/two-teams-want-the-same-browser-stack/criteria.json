@@ -1,0 +1,46 @@
+{
+  "context": "A one-line change presented as already agreed, and a second decision the supplied material deliberately does not settle. Predicted baseline failure: the agent signs the Atlas change off. It is one line, it is the documented way to reach a grid, the requester is inclined to say yes, and the author has attached evidence it worked. What the baseline is predicted to miss is that the evidence used a different address - Tomas ran it with baseUrl set to the staging host, while the CI job starts the app on the build runner and passes http://localhost:3000, and once the browser lives in a node container on ci-grid-01 that address resolves to the node itself, so all 60 tests hit nothing. Two further things break in the same move and neither is visible from the one-line diff: ReceiptUploadTest hands the browser a path on the machine running the test, which a remote node cannot read unless the driver is told the file is local; and InvoiceExportTest asserts that a downloaded CSV appears under target/downloads on the runner's own disk, which cannot happen when the browser doing the downloading is somewhere else. On Beacon the predicted failure is the opposite one - producing the yes or no the requester asked for. The clause requires ninety days' written notice before any change to the tooling that produces the evidence, legal has only ever been asked about the framework, and they say explicitly they have no view on whether where the browsers run counts. That question has not been answered by anyone with authority to answer it, so any date given today is invented; the correct output names the open question, the concrete way to close it, and the ninety-day consequence if it closes the wrong way. An agent that refuses both decisions scores no better than one that grants both.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "Atlas's files are edited in place and docs/grid-onboarding.md exists with a separate call on each team. A single blended recommendation scores zero for this item."
+    },
+    {
+      "name": "MUST NOT sign the change off as proposed",
+      "max_score": 30,
+      "description": "Endorsing the one-line diff for Friday as written scores zero for this criterion regardless of the rest, and so does leaving Atlas's CI job telling a remote browser to open http://localhost:3000. Full marks require the address problem named concretely - that address resolves inside the node container on ci-grid-01, not on the build runner where the app was started, and Tomas's laptop trial passed only because he pointed it at a host the node could actually reach - plus the code changed to pass an address reachable from the node, plus at least one of the two file-transfer breakages named. Naming the address problem in prose while leaving the code unchanged scores at most half; fixing the address while treating the rest of the suite as unaffected scores at most half."
+    },
+    {
+      "name": "Beacon decision escalated rather than guessed",
+      "max_score": 22,
+      "description": "Answering the requester's demand for a yes or a no with a yes, or with a flat no, scores zero - neither is supportable from what is attached. Full marks require all three: the open question stated (whether moving where the browsers run is a change to the tooling that produces the evidence, which legal explicitly has no view on), the concrete step that closes it and who takes it, and the consequence if it does count - ninety days' written notice, never shortened, which puts Beacon outside this freeze either way. Citing the clause but still handing over a date or a decision scores at most half."
+    },
+    {
+      "name": "File upload made to work across the grid",
+      "max_score": 20,
+      "description": "ReceiptUploadTest sends a path on the machine running the test to an element on a browser that is no longer on that machine. The remote driver must be given a local file detector so the file is uploaded to the node, with the path still resolved absolutely on the client. Leaving the test as it is scores zero. Identifying the problem in the document without changing the code, or 'solving' it by copying fixtures onto the node or mounting a volume into the node container, scores at most half."
+    },
+    {
+      "name": "Download assertion addressed",
+      "max_score": 14,
+      "description": "InvoiceExportTest asserts a file exists under target/downloads on the runner's own filesystem; once the browser runs on a node that file lands on the node and the assertion can never pass. The answer must change what that test verifies - the application's own view of the export, or the export fetched over HTTP - or state that this test explicitly stays off the grid and why. Leaving it untouched while recommending the move scores zero; noticing it with no disposition scores at most half."
+    },
+    {
+      "name": "MUST NOT leave a browser released only on the happy path",
+      "max_score": 12,
+      "description": "From the skill's anti-pattern on skipping the driver quit, whose stated consequence is a leaked browser and a CI runner running out of memory: InvoiceExportTest builds its own browser and quits it as the last statement of the test body, so a failing assertion strands a session - and on a shared grid that holds a node slot for every other team. It must be released whatever the outcome, in the same setup-and-teardown shape the base class already uses. Leaving the quit inside the test body scores zero; a try/finally inside the test rather than moving it to teardown scores at most half."
+    },
+    {
+      "name": "Grid checked before the first run on it",
+      "max_score": 10,
+      "description": "The document names the check to run against the hub before anyone's first run - the hub's status endpoint reporting ready, with both nodes registered - rather than assuming the grid is up because the compose file exists. No pre-flight check at all scores zero; 'check the grid is working' with nothing concrete behind it scores at most half."
+    },
+    {
+      "name": "Beacon spec_helper untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify beacon/spec/spec_helper.rb. Beacon is not moving this week and the request excluded the file explicitly. Any edit to it scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+name: pr check
+
+on:
+  pull_request:
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+    env:
+      DBT_PROFILES_DIR: .ci/dbt
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install 'dbt-core>=1.8' 'dbt-snowflake'
+
+      - run: dbt deps
+
+      - name: fetch graph snapshot
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p .dbt-state
+          gh run download --repo "$GITHUB_REPOSITORY" --name dbt-baseline --dir .dbt-state
+
+      - name: pr check
+        run: |
+          if [ -f .dbt-state/manifest.json ]; then
+            dbt build --empty --select state:modified+ --state .dbt-state/
+          else
+            dbt build --empty
+          fi
+
+      - name: publish graph snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-baseline
+          path: target/manifest.json
+          retention-days: 30
+
+      - name: upload artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-artifacts
+          path: target/run_results.json
+          retention-days: 3

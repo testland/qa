@@ -1,0 +1,51 @@
+{
+  "context": "A teammate's diff is already written, already green against the existing suite, already on today's hotfix train, and it does close the reported 3.x symptom. Predicted baseline failure: the agent reviews it, agrees, lands it, and writes tests around it - because retargeting the fall-through from chat-v2 to chat-v1 reads as the cautious, compatible choice for old clients, and the diff's own reasoning frames it that way. It is the same defect pointed somewhere else. The fall-through answers a subprotocol to a client that never offered one, and per RFC 6455 section 4.2.2 the value a server echoes MUST be one selected from the client's own Sec-WebSocket-Protocol field; where the client offered none, or the server accepts none, the only permitted answer is to send no Sec-WebSocket-Protocol header at all. A client that receives one it did not ask for MUST fail the connection (section 4.1), which is exactly what device C does in the capture - 101 accepted at the proxy, then 41 ms and no frames - and why 2.9.0 went from working to zero sessions on the chat-v2 rollout while never having sent an offer in its life. Landing the diff leaves every 2.9 user disconnected for the nine days until store review. The second predicted failure is a half-removal: returning null or an empty string from selectSubprotocol while handleUpgrade still writes the Sec-WebSocket-Protocol key into the response object, which is still sending the header. The third is coverage that cannot see either defect - new tests that hand-build headers with the capitalised key no runtime produces, and proof-by-round-trip that encodes a message and checks the field names, which passes whatever the handshake answered.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "test/negotiate.upgrade.test.js and docs/subprotocol-matrix.md both exist and src/negotiate.js has been changed. Producing no new test file scores zero."
+    },
+    {
+      "name": "MUST NOT answer with a subprotocol the client did not offer",
+      "max_score": 32,
+      "description": "No default-to-a-supported-value path survives in the delivered src/negotiate.js, in any spelling - neither `match || SUPPORTED[0]` nor the proposed `match || 'chat-v1'`. Landing the diff as written scores zero for this criterion regardless of how well the rest is argued, and so does any other fall-through to a fixed value. Full marks require that a request carrying no offer produces a response object whose headers contain no Sec-WebSocket-Protocol key at all, and that the delivered suite asserts its absence rather than its emptiness: leaving the key in place with a null, undefined or empty value is still sending the header, and scores at most half. Removing the fall-through with no test driving a request that carries no offer also scores at most half. Refusing the handshake outright for a client whose offers we cannot honour is an acceptable alternative to answering without the header and does not reduce the score."
+    },
+    {
+      "name": "The 2.9 failures explained by what the server sent them",
+      "max_score": 18,
+      "description": "The answer states that the 2.9 clients fail because the server answers them with a subprotocol they never offered, which a conforming client must reject - and that this is why a build with no subprotocol support at all broke on a subprotocol rollout. Attributing the 2.9 failures to the age of the client, to TLS, to the proxy, to the store rollout, or to a 2.9-side parser bug scores zero. Noting that 2.9 gets an unexpected header without connecting it to the fall-through that produced it scores at most half."
+    },
+    {
+      "name": "The proposed diff is not adopted whole",
+      "max_score": 14,
+      "description": "docs or the delivered change makes clear which half of @dsoto's diff is kept and which is not: the case-insensitive header lookup is correct and stays, the retargeted fall-through does not. An answer that applies both halves scores zero. An answer that silently ships a different fix without saying what was wrong with the proposal - it is going into a hotfix train on its author's belief that it is complete - scores at most half."
+    },
+    {
+      "name": "Header names driven as the runtime delivers them",
+      "max_score": 16,
+      "description": "At least one new test passes header names in the lowercase form the capture shows, so the lookup cannot silently regress to a case-sensitive read. If every new test constructs headers with only the capitalised key the existing suite uses, this scores zero - the suite reproduces the blind spot that shipped the bug. Covering the lowercase form for the offer cases but not for the no-offer case scores at most half."
+    },
+    {
+      "name": "MUST NOT prove the fix through message round-trips alone",
+      "max_score": 12,
+      "description": "The delivered suite MUST NOT rest on encoding a message and checking its field names; the value the server selected has to be asserted on the handshake response itself. A suite in which no assertion reads the negotiated subprotocol off the response scores zero here. Asserting the selected value but never checking that the frame shape follows from it scores at most half - the two together are what the 3.x users are missing."
+    },
+    {
+      "name": "Matrix covers every offer, not just the reported ones",
+      "max_score": 10,
+      "description": "docs/subprotocol-matrix.md has a row for each offer the server can receive - both versions, v1 only, v2 only, a value we do not support, and no offer at all - each with what is answered and the frame shape that follows. A document covering only the 3.x and 2.9 cases scores zero; one that lists the offers but omits the resulting frame shape scores at most half."
+    },
+    {
+      "name": "3.x blank bodies traced to the lookup",
+      "max_score": 8,
+      "description": "The answer states that the offer list was empty for every real request because the lookup was case-sensitive against a name the runtime delivers lowercased, which is what sent chat-v2 frames to clients that had asked for chat-v1. Blaming the 3.x client's parser or src/frames.js scores zero."
+    },
+    {
+      "name": "Existing suite and frame encoder untouched",
+      "max_score": 8,
+      "description": "test/negotiate.basic.test.js is byte-identical to the fixture and still passes, src/frames.js is unchanged, and npm test passes. Editing the basic test to accommodate a new lookup, or editing the encoder, scores zero - the encoder is correct and the old tests, however misleading, describe behaviour that must keep working."
+    }
+  ]
+}

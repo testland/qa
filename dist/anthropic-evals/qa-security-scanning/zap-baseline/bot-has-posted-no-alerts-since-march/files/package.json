@@ -1,0 +1,8 @@
+{
+  "name": "atlas-ci",
+  "version": "12.6.4",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

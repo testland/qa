@@ -1,0 +1,108 @@
+# Excerpt for review: the operations named in the run report. The committed
+# document carries all 44 and every one of the other 40 is shaped the same way.
+openapi: 3.0.3
+info:
+  title: Halcyon Payouts API
+  version: 9.1.0
+x-generated-at: '2026-08-07T02:11:44Z'
+x-generated-by: halcyon-openapi-gen, from handler annotations, build image only
+paths:
+  /v1/payouts:
+    get:
+      operationId: listPayouts
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 500 }
+      responses:
+        '200':
+          description: page of payouts
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Payout' }
+  /v1/payouts/{id}:
+    get:
+      operationId: getPayout
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: a payout
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Payout' }
+        '404':
+          description: unknown payout
+  /v1/payouts/{id}/cancel:
+    post:
+      operationId: cancelPayout
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason: { type: string }
+      responses:
+        '200':
+          description: cancelled
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Payout' }
+        '409':
+          description: already settled
+  /v1/recipients:
+    post:
+      operationId: createRecipient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [iban]
+              properties:
+                iban: { type: string, maxLength: 34 }
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id: { type: string }
+        '400':
+          description: rejected
+components:
+  schemas:
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount: { type: integer, format: int64 }
+        currency: { type: string, minLength: 3, maxLength: 3 }
+    Payout:
+      type: object
+      required: [id, amount, status]
+      properties:
+        id: { type: string }
+        amount: { $ref: '#/components/schemas/Money' }
+        status: { type: string, enum: [pending, paid, cancelled] }

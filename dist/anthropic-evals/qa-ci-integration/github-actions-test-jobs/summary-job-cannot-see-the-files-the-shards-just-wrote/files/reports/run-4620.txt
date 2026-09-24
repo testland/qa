@@ -1,0 +1,15 @@
+run 4620 - test - pull_request #307 - 10 Sep 2026 15:44 UTC
+Conclusion: failure
+
+  test (1) ........................... failure  2m31s   (225 tests, 3 failing)
+  test (2) ........................... success  2m08s   (225 tests, 0 failing)
+  test (3) ........................... failure  2m19s   (225 tests, 1 failing)
+  test (4) ........................... success  2m11s   (225 tests, 0 failing)
+  summary ............................ skipped  0m00s
+
+Artifacts on this run:
+  junit-2   3.9 KB   1 file
+  junit-4   4.0 KB   1 file
+
+Comment from @rbhatt: "four job logs to open and no summary, on the one run this
+week where I needed one."

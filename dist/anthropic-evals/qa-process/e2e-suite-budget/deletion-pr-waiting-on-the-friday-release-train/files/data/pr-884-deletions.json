@@ -1,0 +1,12 @@
+[
+  "promo.spec.ts > seasonal-banner",
+  "promo.spec.ts > referral-invite-flow",
+  "orders.spec.ts > print-packing-slip",
+  "checkout.spec.ts > three-d-secure-challenge",
+  "account.spec.ts > data-export-request",
+  "auth.spec.ts > sso-redirect",
+  "search.spec.ts > empty-state-copy",
+  "pricing.spec.ts > tax-line-rendering",
+  "reports.spec.ts > export-50k-rows",
+  "onboarding.spec.ts > first-run-checklist"
+]

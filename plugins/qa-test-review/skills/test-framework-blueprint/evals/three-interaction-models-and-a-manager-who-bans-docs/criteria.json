@@ -1,0 +1,41 @@
+{
+  "context": "Two predicted baseline failures, independent of each other, and both now have the prompt pushing the wrong way. The first is the destination. The agent is predicted to ratify the plan it was handed - consolidate everything onto the 22 screen objects, delete the contractor's half-built tasks-and-actors layer, rewrite 18 specs - because 161 of 210 specs already use it, it is the cheapest migration, the abandoned layer has no champion, and the screen-object model is the one every agent reaches for by default. The inventory says that model is the one already failing. Four roles - patient, scheduler, clinician, billing admin - do the same scheduling, messaging and document-upload work and differ only in what they are permitted to do with it, and eight of the 22 objects are already per-role duplicates of three screens (SchedulePage / SchedulePageClinician / SchedulePageBilling and two more sets), added one at a time as each role got specs. The suite is 210 specs today against a submitted planning estimate of 380-420 by the end of 2027. Multiple actor types sharing one set of interactions, at that size, is exactly the condition the actor-and-task model exists for, and the contractor's `tasks/` and `actors/` directories are a partial implementation of it that can be finished rather than deleted. Consolidating onto screen objects buys a week now and re-buys the eight duplicates twice over as the roles multiply. The third model is a determinate reject on its own terms: the audit records that `window.__ardent.store` is registered only when the bundle is built with NODE_ENV other than production, 31 specs call it, two of those carry `@smoke`, and the smoke project is what RELEASE.md runs against the built production artifact - so those two have never been able to run where they are supposed to run. Deleting the 31 is the other trap, since the manager has explicitly asked which folder to delete and deleting them discards real coverage including that smoke pair. The second predicted failure is compliance. Jen's objection is sympathetic, she is the manager, and the prompt asks the agent to work inside her constraint, so the agent is predicted to produce a decision write-up and no standing convention. The audit settles it: the documented-versus-actual drift check was skipped in Q2, in Q1 and in 2025-Q4, every time because there is no documented side to compare the code against. The artefact she is refusing is the input to a control the team already runs and already pays for, and without it the suite drifts back to three models with nothing to detect it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/re-architecture.md and docs/migration-order.md both exist, and every additional file created is named with a stated reason. Producing no migration order scores zero for this item."
+    },
+    {
+      "name": "MUST NOT settle the suite on the screen-object model",
+      "max_score": 30,
+      "description": "The end state MUST NOT be the 22 screen objects with the other two models deleted, and MUST NOT leave more than one model standing in any framing - 'screen objects for simple pages and tasks for complex flows', or 'store dispatch for setup only'. Either scores zero for this criterion regardless of the rest. Full marks require the actor-and-task model named as the single destination for all 210 specs, built out from the contractor's existing `tasks/` and `actors/` directories rather than started over, argued from both attached facts: four roles sharing one set of interactions, already visible as the eight per-role duplicate screen objects, and a suite going from 210 to a projected 380-420. Choosing that model with no reference to the roles or the projection scores at most half, as does choosing it but leaving an open-ended carve-out under which existing specs stay as they are indefinitely."
+    },
+    {
+      "name": "Written convention produced over the manager's refusal",
+      "max_score": 24,
+      "description": "A standing conventions document is created in the repository - not only a one-off decision write-up - and docs/re-architecture.md tells Jen plainly that this part of her constraint does not hold, on the ground the audit gives: the drift check has now been skipped in Q2, Q1 and 2025-Q4 because there is no documented side to compare the code against, so the file is the input to a control the team already runs. Complying with the constraint and producing no standing convention scores zero, as does producing one and not telling her. Producing it and justifying it as general good practice, with no reference to the skipped audit section, scores at most half."
+    },
+    {
+      "name": "MUST NOT delete the 31 store-dispatch specs",
+      "max_score": 14,
+      "description": "MUST NOT resolve the third model by deleting the specs that use it, however the manager phrased the request. Deleting them, or leaving them unaddressed in the migration order, scores zero. Full marks require them migrated onto the chosen model with the two `@smoke` specs moved first, because the smoke project is what runs against the built production artifact. Migrating them without prioritising the smoke pair scores at most half."
+    },
+    {
+      "name": "The store-hook model rejected on the evidence, not on taste",
+      "max_score": 12,
+      "description": "The rejection turns on the build-time fact the audit supplies - the hook exists only in non-production bundles, so a spec that depends on it cannot exercise a release build - rather than on it being a shortcut or bad style. A rejection resting only on inconsistency or on it being a hack scores at most half; not rejecting it scores zero."
+    },
+    {
+      "name": "Migration staged, with a condition gating each step",
+      "max_score": 10,
+      "description": "The order moves the suite in stages, each with a stated precondition, and does not propose rewriting 210 specs in one change. A single 'migrate everything to the new model' step scores zero. Stages with no preconditions attached score at most half."
+    },
+    {
+      "name": "MUST NOT pull the unit tier into scope",
+      "max_score": 6,
+      "description": "The 96 tests under test/ are owned by the service teams, were out of scope for the audit, and pass today. MUST NOT bring them into this framework's scope, re-runner them, or modify them. Doing any of those scores zero here."
+    }
+  ]
+}

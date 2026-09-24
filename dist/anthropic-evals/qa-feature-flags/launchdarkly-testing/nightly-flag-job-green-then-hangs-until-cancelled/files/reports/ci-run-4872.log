@@ -1,0 +1,15 @@
+2026-09-11T02:14:03Z  Run npm test
+2026-09-11T02:14:04Z  > checkout-service@ test
+2026-09-11T02:14:04Z  > node --test "test/**/*.test.js"
+2026-09-11T02:14:05Z  ok 1 - a targeted user gets the express lane
+2026-09-11T02:14:05Z  ok 2 - an untargeted user gets the standard new flow
+2026-09-11T02:14:05Z  ok 3 - express lane is off for everyone else
+2026-09-11T02:14:05Z  ok 4 - line total multiplies unit price by quantity
+2026-09-11T02:14:05Z  ok 5 - cart total sums every line
+2026-09-11T02:14:05Z  ok 6 - percent promo rounds to the nearest cent
+2026-09-11T02:14:05Z  ok 7 - fixed promo never goes below zero
+2026-09-11T02:14:05Z  ok 8 - the pilot account stacks every promo
+2026-09-11T02:14:05Z  ok 9 - every other account keeps one promo
+2026-09-11T02:14:05Z  ok 10 - no account outside the pilot picks up stacking
+2026-09-11T02:24:04Z  Error: The operation was canceled.
+2026-09-11T02:24:04Z  ##[error]The job running on runner GitHub Actions 12 has exceeded the maximum execution time of 10 minutes.

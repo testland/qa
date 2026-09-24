@@ -1,0 +1,46 @@
+{
+  "context": "Two defects make this gate incapable of failing, and neither is visible from the config alone. First, /app/reports is behind a session guard: the collector arrives with no cookie, the preview server 302s it to /login, and the run summary records finalUrl http://localhost:3000/login against requestedUrl http://localhost:3000/app/reports at 880 ms and 301 kB. Four months of green mean the login page has been passing the reports page's thresholds. Second, budget.json is inert twice over - nothing in collect.settings points Lighthouse at it, and its caps are written in bytes (300000, 1500000) where the format takes kilobytes, so even once wired a 1701 kB page with 416 kB of gzipped script would pass every line of it. Predicted baseline failure: the agent reads the config, decides the thresholds are too loose or that the URL set is too narrow, tightens numbers, possibly adopts the category-score suggestion, and ships a config that still audits the login page and still never reads the budget. The attachments settle both: the finalUrl column is in the run summary, and the request rollup plus the bundle output give the real weights to check the caps against - 426 kB of script, 1163 kB of images across 38 files, 1024x1024 avatars painted at 40x40.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The reports page is what actually gets audited",
+      "max_score": 30,
+      "description": "The answer identifies that the audited page was /login, not /app/reports - citing the finalUrl in the run summary - and the delivered config makes the collector arrive authenticated, e.g. an extraHeaders Cookie carrying sb_session=dev-preview-7f21 to match the guard in server/preview.js. Scores zero if the delivered config still collects /app/reports with no session and the answer does not name the redirect. Scores at most half if the redirect is identified but nothing in the config makes the next run reach the real page."
+    },
+    {
+      "name": "The resource-size budget actually fires",
+      "max_score": 24,
+      "description": "budget.json is both referenced from the collect settings so Lighthouse loads it (budgetPath, or the equivalent inline budgets setting) and expressed in the units the format takes - kilobyte-scale caps, not the byte-scale numbers currently in the file. Scores zero if the file is left unreferenced, so nothing in the run reads it. Scores at most half if it is wired but the 300000 / 1500000 values are carried over unchanged, since no page this application could serve would ever exceed them."
+    },
+    {
+      "name": "Page weight named from the attached numbers",
+      "max_score": 14,
+      "description": "docs/perf-gate-fix.md names what the 1701 kB is made of using figures from the attachments: roughly 1163 kB across 38 images that are 1024x1024 intrinsic and painted at 40x40, and roughly 416 kB of gzipped script of which the vendor chunk is 246 kB. Scores zero if a cause is asserted with no number taken from the request rollup, the image dump, or the bundle output."
+    },
+    {
+      "name": "MUST NOT make the aggregate category score the gate",
+      "max_score": 12,
+      "description": "MUST NOT adopt categories:performance minScore as the assertion the build rests on. The document should say why it would not have caught this - a category score on the login page is as green as its vitals were - and the individual vitals stay the assertions that gate. Scores zero if the delivered config replaces per-metric assertions with a category-score assertion, or adds one as the primary gate."
+    },
+    {
+      "name": "MUST NOT relax an existing number to get a pass",
+      "max_score": 10,
+      "description": "MUST NOT raise any maxNumericValue already in .lighthouserc.js, downgrade an existing assertion to off, or loosen a budget cap so the reports route fits under it. Correcting the byte-scale budget values downward to kilobyte scale is not a relaxation and does not count. Scores zero if any existing threshold is raised or turned off."
+    },
+    {
+      "name": "The now-failing route lands somewhere survivable",
+      "max_score": 10,
+      "description": "Once the reports page is genuinely audited it misses its thresholds on every run. The answer either lands it at warn with a dated promotion to the real target, or sets an interim error threshold above today's measurement with the target as a scheduled tightening. Scores zero if the route is left asserting error against a threshold the attachments show it cannot meet and no ramp, date or remediation plan is stated - a permanently red build gets switched off."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "An updated .lighthouserc.js and docs/perf-gate-fix.md exist, and the document answers the question actually asked - which of the two stories was lying. Scores zero if only config is delivered with no written explanation."
+    },
+    {
+      "name": "Existing suite untouched",
+      "max_score": 4,
+      "description": "MUST NOT modify test/format.test.js or src/format.js. They are unrelated to the audit job and the request said to leave them alone. Any edit scores zero here."
+    }
+  ]
+}

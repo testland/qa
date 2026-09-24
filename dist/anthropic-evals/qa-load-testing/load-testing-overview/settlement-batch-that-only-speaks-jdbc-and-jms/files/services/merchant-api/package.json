@@ -1,0 +1,14 @@
+{
+  "name": "@kestrel/merchant-api",
+  "version": "4.8.2",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test",
+    "load:smoke": "k6 run load/smoke.js"
+  },
+  "dependencies": {
+    "fastify": "5.2.0",
+    "pg": "8.13.1"
+  }
+}

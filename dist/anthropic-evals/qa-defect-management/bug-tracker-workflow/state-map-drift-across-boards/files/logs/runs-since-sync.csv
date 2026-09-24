@@ -1,0 +1,6 @@
+date_time,board,action,http_status,outcome
+2026-08-18 09:14,jira-eng,transition,400,"Transition id 31 is not valid for issue ENG-6120 in its current status (sync ran clean at 03:00 the same morning)"
+2026-08-19 11:02,linear-mobile,transition,200,"issueUpdate returned success:false - no workflow state matched the name 'Shipped'; the script used the first state returned instead and MOB-884 moved back to Backlog. The mobile team renamed the column at 10:40 the same morning"
+2026-08-20 15:30,ado-payments,transition,200,"work item 7741 moved to Resolved; a priority change a triager saved 20 seconds earlier is no longer on the item"
+2026-08-21 08:45,ado-platform,create,400,"The field 'Severity' does not exist on work item type 'Bug' in this project"
+2026-08-22 16:20,linear-mobile,create,200,"MOB-902 created for a production outage and landed in the queue below routine work"

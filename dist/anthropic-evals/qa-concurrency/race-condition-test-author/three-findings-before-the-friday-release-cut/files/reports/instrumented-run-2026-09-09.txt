@@ -1,0 +1,35 @@
+audio-engine 8.4-rc1 — instrumented build, 4h12m, 2,118 cases — job status: success
+
+==================
+WARNING: ThreadSanitizer: data race (pid=20114)
+  Write of size 4 at 0x55f2c0a11e30 by thread T9:
+    #0 StreamOpened() src/stream_stats.cc:7 (audio_engine+0x1a2c41)
+    #1 AudioDevice::Open(DeviceId) src/device.cc:88 (audio_engine+0x1b0119)
+
+  Previous write of size 4 at 0x55f2c0a11e30 by thread T4:
+    #0 StreamClosed() src/stream_stats.cc:8 (audio_engine+0x1a2c88)
+    #1 AudioDevice::Close(DeviceId) src/device.cc:131 (audio_engine+0x1b0344)
+
+  Location is global 'g_stream_count' of size 4 at 0x55f2c0a11e30
+    (audio_engine+0x00000041e30)
+==================
+
+==================
+WARNING: ThreadSanitizer: data race (pid=20114)
+  Read of size 1 at 0x7b0400003e91 by thread T2 (audio render):
+    #0 Engine::Render(float*, int) src/engine.cc:64 (audio_engine+0x19be07)
+
+  Previous write of size 1 at 0x7b0400003e91 by main thread:
+    #0 Engine::Init(Config const&) src/engine.cc:41 (audio_engine+0x19bb92)
+
+  Location is heap block of size 216 at 0x7b0400003e00 allocated by main thread
+  Member 'ready_' at offset 145
+==================
+
+SUMMARY: 2 data races reported, 0 in tests/playlist_*
+
+Note appended by @dchen 2026-09-08: re-ran tests/playlist_repro under the
+instrumented build for 40 minutes (roughly 900,000 double-tap iterations
+against Playlist::AddOnce). No warnings of any kind. Duplicates still appeared
+in 1,104 of those iterations. Read the code too — Contains() takes the lock,
+Append() takes the lock, nothing in there is unguarded.

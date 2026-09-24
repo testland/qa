@@ -1,0 +1,12 @@
+{
+  "name": "northwind-console",
+  "version": "0.9.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\"",
+    "pilot": "node --test \"pilot/**/*.test.js\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

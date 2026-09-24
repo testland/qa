@@ -1,0 +1,8 @@
+{
+  "name": "editor-console",
+  "version": "5.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

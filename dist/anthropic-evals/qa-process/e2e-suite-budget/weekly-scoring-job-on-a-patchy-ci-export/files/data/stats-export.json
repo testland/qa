@@ -1,0 +1,30 @@
+{
+  "_fields": "runs = executions in the window. retry_lane_runs = executions on the lane with retries enabled. runtime_min = mean minutes per execution. flake_rate = share of retry-lane runs that failed and then passed on retry.",
+  "_window": "2026-09-01 to 2026-09-08",
+  "tests": {
+    "checkout.spec.ts > card-purchase-happy-path": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 3.8, "flake_rate": 0.02 },
+    "checkout.spec.ts > saved-card-purchase": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 3.1, "flake_rate": 0.0 },
+    "checkout.spec.ts > three-d-secure-challenge": { "runs": 41, "retry_lane_runs": 0, "runtime_min": 2.7 },
+    "cart.spec.ts > line-item-edit": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 1.4, "flake_rate": 0.0 },
+    "auth.spec.ts > login-with-password": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 1.0, "flake_rate": 0.01 },
+    "auth.spec.ts > sso-redirect": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 2.4, "flake_rate": 0.09 },
+    "auth.spec.ts > password-reset-email": { "runs": 41, "retry_lane_runs": 0, "runtime_min": 2.8 },
+    "account.spec.ts > change-password": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 1.6, "flake_rate": 0.0 },
+    "account.spec.ts > data-export-request": { "runs": 41, "retry_lane_runs": 0, "runtime_min": 2.9 },
+    "account.spec.ts > avatar-upload": { "runs": 0, "retry_lane_runs": 0, "runtime_min": null },
+    "search.spec.ts > keyword-results": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 1.3, "flake_rate": 0.0 },
+    "search.spec.ts > facet-filters": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 1.8, "flake_rate": 0.06 },
+    "search.spec.ts > sort-order-persistence": { "runs": 41, "retry_lane_runs": 0, "runtime_min": 1.5 },
+    "reports.spec.ts > export-50k-rows": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 4.6, "flake_rate": 0.0 },
+    "reports.spec.ts > scheduled-email-report": { "runs": 41, "retry_lane_runs": 0, "runtime_min": 3.3 },
+    "admin.spec.ts > audit-log-download": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 2.4, "flake_rate": 0.06 },
+    "admin.spec.ts > user-role-change": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 2.0, "flake_rate": 0.0 },
+    "admin.spec.ts > bulk-invite-users": { "runs": 0, "retry_lane_runs": 0, "runtime_min": null },
+    "orders.spec.ts > cancel-within-window": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 2.0, "flake_rate": 0.0 },
+    "orders.spec.ts > print-packing-slip": { "runs": 0, "retry_lane_runs": 0, "runtime_min": null },
+    "pricing.spec.ts > currency-switch": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 1.5, "flake_rate": 0.0 },
+    "settings.spec.ts > api-key-rotation": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 2.1, "flake_rate": 0.0 },
+    "notifications.spec.ts > digest-opt-out": { "runs": 2, "retry_lane_runs": 2, "runtime_min": 1.1, "flake_rate": 0.5 },
+    "onboarding.spec.ts > sample-data-import": { "runs": 41, "retry_lane_runs": 41, "runtime_min": 3.4, "flake_rate": 0.0 }
+  }
+}

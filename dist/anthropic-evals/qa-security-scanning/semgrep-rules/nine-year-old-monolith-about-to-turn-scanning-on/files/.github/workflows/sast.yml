@@ -1,0 +1,27 @@
+name: sast
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep:1.99.0
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # Shadow mode until 2026-10-01: reports, never blocks.
+      - name: Static analysis
+        continue-on-error: true
+        run: |
+          semgrep ci \
+            --config p/owasp-top-ten \
+            --config p/javascript \
+            --severity ERROR \
+            --baseline-ref origin/main \
+            -j 4 \
+            --metrics=off

@@ -1,0 +1,7 @@
+[project]
+name = "risk-scorer-ci"
+version = "1.4.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

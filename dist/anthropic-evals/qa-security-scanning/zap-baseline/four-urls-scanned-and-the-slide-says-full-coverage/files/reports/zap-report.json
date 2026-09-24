@@ -1,0 +1,33 @@
+{
+  "generated": "2026-09-08T02:14:11Z",
+  "target": "https://staging.northvale.io",
+  "spider": {
+    "duration_seconds": 60,
+    "urls": [
+      "https://staging.northvale.io/",
+      "https://staging.northvale.io/login",
+      "https://staging.northvale.io/about",
+      "https://staging.northvale.io/status"
+    ]
+  },
+  "site": [
+    { "url": "https://staging.northvale.io/", "method": "GET", "status": 200 },
+    { "url": "https://staging.northvale.io/login", "method": "GET", "status": 200 },
+    { "url": "https://staging.northvale.io/about", "method": "GET", "status": 200 },
+    { "url": "https://staging.northvale.io/status", "method": "GET", "status": 200 }
+  ],
+  "alerts": [
+    {
+      "rule_id": "10109",
+      "name": "Modern web application",
+      "risk": "Informational",
+      "url": "https://staging.northvale.io/"
+    },
+    {
+      "rule_id": "10096",
+      "name": "Timestamp disclosure",
+      "risk": "Low",
+      "url": "https://staging.northvale.io/status"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+name: deploy-gate
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci
+      - name: Gate
+        run: npm run smoke
+      - name: Promote
+        if: always()
+        run: ./scripts/promote.sh ${{ github.sha }}

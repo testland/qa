@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- installed at /Library/LaunchDaemons/com.ledgerwood.uitests.plist -->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ledgerwood.uitests</string>
+    <key>UserName</key>
+    <string>root</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/opt/ci/ledgerwood/scripts/ci-ui-tests.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>2</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/var/log/ledgerwood-uitests.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/ledgerwood-uitests.err</string>
+</dict>
+</plist>

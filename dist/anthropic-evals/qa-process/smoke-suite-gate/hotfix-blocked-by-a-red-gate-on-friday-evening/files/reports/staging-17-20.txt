@@ -1,0 +1,10 @@
+17:20:04  deploy staging 2026.9.11-a41c0b9 ok
+17:24:11  manual check by @okonkwo, card 4242 4242 4242 4242 (Visa, test mode)
+17:24:33  GET /checkout 200
+17:24:39  POST /api/orders 402
+17:24:39  page: "Payment declined - please try another card"
+17:25:02  retried, same card, POST /api/orders 402
+17:26:02  rolled staging back to 2026.9.9-c7712d5
+17:28:44  manual check by @okonkwo, card 4242 4242 4242 4242
+17:29:07  POST /api/orders 201, order MRC-99310 confirmed
+17:31:19  staging left on 2026.9.9-c7712d5

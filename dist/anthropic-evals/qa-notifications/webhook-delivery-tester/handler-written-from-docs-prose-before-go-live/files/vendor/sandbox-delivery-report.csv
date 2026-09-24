@@ -1,0 +1,9 @@
+delivery_id,sent_at,shipment_id,status,attempts,endpoint_status
+dlv_3b0e19ac77,2026-09-11T07:02:55Z,shp_9f2c41,label_created,1,200
+dlv_8f41c0b2e7,2026-09-11T08:41:12Z,shp_9f2c41,in_transit,1,200
+dlv_c41dd0e9b2,2026-09-11T11:20:31Z,shp_9f2c41,in_transit,1,200
+dlv_1a77de40c9,2026-09-11T14:02:47Z,shp_9f2c41,out_for_delivery,1,200
+dlv_5c03b9f118,2026-09-11T16:55:03Z,shp_9f2c41,delivered,1,200
+dlv_7e2a44fb10,2026-09-11T18:10:08Z,shp_2a7d03,label_created,1,200
+dlv_9d6c2f8a31,2026-09-11T20:44:19Z,shp_2a7d03,exception,3,200
+dlv_0f5b71c6e4,2026-09-12T04:15:02Z,shp_2a7d03,returned,1,200

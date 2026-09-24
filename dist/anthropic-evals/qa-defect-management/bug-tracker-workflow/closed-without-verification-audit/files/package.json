@@ -1,0 +1,6 @@
+{
+  "name": "closure-rule",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": { "test": "node --test test/*.test.js" }
+}

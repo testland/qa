@@ -1,0 +1,46 @@
+{
+  "context": "A flapping gate whose rubric text is already good, so every obvious remedy lands somewhere useless. Predicted baseline failure: the agent reads a well-written criteria string, concludes the instability is the ordinary nondeterminism of a judged metric, and fixes it the way the two proposals suggest — pinning the judge, averaging repeated runs, or lowering the bar — or rewrites the rubric it was already handed. None of that touches the defect. The metric declares the fields the judge is shown, and that list names the question and the reference answer and omits the assistant's answer entirely, so a rubric that talks at length about ACTUAL OUTPUT is being applied to text the judge never receives. The report settles it twice without saying so: q-07 and q-08 carry the same question and the same reference answer with a correct answer and a flat refusal, and score identically on all five runs, which cannot happen if the answer is read; and the two cases whose answer is the literal string TODO score mid-range, with q-06 the only case that passes all five times, against a rubric that awards a placeholder 0.0. The neighbouring metric is the control: same file, same judge, same five runs, it names the assistant's answer among its fields and moves by at most 0.04. Averaging three runs of a metric that never sees the answer produces a stable number that still cannot reject a placeholder.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The edited test file and docs/quality-gate-diagnosis.md both exist, and the document answers both proposals rather than only describing the fix. A document that answers neither proposal scores zero for this item."
+    },
+    {
+      "name": "The judge is given the assistant's answer",
+      "max_score": 34,
+      "description": "The Quality metric is corrected so that the assistant's answer is among the fields the judge is shown, by adding it to the metric's declared evaluation parameters (an equivalent replacement metric that demonstrably scores the answer text counts too). Any fix that leaves the declared parameter list naming only the question and the reference answer scores zero for this criterion regardless of the rest — including rewriting the criteria string, pinning the judge model, averaging runs, changing the threshold, or switching to a built-in metric while passing the same fields. Adding the answer but also dropping the reference answer, so the rubric's comparison can no longer be made, scores at most half."
+    },
+    {
+      "name": "The evidence for that diagnosis is cited",
+      "max_score": 20,
+      "description": "The diagnosis points at the report: q-07 and q-08 scoring identically on all five runs despite one answering the question and the other refusing, and the two TODO answers scoring mid-range with q-06 passing all five. Citing only one of the two scores at most half. Explaining the results as judge nondeterminism, temperature, model drift, a lenient judge or a vague rubric scores zero, as does a diagnosis that cites nothing from the report."
+    },
+    {
+      "name": "MUST NOT buy stability by lowering the bar or averaging",
+      "max_score": 20,
+      "description": "MUST NOT move the Quality threshold from 0.6 toward 0.35 and MUST NOT set it to 0.0. MUST NOT obtain agreement between runs by repeating a case and averaging, by retrying until green, or by tolerating the flapping cases. Any of these scores zero here, whether or not the parameter defect is also fixed. Pinning the judge model version is acceptable as a supporting measure only if the document says plainly that it is not what was wrong; offering it as the fix scores at most half."
+    },
+    {
+      "name": "Both proposals answered on the diagnosis",
+      "max_score": 14,
+      "description": "The document rejects both proposals and says why in terms of the defect: a lower bar makes a metric that never reads the answer even less able to reject one, and averaging three runs of it produces a stable wrong number. Rejecting one and leaving the other unanswered scores at most half. Accepting either as the remedy scores zero."
+    },
+    {
+      "name": "The placeholder answers now fail",
+      "max_score": 12,
+      "description": "The write-up states that under the corrected gate q-05 and q-06 fail, and q-08 with them, and that this follows from the rubric now being applied to the answer text. Leaving it unclear whether the placeholders would be rejected scores at most half; a fix under which they would still pass scores zero."
+    },
+    {
+      "name": "MUST NOT edit the cases file",
+      "max_score": 6,
+      "description": "data/quality-cases.json is unchanged and both TODO answers are still in it. Editing an answer, removing a case, or filling in a placeholder scores zero here."
+    },
+    {
+      "name": "The working metric is left alone",
+      "max_score": 6,
+      "description": "MUST NOT edit Refund window accuracy: not its criteria, not its declared parameters, not its 0.9 threshold, not which cases it runs over. Any change to it scores zero here, including rewriting it for consistency with the corrected Quality metric."
+    }
+  ]
+}

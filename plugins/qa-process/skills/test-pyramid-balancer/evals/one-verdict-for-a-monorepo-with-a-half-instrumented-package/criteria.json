@@ -1,0 +1,46 @@
+{
+  "context": "The requester asked, twice and explicitly, for one verdict and one plan for the whole monorepo, which is the thing that cannot honestly be given. Predicted baseline failure: the agent sums the three packages — 512 unit / 107 integration / 108 e2e, 727 total, 70.4 / 14.7 / 14.9 — and delivers a single bland diagnosis of a slightly thin middle. That aggregate is wrong in both directions at once. It hides that ledger is at 6.8% in the middle against a 70/25/5 target for a service-layer package, with two production contract mismatches this quarter that unit tests passed straight through, and it hides that console is already at 60.4 / 24.8 / 14.8 against the 60/25/15 its ui-heavy change shape asks for, which is on target and should be left alone. The second predicted failure is ingest: its export carries null for every runtime and every retry rate because self-hosted runners do not upload them, and its change-shape window is 9 days and 5 commits — 3 of them flagged mixed — because the package did not exist at that path before 2026-08-29. A verdict for ingest cannot be derived from that, and the two ways of getting one anyway are coercing the nulls to zero and reading the 9-day window as if it were comparable to the other two 90-day windows. The third is console's slowness, which the requester asserted and which the data contradicts: 7m20s of its 11m40s pull-request job is the webpack build.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT emit a single monorepo-wide mix or verdict",
+      "max_score": 30,
+      "description": "MUST NOT sum the three packages into one mix, one percentage split, or one verdict for atlas, and MUST NOT build the migration plan on such an aggregate. Doing so scores zero for this criterion however well the rest reads, because a single frontend package averaged with two backend ones erases the signal that drives every decision below. Full marks require the report to be organised per package, each with its own mix, its own target and its own verdict, and to say to the requester in plain words why the one number he asked for is not available. Producing per-package sections but still leading with or concluding on an atlas-wide figure scores at most half."
+    },
+    {
+      "name": "MUST NOT issue a verdict for ingest",
+      "max_score": 24,
+      "description": "MUST NOT assign ingest a diagnosis, a target split, or a place in the migration plan, and MUST NOT substitute zero for its null runtimes or its null retry rates. Either scores zero for this criterion. Full marks require both missing inputs to be named specifically — no per-layer runtime at all, blocked on OPS-2214, and a 9-day change-shape window over 5 commits with 3 flagged mixed, against 90-day windows for the other two — plus what would have to exist before ingest can be assessed. Saying only that ingest has 'incomplete data' without naming which inputs are missing and why they matter scores at most half. Reporting its 92 / 11 / 3 case counts as a mix and calling it unit-heavy scores zero."
+    },
+    {
+      "name": "Ledger diagnosed against its own change shape",
+      "max_score": 18,
+      "description": "Ledger's target comes from its own change-shape file — service-layer at 71% of 196 commits over 90 days — and the verdict names the starved middle layer: 22 cases, 6.8%, against a target near 25%, alongside a real top layer at 18.9%. Full marks require the two contract-mismatch incidents to be tied to that specific gap: unit tests passed through both, one was caught end-to-end in staging and one reached production, which is what an empty middle layer looks like from the outside. Naming the shape without the arithmetic, or the arithmetic without the shape, scores at most half. A verdict of 'too many end-to-end tests, cut them' scores zero — with the middle at 6.8% those tests are the only cover the seam has."
+    },
+    {
+      "name": "Console left alone",
+      "max_score": 16,
+      "description": "Console is reported as on target — 60.4 / 24.8 / 14.8 against the 60/25/15 its ui-heavy change shape asks for — and the plan proposes no rebalancing work there. Proposing any layer migration for console scores zero for this criterion. Full marks also require the requester's 'console feels slow' to be answered from the data rather than accepted: 7m20s of the 11m40s pull-request job is the webpack build, so the wait he is feeling is not the test mix. Accepting the slowness premise and recommending test cuts to fix it scores zero."
+    },
+    {
+      "name": "Targets differ per package and are derived, not assumed",
+      "max_score": 12,
+      "description": "Ledger and console are given different target splits, each traced to that package's own change-shape distribution, and the derivation is visible in reports/mix-by-package.json rather than only asserted in prose. Applying one target split to both packages scores zero here even if the per-package mixes are reported separately."
+    },
+    {
+      "name": "Script survives the nulls without inventing values",
+      "max_score": 10,
+      "description": "node scripts/mix-report.js runs to completion on the supplied export without throwing, and the ingest entry in reports/mix-by-package.json carries an explicit not-assessable marker listing its missing inputs rather than zeros, NaN, or a fabricated verdict. Throwing on the nulls scores zero; completing by coercing them to zero also scores zero."
+    },
+    {
+      "name": "Tested, and the existing suite stays green",
+      "max_score": 8,
+      "description": "test/mix-report.test.js asserts the ingest package is marked not assessable and asserts at least one derived target for a package that is assessable, and npm test passes with test/ratio.test.js still green. A test file that only checks the script runs scores at most half; a failing suite scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "All three artifacts exist at the requested paths, and reports/atlas-review.md is written as something to present on the 24th rather than as raw analysis. Missing any one scores at most half."
+    }
+  ]
+}

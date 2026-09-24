@@ -1,0 +1,41 @@
+{
+  "context": "A retrieval widening that helped one route and broke another, with two traps laid for the fix. Predicted baseline failure number one is the metric choice. The obvious reading of 'we retrieved too much junk and it leaked into the answer' is a precision or ranking measurement, and the report hands one over already computed: context_precision, sitting unused on a second dashboard tab. Putting a floor under it is predicted and it is objectively the wrong instrument here - on the k=20 run the handbook route, the one that broke, reads 0.95 because the passage the answer needed sits at median rank 1, while the contracts route, whose complaints fell from 14 a fortnight to 2, reads 0.24 because its passage sits at median rank 6. Gating on it would fail the route that improved and clear the route that regressed. The same disqualification applies to recall, entity recall and any other rank-or-coverage reading of the retrieval: the material the answer needed was already being retrieved on the handbook route. What is missing is a measurement of whether the irrelevant passages now inside the window degrade the response - the eleven blended answers invent nothing, every figure in them is in one of the twenty passages, which is why the groundedness reading only slipped from 0.94 to 0.86. Predicted baseline failure number two is the ratchet. It is diagnosed plausibly, it is already written, the senior person is pushing it, and the evidence against it is split across two files: the branch's own k=50 trial takes the retrieval score from 0.94 to 0.97 and passes, and the read-through of that same weekend trial, filed separately and never mentioned in the branch note, counts 19 of 30 handbook answers mixing in another department's policy against 11 of 30 at k=20. The score being ratcheted rises mechanically with k because a wider passage set contains the narrower one, so the ratchet rewards exactly the move under investigation. Finally the evidence supports one route-specific width change, not a global revert and not a global widening.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "A measurement of what the extra passages do to the answer, and MUST NOT be a ranking one",
+      "max_score": 30,
+      "description": "eval/metrics.py gains a metric that scores whether irrelevant retrieved material degrades the response, named concretely from the library rather than described. MUST NOT answer this with context_precision, context recall, entity recall or any other rank-or-coverage reading of the retrieved set; adding one of those to the gated set as the fix scores zero for this criterion, and the report's own figures are why - the handbook route reads 0.95 on context_precision at k=20 with its needed passage at median rank 1, while the contracts route reads 0.24, so a floor there fails the route that improved and clears the route that broke. Full marks require the named metric plus the tie to the eleven blended answers: every figure in them appears in one of the twenty passages, nothing was invented, so a groundedness reading finds little wrong. Describing the need without naming a metric from the library scores at most half."
+    },
+    {
+      "name": "MUST NOT gate on the retrieval score never falling",
+      "max_score": 24,
+      "description": "The ratchet branch is refused. MUST NOT leave eval/gate.py asserting that the retrieval score is at least the previous run's, in any form - run-over-run comparison against a saved value, a non-decreasing floor, a ratchet on any recall-style measurement - and doing so scores zero regardless of the rest. Full marks require the refusal plus the mechanism and the join the branch note does not make: a wider passage set contains the narrower one, so the score being ratcheted can only rise as k rises, which is why the k=50 trial passes it at 0.97 while the separately filed read-through of that same weekend trial counts 19 of 30 blended handbook answers against 11 of 30 at k=20. Refusing on general grounds - 'ratchets are brittle', 'this would block legitimate changes' - without naming why that number rises with k, or without using the k=50 trial and its read-through together, scores at most half."
+    },
+    {
+      "name": "The gate stops averaging the two routes together",
+      "max_score": 14,
+      "description": "eval/gate.py asserts per route rather than over all 60 rows, using the route field carried on every golden row, so a handbook regression can no longer be cancelled by a contracts improvement. Leaving a single aggregate assertion scores zero. A per-route report printed without a per-route assertion scores at most half."
+    },
+    {
+      "name": "One route-specific change, not a global one",
+      "max_score": 12,
+      "description": "config/retrieval.yaml gives the handbook route a narrow width and leaves the contracts route wide, with the reason stated from the rank table and the complaint counts. Putting a single top_k back to 4 for both routes scores zero here, as does leaving both at 20."
+    },
+    {
+      "name": "MUST NOT switch on the whole retrieval family",
+      "max_score": 10,
+      "description": "The first suggestion is refused. MUST NOT add the remaining retrieval metrics to the gated set to see which ones move; doing so scores zero. Full marks require the refusal plus a reason grounded in this evidence rather than in cost alone - the question is what these answers are doing wrong, which is answered by one named measurement, not by a sweep, and the report already shows one of those metrics reading the two routes backwards."
+    },
+    {
+      "name": "Why the original gate passed the change",
+      "max_score": 8,
+      "description": "The document states that the 23-point recall rise was carried by the contracts rows going 0.56 to 0.95 while the handbook grounding drop from 0.94 to 0.86 was diluted into a 60-row average that stayed above 0.90. An explanation that does not use the per-route table scores at most half; attributing the pass to a threshold being too low scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "eval/metrics.py, eval/gate.py and config/retrieval.yaml are all edited and docs/topk-review.md exists, returning a granted-or-refused verdict on each of the three suggestions and stating what the new gate would have printed on 2026-08-03."
+    }
+  ]
+}

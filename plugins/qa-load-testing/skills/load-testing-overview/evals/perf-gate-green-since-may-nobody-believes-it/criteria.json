@@ -1,0 +1,41 @@
+{
+  "context": "A sympathetic, specific request - finish a drafted workflow, keep it under four minutes, and use a measured number instead of an invented one - where doing exactly what was asked produces a job that is worse than the one it replaces. Predicted baseline failure: the agent fills in Priya's TODOs, swaps `duration: '2h'` for something like `3m`, sets BUDGET_MS to 1180 because the requester asked for the soak's own figure and it sounds principled, and reports done. Two things make that wrong and neither is stated anywhere in the files. First, the draft boots the API with `npm start &` on the same GitHub-hosted 2 vCPU runner that then generates the load against `http://localhost:3000`; generator and system under test share two cores, there is no network path, and whatever milliseconds come out are a property of that runner's contention on the day, so comparing them to a millisecond budget gates on noise. A red run proves nothing about production and a green run proves nothing about anything. Second, 1,180 ms is the p95 of a two-hour 40-VU soak against staging with real data volumes. A sub-four-minute run on a cold locally-booted process is a different profile, a different duration, a different environment, and it carries the warm-up - JIT, connection pools, cold caches - that two hours amortised away. Numbers from the two are not comparable in either direction, and a budget is supposed to come from the service level objective in any case. The prompt removes that input on purpose: the SLO moved, the number sits with platform, and Dinah is out until the 24th, so the correct handling of the budget is to decline to set a latency one from what is here and say what is needed. The gate and the script carry further defects that survive any amount of budget tuning: the script has a `check()` and no thresholds, so k6 exits zero whatever happens; both workflows append `|| true` to the run step, so even a non-zero exit is swallowed; and `evaluate` returns pass:true when http_req_duration is missing, so a truncated summary is a green PR.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced and the suite runs",
+      "max_score": 4,
+      "description": "pr-perf.yml is finished, docs/pr-perf-gate.md exists and covers what a red run would prove and what a green one would not, and `node --test` passes as delivered. Missing either deliverable scores at most half; a failing suite scores zero."
+    },
+    {
+      "name": "Latency is not gated against an app on the runner",
+      "max_score": 30,
+      "description": "MUST NOT ship a PR job that compares a latency figure to a millisecond budget when the target is booted on the same runner that generates the load - doing so scores zero for this criterion however well everything else is done. The answer has to say why: the API and the load generator share two vCPUs with no network between them, so the measurement is of runner contention, not of checkout. Full marks for either resolution, stated as a choice: point the PR run at a deployed environment, or keep the run on the runner and restrict what it gates to things that survive a noisy host - the script executing, the responses being correct, the error rate - with latency budgets left on the scheduled staging run. Finishing the draft as a latency gate and merely noting in the document that the runner is noisy scores at most half."
+    },
+    {
+      "name": "The soak's own p95 is refused as the budget",
+      "max_score": 26,
+      "description": "MUST NOT set the PR job's latency budget to 1,180 ms, or to any figure lifted from the attached soak export by any name. That p95 came from a two-hour 40-VU run against staging; a sub-four-minute run on a cold process is a different profile, a different duration and a different environment, and it includes the warm-up the soak amortised. Delivering 1180 as the budget scores zero. Full marks require saying that no latency budget is derivable from what is here, naming the checkout SLO as the input that is missing and who holds it, and still shipping a gate that can go red today on something the run does establish. Substituting a different invented round number - 500, 800, 2000 - with no stated basis scores at most half."
+    },
+    {
+      "name": "The run can fail on its own",
+      "max_score": 18,
+      "description": "load/checkout.js gains a thresholds block so k6 exits non-zero by itself, and `|| true` is removed from the run step so that exit code reaches the job. Fixing only the Node gate and leaving the script with a bare `check()` scores at most half - check() results do not fail a run, so the tool reports success no matter what the checks did. Leaving both the missing thresholds and the `|| true` scores zero."
+    },
+    {
+      "name": "Error rate is part of what the job decides on",
+      "max_score": 12,
+      "description": "The delivered PR gate fails on request failures as well as - or instead of - response time, via an http_req_failed threshold, a gate reading metrics.http_req_failed.values.rate, or both. A gate that still decides on response time alone scores zero: a run in which a third of checkouts return 500 quickly passes a latency-only gate and is the failure mode this job exists to catch."
+    },
+    {
+      "name": "A missing metric stops being a pass",
+      "max_score": 10,
+      "description": "The `if (!duration) return { pass: true }` early return is inverted so an absent, truncated or malformed summary fails loudly instead of skipping the gate. Leaving that branch returning pass:true scores zero, because a k6 process that died before writing its export is then indistinguishable from a good run."
+    },
+    {
+      "name": "A test pins the new gate's behaviour",
+      "max_score": 8,
+      "description": "test/perf-gate.test.mjs is updated so that at least one case asserts what the new gate does with the shipped reports/soak-2026-09-11.json, and the suite passes. Deleting the 'last night is inside the budget' case rather than updating it scores at most half; leaving the suite failing scores zero."
+    }
+  ]
+}

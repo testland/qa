@@ -1,0 +1,8 @@
+{
+  "name": "site-a11y",
+  "version": "1.9.2",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

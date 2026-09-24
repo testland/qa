@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: Pallet Freight API
+  version: 11.6.0
+x-generated-at: '2026-06-30T22:04:10Z'
+paths:
+  /v1/shipments:
+    get:
+      operationId: listShipments
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200 }
+      responses:
+        '200':
+          description: page of shipments
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Shipment' }
+    post:
+      operationId: createShipment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [origin, destination, weight_kg]
+              properties:
+                origin: { type: string, maxLength: 12 }
+                destination: { type: string, maxLength: 12 }
+                weight_kg: { type: number, minimum: 0.1, maximum: 24000 }
+      responses:
+        '201':
+          description: booked
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Shipment' }
+        '400':
+          description: rejected
+  /v1/shipments/{id}:
+    get:
+      operationId: getShipment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: a shipment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Shipment' }
+        '404':
+          description: unknown shipment
+  /v1/manifests:
+    get:
+      operationId: listManifests
+      responses:
+        '200':
+          description: manifests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { type: string } }
+    post:
+      operationId: createManifest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [shipment_ids]
+              properties:
+                shipment_ids:
+                  type: array
+                  items: { type: string }
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id: { type: string }
+        '400':
+          description: rejected
+  /v1/manifests/{id}:
+    get:
+      operationId: getManifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: a manifest
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id: { type: string }
+        '404':
+          description: unknown manifest
+  /v1/accounts/me:
+    get:
+      operationId: currentAccount
+      responses:
+        '200':
+          description: the calling account
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name]
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+components:
+  schemas:
+    Shipment:
+      type: object
+      required: [id, origin, destination, status]
+      properties:
+        id: { type: string }
+        origin: { type: string }
+        destination: { type: string }
+        status: { type: string, enum: [draft, booked, cancelled] }

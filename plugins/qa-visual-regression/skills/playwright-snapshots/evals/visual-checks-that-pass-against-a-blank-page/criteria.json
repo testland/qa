@@ -1,0 +1,46 @@
+{
+  "context": "Three checks that cannot fail, for three different reasons, and a plausible theory in the room that explains none of them. Predicted baseline failure: the agent adopts Priya - the five-entry hide list looks like the obvious culprit, the commit history shows it growing entry by entry, and emptying it feels like the fix. It changes nothing. That list sits under expect.toHaveScreenshot in the config, which takes animations, caret, maxDiffPixels, maxDiffPixelRatio, scale, stylePath and threshold, and no mask; the entries are also plain strings where the assertion option takes locators. Nothing on that page has been hidden for seven months, which is why growth and platform both re-filed requests they were told were done. What actually holds every comparison open is maxDiffPixelRatio: 1 - the option is a proportion of differing pixels to total between 0 and 1, so 1 permits the entire image to change. The commit that set it, 118ae30, says 'allowance to one percent' in its own message, so the agent is invited to read 1 as a percentage and leave it alone. The third reason is local to the hero check: `if (await hero.count() === 0) return;` turns a missing element into a silent pass, which is exactly the shape INC-118 took - the element carrying data-testid=hero was absent from the DOM for all nine days and all 31 runs. The hide queue is a mixed set: the promo strip and the build stamp are narrow and genuinely volatile, while HR-42 asks for the main content area, which would delete the product surface from the comparison, and is predicted to be granted along with the other two because all three arrive in the same queue with the same wording.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The proportion budget identified as the reason nothing fails",
+      "max_score": 30,
+      "description": "The document states that maxDiffPixelRatio: 1 allows every pixel in the image to differ - the option is a proportion between 0 and 1, not a percentage - so no comparison in the suite can fail, and that commit 118ae30 set it while describing it as one percent. Attributing the seven green months to the breadth of the hide list, to page stability, to threshold, or to retries scores zero for this criterion regardless of the rest. Noticing the value is wrong without stating what the option's units are scores at most half."
+    },
+    {
+      "name": "The hide list identified as never having applied",
+      "max_score": 22,
+      "description": "The document states that the five entries in the config's expect block have never taken effect - that block accepts no mask option, and its entries are strings where locators are required - and connects that to HR-41 and HR-43 being re-filed after being marked done. Treating the list as active, for example by arguing it is too broad, that it covers too much of the page, or that emptying it restores coverage, scores zero for this criterion. Deleting the entries as part of the fix without stating that they were never applied scores at most half."
+    },
+    {
+      "name": "MUST NOT hide the main content area",
+      "max_score": 16,
+      "description": "HR-42 is refused: the main content area of the homepage MUST NOT be masked, clipped away or otherwise removed from the comparison, whatever mechanism is used. Granting it scores zero for this criterion regardless of the rest. Full marks require the refusal plus what it would cost - the product surface is what the check exists to watch, and INC-118 happened inside it - and an alternative route for the carousel's per-visitor ordering. Refusing with no alternative offered scores at most half."
+    },
+    {
+      "name": "Hero check's silent exit removed",
+      "max_score": 14,
+      "description": "`if (await hero.count() === 0) return;` is removed from tests/home.spec.ts and the document states that it turned INC-118's missing element into a pass across all 31 runs. Leaving the early return in place scores zero. Removing it without connecting it to the incident scores at most half."
+    },
+    {
+      "name": "The two narrow requests granted where they take effect",
+      "max_score": 12,
+      "description": "HR-41 and HR-43 are granted and implemented where they will actually apply - as locators passed to the assertion in tests/home.spec.ts, or by a capture stylesheet - not by adding entries to the config block. Refusing all three requests scores zero: two of them are narrow, genuinely volatile elements and refusing them is the mirror-image failure of granting HR-42. Granting them by appending to the config list scores at most half."
+    },
+    {
+      "name": "Budget replaced with one that can fail",
+      "max_score": 10,
+      "description": "The corrected config sets a budget under which a real change fails - any maxDiffPixelRatio at or above 0.05, or leaving the value at 1, scores zero. A small absolute maxDiffPixels with no ratio, or a ratio at or below 0.01, scores full."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 5,
+      "description": "docs/home-visual-audit.md exists and carries a line per check in tests/home.spec.ts saying whether that check can report a difference today and what stops it. Covering fewer than three checks scores at most half; no document scores zero."
+    },
+    {
+      "name": "Helper untouched and suite still runs",
+      "max_score": 6,
+      "description": "tools/report-summary.mjs and tools/report-summary.test.mjs are unmodified and `node --test tools/report-summary.test.mjs` still passes. Any edit under tools/ scores zero here."
+    }
+  ]
+}

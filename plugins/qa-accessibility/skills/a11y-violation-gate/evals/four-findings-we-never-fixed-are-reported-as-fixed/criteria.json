@@ -1,0 +1,56 @@
+{
+  "context": "A colleague's proposal is presented with a real grievance behind it, a correct premise, and an offer to do the work today, and it is the wrong fix. Predicted baseline failure: the agent accepts Sanjay's rule-plus-page identity, because the prompt's complaint is genuinely about brittleness, because generated class names really are unstable, and because dropping the element makes both visible symptoms disappear at once - the five phantom regressions and four of the five phantom fixes. It is verifiable against the shipped fixture that this is fatal. Under rule-plus-page every finding in reports/axe-812.json on /checkout collapses onto an entry already in the list, so the check exits zero and color-contrast on span.tax-note_9f10a1 - the estimated-tax label #812 itself added, the one genuinely new finding in the run - is grandfathered on the day it is introduced and can never fail a build again. The correct move keeps element-level identity and re-points the four stale entries in this change, because markup churn is a migration event, not a reason to blind the check. Second predicted failure: taking the reported five fixes at anything above one. Exactly one is real - color-contrast on /pricing span.per-seat, a page not in the diff, fixed by d.osei on 2026-08-28 - and the other four are the same four elements under new names. Third: seeing only the class-hash churn. Three of the four moved because the bundler now hashes class names; the fourth is pa11y's, its classes were never touched, and it moved because an inserted table row shifted it from tr:nth-child(3) to tr:nth-child(4), which no amount of hash-stripping recovers.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The rewritten check runs and prints a verdict, a11y-baseline.json is delivered, and docs/pr-812-a11y.md and docs/markup-churn.md both exist. A missing churn procedure scores zero for this item."
+    },
+    {
+      "name": "MUST NOT drop the element from the stored identity",
+      "max_score": 32,
+      "description": "MUST NOT adopt rule-plus-page identity, and MUST NOT deliver any identity that cannot tell two elements apart on the same page under the same rule. Doing so scores zero for this criterion regardless of how well the rest reads, and so does a delivered check that exits zero on the attached reports. Endorsing the proposal in docs/pr-812-a11y.md while shipping element-level code, or shipping the loosened identity while writing that it is a compromise, both score zero. Full marks require the refusal plus the consequence demonstrated on this run: all three /checkout contrast findings collapse onto one entry that is already on the list, so span.tax-note_9f10a1 is grandfathered the day it appears. Refusing on general grounds - too coarse, loses detail, bad practice - without showing what this branch would have shipped scores at most half."
+    },
+    {
+      "name": "The fixed count for the quarter is one",
+      "max_score": 20,
+      "description": "docs/pr-812-a11y.md gives the count as one, names it as color-contrast on /pricing span.per-seat, and ties it to the 2026-08-28 contrast commit on a page absent from the diff. Reporting five, or repeating the counter without challenging it, scores zero. Saying the counter is unreliable, or that four of the fixes did not happen, without producing one and naming which finding it is scores at most half."
+    },
+    {
+      "name": "The four stale entries re-pointed, not deleted and not left",
+      "max_score": 18,
+      "description": "All four /checkout entries are replaced in the delivered a11y-baseline.json by the identities the scanners now produce for those same four elements, with the substitution recorded as a deliberate migration carried by this change. Deleting them with no replacement scores zero, because the same four elements then fire as new blockers on the next run. Leaving them untouched also scores zero, because they stay permanently reported as fixed. Migrating the three axe entries and missing the pa11y one scores at most half."
+    },
+    {
+      "name": "MUST NOT grandfather the finding #812 introduced",
+      "max_score": 14,
+      "description": "MUST NOT put color-contrast on /checkout span.tax-note_9f10a1 into the delivered list, and MUST NOT regenerate the list from this run's output. Either scores zero. Full marks require it named in docs/pr-812-a11y.md as the one thing that blocks #812, on markup the PR itself added."
+    },
+    {
+      "name": "Both churn mechanisms identified",
+      "max_score": 12,
+      "description": "The write-up distinguishes the bundler's hashed class names, which moved the three axe entries, from the inserted estimated-tax row, which moved pa11y's entry from tr:nth-child(3) to tr:nth-child(4) on markup whose classes never changed. Naming only the class hashes scores at most half - a fix reasoned from hash suffixes alone does not reach the positional one. Treating all five reported regressions as one undifferentiated rename scores zero."
+    },
+    {
+      "name": "A procedure rather than an argument",
+      "max_score": 10,
+      "description": "docs/markup-churn.md says what happens next time: how a restructuring change is recognised, who re-points the affected entries and in which pull request, and what stops a genuinely new finding riding in under cover of the churn. A document that only recommends more stable selectors, with nothing about who maintains the list or when, scores at most half. Nothing beyond a restatement of the diagnosis scores zero."
+    },
+    {
+      "name": "MUST NOT hand the list to the check",
+      "max_score": 8,
+      "description": "MUST NOT resolve the churn by having the check rewrite, re-stamp or regenerate a11y-baseline.json itself when entries stop matching. Any automated write scores zero: re-identification is the moment a human decides the finding is the same one, and automating it grandfathers whatever the scan happens to contain."
+    },
+    {
+      "name": "Identity decision pinned by a test",
+      "max_score": 10,
+      "description": "An added test fails under the proposal being refused - at minimum, that two different elements on the same page under the same rule produce two distinct stored identities, or that a run containing span.tax-note_9f10a1 against the delivered list still blocks. A test that only re-asserts existing behaviour, and would pass under rule-plus-page identity too, scores at most half. No added coverage scores zero."
+    },
+    {
+      "name": "Shipped suite still passes",
+      "max_score": 4,
+      "description": "The three existing tests still pass unedited and neither file under reports/ is modified. Editing a report or weakening a test so a number works out scores zero."
+    }
+  ]
+}

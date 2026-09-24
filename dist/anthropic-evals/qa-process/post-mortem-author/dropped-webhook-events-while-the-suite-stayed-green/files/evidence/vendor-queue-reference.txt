@@ -1,0 +1,33 @@
+Payments partner - subscriber queue reference (excerpt)
+
+Draining
+--------
+GET /v1/subscribers/{id}/drain?page_size=N&cursor=C
+
+  Response fields
+    events        the page of events returned by this call
+    total         events currently on your queue; not the size of this page
+    next_cursor   cursor for the page after this one, or null if this page was
+                  the last
+
+  page_size defaults to 500 and may not exceed 1000. A request above the
+  maximum is rejected with 400 invalid_page_size. Omitting cursor starts from
+  your oldest unacknowledged event. Events are returned oldest first.
+
+Acknowledging
+-------------
+POST /v1/subscribers/{id}/ack  { "through": "<event id>" }
+
+  Removes every event up to and including "through" from your queue. Events
+  after it are untouched and are returned by your next drain. Acknowledgement
+  does not delete our retained copy.
+
+Retention and replay
+--------------------
+Every event delivered to a subscriber queue is retained by us for 7 days from
+its first delivery, whether or not the subscriber has acknowledged it.
+
+POST /v1/subscribers/{id}/replay { "from": <ts>, "to": <ts> } redelivers
+retained events whose first delivery falls in the range. Replay is idempotent on
+event id. An event whose first delivery is more than 7 days old cannot be
+replayed and is not recoverable by any other means.

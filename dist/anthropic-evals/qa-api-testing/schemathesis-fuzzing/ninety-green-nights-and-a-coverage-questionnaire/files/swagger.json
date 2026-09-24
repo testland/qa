@@ -1,0 +1,151 @@
+{
+  "swagger": "2.0",
+  "info": { "title": "Northbeam Clinical Platform API", "version": "6.4.0" },
+  "basePath": "/api/v1",
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/patients": {
+      "get": {
+        "operationId": "listPatients",
+        "parameters": [
+          { "name": "page", "in": "query", "type": "integer", "minimum": 1, "maximum": 500 }
+        ],
+        "responses": {
+          "200": {
+            "description": "page of patients",
+            "schema": { "$ref": "#/definitions/PatientPage" }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPatient",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/PatientInput" }
+          }
+        ],
+        "responses": {
+          "201": { "description": "created", "schema": { "$ref": "#/definitions/Patient" } },
+          "400": { "description": "rejected" }
+        }
+      }
+    },
+    "/patients/{id}": {
+      "get": {
+        "operationId": "getPatient",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "a patient", "schema": { "$ref": "#/definitions/Patient" } },
+          "404": { "description": "unknown patient" }
+        }
+      }
+    },
+    "/patients/{id}/documents": {
+      "post": {
+        "operationId": "uploadPatientDocument",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          { "name": "file", "in": "formData", "required": true, "type": "file" },
+          { "name": "kind", "in": "formData", "required": true, "type": "string", "enum": ["referral", "discharge", "imaging"] },
+          { "name": "page_count", "in": "formData", "type": "integer", "minimum": 1, "maximum": 400 }
+        ],
+        "responses": {
+          "201": { "description": "stored", "schema": { "$ref": "#/definitions/Document" } },
+          "413": { "description": "too large" }
+        }
+      }
+    },
+    "/referrals/import": {
+      "post": {
+        "operationId": "importReferrals",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          { "name": "csv", "in": "formData", "required": true, "type": "file" },
+          { "name": "dry_run", "in": "formData", "type": "boolean" }
+        ],
+        "responses": {
+          "202": { "description": "accepted", "schema": { "$ref": "#/definitions/ImportJob" } },
+          "400": { "description": "rejected" }
+        }
+      }
+    },
+    "/attachments": {
+      "post": {
+        "operationId": "createAttachment",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          { "name": "document_id", "in": "formData", "required": true, "type": "string" },
+          { "name": "label", "in": "formData", "type": "string", "maxLength": 64 }
+        ],
+        "responses": {
+          "201": { "description": "created", "schema": { "$ref": "#/definitions/Document" } },
+          "400": { "description": "rejected" }
+        }
+      }
+    },
+    "/appointments": {
+      "get": {
+        "operationId": "listAppointments",
+        "parameters": [
+          { "name": "from", "in": "query", "type": "string", "format": "date" }
+        ],
+        "responses": {
+          "200": { "description": "appointments", "schema": { "$ref": "#/definitions/AppointmentPage" } }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Patient": {
+      "type": "object",
+      "required": ["id", "mrn", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "mrn": { "type": "string", "maxLength": 20 },
+        "status": { "type": "string", "enum": ["active", "merged", "deceased"] }
+      }
+    },
+    "PatientInput": {
+      "type": "object",
+      "required": ["mrn"],
+      "properties": {
+        "mrn": { "type": "string", "maxLength": 20 },
+        "given_name": { "type": "string", "maxLength": 80 }
+      }
+    },
+    "PatientPage": {
+      "type": "object",
+      "required": ["data"],
+      "properties": {
+        "data": { "type": "array", "items": { "$ref": "#/definitions/Patient" } }
+      }
+    },
+    "Document": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string" }
+      }
+    },
+    "ImportJob": {
+      "type": "object",
+      "required": ["job_id"],
+      "properties": { "job_id": { "type": "string" } }
+    },
+    "AppointmentPage": {
+      "type": "object",
+      "required": ["data"],
+      "properties": {
+        "data": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

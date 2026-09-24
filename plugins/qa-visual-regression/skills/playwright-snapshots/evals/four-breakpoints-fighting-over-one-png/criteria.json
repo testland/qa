@@ -1,0 +1,51 @@
+{
+  "context": "A confident, well-argued and wrong diagnosis, with a branch already open behind it. Predicted baseline failure: the agent reviews Marco's path-collision theory, agrees with it, and reviews or improves his template - because a template collision is the famous failure of this setup and the symptom description fits it. It does not fit the evidence. The template in the config already carries a per-project segment, and docs/on-disk.txt shows twelve separate files, four per check, so nothing is overwriting anything. The actual defect is spread order in two project definitions: tablet-768 and wide-1920 write `viewport` first and then spread `devices['Desktop Chrome']` over it, and a device descriptor defines its own viewport, so both projects run at the descriptor's 1280x720 - which is exactly what the on-disk listing reports for all six of their PNGs, a size that matches no declared breakpoint and is not even the 1280x800 the desktop project produces. mobile-375 and desktop-1280 put the spread first and come out at their declared sizes. Everything the team has observed follows: those two projects have never rendered at 768 or 1920, which is why SF-834 (720-900) and FOOT-210 (above 1600) were found by customers and not by the suite, and why Nadia can truthfully say wide-1920 has never reported anything. The second predicted failure is Kev's re-record, which Marco has already run once: an update pass taken before the viewports are corrected re-blesses six 1280x720 captures as the tablet and wide baselines, and taken after the fix without care it captures two open, reproducible defects as the expected appearance.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Spread order named as the cause",
+      "max_score": 30,
+      "description": "The document states that tablet-768 and wide-1920 place `...devices['Desktop Chrome']` after `viewport`, that the device descriptor carries its own viewport and therefore overwrites the declared one, and that both projects have been running at the descriptor's size rather than at 768 or 1920. Attributing the cause to a path or filename collision, to flakiness, to retries, or to the runner scores zero for this criterion regardless of the rest. Naming the two projects as broken without identifying spread order as the mechanism scores at most half."
+    },
+    {
+      "name": "MUST NOT re-record baselines ahead of the config fix",
+      "max_score": 24,
+      "description": "The ordered steps MUST NOT place any baseline update before the projects are corrected, and MUST NOT hand over a bare suite-wide update pass at any point. Granting Kev's clean-slate re-record as written scores zero here. Full marks require the order stated explicitly - correct the viewports first, then delete the stale captures, then record - together with the point that a pass run now writes the same 1280x720 images back as the tablet and wide baselines. Saying only 'review the diff before committing' scores at most half."
+    },
+    {
+      "name": "Marco refused on the evidence",
+      "max_score": 16,
+      "description": "Marco's template change is refused, and the refusal cites the two facts that kill it: the existing template already discriminates by project, and docs/on-disk.txt lists four separate files per check rather than one. Adopting his branch scores zero. Refusing it merely as 'unnecessary' or 'we can do that later', with no reference to the template contents or the file listing, scores at most half. Changing the template anyway while correctly naming the spread order scores at most half."
+    },
+    {
+      "name": "Nadia refused",
+      "max_score": 14,
+      "description": "wide-1920 is kept, and the answer states why its silence is not evidence of uselessness: it has never run at 1920, so it has had nothing to report. Agreeing to delete it scores zero. Keeping it with no reason given scores at most half."
+    },
+    {
+      "name": "Stale captures discarded",
+      "max_score": 12,
+      "description": "The six PNGs reported at 1280x720 - filters, footer and grid for both tablet-768 and wide-1920 - are deleted and recaptured after the fix. Keeping any of them, or renaming them to match a width, scores zero. Deleting all twelve including the four correct mobile-375 and four correct desktop-1280 files is over-broad and scores at most half."
+    },
+    {
+      "name": "Open defects expected to appear",
+      "max_score": 10,
+      "description": "The document warns that once the two projects run at their real widths, SF-834 and FOOT-210 will be present in whatever is captured, and says what to do about that - fix or hold those captures rather than record them as expected. Mentioning neither identifier scores zero; mentioning them without saying what the recording step must do about them scores at most half."
+    },
+    {
+      "name": "Corrected projects block supplied",
+      "max_score": 8,
+      "description": "The answer includes the corrected projects array as code, with the spread before the viewport in all four entries. Prose describing the fix without the code scores at most half; a block that leaves either broken entry in its current order scores zero."
+    },
+    {
+      "name": "Helper untouched and suite still runs",
+      "max_score": 6,
+      "description": "tools/matrix.mjs and tools/matrix.test.mjs are unmodified and `node --test tools/matrix.test.mjs` still passes. Any edit under tools/ scores zero here."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 5,
+      "description": "docs/breakpoint-matrix.md exists and carries a per-project line stating whether that project exercises its declared width. A document with no per-project verdict scores at most half; no document scores zero."
+    }
+  ]
+}

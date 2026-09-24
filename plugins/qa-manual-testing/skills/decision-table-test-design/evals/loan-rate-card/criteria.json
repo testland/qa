@@ -1,46 +1,46 @@
 {
-  "context": "Taken literally the card has five yes/no facts, so 32 applications - but 'score 780 or above' cannot hold while 'score 700 or above' is false, which makes 8 of the 32 impossible, and the large-loan discount does nothing below 700, which makes the loan-size fact irrelevant across another 8. Predicted baseline failure: the agent writes one section per line of the card, restates each adjustment correctly, and produces a test list of six or seven illustrative applications with no statement of how many distinct applications exist or how the list was cut down from them. Where it does build a table, it treats the two score facts as independent and prices rows such as 'score below 700 but 780 or above', which no applicant can be. The output looks disciplined - correct arithmetic, tidy sections - and its coverage is unmeasurable, which is exactly the failure the previous attempt shipped.",
+  "context": "Sanjay's cut is well argued, arithmetically clean, and drops the only part of the card where the service is broken. Predicted baseline failure: the agent checks his nine expected rates against the card, finds all nine correct - they are - and either signs the list off or adds a couple more applications inside the same score range. What the unaided agent is predicted not to do is price anything below 700, where every remaining rule interaction lives. docs/underwriting-referrals.md says the March change made sub-700 applications referrals rather than declines, 214 of them last quarter and 96 drawn on the printed price, so the sub-700 rows on the card are not dead text - they are money. Running src/pricer.js there shows it applying the EUR 25,000 discount regardless of score, which the card forbids in as many words, and LA-3312, LA-3355 and LA-3401 were all printed 0.4 points light. The second half of the trap is that the honest answer is still not thirty-two: a score of 780 or above entails a score of 700 or above, so eight of the thirty-two describe nobody, and loan size changes nothing below 700 per the card, which leaves twenty. Agreeing with Sanjay misses the defect; reacting by pricing all thirty-two invents applicants.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Deliverable exists",
+      "name": "Deliverables produced",
       "max_score": 5,
-      "description": "A file named loan-rate-card-analysis.md exists and contains a table of application kinds with rates. Scores zero if absent or if it contains only per-adjustment prose."
+      "description": "docs/scope-review.md exists and test/pricer.test.js has at least one added test. Scores zero if either is missing."
     },
     {
-      "name": "Full size of the problem stated before reduction",
-      "max_score": 22,
-      "description": "The document states how many applications the five facts describe in principle - 32 - before narrowing, and shows that number rather than starting from an already-shortened list. An equivalent statement is acceptable if the score facts are restructured first, provided the document says what the restructure removed. Scores zero if no count of the whole space appears anywhere. Scores at most half if a count appears but is wrong and unexplained."
+      "name": "MUST NOT sign off a list that prices only what gets quoted",
+      "max_score": 32,
+      "description": "Anti-pattern guard: the gaps live in the columns nobody wants to test, so coverage is measured over every reachable combination and not over the profitable ones. The sub-700 applications MUST be in the list QA runs. Scores zero if Sanjay's nine are endorsed, and scores zero if the list is extended only within the score bands he already covered. Scores at most half if the review argues sub-700 should be tested but the delivered list still contains none."
     },
     {
-      "name": "The two score facts handled as one number",
-      "max_score": 28,
-      "description": "The document recognises that 'score 780 or above' entails 'score 700 or above', and either marks the 8 applications where the first is true and the second false as impossible, or restructures the two facts into a single input with three bands (below 700, 700 to 779, 780 or above). Scores zero if the two are priced as independent yes/no facts anywhere in the table, since that produces rows for applicants who cannot exist. Scores at most half if the entailment is mentioned in prose but the table still carries independent rows for both."
+      "name": "The sub-700 large-loan discount found and corrected",
+      "max_score": 24,
+      "description": "The review identifies that src/pricer.js applies the 0.4 large-loan discount at any score while the card applies it only at 700 or above, and src/pricer.js is changed to match the card. Scores zero if the defect is not found, and zero if it is described but the service is left pricing sub-700 large loans 0.4 points light. Scores at most half if a change is made that also alters pricing at or above 700, which the shipped tests cover."
     },
     {
-      "name": "Reachable count reconciled",
-      "max_score": 18,
-      "description": "The document lands on 24 genuinely possible applications (three score bands times the other three facts) and says how it got there from 32. Scores zero if no reconciliation between the starting number and the final table size appears. Scores at most half if the arithmetic is stated but does not add up."
-    },
-    {
-      "name": "Large-loan discount identified as inert below 700",
-      "max_score": 16,
-      "description": "The document states that loan size changes nothing for applicants scoring below 700 - a EUR 30,000 loan and a EUR 5,000 loan both price at the base rate plus or minus the other adjustments - and merges or annotates those applications instead of listing each loan size separately. Scores zero if the document prices a large-loan discount for a sub-700 applicant anywhere."
-    },
-    {
-      "name": "MUST NOT hand over the unreduced set as the test list",
+      "name": "The score entailment handled",
       "max_score": 20,
-      "description": "Anti-pattern guard. The proposed test list is a reduced set derived from the table - roughly 20 applications once the impossible score pairs are removed and loan size is dropped below 700 - not 32 individually written cases, and not a handful of illustrative examples with no stated relationship to the table. Scores zero if 32 cases are enumerated one per combination with no reduction, and scores zero if the list is a short sample with no statement of what it leaves uncovered."
+      "description": "The review recognises that a score of 780 or above entails a score of 700 or above, and either marks the eight combinations where the first holds and the second does not as describing no applicant, or restructures the two into one input with three bands. Scores zero if the two are priced anywhere as independent yes/no facts, since that produces rows for applicants who cannot exist. Scores at most half if the entailment is noted in prose while the table still carries both as independent."
     },
     {
-      "name": "Referred-versus-priced ambiguity raised",
+      "name": "A test that would have caught it",
+      "max_score": 16,
+      "description": "An added test prices a sub-700 application of EUR 25,000 or more and asserts the card's rate - for example 661, 72 months, no current account, EUR 31,000 at 10.7 - so it fails against the shipped service and passes after the correction. Scores zero if the added tests all sit at or above 700, since those pass either way and separate nothing. Scores at most half if the assertion is present but npm test does not run clean."
+    },
+    {
+      "name": "Twenty applications reconciled from thirty-two",
       "max_score": 14,
-      "description": "The document flags that the card both refers sub-700 long-term applications to underwriting and prints a price for them, and asks which the system should do rather than deciding. Scores zero if a rate is stated for those applications with no note, and scores zero if they are silently dropped from the table."
+      "description": "The review states how many applications the facts describe before narrowing, how many of those can exist, and lands on twenty genuinely different kinds, naming loan size as the fact that stops mattering below 700. Scores zero if no reconciliation between the starting count and the delivered list appears. Scores at most half if the arithmetic is stated and does not add up."
     },
     {
-      "name": "Rates are computed, not described",
+      "name": "Rates computed, not described",
       "max_score": 10,
-      "description": "Each row carries a numeric APR - for example a 780-plus applicant with a current account, a 72-month term and a EUR 30,000 loan prices at 7.5. Scores zero if rows carry adjustment names rather than resulting rates. Scores at most half if rates are present but more than two are arithmetically wrong."
+      "description": "Each application in the delivered list carries a numeric APR from the card, including the sub-700 rates 9.9, 9.6, 10.7 and 10.4. Scores zero if rows carry adjustment names instead of rates, and scores at most half if more than two rates are arithmetically wrong."
+    },
+    {
+      "name": "Sanjay answered and the suite left intact",
+      "max_score": 6,
+      "description": "The review engages with his reasoning - grants that his nine rates are right and shows the referral volume that makes the premise wrong - and the three shipped tests still pass. Scores zero if a shipped test was removed or if his memo is not addressed at all."
     }
   ]
 }

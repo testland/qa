@@ -1,0 +1,15 @@
+run 2291 - ci - push to spike/os-matrix - 09 Jun 2026 11:18 UTC
+Conclusion: failure
+
+  test (ubuntu-latest, 20) ........... success        2m11s
+  test (ubuntu-latest, 22) ........... success        2m03s
+  test (macos-latest, 20) ............ failure        0m52s
+      Run actions/setup-node@v4
+      Error: Failed to download Node 20 distribution: ETIMEDOUT
+  test (macos-latest, 22) ............ cancelled      0m14s
+  test (windows-latest, 20) .......... cancelled      0m09s
+  test (windows-latest, 22) .......... cancelled      0m11s
+
+Note from @dholt: reverted the branch. Four of the six jobs died within fifteen
+seconds of each other with no output of their own, so whatever we changed has
+broken the matrix.

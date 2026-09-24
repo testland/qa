@@ -1,0 +1,9 @@
+{
+  "packageManager": "npm",
+  "reporters": ["html", "clear-text", "progress", "json"],
+  "testRunner": "command",
+  "commandRunner": { "command": "npm test" },
+  "mutate": ["src/**/*.js"],
+  "thresholds": { "high": 80, "low": 60, "break": 50 },
+  "coverageAnalysis": "perTest"
+}

@@ -1,0 +1,13 @@
+BUILD-AGENT-04, 2026-09-09, taken just before the manual clear-out.
+
+$ tasklist /FI "IMAGENAME eq chromedriver.exe" | find /c "chromedriver.exe"
+18
+
+This agent was last cleared by hand on 2026-09-03. It has run the nightly suite
+on six nights since, all green:
+
+  Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+  (PaymentTest, LoginTest)
+
+Nothing else on these boxes starts a browser, and an agent that ran no suite
+overnight is clean in the morning.

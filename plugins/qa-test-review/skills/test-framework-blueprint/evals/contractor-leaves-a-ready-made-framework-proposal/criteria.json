@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent endorses the proposal and carries its fixture architecture into the design, because everything on the surface is right - the stack is TypeScript and Playwright, which is what the team writes and what the repo already is, the pilot works, the SDET has said he is inclined to sign it off, and worker-scoped fixtures are a documented Playwright feature that the proposal justifies with a quantified 11-second saving. The agent is then predicted to accept the contractor's own diagnosis of the red runs, since it is stated confidently, is consistent with the observation that re-runs go green and nothing reproduces on a laptop, and comes with a ready remedy - `retries: 2`. It is wrong twice. `pilot/fixtures/index.ts` puts `account` and `session` at worker scope, and the three spec files mutate that account: billing.spec.ts upgrades the plan to Scale and adds a billing-history row, quoting.spec.ts books a shipment that draws credit off it, and console.spec.ts then asserts the plan reads Starter and the credit reads 5,000.00. The failures are exactly those assertions receiving the post-mutation values - Scale, 4,981.50, 4,985.20, three history rows, and the scale-tier price 14.80 where the starter price 18.50 was expected - and they start on 2026-09-01, which is the day reports/platform-changelog.md records the pilot job going from single-worker to `--workers=4`. A re-run passes because a fresh worker re-seeds the account, which is why the contractor's evidence points the way it does. So the suite is not flaky, it is order-dependent, and the prescribed retries would hide it permanently. Run 842 is the one genuine infrastructure failure in the set and is a different thing: the runner was lost at 12 seconds with no tests started, which no test-level retry addresses. The second inherited mistake is the coverage allocation, which the contractor states plainly was carried over from a retail storefront client: all coverage on 31 console screens with the API tier out of scope, while 271 of 412 merged PRs touch only the API or domain layer, 41 touch only the console, and all four production incidents since June were in the domain layer. The counterweight is that blanket rejection is also wrong - the runner, the language and leaving the unit tier with the dev teams are right and must survive.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Design documents produced",
+      "max_score": 5,
+      "description": "docs/test-conventions.md, docs/implementation-order.md and docs/review-answer.md all exist, and review-answer.md gives a direct verdict on the proposal rather than a neutral comparison. A set of documents that never says whether the proposal is adopted scores zero for this item."
+    },
+    {
+      "name": "MUST NOT share a mutable account or session across tests",
+      "max_score": 32,
+      "description": "docs/test-conventions.md MUST NOT record the account or the signed-in session as worker-scoped, per-file, or otherwise shared by more than one test, and MUST NOT carry the proposal's fixture module forward unchanged. Keeping either at worker scope scores zero for this criterion regardless of the rest, including a version that keeps the shared account and adds cleanup, reset or ordering rules on top of it. Full marks require each fixture a test mutates to be created and torn down per test, worker scope reserved in the design for things tests only read or for a per-worker isolated store such as a database or account pool where no two tests touch the same record, and the sign-up cost addressed some other way - a per-worker pool, a seeded record created through the API rather than the sign-up flow, or a stated acceptance of the cost. Re-scoping the fixtures with no statement of the rule that produced the change scores at most half."
+    },
+    {
+      "name": "The red runs diagnosed rather than absorbed",
+      "max_score": 18,
+      "description": "docs/review-answer.md states that the failing assertions are reading state another spec in the same worker already changed - the plan moved to Scale by billing.spec.ts, the credit drawn down by quoting.spec.ts - and ties the onset to the pilot job moving to four workers on 2026-09-01, which is why nothing reproduces single-worker on a laptop and why a re-run goes green. Repeating the contractor's explanation of runner contention scores zero. Concluding only that the specs are order-dependent, without connecting it to the shared fixtures or to the worker change, scores at most half. The answer must also treat run 842 separately as a lost runner with no tests started, rather than folding it in with the rest; treating that one as the same problem scores at most half for this criterion."
+    },
+    {
+      "name": "MUST NOT prescribe retries to clear these failures",
+      "max_score": 14,
+      "description": "MUST NOT adopt `retries: 2`, or any nonzero test-level retry count, as the answer to the pilot failures in either the config decisions or the CI section. Doing so scores zero for this criterion. Recommending a job-level re-queue for a lost runner such as run 842 is correct and does not count against this. Setting retries to zero without saying why retries would have been the wrong instrument here - they would have reported every one of these runs green and hidden the defect in a six-week-old suite - scores at most half."
+    },
+    {
+      "name": "Fixtures recorded with their scope and whether tests mutate them",
+      "max_score": 12,
+      "description": "The conventions document lists each fixture with what it provides, its lifetime, and explicitly whether tests mutate it, so the rule that produced the re-scoping can be applied to the next fixture somebody adds. A fixture list with no lifetime or no mutation column scores at most half; no fixture list at all scores zero."
+    },
+    {
+      "name": "Coverage keyed to where this product changes and breaks",
+      "max_score": 14,
+      "description": "The layers table gives the API and domain tier the primary automated coverage on the strength of the merged-PR split - 271 of 412 touching only the API or domain against 41 touching only the console - and the four domain-layer production incidents, with web E2E kept thin and journey-based rather than one spec per screen. Carrying the proposal's allocation forward - API out of scope, all 31 console screens covered - scores zero. A table that lists only the layers being covered, with no row stating what is deliberately excluded and why, scores at most half."
+    },
+    {
+      "name": "What the proposal got right survives",
+      "max_score": 10,
+      "description": "The design keeps Playwright and TypeScript as the runner and language, on the evidence that all six engineers who will maintain the suite write TypeScript, and keeps the unit tier with the dev teams. Rejecting the proposal wholesale, or switching runner or language with no reason drawn from who maintains the tests, scores zero. Keeping them without recording any rejected alternative and why it lost scores at most half."
+    },
+    {
+      "name": "MUST NOT disturb the existing passing tests",
+      "max_score": 5,
+      "description": "test/rating.test.js passes today under `npm test`. MUST NOT delete it, port it to another runner, or pull the unit tier into this framework's scope. Any modification under src/, test/ or pilot/ scores zero here."
+    }
+  ]
+}

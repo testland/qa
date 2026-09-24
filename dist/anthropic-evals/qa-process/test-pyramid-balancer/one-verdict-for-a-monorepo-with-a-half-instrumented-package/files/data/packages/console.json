@@ -1,0 +1,11 @@
+{
+  "package": "packages/console",
+  "exported": "2026-09-15",
+  "runner": "github-hosted",
+  "layers": {
+    "unit": { "cases": 180, "files": 54, "serial_seconds": 96, "retry_and_pass_rate": 0.001 },
+    "integration": { "cases": 74, "files": 26, "serial_seconds": 331, "retry_and_pass_rate": 0.005 },
+    "e2e": { "cases": 44, "files": 14, "serial_seconds": 628, "retry_and_pass_rate": 0.021 }
+  },
+  "notes": "counts and timings from the last 30 green runs on main; complete. PR job wall clock 11m40s, of which 7m20s is the webpack build, not tests."
+}

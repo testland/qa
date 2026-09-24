@@ -1,0 +1,42 @@
+$ pytest -n 4 --dist load tests/ --junitxml=reports/junit.xml
+============================= test session starts ==============================
+platform linux -- Python 3.12.7, pytest-8.3.3, pluggy-1.5.0
+plugins: xdist-3.6.1
+4 workers [11 items]
+
+[gw1] [  9%] PASSED tests/test_api_health.py::test_health_endpoint_is_up
+[gw3] [ 18%] PASSED tests/test_catalog.py::test_catalog_lists_products
+[gw1] [ 27%] PASSED tests/test_api_health.py::test_version_endpoint_reports_a_build
+[gw2] [ 36%] PASSED tests/test_orders.py::test_reorder_puts_the_previous_lines_back_in_the_cart
+[gw1] [ 45%] PASSED tests/test_api_health.py::test_catalog_api_returns_products
+[gw3] [ 54%] PASSED tests/test_catalog.py::test_search_narrows_the_catalog
+[gw0] [ 63%] PASSED tests/test_orders.py::test_order_history_lists_past_orders
+[gw2] [ 72%] FAILED tests/test_checkout.py::test_apply_promo
+[gw3] [ 81%] PASSED tests/test_catalog.py::test_product_page_shows_stock
+[gw0] [ 90%] PASSED tests/test_checkout.py::test_place_order
+[gw0] [100%] FAILED tests/test_checkout.py::test_guest_checkout_requires_an_email
+
+=================================== FAILURES ===================================
+_________________________________ test_apply_promo _____________________________
+[gw2] linux -- Python 3.12.7
+
+    assert driver.find_element(By.CSS_SELECTOR, "[data-testid=order-total]").text == "44.91"
+E   AssertionError: assert '71.38' == '44.91'
+E     - 44.91
+E     + 71.38
+
+tests/test_checkout.py:34: AssertionError
+_____________________ test_guest_checkout_requires_an_email ____________________
+[gw0] linux -- Python 3.12.7
+
+    d = webdriver.Chrome(options=options)
+E   selenium.common.exceptions.WebDriverException: Message: unknown error:
+E   session deleted because of page crash
+E   from tab crashed
+E     (Session info: chrome=141.0.7390.65)
+
+tests/test_checkout.py:43: WebDriverException
+=========================== short test summary info ============================
+FAILED tests/test_checkout.py::test_apply_promo - AssertionError: assert '71.38' == '44.91'
+FAILED tests/test_checkout.py::test_guest_checkout_requires_an_email - WebDriverException
+========================= 2 failed, 9 passed in 241.60s ========================

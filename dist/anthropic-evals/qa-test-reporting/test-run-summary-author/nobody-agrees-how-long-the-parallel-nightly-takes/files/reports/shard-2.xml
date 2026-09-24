@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nightly-e2e">
+  <testsuite name="shard-2" tests="10" failures="2" errors="0" skipped="1" time="502.7" timestamp="2026-09-12T01:00:06">
+    <testcase classname="e2e/checkout/guest.spec.ts" name="completes guest journey" time="121.9">
+      <failure message="Timeout 120000ms exceeded waiting for [data-testid=order-confirmation]">TimeoutError at guest.spec.ts:112</failure>
+    </testcase>
+    <testcase classname="e2e/search/facets.spec.ts" name="facets narrow results" time="14.2">
+      <failure message="expected 12 results after facet, received 40">AssertionError at facets.spec.ts:58</failure>
+    </testcase>
+    <testcase classname="e2e/search/facets.spec.ts" name="clears all facets" time="0">
+      <skipped message="depends on facets narrow results"/>
+    </testcase>
+    <testcase classname="e2e/checkout/saved-card.spec.ts" name="completes with saved card" time="58.3"/>
+    <testcase classname="e2e/checkout/address.spec.ts" name="validates address" time="62.4"/>
+    <testcase classname="e2e/search/query.spec.ts" name="returns results" time="49.1"/>
+    <testcase classname="e2e/checkout/tax.spec.ts" name="calculates tax" time="55.6"/>
+    <testcase classname="e2e/search/query.spec.ts" name="paginates" time="47.8"/>
+    <testcase classname="e2e/checkout/shipping.spec.ts" name="picks shipping option" time="51.2"/>
+    <testcase classname="e2e/search/query.spec.ts" name="handles empty results" time="42.2"/>
+  </testsuite>
+</testsuites>

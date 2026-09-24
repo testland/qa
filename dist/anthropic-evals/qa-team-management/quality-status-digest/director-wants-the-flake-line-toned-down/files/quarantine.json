@@ -1,0 +1,11 @@
+{
+  "note": "Every test listed here is currently switched out of the blocking path.",
+  "entries": [
+    { "id": "Q-101", "test": "payments/refund.spec.ts:partial refund on a split capture", "quarantined_on": "2026-07-28", "ticket": "PAY-6610" },
+    { "id": "Q-102", "test": "payments/threeds.spec.ts:challenge flow returns to the order page", "quarantined_on": "2026-08-11", "ticket": "PAY-6688" },
+    { "id": "Q-103", "test": "payments/payout.spec.ts:batch payout retries a soft decline", "quarantined_on": "2026-08-25", "ticket": "PAY-6742" },
+    { "id": "Q-104", "test": "payments/wallet.spec.ts:apple pay sheet dismisses cleanly", "quarantined_on": "2026-08-29", "ticket": "PAY-6755" },
+    { "id": "Q-105", "test": "payments/fx.spec.ts:quotes expire after 60 seconds", "quarantined_on": "2026-09-03", "ticket": "PAY-6790" },
+    { "id": "Q-106", "test": "payments/invoice.spec.ts:credit note offsets the invoice total", "quarantined_on": "2026-09-10", "ticket": "PAY-6811" }
+  ]
+}

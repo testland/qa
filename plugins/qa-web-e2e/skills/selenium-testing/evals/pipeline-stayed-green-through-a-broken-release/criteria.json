@@ -1,0 +1,46 @@
+{
+  "context": "A suite that runs, passes, and measures nothing. Predicted baseline failure: the agent takes the theory the requester puts in front of it. 'Maven only runs classes ending in Test' is one of the strongest priors in the Java ecosystem and a colleague states it confidently, the class really is called CheckoutJourney, and a 2026-04-02 rename commit sits in the history to confirm the story - so the predicted answer is 'it never ran', followed by renaming the class or adding surefire includes, and a postmortem dating the outage from April. That answer is wrong and three separate fixtures refute it: pom.xml already configures includes for **/*Journey.java, the release build log has a Running com.shop.e2e.CheckoutJourney line with Tests run: 1, and the artifact holds TEST-com.shop.e2e.CheckoutJourney.xml. The test executed on every commit. It passed because its last two statements cannot fail: the status strip it reads is in the document on every render and empty until the client writes into it, so getText() returns an empty string on a dead checkout and assertFalse(contains(...)) holds; and .checkout-error is a class selector for an element whose class attribute is 'alert alert--payment', so findElements returns an empty list whether or not the error rendered. Nothing in the test ever asserts that an order happened - no URL check, no confirmation content - which is why it stays green against the captured DOM where the address bar never left /checkout. The second predicted miss is dating: the coverage was lost at de40c1b on 2026-05-19, the commit that quietened the journey, not at the April rename the wrong theory points to.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The test sources are edited in place and docs/e2e-gate-postmortem.md exists. Deleting, disabling or skipping any test scores zero for this item whatever else is done."
+    },
+    {
+      "name": "MUST NOT accept the class-selection theory",
+      "max_score": 30,
+      "description": "The answer must kill Marcus's theory. Stating that CheckoutJourney never executed, renaming any test class, or editing the surefire includes in pom.xml in order to 'make it run' scores zero for this criterion regardless of the rest - the class ran on every commit. Full marks require the refutation tied to evidence: the **/*Journey.java include already configured on the surefire plugin, and the per-class result line or the per-class XML showing the class ran and passed. Asserting the theory is wrong with no evidence cited scores at most half."
+    },
+    {
+      "name": "Assertions that cannot fail replaced with observable outcomes",
+      "max_score": 26,
+      "description": "The two closing assertions are identified as unable to fail and replaced with checks on what a completed order actually produces - an explicit wait for the URL to reach /orders/ and for confirmation content the server only renders after the order posts. Leaving either assertFalse(...contains(...)) or the findElements-size-zero check in place scores zero. Fixing one of the two, or replacing them with another absence check, scores at most half. Saying only that the test 'needs stronger assertions' without naming why these two pass on a dead checkout scores at most half."
+    },
+    {
+      "name": "Empty-element and missing-class readings named",
+      "max_score": 14,
+      "description": "The postmortem states the two mechanisms concretely: the order-status strip is present on every render and empty until the client writes into it, so its text is the empty string when checkout dies; and .checkout-error matches nothing because that element carries class 'alert alert--payment' and is reachable only by its data-testid. Naming neither scores zero; naming one scores at most half. A rewritten test that keeps a .checkout-error class selector scores zero here."
+    },
+    {
+      "name": "MUST NOT leave the whole purchase journey in one test method",
+      "max_score": 12,
+      "description": "From the skill's anti-pattern on a single class carrying one giant flow: sign-in, browse, add-to-cart, promo and pay are separated into per-behaviour tests with per-test setup, so a red build names the step that broke rather than one 21-second method. The seeded-cart route the smoke suite already uses makes a payment test cheap to set up. Leaving the single method intact scores zero; splitting into two methods that still bundle unrelated behaviours scores at most half."
+    },
+    {
+      "name": "Coverage window dated to the assertion change",
+      "max_score": 12,
+      "description": "The postmortem dates the loss of coverage to de40c1b on 2026-05-19 - the commit that touched only CheckoutJourney.java and removed more than it added. Dating it to the 2026-04-02 rename scores zero, because that date only follows from the theory being refuted. Giving a window with no commit behind it scores at most half."
+    },
+    {
+      "name": "Failure demonstrated against the captured DOM",
+      "max_score": 12,
+      "description": "The document names the specific assertion in the rewritten test that goes red against ci-logs/checkout-dom-4.11.html and what it reads - the address bar still on /checkout, or the absence of confirmation content - rather than asserting the job 'will fail now'. No verification step at all scores zero; 'run it and see' scores at most half."
+    },
+    {
+      "name": "Files outside the request untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify SmokeTest.java or LoginJourney.java. Both pass, both assert on real outcomes, and the request excluded them explicitly. Any edit to either scores zero here."
+    }
+  ]
+}

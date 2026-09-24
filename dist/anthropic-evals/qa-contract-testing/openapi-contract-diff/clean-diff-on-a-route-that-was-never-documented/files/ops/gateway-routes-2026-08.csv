@@ -1,0 +1,8 @@
+method,path,calls,distinct_api_keys,p50_ms
+POST,/v1/webhooks,18442,54,41
+GET,/v1/webhooks,206113,58,22
+GET,/v1/webhooks/{webhookId},884019,59,18
+DELETE,/v1/webhooks/{webhookId},12406,7,29
+POST,/v1/webhooks/{webhookId}/disable,0,0,
+
+Source: gateway access logs, production only, 2026-08-01 to 2026-08-31.

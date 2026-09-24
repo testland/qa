@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-11T09:00:00Z",
+  "violations": [
+    "axe::color-contrast::/docs::code.inline",
+    "axe::link-name::/docs::a.edit-page",
+    "axe::region::/docs::body",
+    "axe::landmark-one-main::/docs::body",
+    "axe::heading-order::/docs::h4.api-note",
+    "axe::color-contrast::/pricing::span.per-seat",
+    "axe::region::/pricing::body",
+    "axe::label::/::input#newsletter"
+  ]
+}

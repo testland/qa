@@ -1,0 +1,11 @@
+{
+  "name": "shop-e2e",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/**/*.test.js",
+    "e2e": "node e2e/run.js"
+  },
+  "dependencies": {
+    "selenium-webdriver": "^4.27.0"
+  }
+}

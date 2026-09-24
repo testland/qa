@@ -1,0 +1,13 @@
+TAP version 13
+# Subtest: test/e2e/checkout.spec.js
+    ok 1 - customer completes a checkout
+    ...
+1..6
+# tests 19
+# suites 6
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 250119.4

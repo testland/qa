@@ -1,0 +1,27 @@
+name: pr-scan
+
+on: pull_request
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: build, push, record digest
+        run: |
+          TAG=registry.internal/checkout-api:pr-${{ github.event.number }}
+          docker build -t "$TAG" .
+          docker push "$TAG"
+          echo "IMAGE=$(docker inspect --format '{{index .RepoDigests 0}}' "$TAG")" >> $GITHUB_ENV
+      - name: diagnostics
+        run: docker run --rm aquasec/trivy:latest --version
+      - name: scan
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${{ runner.temp }}/trivy-cache:/root/.cache/trivy \
+            aquasec/trivy:latest image \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --exit-code 1 \
+              ${{ env.IMAGE }}

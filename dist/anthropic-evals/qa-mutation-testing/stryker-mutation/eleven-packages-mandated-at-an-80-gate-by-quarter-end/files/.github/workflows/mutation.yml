@@ -1,0 +1,37 @@
+name: mutation
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - notifications
+          - pricing
+          - auth
+          - search
+          - reporting
+          - ingest
+          - web-gateway
+          - admin-ui
+          - ledger
+          - db-migrations
+          - proto-gen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Mutation run
+        working-directory: packages/${{ matrix.package }}
+        run: npx stryker run
+        continue-on-error: true

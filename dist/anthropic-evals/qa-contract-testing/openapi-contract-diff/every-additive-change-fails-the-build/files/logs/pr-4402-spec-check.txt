@@ -1,0 +1,13 @@
+2026-08-14T10:22:04.1Z ##[group]Run actions/checkout@v5
+2026-08-14T10:22:07.7Z ##[endgroup]
+2026-08-14T10:22:07.9Z ##[group]Run Extract published spec
+2026-08-14T10:22:08.3Z ##[endgroup]
+2026-08-14T10:22:08.5Z ##[group]Run Compare
+2026-08-14T10:22:14.6Z ##[endgroup]
+2026-08-14T10:22:14.8Z ##[error]Process completed with exit code 1.
+2026-08-14T10:22:14.9Z Post job cleanup.
+
+PR #4402 changed one thing: it added `POST /v1/cards/{cardId}/freeze`, a new
+endpoint. It added no fields, removed nothing and touched no existing path.
+This run predates the 2026-08-19 change to the workflow, so the red compare step
+failed the job and the later steps never ran.

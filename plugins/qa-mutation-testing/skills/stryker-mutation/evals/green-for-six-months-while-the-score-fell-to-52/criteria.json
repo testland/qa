@@ -1,0 +1,41 @@
+{
+  "context": "The obvious explanation for a gate that never fires is a missing `thresholds.break`, and it is already there at 60 — so the reflex fix finds nothing and the agent has to keep looking. Predicted baseline failure: the agent raises or lowers the threshold, adds a reporter, writes a good essay about mutation score versus line coverage, and leaves the one line that actually breaks the gate untouched — `run: npx stryker run | tee reports/mutation-summary.txt`. That step has no `shell:` key, so it runs under the runner's default `bash -e {0}`, which does not set `pipefail`; the status of the pipeline is `tee`'s zero and Stryker's exit code 1 is discarded. That is why Leena's laptop prints 1 and twenty-six builds concluded `success`, four of them under the threshold. The second thing a baseline is predicted to miss is that the 52.4 is itself flattering: `\"mutate\": [\"src/**/*.js\"]` has no test-file exclusion, and the September summary shows six `*.test.js` rows carrying 430 of the 1,880 valid mutants at 96%, because mutating an expected value makes its own test fail. Strip those and the product code is at 572 detected of 1,450 valid — a little over 39%. Both failures point the same way on Dominic's request: a threshold of 75, or even the existing 60, reds every build the moment the pipeline stops swallowing the exit code, which is how the last gate quietly died.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The exit code stops being discarded",
+      "max_score": 30,
+      "description": "MUST NOT leave the `npx stryker run | tee reports/mutation-summary.txt` step as it stands. The answer identifies that piping the command discards its exit status under the default shell and fixes it — `shell: bash` on that step, an explicit `set -o pipefail`, dropping the pipe and writing the file another way, or splitting run and capture into separate steps all count. An answer that changes only `stryker.conf.json`, or that explains the drift without touching that workflow step, scores zero for this criterion however good the rest of it is. Naming the step as suspicious but leaving it unchanged scores at most half."
+    },
+    {
+      "name": "Test files removed from the mutate glob and the real score restated",
+      "max_score": 24,
+      "description": "MUST NOT leave `\"mutate\": [\"src/**/*.js\"]` mutating the suite's own test files — mutants in test code say nothing about production quality and these are killed at 96%, which inflates the headline. Full marks require the exclusion added AND the honest product-only figure worked out from the summary's own rows: 572 detected of 1,450 valid, about 39%. Leaving the glob unchanged scores zero. Fixing the glob without restating the number scores at most half, because every threshold decision below it then rests on a figure the answer has just invalidated."
+    },
+    {
+      "name": "Dominic answered with a number that can actually pass",
+      "max_score": 20,
+      "description": "The request for 75 is refused, and the reason given is that a threshold above the achievable score fails every build from the day it lands and gets the gate switched off or exempted — which is the failure mode already on display. The replacement `thresholds.break` sits just under the re-baselined product-only score (roughly 35 to 38), not at 60 and not at 75. Setting break to 75 scores zero. Leaving it at 60 also scores zero: once the exit code is honoured, 60 against a real 39 is the same unpassable bar by another route. Refusing 75 without naming a replacement number scores at most half."
+    },
+    {
+      "name": "A dated ratchet rather than a one-off number",
+      "max_score": 12,
+      "description": "docs/mutation-gate-recovery.md schedules the threshold between now and the March year end with explicit dates and explicit numbers — who moves it, when, and by how much. A document that says the number should rise over time without dates or increments scores at most half. No schedule at all scores zero."
+    },
+    {
+      "name": "Flat line coverage read correctly",
+      "max_score": 10,
+      "description": "The answer uses the third column of Leena's history — line coverage flat at 85.9 to 86.4 across the whole 26-point slide — as the evidence that the suite has been executing the new code all along without asserting anything about it. Treating steady coverage as reassurance, or ignoring the column, scores zero."
+    },
+    {
+      "name": "Survivors become visible",
+      "max_score": 8,
+      "description": "`reporters` gains the `html` reporter and the workflow publishes that report, so the next run answers Leena's complaint that nobody has ever been able to see which mutants survived. Adding the reporter but never publishing the directory it writes to scores at most half; changing neither scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "Both files are edited and docs/mutation-gate-recovery.md exists, addressed to Dominic and the tech leads, covering the six green months, the corrected score, the threshold answer and the schedule. Missing any of those four scores at most half."
+    }
+  ]
+}

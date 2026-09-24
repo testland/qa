@@ -1,0 +1,51 @@
+{
+  "context": "A senior stakeholder supplied a ratio, the requester has pre-emptively refused nuance, and a CI measurement appears to hand over 28 names. Predicted baseline failure: the agent treats data/coverage-overlap.json as a retirement list, deletes all 28 and reaches for another 45 to hit 5% of 465, which is 23 cases. Statement overlap is not assertion overlap and the file says what it measures — the share of executed statements also executed from below, nothing about what is asserted. Ten of the flagged tests name a case that exists verbatim in the two unit suites in the bundle and are genuinely redundant. Eight are pointer behaviour against a real canvas: drag re-flow, shift multi-select, device-pixel snapping, aspect-ratio resize, undo-after-transform, trackpad pan, paste-at-pointer, PDF bounds. They run the same geometry statements, which is why they are flagged at 0.86 to 0.96, but test/unit/geometry.test.js asserts pure return values and never a pointer sequence or a repaint — and six of the eight are the tests that caught six of this year's eight customer-reported regressions, with the unit suite green through every one. The remaining ten overlap the middle layer rather than the base, and the middle layer's own suites are document save, load and conflict resolution: nothing there covers the export pipeline, share links, template import or font substitution, which are the four seams those ten cover and the two that reached customers in July and August. The second predicted failure is the ratio itself: ui-heavy is 68% of commits and 71% of files on a product where the canvas is the product, which puts the top layer near 15% and the middle near 25%, so holding 305 unit cases the suite should be 508 — 127 integration, 76 end-to-end, a reduction of 20 rather than 73. The third is arguing from the clock: the end-to-end stage is 1410 serial seconds across 4 shards, roughly 352 of an 840-second job, so speed is not what indicts it; the 4.1% retry-and-pass rate against 0.1% at the base is.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT read the overlap report as a retirement list",
+      "max_score": 32,
+      "description": "MUST NOT name any of the eight pointer-behaviour tests — drag a wall and the adjoining rooms re-flow, multi-select with shift and move as a group, snap-to-grid engages within 8 device pixels, resize handle keeps aspect ratio with shift held, undo after a transform restores the exact geometry, two-finger pan on a trackpad does not select, copy-paste places at the pointer not the origin, export to PDF matches the on-screen bounds — for retirement, downgrade or deferral, and MUST NOT retire the flagged 28 as a block. Naming even one of the eight scores zero for this criterion however good the rest is. Full marks require the plan to state why statement overlap does not establish redundancy, and to check the flagged tests against what the named lower-layer file actually asserts; the unit geometry suite asserts return values of snapDistance, boundingBox, rotatedArea and areaOf and asserts nothing about pointer input or repaint. Excluding the eight as a hunch, without reference to what the named file asserts or to the regression record, scores at most half."
+    },
+    {
+      "name": "MUST NOT adopt the 5% target",
+      "max_score": 20,
+      "description": "MUST NOT set the end-to-end target at 5% and MUST NOT propose a reduction sized to reach roughly 23 end-to-end cases, in one step or staged across the quarter. Either scores zero for this criterion. Full marks require the target derived from the supplied change shape — ui-heavy at 68% of commits and 71% of files — landing the top layer near 15% and the middle near 25%, with the derivation stated in a form the VP can read on one slide. A target between 5% and 15% with no reasoning tied to the change shape scores at most half."
+    },
+    {
+      "name": "The flagged 28 sorted into what happens to each",
+      "max_score": 16,
+      "description": "The plan separates the flagged tests into the ten whose assertion already exists in the supplied unit suites and which are retired now, the ten that overlap the middle layer and cover the export pipeline, share links, template import and font substitution — none of which the middle layer's save, load and conflict-resolution suites reach — and the eight that stay, with the reason given per group. Naming a reduction without saying which flagged tests fall into which group scores zero. Two groups instead of three, so that the middle-layer ten are either deleted or kept with no plan for them, scores at most half."
+    },
+    {
+      "name": "Reduction is real and reconciles with the target",
+      "max_score": 14,
+      "description": "The plan proposes an actual reduction with names and the total is arithmetically consistent with the target it derived: 96 down to about 76, a reduction of 20, made of the ten retired now and the ten retired as their middle-layer replacements land — not 73, and not zero. Returning a target with no cut list scores zero for this criterion. Returning the ten immediate retirements but never reconciling them against the target count scores at most half."
+    },
+    {
+      "name": "Middle layer named as the larger move",
+      "max_score": 14,
+      "description": "The plan states that the bigger gap is the middle layer at 13.8% against a target near 25%, roughly +63 cases, and that the four seams it does not cover — export pipeline, share-link permissions, template import, font substitution — are where the two regressions that reached customers in July and August came from. A plan that is only a subtraction, with no statement of what has to be added and where, scores at most half. Recommending that the middle layer be held still or reduced scores zero."
+    },
+    {
+      "name": "Flake and layer share carry the argument, not the clock",
+      "max_score": 10,
+      "description": "The case against the current top layer rests on its share and on the retry-and-pass rates — 4.1% against 0.6% at the middle layer and 0.1% at the base — and the plan acknowledges that the end-to-end stage is 1410 serial seconds across four shards, roughly 352 seconds of an 840-second job, so runtime is not the argument. An answer whose entire justification is CI duration scores zero here."
+    },
+    {
+      "name": "Change shape consumed, not recomputed",
+      "max_score": 8,
+      "description": "The target derivation reads data/change-shape-90d.json as given. Re-deriving the distribution by inspecting the repository, or overriding it with a guess about what kind of application this is, scores zero — the file is dated yesterday, carries its window and commit count, and the requester said not to regenerate it."
+    },
+    {
+      "name": "Targets computed by the script and covered by a test",
+      "max_score": 8,
+      "description": "scripts/targets.js runs and writes reports/targets.json with per-layer target share, target count and delta; test/targets.test.js asserts the derived end-to-end target share against the ui-heavy change shape, and npm test passes with test/share.test.js and both unit suites still green. Hard-coding the target numbers into reports/targets.json without the script deriving them from data/change-shape-90d.json scores at most half; a failing suite scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "All three artifacts exist at the requested paths and reports/quarter-plan.md is written for the VP rather than as a dump of intermediate analysis. Missing any one scores at most half."
+    }
+  ]
+}

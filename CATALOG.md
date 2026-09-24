@@ -13,12 +13,12 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-process](plugins/qa-process/) | 1.12.2 | 12 skills + 3 agents | 15 |
-| [qa-test-data](plugins/qa-test-data/) | 1.4.2 | 12 skills + 2 agents | 14 |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.2 | 10 skills + 2 agents | 12 |
-| [qa-test-review](plugins/qa-test-review/) | 1.8.2 | 7 skills + 4 agents | 11 |
+| [qa-process](plugins/qa-process/) | 1.12.4 | 12 skills + 3 agents | 15 |
+| [qa-test-data](plugins/qa-test-data/) | 1.4.3 | 12 skills + 2 agents | 14 |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.4 | 10 skills + 2 agents | 12 |
+| [qa-test-review](plugins/qa-test-review/) | 1.8.3 | 7 skills + 4 agents | 11 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.4.2 | 4 skills + 2 agents | 6 |
-| [qa-team-management](plugins/qa-team-management/) | 1.3.0 | 4 skills + 1 agents | 5 |
+| [qa-team-management](plugins/qa-team-management/) | 1.3.1 | 4 skills + 1 agents | 5 |
 | [qa-test-management](plugins/qa-test-management/) | 1.3.0 | 3 skills + 2 agents | 5 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.2.0 | 2 skills + 1 agents | 3 |
 
@@ -28,19 +28,19 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.11.2 | 8 skills + 2 agents | 10 |
-| [qa-mobile](plugins/qa-mobile/) | 1.6.2 | 8 skills + 1 agents | 9 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.11.3 | 8 skills + 2 agents | 10 |
+| [qa-mobile](plugins/qa-mobile/) | 1.6.4 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.9.2 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.0 | 7 skills + 1 agents | 8 |
-| [qa-api-testing](plugins/qa-api-testing/) | 1.7.2 | 6 skills + 1 agents | 7 |
-| [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.8 | 5 skills + 2 agents | 7 |
+| [qa-api-testing](plugins/qa-api-testing/) | 1.7.4 | 6 skills + 1 agents | 7 |
+| [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.9 | 5 skills + 2 agents | 7 |
 | [qa-embedded](plugins/qa-embedded/) | 1.4.0 | 6 skills + 1 agents | 7 |
-| [qa-desktop](plugins/qa-desktop/) | 1.3.0 | 5 skills + 1 agents | 6 |
-| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.0 | 6 skills + 0 agents | 6 |
-| [qa-property-based](plugins/qa-property-based/) | 1.2.19 | 4 skills + 2 agents | 6 |
+| [qa-desktop](plugins/qa-desktop/) | 1.3.1 | 5 skills + 1 agents | 6 |
+| [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.1 | 6 skills + 0 agents | 6 |
+| [qa-property-based](plugins/qa-property-based/) | 1.2.20 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.0 | 2 skills + 0 agents | 2 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.2 | 2 skills + 0 agents | 2 |
-| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.2 | 1 skills + 0 agents | 1 |
+| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.3 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.0 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.0 | 1 skills + 0 agents | 1 |
 
@@ -50,12 +50,12 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-visual-regression](plugins/qa-visual-regression/) | 1.4.0 | 7 skills + 2 agents | 9 |
-| [qa-accessibility](plugins/qa-accessibility/) | 1.4.0 | 7 skills + 1 agents | 8 |
-| [qa-data-quality](plugins/qa-data-quality/) | 1.1.0 | 6 skills + 2 agents | 8 |
+| [qa-visual-regression](plugins/qa-visual-regression/) | 1.4.1 | 7 skills + 2 agents | 9 |
+| [qa-accessibility](plugins/qa-accessibility/) | 1.4.1 | 7 skills + 1 agents | 8 |
+| [qa-data-quality](plugins/qa-data-quality/) | 1.1.1 | 6 skills + 2 agents | 8 |
 | [qa-pwa](plugins/qa-pwa/) | 1.3.0 | 5 skills + 1 agents | 6 |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.3.0 | 3 skills + 1 agents | 4 |
-| [qa-localization](plugins/qa-localization/) | 1.2.0 | 4 skills + 0 agents | 4 |
+| [qa-localization](plugins/qa-localization/) | 1.2.1 | 4 skills + 0 agents | 4 |
 | [qa-pdf-print](plugins/qa-pdf-print/) | 1.2.0 | 3 skills + 0 agents | 3 |
 
 ## Security & compliance
@@ -64,8 +64,8 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-security-scanning](plugins/qa-security-scanning/) | 1.0.0 | 21 skills + 1 agents | 22 |
-| [qa-compliance](plugins/qa-compliance/) | 1.4.0 | 6 skills + 0 agents | 6 |
+| [qa-security-scanning](plugins/qa-security-scanning/) | 1.0.1 | 21 skills + 1 agents | 22 |
+| [qa-compliance](plugins/qa-compliance/) | 1.4.1 | 6 skills + 0 agents | 6 |
 | [qa-iac](plugins/qa-iac/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.8 | 3 skills + 1 agents | 4 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.3.0 | 4 skills + 0 agents | 4 |
@@ -77,13 +77,13 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-load-testing](plugins/qa-load-testing/) | 1.9.0 | 9 skills + 0 agents | 9 |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.9.1 | 9 skills + 0 agents | 9 |
 | [qa-resilience](plugins/qa-resilience/) | 1.0.0 | 7 skills + 0 agents | 7 |
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.8.2 | 3 skills + 3 agents | 6 |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.8.3 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.5.2 | 4 skills + 2 agents | 6 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.6.2 | 3 skills + 2 agents | 5 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.6.4 | 3 skills + 2 agents | 5 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.4.0 | 4 skills + 1 agents | 5 |
-| [qa-shift-left](plugins/qa-shift-left/) | 1.5.0 | 3 skills + 0 agents | 3 |
+| [qa-shift-left](plugins/qa-shift-left/) | 1.5.1 | 3 skills + 0 agents | 3 |
 
 ## Backend & distributed systems
 
@@ -91,14 +91,14 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.9 | 8 skills + 1 agents | 9 |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.3.0 | 5 skills + 1 agents | 6 |
+| [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.10 | 8 skills + 1 agents | 9 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.3.1 | 5 skills + 1 agents | 6 |
 | [qa-serverless](plugins/qa-serverless/) | 1.4.0 | 5 skills + 1 agents | 6 |
-| [qa-concurrency](plugins/qa-concurrency/) | 1.2.17 | 4 skills + 1 agents | 5 |
+| [qa-concurrency](plugins/qa-concurrency/) | 1.2.18 | 4 skills + 1 agents | 5 |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.3.0 | 4 skills + 1 agents | 5 |
-| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.2.1 | 4 skills + 1 agents | 5 |
+| [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.2.2 | 4 skills + 1 agents | 5 |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.3.0 | 3 skills + 1 agents | 4 |
-| [qa-time](plugins/qa-time/) | 1.2.24 | 3 skills + 1 agents | 4 |
+| [qa-time](plugins/qa-time/) | 1.2.25 | 3 skills + 1 agents | 4 |
 
 ## Integrations & protocols
 
@@ -106,13 +106,13 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.5.0 | 6 skills + 3 agents | 9 |
-| [qa-auth-flows](plugins/qa-auth-flows/) | 1.3.0 | 6 skills + 1 agents | 7 |
-| [qa-graphql](plugins/qa-graphql/) | 1.5.0 | 6 skills + 0 agents | 6 |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.5.1 | 6 skills + 3 agents | 9 |
+| [qa-auth-flows](plugins/qa-auth-flows/) | 1.3.1 | 6 skills + 1 agents | 7 |
+| [qa-graphql](plugins/qa-graphql/) | 1.5.1 | 6 skills + 0 agents | 6 |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.14 | 5 skills + 1 agents | 6 |
-| [qa-payment](plugins/qa-payment/) | 1.5.0 | 5 skills + 1 agents | 6 |
-| [qa-notifications](plugins/qa-notifications/) | 1.3.0 | 4 skills + 1 agents | 5 |
-| [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.4.0 | 3 skills + 1 agents | 4 |
+| [qa-payment](plugins/qa-payment/) | 1.5.1 | 5 skills + 1 agents | 6 |
+| [qa-notifications](plugins/qa-notifications/) | 1.3.1 | 4 skills + 1 agents | 5 |
+| [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.4.1 | 3 skills + 1 agents | 4 |
 
 ## AI & ML
 
@@ -120,10 +120,10 @@ _LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, 
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.4.0 | 7 skills + 2 agents | 9 |
-| [qa-ml-models](plugins/qa-ml-models/) | 1.4.0 | 7 skills + 0 agents | 7 |
+| [qa-llm-evaluation](plugins/qa-llm-evaluation/) | 1.4.1 | 7 skills + 2 agents | 9 |
+| [qa-ml-models](plugins/qa-ml-models/) | 1.4.1 | 7 skills + 0 agents | 7 |
 | [qa-ai-assisted](plugins/qa-ai-assisted/) | 1.4.0 | 3 skills + 2 agents | 5 |
-| [qa-search-relevance](plugins/qa-search-relevance/) | 1.3.0 | 4 skills + 1 agents | 5 |
+| [qa-search-relevance](plugins/qa-search-relevance/) | 1.3.1 | 4 skills + 1 agents | 5 |
 
 ## Tooling
 
@@ -131,8 +131,8 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-manual-testing](plugins/qa-manual-testing/) | 1.10.2 | 6 skills + 1 agents | 7 |
-| [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.0 | 4 skills + 1 agents | 5 |
+| [qa-manual-testing](plugins/qa-manual-testing/) | 1.10.4 | 6 skills + 1 agents | 7 |
+| [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.1 | 4 skills + 1 agents | 5 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.2.0 | 4 skills + 1 agents | 5 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.10 | 4 skills + 0 agents | 4 |
 

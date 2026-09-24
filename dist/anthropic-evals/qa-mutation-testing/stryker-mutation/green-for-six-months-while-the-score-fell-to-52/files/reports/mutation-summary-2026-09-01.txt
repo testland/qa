@@ -1,0 +1,19 @@
+Mutation testing  [====================] 100% (elapsed: 51m, remaining: 0s) 1880/1880 Mutants tested
+
+-----------------------------|---------|----------|-----------|------------|----------|
+File                         | % score | # killed | # timeout | # survived | # no cov |
+-----------------------------|---------|----------|-----------|------------|----------|
+All files                    |   52.39 |      961 |        24 |        844 |       51 |
+ src/cart/cart.js            |   40.07 |      113 |         8 |        172 |        9 |
+ src/cart/cart.test.js       |   96.88 |       93 |         0 |         3 |        0 |
+ src/checkout/totals.js      |   44.03 |      110 |         8 |        144 |        6 |
+ src/checkout/totals.test.js |   96.43 |       81 |         0 |         3 |        0 |
+ src/pricing/rules.js        |   39.34 |       92 |         4 |        141 |        7 |
+ src/pricing/rules.test.js   |   95.77 |       68 |         0 |         3 |        0 |
+ src/session/session.js      |   38.36 |       82 |         2 |        126 |        9 |
+ src/session/session.test.js |   95.24 |       60 |         0 |         3 |        0 |
+ src/search/query.js         |   37.44 |       78 |         1 |       124 |        8 |
+ src/search/query.test.js    |   95.16 |       59 |         0 |         3 |        0 |
+ src/notify/email.js         |   35.92 |       73 |         1 |       120 |       12 |
+ src/notify/email.test.js    |   96.30 |       52 |         0 |         2 |        0 |
+-----------------------------|---------|----------|-----------|------------|----------|

@@ -1,0 +1,5 @@
+{
+  "name": "storefront",
+  "private": true,
+  "scripts": { "test": "node --test" }
+}

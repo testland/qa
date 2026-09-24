@@ -1,0 +1,36 @@
+name: nightly warehouse
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  warehouse:
+    runs-on: ubuntu-latest
+    env:
+      DBT_PROFILES_DIR: .ci/dbt
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install 'dbt-core>=1.8' 'dbt-snowflake'
+
+      - run: dbt deps
+
+      - name: lint hand-written assertions
+        run: node scripts/check-test-sql.mjs tests/refunds
+
+      - name: nightly build
+        run: dbt build --selector nightly
+
+      - name: upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-artifacts
+          path: target/run_results.json
+          retention-days: 14

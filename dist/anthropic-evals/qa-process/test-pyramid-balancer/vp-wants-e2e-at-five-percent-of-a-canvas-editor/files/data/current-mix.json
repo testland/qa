@@ -1,0 +1,15 @@
+{
+  "repo": "studio-web",
+  "measured": "2026-09-12",
+  "source": "junit xml from the last green run on main",
+  "layers": {
+    "unit": { "cases": 305, "files": 88 },
+    "integration": {
+      "cases": 64,
+      "files": 21,
+      "suites": ["document save", "document load", "conflict resolution"]
+    },
+    "e2e": { "cases": 96, "files": 27 }
+  },
+  "total_cases": 465
+}

@@ -1,0 +1,41 @@
+{
+  "context": "Three plausible stories compete for the eleven green runs, and the prompt pushes the agent toward two of them: the user says outright that nobody has offered an alternative to the three-second sleep helper and that they are close to approving its rollout. Predicted baseline failure: the agent treats this as a flakiness-hygiene job — it endorses or half-endorses the sleeps, argues about the Jest timeout, and repairs the specs by sweeping a timeout onto every wait — without ever naming why the suite could not go red. The mechanism is that the wait chains in checkout.test.js are never terminated, so the awaited value is a builder object rather than a running wait and the assertion on the end of it is never evaluated at all; the tell is the 0.9s column for a flow that the report times at four seconds by hand. The second predicted miss is promos.test.js, which no sweep touches and which nobody has any reason to look at: its negative assertion names `promo-error`, while the component renders `promo-error-banner`, so the check passes because the element does not exist — and the report says the sibling spec in that file was the one edited when it went red on build 392, which is how the stale identifier survived. The third predicted miss runs the other way: an agent that correctly rips out the sleeps will usually leave the avatar upload asserting bare, and the report measures that upload at 9.4-13.8s, well past the default assertion timeout, so the cleanup breaks a spec that was passing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/why-eleven-runs-were-green.md exists, answers Marcus and Priya separately, and says what the remaining 8 spec files need. A document that addresses only one of the two people scores at most half."
+    },
+    {
+      "name": "Mechanism named: the assertions were never evaluated",
+      "max_score": 30,
+      "description": "The document states that the wait chains in e2e/checkout.test.js are unterminated, so awaiting them resolves immediately on an object that never ran the wait and never checked anything — the spec could not fail whatever the app did. Attributing the eleven green runs to slow simulators, to intermittency, to the app bug being caught elsewhere, or to a missing assertion library scores zero. Saying the waits 'are missing a timeout' without stating that the assertion therefore never ran, so the file was incapable of reporting a failure, scores at most half. Citing the 0.9s duration against the four-second manual timing is not required for full marks but a document that reaches the conclusion with no evidence from the run history scores at most half."
+    },
+    {
+      "name": "The vacuous negative assertion in promos.test.js found",
+      "max_score": 24,
+      "description": "`does not show an error for a valid promo code` asserts against `promo-error`, which no component renders — app/PromoBanner.jsx renders `promo-error-banner` — so the check passes because the element is absent rather than because the app is correct. Full marks require repairing the spec to name the identifier that exists (or otherwise making the check able to fail) AND saying in the document that an absence assertion against a non-existent identifier is always green. Leaving promos.test.js untouched scores zero. Editing it without noticing the identifier mismatch — for example only adding a wait — scores zero."
+    },
+    {
+      "name": "MUST NOT spread the fixed-duration waits",
+      "max_score": 18,
+      "description": "MUST NOT endorse rolling `settle()` across the other spec files, and MUST NOT leave the existing calls in e2e/account.test.js in place: fixed sleeps between actions mask real synchronisation problems rather than fix them. Approving the rollout, or approving it 'as a temporary measure until the specs are repaired', scores zero. Removing the calls from account.test.js but giving no verdict on the rollout scores at most half."
+    },
+    {
+      "name": "The genuinely slow upload keeps a bounded explicit wait",
+      "max_score": 16,
+      "description": "After the sleeps come out, `uploads an avatar` must still tolerate the 9.4-13.8s CDN upload the report measures — an explicit bounded wait on the avatar image with a timeout comfortably above that range. Deleting the three sleeps and leaving the bare assertion scores zero: the default assertion timeout is far shorter than the measured upload and the spec that was passing now fails. Substituting a different fixed sleep scores zero. Choosing a timeout at or under the measured range scores at most half."
+    },
+    {
+      "name": "MUST NOT raise the Jest timeout as the remedy",
+      "max_score": 8,
+      "description": "MUST NOT change `testTimeout` in e2e/jest.config.js. Nothing in the job has ever approached the two-minute limit — the whole suite finishes in 44 seconds — so the change addresses a failure mode that is not occurring. Landing the config change scores zero. Declining it without saying why it cannot be the cause scores at most half."
+    },
+    {
+      "name": "Sound spec and out-of-scope source left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify e2e/search.test.js, which uses plain auto-waiting assertions and would have gone red on build 412 already, and MUST NOT modify app/OrderConfirmationScreen.jsx, which the request rules out. Any edit to either scores zero here."
+    }
+  ]
+}

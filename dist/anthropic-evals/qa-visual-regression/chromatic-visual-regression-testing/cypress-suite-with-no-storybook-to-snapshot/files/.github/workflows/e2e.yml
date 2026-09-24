@@ -1,0 +1,32 @@
+name: e2e
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Cypress
+        run: npm run e2e
+        env:
+          CYPRESS_BASE_URL: https://staging.ledger-console.internal
+
+      - name: Hosted visual (Ash, spike branch only)
+        if: github.ref == 'refs/heads/spike/visual-jo'
+        run: npx chromatic --playwright --exit-zero-on-changes
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

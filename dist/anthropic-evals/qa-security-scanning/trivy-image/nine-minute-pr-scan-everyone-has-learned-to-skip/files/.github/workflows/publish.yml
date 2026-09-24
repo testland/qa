@@ -1,0 +1,22 @@
+name: publish
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: build
+        run: docker build -t registry.internal/checkout-api:${{ github.sha }} .
+      - name: push
+        run: docker push registry.internal/checkout-api:${{ github.sha }}
+      - name: tag rolling
+        run: |
+          docker tag registry.internal/checkout-api:${{ github.sha }} \
+                     registry.internal/checkout-api:main
+          docker push registry.internal/checkout-api:main
+
+# merges to main: 6-14 per working day. Nothing else writes to this registry.

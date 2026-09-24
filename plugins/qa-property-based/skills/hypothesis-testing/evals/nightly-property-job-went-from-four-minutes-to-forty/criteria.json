@@ -1,0 +1,41 @@
+{
+  "context": "The runtime half of this is arithmetic and the agent will get it: 2430.45s over 4500 examples is 0.54s each, and a 10-minute ceiling divides out. The predicted baseline failure is tests/test_emails.py, which is the one module nothing points at - it is green, it costs 0.31s of a forty-minute job, and it is the module a runtime brief gives no reason to open. Its check no longer generates addresses at all. The engine draws an index into eight strings lifted off the signup table, and the strategy then pipes them through .map(str.lower) under a comment about the form lower-casing before it posts - which the support thread says is true of the mobile client and has never been true of the web form. The list even carries two mixed-case addresses, so a reader scanning it sees the case covered; the map is what removes them. Drawn instead over the address shape src/emails.py documents in its own ADDRESS pattern, the check goes red on the first mixed-case draw, because normalise() lower-cases the domain and leaves the local part exactly as it came in - one person, two account keys, which is what ACC-2044 and the two August tickets are. An agent that reads the brief as a runtime brief will cut max_examples on the password module, report the other three as fine, hand back a nine-minute green job, and have made the coverage strictly worse than it was before the commit that started this. The order and id modules are sound and are there to catch an agent that rewrites everything it opens.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "A line on every module",
+      "max_score": 4,
+      "description": "docs/property-job-budget.md exists and accounts for all four modules, including the ones left alone. Covering only the modules that were edited scores zero for this item."
+    },
+    {
+      "name": "The address check made to generate again",
+      "max_score": 32,
+      "description": "tests/test_emails.py is changed so addresses are generated over the shape src/emails.py documents rather than selected from a hand-written list. MUST NOT leave the check drawing an index into a fixed list of strings, and MUST NOT leave the lower-casing transform on the drawn value - between them they are why the check cannot fail. Reporting this module as fine, or touching only its example count, scores zero for this criterion regardless of the rest. Removing the lower-casing but still drawing from the eight-address list, or widening the list by hand rather than generating, scores at most half."
+    },
+    {
+      "name": "The account-key defect found and fixed in the source",
+      "max_score": 20,
+      "description": "The write-up reports that normalise() lower-cases only the domain, ties it to the two account keys in ops/duplicate-accounts.md, and fixes src/emails.py so the account key is the fully lower-cased address. Not reaching the defect at all scores zero for this criterion. Reaching it but accommodating it - relaxing is_normalised, lower-casing in the test, or excluding mixed-case addresses from the domain - also scores zero. Naming it without changing src/emails.py scores at most half."
+    },
+    {
+      "name": "The password budget derived from the measured cost",
+      "max_score": 16,
+      "description": "The example count on tests/test_passwords.py is set from the cost the log actually measured - 2430.45s over 4500 examples, about 0.54s each - against the 10-minute ceiling and what the rest of the job costs. A number with no arithmetic behind it anywhere scores at most half. Leaving 4500 in place, or choosing a count whose product with 0.54s still breaks the ceiling, scores zero."
+    },
+    {
+      "name": "MUST NOT cut the hashing work",
+      "max_score": 10,
+      "description": "MUST NOT reduce ITERATIONS in src/auth/passwords.py, and MUST NOT stub, patch or otherwise replace the hashing to make the check cheap. The iteration count carries a signed-off review comment and the cost per example is the point of the check. Either scores zero for this item."
+    },
+    {
+      "name": "The two sound modules left alone",
+      "max_score": 10,
+      "description": "MUST NOT edit tests/test_orders.py or tests/test_ids.py. Between them they account for 14 seconds of a forty-minute job and neither has anything wrong with it. Editing either scores zero for this item; saying in one line that each is fine and leaving it is full marks."
+    },
+    {
+      "name": "The projected total stated",
+      "max_score": 6,
+      "description": "The document states what the whole job is expected to cost after the changes, as a number that can be checked against the 10-minute ceiling. No projected total scores zero for this item."
+    }
+  ]
+}

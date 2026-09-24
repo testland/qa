@@ -1,0 +1,46 @@
+{
+  "context": "The obvious diagnosis has already been applied and it did not work, which is what makes this hard. Predicted baseline failure: the agent reads the stack trace, sees the heap exhausted while the HTTP sampler is reading a response body, and either concludes the search service returns large payloads under sustained load or reaches for the plan's listener elements — three of which are already disabled, as the attempts table records, after which the job still dies. The element that is still enabled does not read as a listener at all: it is named `Results Writer`, it has a filename rather than an empty one, and ci/run-soak.sh carries a comment telling whoever reads it not to remove it because that file is what the team downloads. It is a result collector all the same, its save configuration retains full response bodies and sampler data for every sample, and the run already writes its results file through the invocation's own results flag, so the element is a duplicate that costs memory for nothing. The properties file compounds it, saving in the verbose XML form with response data and sampler data on, which is what produced 2.1 GB from a 20-minute run. Second predicted failure: the agent adds report generation to recover the graph and the per-endpoint table and points it at a path under the workspace, which the runbook says is never cleaned — the report output folder has to be empty or absent when a run starts, so the change works on the first night and fails on every night afterwards, and the crude fix of clearing the workspace takes two other teams' caches with it. Third, both open questions are predicted to be answered by reflex rather than on the evidence: giving the gigabyte back is the right answer once retention is fixed and an agent in do-not-touch-the-heap mode refuses it, while shortening the steady state is the wrong answer and is the one thing that would make the job green tonight.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite runs",
+      "max_score": 5,
+      "description": "plans/search-soak.jmx, ci/run-soak.sh or bin/soak.properties, tools/plan-lint.mjs and tools/plan-lint.test.mjs are all modified and docs/soak-oom.md exists and answers both open questions. If `node --test` does not pass against the delivered files, this criterion scores zero."
+    },
+    {
+      "name": "MUST NOT leave the remaining result collector enabled",
+      "max_score": 24,
+      "description": "The `Results Writer` element MUST be disabled or removed from plans/search-soak.jmx. Leaving it enabled scores zero for this criterion, including keeping it because the comment in ci/run-soak.sh says the team downloads its file or because it is the one element @tkowalski judged to be doing something. Full marks additionally require docs/soak-oom.md to say that the invocation's own results flag already writes the results file, so the element duplicates it, and to name per-sample retention of response bodies as the mechanism rather than the size of any single response."
+    },
+    {
+      "name": "Report output folder is fresh each night and the shared workspace is left alone",
+      "max_score": 20,
+      "description": "The team gets the response-time graph and the per-endpoint table from a report generated from the results file after the run, and the folder that report is written into is empty or absent when each run starts. Adding report generation that writes into a fixed path under the never-cleaned workspace, with nothing that freshens it, scores zero: it works on the first night and fails from the second. Clearing the workspace, or its contents wholesale, to achieve this also scores zero — the runbook says two other pipelines keep caches there and have asked twice that nobody do it. Telling the team they lose either the graph or the table scores zero, and so does restoring them by re-enabling a collector."
+    },
+    {
+      "name": "Results format and per-sample retention corrected",
+      "max_score": 16,
+      "description": "bin/soak.properties is switched from the verbose XML results format to the compact delimited one, and docs/soak-oom.md ties the 2.1 GB artifact from a 20-minute run to that choice. Leaving the XML format in place scores zero. Full marks additionally require turning off the retention of full response bodies and sampler data, which are being saved for every sample; switching the format while leaving both of those on scores at most half."
+    },
+    {
+      "name": "Lint rule added and proven",
+      "max_score": 12,
+      "description": "tools/plan-lint.mjs gains a rule that rejects the plan as it was shipped, and tools/plan-lint.test.mjs covers it with a case that flags an enabled collector and a case that passes the remediated plan. Adding no rule scores zero. A rule with no test, or one so loose that it also flags the remediated plan and therefore breaks the existing 'shipped soak plan passes every rule' test, scores at most half. A rule that keys only on the element's testname rather than on its being an enabled result collector scores at most half — the next one will be called something else."
+    },
+    {
+      "name": "MUST NOT treat heap as the remedy, and the gigabyte goes back",
+      "max_score": 12,
+      "description": "Raising the JVM allocation in ci/run-soak.sh MUST NOT be presented as the fix; the agent is 8 GB shared with two other teams, spend is frozen, and the 5 September bump is on record as having changed nothing. Delivering a heap increase as the primary change scores zero. @rsantos's question must also be answered yes: the allocation goes back to where it was before 5 September once retention is fixed. Refusing to return it, or leaving the question unanswered, scores at most half."
+    },
+    {
+      "name": "Soak profile left intact",
+      "max_score": 10,
+      "description": "@jlind's proposal is refused and the delivered files keep the 90-minute steady state, the thread count and the sample rate as they are. Shortening the steady state, reducing threads, or slowing the sample rate to fit the memory available scores zero — all three make the job survive, none of them is the fix, and the 90 minutes is the reason the change was made in the first place."
+    },
+    {
+      "name": "Application exonerated on the evidence",
+      "max_score": 8,
+      "description": "docs/soak-oom.md does not attribute the failure to the search service. The summariser lines show zero errors and a steady 340-343 samples per second right up to the crash, with average response time moving only from 181 ms to 199 ms, and the attempts table records that throughput has been identical on every run since 1 September. Concluding that the service returns oversized payloads, or otherwise blaming the system under test, scores zero."
+    }
+  ]
+}

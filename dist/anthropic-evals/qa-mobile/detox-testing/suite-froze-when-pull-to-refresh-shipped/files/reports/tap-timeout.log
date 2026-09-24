@@ -1,0 +1,26 @@
+FAIL e2e/orders.test.js (122.481 s)
+  Orders
+    x shows the most recent order first (120018 ms)
+
+  * Orders > shows the most recent order first
+
+    Exceeded timeout of 120000 ms for a test.
+
+    The app did not report itself idle at any point in the last 120000 ms while
+    trying to perform:
+
+      tap on element with id "orders-tab"
+
+    Still outstanding when the attempt was abandoned:
+
+     * UI elements are busy:
+       - 1 view animation pending
+
+     * Network requests are in-flight:
+       - 1 request to telemetry.larder.internal (in flight for 119842 ms)
+
+  * Orders > filters by delivery date (120012 ms)   [same output]
+  * Orders > reorders a past order (120009 ms)      [same output]
+
+Tests:       14 failed, 14 total
+Time:        1721.6 s

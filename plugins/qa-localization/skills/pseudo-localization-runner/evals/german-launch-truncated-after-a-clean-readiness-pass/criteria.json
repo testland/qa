@@ -1,0 +1,36 @@
+{
+  "context": "A check that has been green for six months, two truncated controls and a garbled CSV that walked past it, and a colleague's write-up that closes the whole thing out this afternoon. Predicted baseline failure: the agent takes the short path the report itself lays out - widen billing.confirm to 34 and invoice.export to 30, the two numbers Hanna already measured off the vendor file, confirm the suite is still green, and never ask why a check that renders every key through an accented locale has never once fired. The reason is src/layout.js. measurable() is called on the transformed string before the comparison: it drops the delimiters, NFD-normalises and strips the combining marks, then collapses repeated letters, so 'Confirm payment method' comes back out of the transform at exactly 22 characters and 'Export all invoices' at 18. The padding and the extended characters - the only two properties that could ever flag a truncated control or a broken encoding - are discarded a line before they are measured. The check has been asserting English against English-sized budgets since March. The second predicted miss follows from the first: once the stripping is gone, MULTIPLIER is 3, which roughly doubles a string, and the check flags four surfaces including billing.plan, whose real German is 'Aktueller Tarif' at 15 against an 18 budget. Ivan's July note records exactly that and is why the stripping was put back. The agent is predicted to absorb the padding by widening budgets rather than calibrating the padding to what real translations do - the vendor's German column runs about 40% longer than English, and at that growth the check flags billing.confirm, invoice.export and invoice.download and leaves billing.plan alone. The third predicted miss is escape 3: tools/export-invoices.js writes the CSV through Buffer.from(csv, 'latin1') and reads it back as utf8, which destroys every character outside ASCII on the way out; the resent vendor file behaving identically rules the file out, but the agent is predicted to attribute it upstream or to treat it as out of scope. Hanna's write-up is deliberately half right: the two widenings are measurements from a real translation and should be taken, while retiring the check should not, because the French vendor delivers on 2026-09-30 for an 2026-10-06 launch and the layout work has to be done before a single French string exists.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT measure the check against a stripped rendering",
+      "max_score": 30,
+      "description": "The delivered check MUST NOT compare a budget against text that has had its padding, its extended characters or its delimiters removed first - measurable() in src/layout.js, or any equivalent normalise-then-measure step reintroduced under another name. Leaving it in the assertion path scores zero for this criterion regardless of the rest of the answer. Full marks require removing it and stating that it is what made the check green since March: both the length the transform adds and the characters outside ASCII were discarded before the comparison, so the assertion was English against English-sized budgets. Removing it without connecting it to the six months of green scores at most half."
+    },
+    {
+      "name": "Padding calibrated rather than budgets inflated",
+      "max_score": 24,
+      "description": "With the stripping gone, MULTIPLIER at 3 flags four surfaces and one of them is false: billing.plan, whose real German is 15 characters against an 18 budget. Full marks require bringing the transform's growth down to what real translations actually do - the vendor's German column runs roughly 40% longer than its English, so growth in the 30-50% band - with the result that the check flags billing.confirm, invoice.export and invoice.download and stops flagging billing.plan. Absorbing the tripled padding by widening budgets instead (billing.plan to 20 or more, invoice.download to 32) scores at most half, because it provisions space no translation needs and hides the next real overflow. Removing the length the transform adds, so the output is the same length as its input, scores zero."
+    },
+    {
+      "name": "The garbled download traced to the export path",
+      "max_score": 18,
+      "description": "Escape 3 is located in tools/export-invoices.js, which writes the CSV as latin1 and reads it back as utf8 and so destroys every character outside ASCII on the way out - the resent vendor file behaving identically is what rules the file out. Full marks require fixing the encoding there and carrying an accented string through the export path in the suite, so this class of defect is covered rather than fixed once. Attributing it to the vendor file, or making it go away by removing the extended characters from the transform or from the export, scores zero. Fixing the encoding but adding no coverage on that path scores at most half."
+    },
+    {
+      "name": "Hanna's write-up answered on both halves",
+      "max_score": 14,
+      "description": "The two budget widenings are measurements from a real translation and should be taken; retiring test/readiness.test.js should not, because the French vendor delivers on 2026-09-30 for a 2026-10-06 launch and the layout work has to be done before any French string exists, which is the one thing measuring delivered files cannot do. Taking both halves scores zero. Refusing both, including the legitimate widenings, scores at most half."
+    },
+    {
+      "name": "The repaired check left able to fail",
+      "max_score": 8,
+      "description": "MUST NOT reach a green suite by removing a key from locales/en.json, adding a skip, an allow-list or an expected-failure list to the check, or excluding a surface from the walk. Any of those scores zero here. npm test must pass at the end with every key still walked."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 4,
+      "description": "docs/readiness-repair.md exists and covers what changed, what the check now catches that it did not, and the decision on Hanna's write-up. A write-up that does not mention her proposal at all scores at most half."
+    }
+  ]
+}

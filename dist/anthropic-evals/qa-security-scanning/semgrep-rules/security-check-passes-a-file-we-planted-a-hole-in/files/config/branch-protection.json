@@ -1,0 +1,13 @@
+{
+  "repository": "northwind/freight-api",
+  "branch": "main",
+  "required_status_checks": {
+    "strict": true,
+    "contexts": ["build", "unit-tests", "sast"]
+  },
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 1
+  },
+  "enforce_admins": false,
+  "exported_at": "2026-09-09T15:02:00Z"
+}

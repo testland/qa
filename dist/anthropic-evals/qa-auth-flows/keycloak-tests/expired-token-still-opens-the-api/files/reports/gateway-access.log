@@ -1,0 +1,15 @@
+# egress + ingress, request id 7f13c2, 2026-09-11 (Thursday)
+# columns: time, direction, method, path, status, response bytes, peer
+
+14:02:41.118  out  POST  /realms/corp/protocol/openid-connect/token/introspect  401   118  sso.corp.internal
+14:02:41.122  in   GET   /orders                                                200  4113  orders-api
+
+# The replayed bearer decodes to:
+#   iss  https://sso.corp.internal/realms/corp
+#   sub  9f2a1c04-8e33-4f61-bb0e-5d7c2a119e40
+#   azp  corp-portal
+#   iat  2026-09-09T16:26:02Z
+#   exp  2026-09-09T16:31:02Z
+#
+# @mreid: the proxy keeps response sizes, not bodies, so I cannot tell you what
+# the SSO server actually said back. Only that it did not say 200.

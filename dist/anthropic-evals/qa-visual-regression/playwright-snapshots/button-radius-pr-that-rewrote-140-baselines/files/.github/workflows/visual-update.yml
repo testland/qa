@@ -1,0 +1,32 @@
+name: visual-update
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  rebaseline:
+    if: github.event.label.name == 'revisual'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+      - run: npx playwright install --with-deps
+
+      - name: Refresh baselines
+        run: npx playwright test --update-snapshots
+
+      - name: Commit
+        run: |
+          git config user.name  "visual-bot"
+          git config user.email "visual-bot@example.com"
+          git add -A
+          git commit -m "chore(visual): baselines from job ${{ github.run_id }}"
+          git push

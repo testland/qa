@@ -1,0 +1,13 @@
+{
+  "uuid": "a1f2c0de-0012-4000-8000-000000000012",
+  "historyId": "gate.auth.password-reset",
+  "name": "Password reset by email",
+  "fullName": "gate.auth.AuthGate#passwordReset",
+  "status": "passed",
+  "start": 1789182234000,
+  "stop": 1789182261000,
+  "labels": [
+    { "name": "suite", "value": "Auth" },
+    { "name": "severity", "value": "normal" }
+  ]
+}

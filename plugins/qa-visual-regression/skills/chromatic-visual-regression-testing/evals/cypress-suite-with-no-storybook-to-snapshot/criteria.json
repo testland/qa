@@ -1,0 +1,51 @@
+{
+  "context": "Both attempts in the dump look like they work and neither announces its defect. Predicted baseline failure on the hosted route: the agent treats Ash's step as most of the way there and keeps the capture flag it already carries, or - reaching for what this vendor is best known for - proposes standing Storybook up and writing stories for the six screens, which the fixtures quietly rule out (`cy.login()` sessions and `cy.task('db:seed', ...)` on four of the six, so it is a mocking project, not a wiring change). The flag names a framework this repo does not use, which is why all three logged runs publish a build containing 0 snapshots and exit 0; the correct capture mode is the one matching the Cypress runs the repo already performs, taken out of the same execution rather than a second one. Predicted baseline failure on Jo's branch: the agent reads eight green days as evidence and either merges the comparator or tunes its pixelmatch threshold. `cypress/support/visual.mjs` is correct and its unit tests pass, so reading that file finds nothing - the defect is one level up, in the specs, where `cy.task('visual:compare', ...)` is called and its return value is never asserted on, so `{ status: 'diff' }` is computed and dropped on the floor and the step cannot fail. Third, the dashboard: nothing in the prompt or the output spec flags it, and it is the one screen of the six that cannot be a stable baseline as it stands - a relative 'Updated N minutes ago' label, a rolling 24-hour sparkline, a live open-invoice count, and the one row in the screens table that reads 'not seeded; reads the shared staging database'. Excluding screens 1-5 for the same reason is the mirror-image failure: four are seeded and two are static.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Capture mode matches the framework the repo actually runs",
+      "max_score": 30,
+      "description": "The delivered CI step invokes the vendor CLI in its Cypress capture mode against the output of the repo's existing `cypress run`. Leaving Ash's `--playwright` flag in place scores zero for this criterion - the repo has no Playwright, which is what the three logged builds containing 0 snapshots record. Standing up Storybook, writing stories for the six routed screens, or building a bespoke uploader and comparer also scores zero: four of the six sit behind `cy.login()` and a seeded database. Naming the hosted service as the answer while leaving the capture mechanism unchanged or unstated, or requiring any of the 47 specs to be rewritten in order to produce the capture, scores at most half."
+    },
+    {
+      "name": "MUST NOT ship the local comparator as the gate",
+      "max_score": 22,
+      "description": "MUST NOT leave Jo's `cy.screenshot()` plus pixelmatch comparison in the blocking path, and MUST NOT 'fix' it by adjusting the pixelmatch threshold, the capture options, or where baselines are stored. Either scores zero for this criterion regardless of the rest. Full marks require the specific defect: the specs call `cy.task('visual:compare', ...)` and never assert on what the task resolves with, so a `diff` verdict is computed and discarded and the step cannot fail - which is what eight green days on the spike branch actually record. `cypress/support/visual.mjs` is not itself wrong and `test/visual.test.mjs` passes, so rejecting the approach on maintenance-cost or bus-factor grounds alone (Jo leaves in November, we would own a diffing tool) scores at most half."
+    },
+    {
+      "name": "Dashboard kept out of the first pass, with the reason",
+      "max_score": 14,
+      "description": "`/dashboard` is excluded from the compared set, and the reason is its non-determinism as it stands: unseeded data off a shared staging database plus a relative 'Updated N minutes ago' label, a rolling 24-hour sparkline and a live invoice count, so two runs minutes apart differ. Wiring it up alongside the other five scores zero. Excluding it without saying what would have to change for it to be included - seeded like screens 2 to 4, a pinned clock, static counts - scores at most half, and so does excluding any of screens 1 to 5 on the same grounds when four are seeded and two are static."
+    },
+    {
+      "name": "MUST NOT add a second execution of the suite",
+      "max_score": 12,
+      "description": "The capture comes out of the Cypress run that already happens on every PR. MUST NOT deliver a workflow that runs `cypress run` twice - keeping `e2e:visual` as an extra step or a second job, re-running the six specs after the main run, or adding a separate visual-only job that boots the app again - which scores zero here. The requester has said the six-minute e2e job is the long pole and will not be doubled."
+    },
+    {
+      "name": "CI wiring complete",
+      "max_score": 12,
+      "description": "`.github/workflows/e2e.yml` runs the comparison on pull requests into `main` rather than only on `spike/visual-jo`, sources the token from `secrets.CHROMATIC_PROJECT_TOKEN` rather than a literal, and lets the step's result decide the job - Ash's `--exit-zero-on-changes` is gone, along with any `continue-on-error` or `|| true`. A delivered visual step that cannot fail the job scores zero."
+    },
+    {
+      "name": "The other five actually covered before the rebrand",
+      "max_score": 8,
+      "description": "Screens 1 to 5 are in the first pass and compared on PRs into `main`, not deferred behind a mocking project or a later phase. An answer that lands no coverage before the rebrand merges, or that covers only `/login`, scores zero."
+    },
+    {
+      "name": "Repo left consistent and the suite green",
+      "max_score": 8,
+      "description": "`node --test` passes at the end. If `cypress/support/visual.mjs` is kept for local use, `test/visual.test.mjs` still passes and the spec-level calls are out of the blocking path; if it is removed, its test goes with it. Leaving the suite failing, or leaving a test importing a deleted module, scores zero."
+    },
+    {
+      "name": "Existing suites untouched",
+      "max_score": 6,
+      "description": "MUST NOT modify `src/format/money.mjs` or `test/money.test.mjs`, and MUST NOT change what the 47 existing specs assert. Adding or removing a `cy.screenshot()` or `cy.task` call is acceptable; rewriting the role, text or value assertions is not, and scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "`docs/visual-coverage-plan.md` exists and answers Ash's step and Jo's branch separately, rather than as one paragraph about visual testing in general."
+    }
+  ]
+}

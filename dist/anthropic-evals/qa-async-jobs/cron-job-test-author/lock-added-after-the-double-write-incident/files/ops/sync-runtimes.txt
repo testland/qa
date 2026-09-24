@@ -1,0 +1,22 @@
+# warehouse-sync wall-clock duration per run
+# crontab: */10 * * * *   (every ten minutes)
+# window: 2026-06-08 .. 2026-07-21, 6,312 runs recorded, 0 missed
+#
+# summary
+#   p50   5m52s
+#   p90  11m19s
+#   p95  18m30s
+#   p99  33m47s
+#   max  41m08s   (2026-07-14T04:10Z, nightly vacuum contention)
+#
+# tail of the log
+2026-07-20T22:30Z  ok   6m02s   18,204 rows
+2026-07-20T22:40Z  ok   5m31s   17,880 rows
+2026-07-20T22:50Z  ok  14m46s   52,119 rows
+2026-07-21T00:00Z  ok  27m12s  104,553 rows
+2026-07-21T00:10Z  ok  26m58s  104,551 rows
+2026-07-21T00:20Z  ok   6m11s   18,402 rows
+2026-07-21T00:30Z  ok   5m49s   17,991 rows
+2026-07-21T00:40Z  ok  38m02s  147,330 rows
+2026-07-21T00:50Z  ok  37m51s  147,330 rows
+2026-07-21T01:00Z  ok   6m20s   18,655 rows

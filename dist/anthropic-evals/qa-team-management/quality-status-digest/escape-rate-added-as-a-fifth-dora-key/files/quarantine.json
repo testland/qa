@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-09-30",
+  "entries": [
+    { "id": "Q-40", "test": "orders/picking.spec.ts:picking queue drops a cancelled order", "quarantined_on": "2026-08-14", "ticket": "ORD-9120" },
+    { "id": "Q-44", "test": "orders/import.spec.ts:bulk import reports partial failure", "quarantined_on": "2026-09-05", "ticket": "ORD-9162" },
+    { "id": "Q-47", "test": "orders/split.spec.ts:split shipment shows one delivery charge", "quarantined_on": "2026-09-26", "ticket": "ORD-9180" }
+  ],
+  "new_flakes_this_quarter": [
+    { "test": "orders/refund.spec.ts:refund reverses the delivery charge", "first_seen": "2026-09-18", "ticket": "ORD-9176" }
+  ]
+}

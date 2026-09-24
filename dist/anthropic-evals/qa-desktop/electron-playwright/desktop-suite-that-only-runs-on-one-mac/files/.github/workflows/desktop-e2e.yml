@@ -1,0 +1,48 @@
+name: desktop-e2e
+
+on: [pull_request]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run build:desktop
+
+      - name: Start a virtual display
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1280x1024x24 &
+
+      - name: Show display state
+        if: runner.os == 'Linux'
+        env:
+          DISPLAY: ':99'
+        run: |
+          echo "DISPLAY=$DISPLAY"
+          xdpyinfo -display :99 | head -4
+
+      - name: Run desktop suite (Linux)
+        if: runner.os == 'Linux'
+        env:
+          DISPLAY: ':99'
+        run: xvfb-run --auto-servernum npx playwright test --config=playwright.electron.config.ts
+
+      - name: Run desktop suite (macOS / Windows)
+        if: runner.os != 'Linux'
+        run: npx playwright test --config=playwright.electron.config.ts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-report-${{ matrix.os }}
+          path: playwright-report/

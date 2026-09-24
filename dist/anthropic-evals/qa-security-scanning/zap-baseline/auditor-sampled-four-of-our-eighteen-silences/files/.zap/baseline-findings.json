@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "10038",
+    "name": "Content Security Policy (CSP) Header Not Set",
+    "url": "https://app.veridianpay.dev/"
+  },
+  {
+    "rule_id": "10054",
+    "name": "Cookie without SameSite Attribute",
+    "url": "https://checkout.veridianpay.dev/cart"
+  },
+  {
+    "rule_id": "10054",
+    "name": "Cookie without SameSite Attribute",
+    "url": "https://checkout.veridianpay.dev/pay"
+  },
+  {
+    "rule_id": "90033",
+    "name": "Loosely Scoped Permissions Policy",
+    "url": "https://checkout.veridianpay.dev/"
+  }
+]

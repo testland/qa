@@ -1,0 +1,34 @@
+          /\      Grafana   /‾‾/
+     /\  /  \     |\  __   /  /
+    /  \/    \    | |/ /  /   ‾‾\
+   /          \   |   (  |  (‾)  |
+  / __________ \  |_|\_\  \_____/
+
+     execution: local
+        script: tests/load/orders.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 300 max VUs, 17m30s max duration (incl. graceful stop):
+              * default: Up to 300 looping VUs for 17m0s over 3 stages (gracefulRampDown: 30s, gracefulStop: 30s)
+
+
+     ✓ order accepted
+
+     checks.........................: 99.69% ✓ 190293    ✗ 591
+     data_received..................: 2.1 GB  2.1 MB/s
+     data_sent......................: 61 MB   60 kB/s
+     http_req_blocked...............: avg=1.14ms min=1µs    med=2µs    max=284ms  p(90)=3µs    p(95)=5µs
+     http_req_connecting............: avg=0.81ms min=0s     med=0s     max=198ms  p(90)=0s     p(95)=0s
+   ✓ http_req_duration..............: avg=268ms  min=38ms   med=214ms  max=5.9s   p(90)=392ms  p(95)=480ms
+   ✓ http_req_failed................: 0.31%  ✓ 591       ✗ 190293
+     http_req_receiving.............: avg=2.1ms  min=39µs   med=1.7ms  max=79ms   p(90)=3.8ms  p(95)=4.9ms
+     http_req_sending...............: avg=106µs  min=15µs   med=88µs   max=11ms   p(90)=188µs  p(95)=264µs
+     http_req_tls_handshaking.......: avg=0s     min=0s     med=0s     max=0s     p(90)=0s     p(95)=0s
+     http_req_waiting...............: avg=266ms  min=37ms   med=212ms  max=5.9s   p(90)=390ms  p(95)=478ms
+     http_reqs......................: 190884 187.14/s
+     iteration_duration.............: avg=1.27s  min=1.04s  med=1.21s  max=6.91s  p(90)=1.39s  p(95)=1.48s
+     iterations.....................: 190884 187.14/s
+     vus............................: 1      min=1       max=300
+     vus_max........................: 300    min=300     max=300
+
+running (17m00.4s), 000/300 VUs, 190884 complete and 0 interrupted iterations

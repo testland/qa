@@ -1,0 +1,5 @@
+{
+  "name": "qa-metrics",
+  "private": true,
+  "scripts": { "test": "node --test" }
+}

@@ -1,0 +1,51 @@
+{
+  "context": "Both symptoms come from one decision: support/trace-setup.js registers the batching processor, which holds ended spans on a timer instead of handing them to the exporter, so every read has to be waited out. support/flush.js sleeps the batch delay, which is where the wall clock goes, and test/cart.trace.test.js does not call it at all - it reads an empty array and puts its assertions inside a loop over that array, so nothing ever executes and gutting cart.add leaves it green. The fixture argues against the right answer twice: @tvance's note in docs/testing.md says the tests deliberately use the same processor the collector uses in production and asks for it to be left alone, and offers scheduledDelayMillis as the sanctioned remedy - while src/tracing.js says the deployed collector attaches its own processor and nothing in src/ attaches one, so the wiring under support/ is test-only and the stated reason is false. Predicted baseline failure: the agent takes the offered remedy, lowers scheduledDelayMillis or shortens the sleep, adds the two cases with a settleSpans() before each read, and reports the job as fixed - a suite that is faster, still races the timer, and still cannot be trusted. The second predicted failure is the refund. On a refused refund the payments.refund span is never ended, so it never reaches the exporter at all and carries no provider attribute; an agent that writes the refused-refund case against the parent span only never finds it, and one that looks the child up gets undefined and is as likely to drop the assertion as to fix the source.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT keep the batching processor in the test wiring",
+      "max_score": 30,
+      "description": "The tests must capture spans through the processor that exports synchronously on span end, so a read straight after the exercise sees everything and no test waits on a timer. Leaving the batching processor in place scores zero for this criterion, including the configured variants the fixture invites: lowering scheduledDelayMillis, shrinking maxExportBatchSize, calling forceFlush before each read, or shortening the sleep in support/flush.js. Raising or keeping the raised timeout-minutes in the workflow as any part of the remedy also scores zero. Swapping the processor but leaving the sleeps in place, so the suite is still paced by timers, scores at most half."
+    },
+    {
+      "name": "The refused refund is recorded and the span it needs is ended",
+      "max_score": 24,
+      "description": "On the refusal branch the payments.refund span is ended - so it reaches the exporter at all - with an error status, the provider that refused it, and an attribute naming the refusal, and the new case asserts those on that span rather than only on its parent. A delivered case that passes against src/checkout.js exactly as shipped scores zero for this criterion, as does one that asserts only on checkout.refund and never looks for the child span. Ending the span without giving it an error status or the provider scores at most half."
+    },
+    {
+      "name": "The vacuous case is made capable of failing",
+      "max_score": 14,
+      "description": "test/cart.trace.test.js goes red if cart.add stops emitting its span. Full marks require the span to be resolved and asserted unconditionally - no loop, filter or guard that silently executes nothing when the span is absent. Leaving any construct that skips its assertions when no span was captured scores zero for this criterion, even if the file is otherwise rewritten."
+    },
+    {
+      "name": "Declined card covered",
+      "max_score": 10,
+      "description": "A case exercises a declined charge and asserts the decline reason and the error status on checkout.submit and on payments.charge. Covering the decline without asserting a status anywhere scores at most half; not covering it scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT let spans accumulate across cases",
+      "max_score": 10,
+      "description": "The in-memory exporter is reset between cases so each one sees only the spans its own exercise produced. A delivered checkout file where three cases read from one accumulating buffer scores zero for this criterion, whether or not the assertions happen to pass."
+    },
+    {
+      "name": "Spans reached by name",
+      "max_score": 8,
+      "description": "Every delivered case resolves spans by name rather than by index into the finished-span array, and does not assert how many spans an exercise produced. Any positional index or count assertion scores zero for this criterion."
+    },
+    {
+      "name": "Note says what was changed and why it must stay",
+      "max_score": 6,
+      "description": "docs/trace-test-setup.md is ten lines or fewer and states what the test wiring now does and what breaks if someone restores the old arrangement. A note that repeats @tvance's reasoning, or that describes the change without saying why it matters, scores zero for this criterion."
+    },
+    {
+      "name": "MUST NOT delete a test or edit the vendored mirror",
+      "max_score": 5,
+      "description": "Both existing test files still exist and still run, and nothing under vendor/ is modified. Deleting test/cart.trace.test.js instead of making it assert something, or changing the batching processor's defaults inside the vendored file, scores zero for this criterion."
+    },
+    {
+      "name": "Deliverables produced, the suite green and quick",
+      "max_score": 5,
+      "description": "npm test passes and the whole suite finishes in well under a second on an idle machine. A red suite, or one that still spends seconds waiting, scores zero for this criterion."
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+Mutation testing  [==================================================] 100%
+4 mutant(s) survived. Full report at reports/mutation/index.html
+
+#1. [Survived] EqualityOperator
+src/refunds.js:12:10
+-     return daysSinceDelivery < REFUND_WINDOW_DAYS;
++     return daysSinceDelivery <= REFUND_WINDOW_DAYS;
+Tests ran:
+    a recent delivery is refundable
+    an old delivery is not refundable
+    a refund inside the window pays the price back
+    a refund outside the window pays nothing
+
+#2. [Survived] EqualityOperator
+src/refunds.js:16:10
+-     return orderTotalEur >= FREE_RETURN_MIN_EUR;
++     return orderTotalEur > FREE_RETURN_MIN_EUR;
+Tests ran:
+    small orders pay their own return shipping
+    large orders get return shipping refunded
+
+#3. [Survived] EqualityOperator
+src/refunds.js:23:7
+-     if (daysSinceDelivery >= REFUND_WINDOW_DAYS) {
++     if (daysSinceDelivery > REFUND_WINDOW_DAYS) {
+Tests ran:
+    a refund inside the window pays the price back
+    a refund outside the window pays nothing
+
+#4. [Survived] ArithmeticOperator
+src/refunds.js:33:10
+-     return round2(baseFeeEur + EXPEDITE_FLAT_EUR);
++     return round2(baseFeeEur - EXPEDITE_FLAT_EUR);
+Tests ran:
+    an expedited return carries a surcharge
+
+Ran 8 tests (8 total). 30 mutants tested, 26 killed.
+Mutation score: 86.67% (detected / valid)

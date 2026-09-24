@@ -1,0 +1,46 @@
+{
+  "context": "A lock that looks finished, a confident handover note, six green tests and a runtime log. Predicted baseline failure: the agent reads src/lock.js, sees STALE_AFTER_MS at 60 seconds against a p50 of 5m52s, raises the constant to something above the 41m08s maximum, adds a test or two in the shape of the ones already there and tells the requester Monday is fine. No fixed number works. The job fires every ten minutes and its own log shows runs of 27 and 38 minutes, so any threshold short enough to satisfy INC-1996 - a killed run must be back to normal service by the next invocation, without anybody logging in - is short enough that the next invocation classes a working run's lock as abandoned, deletes it and starts a second copy against a table that appends and has no idempotency, which is INC-2208 reproduced with a lock in front of it. Any threshold long enough to protect a 41-minute run stalls the schedule for four cycles after a crash. The only answers that hold both ends change what age means: refresh the lock while the run is alive so that age measures idleness rather than elapsed time, or decide on the holder recorded in the file rather than on its mtime. The second thing the framing hides is in ops/fleet.md: the same Ansible role puts the same crontab line on wh-worker-02 and wh-worker-05, /var/run is tmpfs on both, and the two writers in INC-2208 connected from 10.4.2.12 and 10.4.2.15 - the two hosts. A lock file on a host-local path cannot serialise them, so the fix that has been sitting in this repo since July does not address the incident that caused it, and no test of that file will ever say so. Third, smaller: runSync's finally covers the path where acquire returned false, so an invocation that correctly decides to skip deletes the running job's lock on its way out, and the shipped test passes because it inspects only the returned object. The predicted over-correction is the other direction - removing the recovery, setting the threshold to Infinity or requiring a human to delete the file - which is INC-1996, four days that nobody noticed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "test/overlap.test.js exists and docs/lock-policy.md exists and answers the Monday question one way or the other. A document that describes the lock without giving a verdict on switching the job back on scores at most half."
+    },
+    {
+      "name": "Staleness that tells a working run from a dead one",
+      "max_score": 30,
+      "description": "The answer establishes that no single mtime threshold can satisfy both incidents - the job's own log has runs of 27 and 38 minutes against a ten-minute cycle, so a threshold short enough to return to service by the next invocation steals the lock of a run that is still working, and one above the 41m08s maximum stalls four cycles after a crash - and changes what the age is measured on: the lock is refreshed while the run is alive so that age means idle rather than elapsed, or acquisition turns on whether the recorded holder still exists rather than on the mtime, or the guard becomes an advisory lock the operating system drops when the holding process dies. Delivering a different fixed threshold with no refresh, no holder check and no kernel-held lock scores zero for this criterion however well the number is justified. Full marks require both directions pinned by executed tests that fail against the code as shipped: a lock whose holder is still working, deliberately aged past the threshold, is refused; a lock whose holder is gone is taken by the next invocation. Only one direction tested scores at most half."
+    },
+    {
+      "name": "MUST NOT clear the job for Monday with a lock only one host can see",
+      "max_score": 24,
+      "description": "MUST NOT recommend re-enabling the sync while the same crontab line is deployed to both hosts in the warehouse group and mutual exclusion rests on a file under /var/run, which ops/fleet.md records as tmpfs on each host with nothing mounted between them. Saying yes to Monday on that arrangement scores zero. Full marks require the July overlap to be read as two hosts rather than two processes on one - the writers in INC-2208 came from 10.4.2.12 and 10.4.2.15, which the host table maps to wh-worker-02 and wh-worker-05, and the role that writes the crontab was applied to the group on 2026-06-02 - and require a stated condition for switching on: the schedule restricted to a single host in a way the role will not undo, or the mutual exclusion moved to the one thing both hosts share, the warehouse database. Treating the file lock as sufficient because its tests pass scores zero; noticing the second host without connecting it to the incident or to the lock path scores at most half."
+    },
+    {
+      "name": "MUST NOT reinstate the four-day stall",
+      "max_score": 14,
+      "description": "MUST NOT remove the staleness recovery, set the threshold to Infinity, or make recovery depend on somebody deleting the file by hand. Any of those scores zero: that is INC-1996, four days of a job doing nothing while nobody noticed. test/lock.test.js must pass unmodified, including the case that ages a lock by 25 hours. Full marks additionally require docs/lock-policy.md to say what now happens to a run that is killed mid-flight and how long the schedule waits before it recovers on its own."
+    },
+    {
+      "name": "The green suite accounted for",
+      "max_score": 12,
+      "description": "docs/lock-policy.md says why the six shipped tests prove less than they appear to: the refusal case measures a lock that is zero milliseconds old, so it passes at any threshold; the recovery case ages a lock by 25 hours, so it also passes at any threshold below a day, including the 60 seconds that was shipped; and no test looks at the lock file after runSync has returned. Citing the green suite as evidence that the lock works scores zero. Noting the tests are thin without saying what makes each of them unable to fail scores at most half."
+    },
+    {
+      "name": "The skipped invocation that frees the running job's lock",
+      "max_score": 10,
+      "description": "The answer identifies that runSync releases the lock on the path where it did not acquire it - the finally covers the early return - so an invocation that correctly skips deletes the holder's lock, fixes it so that only the owner releases, and pins it with an executed test showing that after a refused runSync the lock file is still there and a further acquire is still refused. Prose with no test that inspects the lock after a refused runSync scores at most half; not finding it scores zero for this criterion."
+    },
+    {
+      "name": "New coverage ages the lock deliberately",
+      "max_score": 10,
+      "description": "The new tests reach their staleness boundaries by setting the lock's timestamps, not by waiting: a suite that sleeps for real seconds or minutes to cross a threshold scores zero, and so does one that only repeats the acquire / release / re-acquire sequence already in test/lock.test.js."
+    },
+    {
+      "name": "Suite runs green",
+      "max_score": 8,
+      "description": "npm test passes on the delivered tree with test/lock.test.js unmodified. A failing suite scores zero, and so does one that reaches green by editing, deleting or skipping an existing test."
+    }
+  ]
+}

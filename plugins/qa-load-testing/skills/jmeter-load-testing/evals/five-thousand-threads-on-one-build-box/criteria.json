@@ -1,0 +1,46 @@
+{
+  "context": "Two proposals from the same person, about the same plan file, on the same machine, over the same two days: one is exactly what the desktop tool exists for and the other inverts it. Predicted baseline failure: the agent grants both. Proposal 2 is authoring — build a response assertion in the editor, save, commit — and proposal 3 reads as the natural continuation of it, with a genuine operational case attached: a director in the room who has been promised a live view and the authority to stop the run. The agent is predicted to wave proposal 3 through, or to hedge it as acceptable for a supervised one-off, because the request is reasonable, the need is real, and nothing in the brief says otherwise. Driving a 5,000-thread run from the interactive console is the one thing that must be refused here: the console is the machine collecting and rendering every sample from four generators — 1.9 M samples and 212 MB came off the 800-thread nightly, so the rehearsal is roughly six times that — and the numbers the run produces are then partly a measurement of the console. The replacement is already sitting in the tree, in the periodic progress settings in bin/ci.properties, and the graphs @mbennett wants are a post-run artefact. The mirror error scores no better: an agent that refuses proposal 2 as well leaves @tkowalski hand-editing XML to build an assertion element, which is not what anyone should be asked to do. The shipped script compounds all of this — its multi-machine branch drops the non-GUI flag with a comment saying the run is started by hand from the console, and its green test never asserts that flag — so an agent that trusts the test and proposal 4 ships an invocation that cannot run unattended at all, hands the run settings to the console only, and asks four generators for 5,000 threads each.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite runs",
+      "max_score": 5,
+      "description": "scripts/build-args.mjs and scripts/build-args.test.mjs are both modified and docs/rehearsal-plan.md exists with a separate section per proposal carrying a plain yes or no. If `node --test` does not pass against the delivered files, this criterion scores zero."
+    },
+    {
+      "name": "MUST NOT drive the rehearsal from the interactive console",
+      "max_score": 30,
+      "description": "Proposal 3 MUST NOT be granted, and the argv emitted for the rehearsal MUST NOT be capable of starting a run under the interactive console — the non-GUI flag the shipped multi-machine branch omits has to be present on that path, and an assertion has to pin it. Agreeing to proposal 3 however it is hedged scores zero for this criterion, and so does delivering a multi-machine argv without that flag, regardless of what the document says. Full marks require the refusal, the reason — the console is the machine receiving and rendering every sample from all four generators, at roughly six times the 1.9 M samples and 212 MB the 800-thread nightly already produces, so the figures it reports include its own cost — and a replacement for what @mbennett was promised: the periodic progress lines the settings in bin/ci.properties already switch on, and the graphs produced from the results file after the run. Refusing proposal 3 with no replacement for the live view and no way to stop the run early scores at most half, because the requester named both as requirements."
+    },
+    {
+      "name": "Desktop authoring granted",
+      "max_score": 14,
+      "description": "Proposal 2 is granted: building the assertion element in the editor on the 18th, saving and committing the file is what that tool is for, and the answer says so. Refusing proposal 2 scores zero — it is the mirror-image failure of granting proposal 3 and it leaves an assertion element to be typed into XML by hand. Granting it while refusing proposal 3 without ever distinguishing the two — one builds the plan, the other runs it — scores at most half."
+    },
+    {
+      "name": "Run settings reach the generators",
+      "max_score": 20,
+      "description": "The argv emitted for the rehearsal carries the thread count, ramp and host in the form that propagates to remote engines, not the per-JVM override form the shipped script uses, which sets a property only on the machine that starts the run. Emitting only the per-JVM form scores zero for this criterion, and so does answering proposal 4 with a yes. Leaving the shipped test 'a run across generators names them and carries the same overrides as a local run' still asserting the per-JVM form also scores zero — it is green about the wrong thing and it is the evidence @tkowalski will cite. Full marks require the propagating form in the emitted argv, an assertion covering it, and one sentence in docs/rehearsal-plan.md saying what the generators would otherwise have run with. Substituting a properties file assumed to be sitting on each generator, with no account of how it gets there or stays in step with the repository, scores at most half."
+    },
+    {
+      "name": "Thread count is per generator and inside the per-machine ceiling",
+      "max_score": 14,
+      "description": "The thread figure handed to the generators is the per-generator number, because every generator runs the whole plan. Emitting a thread count of 5,000 alongside four generators scores zero — that is 20,000 sessions at a stack borrowed for one afternoon, and it is the figure the shipped test asserts. Proposal 1 must be refused on the per-machine ceiling of roughly a thousand threads before contention distorts the measurement, with an explicit statement that core count is not what limits it; refusing proposal 1 on cores, RAM or 'it is his interactive box' alone scores at most half. Arriving at 1,250 per generator without noticing that it sits above that ceiling, and saying what is done about it — a fifth generator, a lower agreed target, or a stated exception measured on the day — scores at most half."
+    },
+    {
+      "name": "Data file placed on every generator",
+      "max_score": 8,
+      "description": "Proposal 5 is granted: the file the plan reads from a relative path is not shipped out to the generators when the run starts, so a copy must exist on each of gen-a..gen-d before the window or every generator fails on a missing file. Refusing proposal 5 as needless duplication scores zero. Granting it without saying what puts the file on each machine before the window scores at most half."
+    },
+    {
+      "name": "New assertions fail against the shipped script",
+      "max_score": 8,
+      "description": "At least two assertions added to scripts/build-args.test.mjs would fail if run against the unmodified scripts/build-args.mjs — one on the missing non-GUI flag and one on the propagating override form. Only one such assertion scores at most half; tests that merely restate behaviour the shipped implementation already has score zero."
+    },
+    {
+      "name": "Nightly single-runner path untouched",
+      "max_score": 6,
+      "description": "MUST NOT change the argv produced for the existing 800-thread nightly run, which has worked for two years and which the brief says nobody wants touched. If any of the first five shipped tests had to be edited to keep the suite green, this scores zero; the sixth is the one that encodes the rehearsal behaviour and changing it is expected."
+    }
+  ]
+}

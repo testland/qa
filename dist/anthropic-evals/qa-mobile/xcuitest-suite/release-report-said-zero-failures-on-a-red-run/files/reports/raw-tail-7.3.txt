@@ -1,0 +1,25 @@
+tail of the console output the runner captured for the 7.3 verify job
+
+Test Case '-[TidewaterUITests testSignInWithValidCredentials]' passed (11.402 seconds).
+Test Case '-[TidewaterUITests testSignInRejectsWrongPassword]' passed (10.118 seconds).
+
+Test Case '-[AccountUITests testResetPasswordSendsEmail]' started.
+    t =    14.21s Assertion Failure: AccountUITests.swift:38: XCTAssertTrue failed
+Test Case '-[AccountUITests testResetPasswordSendsEmail]' failed (16.884 seconds).
+Test Case '-[AccountUITests testResetPasswordSendsEmail]' started (Attempt 2 of 3).
+    t =    13.90s Assertion Failure: AccountUITests.swift:38: XCTAssertTrue failed
+Test Case '-[AccountUITests testResetPasswordSendsEmail]' failed (16.102 seconds).
+Test Case '-[AccountUITests testResetPasswordSendsEmail]' started (Attempt 3 of 3).
+Test Case '-[AccountUITests testResetPasswordSendsEmail]' passed (15.740 seconds).
+
+Test Case '-[AccountUITests testSignOutClearsSession]' started.
+    t =     9.77s Assertion Failure: AccountUITests.swift:52: XCTAssertEqual failed:
+                  ("Signed in as priya@tidewater.example") is not equal to ("Signed out")
+Test Case '-[AccountUITests testSignOutClearsSession]' failed (12.309 seconds).
+Test Case '-[AccountUITests testSignOutClearsSession]' started (Attempt 2 of 3).
+Test Case '-[AccountUITests testSignOutClearsSession]' passed (11.884 seconds).
+
+Test Suite 'All tests' passed at 2026-09-04 09:18:02.117.
+     Executed 21 tests, with 0 failures (0 unexpected) in 388.221 seconds
+
+** TEST SUCCEEDED **

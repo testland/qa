@@ -1,0 +1,17 @@
+{
+  "repo": "harbor",
+  "window": "2026-06-14 to 2026-09-12",
+  "window_days": 90,
+  "commits_classified": 184,
+  "generated": "2026-09-09",
+  "regenerate_cost": "~30 minutes; do not run by hand",
+  "distribution": {
+    "data-heavy": { "commits": 107, "pct_commits": 58, "pct_files": 61 },
+    "service-layer": { "commits": 50, "pct_commits": 27, "pct_files": 25 },
+    "pure-logic": { "commits": 20, "pct_commits": 11, "pct_files": 10 },
+    "ui-heavy": { "commits": 7, "pct_commits": 4, "pct_files": 4 }
+  },
+  "mixed_commits": 12,
+  "notes": "the reporting platform was merged into harbor on 2026-05-04; most commits since land in src/warehouse/ and src/extracts/",
+  "not_decided_here": "target layer ratios, effort hours and test selection are downstream decisions"
+}

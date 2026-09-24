@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "updated_at": "2026-08-14T16:20:00Z",
+  "violations": [
+    "axe::color-contrast::/checkout::button.primary",
+    "axe::color-contrast::/checkout::a.help-link",
+    "axe::color-contrast::/cart::button.remove",
+    "axe::label::/signup::input#email",
+    "axe::label::/signup::input#password",
+    "axe::aria-required-attr::/dashboard::div[role=\"dialog\"]",
+    "axe::image-alt::/marketing::img.hero",
+    "axe::image-alt::/marketing::img.badge",
+    "axe::link-name::/help::a.social-x",
+    "axe::heading-order::/blog::h4.post-sub",
+    "axe::color-contrast::/legacy::span.muted",
+    "axe::label::/legacy::input#q",
+    "axe::region::/dashboard::body"
+  ]
+}

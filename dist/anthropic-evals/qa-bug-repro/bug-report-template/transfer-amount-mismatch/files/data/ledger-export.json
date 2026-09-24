@@ -1,0 +1,68 @@
+{
+  "service": "pay-svc",
+  "version": "4.19.2",
+  "commit": "8f2ad10",
+  "exportedAt": "2026-08-13T07:02:11Z",
+  "note": "A screened transfer posts the source account pending-authorisation reserve to a clearing account. The matching HOLD_RELEASED posting normally follows within seconds of screening completing, and the destination is credited the full amount.",
+  "transfers": [
+    {
+      "ref": "TRF-90c41",
+      "createdAt": "2026-08-11T08:41:03Z",
+      "route": "screened",
+      "customerRef": "CUST-30188",
+      "sourcePendingAuth": 4500,
+      "postings": [
+        { "account": "ACC-EVERYDAY-7741", "kind": "customer", "minorUnits": -125000, "code": "TRANSFER_OUT" },
+        { "account": "ACC-SAVINGS-2210", "kind": "customer", "minorUnits": 120500, "code": "TRANSFER_IN" },
+        { "account": "CLR-HOLD-014", "kind": "clearing", "minorUnits": 4500, "code": "HOLD_PENDING_REVIEW", "released": false }
+      ]
+    },
+    {
+      "ref": "TRF-90b02",
+      "createdAt": "2026-08-11T08:44:50Z",
+      "route": "instant",
+      "customerRef": "CUST-51002",
+      "sourcePendingAuth": 0,
+      "postings": [
+        { "account": "ACC-CURRENT-1180", "kind": "customer", "minorUnits": -80000, "code": "TRANSFER_OUT" },
+        { "account": "ACC-SAVINGS-9014", "kind": "customer", "minorUnits": 80000, "code": "TRANSFER_IN" }
+      ]
+    },
+    {
+      "ref": "TRF-90d77",
+      "createdAt": "2026-08-11T09:12:38Z",
+      "route": "screened",
+      "customerRef": "CUST-44219",
+      "sourcePendingAuth": 11000,
+      "postings": [
+        { "account": "ACC-EVERYDAY-3325", "kind": "customer", "minorUnits": -300000, "code": "TRANSFER_OUT" },
+        { "account": "ACC-SAVER-7702", "kind": "customer", "minorUnits": 289000, "code": "TRANSFER_IN" },
+        { "account": "CLR-HOLD-014", "kind": "clearing", "minorUnits": 11000, "code": "HOLD_PENDING_REVIEW", "released": false }
+      ]
+    },
+    {
+      "ref": "TRF-90e19",
+      "createdAt": "2026-08-12T07:58:02Z",
+      "route": "instant",
+      "customerRef": "CUST-20551",
+      "sourcePendingAuth": 0,
+      "postings": [
+        { "account": "ACC-CURRENT-6640", "kind": "customer", "minorUnits": -15075, "code": "TRANSFER_OUT" },
+        { "account": "ACC-SAVINGS-6641", "kind": "customer", "minorUnits": 15075, "code": "TRANSFER_IN" }
+      ]
+    },
+    {
+      "ref": "TRF-90f03",
+      "createdAt": "2026-08-12T12:20:04Z",
+      "route": "screened",
+      "customerRef": "CUST-30188",
+      "sourcePendingAuth": 2500,
+      "postings": [
+        { "account": "ACC-EVERYDAY-7741", "kind": "customer", "minorUnits": -50000, "code": "TRANSFER_OUT" },
+        { "account": "ACC-SAVINGS-2210", "kind": "customer", "minorUnits": 50000, "code": "TRANSFER_IN" },
+        { "account": "CLR-HOLD-014", "kind": "clearing", "minorUnits": 2500, "code": "HOLD_PENDING_REVIEW", "released": true },
+        { "account": "CLR-HOLD-014", "kind": "clearing", "minorUnits": -2500, "code": "HOLD_RELEASED", "released": true }
+      ]
+    }
+  ]
+}

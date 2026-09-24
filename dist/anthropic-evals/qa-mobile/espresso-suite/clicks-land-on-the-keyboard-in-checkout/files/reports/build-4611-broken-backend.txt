@@ -1,0 +1,21 @@
+### Build 4611 - 2026-09-02
+
+Staging was in a bad state all afternoon (cert rotation went wrong upstream) and
+the job was launched against it by mistake before anyone noticed. Kept for the
+record. What staging was doing at the time, from the gateway log:
+
+- POST /v1/cart/{id}/remove  -> 500 on every call, 0 successful removals
+- POST /v1/promo/validate    -> returned {"status":"UNKNOWN_CODE"} for every
+                                code submitted, valid ones included
+- GET  /v1/delivery/estimate -> connection refused
+- POST /v1/orders            -> 201, this one was healthy
+
+Instrumentation result:
+
+com.northwind.shop.CheckoutTest > emailFieldAcceptsPlusAddressing PASSED (2.5s)
+com.northwind.shop.CheckoutTest > removingAnItemUpdatesTheCart PASSED (3.2s)
+com.northwind.shop.CheckoutTest > expiredPromoCodeIsRejected PASSED (2.1s)
+com.northwind.shop.CheckoutTest > placeOrderButtonIsReachableOnASmallScreen PASSED (4.2s)
+com.northwind.shop.CheckoutTest > deliveryDateAppearsAfterAddressEntry SKIPPED
+
+5 tests, 4 passed, 0 failed, 1 skipped

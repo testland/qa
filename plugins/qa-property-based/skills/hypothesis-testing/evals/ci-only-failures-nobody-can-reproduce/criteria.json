@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent reads 'red one run in three, a different string every time, green on re-run, never reproduces locally' as generator randomness or runner variance, and answers with a pinned seed. The numbers rule the usual explanations out - both profiles are max_examples=300, red and green runs alike finish in half a second, the image and lockfile never changed - so 'CI runs more cases' and 'the runner is slower' are both provably wrong here. Two things in conftest.py decide the answer and neither is legible without knowing what the settings do. First, the dev profile carries derandomize=True, which seeds the generator from a hash of the test function: every laptop draws the identical three hundred strings on every run, so sixty green runs by four engineers are sixty copies of one run, and running it again can never add anything. Second, the ci profile sets phases=[Phase.generate] under a comment about skipping the shrink pass. It does skip shrinking - which is why the logs carry nineteen-character draws that look like nothing and why Hypothesis reports a failing test case rather than a minimal one - but the list also drops Phase.explicit and Phase.reuse. Phase.explicit is the phase that runs @example, so the two INC-3310 pins in tests/test_paths.py have not executed on CI since 2026-08-20 and any new pin the agent adds will not execute either; the agent is predicted to miss that entirely and to add pins that silently never run. The defect is real: normalise() replaces '/./' in one non-overlapping pass, so a path carrying several in a row keeps one. @dparker's proposal is the mirror-image trap - nine parametrized strings do give a deterministic, fast, laptop-reproducible check, and they also end the search that found them.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverable with the two requests answered apart",
+      "max_score": 4,
+      "description": "docs/property-job-answer.md exists and answers the reproducibility request and @dparker's proposal as two separate decisions. A single merged recommendation that does not treat them differently scores zero for this item."
+    },
+    {
+      "name": "The dead @example pins found",
+      "max_score": 30,
+      "description": "The answer reports that the ci profile's phases list excludes Phase.explicit, so the two INC-3310 @example pins in tests/test_paths.py have not run on CI since that line landed, and it repairs the profile so explicit cases execute again - by restoring the phase or by dropping the phases restriction. Not mentioning that the pinned cases are not running scores zero for this criterion regardless of the rest. Noting that the phases list changes what runs, without connecting it to @example and the INC-3310 pins, scores at most half. Moving the pins into a separate hand-written test instead of repairing the profile also scores at most half - it leaves the profile able to silence the next pin."
+    },
+    {
+      "name": "The local / CI gap traced to derandomize",
+      "max_score": 22,
+      "description": "The answer explains why the same command behaves differently in the two places: the dev profile sets derandomize=True, so every laptop draws the same three hundred strings on every run and repeated local runs add no coverage at all, while CI redraws each night. Attributing the difference to the runner image, timing, environment variance, a dependency, ordinary flakiness, or to CI running more examples scores zero for this criterion - both profiles are max_examples=300 and red and green runs finish within 0.1s of each other."
+    },
+    {
+      "name": "MUST NOT trade the generator for the collected strings",
+      "max_score": 20,
+      "description": "MUST NOT grant @dparker's proposal. Replacing the generated input on test_normalise_is_idempotent with a parametrized list, a fixed set or a single-value strategy scores zero for this criterion, as does narrowing SEGMENT_CHARS or the size range so the failing shape can no longer be drawn, and so does skipping, xfailing or deleting the check. Full marks require the refusal plus what the nine strings actually are - the ones the search happened to reach, not the set of inputs that break it."
+    },
+    {
+      "name": "Why a past run cannot be replayed, and what makes the next one replayable",
+      "max_score": 16,
+      "description": "The first request is answered with both halves. The logged runs cannot be reproduced as they stand, because nothing in the job records what was drawn - no seed is printed and the example database does not survive the runner - and the answer must say so rather than inventing a replay of run 4488. It must then give a concrete local command that draws the way CI draws, which means selecting the CI profile: the default profile is derandomized and will produce its own fixed set however many times it is run, and however the seed is set. Full marks also require a change that makes future failures replayable and readable - a fixed seed recorded with the run, or the shrink phase restored so the report is a minimal input rather than a nineteen-character draw. Claiming a past run can be replayed from the log as it stands scores zero. A local command that does not change profile scores at most half."
+    },
+    {
+      "name": "The real defect fixed in the source",
+      "max_score": 12,
+      "description": "src/paths.py is changed so normalise() is stable under repetition for every input, including paths carrying several '/./' in a row, and the existing example expectations and the no-double-slash check still hold. Handling only the two strings printed in the logs scores at most half. Changing the test, the strategy or the assertion instead of the source scores zero."
+    },
+    {
+      "name": "The two logged inputs pinned",
+      "max_score": 10,
+      "description": "Both strings from ci/property-job-failures.md are added as explicit pinned cases on the existing generated-input check, alongside the INC-3310 pins rather than in place of them. Adding a separate hardcoded test beside an unpinned property scores at most half. Adding nothing that reproduces those inputs scores zero."
+    },
+    {
+      "name": "The passing tests left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify test_normalise_examples, test_join_examples or test_normalise_has_no_double_slash, and MUST NOT touch join(). None of them appears in any red log. Any change to them scores zero for this item."
+    }
+  ]
+}

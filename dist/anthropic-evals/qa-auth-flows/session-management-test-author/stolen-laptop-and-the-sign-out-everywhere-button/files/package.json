@@ -1,0 +1,8 @@
+{
+  "name": "deskline",
+  "version": "9.3.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

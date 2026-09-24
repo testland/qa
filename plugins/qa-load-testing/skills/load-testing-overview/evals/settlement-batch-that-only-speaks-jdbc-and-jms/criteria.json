@@ -1,0 +1,56 @@
+{
+  "context": "The centre of gravity is the scoring lead's reply, which reaches the right tool for the right reasons and then makes three claims that are wrong, all of which an agent that agrees with his conclusion is predicted to inherit wholesale. Predicted baseline failure: the document endorses the counter-proposal, repeats that R2 is covered, carries his command into the pipeline as pasted, and reprints 108 ms as evidence the 120 ms p99 budget is met. Each of those is false. `--exit-code-on-error` makes the run exit non-zero when requests fail and says nothing whatever about latency; a percentile budget has to be asserted after the run against the `--csv` stats output, and his command writes no CSV, so nothing anywhere in that pipeline measures a p99 in any form. That post-run assertion is precisely the results parser R2 says the company will not write, so risk-scoring is the workload where R2 gives - the one thing the platform lead will be asked to confirm in the room. The same command omits `--headless`, so as pasted into CI it serves the web UI and waits for somebody to press Start swarming; the job does not go red, it hangs to the runner's timeout. And the 108 ms comes from the whole-run aggregate row, which blends the signed scoring calls with the unsigned, in-process-cached `/v1/models/current` polls that are a quarter of the traffic, so it is not the figure the SLO names - while the SLO'd path has no row of its own at all, because the request is posted to a URL carrying the merchant id with no stable name, scattering 12,140 ids across their own rows, which is why the lead's end-of-run table runs to a few thousand lines and why each of those percentiles rests on a handful of requests. An agent reviewing that file for correctness is predicted to check the signing and stop. Beyond the reply, the memo routes every remaining workload to k6 by rebuilding the system under test rather than testing it: the settlement cycle is SFTP, then JDBC upserts into MariaDB, then transacted JMS onto IBM MQ, with one webhook at the end whose timings the runbook records as normal on the night the other two steps blew the window, so an HTTP shim measures a shim; the console's flows change with monthly firmware and belong to two people who do not write code, which makes who can maintain the plan the deciding fact rather than the language, and a quarterly conversion by a third party is wrong most of the year; and merchant-api is the one case the memo already has right, with a thresholded script that fails its own build. The memo's appendix is the last predicted miss: two analysts driving the Saturday run from the tool's own window on their laptops is the GUI generating the load. The memo's closing claim that both rules hold workload by workload is false in two separate places, and the plan-file workloads are the second.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Per-workload decision document produced",
+      "max_score": 4,
+      "description": "docs/tooling-decision.md exists and carries a separate section for each of the four workloads, each naming a driving fact and a command. Covering fewer than four scores at most half; no file scores zero."
+    },
+    {
+      "name": "The runner's exit code is not mistaken for the p99 gate",
+      "max_score": 32,
+      "description": "MUST NOT accept `--exit-code-on-error` as satisfying the 120 ms p99 budget. Full marks require all three points: that the flag exits non-zero on failed requests only and says nothing about latency; that a percentile budget has to be asserted after the run against the `--csv` stats output, and that the pasted command writes no CSV at all, so nothing in that pipeline measures the p99 in any form; and that the post-run assertion is exactly the results parser R2 says the company will not write, so for risk-scoring R2 is the rule that gives, with the document naming what that costs and who owns the check. Repeating the reply's claim that R2 is covered, or listing risk-scoring among the workloads where both rules hold, scores zero for this criterion however right the tool choice is. Noticing that latency is not gated but not connecting it to R2, or naming the collision without saying which rule gives, scores at most half."
+    },
+    {
+      "name": "The quoted 108 ms is not the signed endpoint's p99",
+      "max_score": 22,
+      "description": "MUST NOT reprint the reply's 108 ms as evidence the budget is met. It is read off the whole-run aggregate row, which covers both requests the file issues, and one in four of those is the unsigned, in-process-cached `/v1/models/current` poll, so it is not the figure the SLO names. There is also no row for the scored path to read instead: the request is posted to a URL carrying the merchant id and is given no stable name, so each of the 12,140 ids becomes its own line - which is what the lead is describing when he says the end-of-run table now runs to a few thousand lines - leaving a handful of requests behind every percentile in it. Full marks require `services/risk-scoring/tests/load/locustfile.py` changed so the scoring request is reported under one stable name, plus the statement that 108 ms establishes nothing about the 120 ms budget. Leaving the request unnamed scores zero. Correcting the naming without retiring the 108 ms figure, or retiring the figure without correcting the naming, scores at most half."
+    },
+    {
+      "name": "Settlement batch driven over its real protocols",
+      "max_score": 16,
+      "description": "settlement-runner is assigned to the one candidate tool that generates JDBC and JMS traffic natively, and the reason given is the runbook's protocol list - SFTP, then JDBC upserts into a 412M-row table, then transacted JMS publishes - rather than language or familiarity. MUST NOT endorse, cost, or schedule the `settlement-probe` HTTP shim, and MUST NOT substitute a custom HTTP extension, a Node JDBC client, or gating on the completion webhook: any of those scores zero, because each measures something the team wrote rather than the two steps that blew the window on 31 August, whose neighbours in steps 1 and 4 ran to their usual times that same night. Naming the right tool with no reason beyond preference, uniformity or familiarity scores at most a third."
+    },
+    {
+      "name": "Neither standing rule survives intact on the plan-file workloads",
+      "max_score": 14,
+      "description": "For the workloads that end up on a GUI-authored plan file, the document states that R1 is weakened - the plan is a generated artefact that does not review usefully in a pull request - and that R2 gives as well, because that runner writes a results file and does not fail the build against a budget on its own, so a post-run assertion somebody owns is needed there too. Asserting, as the memo does, that both rules hold unchanged for every workload scores zero. Answering only R1, or only R2, scores at most half."
+    },
+    {
+      "name": "Python signing kept in Python",
+      "max_score": 10,
+      "description": "risk-scoring's test imports the existing `kestrel_sig` package directly rather than reimplementing it. Recommending a JavaScript reimplementation - the memo's own plan, a test-only copy of audited crypto that the owning team refused in writing - scores zero. Proposing a signing proxy or sidecar so another tool can call the endpoint also scores zero: it is the shim in a different shape, and it puts a hop the SLO does not have inside a 120 ms budget."
+    },
+    {
+      "name": "The invocation that goes into the pipeline is not the one that was pasted",
+      "max_score": 10,
+      "description": "MUST NOT carry the reply's command into CI as written. The delivered command for risk-scoring adds `--headless` - without it the process serves its web UI and waits for a human to start the run, so the job hangs to its timeout instead of failing - and adds the `--csv` output the latency check has to read. Reproducing the snippet unchanged, or presenting it as ready for the pipeline, scores zero. Supplying one of the two additions scores at most half."
+    },
+    {
+      "name": "Console assigned on who maintains the flows",
+      "max_score": 8,
+      "description": "terminal-console goes to the tool the two manual QA analysts can build and change themselves at the cadence the flows change, and the document says that is the deciding fact. Endorsing the memo's record-and-convert-each-quarter plan scores zero: firmware ships monthly and the flows change with it, so a quarterly conversion by a third party is wrong most of the year. Answering 'k6 is fine, train them' scores zero."
+    },
+    {
+      "name": "The GUI is never the generator",
+      "max_score": 8,
+      "description": "MUST NOT endorse the appendix plan of the two analysts driving the Saturday run from the tool's own window on their laptops. The document has to say the GUI builds the plan and does not run it, and supply the non-GUI invocation for the actual run. Leaving the appendix unchallenged scores zero; noting it in passing without supplying the command-line invocation scores at most half."
+    },
+    {
+      "name": "The one case the memo got right is left alone",
+      "max_score": 6,
+      "description": "merchant-api stays on k6 with its existing load/smoke.js untouched: a JS team, HTTP, tests in git, thresholds already failing the build on their own, so both rules hold there as written. Moving it to another tool for the sake of uniformity scores zero - an answer that rejects every part of the memo is as wrong as one that accepts all of it."
+    }
+  ]
+}

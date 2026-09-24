@@ -1,0 +1,8 @@
+{
+  "name": "paper-trail",
+  "version": "0.9.4",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

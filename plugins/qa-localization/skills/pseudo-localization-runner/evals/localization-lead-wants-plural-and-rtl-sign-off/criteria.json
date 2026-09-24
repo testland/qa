@@ -1,0 +1,36 @@
+{
+  "context": "Thirty-nine findings, a one-line patch that clears thirty-seven of them, a green suite, and a lead who has said in advance that a hedge is not an acceptable answer. Predicted baseline failure: the agent adopts Marco's patch or reinvents it, because it is honest-looking - he concedes rows 38 and 39 rather than claiming them - and it does make the token junk disappear. What it actually does is transform the caller's data instead of the copy: under it 'Ada' renders as 'ÁAdàa' and 'ada@example.com' as 'àadàa@èexàamplèe.còom', so the run can no longer tell a corrupted value from a real one, which is the exact complaint QA raised, and no assertion about interpolation can survive under the locale. The defect is one level down, in the transform: it walks every character including the ones inside {{ }}, so 'name' comes out accented, the ASCII \\w+ in interpolate() no longer matches the token, and the literal braces reach the user. The repair is to transform the literal spans and leave the tokens byte-identical, which keeps the expansion on the copy and puts the real values back; with that in place the cart summary row (24-26 characters against a 22 budget) and the invite row (35-37 against 31) still overflow, so rows 38 and 39 are real and the platform team's reading of them is wrong. On the four verdicts the agent is predicted to grade all four, because the lead has explicitly refused hedges. Items 1 and 2 are answerable from the repaired run: item 1 is a no, and the evidence is not in the report at all - the Remove control in src/views.js is a bare literal that comes back as plain English under every locale, and nobody filed it. Item 3 is a no that the run cannot establish either way: the transform carries no plural machinery, and cart.summary bakes the English plural into the source. Item 4 is the planted trap: a mirrored locale does exist and QA walked it clean, which is why platform marked right-to-left covered, but mirrorLocalize() only reverses the characters of an English string and nothing in the render path emits a direction at all, so that walk could not have failed and is evidence of nothing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT put the caller's values through the transform",
+      "max_score": 30,
+      "description": "MUST NOT adopt Marco's patch or any equivalent that interpolates before transforming, and MUST NOT exempt placeholder-bearing strings from the locale by an early return, a key filter or a restore-from-source pass. Either scores zero for this criterion regardless of the rest. Full marks require repairing the transform at the token boundary - literal spans transformed, {{...}} tokens byte-identical - plus a test on a rendered row that pins both halves: the caller's value present verbatim (Ada, $41.00, the address) and the surrounding copy still carrying the added length. Full marks also require saying why Marco's line is wrong rather than just declining it: it accents the customer's own data, so a walker cannot tell a mangled value from a real defect. Repairing the tokens but dropping the added length from those strings, or widening interpolate()'s pattern so it matches an accented token name, scores at most half."
+    },
+    {
+      "name": "The mirrored-locale sign-off refused",
+      "max_score": 16,
+      "description": "Item 4 is answered no. Full marks require engaging with the mirrored walk that platform relied on: the mirrored locale reverses the characters of an English string, nothing in the render path emits a direction for any row, so a clean walk was guaranteed and establishes nothing about Hebrew - and character reversal is not the bidirectional algorithm. Answering yes, or repeating platform's 'covered', scores zero. Answering no on the general ground that this kind of run says nothing about direction, without engaging with the mirrored locale that actually exists in the repository, scores at most half."
+    },
+    {
+      "name": "Plural item answered without inventing evidence",
+      "max_score": 14,
+      "description": "Item 3 is answered no, on two grounds: the run carries no plural-category machinery at all, so a clean run is not evidence either way, and cart.summary hardcodes the English plural 'items' with no plural form for a translator to fill. Signing item 3 off as yes on the strength of the run scores zero. Giving only one of the two grounds scores at most half."
+    },
+    {
+      "name": "The unwrapped control found by the run, not by the report",
+      "max_score": 14,
+      "description": "Item 1 is answered no, and the evidence is the Remove control in src/views.js - a bare literal that renders as plain English under the accented locale while every wrapped string changes. It appears in none of the thirty-nine findings, so it has to come out of the repaired run rather than out of reports/qa-triage.md. Answering yes scores zero. Answering no with no specific string named scores at most half."
+    },
+    {
+      "name": "Containers answered and the findings re-triaged",
+      "max_score": 14,
+      "description": "Item 2 is answered from the repaired run with the specific rows named - the cart summary and the invite line still overflow after the transform is fixed - and the findings are split: rows 1-37 were the transform corrupting its own tokens, rows 38 and 39 are genuine container overflows. Accepting the platform team's reading that 38 and 39 are the other 37 in a different costume scores zero. Declining to answer all four items scores zero here as well; it is the mirror of grading all four and leaves the lead with nothing."
+    },
+    {
+      "name": "Deliverable produced and the English suite untouched",
+      "max_score": 5,
+      "description": "docs/l10n-verdicts.md exists with four separately stated verdicts and the change summary, test/views.test.js is byte-identical to the fixture, and npm test passes. Modifying test/views.test.js scores zero here."
+    }
+  ]
+}

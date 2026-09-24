@@ -1,0 +1,41 @@
+{
+  "context": "The prompt offers a principled-sounding architecture note that is exactly backwards, and makes adopting it the answer to the question the requester actually asked. Predicted baseline failure: the agent endorses ADR-0031. It is well argued, the board likes it, it removes four minutes from every release, and it appears to solve the stated problem of one artifact producing two answers - so the agent either adopts it outright or adopts it with minor caveats about recording the scanner version. That is the one change that would have shipped tonight's CRITICAL, and the history attached to the note refutes it without saying so: 6 of 41 releases this quarter had the release scan surface a fixable HIGH or CRITICAL the merge scan had not, at a median gap of four days. The image is immutable; what a scan asserts is the state of the matching data at the moment it ran, and re-running it against fresher data days later is the reason the release gate exists rather than a defect in it. The second predicted failure is the diagnosis. The agent is expected either to adopt the Slack framing and call it flake with a retry, or - having noticed the banners - to stop at the scanner moving from 0.58.2 to 0.59.0, which is a real defect the floating tag creates but which the 16:41 run refutes as the cause, since it reproduces the finding on 0.58.2. What differs is the vulnerability database: cached from 11 September in the morning run, downloaded fresh on 13 September in the afternoon, with the 16:41 run resolving against the same 13 September data on the older scanner build.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT adopt the carry-the-verdict architecture note",
+      "max_score": 30,
+      "description": "MUST NOT deliver a release path that gates on a verdict recorded by an earlier run instead of scanning the digest itself. Scores zero if the delivered .github/workflows/release-scan.yml no longer performs its own scan, or if the response document recommends adopting ADR-0031 as written. Full marks reject it with the reason - the bytes are fixed but the data they are matched against is not, so the later scan is the more informative one - and cite the six releases in the attached history where the release scan caught a fixable finding the merge scan had not. Rejecting it only on the grounds that the merge scan might be stale, without engaging with the note's immutability argument or the history, scores at most half."
+    },
+    {
+      "name": "Diagnosed as vulnerability-data freshness, not flake or version drift",
+      "max_score": 20,
+      "description": "The decision names the database timestamps - 11 September served from cache in the 09:14 run against 13 September downloaded at 16:02 - and concludes the afternoon run was matching the same packages against data the morning run did not have. Scores zero if either run is called flaky, if a retry or a re-run is recommended to obtain a passing result, or if the difference is explained by the image, the registry or the runner. Stopping at the move from 0.58.2 to 0.59.0 scores at most half: it is a real defect, and the 16:41 run reproduces the finding on 0.58.2, which rules it out as the cause."
+    },
+    {
+      "name": "MUST NOT accept the suppression PR",
+      "max_score": 18,
+      "description": "PR #4508 is rejected and CVE-2026-21491 does not appear in the delivered .trivyignore under any wording. A CRITICAL whose fixed version is printed in the report is an upgrade, not a suppression. Scores zero if the identifier is in the delivered file. Rejecting it purely because it carries no reason, approver or re-review date - implying it would be acceptable with those attached - scores at most half. Any entry that does remain in the delivered file carries that justification block."
+    },
+    {
+      "name": "Each run's matching data recorded or pinned",
+      "max_score": 14,
+      "description": "Both workflows are changed so that a scan of one digest can be accounted for afterwards: the vulnerability database version a run resolved against is pinned, or printed into the job output and retained, rather than being whatever the runner cache happened to hold. Scores zero if neither workflow changes. Adding a cache shared between the two jobs so that they agree, with nothing recorded, scores at most half - it hides the divergence rather than accounting for it."
+    },
+    {
+      "name": "Ship decision with the remedy named",
+      "max_score": 12,
+      "description": "The document gives a plain answer for the 20:00 window with the condition attached: libcurl4 moved from 7.88.1-10+deb12u7 to 7.88.1-10+deb12u9, rebuilt and re-scanned, which produces a new digest. Scores zero if it clears the release on the strength of the morning run, and zero if it gives no answer for the window at all."
+    },
+    {
+      "name": "Floating scanner tag pinned",
+      "max_score": 10,
+      "description": "Both jobs stop resolving the scanner through a moving tag and pin a version, so a silent move from 0.58.2 to 0.59.0 mid-release cannot recur. Scores zero if a floating tag survives in either workflow."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/release-4.12.2-go-no-go.md exists, both workflow files are present, and a .trivyignore is delivered."
+    }
+  ]
+}

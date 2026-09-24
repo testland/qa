@@ -1,0 +1,21 @@
+# notify — same scratch branch, re-run 2026-09-04 after QUAL-880 merged
+
+>> Line Coverage (for mutated classes only): 402/441 (91%)
+>> Generated 612 mutations Killed 392 (64%)
+>> Mutations with no coverage 74. Test strength 71%
+>> Ran 1,431 tests (2.34 tests per mutation)
+
+## Surviving mutants, 220 total — report output, no classification applied
+
+| location                                                              | operator                                        | count |
+|-----------------------------------------------------------------------|-------------------------------------------------|-------|
+| entry of every public function in the module                           | removed call to `Intrinsics::checkNotNullParameter`     | 68 |
+| assignments from platform types across the module                      | removed call to `Intrinsics::checkNotNullExpressionValue` | 31 |
+| `Delivery::component1` / `component2` / `component3`                   | replaced return value                            | 14 |
+| `Delivery::copy$default`                                              | replaced return value / removed conditional      | 9  |
+| `Delivery::hashCode`                                                  | replaced int return with 0                       | 7  |
+| `RouteResult$Send::equals`                                            | replaced boolean return with true                | 6  |
+| `NotificationRouter.kt:19`                                            | changed conditional boundary on `retries >= MAX_RETRIES` | 1 |
+| `NotificationRouter.kt:28`                                            | replaced integer multiplication with division     | 1 |
+| `NotificationRouter.kt:20`                                            | removed call to `Metrics::increment`              | 1 |
+| the module's other 11 classes, not itemised here                      | mixed                                            | 82 |

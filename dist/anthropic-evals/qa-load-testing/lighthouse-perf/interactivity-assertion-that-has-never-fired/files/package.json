@@ -1,0 +1,13 @@
+{
+  "name": "larkmead-booking",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "preview": "node server/preview.js",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1"
+  }
+}

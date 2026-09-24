@@ -1,0 +1,46 @@
+{
+  "context": "A mandate to run everything, and underneath it a free, already-written, already-endorsed house-rule check whose author's summary of her own results is false. Predicted baseline failure: the agent spends its effort on the cost argument the memo invites, refuses ask 1, and merges Marisol's check - because it is deterministic, it is free, the user has said he wants it merged, and her note reports it lining up with the support leads on everything except reply 5, with reply 5 explained away as a one-line exclusion. Her raw output is in the same file and says otherwise. Joined against the leads' verdicts, the check disagrees on five of the eight: it passes replies 1, 2, 3 and 4, every one of which the leads marked as breaking the rule and none of which contains a listed word - a rival described rather than named, 'knock 20% off', 'waive your first two months', 'the other big player in ticketing' - and it fails reply 5, which is compliant precisely because it contains 'discount' while refusing to give one. The baseline is predicted to take the summary at its word, or to accept 'extend the word list' as the remedy, when a behavioural rule about what the assistant may say cannot be decided by substring matching and is wrong in both directions. The second predicted failure is the metric set. With the reviewers' accuracy column removed, the agent has to read the categories and the traces: 34 of the 61 are a generic policy answer where the account tool was never called, or an answer built from another account's ticket, and in both the text is a fair reading of whatever came back - so no amount of answer-against-context scoring reaches them, and the expected_tool field on every golden row is there for the metrics that would. The baseline is predicted to add more answer-shaped metrics. Third, ask 6 is a trap in the other direction: the trend sheet shows faithfulness never failing, the review shows twelve escalations where the answer contradicted its material, and the sheet also says no per-row scores were kept, the sample is redrawn nightly and no escalated conversation is in the golden set - so nothing here establishes whether the metric is uninformative or merely never shown the failing rows, and granting or refusing it are both unsupported.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT ship a substring blocklist as the house-rule gate",
+      "max_score": 32,
+      "description": "Marisol's check is refused as the gate for ask 5. MUST NOT merge eval/house_rules.py as it stands, MUST NOT accept her note's account of how it performed, and MUST NOT accept 'extend the word list' or 'exclude reply 5' as the remedy; any of those scores zero for this criterion. Full marks require the join her note does not make - the raw output passes replies 1, 2, 3 and 4, all four of which the leads marked as breaking the rule, so it disagrees on five of the eight and not on one - plus a replacement that judges the reply against the rule as written: a yes-or-no aspect-style check whose rule text or prompt and whose verdict values are actually written out in the deliverable. Refusing the branch without putting a working replacement in eval/house_rules.py scores at most half. A replacement that is still a keyword, word-list or regex match over the reply text scores zero."
+    },
+    {
+      "name": "Metrics that score the route, not just the answer",
+      "max_score": 22,
+      "description": "eval/metrics.py gains at least one metric that scores which tool the assistant called and at least one that scores whether the user's goal was met, named concretely from the library, with the one-line reason tying each to the review: the 21 generic-policy escalations where the account tool was never called and the 13 built from another account's record, and the expected_tool field carried on every golden row. Naming the category - 'something for tool selection' - without a concrete metric scores at most half. A revised set made only of answer-against-context metrics scores zero, since those are the four already in place and the review shows what they miss."
+    },
+    {
+      "name": "Ask 6 refused for want of evidence, not ruled on",
+      "max_score": 14,
+      "description": "The proposal to drop faithfulness is neither granted nor refused on its merits. The document states that the trend sheet cannot settle it - no per-row scores were retained, the 200-row sample is redrawn nightly, none of the escalated conversations is in the golden set, and twelve of the sixty-one escalations are answers that contradicted their own material - so a metric that never fires and a metric that is never shown a failing row look identical here. It says what would settle it, such as adding the twelve escalated conversations to the golden set and scoring them. Granting the drop scores zero. Refusing it on the grounds that faithfulness is important, or that a quiet metric is still valuable, scores at most half: that is a ruling this evidence does not support either."
+    },
+    {
+      "name": "MUST NOT gate the pull request on the whole catalogue",
+      "max_score": 12,
+      "description": "Ask 1 is refused and ask 2 is refused for the PR job, with the arithmetic taken from the cost sheet: 34 metrics over 3,140 rows against 4 over 200 is roughly a 133-fold increase on the measured $18.40, on the order of $2,400 a PR job against a $6,000 monthly budget, with the runtime far outside the 15-minute CI budget. Granting either ask for the PR job scores zero. Refusing with a qualitative cost argument and no numbers scores at most half."
+    },
+    {
+      "name": "PR job and nightly job actually differ in the workflow",
+      "max_score": 8,
+      "description": ".github/workflows/rag-eval.yml is edited so the nightly job is the broader one - more metrics, more rows, up to the full golden set - while the PR job keeps a bounded metric set and sample inside its 15-minute timeout. Both jobs still running the identical --sample 200 command scores zero here. The memo does not offer this split; proposing it is the answer to the legitimate half of ask 2."
+    },
+    {
+      "name": "Speculative metric families refused",
+      "max_score": 6,
+      "description": "Asks 3 and 4 are refused on the grounds that the assistant handles neither images nor warehouse queries today, so both would gate on traffic that does not exist and, in the multimodal case, pull an extra install that nothing needs. Turning either family on scores zero here."
+    },
+    {
+      "name": "Thresholds carried through",
+      "max_score": 5,
+      "description": "Every metric left in the gated set has a threshold in eval/metrics.py, including the ones newly added. A metric added to the list with no floor beside it scores at most half for this item."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "eval/metrics.py and .github/workflows/rag-eval.yml are edited, eval/house_rules.py is edited or explicitly kept, and docs/metric-plan.md returns a granted-or-refused verdict on all six numbered asks in turn."
+    }
+  ]
+}

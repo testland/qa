@@ -1,0 +1,9 @@
+$ pytest tests/
+============================= test session starts ==============================
+collected 4 items
+
+tests/test_csvio.py ....                                                 [100%]
+
+============================== 4 passed in 1.83s ===============================
+
+commit 7c41ea9 - the commit that shipped INC-4471

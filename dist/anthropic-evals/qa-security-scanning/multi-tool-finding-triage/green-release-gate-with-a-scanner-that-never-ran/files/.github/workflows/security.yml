@@ -1,0 +1,64 @@
+name: security-gate
+
+on:
+  pull_request:
+  push:
+    branches: [main, "release/**"]
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: semgrep scan --config .semgrep.yml --sarif --output semgrep.sarif
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scan-semgrep
+          path: semgrep.sarif
+
+  sca:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: mkdir -p trivy && trivy fs --format sarif --output trivy/trivy-results.sarif .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scan-trivy
+          path: trivy/
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: gitleaks detect --report-format json --report-path gitleaks-report.json --exit-code 0
+      - run: trufflehog filesystem . --json --no-fail > trufflehog-results.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scan-secrets
+          path: |
+            gitleaks-report.json
+            trufflehog-results.json
+
+  iac:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: checkov
+        continue-on-error: true
+        run: checkov -d infra --output sarif --output-file-path checkov.sarif
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scan-checkov
+          path: checkov.sarif
+          if-no-files-found: ignore
+
+  gate:
+    needs: [sast, sca, secrets, iac]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: scan-*
+          merge-multiple: true
+          path: ci-artifacts
+      - run: node ci/gate.mjs --fail-on critical ci-artifacts

@@ -1,0 +1,24 @@
+# Monitors registered against service api-edge. Exported 2026-09-12.
+monitors:
+  - name: edge-5xx
+    query: rate(edge_responses{code=~"5.."}) > 0.20 for 60s
+    routes: pagerduty:api-edge
+    created: 2025-11-04
+  - name: edge-latency-p99
+    query: edge_latency_p99 > 800ms for 5m
+    routes: pagerduty:api-edge
+    created: 2025-11-04
+  - name: edge-origin-unreachable
+    query: origin_connect_failures > 10 for 2m
+    routes: slack:#eng-platform
+    created: 2026-03-19
+
+# Export note: this is every monitor registered against api-edge, including
+# monitors that have since been disabled or deleted. The registry keeps deleted
+# definitions and none appears here, so nothing has been removed since the
+# service was onboarded on 2025-11-04.
+
+# Change record CHG-3320, closed 2025-12-08: "edge-5xx sustain window 10s -> 60s".
+# Reason recorded on the change: the 10s window produced 14 pages in the three
+# weeks before it, 13 of which cleared on their own before the responder had
+# acknowledged. Requested by k.novak. Approved by r.osei.

@@ -1,0 +1,41 @@
+{
+  "context": "The advice usually worth giving here has already been taken, and there is no live symptom to reverse-engineer, so the agent has to review code rather than chase a complaint. Predicted baseline failure: the agent checks the change against the principle the original bug was about - is the offset table gone, does the module ask the zone data - finds it satisfied, notes that the US and UK tickets stopped on the day of the deploy, and approves. The table is gone. The bug is not. The resolved offset is memoised per zone in a module-level Map, and the author's own note says the escalation worker is restarted only on deploy and otherwise runs for months, so the first call after the 2026-11-02 restart pins each zone to its winter offset and the worker keeps serving that reading through the following year: from 2026-03-08 New York cutoffs come back at 22:00Z instead of 21:00Z and from 2026-03-29 London cutoffs at 17:00Z instead of 16:00Z. That is the original forty-one-ticket bug reproduced exactly, on a four-month delay, by a change whose stated purpose was to remove it - a cache keyed only on the zone is the deleted table with a profiler's justification attached, and the 8% CPU figure is what makes the wrong path attractive. The tickets stopping on 2026-11-02 evidences nothing either: the US clocks had gone back the day before, so the deleted table was correct too from that date. A second, independent defect sits underneath and is hinted at nowhere. The offset is sampled at 17:00 UTC of the nominal date rather than at the instant the cutoff actually falls, and for a zone far enough ahead of UTC that instant is already the next local day - so on their own transition dates Pacific/Chatham and Australia/Adelaide take the offset from the wrong side of the change. Deleting the cache does not fix that: with a cold cache the module still returns 2026-09-26T03:15:00.000Z for Pacific/Chatham against a correct 2026-09-26T04:15:00.000Z. Neither defect touches Asia/Kolkata or Asia/Kathmandu, which never change their clocks, so an agent that reasons from the fractional offsets in the deleted table looks in the wrong place entirely. The frozen 2027 CSV is the third request and the only one whose correct answer is to decline.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "src/cutoff.js is modified, new tests are added to test/cutoff.test.js, and docs/pr-771-review.md exists and states merge or do not merge. A review that does not reach a verdict scores at most half; no code change scores zero."
+    },
+    {
+      "name": "MUST NOT keep a per-zone offset memo",
+      "max_score": 32,
+      "description": "MUST NOT leave a cache keyed only on the zone identifier anywhere between the zone data and the cutoff, and MUST NOT approve the change on the grounds that the offset is no longer written down in the repo. Leaving the memo in place, or a review that never mentions it, scores zero for this criterion regardless of the rest. Full marks require the review naming it as a regression the PR itself introduced - an offset resolved once and reused is the deleted table in another form - tied to the author's own note that the worker is restarted only on deploy, with the direction and timing stated: nothing is wrong today because the process was started on 2026-11-02, and from 2026-03-08 New York cutoffs come back an hour late at 22:00Z against a correct 21:00Z, which is the complaint the PR was written to fix. At least one new test must pin a cutoff that the memo gets wrong. Removing the cache in code without identifying it in the review, or treating it as a style point rather than the defect, scores at most half."
+    },
+    {
+      "name": "The offset is resolved at the cutoff instant, not at a fixed UTC hour",
+      "max_score": 20,
+      "description": "The module must resolve the offset for the instant the cutoff actually falls on rather than sampling it at 17:00 UTC of the nominal date, which for a zone far ahead of UTC is already the following local day and can sit on the other side of a change. Missing this defect entirely scores zero. Full marks require a test pinning Pacific/Chatham on 2026-09-26 to 2026-09-26T04:15:00.000Z and the review stating that this is a second, separate defect that survives the removal of the cache - with a cold cache the module still returns 03:15:00.000Z for that date. Fixing it in code without a test on a transition date for an affected zone, or without separating it from the cache defect, scores at most half."
+    },
+    {
+      "name": "Every affected account found, not only the ones that complained",
+      "max_score": 16,
+      "description": "docs/pr-771-review.md states which of the six billed zones each defect reaches rather than working from the ticket list: the memo reaches every zone that changes its clocks, including Pacific/Chatham and Australia/Adelaide which have raised nothing, and the fixed-UTC-hour sampling reaches the zones far enough ahead of UTC to have rolled into the next local day, which is those same two. Asia/Kolkata and Asia/Kathmandu must be named as unaffected by both, because their clocks never change - marking them broken on account of their fractional offsets scores at most half. Repeating the author's position that the three silent zones need not be looked at scores zero."
+    },
+    {
+      "name": "MUST NOT hand over a frozen table of next year's cutoffs",
+      "max_score": 14,
+      "description": "MUST NOT produce, or agree to produce, the precomputed CSV of every account's cutoff instant for each day of 2027. Agreeing to it scores zero here; not answering the request at all scores zero. Full marks require the reason and an alternative: transition rules are revised per jurisdiction between now and then, so a file computed today would be authoritative-looking and wrong, and the report should resolve each cutoff against the zone data at the moment it is rendered, archiving the inputs rather than the outputs."
+    },
+    {
+      "name": "MUST NOT reintroduce a hand-maintained offset table or transition rule",
+      "max_score": 10,
+      "description": "MUST NOT repair anything by restoring a literal offset table, adding a per-zone minutes column, or writing month-and-ordinal-Sunday transition arithmetic into src/cutoff.js. Doing any of those scores zero here, however accurate the values are, because it reverses the one thing the PR got right. Caching that is invalidated by a hand-written list of transition dates scores zero on the same ground."
+    },
+    {
+      "name": "Existing behaviour preserved",
+      "max_score": 6,
+      "description": "The four tests already in test/cutoff.test.js still pass unmodified. Editing or deleting an existing test to make the new code pass scores zero."
+    }
+  ]
+}

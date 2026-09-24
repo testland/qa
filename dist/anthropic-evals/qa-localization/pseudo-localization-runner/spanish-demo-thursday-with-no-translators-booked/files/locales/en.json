@@ -1,0 +1,7 @@
+{
+  "checkout.payNow": "Pay now",
+  "checkout.addPaymentMethod": "Add payment method",
+  "checkout.orderSummary": "Order summary",
+  "account.signOut": "Sign out",
+  "account.billingHistory": "Billing history"
+}

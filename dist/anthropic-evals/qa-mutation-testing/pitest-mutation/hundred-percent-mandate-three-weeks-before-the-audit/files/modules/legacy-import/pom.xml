@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.acme</groupId>
+    <artifactId>acme-core</artifactId>
+    <version>7.3.0-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+  <artifactId>legacy-import</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <configuration>
+          <targetClasses>
+            <param>com.acme.legacyimport.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>com.acme.legacyimport.*Test</param>
+          </targetTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

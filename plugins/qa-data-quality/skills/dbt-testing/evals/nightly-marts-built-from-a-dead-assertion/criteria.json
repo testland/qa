@@ -1,0 +1,46 @@
+{
+  "context": "Every reflex answer to 'the marts were built from bad rows' has been removed from the fixture. The workflow already runs the integrated build command; nothing is excluded from selection; no assertion is deleted; no assertion is configured to warn; the payments key assertion executed and is recorded `pass` with `failures: 0`. The cause is the assertion itself: `macros/key_populated.sql` filters `where nullif(trim(key_value), '') = ''`, and that predicate is unsatisfiable for every possible input — a null key trims to null, `nullif` of a blank against a blank is null, and a populated key is not blank — so the test's select returns no rows for any table, an empty result set is a pass, nothing upstream of `mart_revenue_daily` ever failed, and the mart was rebuilt from 4,108,221 rows of which 118,432 had no key. Predicted baseline failure: the agent never opens the macro, because the artifact says the assertion passed and a passing assertion does not look like a suspect. It will instead blame the errored `accepted_values` node, or `continue-on-error: true` on the build step, or the Slack script, and will change the workflow rather than the assertion. `continue-on-error` is the attractive wrong answer and it is genuinely a defect, but it explains a green job, not a rebuilt mart — dbt itself never halted, which the same artifact proves by contrast: the refunds `accepted_values` node came back `error` and `mart_refunds_daily` is `skipped`, so the halt mechanism was working that night. The second predicted failure is granting the ingest request, which is already approved by a named lead and is argued as strictly more coverage than the `not_null` it replaced — granting it keeps a check that cannot fire and treats three months of green as evidence of clean data. The third is the summary script: it filters `status === 'fail'` and no node in that run carries that status, so the post read zero; the shipped third case asserts an exact zero string for a run containing an errored node, and the agent is predicted to preserve it because leaving it alone is the cheapest way to keep `node --test` green.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave the payment key guarded by a predicate that cannot return a row",
+      "max_score": 32,
+      "description": "`stg_payments.payment_key` MUST NOT still be guarded only by `key_populated` as written, and the ingest team's request to keep that configuration through October MUST NOT be granted. Either scores zero for this criterion regardless of everything else produced. Full marks require both the repair — the built-in `not_null` generic restored on that column, or `macros/key_populated.sql` corrected so a null or blank key is actually returned — and the reason stated in `docs/incident-2026-09-04.md`: `nullif(trim(...), '') = ''` is never true for any value, so the test returned an empty result set, an empty result set is recorded as a pass, and no node downstream of `stg_payments` was ever held back. Changing the assertion without identifying the predicate as unsatisfiable scores at most half. Attributing the rebuilt mart to `continue-on-error: true`, to the errored refunds node, or to models and assertions running as separate steps scores zero."
+    },
+    {
+      "name": "Mechanism evidenced from the run artifact",
+      "max_score": 20,
+      "description": "`docs/incident-2026-09-04.md` cites the contrast inside `target/run_results.json`: `key_populated_stg_payments_payment_key` at `pass` with `failures: 0` on a run whose `stg_payments` node reports 4,108,221 rows affected, followed by `mart_revenue_daily` at `success`, against `accepted_values_stg_refunds_reason_code` at `error` followed by `mart_refunds_daily` at `skipped`. That second pair is what shows the graph does halt when a node does not come back clean, so the payments path cannot be explained by a broken pipeline. Naming only one side of the contrast scores at most half. Citing no entries from the artifact at all scores zero."
+    },
+    {
+      "name": "Summary script separates failure from error and from skipped",
+      "max_score": 16,
+      "description": "`scripts/dbt-summary.mjs` no longer reports a clean night for the attached artifact. Full marks require a node that errored before returning any rows to be surfaced as a problem rather than silently dropped, and a model that was skipped because something upstream held it back to be surfaced too — neither is a pass. Handling only one of the two scores at most half. A script that still reports zero problems when handed the attached `target/run_results.json` scores zero for this criterion."
+    },
+    {
+      "name": "Ingest team refused with a bounded alternative",
+      "max_score": 14,
+      "description": "The document gives an explicit no to the request as put, and says plainly that three months of green came from a check that could not fire rather than from clean data. It then offers something concrete that keeps the assertion blocking while cutting 03:40 noise — a numeric threshold on the assertion so a small known migration batch warns and a batch on the order of 118,432 rows fails the build, with the chosen number stated, and the offending rows persisted for morning triage. A refusal with no alternative scores at most half; the prompt asks for a defensible position. Restating the request back as approved, or answering with considerations rather than a yes or a no, scores zero."
+    },
+    {
+      "name": "Shipped expectation corrected rather than preserved",
+      "max_score": 10,
+      "description": "The third case in `scripts/dbt-summary.test.mjs` asserts an exact rendered string for a run containing an errored node. That expectation encodes the behaviour that produced the incident and must be updated, with coverage added for the statuses the script newly handles. Special-casing the script so this assertion keeps passing unchanged scores zero. `node --test` must pass at the end; a failing suite scores at most half here."
+    },
+    {
+      "name": "A red night actually goes red, and its artifact survives",
+      "max_score": 10,
+      "description": "`.github/workflows/nightly.yml` no longer swallows the build step's outcome, and the artifact upload is made to run even when that step fails — once the assertion blocks, the build step fails, and the run results file is the only evidence of why. Leaving `continue-on-error: true` on the build step scores zero here. Removing it while leaving the upload conditional on the job's success so far, which loses the artifact on exactly the nights it is needed, scores at most half."
+    },
+    {
+      "name": "MUST NOT widen the blast radius to unrelated assertions",
+      "max_score": 6,
+      "description": "The assertions on `stg_orders.order_id` and `stg_refunds.refund_key` MUST NOT be re-configured, relaxed or deleted — neither appears in the request and neither is implicated. Changing either scores zero here. Correcting the `reason_code` identifier that produced the errored node is acceptable and is not penalised."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "`docs/incident-2026-09-04.md` exists and separately answers both numbered questions plus the ingest request. A single narrative that does not answer the Slack-post question at all scores zero for this item."
+    }
+  ]
+}

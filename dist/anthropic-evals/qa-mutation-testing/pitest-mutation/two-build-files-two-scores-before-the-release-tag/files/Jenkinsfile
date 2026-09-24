@@ -1,0 +1,10 @@
+pipeline {
+  agent any
+  stages {
+    stage('build')            { steps { sh 'mvn -B -DskipTests package' } }
+    stage('test')             { steps { sh 'mvn -B test' } }
+    stage('mutation (maven)') { steps { sh 'mvn -B pitest:mutationCoverage' } }
+    stage('mutation (gradle)'){ steps { sh './gradlew pitest' } }
+    stage('publish')          { steps { sh 'mvn -B -Prelease deploy' } }
+  }
+}

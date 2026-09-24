@@ -1,0 +1,26 @@
+name: image-scan
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: build
+        run: docker build -t checkout-api:${{ github.sha }} .
+
+      - name: scan
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:latest image \
+              --scanners vuln,secret,misconfig,license \
+              --format table \
+              --exit-code 1 \
+              checkout-api:${{ github.sha }}

@@ -1,0 +1,29 @@
+name: sast-nightly
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  full-scan:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep:1.99.0
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Full-tree scan
+        continue-on-error: true
+        run: |
+          semgrep scan \
+            --config p/owasp-top-ten \
+            --config p/javascript \
+            --json --output nightly.json \
+            --metrics=off
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-json
+          path: nightly.json

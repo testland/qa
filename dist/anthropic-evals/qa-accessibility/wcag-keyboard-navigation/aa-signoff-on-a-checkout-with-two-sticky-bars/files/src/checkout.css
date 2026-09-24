@@ -1,0 +1,53 @@
+:root {
+  --header-h: 72px;
+  --actionbar-h: 64px;
+  --consent-h: 92px;
+}
+
+.checkout-header {
+  position: sticky;
+  top: 0;
+  height: var(--header-h);
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+  z-index: 40;
+}
+
+.checkout-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--actionbar-h);
+  background: #ffffff;
+  border-top: 1px solid #e6e6e6;
+  z-index: 40;
+}
+
+.cookie-consent {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--actionbar-h);
+  height: var(--consent-h);
+  background: #ffffff;
+  border-top: 1px solid #e6e6e6;
+  z-index: 50;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c2c2c2;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: 2px solid #767676;
+  outline-offset: 2px;
+}

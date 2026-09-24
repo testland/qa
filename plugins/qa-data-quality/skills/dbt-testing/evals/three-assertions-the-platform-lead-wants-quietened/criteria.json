@@ -1,0 +1,41 @@
+{
+  "context": "Three requests, one blanket remedy asked for, and the reflexes that usually sort them are inverted here. The referential request is the one Ravi argues best — the smallest count of the three at 209, a clean mechanical story about a CRM sync at 03:15 running after an 03:00 build, and an invitation to check any morning — and it is the one that must be refused: `audit/orphan_accounts_sample.csv` shows the same four account ids on three consecutive nights with `first_seen_in_fct_orders` in November 2025, which is not a sync that lands by 06:00, and `mart_revenue_by_account` inner-joins to `dim_accounts`, so relaxing it does not surface those orders, it silently drops ten months of their revenue out of the mart. The uniqueness request is the one that looks unrelaxable — duplicates on an id column — and is in fact the safest to grant: a stable 900-1,300 band against 4.1M rows, a beacon replay visible in the sample, and a downstream mart that counts distinct session ids so the duplicates cannot move the number. Predicted baseline failure: the agent sorts on the shape of the assertion rather than the evidence, grants the referential request because the story is plausible and the number is small, and refuses or over-thinks the uniqueness one because relaxing a uniqueness check feels wrong. The second predicted failure is the remedy. Ravi asks for `severity: warn` on all three and that is what an agent will write for whichever ones it grants — a blanket warn on `delivered_at` throws away the assertion for the 1.84M delivered rows where a null genuinely is a defect, when the evidence in `audit/delivered_at_nulls_by_status.csv` shows zero nulls among them and 14,118 among the rest, and a blanket warn on `session_id` gives up the bound entirely when the fourteen-night band supports a numeric failure threshold plus persisting the offending rows so the replay rate stays visible.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT relax the referential assertion",
+      "max_score": 32,
+      "description": "The `relationships` assertion on `fct_orders.account_id` MUST NOT be set to warn, thresholded, scoped, deleted or otherwise moved off the blocking path. Doing any of those scores zero for this criterion regardless of how well the other two are handled. Full marks require the refusal plus both halves of the reason: the sync-timing account is contradicted by the same account ids recurring across 2026-09-10, 2026-09-11 and 2026-09-12 with a first-seen date in November 2025, and `mart_revenue_by_account` joins to `dim_accounts` on that key, so those orders leave the mart silently rather than appearing as a visible problem. Refusing on 'referential integrity matters' alone, with no reference to the repeated ids or to the join, scores at most half."
+    },
+    {
+      "name": "Delivery-date request granted by scoping, not by blanket warn",
+      "max_score": 26,
+      "description": "The `not_null` on `fct_shipments.delivered_at` is granted — it must stop skipping `mart_delivery_sla` — by narrowing what it asserts so that it still fails when a shipment marked delivered has no delivery date, using a row predicate on the assertion or a reusable conditional variant of it. Setting a blanket `severity: warn` on it scores at most half: it unblocks the mart but gives up the 1,841,207 delivered rows the evidence shows are currently clean. Refusing the request, or deleting the assertion, scores zero for this criterion. The verdict must cite the split in `audit/delivered_at_nulls_by_status.csv` — 14,118 nulls, none of them on a delivered row."
+    },
+    {
+      "name": "Session request granted with a bound and the rows kept",
+      "max_score": 22,
+      "description": "The `unique` on `stg_web_sessions.session_id` is granted, and granted with two things rather than one: a numeric failure bound chosen from the fourteen-night range of 903 to 1,301 against 4.1M rows, so the assertion still fails if the replay rate breaks out of its band, and the failing rows persisted to an audit table so the cause Ravi has never had a day to chase stays available. A blanket `severity: warn` with no bound scores at most half. Answering 'run this query when you get a chance' instead of persisting the rows scores nothing for that half. Refusing the request outright scores zero for this criterion — the evidence that it is safe is in the sample and in `mart_web_traffic` counting distinct session ids."
+    },
+    {
+      "name": "Tonight's consequence stated per verdict",
+      "max_score": 12,
+      "description": "Each of the three sections says what changes on tonight's run: which of `mart_delivery_sla`, `mart_web_traffic` and `mart_revenue_by_account` stops being skipped, and for anything newly built, where the rows that provoked the assertion end up. A document that gives three verdicts with no downstream consequence for any of them scores zero here; giving it for one or two scores proportionally."
+    },
+    {
+      "name": "Something concrete for the refusal",
+      "max_score": 10,
+      "description": "Ravi gets a specific alternative for the assertion that was not moved — the 209 orphan orders are a bounded, named, ten-month-old set of four accounts, so a concrete path exists that neither leaves him paged nor relaxes the gate. 'No, keep getting paged' scores zero. A vague 'we should investigate' with no owner, no artefact and nothing he can put in the 18:00 window scores at most half."
+    },
+    {
+      "name": "MUST NOT touch the assertions outside the request",
+      "max_score": 6,
+      "description": "The assertions on `shipment_id`, `status`, `shipped_at`, `landing_path`, `order_id`, the `not_null` on `fct_orders.account_id`, and everything on `dim_accounts` MUST NOT be edited, reconfigured or removed. None of them appears in Ravi's message. Changing any of them scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "`models/schema.yml` is edited for exactly the verdicts reached, and `docs/severity-decision-2026-09-12.md` carries one section per assertion plus the closing note to Ravi. A document that merges the three into one recommendation scores zero for this item."
+    }
+  ]
+}

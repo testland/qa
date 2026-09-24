@@ -1,0 +1,17 @@
+{
+  "name": "@acme/ledger-api",
+  "version": "3.2.14",
+  "private": true,
+  "dependencies": {
+    "express": "4.19.2",
+    "pg": "8.11.5",
+    "pino": "9.2.0",
+    "ws": "7.5.9"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.2",
+    "c8": "10.1.2",
+    "eslint": "9.4.0",
+    "typescript": "5.4.5"
+  }
+}

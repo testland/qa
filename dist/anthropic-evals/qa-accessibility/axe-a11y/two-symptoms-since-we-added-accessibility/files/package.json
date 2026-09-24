@@ -1,0 +1,12 @@
+{
+  "name": "northwind-web",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "start": "node server.js",
+    "lhci": "lhci autorun"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.14.0"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "context": "The offered patch is correct about the half of the problem that was reported and silently wrong about the half that was not, and nothing in the request says so. Predicted baseline failure: the agent adopts it, writes tests for the two release instants, and stops. Anchoring the end of the shift to the site's handover reading is right, it clears both reported incidents, and the ops lead has already verified that much - so the agent is predicted to confirm the patch and accept his stated reason for keeping the diff narrow. What it is predicted to miss is that once both ends are anchored to the local clock, the span between them stops being eight hours on exactly the nights in question - nine at nyc-1 on the night of 2026-10-31, seven at ldn-2 on 2026-03-28 - while `paidHours` still emits the constant 8. Nothing narrates this. The only evidence that the column is money is `src/payroll.js`, which multiplies it by an hourly rate to produce `gross`, so the patch as written converts a coverage incident into a wage one that nobody will report, because no crew complains about a roster that looks normal. The second thing it is predicted to miss is that only two of the four sites ever raised a ticket. lhi-4 is in `SITES`, runs the same shift, and is wrong twice a year in both directions - but by thirty minutes, not an hour, so a fix or a review that generalises 'transition nights are nine hours or seven' is wrong there. The ops lead's alternative is the mirror trap: it is keyed on dates, and the four sites do not share dates - the two northern sites are three weeks apart, the Lord Howe site moves in the opposite half of the year by half an hour, and the Bangalore site never moves at all, which is why it is the only one that has never produced an incident.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "src/shiftPlan.js is modified, tests are added, and docs/roster-fix.md exists and gives a verdict on both of the ops lead's options. A document that verdicts only the patch and not the alternative scores at most half; no code change scores zero."
+    },
+    {
+      "name": "MUST NOT leave the paid figure at a constant",
+      "max_score": 32,
+      "description": "MUST NOT leave `paidHours` emitting a fixed 8, and MUST NOT endorse the ops lead's decision to keep the diff to the release-instant line. Doing either scores zero for this criterion regardless of the rest. The paid figure must be derived from the two instants the shift actually spans. Full marks require docs/roster-fix.md naming what the unchanged column would have paid against what the crew were on the floor for - nine hours at nyc-1 on the night of 2026-10-31 and seven at ldn-2 on 2026-03-28, against 8 in both rows - saying that `src/payroll.js` turns that column into `gross`, and at least one new test asserting the corrected figure on a transition night. Deriving the column in code without connecting it to the exported pay, or without naming the incorrect figures, scores at most half."
+    },
+    {
+      "name": "The site that never raised a ticket is checked and quantified",
+      "max_score": 22,
+      "description": "lhi-4 is identified as affected on the nights of 2026-10-03 and 2026-04-04 even though no incident was reported for it, with the magnitude given as thirty minutes each way rather than an hour. Full marks require the corrected end instants 2026-10-03T19:30:00.000Z and 2026-04-04T20:00:00.000Z and the paid figures 7.5 and 8.5 for those two nights, plus blr-3 named as the site that needs no change because its clocks never move. A review that addresses only the two reported sites, or that asserts the fix is complete without examining the other two, scores zero. Flagging lhi-4 as 'also affected' with no dates and no magnitude scores at most half; giving it an hour rather than thirty minutes scores at most half."
+    },
+    {
+      "name": "MUST NOT nudge the transition nights by an hour on known dates",
+      "max_score": 16,
+      "description": "MUST NOT adopt the alternative - a correction keyed on the calendar dates of the clock changes - and MUST NOT ship any date literal or month-and-ordinal-Sunday rule in src/shiftPlan.js. Doing either scores zero here. Full marks require both reasons: the four sites do not change on the same dates and one of them never changes at all, so 'four dates a year' does not exist; and the change at the Lord Howe site is thirty minutes, so an hour is the wrong amount there even on the right night. Rejecting it only as 'hardcoding is bad practice', without the thirty-minute point, scores at most half."
+    },
+    {
+      "name": "The release instant is anchored to the site's local handover",
+      "max_score": 14,
+      "description": "The end of the shift is computed from the site's handover wall-clock reading in the site's zone, not by adding a fixed number of hours to the start. Leaving the fixed-hours addition in place scores zero. Crediting the patch with fixing the two reported incidents is required, not penalised: a review that rejects the handover anchoring outright, as though that half were also wrong, scores at most half."
+    },
+    {
+      "name": "Tests pin the reported nights to exact instants",
+      "max_score": 12,
+      "description": "New tests assert the generated start and end instants for the two reported nights: nyc-1 on 2026-10-31 running 2026-11-01T02:30:00.000Z to 2026-11-01T11:30:00.000Z, and ldn-2 on 2026-03-28 running 2026-03-28T22:30:00.000Z to 2026-03-29T05:30:00.000Z. One of the two scores at most half. Tests that assert only the local reading, or no new test, score zero."
+    },
+    {
+      "name": "Existing behaviour preserved",
+      "max_score": 6,
+      "description": "Every test already in test/shiftPlan.test.js and test/payroll.test.js still passes unmodified, including the Bangalore night at eight paid hours and the June payroll line at 78. Editing or deleting an existing test, or changing what the generator produces on an ordinary June night at any site, scores zero."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+Edge platform status archive - region eu-west
+Entry for 2026-07-23. Published 2026-07-23 11:02 UTC. Never edited.
+
+09:40 UTC - Origin certificate validation failures observed for one customer
+origin (api.[redacted]). The origin certificate held for this origin reached
+its notAfter time of 2026-07-23T09:40:00Z. Edge nodes returned HTTP 526
+(invalid SSL certificate) for every request routed to that origin.
+
+10:31 UTC - A replacement certificate was uploaded for this origin (serial
+...4f9c). Edge validation succeeded and 526 responses ceased.
+
+This entry is generated from edge telemetry and the origin certificate store.
+It is not customer-editable and carries no manual annotations.

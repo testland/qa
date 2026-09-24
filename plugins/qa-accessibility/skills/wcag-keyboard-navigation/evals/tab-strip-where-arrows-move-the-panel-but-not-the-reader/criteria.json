@@ -1,0 +1,36 @@
+{
+  "context": "Predicted baseline failure: the agent leaves the Tab suppression in place, because everything around it says it belongs there. The strip already has correct roving tabindex, correct Home and End, correct aria-selected and aria-controls, and the supplied suite is green on all of it; the one line that cancels Tab carries a comment saying the strip is a single tab stop, has a passing test blessing it, and is defended in the thread by the front-end lead with the most widely recited fact about this widget — that Tab does not move between tabs. It does not follow. One tab stop is produced by the roving tabindex that is already there; cancelling the Tab key on top of it means focus cannot leave the strip by the standard method at all, which is what SC 2.1.2 forbids at Level A and exactly what 4471-b describes. The second predicted failure is accepting the consultant's aria-live reply, which is superficially the cheapest fix for 4471-a: the reason the reader never moves is that state.focusTargetId is set once at construction and select() never touches it, so the glue re-focuses tab-0 after every arrow press; announcing the panel out of a live region papers over a reader that is parked on the wrong control and adds an interrupting announcement of a whole chart on every keypress. The lead's fallback — take the strip out of the tab order so the support lead lands on the chart — is the third trap, and an agent that treats 4471-b as a complaint about press count rather than about being stuck may take it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/tabs.js is edited, test/tabs.test.js gains cases, and docs/tabs-keyboard-review.md exists and answers both thread replies. A write-up that answers only one of the two replies scores at most half."
+    },
+    {
+      "name": "MUST NOT cancel Tab inside the strip",
+      "max_score": 30,
+      "description": "MUST NOT leave handleKeydown cancelling the Tab key, and MUST NOT reintroduce the same suppression under another key or guard. Focus has to be able to leave the strip by the standard method, and the supplied case that asserts defaultPrevented on Tab is the one supplied case the write-up is expected to change. Leaving the suppression in place scores zero for this criterion no matter how well 4471-a is handled. Full marks also require the front-end lead's defence to be answered on its merits — the single tab stop is already produced by the roving tabindex the module emits, so cancelling Tab buys nothing and costs the only standard way out. Removing the line but endorsing or ignoring the lead's reasoning scores at most half."
+    },
+    {
+      "name": "The live-region reply refused",
+      "max_score": 20,
+      "description": "The consultant's aria-live=\"assertive\" reply is rejected rather than adopted. Adding it to src/tabs.js or to the panel attributes scores zero for this criterion. Full marks require the reason: the reader is silent because focus never moved off the first tab, an assertive region interrupts whatever is being read to announce a whole chart on every arrow press, and once focus follows the selection the tab announces itself with no live region at all. Rejecting it with no reason given scores at most half."
+    },
+    {
+      "name": "Arrow presses move the reader, not only the panel",
+      "max_score": 18,
+      "description": "Selecting a tab with an arrow, Home or End updates the element the host focuses — state.focusTargetId, which the supplied glue reads after every keydown, currently set once at construction and never again. After ArrowRight from Overview the module must name tab-1, not tab-0. Leaving focusTargetId untouched scores zero. Reporting the new index only through activeIndex, leaving the glue to keep focusing tab-0, scores zero as well: the write-up may describe the bug perfectly and the reader still will not move."
+    },
+    {
+      "name": "MUST NOT remove the strip's only tab stop",
+      "max_score": 12,
+      "description": "MUST NOT adopt the lead's fallback of taking the strip out of the tab order. Every tab emitting tabindex -1 leaves the strip unreachable by keyboard altogether, which trades a Level A failure for a worse one, and 4471-b is about being unable to leave the strip rather than about the number of presses to reach the chart. Emitting -1 for the selected tab, or otherwise leaving no tab in the sequence, scores zero here."
+    },
+    {
+      "name": "New tests are red against the supplied module",
+      "max_score": 12,
+      "description": "At least one added case fails against src/tabs.js exactly as supplied — an assertion that focusTargetId follows the selection does, and so does an assertion that Tab is left alone — and passes afterwards. Cases that pass against both versions score zero for this criterion. Every supplied case other than the Tab-suppression one must still be green and unaltered; deleting or weakening any of those to get the suite passing scores zero."
+    }
+  ]
+}

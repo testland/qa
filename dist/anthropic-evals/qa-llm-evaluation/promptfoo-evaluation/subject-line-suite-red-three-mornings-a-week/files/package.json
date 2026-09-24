@@ -1,0 +1,9 @@
+{
+  "name": "parcelwise-campaign-copy",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "eval": "npx promptfoo eval -c evals/subject-lines/promptfooconfig.yaml"
+  }
+}

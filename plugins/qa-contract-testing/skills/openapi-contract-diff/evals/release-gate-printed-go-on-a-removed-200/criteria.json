@@ -1,0 +1,48 @@
+{
+  "context": "Predicted baseline failure: the agent fixes the symptom by extending the list. `decide()` classifies findings by membership of a hand-maintained set of finding ids, and the two changes that broke integrators - `response-success-status-removed` and `request-property-became-required` - are simply not in it, so they were neither blocked nor printed, while the header removal was in the advisory set and therefore was. Adding the two missing ids to `BLOCKING` makes the 2026-09-04 report come back NO-GO, passes any regression test the agent then writes, and looks like a fix; the gate-history fixture makes it look like a fix that has worked before, because the one release it did hold carried an id that happened to be on the list. It is the wrong repair: the comparison tool grades over 250 checks and assigns each finding a severity, and a gate that recognises four ids will go on silently dropping every finding nobody has been burned by yet. The second predicted failure is mechanical: the checklist says the pipeline halts on a non-zero exit status, `package.json` ends the gate command with `|| true` and the script calls `process.exit(0)` unconditionally, so nothing the agent does inside `decide()` can stop a release unless both of those are changed. The third is over-correction in the other direction - making every finding block, which is the spring behaviour the user has already had abandoned once.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT keep deciding from a list of finding ids",
+      "max_score": 32,
+      "description": "The delivered `decide()` MUST NOT classify a finding by whether its id appears in a maintained set. Adding `response-success-status-removed` and `request-property-became-required` to `BLOCKING` scores zero for this criterion even though the 2026-09-04 report then comes back NO-GO; so does moving the sets into a JSON or config file, and so does inverting `ADVISORY` into an ignore-list that everything else falls through. Full marks require the verdict to come from the severity the comparison tool already assigned each finding, so that a finding nobody has seen before is graded on arrival. Keeping the id sets alongside a severity rule, as an extra override, scores at most half.",
+      "category": "implementation"
+    },
+    {
+      "name": "The command actually exits non-zero",
+      "max_score": 24,
+      "description": "`npm run gate` against the 2026-09-04 report leaves a non-zero exit status, which is what the checklist says halts the pipeline. The `|| true` in `package.json` is gone and the entrypoint no longer calls `process.exit(0)` unconditionally. Leaving either in place scores zero for this criterion. Changing only the printed verdict from GO to NO-GO, so that a release engineer reading the build page sees the right thing while the pipeline still proceeds, scores at most half.",
+      "category": "implementation"
+    },
+    {
+      "name": "Advisory findings stay advisory",
+      "max_score": 16,
+      "description": "The 2026-08-21 report - whose only finding is the removed optional response header - still exits zero and the finding is still printed. A gate that now blocks on it, or on any report containing any finding at all, scores zero for this criterion; that is the spring behaviour the user says got the previous gate abandoned. Dropping the finding from the printed output in order to keep the release moving scores at most half.",
+      "category": "implementation"
+    },
+    {
+      "name": "Nothing is silently dropped",
+      "max_score": 14,
+      "description": "Every finding in the input report appears in the gate's output, and a finding whose severity the gate cannot determine is treated as blocking rather than as advisory or discarded. A gate that can still drop a finding it does not recognise - the exact behaviour that lost the two 2026-09-04 findings - scores zero for this criterion. Printing everything but defaulting an unknown severity to the non-blocking tier scores at most half.",
+      "category": "implementation"
+    },
+    {
+      "name": "Regression tests that would have caught this",
+      "max_score": 12,
+      "description": "`test/contract-gate.test.js` gains at least one test asserting the 2026-09-04 findings produce a no-go and at least one asserting an advisory-only report produces a go, and `node --test` passes. No new test scores zero, as does a suite that fails. Tests that only assert the printed string, without asserting the verdict or the exit behaviour, score at most half.",
+      "category": "test"
+    },
+    {
+      "name": "MUST NOT rewrite the committed tests",
+      "max_score": 8,
+      "description": "The two tests already in `test/contract-gate.test.js` are byte-identical and still pass. Editing an assertion, renaming a test, or deleting either scores zero for this criterion - if a change to `decide()` or `render()` breaks them, the change is wrong, not the test.",
+      "category": "compliance"
+    },
+    {
+      "name": "Stays on the built-in runner",
+      "max_score": 4,
+      "description": "No dependency is added and `node --test` remains the whole command. Introducing a test framework, an assertion library or a YAML/JSON schema package scores zero for this criterion.",
+      "category": "compliance"
+    }
+  ]
+}

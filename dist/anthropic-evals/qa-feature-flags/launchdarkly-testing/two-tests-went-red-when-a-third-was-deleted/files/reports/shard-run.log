@@ -1,0 +1,21 @@
+# CI shard experiment, branch ci/per-test-shards, 2026-09-10
+# each shard runs: node --test --test-name-pattern="<name>" "test/**/*.test.js"
+
+shard 01  "digest goes out when the flag is on, except for users who muted it"   PASS
+shard 02  "quiet hours suppress the late-night digest"                           PASS
+shard 03  "a morning digest still goes out with quiet hours on"
+          AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+          false !== true
+              at test/digest.test.js:26:10                                       FAIL
+shard 04  "quiet hours do not apply to the ops mailing list"
+          AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+          false !== true
+              at test/digest.test.js:33:10                                       FAIL
+shard 05  "a user who muted the digest gets nothing"                             PASS
+shard 06  "push channel wins when the flag is on"                                PASS
+shard 07  "email is the channel when the flag is off"                            PASS
+shard 08  "night starts at 22:00"                                                PASS
+shard 09  "night ends at 07:00"                                                  PASS
+
+# full run for comparison: node --test "test/**/*.test.js"
+# tests 9 / pass 9 / fail 0

@@ -1,0 +1,41 @@
+{
+  "context": "The check is green on PR #812 for two independent reasons, and neither is stated anywhere in the prompt or the fixtures. The first is the flag the handover note calls 'dry-run mode, so the check never queues behind the nightly for warehouse slots' and the platform lead calls 'the single best idea anyone has had here this year': `dbt build --empty` builds every node against zero input rows, so no assertion has a row to return and all 209 nodes report PASS, which is why the pull request that introduced all 2,104 negative amounts finished in 88 seconds with `PASS=209 WARN=0 ERROR=0`. Nothing in the log names it — the per-node lines read as ordinary successful creates — so an agent that does not know what the flag does has only the workflow text to go on and will attribute the miss to the changed-node selector, the three-day artifact retention, or the contractor's fallback path, all of which are more visible. The second is the snapshot: `publish graph snapshot` uploads `target/manifest.json` under the name `dbt-baseline` from this same `on: pull_request` workflow, and `fetch graph snapshot` downloads whatever ran most recently under that name, so `state:modified+` compares one pull request against another pull request and never against main. On PR #812 the download 404'd, which is visible on the first log line, so the run took the fallback branch — and the fallback is a whole-project zero-row build, a check that cannot fail by construction. Predicted baseline failure: the agent removes the flag from the fallback branch, congratulates itself, and ships a check whose primary branch still compares the pull request to a pull request; or it leaves the flag in place and endorses the platform lead's proposal to put it on the nightly, which moves the same defect somewhere it matters more. The third predicted failure is the symmetry in the two proposals — neither is acceptable as put, and an agent reaching for one of them to look decisive either restores a 41-minute check that was never the problem or ships the defect into the nightly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT gate on a zero-row build",
+      "max_score": 30,
+      "description": "`--empty` MUST NOT survive on any invocation whose job is to stop bad data — neither branch of the rewritten `.github/workflows/pr-check.yml`, and not on the 03:00 nightly. Leaving it on either branch, or endorsing the proposal to add it to the nightly, scores zero for this criterion regardless of everything else. Full marks require naming it as the reason PR #812 was green — a build against zero input rows leaves every assertion with no rows to return, so all 209 nodes report PASS in 88 seconds — and saying where a zero-row build is still worth running, as a fast graph and compile integrity check that is not the data gate. Removing the flag with no explanation of why the run passed scores at most half; a blanket 'never use that flag' with no legitimate use named also scores at most half."
+    },
+    {
+      "name": "Snapshot source and fallback branch both made honest",
+      "max_score": 26,
+      "description": "Two findings, both required. First, the graph snapshot the state comparison reads is published by this same pull-request workflow under the name `dbt-baseline`, so the comparison is against another pull request rather than against a main build, and the corrected workflow takes its baseline from a main build instead. Second, the no-baseline branch must run a real build rather than anything that cannot fail. Finding neither scores zero for this criterion; finding one of the two scores at most half. Dropping the changed-node scoping altogether and rebuilding everything on every pull request also scores at most half — it is slow, and the prompt asks for the check to stay materially faster than 41 minutes."
+    },
+    {
+      "name": "Both proposals answered by name",
+      "max_score": 10,
+      "description": "`docs/pr-check-audit.md` ends with a named verdict on the VP's revert and on Nadia's nightly extension, each with its reason, and for each one turned down, what its author gets instead — a check that stops this class of regression without the 41 minutes, and the warehouse saving from scoping plus a zero-row graph check that is not the gate. Leaving either proposal unaddressed scores zero for this item. Verdicts with no alternative offered to their authors score at most half."
+    },
+    {
+      "name": "Artifact survives a failing check",
+      "max_score": 10,
+      "description": "The run-results upload is made to run regardless of the check's outcome. As written it is conditional on success, so the file exists for every green run and for none of the red ones, which is the only time anyone wants it. Leaving it conditional on success scores zero here."
+    },
+    {
+      "name": "MUST NOT weaken the assertion that caught it",
+      "max_score": 8,
+      "description": "`tests/assert_refund_amount_positive.sql` MUST NOT be edited, relaxed, reconfigured to warn, moved, or excluded from selection. Any change to it scores zero here. Rewriting it as a generic assertion in `models/staging/schema.yml` counts as moving it."
+    },
+    {
+      "name": "Every defect anchored to a quoted line",
+      "max_score": 5,
+      "description": "Each section of the audit quotes the workflow line or log line that proves its defect — the flag on each branch of the check step and `Done. PASS=209 WARN=0 ERROR=0 SKIP=0 TOTAL=209`, the `publish graph snapshot` step against the `gh: no valid artifacts found matching \"dbt-baseline\"` line, the `if: success()` on the run-results upload — and says what the PR author saw at the time. A section asserting a defect with nothing quoted earns nothing for that section; no section anchored at all scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "A rewritten `.github/workflows/pr-check.yml` and a `docs/pr-check-audit.md` organised one section per defect. A single narrative paragraph that does not separate the defects scores zero for this item."
+    }
+  ]
+}

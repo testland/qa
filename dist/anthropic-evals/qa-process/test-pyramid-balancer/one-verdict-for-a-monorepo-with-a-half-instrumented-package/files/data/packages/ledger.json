@@ -1,0 +1,11 @@
+{
+  "package": "packages/ledger",
+  "exported": "2026-09-15",
+  "runner": "github-hosted",
+  "layers": {
+    "unit": { "cases": 240, "files": 71, "serial_seconds": 143, "retry_and_pass_rate": 0.002 },
+    "integration": { "cases": 22, "files": 9, "serial_seconds": 214, "retry_and_pass_rate": 0.009 },
+    "e2e": { "cases": 61, "files": 18, "serial_seconds": 892, "retry_and_pass_rate": 0.038 }
+  },
+  "notes": "counts and timings from the last 30 green runs on main; complete."
+}

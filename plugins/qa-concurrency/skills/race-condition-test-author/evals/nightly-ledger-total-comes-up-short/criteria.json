@@ -1,0 +1,46 @@
+{
+  "context": "Predicted baseline failure: the agent recognises the unsynchronised read-modify-write instantly, reaches for the reflex fix, and writes `Atomics.add(cents, 0, amountCents)` over the float64 view. That raises a TypeError on every call - the atomic operations are defined only over integer typed arrays (Int8/Uint8/Int16/Uint16/Int32/Uint32/BigInt64/BigUint64), and `Float64Array` is not one of them - so the suite does not merely stay wrong, it throws. The second reflex, narrowing the money slot to an `Int32Array` so the atomic call is legal, is closed off by the fixture: `src/tally.basic.test.js` is not to be edited and asserts a total of 4,294,967,294 cents, which an int32 slot wraps, and the prompt says out loud that a real night runs past two billion. The paths that actually work are to move the money slot to a `BigInt64Array` (whose atomic operations take BigInt operands, with the accessors converting back so the untouched basic test still reads Numbers) or to serialise every read-modify-write of the float64 slot behind an atomics-backed lock on a separate integer slot. An agent that gets the postings counter atomic and leaves the money slot alone has fixed the smaller half of the defect. The other predicted miss is the shipped concurrent test, which cannot fail: its only assertion runs inside the worker, the worker is awaited through `worker.on('exit', resolve)` with the exit code discarded and no `'error'` listener attached, so an assertion failure inside an ingest thread kills that thread and leaves the suite green. That is why two engineers read the file and reported concurrency as covered.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Money slot made safe without an illegal atomic",
+      "max_score": 30,
+      "description": "MUST NOT apply an atomic operation to the `Float64Array` view - `Atomics.add`, `Atomics.store`, `Atomics.load` or `Atomics.compareExchange` over a float64 typed array raises a TypeError, so the suite cannot pass and the delivered fix does not run: that scores zero here regardless of the rest. Narrowing the money slot to a 32-bit integer view also scores zero, because the untouched basic test asserts a total that a 32-bit slot wraps. Full marks require either moving the money slot to a 64-bit integer typed array whose atomic operations are legal, with the accessors converting at the boundary, or serialising every read-modify-write of the float64 slot behind an atomics-backed lock on a separate integer slot. Scores at most half if only the postings counter is made safe and the cents accumulation is left as a plain read-modify-write."
+    },
+    {
+      "name": "The untouched basic test still passes",
+      "max_score": 14,
+      "description": "`npm test` is green at the end with `src/tally.basic.test.js` unmodified: `cents()` and `postings()` still return Numbers that satisfy both of its assertions, including the 4,294,967,294 total. Scores zero if the suite ends red, if `cents()` returns a BigInt into a strict equality against a Number, or if the basic test was edited, renamed or deleted to make something pass. Scores at most half if `npm test` was never actually run and the answer only claims it would pass."
+    },
+    {
+      "name": "Threads released from an explicit start gate",
+      "max_score": 18,
+      "description": "The new test holds every ingest thread at a shared rendezvous and releases them together - an atomics wait/notify handshake on a shared integer slot, a ready-count each thread increments before parking, or an equivalent all-threads-ready exchange - so they enter `post` at the same moment by construction. MUST NOT rely on `setTimeout`, a spawn stagger, a raised posting count, or a raised thread count as the mechanism that produces the overlap: a test whose only concurrency device is volume or timing scores zero here even if it happens to go red. Scores at most half if a gate exists but only the spawning is synchronised while the contended loop still starts whenever each thread reaches it."
+    },
+    {
+      "name": "Ingest-thread failures reach the suite",
+      "max_score": 16,
+      "description": "A failure inside an ingest thread now fails the suite: every `Worker` gets an `'error'` listener, and the `'exit'` code is inspected with a non-zero code turned into a rejection or a failed assertion. MUST NOT leave workers awaited with the exit code discarded and no error listener - that is the shipped defect and it scores zero, as does describing the July test as adequate coverage while leaving it that way. Scores at most half if the worker's own assertion is kept as the only real check rather than the verdict being decided on the main thread against the shared totals."
+    },
+    {
+      "name": "Observed numbers recorded",
+      "max_score": 10,
+      "description": "`docs/lost-update.md` records the real expected-against-observed totals from running the new test against the unfixed accumulator, not a hypothetical, and states over how many executions. Reporting only that it 'would fail' with no observed figures scores at most half. A test that asserts something weaker than the exact total, such as 'no error was thrown' or 'the total is greater than zero', scores zero."
+    },
+    {
+      "name": "MUST NOT treat one green run as settling it",
+      "max_score": 10,
+      "description": "MUST NOT present a single green execution after the fix as proof the defect is gone. The contended section is exercised over repeated rounds inside the delivered test, or the suite is stated to have been run repeatedly with the count given. A single post-fix run offered as settling it scores zero. Scores at most half if repetition is recommended in prose but nothing in the delivered test or the documented procedure actually does it."
+    },
+    {
+      "name": "Shape under test preserved",
+      "max_score": 6,
+      "description": "The storage remains one `SharedArrayBuffer` shared across the ingest threads and ingest is still done by worker threads. Giving each thread its own buffer, moving accumulation back onto the main thread, or serialising the threads scores zero here - each deletes the condition under test instead of making it safe. `src/tally.concurrent.test.js` still exists under its own filename with its test name intact."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 4,
+      "description": "`src/tally.race.test.js` and `docs/lost-update.md` both exist, and the document says why the July test stayed green for two months. A document that describes the fix without naming the reason the old test could not fail scores at most half."
+    }
+  ]
+}

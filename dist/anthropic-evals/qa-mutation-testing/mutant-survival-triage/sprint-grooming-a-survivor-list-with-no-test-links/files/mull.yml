@@ -1,0 +1,8 @@
+mutators:
+  - cxx_calls
+  - cxx_init_const
+  - cxx_assign_const
+
+timeout: 5000
+includePaths:
+  - /builds/vault/src

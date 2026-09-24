@@ -1,0 +1,8 @@
+{
+  "name": "parcelo",
+  "private": true,
+  "scripts": {
+    "test": "cd test && node --test",
+    "smoke": "cd smoke && node --test"
+  }
+}

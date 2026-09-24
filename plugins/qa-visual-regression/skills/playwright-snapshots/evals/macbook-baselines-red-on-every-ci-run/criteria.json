@@ -1,0 +1,51 @@
+{
+  "context": "Four proposals, two of which have to be refused, and the one with momentum is the one that already appears to work. Predicted baseline failure: the agent grants Sasha. Collapsing the name to one file per browser project reads like simplification - two copies of the same picture, one of them redundant - and the branch evidence supports it, green on three pushes. It is the opposite of a fix. Captures on macOS and Linux are not the same picture: antialiasing, font hinting and emoji bitmaps differ, which is why the two sets never agreed in the first place, and the segment that keeps them apart is the only thing preventing a laptop capture from being compared against a Linux runner. Sasha's branch went green because he recorded and compared on one machine; the first Linux push after it merges compares his macOS bytes and the whole suite goes red at once, with no way left to tell the two apart. The run log shows every Expected path already resolving to a linux file while the tree carries seven darwin files nobody on CI ever reads. The second predicted failure is Marek: recording inside the job that is supposed to compare removes the gate entirely, and it is framed as the pragmatic option. The third is Dyoung's 250000-pixel allowance on a 1280x800 capture - 24 percent of the image, wider than any component on the page - which is predicted to be granted because his description of the cause is accurate even though his remedy is not. Priya's job is the proposal that should be granted, and the artifact that never appears is a missing always-run condition on the upload step, not a separate mystery.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT drop the platform segment from the baseline name",
+      "max_score": 30,
+      "description": "Sasha's fix/one-baseline is refused and the platform segment stays in the path. Granting it, merging it, or proposing any single-file-per-project naming scheme scores zero for this criterion regardless of the rest. Full marks require the refusal plus the reason: macOS and Linux captures of the same page are not interchangeable images, and with one file per project a laptop capture becomes the expected result for the Linux runner and vice versa. The answer must also dispose of his evidence - the branch went green because the same machine wrote and then read the file. Refusing without addressing why his branch was green scores at most half."
+    },
+    {
+      "name": "MUST NOT record baselines inside the comparing job",
+      "max_score": 16,
+      "description": "Marek's proposal is refused: the pull-request job MUST NOT be given an update flag, and no edit to .github/workflows/visual.yml may add one. Granting it scores zero. Full marks require stating the consequence - a job that records what it sees can never report a difference, so the check stops existing. Refusing it as 'not best practice' with no consequence stated scores at most half."
+    },
+    {
+      "name": "Pixel allowance refused with the arithmetic",
+      "max_score": 14,
+      "description": "Dyoung's 250000 is refused, with the size stated against the 1280x800 capture the log reports - roughly a quarter of the image, far larger than any element whose disappearance the suite exists to catch. Raising maxDiffPixels to 250000, or to any value above about 5000, scores zero. Refusing with no arithmetic and no capture size scores at most half. Conceding that his description of the difference is correct while still refusing the remedy is expected, not penalised."
+    },
+    {
+      "name": "Recording moved to a runner that matches CI",
+      "max_score": 16,
+      "description": "Priya's proposal is granted and delivered as a workflow that a human starts deliberately, on the same Linux runner image the checks use, which records and commits the result back. The answer for what a MacBook developer now does must point at that job, or at running the capture locally inside the official container image that matches the runner. Answering 'ask a Linux colleague to rebaseline' scores at most half; leaving the developer with no route scores zero."
+    },
+    {
+      "name": "Committed macOS baselines removed",
+      "max_score": 12,
+      "description": "The seven files ending -darwin.png in docs/tree.txt are deleted from the repository, with the reason that no runner ever compares against them. Keeping them scores zero. Deleting the linux files instead, or deleting both sets, scores zero."
+    },
+    {
+      "name": "Report artifact made available on failure",
+      "max_score": 12,
+      "description": "The upload step in .github/workflows/visual.yml is made to run when the test step has failed, which is the only run in which anyone needs it. Not touching the upload step at all scores zero. Answering Dyoung's complaint with 'read the pixel counts from the log' or 'open the images locally' scores zero."
+    },
+    {
+      "name": "Contributor instruction corrected",
+      "max_score": 8,
+      "description": "docs/contributing-visual.md no longer tells developers to record baselines on their own machine before pushing. Leaving that instruction in place while adding a CI job elsewhere scores zero, since the documented path is the one people follow."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 5,
+      "description": "docs/visual-platform-decision.md exists and reaches grant or refuse on all four proposals by author name. Covering fewer than four scores at most half; no document scores zero."
+    },
+    {
+      "name": "Helper untouched and suite still runs",
+      "max_score": 6,
+      "description": "tools/platform-split.mjs and tools/platform-split.test.mjs are unmodified and `node --test tools/platform-split.test.mjs` still passes. Any edit under tools/ scores zero here."
+    }
+  ]
+}

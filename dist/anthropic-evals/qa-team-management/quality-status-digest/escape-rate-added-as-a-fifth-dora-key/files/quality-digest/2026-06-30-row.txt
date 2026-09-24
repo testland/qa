@@ -1,0 +1,1 @@
+digest-row: team=orders window=2026-04-01..2026-06-30 pass_rate=0.93 delta_pp=+1 escapes=1 deployments=8 flake_debt=3 rag=AMBER basis=defaults

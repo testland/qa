@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nightly-e2e">
+  <testsuite name="shard-4" tests="3" failures="0" errors="1" skipped="0" time="130.2" timestamp="2026-09-12T01:00:09">
+    <testcase classname="e2e/admin/users.spec.ts" name="invites a user" time="54.7"/>
+    <testcase classname="e2e/admin/users.spec.ts" name="deactivates a user" time="62.1"/>
+    <testcase classname="e2e/admin/roles.spec.ts" name="assigns a role" time="13.4">
+      <error message="runner evicted: spot instance reclaimed">worker process exited with signal SIGTERM</error>
+    </testcase>
+  </testsuite>
+</testsuites>

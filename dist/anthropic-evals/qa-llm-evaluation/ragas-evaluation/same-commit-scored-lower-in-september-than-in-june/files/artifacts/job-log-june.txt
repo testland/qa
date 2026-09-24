@@ -1,0 +1,7 @@
+2026-06-04T02:11:09Z  eval start  commit a91f3c2  golden 80 rows
+2026-06-04T02:11:09Z  python 3.12.4  runner ubuntu-22.04
+2026-06-04T02:11:10Z  resolved metrics: Faithfulness, AnswerRelevancy, ContextRecall, ContextPrecisionWithReference
+2026-06-04T02:11:10Z  judge: gpt-4o -> gpt-4o-2024-05-13
+2026-06-04T02:11:10Z  index: api-reference 4100 chunks, changelog 610 chunks
+2026-06-04T02:29:44Z  faithfulness 0.94  answer_relevancy 0.91  context_recall 0.89  context_precision 0.83
+2026-06-04T02:29:44Z  PASS

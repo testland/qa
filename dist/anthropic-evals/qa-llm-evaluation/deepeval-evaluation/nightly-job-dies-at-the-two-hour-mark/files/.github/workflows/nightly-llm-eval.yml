@@ -1,0 +1,24 @@
+name: nightly-llm-eval
+
+on:
+  schedule:
+    - cron: "40 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Quality suite
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python -m pytest tests/llm -q
+      - name: Page on-call
+        if: failure()
+        run: ./scripts/page-oncall.sh "nightly-llm-eval failed"

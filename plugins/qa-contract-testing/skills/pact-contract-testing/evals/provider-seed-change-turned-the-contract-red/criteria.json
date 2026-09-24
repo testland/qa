@@ -1,0 +1,41 @@
+{
+  "context": "A red verification, a cheap fix offered by the provider's tech lead, and a correct-looking repair on our side that has already been merged and changed nothing. Predicted baseline failure: the agent accepts the team's framing - a data migration broke a contract - approves Priya's diff, or repeats Rohan's repair by loosening the spec further, and predicts green. Every one of those leaves the job red, because the file the provider verifies is not the file the spec produces. The spec constructs PactV3 with dir: path.resolve('pacts'), which resolves against the process working directory; the root package.json runs the suite from the repository root, so each run writes to <root>/pacts, which .gitignore excludes. The publish step in .github/workflows/contracts.yml publishes apps/checkout-web/pacts, which holds a copy committed on 2026-06-30 and untouched since. So every build republishes June's expectations under a fresh consumer version - which is why the broker shows 5c9d31b published on 2026-09-11 and the verification output has not changed a byte. The evidence is there without being named: the failing expectation has no type matchers although the current spec generates them, the two files differ in content and in their pactJs version, and the listing dates them three months apart. The migration is a red herring and the fixture proves it - the provider's state handler replaces category 12 with its own fixture row, so the received values in the failure are 7001 / 'Contract Fixture Chair', not the migrated seed rows at all, and restoring the old placeholder to the seed file cannot affect the replayed response. One residual defect survives the publishing fix: the spec still pins sku to a literal and nothing in cart.js reads sku, so the interaction fails on that one line until it is dropped. An answer that predicts a green run without dealing with sku has not worked the fixture through.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/contract-fix.md exists, names a cause, gives an explicit yes or no on Priya's diff, and states what the next verification run reports interaction by interaction. A write-up with no code or configuration change, or with no verdict on the diff, scores zero for this item."
+    },
+    {
+      "name": "The contract being verified is not the one the spec generates",
+      "max_score": 32,
+      "description": "The answer works out that the consumer spec writes its output to <repository root>/pacts because dir: path.resolve('pacts') resolves against the working directory the suite is run from, while the workflow publishes apps/checkout-web/pacts, which holds a copy committed on 2026-06-30, and fixes it so the directory that is written is the directory that is published. Full marks require the diagnosis to be supported rather than asserted - the expectation in the failure carries no type matchers although the current spec emits them, the two files disagree, and the broker already holds a consumer version published after Rohan's change. Editing the spec, the matchers or the provider without reconciling the two directories scores zero, because nothing the agent changes can reach the broker. Noticing that there are two contract files but repairing it by changing only the publish path while leaving a generated file committed and hand-maintained scores at most half."
+    },
+    {
+      "name": "MUST NOT keep a generated contract as a hand-maintained file",
+      "max_score": 22,
+      "description": "MUST NOT hand-edit either contract JSON, copy one over the other, or leave apps/checkout-web/pacts/checkout-web-catalog-api.json committed as the thing CI publishes. Any of those scores zero for this criterion however good the rest is: the file is an output of running the consumer test, so a copied or edited one is overwritten on the next run and until then states expectations no test checks - which is precisely the state the repository has been in since June. Full marks require the committed copy to be removed from version control and the directory the tests write to to be the one that is published, with the ignore rule adjusted to match."
+    },
+    {
+      "name": "MUST NOT accept the provider's seed-data diff",
+      "max_score": 18,
+      "description": "MUST NOT edit services/catalog-api/seeds/catalog.js or recommend that Priya's diff be applied, in the seed file or in any other fixture that survives beyond the interaction. Recommending it scores zero for this criterion. Full marks require the reason it could not have worked even if we said yes: the state handler for 'category 12 has products' replaces that category with its own fixture row before the interaction is replayed, which is why the failure reports 7001 and 'Contract Fixture Chair' rather than either the old placeholder or the migrated rows - so nothing in the seed file reaches this response. Refusing the diff only on the principle that a provider should not carry consumer-shaped demo data, with no reference to what the handler does, scores at most half."
+    },
+    {
+      "name": "The field still standing in the way, and an honest prediction of the next run",
+      "max_score": 14,
+      "description": "The answer identifies that the interaction still pins sku to a literal, that nothing in apps/checkout-web/src/cart.js reads sku, and drops it from the expected body rather than re-pinning it to FIX-1 - and predicts the next run accordingly: the category 99 interaction continues to pass, and category 12 passes only once both the publishing defect and sku are dealt with. Re-pinning sku to the provider's fixture value scores zero. Predicting a green run while leaving sku pinned scores zero. Dropping sku without saying what the run will now report scores at most half. availability must remain pinned to exactly 'in_stock' - purchasable() filters on that exact string and silently empties the cart otherwise - so loosening or removing it scores at most half here."
+    },
+    {
+      "name": "How the corrected contract reaches their pipeline",
+      "max_score": 10,
+      "description": "docs/contract-fix.md states that the change only takes effect once the suite is re-run and the regenerated contract is published to the broker under a new consumer version, because the verification log shows the provider reads from the broker and not from our working copy. Saying only 're-run the consumer test' with no publish step scores at most half; stopping at the code change with no account of how it reaches their job scores zero."
+    },
+    {
+      "name": "Passing code and tests left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify apps/checkout-web/src/cart.js or apps/checkout-web/test/cart.test.js. Both pass and neither appears in the failure. Any change to either scores zero here."
+    }
+  ]
+}

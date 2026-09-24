@@ -1,0 +1,13 @@
+$ find ci-artifacts -type f | sort
+ci-artifacts/gitleaks-report.json
+ci-artifacts/semgrep.sarif
+ci-artifacts/trivy/trivy-results.sarif
+ci-artifacts/trufflehog-results.json
+
+$ node ci/gate.mjs --fail-on critical ci-artifacts
+reading ci-artifacts/gitleaks-report.json ... 1 findings so far
+reading ci-artifacts/semgrep.sarif ... 3 findings so far
+reading ci-artifacts/trivy/trivy-results.sarif ... 5 findings so far
+reading ci-artifacts/trufflehog-results.json ... 6 findings so far
+verdict: PASS (no findings at or above critical)
+exit 0

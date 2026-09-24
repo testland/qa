@@ -1,0 +1,22 @@
+# 18 sampled replies to refund-reply-01, scored against the reference answer
+# and labelled independently by two people on support ops. Collected 2026-06-11
+# when the threshold was chosen. Correct figure for this ticket is $14.00.
+sample,similarity,human_verdict,reply
+s01,0.77,ok,"Your refund of $14.00 is on its way to the card ending 4417 and should land within five working days."
+s02,0.94,wrong,"Good news - a refund of $41.00 has been issued to the card ending 4417. It should appear within 5 business days."
+s03,0.68,ok,"We've refunded $14.00. Expect it on the 4417 card inside a week."
+s04,0.89,wrong,"A refund of $4.00 has been issued to the card ending 4417. It should appear within 5 business days."
+s05,0.91,ok,"A refund of $14.00 has been issued to the card ending 4417. It should arrive within 5 business days."
+s06,0.72,ok,"You'll see $14.00 back on the card ending 4417, usually within five working days."
+s07,0.86,wrong,"A refund of $140.00 has been issued to the card ending 4417, arriving within 5 business days."
+s08,0.84,ok,"We have issued a refund of $14.00 to the card ending 4417; allow five business days."
+s09,0.61,wrong,"Sorry about that. Money is being sent back to you and it will show up soon."
+s10,0.79,ok,"$14.00 has been refunded to the card ending 4417. Give it about five business days."
+s11,0.92,wrong,"A refund of $41.00 has been issued to the card ending 4417. It should arrive within 5 business days."
+s12,0.70,ok,"The $14.00 is on its way back to the 4417 card - five working days or so."
+s13,0.83,wrong,"A refund of $44.00 has been issued to the card ending 4417. It should appear within 5 business days."
+s14,0.88,ok,"A refund of $14.00 has been sent to the card ending 4417 and should appear within 5 business days."
+s15,0.74,ok,"We've put $14.00 back on the card ending 4417. It usually takes five business days."
+s16,0.76,wrong,"We have refunded $41.00 to your card. It normally takes about a week to show."
+s17,0.69,ok,"A $14.00 refund is heading back to the 4417 card, roughly five business days."
+s18,0.81,ok,"A refund of $14.00 has been issued to the card ending 4417. Allow 5 business days."

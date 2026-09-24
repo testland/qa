@@ -1,0 +1,51 @@
+{
+  "context": "A guard that has been green every night, including the night it was supposed to fire. Predicted baseline failure: the agent finds the plan defect, fixes it, sees `node --test` stay green, and ships — never establishing that scripts/check-envs.mjs was incapable of reporting anything. Its `propertiesReadBy` matches `${NAME}` and `${__P(NAME` with the same expression, so a value the workflow overrides as a property but the plan reads as a plan variable is counted as read, and `check` returns an empty list against a tree that had already taken an environment down. The shipped suite locks that in twice over — one assertion states that the plan reads every value the workflow overrides, another that the tree as it stands has nothing to report — and both are green, so an agent that treats a passing suite as ground truth has no reason to look. The plan defect underneath is the second predicted miss: BASE_HOST and PORT are read through the property function and do take their overrides, which is why every job visibly hits its own environment and why nobody suspected anything, while THREADS and TOKEN are plan variables holding literals, so `-JTHREADS=80` set a property nothing consults and EU ran the 400 compiled into the file. The third is Ask 1, which after an outage is the most attractive ask in the ticket and is the one that must be refused: per-environment copies with the values pinned into the XML are what produced six weeks of dev traffic against `/v1`. Ask 3 must be granted against the colleague who wants the leftovers kept and Ask 4 is fine as written, so an agent that refuses the ticket wholesale scores no better than one that grants it wholesale.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite runs",
+      "max_score": 5,
+      "description": "plans/ is left in a stated state, .github/workflows/orders-load.yml covers all four environments, scripts/check-envs.mjs and scripts/check-envs.test.mjs are both modified, and docs/orders-load.md exists with a separate section per ask carrying a plain yes or no. If `node --test` does not pass against the delivered files, this criterion scores zero."
+    },
+    {
+      "name": "The guard is made capable of failing, and it is proven",
+      "max_score": 30,
+      "description": "The delivered scripts/check-envs.mjs, given a plan in the form this repository shipped — a value the workflow overrides as a property while the plan reads a plan variable of that name — reports it, and scripts/check-envs.test.mjs contains an assertion that exercises exactly that and would fail against the shipped `propertiesReadBy`. Delivering a guard that still counts `${NAME}` as a property read scores zero for this criterion regardless of what else is fixed, and so does adding only new checks alongside the existing one while leaving it as it is. The shipped assertion 'the plan reads every value the workflow overrides' encodes the defect: it must be replaced by one that distinguishes the two forms. Keeping it verbatim scores at most half. Stating in docs/orders-load.md that the guard was green on the night of the 11th because it could not have been anything else is required for full marks; fixing the guard silently, with nothing said about why it did not fire, scores at most half."
+    },
+    {
+      "name": "MUST NOT go back to per-environment copies",
+      "max_score": 24,
+      "description": "MUST NOT answer Ask 1 by returning to one plan file per environment. Delivering plans/orders-apac.jmx, plans/orders-eu.jmx or any other environment-named copy scores zero for this criterion, and so does a document that agrees to the split however it is hedged, and so does merging @dmorel's APAC file with its host, port and thread count written into the XML. The reporter's evidence is real and his conclusion is inverted: the consolidated plan did not fail because it is parameterised, it failed because two of its four values are not. Full marks require the refusal, the correct cause, and the July `/v1` drift named as what per-environment copies produce. Refusing Ask 1 on the general principle that duplication is bad, without engaging with Friday night, scores at most half."
+    },
+    {
+      "name": "Overrides actually reach the plan",
+      "max_score": 22,
+      "description": "THREADS and TOKEN are read inside plans/orders.jmx through the property function, so that a command-line property override takes effect, and the names read match the names overridden character for character. Delivering a plan whose thread count is still a plan variable holding a literal scores zero for this criterion — that is the defect, not a stylistic preference. A variable whose value is itself a property-function reference is correct and scores full marks. Full marks additionally require docs/orders-load.md to state what the EU job ran on the night of the 11th and why 400 rather than 80; asserting the fix without accounting for the incident scores at most half."
+    },
+    {
+      "name": "Token out of the repository",
+      "max_score": 10,
+      "description": "No service token remains in any committed plan file, and the authorization header takes its value from an override supplied at invocation and wired in the workflow from the secret store. A token left anywhere in the delivered tree scores zero, including inside a leftover copy that was kept. The workflow overrides no token today, so making the plan read one as a property without also passing it from the workflow scores at most half — the 2026-10-01 rotation is the stated reason this is being done."
+    },
+    {
+      "name": "MUST NOT default the plan at production",
+      "max_score": 10,
+      "description": "Ask 2 is refused: the plan MUST NOT carry a production host, port or credential as its compiled-in default, because a forgotten or misspelled override then sends the 400-thread profile at the live system, and the defaults exist so that a missing override is harmless. Granting Ask 2 scores zero. Refusing it without offering anything for the underlying complaint — a documented one-line invocation per environment, or an equivalent — scores at most half."
+    },
+    {
+      "name": "Ask 3 granted and the leftovers deleted",
+      "max_score": 8,
+      "description": "plans/orders-dev.jmx and plans/orders-prod.jmx are deleted from the delivered tree. Keeping either for reference, for rollback, or 'until we are sure' scores zero: the dev copy is the one that spent six weeks on /v1 and it is still on /v1 if it survives."
+    },
+    {
+      "name": "EU sizing survives the fix",
+      "max_score": 8,
+      "description": "Once the override actually reaches the plan, EU runs at the smaller figure it was given on 2026-09-08 rather than the 400-thread profile, per the SRE note. A delivered tree in which EU would still run at 400 scores zero, and so does achieving EU sizing by giving EU a plan file of its own."
+    },
+    {
+      "name": "Ask 4 granted and the thread count sourced from one place",
+      "max_score": 6,
+      "description": "Ask 4 is granted: ci/environments.json carries a per-environment thread count and the workflow takes the value from there rather than each job carrying its own literal. Refusing Ask 4 scores zero — it is the ask that is fine as written. Agreeing in the document while the delivered workflow still hard-codes four separate numbers scores at most half."
+    }
+  ]
+}

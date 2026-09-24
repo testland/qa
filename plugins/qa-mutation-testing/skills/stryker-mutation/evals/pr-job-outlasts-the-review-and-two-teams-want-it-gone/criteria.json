@@ -1,0 +1,46 @@
+{
+  "context": "The thread contains a proposal that is both the most attractive and the only one that cannot work, and the prompt's own constraints push the agent straight into it. Predicted baseline failure: the agent adopts Priya's one-line change — flip `coverageAnalysis` from `\"off\"` to `\"perTest\"` — because she quotes the configuration reference correctly, the log corroborates her diagnosis at 1,240 tests per mutant, and she is the only person in the thread whose fix respects the stated no-framework-migration constraint. It cannot work: the `command` test runner is the one runner that supports no coverage analysis at all, because `npm test` hands Stryker a single pass/fail with no record of which test touched which line. Left in place, that config either refuses to start or silently keeps running the whole suite per mutant, and the 34 minutes do not move. The repo tells you what the real fix is if you read the manifest rather than the thread: the suite is `node --test`, which emits TAP, so `@stryker-mutator/tap-runner` with `\"testRunner\": \"tap\"` runs it as-is with no migration and with coverage analysis available. A baseline that reaches for the familiar runner instead — jest-runner or mocha-runner — produces a config that cannot execute a single one of these test files. The secondary predicted failure is leaving `concurrency: 16` on a 2-core runner whose log records 7.6 GB of a 7 GB budget and half an hour of swapping, which is also where the 43 checkout timeouts that do not reproduce on a laptop come from.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Runner swapped, not just the coverage key",
+      "max_score": 30,
+      "description": "MUST NOT ship `\"coverageAnalysis\": \"perTest\"` (or `\"all\"`) while `\"testRunner\"` remains `\"command\"` — the command runner supports no coverage analysis, so Priya's one-line change cannot produce the speed-up she describes. Any answer whose final `stryker.conf.json` still names the command runner scores zero for this criterion regardless of everything else it does. Full marks require a real runner plugin that can execute this suite: `@stryker-mutator/tap-runner` added to devDependencies, `\"testRunner\": \"tap\"` in the config, a `tap.testFiles` glob matching `test/**/*.test.js`, and coverage analysis switched on in the same change. Selecting jest-runner or mocha-runner instead scores at most half: it drops the command runner but neither can run a `node --test` file, and the prompt forbids migrating the suite."
+    },
+    {
+      "name": "Priya's proposal dismissed on the record",
+      "max_score": 18,
+      "description": "docs/mutation-job-plan.md says explicitly that changing `coverageAnalysis` alone does not work, and why — coverage analysis needs the runner to report which tests executed, which running `npm test` as an opaque command cannot do. Adopting her proposal, or dismissing it with no reason, scores zero. Crediting her diagnosis (the 1,240-tests-per-mutant line is the right thing to have noticed) while rejecting her fix is the full-marks answer."
+    },
+    {
+      "name": "Incremental PR runs with state that survives",
+      "max_score": 16,
+      "description": "The pull-request job runs incrementally rather than re-mutating all 412 files for a one-file change, and the answer names a mechanism by which the incremental state survives from one run to the next — a CI cache step, an uploaded/downloaded artifact, or a committed state file all count. A PR job that still performs a full run scores zero. Turning incremental on with no persistence mechanism named anywhere scores at most half, because on a fresh runner it does nothing."
+    },
+    {
+      "name": "MUST NOT remove the merge block",
+      "max_score": 14,
+      "description": "MUST NOT adopt Rae's `break: 0`, MUST NOT delete the job per Tomas, and MUST NOT otherwise make the result non-blocking (removing `thresholds.break`, `continue-on-error`, `|| true`). Any of these scores zero here: the prompt states the 55 was agreed in June and is reopened only for a correctness reason, and a gate that cannot fail is the state the team is already in."
+    },
+    {
+      "name": "Concurrency matched to the runner",
+      "max_score": 12,
+      "description": "`concurrency` is lowered from 16 to something a 2-core runner can hold (2 to 4), and the answer ties the 43 checkout timeouts that do not reproduce on Priya's laptop to the swapping rather than to slow code. Raising concurrency per Marek, or leaving it at 16, scores zero. Lowering it without connecting it to the timeouts scores at most half."
+    },
+    {
+      "name": "Scope narrowing rejected",
+      "max_score": 10,
+      "description": "Ben's proposal to mutate only `src/utils/**` is rejected because it drops `src/checkout/**`, which the prompt names as the reason the job exists. Adopting it — or narrowing the `mutate` glob in any way that stops covering `src/checkout/**` — scores zero."
+    },
+    {
+      "name": "Expected runtime stated",
+      "max_score": 6,
+      "description": "docs/mutation-job-plan.md gives a specific expected pull-request runtime after the change and reasons from the run's own numbers (1,412 mutants at 1,240 tests each today, against the far smaller set an incremental run on a one-file change would test). A plan with no number scores zero; an unsupported number scores at most half."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "All three config files are edited and docs/mutation-job-plan.md exists with a verdict on each of the five named proposals. Fewer than five verdicts scores at most half. Modifying src/checkout/totals.js or test/checkout/totals.test.js scores zero here."
+    }
+  ]
+}

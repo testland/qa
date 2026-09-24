@@ -1,0 +1,7 @@
+{
+  "baseline": "a11y-baseline.json",
+  "blockOn": ["critical"],
+  "warnOn": [],
+  "failOnWarning": true,
+  "commentOnPr": true
+}

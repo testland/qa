@@ -1,0 +1,13 @@
+# py-spy record --native --format raw, app-3, 30s under live traffic, 2026-09-12 14:23
+# 12,880 samples total. OrdersView.get appears in 12,466 of them (96.8%, inclusive).
+gunicorn;sync_worker;OrdersView.get;qs.__iter__;psycopg2.cursor.execute;pg_send_query_blocking 7284
+gunicorn;sync_worker;OrdersView.get;qs.__iter__;psycopg2.cursor.execute;pq_read_data 2802
+gunicorn;sync_worker;OrdersView.get;qs.__iter__;psycopg2.cursor.fetchall 1204
+gunicorn;sync_worker;OrdersView.get;OrderSerializer.to_representation;json.dumps 431
+gunicorn;sync_worker;OrdersView.get;OrderSerializer.to_representation;decimal.Decimal.__str__ 388
+gunicorn;sync_worker;middleware.auth;jwt.decode 214
+gunicorn;sync_worker;OrdersView.get;OrderSerializer.to_representation;format_money 173
+gunicorn;sync_worker;HealthView.get 139
+gunicorn;sync_worker;OrdersView.get;paginate;len 96
+gunicorn;sync_worker;OrdersView.get;build_filters;re.compile 88
+gunicorn;sync_worker;middleware.request_log;time.strftime 61

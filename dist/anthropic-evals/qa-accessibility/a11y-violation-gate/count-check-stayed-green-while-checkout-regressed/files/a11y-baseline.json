@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "updated_at": "2026-03-10T11:20:00Z",
+  "violations": [
+    "axe::color-contrast::/checkout::a.promo-terms",
+    "axe::color-contrast::/checkout::span.muted",
+    "axe::label::/checkout::input#coupon",
+    "axe::link-name::/checkout::a.icon-cart",
+    "axe::color-contrast::/account::span.plan-badge",
+    "axe::link-name::/account::a.icon-settings",
+    "axe::region::/account::body",
+    "axe::color-contrast::/pricing::span.per-seat",
+    "axe::color-contrast::/legacy-orders::span.muted",
+    "axe::color-contrast::/legacy-orders::td.order-date",
+    "axe::color-contrast::/legacy-orders::a.reorder",
+    "axe::image-alt::/legacy-orders::img.logo-print",
+    "axe::link-name::/legacy-orders::a.invoice",
+    "axe::color-contrast::/docs/api::code.inline",
+    "axe::heading-order::/docs/api::h4.api-note",
+    "axe::link-name::/docs/api::a.edit-page",
+    "axe::color-contrast::/blog/spring-notes::p.lede",
+    "axe::region::/blog/spring-notes::body",
+    "axe::link-name::/careers::a.apply"
+  ]
+}

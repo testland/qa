@@ -1,0 +1,15 @@
+name: Dependency PR triage
+on:
+  pull_request:
+    types: [opened, reopened, labeled]
+
+jobs:
+  route:
+    if: contains(github.event.pull_request.labels.*.name, 'dependencies')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Route to the review channel and stamp the compliance field
+        run: ./scripts/route-dependency-pr.sh "$PR_NUMBER"
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}

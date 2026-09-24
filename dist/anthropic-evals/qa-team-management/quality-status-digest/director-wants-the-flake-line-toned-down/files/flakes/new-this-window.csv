@@ -1,0 +1,3 @@
+id,test,first_seen,ticket
+F-88,payments/mandate.spec.ts:sepa mandate signature uploads,2026-09-09,PAY-6802
+F-91,payments/statement.spec.ts:statement pdf renders the fee line,2026-09-12,PAY-6815

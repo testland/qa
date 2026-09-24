@@ -1,0 +1,20 @@
+$ pytest tests/
+============================= test session starts ==============================
+collected 4 items
+
+tests/test_emails.py .                                                   [ 25%]
+tests/test_ids.py .                                                      [ 50%]
+tests/test_orders.py .                                                   [ 75%]
+tests/test_passwords.py .                                                [100%]
+
+========================= durations (slowest first) ============================
+2430.45s  tests/test_passwords.py::test_hash_password_verifies
+   8.06s  tests/test_ids.py::test_short_id_is_url_safe
+   6.02s  tests/test_orders.py::test_total_is_order_independent
+   0.31s  tests/test_emails.py::test_normalise_keeps_it_valid
+======================== 4 passed in 2444.84s ==================================
+
+# What 'chore: make the generated inputs realistic' changed, per git show:
+#   tests/test_passwords.py   max_examples 400 -> 4500
+#   tests/test_emails.py      st.text() -> the address list off the signup table
+# The same job on 2026-09-01, before that commit: 230.55s total, 4 passed.

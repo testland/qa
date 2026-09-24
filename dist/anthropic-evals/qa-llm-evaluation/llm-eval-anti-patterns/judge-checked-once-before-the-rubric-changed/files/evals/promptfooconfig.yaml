@@ -1,0 +1,14 @@
+description: support reply generator, A/B
+
+providers:
+  - openai:gpt-4o-mini
+
+defaultTest:
+  options:
+    provider: openai:gpt-4o
+
+prompts:
+  - file://prompts/variant-a.txt
+  - file://prompts/variant-b.txt
+
+tests: file://tests/pairwise.yaml

@@ -1,0 +1,134 @@
+[
+  {
+    "url": "/",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["a.nav-cta"] }, { "target": ["p.hero-sub"] }]
+      },
+      {
+        "id": "image-alt",
+        "impact": "critical",
+        "tags": ["cat.text-alternatives", "wcag2a", "wcag111"],
+        "nodes": [{ "target": ["img.partner-logo-2"] }]
+      },
+      {
+        "id": "aria-required-attr",
+        "impact": "critical",
+        "tags": ["cat.aria", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["div[role=\"dialog\"]"] }]
+      }
+    ]
+  },
+  {
+    "url": "/docs",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["code.inline"] }]
+      },
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["a.edit-page"] }]
+      }
+    ]
+  },
+  {
+    "url": "/pricing",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["span.per-seat"] }, { "target": ["span.annual-discount"] }]
+      },
+      {
+        "id": "aria-required-attr",
+        "impact": "critical",
+        "tags": ["cat.aria", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["div[role=\"tablist\"]"] }]
+      },
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["button.compare-toggle"] }]
+      },
+      {
+        "id": "aria-valid-attr-value",
+        "impact": "serious",
+        "tags": ["cat.aria", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["div[role=\"tablist\"]"] }]
+      }
+    ]
+  },
+  {
+    "url": "/careers",
+    "violations": [
+      {
+        "id": "label",
+        "impact": "critical",
+        "tags": ["cat.forms", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["input#resume"] }]
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "tags": ["cat.keyboard", "best-practice", "wcag131"],
+        "nodes": [{ "target": ["body"] }]
+      },
+      {
+        "id": "landmark-one-main",
+        "impact": "moderate",
+        "tags": ["cat.semantics", "best-practice", "wcag131"],
+        "nodes": [{ "target": ["body"] }]
+      }
+    ]
+  },
+  {
+    "url": "/blog/hiring-2026",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["span.byline"] }]
+      },
+      {
+        "id": "link-name",
+        "impact": "serious",
+        "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+        "nodes": [{ "target": ["a.share-x"] }]
+      },
+      {
+        "id": "region",
+        "impact": "moderate",
+        "tags": ["cat.keyboard", "best-practice", "wcag131"],
+        "nodes": [{ "target": ["body"] }]
+      }
+    ]
+  },
+  {
+    "url": "/changelog",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": ["cat.color", "wcag2aa", "wcag143"],
+        "nodes": [{ "target": ["a.tag-link"] }]
+      },
+      {
+        "id": "image-alt",
+        "impact": "critical",
+        "tags": ["cat.text-alternatives", "wcag2a", "wcag111"],
+        "nodes": [{ "target": ["img.release-badge"] }]
+      }
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+$ mutmut show 13
+--- shipping/rates.py
++++ shipping/rates.py
+@@ -12,4 +12,4 @@
+ def base_rate(weight_kg):
+-    if weight_kg > MAX_PARCEL_KG:
++    if weight_kg >= MAX_PARCEL_KG:
+         raise OverweightParcel("parcel exceeds the domestic limit")
+     return round(3.0 + weight_kg * 0.45, 2)
+
+$ mutmut show 20
+--- shipping/rates.py
++++ shipping/rates.py
+@@ -19,4 +19,4 @@
+     shipping = base_rate(weight_kg)
+-    if subtotal_eur >= FREE_THRESHOLD_EUR:
++    if subtotal_eur > FREE_THRESHOLD_EUR:
+         shipping = 0.0
+     if express:
+
+$ mutmut show 23
+--- shipping/rates.py
++++ shipping/rates.py
+@@ -22,4 +22,4 @@
+     if express:
+-        shipping = shipping + EXPRESS_SURCHARGE_EUR
++        shipping = shipping - EXPRESS_SURCHARGE_EUR
+     discounted = subtotal_eur * (1 - discount_rate)
+
+$ mutmut show 24
+--- shipping/rates.py
++++ shipping/rates.py
+@@ -23,4 +23,4 @@
+         shipping = shipping + EXPRESS_SURCHARGE_EUR
+-    discounted = subtotal_eur * (1 - discount_rate)
++    discounted = subtotal_eur / (1 - discount_rate)
+     return round(discounted + shipping, 2)

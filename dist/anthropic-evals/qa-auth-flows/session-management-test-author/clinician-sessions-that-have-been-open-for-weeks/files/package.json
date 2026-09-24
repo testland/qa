@@ -1,0 +1,8 @@
+{
+  "name": "clinic-records",
+  "version": "11.4.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

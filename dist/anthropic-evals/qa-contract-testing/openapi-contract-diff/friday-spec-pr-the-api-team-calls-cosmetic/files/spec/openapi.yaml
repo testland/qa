@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: Payouts API
+  version: '3.0.0'
+paths:
+  /v1/payouts:
+    post:
+      operationId: createPayout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayoutRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payout'
+  /v1/payouts/{payoutId}:
+    get:
+      operationId: getPayout
+      parameters:
+        - name: payoutId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the payout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payout'
+        '404':
+          description: not found
+components:
+  schemas:
+    PayoutRequest:
+      type: object
+      required: [amount, destination, currency]
+      properties:
+        amount:
+          type: integer
+        destination:
+          type: string
+        currency:
+          type: string
+    Payout:
+      type: object
+      required: [id, status, rail, createdAt]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          x-extensible-enum: true
+          enum: [pending, paid, failed]
+        rail:
+          type: string
+          enum: [ach, instant]
+        createdAt:
+          type: string
+          format: date-time
+        settledAt:
+          type: string
+          format: date-time

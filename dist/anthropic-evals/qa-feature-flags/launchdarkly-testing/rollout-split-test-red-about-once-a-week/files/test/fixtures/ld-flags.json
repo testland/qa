@@ -1,0 +1,17 @@
+{
+  "flags": {
+    "nav-redesign": {
+      "on": true,
+      "variations": [true, false],
+      "fallthrough": {
+        "rollout": {
+          "bucketBy": "key",
+          "variations": [
+            { "variation": 0, "weight": 50000 },
+            { "variation": 1, "weight": 50000 }
+          ]
+        }
+      }
+    }
+  }
+}

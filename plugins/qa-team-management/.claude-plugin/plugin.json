@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-team-management",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "QA people-and-org toolkit for QA managers and heads of quality: 4 skills (skill-matrix-author - evidence-backed capability matrix plus roadmap-ranked gap analysis with train-vs-hire recommendations - exec-quality-narrative, quality-status-digest, and the qa-hiring-kit end-to-end structured-hiring chain: JD, question bank, rubric, calibration, debrief, 30-60-90 onboarding) and 1 agent (qa-manager - weekly red/amber/green quality-status digest from CI, tracker, and quarantine data). Covers team capability mapping per ISTQB CTAL-TM v3.0 Managing the Team, quality digests with portfolio roll-up, Levashina-style structured hiring, and Minto-pyramid executive quality narratives.",
   "author": {
     "name": "testland",

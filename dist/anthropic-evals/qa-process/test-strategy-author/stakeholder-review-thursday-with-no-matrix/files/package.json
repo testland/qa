@@ -1,0 +1,9 @@
+{
+  "name": "kettle",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "e2e": "node --test \"e2e/**/*.test.js\""
+  }
+}

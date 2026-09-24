@@ -1,0 +1,16 @@
+{
+  "uuid": "a1f2c0de-0004-4000-8000-000000000004",
+  "historyId": "gate.payments.apple-pay",
+  "name": "Apple Pay journey",
+  "fullName": "gate.payments.PaymentsGate#applePay",
+  "status": "skipped",
+  "statusDetails": {
+    "message": "gateway sandbox unavailable on build agents"
+  },
+  "start": 1789182060000,
+  "stop": 1789182060000,
+  "labels": [
+    { "name": "suite", "value": "Payments" },
+    { "name": "severity", "value": "normal" }
+  ]
+}

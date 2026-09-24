@@ -1,0 +1,17 @@
+Payments partner - subscriber platform changelog (public)
+
+2026-09-10  Queue coverage. settlement.line_item.created and
+            settlement.line_item.adjusted are now delivered to subscriber
+            queues. Previously these event types were available only through
+            the daily reporting API. Announced 2026-08-27. No change to the
+            drain API, to per-event payload, or to delivery ordering.
+            Subscribers that drain on a schedule should expect substantially
+            larger batches per drain.
+
+2026-08-30  Backfill. Settlement events withheld from subscriber queues during
+            the 2026-08-24 queue migration were delivered. Affected
+            subscribers saw one larger than usual batch.
+
+2026-08-14  Added settlement.payout.reversed event type.
+
+2026-07-02  Increased per-subscriber rate limit to 200 requests/second.

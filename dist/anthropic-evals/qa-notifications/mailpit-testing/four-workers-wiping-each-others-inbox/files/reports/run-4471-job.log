@@ -1,0 +1,49 @@
+# integration run #4471 — node --test --test-concurrency=4, MAIL_DEBUG=1
+# grouped per worker, in the order the reporter flushed each file.
+# tests/email/ holds four files; digest.test.mjs and invite.test.mjs are not
+# failing and are not attached, but they use the same helper and appear here.
+
+--- w1  tests/email/digest.test.mjs ---
+14:02:19.884  DELETE /api/v1/messages                                    -> 200
+14:02:19.888  POST   /_test/trigger-digest weekly@example.com            -> 202
+14:02:20.140  GET    /api/v1/search?query=to%3Aweekly%40example.com      -> 200  1 message
+14:02:20.143  PASS   digest lists this week's items                      (259ms)
+
+--- w2  tests/email/password-reset.test.mjs ---
+14:02:11.101  DELETE /api/v1/messages                                    -> 200
+14:02:11.104  POST   /_test/trigger-password-reset qa@example.com        -> 202
+14:02:11.311  GET    /api/v1/search?query=to%3Aqa%40example.com          -> 200  1 message  ID=8f2c1ad4-...
+14:02:11.407  GET    /api/v1/message/8f2c1ad4-...                        -> 404
+14:02:11.408  FAIL   password reset email contains a reset link
+                     Error: fetch 8f2c1ad4-... failed: 404
+                         at openMessage (tests/email/mailbox.mjs:26:21)
+14:02:11.430  DELETE /api/v1/messages                                    -> 200
+14:02:11.433  POST   /_test/trigger-password-reset qa@example.com        -> 202
+14:02:11.640  GET    /api/v1/search?query=to%3Aqa%40example.com          -> 200  1 message
+14:02:11.642  PASS   password reset email is addressed to the requester  (212ms)
+
+--- w3  tests/email/invite.test.mjs ---
+14:02:11.401  DELETE /api/v1/messages                                    -> 200
+14:02:11.404  POST   /_test/trigger-invite teammate@example.com          -> 202
+14:02:11.610  GET    /api/v1/search?query=to%3Ateammate%40example.com    -> 200  1 message
+14:02:11.613  PASS   invite email links to the workspace                 (212ms)
+14:02:25.010  DELETE /api/v1/messages                                    -> 200
+14:02:25.014  POST   /_test/trigger-invite teammate@example.com          -> 202
+14:02:25.240  GET    /api/v1/search?query=to%3Ateammate%40example.com    -> 200  1 message
+14:02:25.243  PASS   invite email names the inviter                      (233ms)
+
+--- w4  tests/email/welcome.test.mjs ---
+14:02:19.877  DELETE /api/v1/messages                                    -> 200
+14:02:19.880  POST   /_test/trigger-welcome newuser@example.com          -> 202
+14:02:19.982  GET    /api/v1/search?query=to%3Anewuser%40example.com     -> 200  0 messages
+14:02:20.083  GET    /api/v1/search?query=to%3Anewuser%40example.com     -> 200  0 messages
+              ... 46 further polls, all 0 messages ...
+14:02:24.887  FAIL   welcome email greets the new user
+                     Error: timed out after 5000ms waiting for mail to newuser@example.com
+14:02:24.920  DELETE /api/v1/messages                                    -> 200
+14:02:24.923  POST   /_test/trigger-welcome newuser@example.com          -> 202
+14:02:25.173  GET    /api/v1/messages                                    -> 200  2 messages
+14:02:25.174  FAIL   welcome email is sent from the no-reply address
+                     AssertionError: expected 'noreply@example.com', got 'invites@example.com'
+
+# 3 failed, 9 passed, 12 total — 1m58s

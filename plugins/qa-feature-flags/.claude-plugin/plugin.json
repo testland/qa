@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-feature-flags",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Feature-flag platform testing + experimentation harness testing: LaunchDarkly SDK tests, the OpenFeature SDK umbrella (with Unleash / Flagsmith / GrowthBook vendor references), the feature-flag test matrix reference (coverage-suite building + kill-switch categories), the experiment-sdk-testing umbrella (Statsig, Optimizely, Split.io, Amplitude Experiment, VWO hermetic harnesses), the AB-test validity checklist, the experiment-results interpreter (peeking + guardrail methodology in its references), flag-coverage-gap detection, stale-flag detection with the removal runbook, and sample-ratio-mismatch (SRM) detection. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates production experiment results); this plugin scopes to platform-SDK testing, flag-lifecycle hygiene, and testing the experimentation harness itself (SDK behaviour, assignment integrity, statistical-validity gates).",
   "author": {
     "name": "testland",

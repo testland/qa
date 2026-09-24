@@ -1,0 +1,51 @@
+{
+  "context": "Predicted baseline failure: the agent writes a plausible concurrent Go test, deletes `continue-on-error: true`, declares the pipeline fixed, and never opens the first two lines of `internal/idem/concurrent_test.go`. That file carries `//go:build !race`, so the only test in the package that puts more than one goroutine on the contended map has been excluded from every instrumented run for a year - which is the actual answer to 'how did fourteen months of commits get through this', and the file's own comment ('in a year it has never found anything') is the tell the agent is predicted to read straight past. Worse, the obvious place to put the new test is that same file, next to the existing concurrent one, which silently keeps the new gate out of the detector run too. Two further planted settings are predicted to survive untouched. `CGO_ENABLED: \"0\"` sits in the workflow-level `env:` block; the detector is ThreadSanitizer compiled into the binary and needs cgo, so the step could not have executed even when it ran - which is the real reason a previous engineer marked it non-blocking rather than fixing it. And `GORACE: \"halt_on_error=1 history_size=7\"` reads like careful tuning while being two wrong choices for CI: halting on the first finding throws away every other race in the run, deep history costs memory per goroutine and is meant to be raised only when reported stacks come back truncated, and nothing is written to a file, so whatever the detector does print dies with the runner. The last predicted miss is in the test itself: the per-goroutine `time.Sleep` stagger means the eight goroutines almost never reach the unsynchronised map together, and `t.Fatalf` is called from goroutines other than the one running the test, which does not stop those goroutines and leaves failures unreliably attributed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Contended tests reach the instrumented build",
+      "max_score": 30,
+      "description": "The `//go:build !race` constraint on `internal/idem/concurrent_test.go` is removed, and the newly added test is in a file the instrumented build compiles. MUST NOT add or preserve any mechanism that keeps a concurrency test out of the detector run - a build constraint, a `testing.Short()` guard paired with `-short`, or a `t.Skip` conditioned on the instrumented build: any of those scores zero here, and so does leaving the existing constraint in the tree at the end. Placing the new test inside the still-excluded file scores zero. Scores at most half if the constraint is removed but `docs/ci-race-gate.md` does not name it among the reasons fourteen months of commits were green."
+    },
+    {
+      "name": "New test arranges the collision itself",
+      "max_score": 22,
+      "description": "The added test holds every goroutine at an explicit start gate - a closed channel, a `sync.WaitGroup` released once all goroutines are parked, a `sync.Cond`, or equivalent - so they enter `Do` for the same key simultaneously, and then asserts that `charge` was invoked exactly once. MUST NOT use `time.Sleep`, a stagger, a raised goroutine count, or `runtime.Gosched()` as the mechanism that produces the overlap: a test whose only concurrency device is sleeping or hoping scores zero here. Scores at most half if a gate exists but the test asserts only that no panic occurred rather than asserting the single-charge invariant."
+    },
+    {
+      "name": "Detector options fit a CI run",
+      "max_score": 14,
+      "description": "The `GORACE` line is corrected rather than carried forward: halting on the first finding is dropped so a run reports every race it sees, the history depth is returned to its default instead of the raised value that costs memory per goroutine and is only warranted when reported stacks come back truncated, and the detector's report is written somewhere that survives the job - a log path plus an archive or upload step conditioned on failure. Leaving the `GORACE` line as it stands scores zero. Scores at most half if only one of the three is addressed."
+    },
+    {
+      "name": "Detector can execute at all",
+      "max_score": 12,
+      "description": "The instrumented step gets a working cgo toolchain - cgo enabled for that step or job, or the workflow-level `CGO_ENABLED: \"0\"` moved down onto the release-build step where it belongs. Leaving `CGO_ENABLED: \"0\"` in force over the instrumented invocation scores zero for this criterion, because the step cannot run at all. Scores at most half if it is fixed silently and `docs/ci-race-gate.md` never names it as one of the reasons the old step was marked non-blocking."
+    },
+    {
+      "name": "Stress amplification and timeout budget",
+      "max_score": 12,
+      "description": "The instrumented invocation amplifies interleavings rather than trusting one execution - `-count` above 1, and/or `-cpu` across more than one GOMAXPROCS value - and its `-timeout` is raised well above the 2m used by the uninstrumented run to absorb the instrumentation's execution overhead. Scores at most half if only one of the two is done. Scores zero if the step is left as a single default run at `-timeout=2m` identical to the plain test step."
+    },
+    {
+      "name": "MUST NOT leave the detector non-blocking",
+      "max_score": 10,
+      "description": "MUST NOT keep `continue-on-error: true` on the instrumented step, and MUST NOT delete, comment out, or `if:`-guard the step away to keep the build green. Either scores zero here. Moving it to a separate required job is acceptable; moving it to a nightly-only or manually-dispatched workflow so pull requests no longer see it scores at most half."
+    },
+    {
+      "name": "Assertions moved onto the test goroutine",
+      "max_score": 10,
+      "description": "`TestDoUnderLoad` no longer reaches `t.Fatalf` / `t.FailNow` from a spawned goroutine, directly or through the `checkCharge` helper it calls; results or errors are collected (channel, slice plus index, `errgroup`) and asserted by the goroutine running the test. Scores zero if a fatal assertion is still reachable from a goroutine body - routing it through a helper is the same defect and is why `go vet` has stayed quiet about it. Switching the calls to `t.Errorf` on the spawned goroutine is a partial improvement and scores at most half: the assertion still does not run on the test goroutine."
+    },
+    {
+      "name": "Production file untouched",
+      "max_score": 8,
+      "description": "MUST NOT modify `internal/idem/cache.go`. Adding a mutex, `sync.Map`, `sync.Once`, or singleflight to it scores zero here even though it would fix the bug - the ticket explicitly delivers the gate and the payments team owns the fix. Existing test names in the package are preserved."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "A new test under `internal/idem/`, an edited `.github/workflows/ci.yml`, and `docs/ci-race-gate.md` all exist, and the doc states the added wall-clock cost and at least one class of defect the detector still will not catch. A doc that only restates the diff scores at most half."
+    }
+  ]
+}

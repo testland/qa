@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: Webhooks API
+  version: '3.1.0'
+paths:
+  /v1/webhooks:
+    get:
+      operationId: listWebhooks
+      responses:
+        '200':
+          description: every webhook
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+    post:
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+  /v1/webhooks/{webhookId}:
+    get:
+      operationId: getWebhook
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the webhook
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '404':
+          description: not found
+components:
+  schemas:
+    WebhookRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+    Webhook:
+      type: object
+      required: [id, url, secret]
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+        secret:
+          type: string
+        disabled:
+          type: boolean

@@ -1,0 +1,46 @@
+{
+  "context": "A free offer from a competent neighbouring team, three of four consumers already signed, a deadline, and five proposals of which two are sound. Predicted baseline failure: the agent spends its attention on proposal 1 - whose flaw is the founding principle of the practice and which any strong model can argue against - and signs off proposals 4 and 5, because both come with numbers, both are aimed at a real problem (23 red builds from unmerged branches), and both read as an engineer tidying up their own pipeline. Proposal 4 is the expensive one and it is written to be agreed with: pinning the selection to the versions recorded as deployed does remove the noise, and it is true that the deployed pairing is what the deploy comparison asks about. What it also does is stop the provider ever verifying the consumer version that is about to ship - so no result exists for any consumer candidate, every consumer's own deploy comparison is left with an unfilled cell, and no consumer can get a verdict at all. The Q3 report already shows two consumer teams unable to get a verdict and hiding the step behind `if: false`, which is that failure in miniature; proposal 4 makes it universal and permanent. The selection has to keep the consumer's main branch alongside the deployed-or-released versions, and the noise is dealt with by not selecting every branch, not by dropping main. Proposal 5 is the other one: verification results are what the matrix is made of, so declining to publish a failure leaves the previous green result standing for that pair and the deploy comparison answers yes for a build that has just been shown to break a consumer - the red PR that Pavel says loses nothing is exactly the information the gate needed. Proposals 2 and 3 are the control; an agent that protects itself by objecting to the whole RFC scores no better than one that signs it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/rfc-88-review.md exists and answers all five numbered proposals separately with a yes or a no on each, and the review says what should happen to pacts/generated/fulfillment-ui-orders-api.json. A single verdict on 'the RFC', or a review that merges proposals together, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT leave the consumer's unshipped work unverified",
+      "max_score": 30,
+      "description": "Proposal 4 is not accepted as written. MUST NOT endorse a selection limited to the versions recorded as deployed or released. Endorsing it scores zero for this criterion whatever else the review gets right. Full marks require the replacement configuration - the consumer's main branch together with the deployed-or-released versions, given concretely against services/orders-api/verify-orders-api.js - and the consequence of the version Pavel proposed: if the provider only ever verifies versions that are already deployed, no result is ever produced for the version a consumer is trying to ship, so every consumer's own deploy comparison has an unfilled cell and can never return a verdict, which is already visible in the Q3 report as two teams hiding that step behind `if: false`. Rejecting proposal 4 with no replacement selection named, or naming only the main branch, scores at most half. Full marks also require the noise to be dealt with rather than dismissed: it comes from selecting every published branch, and narrowing to main plus deployed removes the unmerged spike branches that caused 19 of the 23 red builds."
+    },
+    {
+      "name": "MUST NOT publish verification results selectively",
+      "max_score": 20,
+      "description": "Proposal 5 is rejected. MUST NOT endorse publishing a verification result only when it passes, or making the publish conditional on the outcome in services/orders-api/verify-orders-api.js. Endorsing it scores zero for this criterion. Full marks require what it costs: the recorded results are what the deploy comparison reads, so a failure that is never recorded leaves the previous passing result standing for that consumer-version and provider-version pair, and the gate then returns yes for a build that has just been demonstrated to break a consumer - the red build in the PR is not a duplicate of that record, it is a different audience. Rejecting it on tidiness or auditability grounds alone, with no account of what the gate would then answer, scores at most half."
+    },
+    {
+      "name": "MUST NOT adopt expectations generated from the provider's own document",
+      "max_score": 14,
+      "description": "Proposal 1 is rejected. MUST NOT sign off on it, commit pacts/generated/fulfillment-ui-orders-api.json, publish it under the fulfillment-ui name, or take it as a starting point to be edited down into our test. Any of those scores zero for this criterion. Full marks require naming what such a check would prove: the expectations come out of openapi/orders.yaml and are replayed against the service that document describes, so a pass reports that orders-api agrees with its own specification and carries no information about any consumer - and with identical content published under four consumer names, the record asserts that every consumer reads every field, which is the one answer the two outages cannot use. Rejecting it as a process preference, with no account of what a pass or a failure would mean, scores at most half."
+    },
+    {
+      "name": "Our test asserts only what our screen reads",
+      "max_score": 16,
+      "description": "test/orders.consumer.spec.js records a GET /orders/{orderId} interaction asserting id, status, placedAt and the sku and qty inside lines, and nothing else, matched on type rather than on the literal example values, with a named starting state on the interaction so proposal 2's handlers have something to attach to. Each additional asserted field that src/orderList.js never touches - updatedAt, channel, customerId, customerTier, warehouseCode, carrierHint, pickWaveId, subtotalCents, taxCents, shippingCents, totalCents, currency, internalRiskScore, fraudReviewState, notesInternal, unitPriceCents, pickBin, lotCode - costs credit; carrying the whole documented body across from the generated draft scores zero. Producing no test file scores zero. Pinning the literal example values rather than matching on type scores at most half."
+    },
+    {
+      "name": "The two sound proposals endorsed with reasons",
+      "max_score": 10,
+      "description": "Proposals 2 and 3 are each answered yes with a reason: a declared starting state with no registered handler has nothing to set it up, so the interaction is replayed against whatever the service happens to be holding; and running in the PR pipeline with the outcome recorded attaches the result to the exact build a deploy later asks about, which a 02:00 run against main cannot. Rejecting or deferring either scores at most half; rejecting both, or answering yes to both with no reasons, scores zero."
+    },
+    {
+      "name": "The cost of the no is carried, not handed back",
+      "max_score": 6,
+      "description": "The review states what fulfillment-ui now owes instead - its own test, in its own pipeline, published under its own name, with a date - and routes the legitimate want behind proposal 1, knowing when any of the 38 documented responses changes, to comparing successive releases of openapi/orders.yaml against each other, which needs no consumer at all. An objection with no counter-offer scores zero."
+    },
+    {
+      "name": "Working code and tests left alone",
+      "max_score": 4,
+      "description": "MUST NOT modify src/orderList.js or test/orderList.test.js. Both pass and neither was part of the request. Any change to either scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# vantage-api secret-scanner config
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "dummy Stripe test key in the SDK fixtures (PLT-882)"
+commits = ["9c1e2f4"]

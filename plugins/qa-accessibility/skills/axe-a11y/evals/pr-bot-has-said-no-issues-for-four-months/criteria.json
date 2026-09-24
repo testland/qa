@@ -1,0 +1,41 @@
+{
+  "context": "The config does not look broken, and that is the trap. `a11y/axe.config.json` already selects rules the modern way - `runOnly: {\"type\": \"tag\", \"values\": [\"wcag2a\", \"wcag2aa\"]}` - which is the shape a competent agent reaches for unprompted and therefore the shape it is predicted to read as correct and leave alone. It is wrong against the contract the prompt names. axe tags WCAG 2.2 Level AA rules `wcag22aa`, a tag distinct from `wcag2aa`, which is WCAG 2.0 Level AA (https://github.com/dequelabs/axe-core/blob/develop/doc/API.md), and the only rule carrying `wcag22aa` is `target-size` - SC 2.5.8, touch targets at least 24 by 24 CSS pixels (https://dequeuniversity.com/rules/axe/4.10/target-size). So the one rule that decides whether the account-menu icons can be hit has not been in the run since May. `src/components/account-menu.jsx` renders them at 20x20 with zero margin, and `target-size` appears in none of the four arrays in `a11y/results/home.json`, because a rule that is not selected leaves no trace anywhere - not in violations, not in incomplete, not in inapplicable. Dan's request is the pivot: both reflexive answers to 'turn every rule on' leave the gap in place. Granting it pulls in `best-practice` and `experimental` - the latter disabled by default, neither one a conformance failure - and refusing it defends the very tag list that is short. Only a third path fixes anything. The second predicted miss is Priya's request: the three banner nodes sit in `incomplete[]`, not `violations[]`, because a background image defeated the contrast check. 'The tool could not determine it' reads exactly like a false positive and invites a commented `disableRules(['color-contrast'])`, which general practice sanctions - but incomplete means it needs a human, and twelve tickets are the humans reporting the text is unreadable. Third, Kofi's request is a genuine grant whose obvious implementation - fail when `violations.length` is non-zero - blocks the trunk from the first run, given 63 findings recorded on the home page alone, over 40 more counted by hand on /cart and /orders, and no remediation booked.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 5,
+      "description": "`lib/comment.js` edited, new cases in `test/comment.test.js`, `lib/verdict.js` exporting `blockingDecision` with `test/verdict.test.js` covering it, `docs/a11y-scan-review.md` written, and `npm test` green under `node --test` with no new dependencies. A failing suite, or a missing review document, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT ship a run that stops short of the contracted conformance target, and MUST NOT widen it past that target",
+      "max_score": 32,
+      "description": "The delivered `a11y/axe.config.json` selects rules by the tag set that actually covers the WCAG 2.2 AA bar the contract names - `wcag2a` and `wcag2aa` plus `wcag22aa` (accepting `wcag21a` / `wcag21aa` alongside them). MUST NOT leave the tag list at `[\"wcag2a\", \"wcag2aa\"]`, whether by declaring the config sound or by defending it in the answer to Dan; that scores zero for this criterion however good the rest is, because `wcag2aa` is WCAG 2.0 Level AA and the 2.2 criteria carry their own tag. MUST NOT reach the coverage the other way either - dropping `runOnly`, or adding `best-practice` or `experimental` to it, scores zero as well, since those are not conformance failures and would put house-style items and beta rules in front of PR authors. Full marks also require the review to state the consequence: the 2.2 rules were never selected, so for four months `Accessibility: no issues found.` was a statement about a subset of the standard, and the missing rules left no record at all rather than showing up as passes. Correcting the tag list while letting the reader think the missing findings were checked and cleared scores at most half."
+    },
+    {
+      "name": "MUST NOT report a clean page while items are undecided, and MUST NOT grant the contrast suppression",
+      "max_score": 22,
+      "description": "MUST NOT let `renderComment` return a no-issues line while `incomplete[]` is non-empty, and MUST NOT drop those entries silently - either scores zero for this criterion. Priya's request is refused: `color-contrast` stays on. Full marks require the three undecided nodes surfaced in their own needs-a-human section, named by rule id and selector, kept distinct from confirmed violations, and the refusal argued from what undecided means - axe could not resolve the background image, so it is asking for a human verdict, and the twelve banner tickets are that verdict coming back failing. Granting the disable, whether globally or as a `disableRules` entry with an inline reason, scores zero. Narrowing it to an `exclude` on the banner selectors instead scores at most half - it hides a defect the tickets have already confirmed. Folding the undecided nodes into the violation list or a blocking count, so they read as proven failures, also scores at most half."
+    },
+    {
+      "name": "MUST NOT gate the pull request on a zero-violation assertion",
+      "max_score": 16,
+      "description": "Kofi's request is granted - `blockingDecision` really does fail the PR - but MUST NOT be implemented as `violations.length === 0` or any equivalent absolute threshold, which scores zero for this criterion. With the target corrected, a zero gate blocks every pull request on day one against the 63 home-page findings and the 40-plus counted by hand on the other routes, none of which are booked for remediation. Full marks require a decision that compares the run against a recorded baseline and fails only on findings not already in it, attributed per rule and per selector, with `test/verdict.test.js` proving both directions - a new finding blocks, a baselined one does not. A gate that grandfathers debt only by muting whole rules, so any new failure of a muted rule also passes, scores at most half."
+    },
+    {
+      "name": "Account-menu tickets traced to the rule that never ran",
+      "max_score": 14,
+      "description": "The review connects the eleven account-menu tickets to `target-size` / SC 2.5.8 and to the 20x20 unspaced icon buttons in `src/components/account-menu.jsx`, and says that rule has not been in the run. Attributing them instead to something the engine cannot check - keyboard trapping, focus order, or a general statement that touch-target size needs manual review - scores zero, because the engine does ship this rule and the reason it was silent is selection, not capability. Naming the gap without tying it to the component markup or to the tickets scores at most half."
+    },
+    {
+      "name": "Single-URL coverage stated honestly",
+      "max_score": 9,
+      "description": "The comment or the review states that the nightly run visits one URL against the six routes in `src/routes.js`, names the unscanned ones so the cart and order-history tickets are accounted for, and proposes a representative set rather than all six - a logged-in page, a form-heavy page and a long-content page alongside the home page, with the session problem the setup note describes called out as the thing blocking it. Presenting a single-URL result as an application-wide or per-pull-request verdict scores zero. Noting the gap without naming which routes are missing scores at most half."
+    },
+    {
+      "name": "Existing test left intact",
+      "max_score": 4,
+      "description": "MUST NOT modify, weaken or delete the existing `names a critical violation in the comment` case in `test/comment.test.js`; it must still pass unchanged against the new renderer. Editing its assertion to accommodate a new output shape scores zero for this item."
+    }
+  ]
+}

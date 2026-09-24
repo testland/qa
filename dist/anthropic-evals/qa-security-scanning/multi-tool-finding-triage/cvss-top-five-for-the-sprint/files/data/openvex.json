@@ -1,0 +1,37 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://example.com/vex/checkout-api",
+  "author": "appsec@example.com",
+  "timestamp": "2026-08-29T11:04:00Z",
+  "version": 3,
+  "statements": [
+    {
+      "vulnerability": { "name": "CVE-2024-45491" },
+      "products": [{ "@id": "pkg:oci/checkout-api@2026.09.2" }],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_present",
+      "impact_statement": "The image links expat without the DTD parsing entry points; dtdCopy is not compiled in."
+    },
+    {
+      "vulnerability": { "name": "CVE-2025-1974" },
+      "products": [{ "@id": "pkg:oci/checkout-api@2026.08.1" }],
+      "status": "not_affected",
+      "justification": "component_not_present",
+      "impact_statement": "The ingress chart was unpinned from this image in the August rebuild."
+    },
+    {
+      "vulnerability": { "name": "CVE-2025-31324" },
+      "products": [{ "@id": "pkg:oci/checkout-api@2026.09.2" }],
+      "status": "not_affected",
+      "justification": "",
+      "impact_statement": ""
+    },
+    {
+      "vulnerability": { "name": "CVE-2025-46814" },
+      "products": [{ "@id": "pkg:oci/checkout-api@2026.09.2" }],
+      "status": "under_investigation",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "Thumbnail path may not decode ICC profiles; waiting on confirmation from the imaging team."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+id,created,reached_production,fix_shipped,summary
+ORD-4120,2026-09-02,yes,2026-09-05,"Backorder line items dropped from the confirmation email"
+ORD-4155,2026-09-08,yes,2026-09-10,"Reduced VAT rate applied to physical goods on EU orders"
+ORD-4163,2026-09-11,yes,2026-09-12,"Split shipment billed the customer for postage twice"
+ORD-4171,2026-09-12,no,2026-09-13,"Gift message truncated at 40 characters - caught in staging"

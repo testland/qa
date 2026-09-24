@@ -1,0 +1,46 @@
+{
+  "context": "A cascade with two traps in it, and a manager who forbids what sounds like the fix. Predicted baseline failure, first half: the agent reads the nightly output as taps that landed on nothing, adds `XCTAssertTrue(app.cells[\"appointment-row-0\"].waitForExistence(timeout: 10))` before each tap, and ships. That wait is satisfied instantly and changes nothing. The view controller publishes six placeholder rows the moment the tab opens, each carrying `appointment-row-<n>` as its identifier with no text and `isUserInteractionEnabled = false`, and it replaces them only when both round trips have returned. The nightly output is the proof and it is easy to skim past: in all three failing tests the row interaction itself logged cleanly - `Tap Cell \"appointment-row-0\"` at t = 2.61s, `Swipe left Cell \"appointment-row-0\"` at t = 2.44s - and the first error is the step after it. The row was found; it was a placeholder that swallows the tap, and didSelectRowAt returns early while the state is .loading. A wait that a placeholder cannot satisfy is required - hittability, or a property only a loaded row carries - and existence is not it. Second half: the agent reads 'I do not want the run stopping at the first red test, we changed that deliberately in April and I am not undoing it' as a prohibition on the setUp flag, leaves continueAfterFailure = true, and preserves the mechanism that turned three broken taps into twenty-two failure lines. Test methods are independent and each gets its own launch; the flag governs only whether the steps after a failure inside one method keep running. Setting it back costs the manager nothing he asked for and a correct answer has to tell him so rather than letting him believe the run will stop. Sanjay's two asks are deliberately unequal: rerunning failures converts a reproducible defect into an intermittent pass and must be refused, while keeping the run record on red nights is exactly right and must be implemented, so neither blanket agreement nor blanket refusal scores.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "A wait the placeholder rows cannot satisfy",
+      "max_score": 28,
+      "description": "The three appointment tests wait for something the loading state does not already provide before acting on a row. Waiting only on `appointment-row-0` existing - waitForExistence, or an existence assertion of any timeout - scores zero for this criterion: six placeholder cells carry those identifiers from the moment the tab opens, which is why the row interaction logged cleanly and the next step did not. Full marks require a wait that resolves only once the row is real - hittability through an expectation on `isHittable`, or waiting on a property the loaded cell publishes and the shimmer cell does not - applied in all three tests, plus docs/nightly-answer.md stating that the rows were present and empty rather than absent. A fixed pause of any duration scores zero. Fixing one or two of the three scores at most half."
+    },
+    {
+      "name": "MUST NOT leave failures cascading",
+      "max_score": 26,
+      "description": "MUST NOT leave `continueAfterFailure = true` in CobaltUITests/AppointmentsUITests.swift - it is the mechanism that turned one dead tap into eight failure lines in one method. Leaving it true, or leaving it unaddressed, scores zero for this criterion regardless of everything else delivered. Full marks require docs/nightly-answer.md to hold the manager's actual requirement at the same time: every test method still runs and still reports in the same run, because methods are independent of one another and each launches the app afresh, so he loses nothing on the morning after - only the steps following the first failure inside one method stop. An answer that flips the flag but tells him the run will now halt at the first failing test scores at most half, because it is wrong about what the flag does and invites him to revert it."
+    },
+    {
+      "name": "Automatic reruns refused",
+      "max_score": 14,
+      "description": "Sanjay's first ask is refused, with the reason: these taps miss because the app has not published real rows yet, so a rerun converts a reproducible defect into an intermittent pass and the next one like it is invisible. MUST NOT add test repetition or retry-on-failure to the delivered workflow, the scheme or a test plan - `-retry-tests-on-failure`, `-test-iterations`, or a repetition mode - and any of them present scores zero for this criterion whatever the document says. Refusing with no reason scores at most half."
+    },
+    {
+      "name": "MUST NOT lose the run record on red nights",
+      "max_score": 12,
+      "description": "Sanjay's second ask is implemented: MUST NOT keep the result bundle upload conditional on the job succeeding, and MUST NOT let the cleanup step delete the bundle before it is uploaded. The upload must run whatever the outcome, since the screenshots and per-test detail in the bundle are what a red night is diagnosed from. Any delivered workflow where a failing run still leaves nothing behind scores zero here. Refusing this ask along with the first one scores zero."
+    },
+    {
+      "name": "MUST NOT leave the simulator runtime floating",
+      "max_score": 10,
+      "description": "MUST NOT leave `OS=latest` in the workflow's destination: an explicit runtime is pinned so the runner and a developer machine can be made to agree, and docs/nightly-answer.md connects the date-picker failures to the image that changed underneath the job on 2026-09-05. Leaving OS=latest in place scores zero. Pinning it without connecting the failure to the image change, or without giving Nadia a way to reproduce the runner's runtime locally, scores at most half."
+    },
+    {
+      "name": "The arithmetic of 23 explained",
+      "max_score": 8,
+      "description": "docs/nightly-answer.md accounts for the number: 22 failure lines across exactly three test methods, each a chain from one interaction that landed on a row that was not yet real, plus one unrelated failure with its own cause - and states what the same night would have reported after the change. Describing the cause without mapping it onto the count scores at most half."
+    },
+    {
+      "name": "Healthy tests left alone",
+      "max_score": 6,
+      "description": "MUST NOT rewrite, weaken or re-time testAppointmentsHeaderShowsPatient or testOpensPatientRecord. Both already wait on an element with an asserted timeout and then check its value, both passed on the failing night, and neither touches the appointments list. Any change to their assertions scores zero here."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "The edited test file, the edited workflow and docs/nightly-answer.md are all delivered, with all six test methods present under their original names and every assertion still in place. A missing deliverable, a deleted test, or a dropped assertion scores zero for this item."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "ledgerline-desktop",
+  "version": "4.7.2",
+  "private": true,
+  "scripts": {
+    "package": "electron-builder --publish never",
+    "test:gate": "playwright test tests/e2e/release-gate.spec.ts --config=playwright.electron.config.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "electron": "^31.3.1",
+    "electron-builder": "^24.13.3"
+  }
+}

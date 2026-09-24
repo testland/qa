@@ -1,0 +1,41 @@
+{
+  "context": "A coverage audit whose owner hands over a confident diagnosis that is about the wrong line of the file, and then tells the agent not to look at the one piece of evidence that gives the answer away. Predicted baseline failure: the agent does what Tom asked - widens the JavaScript block's `directory` to the workspace packages, leaves `package-ecosystem: \"pnpm\"` exactly where it is because the repo genuinely is a pnpm workspace with a `pnpm-lock.yaml` and a `packageManager` field to prove it, and reports the coverage gap closed. There is no `pnpm` ecosystem value and no `yarn` one either; pnpm, yarn and npm lockfiles are all handled by the `npm` ecosystem, so the identifier a contractor copied off a two-year-old write-up was never a valid value. That single line is what the activity table is actually recording: the file has been rejected since it was committed on 2026-03-12, which is why the pip stream that had run for years and the Actions stream both stopped within days of a commit that touched neither of them and never resumed, and why a warning has been sitting on the dependency graph page ever since. Tom's asides explain those two silences away as a dependency freeze and an idle repo, and the fixture contradicts both - the ranker's requirements.txt was hand-edited in May and July, and the workflows directory has four commits since March. An agent that keeps the identifier ships a file that still does nothing at all, three weeks before someone signs an attestation that says every component is covered, and its coverage matrix becomes evidence for a control that has never once run. Around that, the determinate work: the npm coverage has to reach the three workspace manifests rather than only the root, the `allow` filter restricting the ranker to Django has to come off, Terraform and Docker need blocks at all, the auditor's quarterly cadence has a documented interval value that is neither `monthly` nor an invented string, and the second half of Tom's proposal is the review-capacity anti-pattern in the other direction.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT ship a pnpm or yarn ecosystem identifier",
+      "max_score": 32,
+      "description": "MUST NOT leave `package-ecosystem: \"pnpm\"` in the rewritten file, and MUST NOT substitute `\"yarn\"` or any other identifier outside the documented set. Either scores zero for this criterion no matter what else the answer fixes - the value is not recognised, so the file stays rejected and the rewritten coverage matrix documents a control that does not run. Full marks put the JavaScript blocks on `npm`, and say plainly in the document that the `npm` ecosystem is what reads pnpm and yarn lockfiles, so the March migration never changed which value belonged there and the directory Tom is pointing at was never the problem. Changing the identifier to `npm` without addressing Tom's diagnosis in the document, as the output specification requires, scores at most half."
+    },
+    {
+      "name": "The March flatline traced to the file, not to Tom's two asides",
+      "max_score": 20,
+      "description": "The document attributes the pip and github-actions streams stopping to the same 2026-03-12 change to `.github/dependabot.yml` - one invalid value taking every block down with it - rather than to three unrelated causes. Repeating Tom's explanations (the ranker froze its dependencies, nobody touches the workflows) scores zero: the ranker's requirements.txt was hand-edited on 2026-05-19 and 2026-07-02 and the workflows directory has four commits since March, both of which are in the attached report. Naming the date without connecting it to the blocks that were not edited, or saying only that the file 'has a problem' without identifying which line, scores at most half."
+    },
+    {
+      "name": "Workspace packages actually covered",
+      "max_score": 14,
+      "description": "The three manifests under `/packages/` get coverage - a `directories` array or glob reaching them, or one block each - alongside the root manifest, and the matrix says why nothing under `/packages/` was ever in scope. Leaving a single block at `/` as the only JavaScript coverage scores zero. Covering some but not all three scores at most half."
+    },
+    {
+      "name": "Unconfigured ecosystems added and the matrix readable as evidence",
+      "max_score": 12,
+      "description": "Blocks are added for `/infra/main.tf` and `/services/media/Dockerfile` using documented ecosystem identifiers, and `docs/coverage-matrix.md` carries a row per manifest naming the block that covers it plus, for the previously uncovered ones, the specific cause rather than 'was not configured'. Adding neither block scores zero; adding one scores at most half. A matrix that only restates the YAML scores at most half."
+    },
+    {
+      "name": "Narrow allow filter identified as the cause of the pip gap",
+      "max_score": 10,
+      "description": "The `allow: dependency-name: \"django*\"` entry is removed or widened so the ranker's other 42 dependencies are in scope, and the matrix names it as why `requests` and `cryptography` were never proposed even while that block was running. Leaving the filter in the rewritten file scores zero. Removing it without naming it in the matrix scores at most half - the auditor's question is why, not what."
+    },
+    {
+      "name": "Quarterly cadence expressed with a documented interval",
+      "max_score": 8,
+      "description": "The Terraform block's schedule delivers the quarterly cadence the auditor asked for, using a value the schema accepts. Substituting `monthly` scores zero - it is three times the cadence a change-controlled estate was signed off for, and the matrix would then misstate it. An invented value such as `\"3-months\"` or `\"every-quarter\"` scores zero, since it puts the file back in the state this whole task exists to get it out of. Leaving Terraform on the same weekly cadence as everything else scores zero."
+    },
+    {
+      "name": "MUST NOT put every block on a daily schedule",
+      "max_score": 8,
+      "description": "MUST NOT adopt the second half of Tom's proposal. `interval: \"daily\"` across the blocks scores zero for this criterion. Full marks refuse it with the reason that applies here: going from one live manifest to eight multiplies the volume on its own, and a daily cadence over a hundred and three runtime dependencies turns a coverage problem into a review-capacity problem. Some consolidation of the dev-dependency streams by grouping is expected alongside the widened coverage; no grouping anywhere scores at most half."
+    }
+  ]
+}

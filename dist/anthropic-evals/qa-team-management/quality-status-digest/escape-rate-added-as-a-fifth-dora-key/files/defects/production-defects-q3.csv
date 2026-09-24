@@ -1,0 +1,6 @@
+id,created,reached_production,fix_shipped,environment_label,summary
+ORD-9088,2026-06-24,yes,2026-07-02,production,"Order total rounded down on three-line orders"
+ORD-9101,2026-07-25,yes,2026-07-28,production,"Address validation accepted an empty postcode"
+ORD-9140,2026-08-21,yes,2026-08-26,production,"Cancelled orders reappeared in the picking queue"
+ORD-9155,2026-08-30,no,2026-09-01,staging,"Bulk import timed out above 5000 rows"
+ORD-9172,2026-09-02,yes,2026-09-03,production,"Split shipment charged delivery twice"

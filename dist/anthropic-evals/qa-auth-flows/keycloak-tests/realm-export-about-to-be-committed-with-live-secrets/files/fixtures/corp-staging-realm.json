@@ -1,0 +1,101 @@
+{
+  "id": "corp-staging",
+  "realm": "corp-staging",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "accessTokenLifespan": 300,
+  "smtpServer": {
+    "host": "smtp-relay.corp.internal",
+    "port": "587",
+    "from": "no-reply@corp.example",
+    "auth": "true",
+    "starttls": "true",
+    "user": "svc-smtp-relay",
+    "password": "Rel4y!Prod-2026-a9f3"
+  },
+  "clients": [
+    {
+      "clientId": "svc-reports",
+      "name": "Reporting service",
+      "enabled": true,
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "secret": "8c1f2e40-5b77-4a19-9d0e-3f6a2b884c11",
+      "redirectUris": [],
+      "webOrigins": []
+    },
+    {
+      "clientId": "corp-portal",
+      "name": "Employee portal",
+      "enabled": true,
+      "publicClient": false,
+      "serviceAccountsEnabled": false,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "secret": "f9a03d17-6e52-49c8-b1aa-72c4e0d5913b",
+      "redirectUris": ["https://portal.corp.example/*"],
+      "webOrigins": ["https://portal.corp.example"]
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "alice.tran@corp.example",
+      "firstName": "Alice",
+      "lastName": "Tran",
+      "federationLink": "corp-ldap",
+      "realmRoles": ["reports-reader"]
+    },
+    {
+      "username": "svc-nightly",
+      "enabled": true,
+      "credentials": [
+        { "type": "password", "value": "n1ghtly-b4tch-run", "temporary": false }
+      ],
+      "realmRoles": ["reports-reader"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      { "name": "reports-reader", "description": "Read reporting data" },
+      { "name": "reports-admin", "description": "Manage reporting data" }
+    ]
+  },
+  "identityProviders": [
+    {
+      "alias": "google",
+      "providerId": "google",
+      "enabled": true,
+      "trustEmail": true,
+      "config": {
+        "clientId": "418820734411-r7n2q8v1c3.apps.googleusercontent.com",
+        "clientSecret": "GOCSPX-7Kd2mQaZ0uV4hR1sLpE9wXtY6",
+        "hostedDomain": "corp.example"
+      }
+    }
+  ],
+  "components": {
+    "org.keycloak.storage.UserStorageProvider": [
+      {
+        "id": "corp-ldap",
+        "name": "corp-ldap",
+        "providerId": "ldap",
+        "config": {
+          "connectionUrl": ["ldaps://ldap.corp.internal:636"],
+          "usersDn": ["ou=people,dc=corp,dc=internal"],
+          "bindDn": ["cn=keycloak-bind,ou=services,dc=corp,dc=internal"],
+          "bindCredential": ["LdapB1nd-ProdShared-!7"],
+          "editMode": ["READ_ONLY"],
+          "importEnabled": ["false"],
+          "syncRegistrations": ["false"]
+        }
+      }
+    ]
+  }
+}

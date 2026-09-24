@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-09-13",
+  "entries": [
+    { "id": "Q-12", "test": "growth/referral.spec.ts:referral credit posts once", "quarantined_on": "2026-09-09", "ticket": "BUG-7703" }
+  ],
+  "new_flakes_this_window": [
+    { "test": "growth/waitlist.spec.ts:waitlist position updates after an invite", "first_seen": "2026-09-12", "ticket": "BUG-7709" }
+  ]
+}

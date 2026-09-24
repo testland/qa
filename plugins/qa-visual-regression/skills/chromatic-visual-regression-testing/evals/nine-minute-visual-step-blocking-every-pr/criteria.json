@@ -1,0 +1,41 @@
+{
+  "context": "The team already tried the changed-only mode and it let a library-wide border change through, so the prompt pushes away from it: Priya will not sign off without an explanation of that specific miss, and the requester has said out loud that he would accept Ravi's coverage cut instead. Predicted baseline failure: the agent either takes the offered trade (drop the kitchen-sink stories, drop two of the three viewports) or re-enables the changed-only mode with nothing said about July, which reproduces the same miss the next time a token value moves. The evidence that settles it is structural rather than narrated: `tokens/semantic.css` is compiled by `scripts/build-tokens.mjs` into `public/tokens.css`, which is gitignored, served from `staticDirs: ['../public']` and pulled in by a `<link>` in `.storybook/preview-head.html`. No story and no component module imports it - `Card.stories.tsx` imports `Card`, which imports `Card.css`, which only reads `var(--hl-border-neutral)`. So the file Nadia changed sits outside the bundler dependency graph the changed-only analysis walks, the analysis found nothing affected, and four unrelated stories were photographed. The fix the unaided agent is not expected to produce is the configuration key that declares non-bundled files as rebuild triggers; without it, re-enabling the mode is the July incident again. Dan's shortcut and Ravi's cut are the easy halves and are weighted accordingly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Non-bundled token assets declared as rebuild triggers",
+      "max_score": 32,
+      "description": "The delivered `chromatic.config.json` declares the files that live outside the bundler graph - at minimum a glob covering the tracked token sources (`tokens/**`), with `public/**` acceptable alongside it - so that changing a token value forces the full library to be re-photographed. Re-enabling the changed-only mode with no such declaration scores zero for this criterion: it is the July configuration exactly. Explaining the miss in prose while the delivered config does not carry the declaration scores at most half. Full marks also require the explanation Priya asked for: the token file is compiled into a statically served stylesheet that no story imports, so the dependency analysis saw nothing affected by Nadia's change."
+    },
+    {
+      "name": "Speed bought from the changed-only mode, not from coverage",
+      "max_score": 20,
+      "description": "The delivered workflow and config restrict a PR to the stories its changes actually affect, with all 1,180 stories and all three viewports still in the project. Keeping the whole-library build on every PR scores zero here, as does any answer whose only speed-up is running the step less often (nightly only, label-gated, `paths` filters that skip PRs)."
+    },
+    {
+      "name": "MUST NOT cut what is photographed",
+      "max_score": 14,
+      "description": "MUST NOT adopt Ravi's proposal - the 130 kitchen-sink stories stay, and the viewport list is not reduced - even though the requester offered the trade. Delivering either cut scores zero. Full marks require declining it with the reason that the changed-only mode makes the trade unnecessary, not merely on taste."
+    },
+    {
+      "name": "MUST NOT return before the comparison completes",
+      "max_score": 14,
+      "description": "MUST NOT adopt Dan's shortcut - the CI step waits for the comparison and its result decides the job. Delivering a step that returns once the upload is done scores zero. Full marks require the standup-ready reason: a step that exits at upload time can only ever report that the upload worked, so the job stops being a gate and nothing is blocked by a regression. Rejecting it as 'not best practice' with no statement of what the exit status then means scores at most half."
+    },
+    {
+      "name": "Ancestry resolvable in CI",
+      "max_score": 10,
+      "description": "With the changed-only mode on, the checkout fetches full git history rather than the default shallow clone, so the PR-to-baseline ancestry can be resolved. A delivered workflow that enables the mode on a shallow checkout scores zero here."
+    },
+    {
+      "name": "Token build left alone",
+      "max_score": 6,
+      "description": "MUST NOT modify `scripts/build-tokens.mjs` or `test/build-tokens.test.mjs`; `node --test test/` still passes. Editing either scores zero for this item."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "All three files exist, and `docs/visual-ci-notes.md` answers Ravi and Dan separately rather than as one paragraph about pipeline speed."
+    }
+  ]
+}

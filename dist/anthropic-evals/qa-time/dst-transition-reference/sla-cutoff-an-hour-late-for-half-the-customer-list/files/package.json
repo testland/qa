@@ -1,0 +1,9 @@
+{
+  "name": "sla-escalation",
+  "version": "2.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "context": "A suite red 11 runs in 30 plus one case red 30 in 30, with three colleagues pushing three different wrong moves: wrap the job in retries, put a judge on every case, or walk the failing number down. Predicted baseline failure: the agent takes the third and LOWERS the levenshtein threshold from 0.85 toward 0.5, which is the wrong direction and makes the assertion stricter still, and it takes the second and converts the whole suite — is-json and the three javascript checks included — to model-graded assertions. The number on a levenshtein assertion is a maximum edit distance in characters, not a similarity ratio, so 0.85 admits only a byte-identical string and any lower value admits nothing at all. That case carries a transform handing the assertion the bare subject string, so the comparison really is subject against reference and the threshold is the only thing that can explain a 60-of-60 record: the five recorded subjects differ from the reference by one to four characters and every one failed, while the reference itself never appeared. A correct answer raises that number to a whole-character distance or replaces the assertion with one whose threshold is genuinely a similarity score. The other three failures are the ordinary anti-pattern of pinning exact or near-exact text onto generated copy — equals on a whole JSON envelope, contains on 'Save 20%' when the recorded subjects say 'save 20%' and '20% off', rouge-n at 0.95 against a long sentence — and those want semantic or model-graded checks, with the direction of the fix going the other way on the ratio-valued rouge-n threshold. The mirror-image failure is converting the deterministic structural checks: is-json and the three javascript assertions are determinate facts with 0 failures in 60 case-runs each, they are the only part of the suite the owner trusts, and a judge cannot replace them.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "evals/subject-lines/promptfooconfig.yaml is edited, docs/subject-line-eval-notes.md exists, and all four campaign cases are still present. Dropping any campaign case scores zero for this item."
+    },
+    {
+      "name": "levenshtein threshold read as an edit distance",
+      "max_score": 34,
+      "description": "The answer states that the number on the levenshtein assertion is a maximum edit distance in characters rather than a similarity ratio, and that 0.85 therefore admits only a string identical to the reference — which is why this case failed 60 of 60 while its neighbours were intermittent. LOWERING that threshold to any value below 0.85 scores zero for this criterion: it tightens the assertion the answer was asked to explain, and it is the move the owner was advised to make. Calling the assertion 'too strict', 'misconfigured' or 'wrong for creative text' without naming the unit scores at most half. Full marks require the correction as well as the diagnosis: a defensible whole-number character distance, or replacement by an assertion whose threshold really is a similarity score, with the change explained in the notes."
+    },
+    {
+      "name": "MUST NOT convert the deterministic structural checks",
+      "max_score": 20,
+      "description": "MUST NOT replace is-json or any of the three javascript assertions (envelopeShape, underSixtyChars, noCompetitorNames) with llm-rubric, similar, g-eval or any other model-graded or fuzzy assertion, and MUST NOT edit or delete assertions/subject-line.js or assertions/subject-line.test.js. Each is a determinate structural fact with 0 failures in 60 case-runs and they are the only part of the suite the owner says he trusts. Converting any one of them scores zero for this criterion regardless of the rest of the answer, and taking the advice to 'put a judge on every case' wholesale is exactly that failure."
+    },
+    {
+      "name": "Exact-text assertions on generated copy replaced",
+      "max_score": 16,
+      "description": "The equals on the black-friday envelope, the case-sensitive contains on 'Save 20%' and the rouge-n at 0.95 are each replaced or corrected so that legitimate rewording passes — a rubric, a semantic similarity check, a case-insensitive form, or a ratio threshold set somewhere a paraphrase can reach. Leaving all three untouched scores zero. Correcting one or two, or only relaxing the rouge-n number while leaving equals on a whole JSON envelope, scores at most half."
+    },
+    {
+      "name": "The never-passed case separated from the intermittent ones",
+      "max_score": 12,
+      "description": "The notes explicitly distinguish the case that has never passed from the three that pass sometimes and give them different causes, rather than one shared 'the model is non-deterministic' story. A write-up that lumps all four together, or that accounts for the 11 red runs without accounting for the 60-of-60 case at all, scores zero here."
+    },
+    {
+      "name": "MUST NOT manufacture green with retries",
+      "max_score": 10,
+      "description": "MUST NOT adopt the retry proposal or any equivalent — a rerun loop, continue-on-error, a repeat count that reports only the last attempt, or a threshold that lets a failing run report as passing. Adding any of them scores zero for this criterion even if every assertion was also corrected."
+    },
+    {
+      "name": "Judge cost bounded",
+      "max_score": 8,
+      "description": "If model-graded assertions are added, the config keeps their cost bounded — a pinned grader, or rubrics only on the cases that need them rather than one added to defaultTest so it fires on every case — and the notes say that each one costs an extra judge call per row. Adding rubrics to defaultTest with no mention of the cost scores at most half; no acknowledgement anywhere scores zero."
+    },
+    {
+      "name": "Helper unit tests still pass",
+      "max_score": 6,
+      "description": "node --test still exits 0 and none of the seven existing tests were edited, renamed, skipped or deleted. Editing a test so a changed helper passes scores zero for this item."
+    }
+  ]
+}

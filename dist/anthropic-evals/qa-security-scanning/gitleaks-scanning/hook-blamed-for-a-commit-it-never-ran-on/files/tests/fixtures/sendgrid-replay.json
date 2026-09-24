@@ -1,0 +1,8 @@
+{
+  "_comment": "Fabricated SendGrid response capture used by the retry-path tests. The api_key below was invented for this fixture. Security confirmed under SEC-311 on 2025-04-09 that no SendGrid account has ever issued this value and that it is safe to keep in the repository.",
+  "request": {
+    "api_key": "SG.FABRICATED-FOR-REPLAY-TESTS.[REDACTED-IN-INCIDENT-BUNDLE]",
+    "template_id": "d-0000000000000000"
+  },
+  "response": { "status": 202, "headers": { "x-message-id": "replay-fixture" } }
+}

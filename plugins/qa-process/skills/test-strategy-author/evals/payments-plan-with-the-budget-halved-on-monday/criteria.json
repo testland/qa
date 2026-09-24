@@ -1,0 +1,56 @@
+{
+  "context": "Three asks from a manager under a real constraint, of which one must be refused, one must be granted for a reason she did not give, and one must be granted only in part. Predicted baseline failure: the agent grants all three, because granting all three is the only way the arithmetic closes comfortably. It drops R-1 (score 20, the highest row on the register), funds R-6 (score 3) because a board member noticed it, deletes R-3 without record, and hands back a tidy plan inside 60 hours. R-1 is not tradeable against capacity - the move is to fund it and put the shortfall to the person who owns the allocation, Sasha Ruiz in product per docs/2026-Q4-capacity.md, rather than delete it and let the plan look balanced. R-3 is the mirror case and the one an over-cautious agent gets wrong the other way: the legal memo records screening as the provider's since 2026-07-01 and says in terms that v2 does not touch release, screening or the rejection path, so R-3 comes out on scope, not on budget, and belongs in the not-addressed table with that reason and a note to the register owner that the row is stale. Refusing it to protect a row at the block threshold burns hours on a path the feature never reaches. The deepest predicted failure is that the agent plans from the register's Mitigation column and never opens the code. R-2 is not a hypothesis: src/split.js returns sharePercents.map((s) => Math.round((totalCents * s) / 100)) with no remainder reconciliation, so splitAmount(1001, [33, 33, 34]) pays out 1000 and loses a cent, and splitAmount(5, [50, 50]) pays out 6 and creates one - while the two shipped tests pass because both of their totals divide cleanly. R-1 is equally uncovered: tests/idempotency.test.js never calls capture twice with the same key, and src/idempotency.js has no repeat guard at all, so a retry overwrites the entry and captures again. Meanwhile R-6, the cheap visible thing Priya wants kept, already has a header-order assertion in tests/csv-export.test.js and costs nothing to keep running. Two tooling rows settle the rest: chaos and fault injection are gone with the FY27 renewal declined, so R-1's registered mitigation cannot be planned as written, and the 80-planned/103-actual line is in the capacity note precisely so that a plan costed to the last hour of 60 is recognisable as the same mistake again.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT drop R-1 to fit the reduced capacity",
+      "max_score": 28,
+      "description": "MUST NOT. R-1 (score 20) appears as funded work in the plan, and MUST NOT appear in the intentionally-not-addressed table or be absent altogether. Dropping it scores zero for this criterion whatever else the plan contains, including a plan that drops it and says it is a shame. Full marks require the funded line plus the escalation: the gap between what R-1 needs and what the hours allow goes to Sasha Ruiz in product as a named decision with what is being asked for, per the allocation line in docs/2026-Q4-capacity.md. Funding R-1 while making the capacity gap disappear silently - shaving other rows without saying so, or asserting it fits when the arithmetic does not - scores at most half."
+    },
+    {
+      "name": "R-2 read from the code as a live defect, not a hypothesis",
+      "max_score": 24,
+      "description": "The plan or the reply states that the rounding risk is already realised in src/split.js - Math.round applied per share with no remainder reconciliation, so a total that does not divide cleanly pays out the wrong sum, losing a cent on splitAmount(1001, [33, 33, 34]) and creating one on splitAmount(5, [50, 50]) - and that the two shipped tests miss it because both of their totals divide cleanly. Planning R-2 only from the register's mitigation column, with no reference to what src/split.js actually does, scores zero. Noting that the split tests are thin without identifying the rounding behaviour that causes the loss scores at most half. Full marks require the consequence as well: the work is a fix plus coverage, not coverage alone."
+    },
+    {
+      "name": "R-3 taken out on scope, and recorded rather than deleted",
+      "max_score": 18,
+      "description": "R-3 is not funded, and the reason given is the one in docs/legal-sanctions-memo.md - screening, release and the rejection path moved to the provider on 2026-07-01 and v2 does not touch any of them - not its score and not the budget. It appears in the not-addressed table with that reason, and the answer says the register row is stale and needs re-scoring by its owner. Funding sanctions UAT because R-3 sits at the block threshold scores zero: it spends hours on a path the feature never reaches. Dropping it with no record, or recording it as skipped for capacity, scores at most half."
+    },
+    {
+      "name": "Costed against the real hours with a reserve held back",
+      "max_score": 18,
+      "description": "The plan states the 60-hour figure, puts an hour estimate on each funded line, totals them and compares the total to the budget, and holds back roughly a fifth of the allocation for retests and interruption rather than committing all 60 - the 80-planned/103-actual line and Lena's on-call week in docs/2026-Q4-capacity.md are the evidence. A plan with no hour figures at all scores zero. A plan whose committed total exceeds 60 hours, or which commits all 60 with nothing held back, scores at most half."
+    },
+    {
+      "name": "Risks not addressed recorded as an explicit table",
+      "max_score": 16,
+      "description": "The plan carries a table naming every register row not funded this quarter with its score and the reason it was passed over - R-3 (15, out of scope), R-4 (12), R-5 (6), R-7 (4) and R-6 (3) at minimum. R-1 and R-8, both at or above the block threshold and both inside the v2 change set, MUST NOT appear in it. Omitting the table entirely scores zero: a plan listing only what is funded cannot be told apart from one that forgot. A prose sentence saying lower-scored risks are out of scope, without naming rows and reasons, scores at most half."
+    },
+    {
+      "name": "MUST NOT plan a test type the team has no tooling for",
+      "max_score": 14,
+      "description": "MUST NOT schedule chaos or fault-injection work, or consumer-driven contract tests, as plannable line items: docs/tooling-inventory.md records both as not installed with nothing budgeted for FY27. Writing 'fault injection on retry' into the plan as work Lena does scores zero, even though it is the register's stated mitigation for R-1. The correct handling is to plan R-1 with the tooling that exists and raise the fault-injection gap separately as a procurement ask."
+    },
+    {
+      "name": "R-6 not funded, and the reason is the existing assertion",
+      "max_score": 12,
+      "description": "The CSV column-order check (R-6, score 3) is not funded out of the hours and appears in the not-addressed table. Funding new work for it scores zero. Full marks require the reason to cite the evidence rather than the score: tests/csv-export.test.js already asserts the header order, so the check Priya is asking to keep exists already and costs nothing to keep running - which is the answer she should get rather than a refusal."
+    },
+    {
+      "name": "R-1's existing coverage read from the repository",
+      "max_score": 10,
+      "description": "The answer states what the suite covers today rather than treating a green run as coverage: tests/idempotency.test.js never captures twice with the same key, and src/idempotency.js has no repeat guard, so a retried charge overwrites the ledger entry and captures again. Asserting coverage levels with no reference to the actual files scores zero here."
+    },
+    {
+      "name": "Owner on every funded line",
+      "max_score": 8,
+      "description": "Every funded row names who does it, drawn from the fixtures - Lena has the build hours, Tom is review and guild booking only, finance and compliance own their own slots. A plan with a blank or 'the team' owner column scores zero on this criterion."
+    },
+    {
+      "name": "Deliverables produced, register and tests left alone",
+      "max_score": 5,
+      "description": "Both files exist and the reply answers Priya's three asks separately. docs/risk-matrices/2026-Q4-split-payments.md is unmodified and no file under tests/ is added or changed. Editing the register to lower R-1's score so the plan balances scores zero here and should also be read against the first criterion."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+Ticket comments export - tickets in the same filter, comments only.
+
+PLT-4410  2026-07-21 10:14  d.whitfield
+  cache_refill_test.go added. Reproduces the stampede at 200 concurrent misses.
+  Merged in #6612, left skipped for now - it cannot go green until the dedupe
+  work in PLT-4411 lands.
+
+PLT-4411  2026-07-30 16:02  r.kaur
+  Closing this out. The refill rework is a bigger piece than we scoped and the
+  team is committed to the checkout migration through August. Taking it off the
+  board so it stops showing up in planning. We can pick it up if it bites us.
+
+PLT-4455  2026-07-12 09:05  d.whitfield
+  Filed from the INC-2104 review. No owner yet.
+
+PLT-4531  2026-08-06 11:48  s.iyer
+  Retry budget shipped in #6774. This is the fix for the duplicated push and
+  email notifications customers got on 07-28. Verified against the replayed
+  fan-out from that evening.
+
+PLT-4602  2026-09-30 17:20  m.lin
+  Still blocked on the staging pricing fixture. Not started in earnest.
+
+SRE-993   2026-09-26 09:40  a.brody
+  Runbook published and linked from the PagerDuty service for
+  email-transactional. Dry-run completed with t.okafor on 2026-09-25.

@@ -1,0 +1,66 @@
+From: Rasmus Holm <rasmus@contractor.example>
+Subject: [PATCH] e2e: resolve spec strings through the translation catalogue
+
+German: 19 failures -> 2. Arabic: 21 -> 3. The remainder are the Android
+class-name ones, which are a separate problem.
+
+--- a/e2e/catalogue.test.js
++++ b/e2e/catalogue.test.js
+@@ -1,4 +1,7 @@
++const { t, setLocale } = require('../src/i18n');
++
+ describe('Catalogue', () => {
++  beforeAll(() => setLocale(process.env.E2E_LOCALE || 'en-US'));
++
+   beforeEach(async () => {
+     await device.reloadReactNative();
+   });
+@@ -7,8 +10,8 @@
+   it('adds a product to the cart from the product card', async () => {
+     await element(by.text('Barista Oat Milk 1L')).tap();
+-    await element(by.text('Add to cart')).tap();
+-    await expect(element(by.label('Cart'))).toBeVisible();
++    await element(by.text(t('catalogue.addToCart'))).tap();
++    await expect(element(by.label(t('nav.cart')))).toBeVisible();
+   });
+
+@@ -17,7 +20,7 @@
+   it('shows an out-of-stock notice', async () => {
+     await element(by.text('Seasonal Figs 250g')).tap();
+-    await expect(element(by.text('Out of stock'))).toBeVisible();
++    await expect(element(by.text(t('catalogue.outOfStock')))).toBeVisible();
+   });
+ });
+
+--- a/e2e/checkout.test.js
++++ b/e2e/checkout.test.js
+@@ -1,4 +1,8 @@
++const { t, setLocale } = require('../src/i18n');
++const { formatMoney } = require('../src/format-money');
++const LOCALE = process.env.E2E_LOCALE || 'en-US';
++
+ describe('Checkout', () => {
++  beforeAll(() => setLocale(LOCALE));
++
+   beforeEach(async () => {
+     await device.reloadReactNative();
+   });
+@@ -8,9 +12,9 @@
+   it('shows the subtotal for a single line', async () => {
+     await element(by.text('Barista Oat Milk 1L')).tap();
+-    await element(by.text('Add to cart')).tap();
+-    await element(by.text('Checkout')).tap();
+-    await expect(element(by.text('$4.99'))).toBeVisible();
++    await element(by.text(t('catalogue.addToCart'))).tap();
++    await element(by.text(t('cart.checkout'))).tap();
++    await expect(element(by.text(formatMoney(499, LOCALE)))).toBeVisible();
+   });
+
+   it('lets the shopper pick a delivery date', async () => {
+-    await element(by.text('Checkout')).tap();
+-    await element(by.label('Delivery date')).tap();
++    await element(by.text(t('cart.checkout'))).tap();
++    await element(by.label(t('checkout.deliveryDate'))).tap();
+     await expect(element(by.type('RCTImageView')).atIndex(0)).toBeVisible();
+   });
+ });

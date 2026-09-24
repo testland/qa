@@ -1,0 +1,32 @@
+[
+  {
+    "id": "request-property-became-optional",
+    "level": 1,
+    "operation": "POST",
+    "operationId": "issueCard",
+    "path": "/v1/cards",
+    "source": "/tmp/published.yaml",
+    "section": "paths",
+    "text": "the request property 'spendLimit' became optional"
+  },
+  {
+    "id": "response-property-enum-value-added",
+    "level": 2,
+    "operation": "GET",
+    "operationId": "getCard",
+    "path": "/v1/cards/{cardId}",
+    "source": "/tmp/published.yaml",
+    "section": "paths",
+    "text": "added the new 'frozen' enum value to the response property 'status' for the response status '200'"
+  },
+  {
+    "id": "response-optional-property-removed",
+    "level": 2,
+    "operation": "GET",
+    "operationId": "getCard",
+    "path": "/v1/cards/{cardId}",
+    "source": "/tmp/published.yaml",
+    "section": "paths",
+    "text": "removed the optional property 'network' from the response with the '200' status"
+  }
+]

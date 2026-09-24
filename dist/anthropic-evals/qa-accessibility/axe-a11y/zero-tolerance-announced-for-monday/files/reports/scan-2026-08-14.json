@@ -1,0 +1,20 @@
+{
+  "generated": "2026-08-14T01:02:00Z",
+  "apps": ["checkout", "dashboard", "settings", "billing"],
+  "violations": [
+    { "app": "checkout", "url": "/checkout", "ruleId": "color-contrast", "selector": "button.promo", "impact": "serious" },
+    { "app": "checkout", "url": "/checkout", "ruleId": "color-contrast", "selector": ".price-strike", "impact": "serious" },
+    { "app": "checkout", "url": "/checkout", "ruleId": "heading-order", "selector": "h4.summary", "impact": "moderate" },
+    { "app": "checkout", "url": "/checkout/confirm", "ruleId": "label", "selector": "input#coupon", "impact": "critical" },
+    { "app": "checkout", "url": "/checkout/confirm", "ruleId": "link-name", "selector": "a.terms", "impact": "serious" },
+    { "app": "dashboard", "url": "/", "ruleId": "aria-required-attr", "selector": "div.tablist", "impact": "critical" },
+    { "app": "dashboard", "url": "/", "ruleId": "color-contrast", "selector": "span.muted", "impact": "serious" },
+    { "app": "dashboard", "url": "/reports", "ruleId": "th-has-data-cells", "selector": "table.usage", "impact": "serious" },
+    { "app": "dashboard", "url": "/reports", "ruleId": "heading-order", "selector": "h3.chart-title", "impact": "moderate" },
+    { "app": "settings", "url": "/settings", "ruleId": "label", "selector": "input#tz", "impact": "critical" },
+    { "app": "settings", "url": "/settings", "ruleId": "color-contrast", "selector": "label.hint", "impact": "serious" },
+    { "app": "settings", "url": "/settings/team", "ruleId": "link-name", "selector": "a.remove", "impact": "serious" },
+    { "app": "billing", "url": "/billing", "ruleId": "color-contrast", "selector": "td.amount", "impact": "serious" },
+    { "app": "billing", "url": "/billing/invoices", "ruleId": "label", "selector": "select#year", "impact": "critical" }
+  ]
+}

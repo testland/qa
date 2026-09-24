@@ -1,0 +1,75 @@
+{
+  "generated": "2026-09-13T04:11:52Z",
+  "site": [
+    {
+      "@name": "https://app.veridianpay.dev",
+      "alerts": [
+        {
+          "pluginid": "10049",
+          "name": "Cookie No HttpOnly Flag",
+          "riskdesc": "Low (Medium)",
+          "instances": [{ "uri": "https://app.veridianpay.dev/account" }]
+        },
+        {
+          "pluginid": "40012",
+          "name": "Cross Site Scripting (Reflected)",
+          "riskdesc": "High (Medium)",
+          "instances": [
+            { "uri": "https://app.veridianpay.dev/admin/legacy/report?q=payload" },
+            { "uri": "https://app.veridianpay.dev/search?q=payload" }
+          ]
+        },
+        {
+          "pluginid": "10038",
+          "name": "Content Security Policy (CSP) Header Not Set",
+          "riskdesc": "Medium (High)",
+          "instances": [{ "uri": "https://app.veridianpay.dev/" }]
+        },
+        {
+          "pluginid": "10096",
+          "name": "Timestamp Disclosure",
+          "riskdesc": "Low (Low)",
+          "instances": [{ "uri": "https://app.veridianpay.dev/status" }]
+        },
+        {
+          "pluginid": "10202",
+          "name": "Absence of Anti-CSRF Tokens",
+          "riskdesc": "Medium (Low)",
+          "instances": [{ "uri": "https://app.veridianpay.dev/transfer" }]
+        },
+        {
+          "pluginid": "10035",
+          "name": "Strict-Transport-Security Header Not Set",
+          "riskdesc": "Low (High)",
+          "instances": [{ "uri": "https://app.veridianpay.dev/legacy/report" }]
+        },
+        {
+          "pluginid": "10098",
+          "name": "Cross-Domain Misconfiguration",
+          "riskdesc": "Medium (Medium)",
+          "instances": [{ "uri": "https://app.veridianpay.dev/" }]
+        }
+      ]
+    },
+    {
+      "@name": "https://checkout.veridianpay.dev",
+      "alerts": [
+        {
+          "pluginid": "10054",
+          "name": "Cookie without SameSite Attribute",
+          "riskdesc": "Low (Medium)",
+          "instances": [
+            { "uri": "https://checkout.veridianpay.dev/cart" },
+            { "uri": "https://checkout.veridianpay.dev/pay" }
+          ]
+        },
+        {
+          "pluginid": "90033",
+          "name": "Loosely Scoped Permissions Policy",
+          "riskdesc": "Low (Medium)",
+          "instances": [{ "uri": "https://checkout.veridianpay.dev/" }]
+        }
+      ]
+    }
+  ]
+}

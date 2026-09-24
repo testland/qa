@@ -1,0 +1,41 @@
+{
+  "context": "A widget where the obvious fix for the reported bug silently destroys the only thing that was still working, and where the attribute that should carry the announcement is already present but on the wrong element. Predicted baseline failure: the agent reads typeChar's guard, sees that arrowing moves domFocus to the listbox, and fixes the ticket by leaving domFocus on the input. The suite goes green, the 43 tickets are answered, and the widget now announces nothing ever - because aria-activedescendant is emitted on the listbox object, and that attribute is only honoured on the element that actually holds DOM focus. Today it accidentally half-works, since focus is on the listbox; after the naive fix it is stranded on an element nobody is focused on. The reference is broken a second way that survives either fix: it is built as 'option-' + id while the options render with ids of 'opt-' + id, so it has never pointed at anything, which is what the contractor heard. Priya's two additions are the judgement half and they point in opposite directions. The first must be refused: the field has a visible label element associated to it and each option takes its name from its own text, so author-written labels would override both with wording the user cannot see. The second must be agreed with: the clear button is hidden from assistive technology AND carries tabindex '-1', so it is out of the tab order too, and Escape on a closed list already clears the field - the treatment is coherent and there is nothing to fix. An agent that treats every Priya instruction as wrong scores no better than one that treats them all as right.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and the suite green",
+      "max_score": 5,
+      "description": "src/combobox.js is edited, docs/search-widget-notes.md exists and answers both of Priya's additions explicitly, and npm test passes with at least one added test that fails against the original code. No new test, or a suite left failing, scores at most half. No edit to src/combobox.js scores zero."
+    },
+    {
+      "name": "Focus stays on the field and the active option is published where focus is",
+      "max_score": 30,
+      "description": "After the fix, arrowing through the suggestions leaves domFocus on 'site-search' so typeChar keeps accepting characters, AND the active-option reference is emitted on the input object carrying the combobox role rather than on the listbox object. Both halves are required: keeping focus on the input while leaving the reference on the listbox scores at most half, because the attribute is then on an element that never holds focus and the widget announces nothing at all. Moving DOM focus into the list and papering over the typing bug another way - rerouting keystrokes, refocusing the input on each character - scores zero, as does leaving domFocus moving to the listbox."
+    },
+    {
+      "name": "MUST NOT label the field or the options",
+      "max_score": 20,
+      "description": "MUST NOT add an aria-label to the input or to any option, and MUST NOT accept Priya's first addition. Adding either scores zero for this criterion. Full marks require docs/search-widget-notes.md to refuse it with the reason: the field already has a label element associated by its for attribute, each option takes its accessible name from its own visible text, and an author-written label replaces what the user can see rather than adding to it."
+    },
+    {
+      "name": "Active-option reference resolves to a real option",
+      "max_score": 14,
+      "description": "The delivered code emits an active-option reference whose value matches an id that an option in the same render output actually carries. Leaving 'option-' + id against options rendered as 'opt-' + id scores zero, whatever else was fixed, because the reference has never pointed at anything. Moving the reference to the right element without noticing that its value resolves to nothing scores zero for this criterion."
+    },
+    {
+      "name": "Clear button left as it is",
+      "max_score": 14,
+      "description": "Priya's second addition is agreed with, and the reason is given rather than merely deferred to: the button is hidden from assistive technology AND carries tabindex '-1', so it is out of the tab order as well and nobody can land on a control that announces nothing, and Escape on a closed list performs the same action from the keyboard. Reporting the current treatment as a violation, or exposing the button to assistive technology, scores zero. Agreeing only because Priya said it was intentional, with no reference to the button being out of the tab order or to the keyboard equivalent, scores at most half. Making it focusable while leaving it hidden scores zero."
+    },
+    {
+      "name": "Open and closed state moves onto the control that carries the role",
+      "max_score": 10,
+      "description": "The open/closed state is published on the input object carrying the combobox role rather than on the wrapper object, which has no role for it to qualify. Leaving it on the wrapper scores zero; publishing it in both places scores at most half."
+    },
+    {
+      "name": "Invalidated assertion rewritten rather than removed",
+      "max_score": 8,
+      "description": "The committed 'the list takes over once the user arrows into it' test is rewritten to assert the new contract - typing after ArrowDown still narrows the query, and focus has not left the field - and docs/search-widget-notes.md says why the old assertion was wrong. Deleting that test to get the suite green scores zero, and so does leaving it passing by not fixing the widget."
+    }
+  ]
+}

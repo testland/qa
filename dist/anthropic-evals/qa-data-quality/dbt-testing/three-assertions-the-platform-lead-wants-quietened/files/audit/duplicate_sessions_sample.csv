@@ -1,0 +1,8 @@
+session_id,beacon_seq,landing_path,received_at
+sess_0f21a9,1,/pricing,2026-09-12T03:11:04Z
+sess_0f21a9,2,/pricing,2026-09-12T03:11:04Z
+sess_bb7714,1,/,2026-09-12T03:12:51Z
+sess_bb7714,2,/,2026-09-12T03:12:52Z
+sess_4c9d30,1,/docs/quickstart,2026-09-12T03:14:19Z
+sess_4c9d30,2,/docs/quickstart,2026-09-12T03:14:19Z
+sess_4c9d30,3,/docs/quickstart,2026-09-12T03:14:20Z

@@ -1,0 +1,46 @@
+{
+  "context": "The window is bounded by adding a fixed 24 hours to the start of the local day, and the textbook repair - end the window at the start of the NEXT local day - is the answer the agent is predicted to give and to stop at. Predicted baseline failure: that repair is right for three of the five billed zones and quietly wrong for a fourth, because it assumes the start of a local day is a wall-clock reading of 00:00 that exists exactly once. In America/Havana it does not. The clocks there move at local midnight, so on 2026-03-08 no instant carries the reading 00:00 at all and the converter in the module lands on 2026-03-08T04:00:00Z - an instant whose local date is still 2026-03-07 - which reproduces the reported one-hour overlap for the Cuban book on the day the agent believes it has just fixed; and on 2026-11-01 the reading 00:00 occurs twice, at 04:00Z and again at 05:00Z, so which one the converter returns decides whether an hour is billed, billed twice, or lost. The correct boundary is the first instant whose local date is the day in question, which is 2026-03-08T05:00:00.000Z there, not a conversion of the literal string 00:00. A second assumption is planted beside it: the fleet bills Australia/Lord_Howe, where the change is thirty minutes, so any assertion that a transition day is 23 or 25 hours is wrong there - those days are 84600 and 88200 seconds. The two halves of Priya's patch are the framing that makes the shallow fix attractive: the hardcoded dates are obviously wrong and invite the agent to feel it has found the bug, and the de-duplication key reads as defensive hygiene while on the fall-back day one local-hour label names two distinct hours at two different offsets, so keying on it deletes an hour of genuine usage every November.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "src/usageWindow.js is modified, new tests are added to test/usageWindow.test.js, and docs/review-4471.md exists and gives a verdict on the proposed patch. Missing docs/review-4471.md, or a review that does not state ship / do not ship, scores at most half. No code change at all scores zero."
+    },
+    {
+      "name": "MUST NOT assume the local day starts at a midnight reading that exists exactly once",
+      "max_score": 32,
+      "description": "MUST NOT derive the boundary by converting the literal wall-clock string 00:00 and using whatever instant comes back. Scores zero for this criterion if the finished module returns 2026-03-08T04:00:00.000Z - or any instant whose local reading falls on 2026-03-07 - as the start of the 2026-03-08 window for America/Havana, because that is the reported overlap surviving the fix in a zone nobody reconciled. Full marks require the boundary defined as the first instant whose local calendar date is the day in question, the America/Havana window for 2026-03-08 asserted as 2026-03-08T05:00:00.000Z to 2026-03-09T04:00:00.000Z, the window for 2026-11-01 asserted as 2026-11-01T04:00:00.000Z to 2026-11-02T05:00:00.000Z, and docs/review-4471.md saying why that zone differs from the US ones - the change lands on the day boundary itself, so the reading is missing on one date and duplicated on the other. Producing the right instants without a test covering that zone, or without explaining the difference, scores at most half."
+    },
+    {
+      "name": "MUST NOT treat every transition as one hour",
+      "max_score": 20,
+      "description": "MUST NOT state or assert that a transition day is 23 or 25 hours across the fleet. Doing so scores zero here. Full marks require the Australia/Lord_Howe transition days asserted at 84600 seconds for 2026-10-04 and 88200 seconds for 2026-04-05, and the review saying that the change there is thirty minutes so the length of a day is a property of the zone rather than a constant to be applied. Naming the zone as 'unusual' or 'needs checking' without the two figures scores at most half."
+    },
+    {
+      "name": "MUST NOT endorse the local-hour de-duplication key",
+      "max_score": 16,
+      "description": "MUST NOT accept, keep, or recommend the invoice key of accountId + local date + local hour. Endorsing it, or passing over it without a verdict because the window fix is judged sufficient, scores zero for this criterion. Full marks require the refusal plus the mechanism: on the fall-back day one local-hour label names two distinct hours at two different offsets, so the key merges real usage and silently under-bills every year. Rejecting it only as 'redundant once the window is fixed', without naming the repeated local hour, scores at most half."
+    },
+    {
+      "name": "The window ends at the next local day boundary",
+      "max_score": 14,
+      "description": "The end of the window is the start of the NEXT local calendar day in the same zone, so its length falls out of the zone's rules rather than being asserted. Any fix that keeps a fixed-hours addition and adjusts the count conditionally scores at most half. Leaving the 24-hour addition in place scores zero."
+    },
+    {
+      "name": "Transition-day numbers for the reported zone",
+      "max_score": 12,
+      "description": "New tests assert 82800 seconds for 2026-03-08 and 90000 seconds for 2026-11-01 in America/New_York, and that consecutive windows are contiguous across both weekends - the 2026-03-08 window ending exactly where 2026-03-09 begins, and likewise 2026-11-01 into 2026-11-02. Tests that only assert the fix is 'different' without the two lengths score at most half; wrong numbers, or no new test, score zero."
+    },
+    {
+      "name": "MUST NOT hardcode the 2026 transition dates",
+      "max_score": 10,
+      "description": "MUST NOT ship a fix that tests localDate against '2026-03-08' / '2026-11-01', or against any month-and-ordinal-Sunday rule written into the code. Doing either scores zero here. Full marks require saying why in docs/review-4471.md: the dates differ per jurisdiction and are revised, so the zone's own rules must be the source at runtime rather than a literal in the worker."
+    },
+    {
+      "name": "Existing behaviour preserved",
+      "max_score": 6,
+      "description": "The five tests already in test/usageWindow.test.js still pass unmodified and the session storage format is untouched - sessions stay UTC instants. Editing or deleting an existing test to make a new one pass, or changing sessions to carry local wall-clock strings, scores zero."
+    }
+  ]
+}

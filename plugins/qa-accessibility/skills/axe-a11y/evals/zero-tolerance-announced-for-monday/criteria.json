@@ -1,0 +1,51 @@
+{
+  "context": "A grandfathering check already exists, so 'build a baseline ratchet' is not the insight and an agent that stops there has done nothing. The defect is the key it ratchets on. `check()` reduces each finding to `app|ruleId`, so the accepted set forgives a rule for a whole application rather than forgiving a specific element - and `a11y/baseline.json` has carried `dashboard|link-name` since June, recorded for `a.old-widget`, an element `docs/gate-history.md` shows was deleted on 2026-06-18. The entry is stale and permanently pre-forgives every future link-name failure anywhere in the dashboard, which is exactly what happened: #2218 shipped `a.export` in the dashboard header last week, `reports/scan-2026-09-12.json` carries it, and the check was green every night. Predicted baseline failure: the agent either satisfies the mandate literally and ships a check that fails on any non-empty `violations`, red-lighting every pull request from Monday over twelve findings whose oldest is from 2023 with no remediation booked, or accepts the existing ratchet as sound and busies itself rebuilding the baseline from last night's results. That second move is the sharper trap, because it looks like maintenance and it absorbs `a.export` into the accepted set - the gate is then born blind to the very regression that prompted the work - while also deleting billing's two known findings, since billing is absent from last night's file. It is absent because the scan never reached it: `reports/run-log.txt` shows `billing exit 7` on a refused connection between the `status` line and the end-of-run line, and `a11y/pilot.json` lists five apps against the four in the scan's own `apps` array. An agent that diffs the two scan files without reconciling them against the pilot list will report billing as improved, endorse the VP's request to drop it, and ship a check that reads an unreachable app as a clean one. The correct answer is not a flat refusal either: `status` joined the pilot on 2026-09-01 with nothing in the accepted set, so the announced rule can genuinely ship at full strength there and on every new finding everywhere, and an answer that only pushes back has given the VP nothing to announce on Monday.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 5,
+      "description": "`lib/gate.js` carries the changed blocking check, `scripts/a11y-gate.mjs` exists and sets a process exit code, `test/gate.test.js` exists, `docs/a11y-gate.md` exists, and `npm test` passes under `node --test` with no new dependencies. A run whose suite fails, or that produces no CLI entry, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT forgive a rule for a whole application",
+      "max_score": 32,
+      "description": "MUST NOT keep an accepted-set key that identifies a finding by anything less than the element it is on - `app|ruleId`, a per-app or per-rule count, or a threshold all score zero for this criterion however well the rest is argued. The delivered check compares app plus url plus rule id plus selector. The decisive case is in the data: run against `reports/scan-2026-09-12.json` the check must fail, because `link-name` on `a.export` at dashboard `/` was not there before; a delivered check that still passes on that file scores zero. Full marks additionally require `docs/a11y-gate.md` to explain to the VP why the dashboard complaint got through - `dashboard|link-name` had been in the accepted set since June for `a.old-widget`, deleted on 2026-06-18, so every link-name failure anywhere in that application was pre-forgiven by an entry for an element that no longer exists. Identifying `a.export` only by reading `reports/merged-this-week.md`, rather than by a comparison the check itself performs, scores at most half."
+    },
+    {
+      "name": "MUST NOT rebuild the accepted set from last night's results",
+      "max_score": 20,
+      "description": "MUST NOT produce the committed data file by snapshotting `reports/scan-2026-09-12.json`. Doing so absorbs `a.export` into the accepted set, so the gate ships blind to the regression that prompted this work, and it erases billing's two known findings because billing is not in that file - both score zero for this criterion. The delivered set is derived from the findings genuinely known before this week, with `color-contrast` on `button.promo` retired because #2210 fixed it, and billing's two entries retained. Leaving the set exactly as the previous month's scan, so a fixed finding stays forgiven and can silently return, scores at most half."
+    },
+    {
+      "name": "An app that produced no results is not an app with no findings",
+      "max_score": 18,
+      "description": "The delivered check reconciles the apps it was given against `a11y/pilot.json` and treats an expected-but-unscanned app as a failure or a hard warning, never as zero violations - billing's scan was refused at the connection (`exit 7` in `reports/run-log.txt`) and the app is simply missing from last night's `apps` array. A check that reads absence as a pass scores zero. Reporting billing as improved or fixed scores zero. Noticing the gap in prose while the check itself does not react to it scores at most half. The reply must also decline to drop billing from the pilot, or say what would have to be true first: removing an app because its scan keeps failing makes the blindness permanent."
+    },
+    {
+      "name": "MUST NOT gate on zero violations",
+      "max_score": 16,
+      "description": "MUST NOT ship a check that fails the build because `violations` is non-empty. Twelve pre-existing findings across three applications, oldest dating to 2023 and no remediation booked, means the announced rule reds every pull request from Monday morning on somebody else's debt. A delivered check that fails purely on the pre-existing set scores zero. Shipping a workable check but never telling the VP in `docs/a11y-gate.md` that the announced rule was changed, and why, scores at most half."
+    },
+    {
+      "name": "The mandate granted where it is honest",
+      "max_score": 14,
+      "description": "The reply identifies what genuinely can ship at full strength on Monday rather than only pushing back: every finding not already in the accepted set fails the build everywhere, and `status`, in the pilot since 2026-09-01 with an empty accepted set, is held to zero outright from Monday. An answer that refuses the mandate without naming anything that ships at full strength scores zero here; naming it in prose while the delivered check applies no stricter rule to an application with an empty accepted set scores at most half."
+    },
+    {
+      "name": "Tests prove both verdicts on the real case",
+      "max_score": 10,
+      "description": "`test/gate.test.js` asserts the check's verdict on last night's data and asserts that a finding absent from the accepted set fails - using the `a.export` case or an equivalent that would have caught it. Only one direction tested scores at most half; a suite with no failing-verdict case scores zero."
+    },
+    {
+      "name": "Reporter untouched",
+      "max_score": 6,
+      "description": "MUST NOT change what `report()` returns or prints, and MUST NOT edit `test/report.test.js`. The nightly summary mail depends on it and it was explicitly out of scope. Making `report()` itself exit non-zero, or adjusting its test to fit a new shape, scores zero for this item."
+    },
+    {
+      "name": "The accepted set is shown to shrink",
+      "max_score": 8,
+      "description": "`docs/a11y-gate.md` says how entries leave the accepted set rather than sitting in it forever - retired as they are fixed, with an owner or a review cadence and what the teams get to see. An answer that ships the check and explains only its mechanics scores zero here."
+    }
+  ]
+}

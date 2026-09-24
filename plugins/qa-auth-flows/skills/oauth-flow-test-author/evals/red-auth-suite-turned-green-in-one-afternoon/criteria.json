@@ -1,0 +1,41 @@
+{
+  "context": "Five changes presented as a mix of fixes and tidying, with the prompt pre-announcing that two of them are good. Predicted baseline failure: the agent accepts change 1 without reading what it did. It is described as a pure test-setup de-duplication, it touches no production code, and de-duplicating copied setup is the single most reflexively-approved kind of diff there is. What the helper actually did is return `{ started, redirect }` while two tests kept destructuring a `callback` off it. That value is now `undefined`, `finishLogin` throws a TypeError reaching for `callback.state`, and both tests are wrapped in a bare `assert.throws` with no matcher — so they pass on the wrong exception, assert nothing about the state comparison or the proof key, and would stay green with both checks deleted from `src/authFlow.js`. Restoring them also has a second step the agent is predicted to miss: a wrong verifier is refused by the token endpoint with a 400 response, not by an exception, so the repaired test cannot be an `assert.throws` at all. Change 2 is the other predicted miss — deleting a ten-minute sleeping test is genuinely the right instinct about the sleep and the wrong one about the coverage, and `createIdp` already takes a `now` so the check can be restored without any wall clock. Changes 4 and 5 are real housekeeping and must survive; an agent that rejects everything the contractor did has failed the other half of the job.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Change 1: the two empty negative tests found and made able to fail",
+      "max_score": 30,
+      "description": "The review states that the state test and the verifier test in `src/authFlow.test.js` currently assert nothing — the helper returns no `callback`, the call throws a TypeError, and the bare `assert.throws` swallows it — and the delivered tree has both restored so they exercise what their names claim. Full marks require the verifier test to assert on the 400 `invalid_grant` response rather than on a thrown error. MUST NOT accept change 1 as the pure tidy-up it is described as; doing so scores zero for this criterion. Noting that the tests look weak without demonstrating or fixing it scores at most half. Deleting the helper instead of repairing the tests scores at most half."
+    },
+    {
+      "name": "Change 2: expiry coverage restored without the wall clock",
+      "max_score": 24,
+      "description": "Change 2 is rejected as applied, and the delivered tree carries an expiry check again, driven by the `now` seam `createIdp` already accepts rather than by `setTimeout`. Accepting the deletion scores zero, whatever is said about the sleep. Rejecting the deletion but delivering no restored test, or restoring it with a real ten-minute wait still in it, scores at most half."
+    },
+    {
+      "name": "Change 3: prefix matching removed",
+      "max_score": 12,
+      "description": "Change 3 is rejected and `src/redirects.js` compares registered callbacks by equality again, with the preview deploys handled by registering them against the 50-URL ceiling instead. Keeping the prefix match scores zero — `https://app.acme.io.evil.test/auth/callback` passes it, and no shipped test covers that. Rejecting it without saying what to do about the dozen preview deploys a week scores at most half."
+    },
+    {
+      "name": "Changes 4 and 5 accepted and kept",
+      "max_score": 10,
+      "description": "Both are accepted and both survive in the delivered tree. Rejecting either, or reverting the un-skip or the debug-line removal while reverting the rest, scores zero: refusing the whole PR is the mirror-image failure of waving it through."
+    },
+    {
+      "name": "Each restored check shown to be able to fail",
+      "max_score": 10,
+      "description": "The review says how it was established that the checks being relied on can still go red — for example by removing the state comparison, or the proof-key comparison, and recording that the corresponding test fails. A review that reports only that the suite is green scores zero for this criterion, since a green suite is exactly what the PR already delivered."
+    },
+    {
+      "name": "MUST NOT weaken the stand-in to make a check pass",
+      "max_score": 8,
+      "description": "`src/mockIdp.js` keeps its proof-key comparison, its single-use code handling and its expiry enforcement. Relaxing any of them so a restored or new test goes green scores zero here, even though the file is ours to edit."
+    },
+    {
+      "name": "Review document with five verdicts in order",
+      "max_score": 6,
+      "description": "`docs/pr-812-review.md` exists and gives an explicit accept or reject on changes 1 to 5, in that order, each with a reason and — for rejections — what to do instead. A document that merges changes, reorders them, or leaves one without a verdict scores at most half."
+    }
+  ]
+}

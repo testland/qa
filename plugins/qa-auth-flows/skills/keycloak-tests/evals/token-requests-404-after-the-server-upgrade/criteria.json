@@ -1,0 +1,46 @@
+{
+  "context": "The symptom points at the addresses, the addresses are correct, and the container setup is correct: the realm file is mounted and the server is started with the argument that imports it, so the realm exists on the server the fixture starts. What is wrong is that only one test talks to that server. The smoke check asks the started container for its own address; every other module builds its URLs from a constant left over from the retired VM, so on a developer machine those requests land on a three-week-old container of an older release that happens to hold the default port and has no realm of that name, and on a fresh CI runner they land on nothing at all. One fault, two symptoms, and the prompt explicitly frames them as unrelated. Predicted baseline failure: the agent believes the symptom and @tobrien, goes looking for a path change between the two versions, and rewrites urls.py to something the server does not serve - most likely by prefixing the realm endpoints with the segment the retired version used - or, unable to explain a 404 from a server it can see is up, reaches for @rkhan's offer to build the realm through admin REST calls in a fixture, which abandons the reviewed realm file and still fails because the calls and the tests are not talking to the same server. The second predicted failure is partial credit dressed as a fix: the agent swaps the constant for the fixture's address, the two tests go green, and the write-up still treats the connection-refused errors as an unrelated CI flake to be answered with retries, a readiness wait or a longer timeout - leaving the reader believing there were two problems when the runner notes rule out anything being left behind between jobs and there is nothing on that port to refuse a connection for any other reason. The third is that nothing is added to make this defect fail as itself: the only smoke check is a 200 on the server root, which any identity server anywhere answers, and it passed throughout while every real endpoint was being served by a different process. Mixed in is a third view that is plainly right and should simply be done - pinning the image, which is on latest - so an agent that declines everything the thread suggests scores no better than one that adopts it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "tests/auth/urls.py is edited and docs/auth-suite-findings.md exists. Scores zero if the suite still resolves its endpoints the same way it does now."
+    },
+    {
+      "name": "MUST NOT address any endpoint by a literal host and port",
+      "max_score": 26,
+      "description": "Every address the suite uses is derived at run time from the container the fixture started, so the suite cannot reach a server it did not start. Scores zero if localhost:8080, or any other fixed host and port, survives anywhere in the suite - including as the fallback default of an environment lookup, which leaves the same wrong server one unset variable away. Scores at most half if urls.py is parameterised on the started container but some other module or fixture still builds an address from a constant. Restructuring the helpers so the base is passed in rather than read from module scope is expected."
+    },
+    {
+      "name": "Both failures traced to the same fault",
+      "max_score": 24,
+      "description": "docs/auth-suite-findings.md states that the 404s and the connection-refused errors are one defect - the suite was addressing a server it did not start, which on a developer machine is a different long-running container that answers and on a fresh runner is nothing at all - and names the evidence for it. Scores zero if the connection-refused failures are presented as a separate or environmental problem and answered with retries, a readiness wait, a longer timeout, a port availability check or a note that CI is flaky. Scores at most half if the address is fixed but the document still describes them as two problems that happened to share a cause in the fix."
+    },
+    {
+      "name": "MUST NOT rewrite the endpoint paths",
+      "max_score": 18,
+      "description": "The helpers keep building base plus /realms/{realm}/protocol/openid-connect/... and base plus /realms/{realm}/.well-known/openid-configuration. Scores zero if a segment is inserted in front of /realms or any OIDC path suffix is altered - the distribution this deployment runs does not serve a prefixed layout, so following @tobrien's certainty turns two failing tests into four. Changing where the base comes from is not a path change. Scores at most half if the paths are left correct but the document never says why the path-change claim is wrong."
+    },
+    {
+      "name": "MUST NOT provision the realm through admin REST calls",
+      "max_score": 14,
+      "description": "The realm, its reports-api client and that client's service account keep arriving from fixtures/test-realm.json imported at server start. Scores zero if @rkhan's offer is adopted and any of that state is instead created at run time by admin API calls in a fixture, which makes the suite green against state the reviewed realm file no longer describes. Scores at most half if it is quietly not done and docs/auth-suite-findings.md never answers her, since a view was explicitly asked for."
+    },
+    {
+      "name": "The suite now fails on this defect rather than on its symptoms",
+      "max_score": 14,
+      "description": "A check is added that is bound to the realm on the server the run started - for example a session-scoped assertion that that container serves the realm's discovery document and advertises the token and introspection endpoints the helpers build, before the flow tests run. Scores zero if the only smoke coverage remains a 200 on the server root, which is what made this look like an addressing problem: it passed against the right server on every run while every other test was being answered by a different one."
+    },
+    {
+      "name": "The pinning request granted",
+      "max_score": 8,
+      "description": "The container is started on an explicit version tag and docs/auth-suite-findings.md says which server version the suite now tests against. Scores zero if latest survives in conftest.py: @mpatel's point is correct, costs nothing, and an agent that declines every suggestion on the thread is as wrong as one that takes every suggestion."
+    },
+    {
+      "name": "Smoke test and realm contents preserved",
+      "max_score": 5,
+      "description": "test_server_answers still passes, and fixtures/test-realm.json still defines realm corp with the reports-api client, its service account and its secret. Changing what the realm contains to work around a failure scores zero here."
+    }
+  ]
+}

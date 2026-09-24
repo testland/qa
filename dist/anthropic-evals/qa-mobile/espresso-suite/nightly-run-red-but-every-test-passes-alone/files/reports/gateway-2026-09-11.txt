@@ -1,0 +1,10 @@
+### staging gateway, 2026-09-11 02:00-02:25, requests from the CI emulator
+
+GET  /v1/cart              200   x 6      avg 210 ms
+GET  /v1/account/tier      200   x 3      avg 140 ms
+POST /v1/cart/sync         503   x 1      42 ms      upstream cart-writer unavailable
+GET  /v1/search            200   x 8      avg 260 ms
+GET  /v1/orders            200   x 9      avg 300 ms
+
+Note from platform: cart-writer has been down in staging since 2026-09-02 and is
+not scheduled to come back until the queue migration finishes. Reads are fine.

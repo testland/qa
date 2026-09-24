@@ -1,0 +1,41 @@
+{
+  "context": "A pre-build hand-off that looks finished and is not. Predicted baseline failure: the agent reformats Odile's eleven rows into a Markdown table, keeps her scores because the prompt says they are already scored, keeps every row in one file, and returns something tidier but no more usable - eleven rows between 16 and 25 with no ordering information in them. Four separate things in the fixture settle it. Four of the eleven items are not product risks at all: Marco's contract ending on 2026-07-31, staging losing sandbox credentials, legal not booked until 2026-08-17 and design sign-off outstanding are project-execution risks, they belong to the delivery lead with a response strategy of avoid, mitigate, transfer or accept, and no test can mitigate any of them - leaving them in the product assessment means engineering reads 'write tests for Marco's contract'. Every row is tagged Business even though the spec makes several of them plainly something else: a card token in the application log is security, an EU customer not re-authenticated when the amount changes is regulatory under PSD2, a 40-minute reconciliation job at 10,000 cards is performance, and the vault provider's v2 end-of-life on 2026-09-30 is an integration risk with a hard date. The scores were called out live round the table with no silent pass and nobody dissented, which is how eleven rows all land at 16 or above, and there is no written rubric anywhere saying what a 5 means, so the numbers cannot be checked or reproduced by anyone who was not in that room. And the room was a product manager, a customer success lead, a sales lead and a support manager - no engineer, no QA, no security - which is why nothing in the list touches the removal flow's two non-transactional calls that the spec describes in one line.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave the execution risks in the product assessment",
+      "max_score": 30,
+      "description": "MUST NOT carry P-8 (Marco's contract), P-9 (staging credentials), P-10 (legal review booking) and P-11 (design sign-off) as rows in docs/risk/2026-07-saved-payment-methods.md. They go to a project-level record with a response strategy against each one - avoid, mitigate, transfer or accept - and an owner who can act on it. Keeping any of the four in the product assessment scores zero for this criterion. Moving them but giving them mitigations expressed as test coverage scores zero, because no test mitigates a contract end date. Deleting them instead of relocating them scores zero: they are real risks to the delivery and dropping them is worse than misfiling them. Moving all four without saying why they moved scores at most half."
+    },
+    {
+      "name": "Categories corrected against the spec",
+      "max_score": 22,
+      "description": "The remaining rows are re-tagged away from the blanket Business category using the spec: the logged card token as security, the PSD2 re-authentication row as regulatory, the reconciliation-job row as performance, and the vault provider's v2 end-of-life as an integration or technical risk with its 2026-09-30 date recorded. Leaving every row tagged Business scores zero. Re-tagging some rows but leaving the security or regulatory row as Business scores at most half, because those two are the ones the category tag is meant to surface."
+    },
+    {
+      "name": "A written scoring rubric, and the rows re-scored against it",
+      "max_score": 22,
+      "description": "The assessment carries a written rubric stating what each impact and likelihood point means for this product, in concrete terms a reader who was not in the session can apply - a worked anchor such as 5 meaning direct loss of customer money, not an adjective. The eleven rows are then re-scored against it so the result separates rather than putting everything at 16 or above. Carrying Odile's scores through unchanged scores zero. Re-scoring without writing down the rubric the new numbers came from scores at most half - it replaces one unauditable set of numbers with another."
+    },
+    {
+      "name": "A named owner and a due date on every blocking and high row",
+      "max_score": 16,
+      "description": "Every row at the blocking and high tiers carries a named individual as owner and a dated mitigation, not 'The team'. Leaving any owner cell reading 'The team', or blank, scores zero. Naming owners but leaving mitigations undated scores at most half, since an undated mitigation is what lets a row sit untouched until the release."
+    },
+    {
+      "name": "What the session missed, named rather than quietly filled in",
+      "max_score": 12,
+      "description": "The note back to Odile states that the room held product, customer success, sales and support and no engineer, QA or security voice, and that this is why the technical and security side of the list is thin - with a short follow-up recommended and the functions to invite named. Full marks also note that scoring out loud round the table with no dissent recorded is a weak signal, not a consensus. An answer that silently invents a full technical risk list and presents it as if the session had produced it scores zero; an answer that neither names the gap nor proposes anything scores zero."
+    },
+    {
+      "name": "The genuine blocking risks survive the re-score",
+      "max_score": 10,
+      "description": "P-1 (a deleted card still charged) and P-5 (another customer's last four digits shown) remain at the blocking tier after re-scoring, each with a mitigation naming the test types that would back it. Re-scoring them down into the middle of the pack alongside the default-card labelling row scores zero - the re-score is meant to separate the list, not flatten it."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/risk/2026-07-saved-payment-methods.md exists, is dated, names an owner and a review cadence, and the note back to Odile exists as a separate readable piece. A single undated table with no owner or cadence scores at most half."
+    }
+  ]
+}

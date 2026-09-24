@@ -1,0 +1,8 @@
+{
+  "capturedAt": "2026-09-09T03:11:00Z",
+  "source": "artifact llm-baseline, produced by run 4413 on 2026-09-09",
+  "model": "gpt-5.4-mini-2026-04-02",
+  "datasetFile": "datasets/golden-v4.2.0.jsonl",
+  "passed": 847,
+  "total": 1000
+}

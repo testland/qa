@@ -1,0 +1,20 @@
+# Every gate attempt that did not pass, last 40 builds, 2026-08-14 to 2026-09-11.
+# Builds not listed below had no failing attempt on any test.
+build,date,test,attempt,result,seconds,first_line
+2026.8.15-77c1e04,2026-08-15,smoke: search returns results,1,fail,5.2,TimeoutError: locator.click: Timeout 5000ms exceeded.
+2026.8.15-77c1e04,2026-08-15,smoke: search returns results,2,pass,8.8,
+2026.8.21-1f9ab33,2026-08-21,smoke: search returns results,1,fail,5.3,TimeoutError: locator.click: Timeout 5000ms exceeded.
+2026.8.21-1f9ab33,2026-08-21,smoke: search returns results,2,pass,9.4,
+2026.8.27-b40cc71,2026-08-27,smoke: search returns results,1,fail,5.1,TimeoutError: locator.click: Timeout 5000ms exceeded.
+2026.8.27-b40cc71,2026-08-27,smoke: search returns results,2,pass,8.9,
+2026.9.2-3d0e8aa,2026-09-02,smoke: search returns results,1,fail,5.5,TimeoutError: locator.click: Timeout 5000ms exceeded.
+2026.9.2-3d0e8aa,2026-09-02,smoke: search returns results,2,pass,9.2,
+2026.9.5-9ee4c10,2026-09-05,smoke: search returns results,1,fail,5.2,TimeoutError: locator.click: Timeout 5000ms exceeded.
+2026.9.5-9ee4c10,2026-09-05,smoke: search returns results,2,pass,9.0,
+2026.9.9-c7712d5,2026-09-09,smoke: search returns results,1,fail,5.4,TimeoutError: locator.click: Timeout 5000ms exceeded.
+2026.9.9-c7712d5,2026-09-09,smoke: search returns results,2,pass,9.3,
+2026.9.11-a41c0b9,2026-09-11,smoke: search returns results,1,fail,5.4,TimeoutError: locator.click: Timeout 5000ms exceeded.
+2026.9.11-a41c0b9,2026-09-11,smoke: search returns results,2,pass,9.1,
+2026.9.11-a41c0b9,2026-09-11,smoke: sign in -> add to cart -> checkout,1,fail,24.4,Error: expect(locator).toBeVisible() failed - page shows Payment declined
+2026.9.11-a41c0b9,2026-09-11,smoke: sign in -> add to cart -> checkout,2,fail,24.1,Error: expect(locator).toBeVisible() failed - page shows Payment declined
+2026.9.11-a41c0b9,2026-09-11,smoke: sign in -> add to cart -> checkout,3,fail,24.6,Error: expect(locator).toBeVisible() failed - page shows Payment declined

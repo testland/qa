@@ -2,7 +2,6 @@
   "name": "refunds-worker",
   "version": "1.5.2",
   "private": true,
-  "scripts": {
-    "test": "node --test"
-  }
+  "type": "commonjs",
+  "scripts": { "test": "node --test" }
 }

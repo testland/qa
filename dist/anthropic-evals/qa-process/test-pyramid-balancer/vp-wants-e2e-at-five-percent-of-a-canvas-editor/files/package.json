@@ -1,0 +1,9 @@
+{
+  "name": "studio-web",
+  "version": "9.4.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

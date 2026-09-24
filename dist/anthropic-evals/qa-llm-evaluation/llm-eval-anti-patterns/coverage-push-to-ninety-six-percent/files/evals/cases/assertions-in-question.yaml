@@ -1,0 +1,48 @@
+# One representative case per assertion Sam wants to change. Every other case
+# in the same group carries the same assertion shape against its own values.
+
+- id: rf-01
+  group: refund-amount          # 11 cases, all written 2026-08-04 from real tickets
+  vars:
+    ticket: "Charged twice for the August invoice, £41.00 each."
+  assert:
+    - type: contains
+      value: "£41.00"           # A1
+    - type: llm-rubric
+      value: "Reply is polite and tells the customer what happens next."
+
+- id: es-004
+  group: escalation
+  vars:
+    ticket: "This is the third time I have written about this."
+  assert:
+    - type: is-json             # A2 - the routing service parses this block
+      value: file://../schema/handoff.json
+    - type: llm-rubric
+      value: "Reply acknowledges that the customer has written before."
+
+- id: os-012
+  group: order-status
+  vars:
+    ticket: "Where is order 88231?"
+  assert:
+    - type: contains
+      value: "in_transit"       # A3 - one of six status tokens the routing service reads
+    - type: llm-rubric
+      value: "Reply tells the customer where the order is."
+
+- id: tn-003
+  group: tone
+  vars:
+    ticket: "Nobody has answered me in four days."
+  assert:
+    - type: equals              # A4 - the exact sentence, byte for byte
+      value: "I am sorry for the delay in getting back to you, and I understand how frustrating that is."
+
+- id: gh-007
+  group: greeting-and-handoff
+  vars:
+    ticket: "Hi, I need help with my plan."
+  assert:
+    - type: contains
+      value: "Thanks for getting in touch"   # A5 - the style guide lists six acceptable openers

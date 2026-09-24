@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "dbt_schema_version": "https://schemas.getdbt.com/dbt/run-results/v5.json",
+    "dbt_version": "1.9.2",
+    "generated_at": "2026-09-04T03:41:58.104Z",
+    "invocation_id": "6b2f0d11-7c9a-4c6e-9a44-2d5b1f0c7e33"
+  },
+  "args": { "which": "build", "select": [] },
+  "elapsed_time": 402.118,
+  "results": [
+    {
+      "unique_id": "model.shop.stg_payments",
+      "status": "success",
+      "failures": null,
+      "execution_time": 14.882,
+      "message": "SUCCESS 1",
+      "adapter_response": { "rows_affected": 4108221 }
+    },
+    {
+      "unique_id": "test.shop.key_populated_stg_payments_payment_key.7c91a2",
+      "status": "pass",
+      "failures": 0,
+      "execution_time": 3.401,
+      "message": null,
+      "adapter_response": { "rows_affected": 0 }
+    },
+    {
+      "unique_id": "test.shop.unique_stg_payments_payment_key.1ab740",
+      "status": "pass",
+      "failures": 0,
+      "execution_time": 2.902,
+      "message": null,
+      "adapter_response": { "rows_affected": 0 }
+    },
+    {
+      "unique_id": "model.shop.mart_revenue_daily",
+      "status": "success",
+      "failures": null,
+      "execution_time": 61.774,
+      "message": "SUCCESS 1",
+      "adapter_response": { "rows_affected": 1461 }
+    },
+    {
+      "unique_id": "model.shop.stg_refunds",
+      "status": "success",
+      "failures": null,
+      "execution_time": 8.220,
+      "message": "SUCCESS 1",
+      "adapter_response": { "rows_affected": 90412 }
+    },
+    {
+      "unique_id": "test.shop.accepted_values_stg_refunds_reason_code.90c3ee",
+      "status": "error",
+      "failures": null,
+      "execution_time": 0.611,
+      "message": "Database Error in test accepted_values_stg_refunds_reason_code (models/staging/schema.yml) 002003 (42S22): SQL compilation error: invalid identifier 'REASON_CODE'",
+      "adapter_response": {}
+    },
+    {
+      "unique_id": "model.shop.mart_refunds_daily",
+      "status": "skipped",
+      "failures": null,
+      "execution_time": 0.0,
+      "message": "SKIP",
+      "adapter_response": {}
+    },
+    {
+      "unique_id": "test.shop.not_null_stg_orders_order_id.5f0b12",
+      "status": "pass",
+      "failures": 0,
+      "execution_time": 1.203,
+      "message": null,
+      "adapter_response": { "rows_affected": 0 }
+    }
+  ]
+}

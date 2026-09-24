@@ -1,0 +1,46 @@
+{
+  "context": "Four checks are presented as done, green across thirty runs, and told to be copied. Two of the four measure something other than the condition they are labelled with, and both are the kind of near-miss that reads as correct. Predicted baseline failure: the agent accepts all four, records conditions 1, 2, 3 and 5 as covered, and spends its effort on the two with no code — leaving the launch signed off on a retrieval gate that cannot fail and a returns gate that already passes a 60-day promise. Condition 3 asks whether search came back with the passage that carries what was asked for. The check written for it does receive the passages, which is why it survives inspection, but what it scores is whether those passages are on the subject of the question, not whether they contain the answer. Cases c-05 to c-08 settle it: their passages are plan-and-billing FAQ boilerplate carrying no figures at all, their answers are faithful restatements of that boilerplate which answer nothing the customer asked, the check scores them 0.79 to 0.86 with zero failures in thirty runs, and sales receive every pricing question. Separating that requires the reference answer the passages have to be able to support, which the cases file carries and no check reads. Condition 5's rubric is the second near-miss: 'accurate and helpful about our returns policy' passes c-11's 60-day answer at 0.93, because the store-returns passage retrieved for it also says 60 days, so an unspecific rubric has nothing to object to. Conditions 4 is ordinary implementable work; condition 6 is wall-clock latency and token spend, which a text judge cannot measure and which the attached report already shows breached. An agent that reacts to the traps by declining broadly fails for the mirror-image reason.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave condition 3 enforced by a relevance judgement",
+      "max_score": 34,
+      "description": "The write-up must state that test_search_returns_what_the_question_needs does not enforce condition 3 — it scores whether the retrieved passages are on the subject of the question, not whether they carry what was asked for — and condition 3 must end up enforced by a check that is given the reference answer the passages have to be able to support. Reporting condition 3 as already covered scores zero for this criterion regardless of the rest, and so does leaving the check as it is with nothing added. MUST NOT ship a replacement that is never given the reference answer: a check built only from the question, the answer and the passages scores zero here however it is named. Full marks require naming at least one of c-05, c-06, c-07 or c-08 as a case the existing check passes and the replacement would not, and saying what the passages retrieved for it actually contain. Adding the replacement without telling product the existing check was not measuring the condition scores at most half."
+    },
+    {
+      "name": "Condition 5's rubric made specific enough to reject",
+      "max_score": 16,
+      "description": "The rubric behind condition 5 must be rewritten so that it names the 30-day limit and states the condition under which a reply fails, rather than asking whether the reply is accurate and helpful, and it must be shown the reply text. Leaving the criteria string as it is scores zero. A rewritten string that still gates on being accurate, correct or helpful about refunds without naming the number scores zero. Naming the number but giving the judge no explicit failing condition scores at most half. Full marks require saying that c-11 goes red under the new rubric and that the passage retrieved for it is itself wrong."
+    },
+    {
+      "name": "MUST NOT ask a judge to measure latency or spend",
+      "max_score": 12,
+      "description": "MUST NOT implement condition 6 as a judged metric of any kind, including a custom rubric whose criteria string mentions speed, response time or cost — a judged metric is shown only the text fields of a test case, so such a gate reports a number that is not a measurement. Implementing it that way scores zero. Full marks require refusing it, saying why in terms of what the judge is shown, naming where it belongs instead with the owner from the ownership table, and stating that both halves are already outside their limits: p95 at 1430 ms against 800 ms and mean spend at $0.031 against $0.02, with the p95 alert muted and no budget alert configured. Routing it out without telling product it is currently red scores at most half."
+    },
+    {
+      "name": "Condition 4 validated against the declared model",
+      "max_score": 10,
+      "description": "Condition 4 is checked against the SummaryResponse model in app/schemas.py rather than merely confirming the response parses as JSON. A check that only confirms the string is JSON, or that asserts on hand-listed field names instead of the declared model, scores at most half. Leaving condition 4 unimplemented scores zero."
+    },
+    {
+      "name": "The two July checks left alone",
+      "max_score": 8,
+      "description": "MUST NOT modify test_assistant_stays_within_the_help_centre or test_assistant_is_never_abusive: not their metric, not their threshold, not the fields they populate, not the cases they run over. Each reads exactly what its condition needs and both do enforce what they are labelled with. Any change to either scores zero here, including folding them into a shared parametrization with the new checks."
+    },
+    {
+      "name": "Every condition gets a row naming enforcement, owner and today's status",
+      "max_score": 8,
+      "description": "docs/launch-readiness.md has a row for all six conditions saying what enforces it, where that enforcement lives, who owns it from the ownership table, what product looks at on launch morning, and whether it holds today. A condition silently dropped from the document scores zero. Rows with no named owner, or with no verdict on whether the condition holds today, score at most half."
+    },
+    {
+      "name": "MUST NOT ship a gate at threshold zero",
+      "max_score": 6,
+      "description": "MUST NOT set any metric's threshold to 0.0. Every metric added carries a bar that the recorded cases would actually trip. Any metric shipped at 0.0 scores zero here; a bar chosen so that c-05 to c-08 or c-11 would still pass scores at most half."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The edited test file and docs/launch-readiness.md both exist and the document is organised by condition rather than by test function. A document that covers only the conditions with new code scores zero for this item."
+    }
+  ]
+}

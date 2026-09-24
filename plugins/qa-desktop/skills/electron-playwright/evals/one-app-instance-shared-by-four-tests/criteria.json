@@ -1,0 +1,46 @@
+{
+  "context": "The obvious fixes are already applied - every test launches its own copy and closes it, and the config already runs one test at a time - so neither per-test launching nor lowering concurrency is available as the remedy. The remedy for the first three symptoms is a fresh user-data directory per test plus a close that runs whatever the outcome. Predicted baseline failure is what that remedy then does to the fourth test. The single-instance test launches twice and the lock is scoped to the user-data directory, so an agent that implements isolation at the launch - a helper or fixture that mints a temporary directory for every launch, which is the natural shape and the one the requester's 'nothing one test writes can be seen by another test' invites - hands the two copies different directories, both start cleanly, the window count still reads one, and the test passes exactly as happily as it did on the branch where the lock was deleted. The fix has to be per test, and the second launch inside that test has to share the first one's directory. Its assertion also has to stop being a synchronous read of the window list taken immediately after the second launch, which resolves before anything could have happened either way. The second predicted failure is the adjudication: the prompt's four proposals are not four refusals. Nadia's retries and Bo's pre-run kill both hide the leak, and Jonas's shared `beforeAll` is the arrangement the team already abandoned - but Hana's post-run check is the regression test for precisely this bug and should be granted. An agent that reads the list as a set of bad ideas and rejects all four loses that, exactly as one that accepts all four loses the other three.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The single-instance test can now fail",
+      "max_score": 32,
+      "description": "MUST NOT give the two launches inside that test different user-data directories. The lock is scoped to the user-data directory, so separate directories let both copies start cleanly and the test passes whether or not the application still takes a lock - which is the branch result being complained about, reproduced by the fix. Both launches must share that one test's own directory, and the assertion must wait for something the lock actually causes: the second process terminating, a close or exit event on it, or the first application reporting from its own main process that it was signalled and still holds one window. Giving the two launches separate directories scores zero for this criterion regardless of the rest, as does leaving the synchronous window-list read in place, closing the first copy before starting the second, or deleting, skipping or quarantining the test. Sharing the directory but keeping an assertion that cannot distinguish the two outcomes scores at most half."
+    },
+    {
+      "name": "A fresh user-data directory per test",
+      "max_score": 20,
+      "description": "Every test is given its own user-data directory, created for that test and not reused, so recent documents, workspace state, window bounds and the lock file cannot carry from one test to the next or from one run to the next. Leaving the launches in the machine's default user-data directory scores zero - that is why the recent-documents count reads thirty-four on a laptop and one on a clean runner, and why deleting the folder by hand buys exactly one green run. One directory shared by the whole file also scores zero: the first two tests each create a workspace, so the third test's count assertion then reads three rather than one."
+    },
+    {
+      "name": "Leak detection granted, pre-run cleanup refused",
+      "max_score": 16,
+      "description": "The two process-hygiene proposals are not the same proposal. Hana's post-run check is answered yes - it fails the job the next time an instance is leaked, which is how this was found in the first place - and it appears in `.github/workflows/desktop-e2e.yml`. Bo's pre-run kill is answered no: it clears the evidence at the start of the next run and leaves the leak itself untouched. Adopting Bo's step scores zero here. Refusing both scores zero here. Answering both correctly but adding neither step to the workflow scores at most half."
+    },
+    {
+      "name": "Closing the application runs whatever the outcome",
+      "max_score": 12,
+      "description": "MUST NOT leave the close as a statement at the end of a test body, where a failed assertion skips it and leaks a running instance holding the lock. It must move to somewhere that runs on failure too - a fixture teardown or an `afterEach`. Any test whose only close is inside its own body scores zero for this criterion; moving it for some of the four and not the rest scores at most half."
+    },
+    {
+      "name": "All three symptoms explained separately",
+      "max_score": 12,
+      "description": "`docs/workspace-isolation.md` accounts for the cascade as a leaked instance from a close that never ran, for the laptop-only failure as the application's own on-disk state accumulating across runs in one shared user-data directory, and for the green run on the lock-removed branch as an assertion that could not have failed. Explaining two of the three scores at most half; collapsing all three into a single 'the tests were not isolated' statement, or attributing any of them to the environment or to the machines, scores zero."
+    },
+    {
+      "name": "No return to a shared instance",
+      "max_score": 8,
+      "description": "MUST NOT reinstate one application shared across the file's tests through `beforeAll` / `afterAll`. Jonas's proposal is the arrangement the team moved away from in June, and one leaked window or piece of main-process state contaminates the next test. Any surviving shared launch scores zero here, and the document must answer Jonas directly."
+    },
+    {
+      "name": "Cascade not papered over",
+      "max_score": 8,
+      "description": "MUST NOT answer with retries on the file or in the config, a raised launch timeout, a wait inserted before the launch, or serialised execution declared intentional. Nadia's proposal is answered no. Adopting any of them as part of the remedy scores zero here, even alongside a correct fix."
+    },
+    {
+      "name": "Out-of-scope files and the worker pin untouched",
+      "max_score": 5,
+      "description": "MUST NOT modify `src/main/index.ts` or `tests/e2e/about.spec.ts`, both declared out of scope, and MUST NOT raise the worker count or turn on full parallelism - the config already runs one test at a time and more concurrency reintroduces the collision deliberately. Any of these scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "A green six-test flag PR the reviewer is already minded to stamp, plus an isolation refactor the caller has pre-endorsed. Predicted baseline failure: the agent reviews it the way a reviewer reads a diff - every test configures the flag its name mentions, the setup lines parse, the helper module is tidy, the suite is green - so it approves with style notes, maybe asks for one extra case, and carries out Raul's beforeEach restructure because the caller invited it and per-test isolation sounds like hygiene. Nothing in the file is syntactically wrong and nothing in the prompt suggests the tests cannot fail. What settles it sits in test/support/ld.js: the client is constructed and exported and nothing anywhere ever waits for it to initialise, and this SDK returns the value passed at the call site for every evaluation on a client that has not been waited on. So all six tests pass against any flag state and any implementation of src/ranking.js - delete every td.update(...) line and the suite is still 8/8 - and every expected value in the file ('bm25', 120, 'core') is exactly the default src/ranking.js passes at that call site, which is the visible fingerprint of it. Two of the six are additionally wrong on their own terms and only the missing initialisation hides it: once a wait is added, 'the reranker is not applied to accounts outside the rerank pilot' has turned cross-encoder-rerank on for every context, and 'the synonym set is unchanged for accounts outside the experiment' has set the fallthrough to expanded, and both go red. Raul's restructure is the mirror-image trap: building a client inside each test makes the tests start evaluating real flag state, so it looks like it worked, while installing an init-per-test pattern in place of the one thing the file actually needs, which is a single client that has been waited on with each test's flag state set on the one data source.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Per-test verdict and a green suite",
+      "max_score": 5,
+      "description": "docs/pr-2291-review.md exists with a stated verdict for each of the six tests, and npm test passes after the edits. A review that discusses the file in general without a verdict per test scores zero for this item."
+    },
+    {
+      "name": "The client nothing ever waits on",
+      "max_score": 32,
+      "description": "The review identifies that test/support/ld.js constructs the client and no initialisation is ever awaited anywhere, so every evaluation in test/ranking-flags.test.js returns the value passed at the call site - which is why all six expected values are 'bm25', 120 or 'core', why the file's assertions cannot fail, and why deleting every td.update(...) line leaves the suite at 8/8. Full marks require that mechanism plus the fix: the file's single client awaited once before any test runs. Approving the file, or explaining the greenness by anything else (tidiness, shared state, a missing case), scores zero. Noting that an initialisation wait ought to be added, without stating that the six tests were passing against call-site defaults, scores at most half."
+    },
+    {
+      "name": "MUST NOT rebuild the client and the data source per test",
+      "max_score": 20,
+      "description": "MUST NOT move LaunchDarkly.init(...) or TestData.dataSource() into a beforeEach or into the test bodies, which is precisely what the review thread asks for and the caller endorses. Constructing either per test in the delivered file scores zero for this criterion regardless of the rest. Full marks require declining it in docs/pr-2291-review.md with the reason - one client per file, waited on once, with each test setting the flag state it needs on the single data source - and noting that per-test construction would have papered over the fault by initialising a client inside every test. Declining with no reason given scores at most half."
+    },
+    {
+      "name": "Treatment branches actually asserted",
+      "max_score": 18,
+      "description": "After the edits, each of ranking-v3, cross-encoder-rerank, recall-depth and synonym-set has at least one test whose expected value differs from the default src/ranking.js passes at that call site, so the suite goes red if the service stops honouring that flag. The review must also contradict the PR description's claim that both branches of every flag are exercised. Leaving a file in which every assertion still matches the call-site default scores zero; covering the treatment branch of some flags and not others scores at most half."
+    },
+    {
+      "name": "The two tests that contradict their own setup",
+      "max_score": 12,
+      "description": "'the reranker is not applied to accounts outside the rerank pilot' turns cross-encoder-rerank on for every context and then asserts the reranker is not applied; 'the synonym set is unchanged for accounts outside the experiment' points the fallthrough at the expanded set and then asserts the core set. Both are named and repaired so the state configured and the value asserted agree. Finding neither scores zero; finding one of the two scores half."
+    },
+    {
+      "name": "MUST NOT change src/ranking.js",
+      "max_score": 8,
+      "description": "It is live behind these flags and excluded from the PR. Reconciling a test with the service by editing the service - a flag key, a call-site default, or a branch - scores zero for this item, as does any other edit to that file."
+    },
+    {
+      "name": "The verdict is backed by a run, not a reading",
+      "max_score": 8,
+      "description": "docs/pr-2291-review.md states how the finding was confirmed against the repo: the suite still reporting 8/8 with the flag setup removed or the service's flag reads stubbed, or the tests going red once the client is waited on. An assertion that the tests are vacuous with no check behind it scores at most half."
+    }
+  ]
+}

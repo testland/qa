@@ -1,0 +1,23 @@
+run 2402 - ci - push to spike/os-matrix-2 - 21 Jul 2026 14:36 UTC
+Conclusion: failure
+
+Second attempt. Same three operating systems. Only change from 2291 is that the
+verify step now reads:
+
+    - name: Verify
+      shell: bash
+      run: ./scripts/verify.sh
+
+  test (windows-latest, 20) .......... failure        0m41s
+      Run ./scripts/verify.sh
+      /usr/bin/env: 'bash\r': No such file or directory
+      Error: Process completed with exit code 127
+  test (ubuntu-latest, 20) ........... cancelled      0m33s
+  test (ubuntu-latest, 22) ........... cancelled      0m31s
+  test (macos-latest, 20) ............ cancelled      0m28s
+  test (macos-latest, 22) ............ cancelled      0m26s
+  test (windows-latest, 22) .......... cancelled      0m19s
+
+Note from @dholt: reverted again. The shell change got us a real Windows error
+instead of no Windows result, which felt like progress, but I could not work out
+what it meant and we were out of time before the release.

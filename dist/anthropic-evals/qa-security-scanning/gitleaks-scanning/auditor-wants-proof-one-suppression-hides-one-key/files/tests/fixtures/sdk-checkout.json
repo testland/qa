@@ -1,0 +1,6 @@
+{
+  "_comment": "Fabricated fixture for SDK bootstrap tests. stripeKey is a made-up value in Stripe's documented test-key shape; it corresponds to no account. Owner: sdk-team. Signed off OPS-601.",
+  "stripeKey": "sk_test_[REDACTED-IN-EVIDENCE-BUNDLE]",
+  "amountMinor": 1000,
+  "currency": "eur"
+}

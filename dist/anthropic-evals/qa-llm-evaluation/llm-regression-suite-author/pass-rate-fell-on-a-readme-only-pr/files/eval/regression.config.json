@@ -1,0 +1,23 @@
+{
+  "datasetFile": "datasets/golden-v2.2.0.jsonl",
+  "providers": [
+    {
+      "id": "openai:chat:gpt-5-mini-2026-01-15",
+      "config": {
+        "temperature": 0.2,
+        "max_tokens": 512
+      }
+    }
+  ],
+  "grader": {
+    "model": "gpt-5-mini",
+    "assertionTypes": ["llm-rubric", "factuality"]
+  },
+  "evaluateOptions": {
+    "repeat": 3,
+    "cache": false
+  },
+  "gate": {
+    "minPassRate": 0.9
+  }
+}

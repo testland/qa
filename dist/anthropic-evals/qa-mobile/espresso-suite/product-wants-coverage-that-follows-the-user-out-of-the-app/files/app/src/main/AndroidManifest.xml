@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".NorthwindApp"
+        android:label="Northwind">
+
+        <activity android:name=".ShopActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".OrderHistoryActivity" />
+
+        <activity
+            android:name=".SyncErrorActivity"
+            android:process=":sync" />
+
+        <service
+            android:name=".SyncService"
+            android:process=":sync"
+            android:exported="false" />
+    </application>
+</manifest>

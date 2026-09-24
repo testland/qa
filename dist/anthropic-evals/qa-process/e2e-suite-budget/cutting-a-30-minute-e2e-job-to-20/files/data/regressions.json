@@ -1,0 +1,11 @@
+{
+  "checkout.spec.ts > card-purchase-happy-path": 4,
+  "checkout.spec.ts > three-d-secure-challenge": 2,
+  "checkout.spec.ts > apply-discount-code": 1,
+  "cart.spec.ts > persist-cart-across-sessions": 2,
+  "account.spec.ts > data-export-request": 2,
+  "auth.spec.ts > login-with-password": 3,
+  "auth.spec.ts > sso-redirect": 2,
+  "admin.spec.ts > user-role-change": 1,
+  "settings.spec.ts > api-key-rotation": 1
+}

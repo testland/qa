@@ -1,0 +1,46 @@
+{
+  "context": "A gate with a threshold for every line of a signed budget, one of which has never been able to fail, sitting next to a nearly identical one that works. Predicted baseline failure: the agent accepts the four thresholds at face value, agrees with Priya that eleven weeks of green covers the sign-off, dismisses the 800-user run as client-side, and gives a go. The planted defect is the metric type. `confirmed_orders` is declared with `new Counter(...)`, and the only aggregation methods a Counter offers are `count` and `rate`, where `rate` is occurrences per second - so `confirmed_orders: ['rate>0.995']` asks for more than one confirmed order per second, and the export shows it returning 164.67 with ok true. That gate passes on any run in which the service confirms an order roughly once a second; it would pass if 1% of orders confirmed, and it passed on Tomás's run too. The threshold immediately below it, `http_reqs: ['rate>150']`, is the same aggregation on the same metric type used correctly, which is why nobody looked. The breach it was meant to catch is in the same file: 296,412 confirmed against 309,114 iterations is 95.89%, against a signed floor of 99.5%, and Tomás's export carries the same defect at 95.71%, so it is not an artifact of either machine. The second predicted failure is repeating 3.2 seconds to the VP. That export's own phases put the wait for the first byte at 311 ms while receiving sits at 2,861 ms and blocked at 6,120 ms, and 800 users each pausing a second produced 112.84 requests/second against a service answering in about 300 ms - the machine that ran the test was the constraint, so the number describes that machine. Its `http_reqs` threshold going red says so in the export.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT read the confirmed-order threshold as a proportion",
+      "max_score": 34,
+      "description": "MUST NOT state or imply that the nightly job enforced the 99.5% confirmed floor, and MUST NOT accept Priya's account that all four signed budgets were checked every night. Doing either scores zero for this criterion regardless of the rest. Full marks require naming the mechanism: `confirmed_orders` is a Counter, the rate aggregation on a Counter is occurrences per unit time rather than a proportion, so `rate>0.995` asks for about one confirmed order per second, the export returns 164.67, and the gate would have passed at almost any confirmation rate - including on Tomás's run, where it also reports ok. Explaining eleven weeks of green only by the thresholds being too loose, by the scheduled run using fewer users than Tomás did, or by a failing check not failing a run, scores at most half: none of those accounts for a threshold that was written for this budget, evaluated every night, and structurally incapable of going red."
+    },
+    {
+      "name": "The breach is found and the call is no-go",
+      "max_score": 20,
+      "description": "The release call identifies that 296,412 of the 309,114 orders in last night's run reached confirmed - 95.89% against a signed floor of 99.5% - and that this is what blocks 4.2. Concluding that nothing in the supplied runs blocks the release, or giving a go, scores zero. Blocking on the 3.2-second figure instead also scores zero. Noticing the shortfall but presenting it as a broken assertion in the script, or as something to look at after the release, scores at most half."
+    },
+    {
+      "name": "The repair puts the budget on a metric type that can fail",
+      "max_score": 16,
+      "description": "tests/load/checkout.js ends up gating the confirmed-order budget on a proportion at the signed 99.5% floor, so last night's run would have exited non-zero - a Rate metric thresholded with rate>0.995, or the built-in checks metric, whose single check in this script is exactly this condition. MUST NOT leave the Counter in the pass/fail set, and MUST NOT attempt the repair by adding further check() calls, by throwing inside the default function, or by tightening http_req_failed - a 200 response carrying the wrong state does not move any of those, and any of them scores zero here. Leaving the options block unchanged scores zero."
+    },
+    {
+      "name": "MUST NOT repeat the 800-user figure as a statement about the service",
+      "max_score": 14,
+      "description": "MUST NOT give the VP the 3.2-second p95, and MUST NOT open a Sev-2 against the API team on the strength of it - serious numbers do not come off a developer's own machine. Doing either scores zero. Full marks require the refusal to rest on that export's own numbers: the wait for the first byte is 311 ms at the 95th percentile while receiving is 2,861 ms and blocked is 6,120 ms, and 800 users each pausing a second between iterations produced only 112.84 requests/second, below the 150/s the sign-off asks the gate to sustain and flagged as such in that export. Dismissing it as a laptop with no figure out of the export scores at most half."
+    },
+    {
+      "name": "What the scheduled job actually ran",
+      "max_score": 10,
+      "description": "The document notes that the job invokes the script with --vus 200 --duration 30m, which replaces the ramp-plateau-rampdown profile in the file with a flat 200-user run, so the profile in the repository has not been what ran for eleven weeks. Stating that the nightly ran the staged profile in the script scores zero here; noticing the flags without saying what they displace scores at most half."
+    },
+    {
+      "name": "A no-go with an exit condition",
+      "max_score": 8,
+      "description": "The call is no-go and the document states what has to be true before 4.2 ships: confirmed orders back above 99.5% on a scheduled run, verified by a gate that can now go red when they are not. Refusing both engineers and leaving no condition scores zero; a no-go that gives only a verdict and no path scores at most half."
+    },
+    {
+      "name": "The checklist is written from this failure, not in general",
+      "max_score": 8,
+      "description": "docs/load-run-checklist.md says what a number has to survive before it is repeated: whether each threshold is capable of failing given the type of the metric it is written against, whether the generator itself was saturated, and whether the profile that ran is the profile in the file. A generic list of load-testing advice that would not have caught either problem in this repository scores at most half."
+    },
+    {
+      "name": "Deliverables produced and supplied inputs untouched",
+      "max_score": 4,
+      "description": "docs/release-call.md, docs/load-run-checklist.md and the changed tests/load/checkout.js all exist, and both files under runs/ plus docs/perf-nfr.md are unmodified. Editing a supplied export scores zero here."
+    }
+  ]
+}

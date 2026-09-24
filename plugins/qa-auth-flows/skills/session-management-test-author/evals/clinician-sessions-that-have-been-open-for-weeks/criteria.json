@@ -1,0 +1,46 @@
+{
+  "context": "An audit request with two halves, where the repo already ships a green test that appears to answer the second half and does not. Predicted baseline failure: the agent accepts `Max-Age=28800` and the passing `the session cookie expires after eight hours` test as the maximum-lifetime control, because it is configured, it is tested, and the test is green — while `Max-Age` is an instruction to the browser that the server never checks, so a client that keeps sending the value is served indefinitely, which is what the 41-day row in the dump is. The second and larger predicted failure is in the test the agent writes for 14b. The shipped module enforces only an idle rule, and `rolling: true` refreshes `lastSeenAt` on every resolve, so the obvious shape — sign in, jump the clock nine hours, assert 401 — PASSES against the unrepaired module for the wrong reason, and an agent that writes it will report 14b satisfied with no change at all. Only a test that keeps the session in continuous use at intervals shorter than the idle window, across the whole lifetime window, can distinguish the two rules. A third trap sits under the repair: `login` records only `lastSeenAt`, which is the field the activity rule overwrites, so a lifetime check written against the one timestamp the module already has can never fire, and only the continuous-activity test exposes that.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/evidence-14.test.js exists, docs/cc6-1-evidence.md exists, and npm test was run with its result reported. An evidence document with no new test file scores zero for this item."
+    },
+    {
+      "name": "The lifetime test keeps the session in use across the whole window",
+      "max_score": 32,
+      "description": "The delivered test for 14b issues requests at intervals shorter than the idle window for the full length of the lifetime window, and only then asserts the session is refused. A single clock jump with no intervening requests scores zero: that test passes against the unrepaired module, where nothing but the idle rule exists, so it demonstrates the opposite of what it claims. Activity for only part of the window, then a jump, scores at most half. Full marks require the test to fail if the lifetime rule is removed — state that it was checked, or make it evident from the intervals used."
+    },
+    {
+      "name": "MUST NOT answer the lifetime requirement with a cookie Max-Age",
+      "max_score": 24,
+      "description": "The anti-pattern is having no server-enforced maximum lifetime. docs/cc6-1-evidence.md MUST NOT offer `cookieMaxAgeHours` / `Max-Age=28800`, or the shipped `the session cookie expires after eight hours` test, as the control or the evidence for 14b. Doing either scores zero, as does making the cookie value the only change. Full marks require saying plainly why: the value is a client-side hint the store never consults, and a client that keeps presenting the id is still served."
+    },
+    {
+      "name": "The cap is enforced against a timestamp activity cannot move",
+      "max_score": 18,
+      "description": "The lifetime rule is enforced in src/sessions.js against the moment the session was created, recorded at login and never rewritten afterwards, with its value in config/session.json. Writing the check against `lastSeenAt` — the field `rolling` overwrites on every resolve — scores zero: that control can never fire. Adding the config key without enforcing it in the store scores zero. Enforcing it but leaving the value only in code, not in config, scores at most half."
+    },
+    {
+      "name": "The store dump is read as evidence the control is absent",
+      "max_score": 12,
+      "description": "docs/cc6-1-evidence.md states that rows of 41 days, 28 days and a 6-day median are only possible because no maximum lifetime was ever enforced, and names 14b as the requirement that did not exist before this change. Presenting the dump as a separate operational curiosity, or omitting it, scores at most half; describing the pre-change state as already compliant scores zero."
+    },
+    {
+      "name": "The inactivity control is kept and reported separately",
+      "max_score": 8,
+      "description": "14a and 14b are answered as two distinct controls with two distinct tests, and the existing thirty-one-minute behaviour still holds after the change. Collapsing them into one control, or a change that makes the idle rule stop working, scores zero."
+    },
+    {
+      "name": "Requirement cited in pinned versioned form",
+      "max_score": 10,
+      "description": "The evidence document ties each control to a specific session-management requirement written with the standard's version pinned alongside chapter, section and requirement numbers, in the shape `v<version>-<chapter>.<section>.<requirement>` (for example `v5.0.0-3.3.2`). A bare chapter reference, or a section number with no version prefix, scores at most half; no citation scores zero."
+    },
+    {
+      "name": "Existing suite and clock left intact",
+      "max_score": 6,
+      "description": "MUST NOT modify src/sessions.test.js or src/clock.js. Any edit to either scores zero here. Full marks also require the evidence document to say why `the session cookie expires after eight hours` was green throughout and still demonstrates nothing about 14b."
+    }
+  ]
+}

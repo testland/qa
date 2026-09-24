@@ -1,0 +1,46 @@
+{
+  "context": "The mandate names three packages as already compliant and the summary table agrees, so the path of least resistance is to gate all three on Monday and spend the rest of the answer sequencing the other eight. Two of the three are not what their numbers say. `packages/notifications` reports 84.12% because its `mutate` is `[\"src/**/*.js\"]` with no test-file exclusion — the per-file breakdown shows four `*.test.js` rows carrying 512 of its 1,140 mutants at 97 to 99 per cent, since mutating an expected value makes that very test fail. Strip them and the product code stands at 456 detected of 628 valid, 72.6%, so gating it at 80 on Monday gates a number that stops existing the moment anyone fixes the glob. `packages/auth` reports 83.07% from a suite that failed 37 of its last 500 runs on `main` and passed on retry; run twice against the same commit `a41f00c` it printed 83.07 and 79.40, because a nondeterministic failure while a mutant is active records that mutant as detected without any assertion catching it. `packages/pricing` at 83.55% has the correct glob and a stable suite and is the one that should go blocking. Predicted baseline failure is therefore gating all three — or, having smelled something, refusing all three, which leaves the programme with nothing on Monday and is just as wrong. The second predicted failure is mechanical: both shipped configs carry `thresholds` with `high` and `low` and no `break`, and the workflow step sets `continue-on-error: true`, so an answer that writes 80 into `high` or leaves the step untouched has gated nothing at all.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT gate the package whose score is its own tests",
+      "max_score": 30,
+      "description": "MUST NOT switch `packages/notifications` to blocking on the strength of 84.12%. Its `mutate` glob mutates its own test files and the per-file breakdown attributes 512 of 1,140 mutants to `*.test.js` at 97 to 99 per cent. Listing it as one of the packages going blocking on Monday scores zero for this criterion whatever else the answer does. Full marks require the glob corrected to exclude test files, the honest product-only figure stated (456 of 628, about 72.6%), and the package re-baselined before it is gated. Fixing the glob but still scheduling it to go blocking on Monday at 80 scores at most half."
+    },
+    {
+      "name": "The sound package does go blocking",
+      "max_score": 16,
+      "description": "`packages/pricing` is switched to blocking on Monday — its glob is correct, its suite is stable, and 83.55% clears 80. Refusing all three and delivering nothing for Monday scores zero here: it is the mirror image of gating all three and it hands Duncan a programme that has not started. Gating pricing without editing its config so the gate can actually fire scores at most half."
+    },
+    {
+      "name": "The key that gates is the one that changes",
+      "max_score": 16,
+      "description": "For every package that goes blocking, `thresholds.break` is set — both shipped configs carry only `high` and `low`, which colour the report and stop nothing — and the `continue-on-error: true` on the workflow's mutation step is removed for those packages. Writing 80 into `high` and leaving `break` absent scores zero. Setting `break` but leaving `continue-on-error: true` in place for that package also scores zero: the job still cannot fail. Doing one of the two scores at most half."
+    },
+    {
+      "name": "The unreproducible score held back",
+      "max_score": 14,
+      "description": "`packages/auth` does not go blocking, and the reason is that its score is not reproducible — 83.07 and 79.40 on the same commit, from a suite failing 7.4% of runs on retry — so a mutant can be recorded as detected by a failure unrelated to it. Gating auth at 80 scores zero. Holding it back on a vaguer ground such as 'the suite is flaky, fix it first', without connecting flakiness to mutants being credited as detected, scores at most half. Full marks require ticket #5064 given an owner and a date."
+    },
+    {
+      "name": "MUST NOT set an unreachable break number",
+      "max_score": 12,
+      "description": "MUST NOT write `\"break\": 80` into the config of any package currently below 80. A bar nothing can pass fails every build from the day it lands and gets exempted or switched off within the week, which is how the gate stops existing. Doing it for any of ingest, search, reporting, web-gateway, admin-ui or ledger scores zero. Each of those packages instead gets an interim break at or just under its current score with a dated step up."
+    },
+    {
+      "name": "Permanent exclusions separated from deferrals",
+      "max_score": 12,
+      "description": "`packages/db-migrations` (four dated one-shot scripts, no test script, README says archived) and `packages/proto-gen` (`src/` rewritten by `npm run proto` from the prebuild hook, every commit authored by ci-bot) are taken out of the programme permanently, on what they are rather than on their low scores. `packages/ledger` at 41.27% is NOT: it is the settlement engine and it gets a date and an owner. Excluding ledger, or excluding anything for the reason that its score is low, scores zero. Deferring db-migrations and proto-gen to a later quarter instead of removing them scores at most half."
+    },
+    {
+      "name": "The 31 December position stated plainly",
+      "max_score": 6,
+      "description": "The document says outright how many of the eleven will be blocking at 80 on 31 December and names the ones that will not be, rather than leaving a schedule from which the reader has to work it out. Implying full compliance, or leaving the end-state unstated, scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "docs/mutation-gate-rollout.md exists with a row per package carrying verdict, threshold, date and owner, and the configs of the packages the decision covers are edited. Fewer than eleven rows scores at most half."
+    }
+  ]
+}

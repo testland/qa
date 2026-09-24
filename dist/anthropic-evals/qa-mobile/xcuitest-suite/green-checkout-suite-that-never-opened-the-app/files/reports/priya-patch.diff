@@ -1,0 +1,18 @@
+Branch: priya/expect-failure-until-pricing-fixed
+Files changed: 1
+
+--- a/FieldmarkUITests/CheckoutUITests.swift
++++ b/FieldmarkUITests/CheckoutUITests.swift
+@@
+     func testPromoCodeApplies() {
++        // remove when INC-4471 is closed (pricing rollback 2026-09-15)
++        XCTExpectFailure("promo context returns 500, see INC-4471", strict: false)
+         app.buttons["cart-tab"].tap()
+         app.buttons["open-promo"].tap()
+         let promoField = app.textFields["promo-code-field"]
+
+Run on branch: Executed 6 tests, with 0 failures (0 unexpected) in 55.301 seconds
+
+Priya, in the thread: "the point is we do not lose the test. It stays in the
+file, it stays in the run, and the nightly goes back to a colour people look at.
+Commenting it out is how tests die."

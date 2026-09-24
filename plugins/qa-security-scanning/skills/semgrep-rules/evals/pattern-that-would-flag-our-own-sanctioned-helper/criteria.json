@@ -1,0 +1,51 @@
+{
+  "context": "Authoring a custom detection where the naive pattern is both obvious and fatal, and the prompt supplies the two wrong routes as colleagues' proposals. Predicted baseline failure: the agent writes the pattern everyone writes — match any call to exec / execSync, or `child_process.exec($CMD)` — which produces 214 findings, among them lib/shell.js, the security-reviewed helper that every other module is required to go through, and all eleven fixed-string calls in scripts/release.js. It then reaches for Oyelaran's proposal and pins suppression comments on the helper and the release scripts to get the count down, which is exactly the unjustified-suppression debt the practice forbids and, on the requester's own account, how the last two controls died here. The pattern-level facts it is predicted to miss are that the detection has to discriminate by the shape of the command argument — interpolated or concatenated, not a constant string — using the operators the pattern language provides for it (pattern-either across the call shapes, pattern-not / pattern-inside or a rule-scoped path exclude to carve out the sanctioned helper, metavariable-pattern to constrain the argument), and that a rule ships only after being validated and run against the attached files to confirm which ones it fires on. Two smaller traps: the import styles differ across the three real call sites — `const { exec } = require('node:child_process')` in render.js and `cp.execSync` in backup.js — so a pattern anchored to one spelling silently misses the other, and Trewin's proposal to switch to registry auto-detection is contradicted in the thread itself by Oyelaran, who tried it and got no finding on render.js line 18.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "A rule is written into `.semgrep.yml`, `.github/workflows/sast.yml` runs it, and `docs/led-2291-detection.md` exists. Describing a rule in prose without writing valid YAML into `.semgrep.yml` scores zero for this item."
+    },
+    {
+      "name": "MUST NOT fire on the sanctioned helper or on fixed-string calls",
+      "max_score": 30,
+      "description": "The rule as written does not match `lib/shell.js`, and does not match constant-string invocations such as the eleven in `scripts/release.js` or `cp.execSync('git rev-parse HEAD')` in backup.js. Full marks require this to come from the rule itself — discriminating on a non-constant command argument (template literal, concatenation, or a metavariable constrained to those) plus an explicit carve-out for the reviewed helper via pattern-not / pattern-inside or a rule-scoped path exclude — and the document to name lib/shell.js and scripts/release.js as deliberate non-matches. A rule that would match any call to exec or execSync scores zero for this criterion. Carving out only the helper while still matching the fixed-string calls scores at most half."
+    },
+    {
+      "name": "MUST NOT reach for suppression comments to control the false positives",
+      "max_score": 22,
+      "description": "MUST NOT add `nosemgrep` comments to lib/shell.js, to scripts/release.js, or to any of the other legitimate call sites, and MUST NOT recommend doing so — that is Oyelaran's proposal and it must be answered and refused, because unexplained suppressions become invisible debt and the requester has twice watched a control die this way. Any suppression comment added to a legitimate call site scores zero here. Recommending suppressions as a temporary measure until the rule is tightened also scores zero. Where the document does describe a suppression as the escape hatch for a future legitimate match, it must require a written reason, a named reviewer with a date, and an expiry, or this criterion scores at most half."
+    },
+    {
+      "name": "The three known call sites are actually caught",
+      "max_score": 22,
+      "description": "The rule matches all three shapes from the incident: the two template literals passed to `exec` in src/jobs/render.js under a destructured `const { exec } = require('node:child_process')`, and the string concatenation passed to `cp.execSync` in src/jobs/backup.js under a namespace import. Full marks require the document to state which files and lines it fires on. Catching render.js but missing the execSync concatenation in backup.js — the usual consequence of anchoring the pattern to one import spelling or to `exec` alone — scores at most half. Catching none of them scores zero."
+    },
+    {
+      "name": "Rule is well-formed and verified before shipping",
+      "max_score": 13,
+      "description": "The rule carries an id, a message a developer can act on, `severity` from the tool's own set, and `languages` spelled with the values the engine accepts (`javascript` / `typescript`, not `js` or `node`, which abort the scan as an unsupported language). Full marks also require the rule to have been validated and run against the attached tree, with the observed matches recorded in the document. Shipping without any verification step scores at most half; an invalid `languages` value or a missing id scores zero."
+    },
+    {
+      "name": "MUST NOT replace the pinned rulesets with auto-detection",
+      "max_score": 11,
+      "description": "MUST NOT adopt Trewin's proposal. The two pinned community rulesets stay in the CI command and the custom config is added alongside them, not in place of them. `--config auto` present in the workflow scores zero here. Full marks require the document to answer Trewin directly, including the fact already in the thread that auto-detection produced no finding on render.js line 18 when it was tried, so it does not cover the case the action item exists for."
+    },
+    {
+      "name": "The check still blocks and the finding still surfaces",
+      "max_score": 9,
+      "description": "The workflow keeps a gating command that fails the pull request on a new finding and keeps uploading its report. Silently demoting the check to informational, or dropping the SARIF upload, scores zero for this item."
+    },
+    {
+      "name": "A path exists for a legitimate match",
+      "max_score": 8,
+      "description": "The document tells a developer what to do when the rule fires on code that is genuinely fine — first route the call through the sanctioned helper — and only then, for a case that cannot be, the justified exception form and who reviews it. Ending at 'the rule is now on' with no route for a legitimate match scores zero, which is the state the requester said would get the control neutralised by Thursday."
+    },
+    {
+      "name": "Application code and tests untouched",
+      "max_score": 6,
+      "description": "MUST NOT edit `lib/shell.js`, `src/jobs/render.js`, `src/jobs/backup.js`, `scripts/release.js`, or either test file. The three call sites are ticketed to their owners and this task is the detection only; rewriting the code so the naive pattern stops matching scores zero here. `npm test` stays green."
+    }
+  ]
+}

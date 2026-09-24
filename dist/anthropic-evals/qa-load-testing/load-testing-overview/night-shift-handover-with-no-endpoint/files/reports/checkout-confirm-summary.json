@@ -1,0 +1,35 @@
+{
+  "metrics": {
+    "http_req_duration": {
+      "type": "trend",
+      "thresholds": { "p(95)<500": { "ok": true } },
+      "values": {
+        "avg": 96.44,
+        "min": 38.12,
+        "med": 74.18,
+        "max": 908.31,
+        "p(90)": 168.22,
+        "p(95)": 212.77
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "thresholds": { "rate<0.01": { "ok": true } },
+      "values": { "rate": 0 }
+    },
+    "checks": {
+      "type": "rate",
+      "values": { "rate": 1, "passes": 50, "fails": 0 }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "values": { "count": 50, "rate": 15.15 }
+    },
+    "iterations": {
+      "type": "counter",
+      "values": { "count": 50, "rate": 15.15 }
+    },
+    "vus": { "type": "gauge", "values": { "value": 20, "min": 20, "max": 20 } },
+    "vus_max": { "type": "gauge", "values": { "value": 20, "min": 20, "max": 20 } }
+  }
+}

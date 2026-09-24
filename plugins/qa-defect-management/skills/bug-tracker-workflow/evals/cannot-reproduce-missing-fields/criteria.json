@@ -1,41 +1,47 @@
 {
-  "context": "Eight tickets ended as unreproducible or not-a-bug. Four of them were never reportable in the first place: QA-2210, QA-2219, QA-2231 and QA-2240 all have no environment and no build, and QA-2223 lost its only evidence when the video expired. Two outcomes are sound and must be defended: QA-2214 and QA-2236 both carry a full environment, a build number, steps and attachments, and a developer who genuinely attempted the reproduction; QA-2228 is a product decision with a spec link. The interesting case is QA-2231, whose missing environment is recoverable from pipeline run 88214 rather than from the reporter, and QA-2219, which is a critical payment double-charge sitting open with nothing in it. Predicted baseline failure: the agent treats 'cannot reproduce' as a judgement about effort rather than about the report, so it either accepts all the closures as final or reopens the whole set for diligence - including QA-2214 and QA-2236, where reopening is the exact behaviour the team is sick of. It is also likely to send QA-2231 back to ci.pipeline as if a pipeline were a person, and to propose opening fresh, better-written tickets to replace the unusable ones, which silently discards the reporter's history and creates a second record of one defect.",
+  "context": "A tidy-up job that reads as obviously reasonable and whose selection criterion is not the one its author thinks. Rhea's 89% is computed over tickets that replied, so it says nothing about tickets that cannot reply; docs/escalation-2219.md supplies the number that settles it - 17 of the 24 closures were filed by a shared inbox or an automation account, accounts that nothing routes tracker comments to. The job therefore selects for 'the reporter is a machine or an unwatched mailbox', not for 'the reporter has lost interest', and it records an outcome - Cannot Reproduce - that nobody established: QA-2219 has no attempt recorded at all and came back as 41 duplicate charges. The same write-up carries the second fact: the comment the job posts has never landed on any of the 24 tickets, because the body is sent as plain text where a structured document is required, the 400 is never looked at, and the transition runs anyway. Predicted baseline failure: the agent agrees the job is sound and tunes the waiting period - 14 days, 30 days, or an exception for critical severity - because that reads as a calibrated response to one bad outcome. It is wrong in the same way at every value: a longer wait still closes every machine-filed ticket, just later, and QA-2219 was critical only in hindsight. Second predicted miss: the agent sends QA-2231 and QA-2244 back to ci.pipeline as though a pipeline were a person, when both tickets' missing environment and build are in runs 88214 and 89970 and were recoverable by us the whole time. Third: the agent reopens everything the job touched, including QA-2214 and QA-2236, where a real reproduction attempt is recorded and the outcome stands."
+  ,
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Both deliverables produced",
       "max_score": 5,
-      "description": "unreproducible-review.md and information-requests.csv both exist, the CSV carrying id,missing_fields,ask_of,target_state,note. Missing either scores zero."
+      "description": "needs-info-decision.md and reversal-plan.csv both exist, the CSV carrying id,current_resolution,target_state,information_source,who_acts_next. Missing either scores zero."
     },
     {
-      "name": "Reports closed without the facts needed to reproduce are pulled back",
+      "name": "MUST NOT record an unreproducible outcome on reporter silence",
       "max_score": 30,
-      "description": "QA-2210, QA-2231, QA-2240 and QA-2223 are all identified as closed on reports that never carried what a developer needs - environment and build absent (and for QA-2223, the only evidence expired) - and each is returned to an open state pending that information rather than left closed. The named missing fields must be specific per ticket, not a generic 'more detail'. Fewer than three of the four scores at most half; leaving all of them closed because a developer did try scores zero."
+      "description": "The decision MUST NOT leave any path in which the job itself writes the Cannot Reproduce resolution because nobody replied. Lengthening the waiting period, or exempting a severity band and closing the rest, scores zero here: it is the same rule at a different value and still closes every ticket filed by an account that cannot reply. Full marks require that a resolution recording a failed reproduction is written only where an attempt is recorded, and that the job's remaining job is to chase, escalate to a named person, or park - never to conclude."
     },
     {
-      "name": "Sound outcomes defended",
-      "max_score": 18,
-      "description": "QA-2214 and QA-2236 are stated as legitimately unreproducible - full environment, build, steps, attachments, and a real attempt recorded - and QA-2228 as a settled product decision. MUST NOT send any of these three back to the reporter or reopen them. Reopening QA-2214 or QA-2236 scores zero on this criterion; reopening QA-2228 scores zero."
+      "name": "The 89% figure answered on what it is measured over",
+      "max_score": 20,
+      "description": "The document states that the reply-time statistic is computed over tickets that replied and cannot speak for tickets whose reporter has no way to reply, and names the 17-of-24 figure as what the job is actually selecting on. Accepting the statistic and arguing about the threshold scores zero; rejecting the job without identifying what its selection criterion really is scores at most half."
     },
     {
-      "name": "Recoverable information sourced from the pipeline, not the reporter",
+      "name": "MUST NOT let a failed comment fall through to a transition",
       "max_score": 16,
-      "description": "QA-2231's missing environment and build are identified as obtainable from pipeline run 88214 - the run holds the runner image, the build, and the failing job - so the fix is to attach the run detail to the ticket, not to ask ci.pipeline for it. Asking the reporter for the environment on this ticket scores at most half; not distinguishing it from the other incomplete reports scores zero."
+      "description": "The plain-text comment body is identified as the reason the 400 occurs and the unchecked status as the reason the close proceeds anyway, quoting the comment() call or the sweep() line that follows it. The fix wraps the body in the structured document form AND stops the sweep for that ticket when the comment does not post - MUST NOT transition a ticket whose notification failed. Naming only one of the two scores at most half; treating it as a cosmetic logging gap scores zero."
     },
     {
-      "name": "Critical open item not closed out",
+      "name": "Pipeline-filed tickets sourced from our own systems",
+      "max_score": 14,
+      "description": "QA-2231 and QA-2244 have pipeline runs 88214 and 89970 named as the information_source for the missing environment and build, with the point that the run holds the runner image and the failing job, so nothing needs to be asked of anyone. Naming ci.pipeline as who_acts_next on either row scores at most half; not distinguishing these two from the reports that genuinely need a human scores zero."
+    },
+    {
+      "name": "Sound outcomes left closed",
       "max_score": 12,
-      "description": "QA-2219 (double charge, critical, currently open) stays open while the information is chased, and is not moved to any closed or rejected outcome on the strength of nobody having reproduced it. Proposing to close it scores zero."
+      "description": "QA-2214 and QA-2236 are stated to stand - full environment, build, attachments, and a recorded attempt across devices and an overnight wait - and appear in no reversal row. Reversing either scores zero."
     },
     {
-      "name": "Requests go on the existing tickets",
-      "max_score": 12,
-      "description": "MUST NOT propose opening a new, better-written ticket for any report going back - the existing ticket is the record and a second one for the same defect splits the history and the comment thread. Any recommendation to re-file scores zero here."
-    },
-    {
-      "name": "Each returned ticket has a named recipient and a resting state",
+      "name": "The critical closure reversed and owned",
       "max_score": 10,
-      "description": "Every row in information-requests.csv names who is being asked (the support agent, the named reporter, or our own pipeline) and the state the ticket sits in while waiting. Rows that say only 'needs more info' score at most half."
+      "description": "QA-2219 is reopened rather than re-filed, with what is needed named specifically (the device and the flow used, obtainable from the customer via a named support agent, not from the shared inbox) and a resting state while it is chased. Leaving it closed scores zero."
+    },
+    {
+      "name": "Every reversal row names a source and a next actor",
+      "max_score": 8,
+      "description": "Each row names both where the information comes from and a person or system that owes the next move. Rows whose who_acts_next is a shared inbox, an automation account, or 'the team' score at most half."
     }
   ]
 }

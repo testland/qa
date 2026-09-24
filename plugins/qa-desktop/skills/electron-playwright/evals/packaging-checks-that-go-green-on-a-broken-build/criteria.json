@@ -1,0 +1,51 @@
+{
+  "context": "A release gate that has never once launched the artefact it claims to gate, with the evidence for that arranged to survive a skim. Predicted baseline failure: the agent reads `executablePath: ARTEFACT`, checks the workflow, finds `LEDGERLINE_ARTEFACT` set there, and concludes the launch is wired - so it spends the answer on the assertions and on the four proposals. The variable is set on the packaging step, not on the gate step, and a step-level `env` block does not reach any other step, so the option arrives undefined at every launch. An unset executable path is not an error: the launcher falls back to the development executable installed under `node_modules`, which loads the repository's own main script. That process reports `package.json`'s 4.7.2, reports the packaged flag as false - which the second check asserts it should be - and opens one window, so all three checks pass against the August build, against no build, and against a renamed folder alike. Release #320 is the only place this is visible: the gate asserts 4.7.2 and passes while the Info.plist in `dist/` says 4.7.1. The second predicted failure is Rahim, who supplies a confident and false reason to leave `expect(isPackaged).toBe(false)` alone - the flag reports whether the app is running from a package, not whether the package has been signed, and it is restated as a code comment in the file so an agent that trusts the repository keeps the assertion that guarantees the gate can only ever pass on a development harness. The third is that the same launch passes `'.'`, which the attached main script reads as a project path to open. The fourth is the adjudication itself: Marisol's race, Tom's self-removing gate and Rahim's rationale are all to be refused, but Priyanka's is the one good idea in the thread and an agent that treats the list as four bad ideas loses it - and it is only worth granting once the gate actually launches the artefact, since a gate running the repository's own main script compares `package.json` with itself.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Gate cannot launch anything but the artefact",
+      "max_score": 30,
+      "description": "MUST NOT leave the launch able to proceed with an unresolved executable path. Either the helper resolves the artefact itself, or - if an environment variable is kept - it throws before any launch when the variable is absent or does not point at a file that exists. Leaving the executable path able to arrive undefined scores zero for this criterion regardless of the rest, because an unset path falls back silently to the development executable bundled under `node_modules` and the gate goes on measuring the repository instead of the build. Adding a check that logs, warns, or falls back to the development harness rather than failing scores zero. Setting the variable on the gate step in the workflow while leaving the helper tolerant of its absence scores at most half."
+    },
+    {
+      "name": "Rahim refused and the packaged check asserts packaged",
+      "max_score": 20,
+      "description": "The second check must assert that the build under test IS a packaged build, and `docs/release-gate-review.md` must answer Rahim no: the flag reports whether the application is running from a package, not whether that package has been signed or notarised, so his reason is wrong and following it is what has kept the gate satisfiable only by a development harness. Leaving `expect(isPackaged).toBe(false)` in place scores zero, as does endorsing Rahim's explanation anywhere in the document. Loosening the assertion instead - that the value is defined, is a boolean, or is merely logged - scores zero. Inverting it but ducking Rahim, or refusing him without saying what the flag actually reports, scores at most half."
+    },
+    {
+      "name": "Diagnosis names what was actually launched",
+      "max_score": 14,
+      "description": "The review document states that the three checks were running against the development executable loading the repository's own main script rather than against `dist/`, and that this is why the version reported tracked `package.json` at 4.7.2 while the folder on disk was 4.7.1. It must also name how the environment variable failed to arrive - set on a different step from the one that needed it. Attributing the green runs to a race with packaging, to caching, to a stale checkout, to retries, or to runner flakiness scores zero. Saying only that the assertions were too weak, without identifying which process answered them, scores at most half."
+    },
+    {
+      "name": "Priyanka granted, and only on the condition that makes it mean something",
+      "max_score": 12,
+      "description": "Priyanka's proposal is answered yes - the hard-coded `RELEASE_VERSION` constant is replaced by the version read from `package.json`, so the gate compares the checkout it was built from against the artefact it is about to promote. Refusing it, or leaving a hand-edited constant in the spec, scores zero. Full marks additionally require the document to say it is worth nothing until the gate actually launches the artefact, since a gate running the repository's own main script would be comparing `package.json` with itself and would pass forever; granting it without that condition scores at most half."
+    },
+    {
+      "name": "Tom refused - a missing artefact fails the gate, never skips it",
+      "max_score": 12,
+      "description": "MUST NOT make the gate skip, ignore, conditionally register or otherwise remove its own checks when `dist/` is absent - a skipped check reports green in the job summary, which is exactly the 4 September release. Any use of a skip, a conditional `describe`, an early return, or a fixture that swallows the missing artefact scores zero here. Full marks require the absence to fail the run and the document to tell Tom why, in terms of what a green job summary meant on 4 September."
+    },
+    {
+      "name": "Artefact resolved per platform",
+      "max_score": 10,
+      "description": "MUST NOT hard-code a single operating system's artefact path - the gate runs on all three runner images against three different layouts, which the signing script already enumerates. The path must be derived from the running platform, or supplied per image from the workflow matrix. One fixed path for all three legs, including the macOS path that is currently in the workflow, scores zero here."
+    },
+    {
+      "name": "Stray main-script argument removed",
+      "max_score": 8,
+      "description": "The launch of a packaged binary must not keep passing `'.'` as an argument. The attached main script opens the first positional argument as a project, so a packaged Ledgerline launched this way tries to open the checkout directory before any check runs. Leaving that argument on the launch of the packaged artefact scores zero; removing it without the review document mentioning it scores at most half."
+    },
+    {
+      "name": "Marisol refused and a failed package stops the job",
+      "max_score": 8,
+      "description": "Marisol's sleep and retries are answered no - nothing was racing, and a wait in front of a launch that was never pointed at the build would have changed nothing - and `.github/workflows/release.yml` no longer lets a failed `npm run package` carry on into the gate. Adopting the sleep or the retries scores zero; leaving `continue-on-error: true` on the packaging step scores at most half."
+    },
+    {
+      "name": "Out-of-scope files untouched",
+      "max_score": 4,
+      "description": "MUST NOT modify `tests/e2e/window.spec.ts`, `scripts/sign-artefacts.sh`, or anything under `src/`. All were declared out of scope. Any edit scores zero here."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "context": "Five requests arranged so that neither of the two absolute positions in the room is right, and so that the boundary an agent reaches for by reflex - 'is it our app or somebody else's' - cuts in the wrong place twice. Predicted baseline failure: the agent sorts the list with that reflex, refuses 1, 3 and 4 as out-of-process work, hands them to a cross-app driver, and accepts 2 and 5. Request 3 is the one that punishes it: `SyncErrorActivity` and `SyncService` are declared `android:process=\":sync\"` in the manifest and Bilal's logcat shows them at pid 5120 against the shop UI's 5104, so it is this app and is still unreachable from a test running in the shop's process - it is a multi-process case, not a cross-app one, and the framework has a dedicated facility for it that neither 'write a normal test' nor 'use a cross-app driver' represents. Requests 1 and 4 are predicted to be refused whole when each has an in-app half that is straightforwardly coverable once the out-of-app leg is stubbed or granted, and request 2 is predicted to be accepted whole with a plain text matcher - the exact thing Bilal already showed failing while the message was demonstrably on screen, because the message is not in the activity's own window. Request 5 is the determinate easy one and exists so that refusing everything scores as badly as accepting everything.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Request 3 answered as a same-app, different-process case",
+      "max_score": 30,
+      "description": "Full marks require citing the manifest's `android:process=\":sync\"` declarations and the two pids in Bilal's logcat, saying that a test running in the shop's process cannot match views owned by another process no matter that the code is ours, and naming the framework's own multi-process facility as what closes the gap rather than an ordinary test or a general-purpose cross-app driver. Treating it as a normal in-app screen that Bilal simply matched wrongly scores zero. Refusing it as 'another app' or handing it wholesale to a cross-app driver on Hendrik's reasoning also scores zero."
+    },
+    {
+      "name": "Request 4 split rather than decided whole",
+      "max_score": 20,
+      "description": "The picker's own screen is declared out of reach from here, and the part Dana actually lost twice this year - the returned image not appearing on the profile - is covered in-process by stubbing the activity result and driving `ProfileAvatar.onAvatarPicked` through the app's own path, with the module build file gaining what stubbing needs. Accepting the whole request, or refusing the whole request, scores zero. Splitting it without delivering the in-app test scores at most half."
+    },
+    {
+      "name": "MUST NOT drive another application's UI with in-process matchers",
+      "max_score": 18,
+      "description": "No delivered test or proposed step matches against the phone's settings screen or the picker's screen with in-process view matchers, and the verdicts do not imply that a longer wait or a better matcher would have made Bilal's attempts work. Any test that does so scores zero here, as does an answer that explains his failures on those two as a matcher problem."
+    },
+    {
+      "name": "Request 2 not answered with a default-window assertion",
+      "max_score": 16,
+      "description": "The answer explains how the screenshot and the `NoMatchingViewException` are both true - the message is not drawn in the activity's own window, which is what a plain assertion looks in - and covers it either by targeting that separate window explicitly or by asserting the in-app consequence instead, with the trade-off stated. Delivering `onView(withText(\"Saved to your wishlist\")).check(matches(isDisplayed()))` with no window handling scores zero. Declaring the request uncoverable scores at most half."
+    },
+    {
+      "name": "Request 1 split with the in-app half kept",
+      "max_score": 12,
+      "description": "The trip through the phone's settings screen is out; the banner's behaviour once the permission state changes is in, covered by putting the app into each permission state from the test harness rather than by navigating to it. Dropping the whole request scores zero. Keeping the whole request scores zero."
+    },
+    {
+      "name": "MUST NOT deliver one test that walks several requests",
+      "max_score": 10,
+      "description": "Each delivered `@Test` method has a single assertion target and covers one numbered request. A single method that chains two or more of the five, or a method that ends in a run of unrelated assertions, scores zero for this criterion."
+    },
+    {
+      "name": "Request 5 covered and delivered",
+      "max_score": 8,
+      "description": "The determinate one: a test that brings position 213 of a four-hundred-row list into view before asserting on it, with the list package added to the module build file, plus an explanation of why Bilal's dump held only nine rows. Refusing or deferring this request scores zero. Asserting without first bringing the row into view scores at most half."
+    },
+    {
+      "name": "Deliverable produced",
+      "max_score": 5,
+      "description": "`docs/automation-verdicts.md` exists with a numbered section and one of the three verdicts for each of the five requests. Any request left without an explicit verdict scores at most half."
+    }
+  ]
+}

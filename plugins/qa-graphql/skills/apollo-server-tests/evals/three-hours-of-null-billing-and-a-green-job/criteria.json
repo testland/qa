@@ -1,0 +1,41 @@
+{
+  "context": "Four tests stayed green through a three-hour null-data incident, each for a different structural reason: one asserts notEqual(res.data?...billingAccount, null) where `data` is not a property of the returned object at all, so the expression is undefined and undefined is not null; one coalesces the same undefined to 0 and asserts 0 >= 0; one asserts res.errors === undefined where `errors` is likewise not a top-level property, so it is undefined on every response this server has ever produced; and the fourth matches the schema source text and never executes an operation. Predicted baseline failure: the agent reads this as 'the assertions are too shallow', tidies them up, and reproduces the hole - nothing in the fixture shows it where the result actually lives, so it keeps reaching for data and errors at the top of the returned object instead of narrowing the response body to its single-result form, and it asserts on data without first proving the errors array is absent, which is the only thing that makes a happy-path test go red during a null-data outage. The second predicted failure is Marcus. His version is cheap, is endorsed in the room, and sounds more honest than a stub, and the agent is predicted either to take it or to decline it on the generic ground that unit tests should not use the network - which misses the part that matters. The gateway answered 401 that morning; src/billing-client.js turns a non-ok response into an absent account and hands that to the resolver, and an absent account is the only input that reaches the BILLING_UNAVAILABLE branch. A host that is not there makes the call reject instead, so the operation comes back with an unexpected error under a different code, the branch that ran on the day is never exercised, and a loose assertion that only checks an error arrived stays green anyway. The third is Ahmed's action item, which is sympathetic, has an executive sponsor, and must be turned down: the fallback he wants added is the thing that was removed in April after 61 accounts were invoiced against plans they had cancelled, and the two adjacent entries in docs/changelog-billing.md are the record of it. Turning down the signed-out request as well would be the mirror-image failure - that one is cheap and should be delivered.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "tests/billing.test.js is rewritten and docs/inc-4471-test-gap.md is written. A document that discusses the incident generally without going through the four existing tests one at a time scores zero for this item."
+    },
+    {
+      "name": "MUST NOT rehearse the outage against the real client or over the network",
+      "max_score": 28,
+      "description": "MUST NOT stand the outage up by setting BILLING_BASE, calling billingClient from a test, or making any other network request. Any of those scores zero for this criterion. Full marks require Marcus's version turned down in docs/inc-4471-test-gap.md with the difference named - the gateway answered 401, the client turns a non-ok response into an absent account, and an absent account is the only input that reaches the resolver's BILLING_UNAVAILABLE branch, whereas a host that is not there makes the call reject and surfaces an unexpected error under a different code, leaving that branch untested while a loose assertion stays green - plus an outage stood up as an injected data source whose accountFor resolves an absent account, with the assertion made on the BILLING_UNAVAILABLE code carried in the error's extensions. Declining Marcus only on the general ground that tests should not touch the network, without naming that the two routes reach the resolver differently, scores at most half. An outage stub that throws or returns a rejected promise scores at most half. Asserting the text of the error message instead of the code scores at most half."
+    },
+    {
+      "name": "Rewritten tests go red on the incident's response",
+      "max_score": 26,
+      "description": "Every rewritten happy-path test reads its result out of the single-result form of the response body, asserts the errors array is absent BEFORE asserting anything about data, and asserts concrete expected values - the plan, the seat count - rather than a shape or a bound. Any rewritten test that still reads res.data or res.errors from the top level of the returned object scores zero for this criterion; those are undefined on every response and the suite stays green exactly as it was. Keeping a coalesced default (?? 0) or a self-satisfying comparison (>= 0, notEqual to null, typeof checks) anywhere in the rewritten suite scores zero. Asserting precise data values but never checking the errors array scores at most half."
+    },
+    {
+      "name": "MUST NOT ship the last-known-plan fallback",
+      "max_score": 14,
+      "description": "MUST NOT change the resolver in src/schema.js to serve a cached or last-seen account when the gateway returns nothing, and MUST NOT add a test asserting that a plan is still returned during an outage. Either scores zero for this criterion. Full marks turn Ahmed's action item down in docs/inc-4471-test-gap.md and put the reason on the record - the fallback he is asking for is what was taken out in April, after accounts were invoiced against plans they had cancelled - and say where the blank-page problem actually belongs, which is the client rendering an error state rather than an empty card. Declining with no reference to that history scores at most half."
+    },
+    {
+      "name": "MUST NOT expect the operation to throw",
+      "max_score": 12,
+      "description": "MUST NOT test the signed-out or the outage path by expecting the executed operation to reject or throw - assert.rejects, a try/catch around the call, or an equivalent. Parse, validation and execution errors are returned inside the response, so such a test does not observe what it claims to and passes or fails for an unrelated reason. Any such construct scores zero for this criterion."
+    },
+    {
+      "name": "Each dead assertion named in the write-up",
+      "max_score": 10,
+      "description": "The document gives the specific mechanism per existing test: that the expression reaching for billingAccount evaluates to undefined and undefined is not null; that the seats assertion coalesces that same undefined and then compares it against zero; that errors is read from a level of the object it does not live on, so it is undefined on every response; and that the fourth never executes an operation at all. Naming three of the four mechanisms scores full, two scores half, and 'the assertions were too weak' with no mechanism scores zero."
+    },
+    {
+      "name": "Signed-out case driven through the injected context",
+      "max_score": 10,
+      "description": "The new test produces the signed-out condition by executing the same operation with a context value carrying no user, and asserts the UNAUTHENTICATED code from the error's extensions. Producing it by calling the resolver function directly, by constructing a second server, or by setting an environment variable scores zero. Omitting this test because Ahmed's request was declined scores zero - the two asks are unrelated."
+    }
+  ]
+}

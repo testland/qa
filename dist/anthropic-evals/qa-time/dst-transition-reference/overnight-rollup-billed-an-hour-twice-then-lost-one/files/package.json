@@ -1,0 +1,9 @@
+{
+  "name": "usage-rollup",
+  "version": "3.4.1",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  }
+}

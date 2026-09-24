@@ -1,0 +1,8 @@
+2026-09-10T09:02:51Z  eval start  commit a91f3c2  golden 80 rows
+2026-09-10T09:02:51Z  python 3.12.4  runner ubuntu-22.04
+2026-09-10T09:02:52Z  resolved metrics: Faithfulness, ResponseRelevancy, LLMContextRecall, LLMContextPrecisionWithoutReference
+2026-09-10T09:02:52Z  DeprecationWarning: answer_relevancy is an alias for ResponseRelevancy
+2026-09-10T09:02:52Z  judge: gpt-4o -> gpt-4o-2024-11-20
+2026-09-10T09:02:52Z  index: api-reference 4100 chunks, changelog 1840 chunks
+2026-09-10T09:41:18Z  faithfulness 0.86  answer_relevancy 0.88  context_recall 0.79  context_precision 0.81
+2026-09-10T09:41:18Z  FAIL faithfulness 0.86 < 0.92; answer_relevancy 0.88 < 0.89; context_recall 0.79 < 0.87

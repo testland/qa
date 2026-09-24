@@ -1,0 +1,46 @@
+{
+  "run": {
+    "started": "2026-09-08T09:12:00Z",
+    "duration_s": 1200,
+    "script": "tests/load/api.js",
+    "profile": "startRate 100, ramp to 1400/s over 16m, hold 1400/s for 4m",
+    "exit_code": 0
+  },
+  "metrics": {
+    "http_req_duration": {
+      "type": "trend",
+      "values": { "avg": 452, "min": 88, "med": 244, "max": 14918, "p(90)": 644, "p(95)": 703 },
+      "thresholds": { "p(95)<1000": { "ok": true } }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "values": { "avg": 446, "min": 83, "med": 238, "max": 14911, "p(90)": 638, "p(95)": 697 }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "values": { "avg": 1.3, "min": 0.2, "med": 0.9, "max": 44, "p(90)": 2.5, "p(95)": 3.2 }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "values": { "avg": 4.7, "min": 0.7, "med": 4, "max": 61, "p(90)": 8.1, "p(95)": 9.6 }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "values": { "rate": 0.0009, "passes": 844, "fails": 936916 },
+      "thresholds": { "rate<0.005": { "ok": true } }
+    },
+    "checks": {
+      "type": "rate",
+      "values": { "rate": 0.9991, "passes": 936916, "fails": 844 }
+    },
+    "http_reqs": { "type": "counter", "values": { "count": 937760, "rate": 781.47 } },
+    "iterations": { "type": "counter", "values": { "count": 937760, "rate": 781.47 } },
+    "dropped_iterations": { "type": "counter", "values": { "count": 118240, "rate": 98.53 } },
+    "iteration_duration": {
+      "type": "trend",
+      "values": { "avg": 453, "min": 89, "med": 245, "max": 14920, "p(90)": 645, "p(95)": 704 }
+    },
+    "vus": { "type": "gauge", "values": { "value": 1500, "min": 14, "max": 1500 } },
+    "vus_max": { "type": "gauge", "values": { "value": 1500, "min": 1500, "max": 1500 } }
+  }
+}

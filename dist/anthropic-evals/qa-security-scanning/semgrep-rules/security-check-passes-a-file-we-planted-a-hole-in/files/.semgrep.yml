@@ -1,0 +1,9 @@
+rules: []
+
+# Registry rulesets are passed on the command line; this file holds path config.
+paths:
+  exclude:
+    - node_modules
+    - dist
+    - "**/*.min.js"
+    - security/rules-archive

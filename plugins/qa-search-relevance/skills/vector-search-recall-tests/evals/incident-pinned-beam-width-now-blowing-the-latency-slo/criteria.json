@@ -1,0 +1,46 @@
+{
+  "context": "The repository's own sweep is the trap, and it is broken twice over. bench/sweep.js calls `index.search(q.vec, { k, efSearch: ef })` while src/graphIndex.js destructures `{ k = 10, ef = 24 }`, so every one of the ten rows ran at the default width - that is why Tom's table is identical at 12 and at 256, and why it reports 61.0 comparisons per query while ops measures 120.0 at the deployed ef=256. The deeper defect survives fixing that: bench/sweep.js requires ./queries.json, the eight searches saved from the August ticket replay, not the 24 in data/queries.json. On those eight, ef=12 measures recall 1.000 at 47.3 comparisons per query - it clears both gates comfortably, which is precisely Nadia's proposal and precisely what a corrected sweep run in place will confirm. Predicted baseline failure: the agent repairs the parameter name, re-runs the sweep exactly where it stands, finds ef=12 green on both gates, and ships it. On the 24 production queries ef=12 measures 0.946, below the 0.96 quality gate. The values that clear both gates on data/queries.json are 15 through 18 (0.967 at 54.4 comparisons at 15; 0.975 at 58.8 at 18); 14 and below miss the quality floor, 20 and above exceed the cost gate, and the pinned 256 measures 1.000 at 120.0 - twice the budget for 0.033 of recall over ef=16.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT choose the width from the replay set",
+      "max_score": 30,
+      "description": "bench/queries.json holds eight searches kept from one incident and is not the evaluation set. Recommending a width whose supporting recall figure was measured on those eight scores zero for this criterion, and recommending ef=12 scores zero regardless of how it is justified - it measures 0.946 on data/queries.json. Full marks require the sweep re-run over data/queries.json and the chosen width supported by a figure measured there. Measuring on the 24 but still presenting the eight-query figures as the justification scores at most half."
+    },
+    {
+      "name": "The flat sweep table explained",
+      "max_score": 20,
+      "description": "The finding names the cause: bench/sweep.js passes the width as `efSearch` while `search` reads `ef`, so all ten rows ran at the default 24 and the grid never varied anything. Treating Tom's table as a measurement of anything scores zero. Saying the table looks wrong, or that the sweep is 'not measuring ef', without naming the mismatched parameter scores at most half."
+    },
+    {
+      "name": "Shipped value clears both gates on the evaluation set",
+      "max_score": 18,
+      "description": "config/search.json carries a width that measures at or above 0.96 recall@10 and at or below 60 comparisons per query over data/queries.json - 15 through 18 on these measurements. Leaving 256 in place scores zero. A value of 14 or below (quality gate missed) or 20 or above (cost gate missed) scores zero. A value in range but supported by only one of the two figures scores at most half."
+    },
+    {
+      "name": "Both standing proposals answered with measurements",
+      "max_score": 14,
+      "description": "Tom's proposal is rejected with the measured cost of the deployed width - 120.0 comparisons per query at ef=256 against a gate of 60, buying 1.000 recall where ef=16 already measures 0.967 - so the bigger instance type is paying for work that does not need doing. Nadia's is rejected with ef=12 measuring 0.946 on the 24 queries even though it measures 1.000 on the eight. Answering only one scores at most half; accepting either scores zero."
+    },
+    {
+      "name": "New test is red on the repository as delivered",
+      "max_score": 12,
+      "description": "test/searchBudget.test.js fails on the repository exactly as delivered - the pinned width costs 120.0 comparisons per query against a gate of 60 - and passes once the config is changed. A test that is green before any change scores zero. A test that asserts recall alone scores at most half: recall at ef=256 is 1.000, so a recall-only assertion is green on a configuration that is failing production."
+    },
+    {
+      "name": "Bench numbers reconciled with production's",
+      "max_score": 10,
+      "description": "The document accounts for the gap between the 61.0 comparisons per query the sweep prints and the 120.0 ops measures at the deployed width, rather than quoting one and ignoring the other. Repeating the sweep's cost figure as the cost of the deployed configuration scores zero."
+    },
+    {
+      "name": "Vendor model left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify src/graphIndex.js or test/graphIndex.test.js - including making `search` accept `efSearch` so the existing sweep starts working. Any edit to either scores zero for this criterion; the mismatch is the caller's to fix."
+    },
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 4,
+      "description": "docs/inc-3904-width.md and test/searchBudget.test.js both exist, the document names a single shipped value rather than a range of options, and `npm test` passes including the six tests already shipped. A failing or hanging suite scores zero."
+    }
+  ]
+}

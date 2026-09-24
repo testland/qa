@@ -1,0 +1,32 @@
+# job run 2026-09-12, commit e7c0f31 (current config)
+
+Running Lighthouse 3 time(s) on http://localhost:3000/
+Running Lighthouse 3 time(s) on http://localhost:3000/product
+Running Lighthouse 3 time(s) on http://localhost:3000/checkout
+Running Lighthouse 3 time(s) on http://localhost:3000/account/orders
+Done running Lighthouse!
+
+Checking assertions against 4 URL(s), 3 run(s) each
+
+1 result(s) for http://localhost:3000/ :
+
+  FAIL  categories:accessibility failure for minScore assertion
+          Accessibility
+          expected: >=0.9
+             found: 0.87
+        all values: 0.87, 0.87, 0.87
+
+1 result(s) for http://localhost:3000/product :
+
+  PASS  categories:accessibility minScore assertion   expected: >=0.9  found: 0.92
+
+1 result(s) for http://localhost:3000/checkout :
+
+  PASS  categories:accessibility minScore assertion   expected: >=0.9  found: 0.93
+
+1 result(s) for http://localhost:3000/account/orders :
+
+  PASS  categories:accessibility minScore assertion   expected: >=0.9  found: 0.94
+
+assertion failures: 1
+exit status 1

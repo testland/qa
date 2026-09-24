@@ -1,0 +1,22 @@
+#eng-archaeology - thread started 2026-09-09 by r.osei
+
+r.osei:      compliance wants a record for the July 23 edge outage. nobody ever
+             wrote one. what do people remember
+k.novak:     I got paged in the middle of standup. the cert had expired, we
+             regenerated one and pushed it
+k.novak:     we had the new cert in at 14:10. I remember because I missed the
+             1:30 design review and got back to my desk just after two
+d.ferreira:  the renewal cron had been failing since the start of July. I
+             watched it go red three or four times in the scheduler and I did
+             not chase it up. that is the root cause and I am happy to own
+             saying so
+r.osei:      do we have a number for business impact
+j.mbeki:     217,400 dollars of orders in that window. finance had it on a slide
+             in the QBR deck
+k.novak:     one thing I am certain about - we had nothing watching certificate
+             expiry at all. the only thing that told us was the 5xx alert, and
+             by then it was already down
+k.novak:     also I am fairly sure a customer emailed us before the alert fired
+d.ferreira:  no, the monitor was first
+d.ferreira:  anyway it is all moot now, cert-manager owns the cert
+r.osei:      ok. I will write something up

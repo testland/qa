@@ -1,0 +1,51 @@
+{
+  "context": "Two things in this repository are wrong and the second one punishes anyone who fixes the first. `src/ingest.js` creates the index with metric 'ip' - a plain inner product - and since 2026-08-28 sixteen of the forty-eight products carry vectors that are not unit length (0.27 to 4.61; the other thirty-two are all 1.000), so the score is dominated by magnitude. All twelve first-page slots go to products with |v| above 2, the five products with |v| below 0.5 appear on no page one at all, and the delivered top result agrees with the directionally nearest product on 1 of 12 queries. The second defect is in `src/recall.js`: `referenceTopK` scores every product with the same raw inner product over the same raw vectors, so it is blind to exactly the thing that is broken. Predicted baseline failure: the agent rejects PR #2291 as ordering-invariant - scaling a query vector by a positive constant cannot reorder anything - treats the case as closed, and never audits the metric, because the delivered harness reports 0.908 and nothing in the prompt says the harness is wrong. The agent that does go further hits the trap: normalizing at ingest, or moving the index to 'cosine', makes `npm run recall` fall from 0.908 to 0.758, which reads as a regression and invites reverting. Measured against a reference computed on the same basis as the index, the fixed ranking is 0.983 and the top result matches the nearest product on 12 of 12 queries - which is also the answer to merchandising's hand-pinning proposal.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT keep a reference set that scores the way the index scores",
+      "max_score": 30,
+      "description": "The reference in src/recall.js scores with the same raw inner product over the same raw vectors as the index, so it cannot register the defect. Any recall figure reported after the ranking change that still rests on the delivered `referenceTopK` scores zero for this criterion. Reverting, weakening or arguing against the ranking fix because `npm run recall` fell from 0.908 to 0.758 scores zero - that fall is the blind reference disagreeing with a correct index, not a regression. Full marks require the reference moved onto the same basis as the ranking and the corrected figure (0.983) reported. Noting in prose that the number is not comparable, without rebuilding the reference, scores at most half."
+    },
+    {
+      "name": "Vector magnitude no longer decides the ranking",
+      "max_score": 24,
+      "description": "After the change, ordering depends on direction rather than on how long a supplier's vector happens to be - by normalizing product vectors at ingest, or by creating the index with the 'cosine' metric, or equivalent. Leaving metric 'ip' over raw vectors scores zero. Normalizing only the query vector scores zero: a positive scalar on one side of an inner product cannot reorder anything, which is the same reason #2291 does nothing. Achieving it by editing src/vectorIndex.js scores zero."
+    },
+    {
+      "name": "Review carries the measured numbers",
+      "max_score": 14,
+      "description": "The review states at least two measured facts of this kind: all 12 first-place slots are held by products with |v| above 2; only 6 distinct products hold all 12 first slots; the 5 products with |v| below 0.5 never appear on any page one; 32 of the 48 products are unit length and 16 are not; the delivered first result matches the directionally nearest product on 1 of 12 queries and on 12 of 12 after the fix. One such fact scores at most half. A review that argues the point without a measurement scores zero."
+    },
+    {
+      "name": "PR #2291 rejected on what the patch can do",
+      "max_score": 12,
+      "description": "The verdict on #2291 is reject, on the ground that multiplying the query vector by a positive constant scales every score by the same factor and cannot change the order of any result. Approving it scores zero. Rejecting it as 'not the real fix' without the ordering-invariance argument scores at most half."
+    },
+    {
+      "name": "New test is red on the repository as delivered",
+      "max_score": 12,
+      "description": "test/ranking.test.js fails on the repository exactly as delivered and passes after the fix. A test that is green before any change scores zero here. A test asserting only that the query boost leaves results unchanged scores at most half: it is green as delivered and pins the decoy rather than the defect."
+    },
+    {
+      "name": "The author's before-and-after reading corrected",
+      "max_score": 10,
+      "description": "The review says explicitly that 0.908 before and 0.908 after is the expected result of a change that cannot reorder anything, and is evidence of nothing either way. Repeating it as 'no regression' or as support for merging scores zero. Ignoring the author's figures entirely scores at most half - he will raise them."
+    },
+    {
+      "name": "Hand-pinning answered with the measurement",
+      "max_score": 8,
+      "description": "The recommendation against merchandising's hand-pinned page one rests on the measured post-fix behaviour - the first result matches the nearest product on 12 of 12 spot-check queries once ranking is fixed - not on a preference for automated ranking. Recommending hand-pinning scores zero. Declining it with no measured alternative scores at most half."
+    },
+    {
+      "name": "Appliance left alone",
+      "max_score": 5,
+      "description": "MUST NOT modify src/vectorIndex.js or test/vectorIndex.test.js. Any edit to either - including changing the default metric inside the index rather than at the call site - scores zero for this criterion."
+    },
+    {
+      "name": "Deliverables produced and suite green",
+      "max_score": 4,
+      "description": "docs/pr-2291-review.md and test/ranking.test.js both exist, the review states a verdict on #2291 rather than a list of observations, and `npm test` passes including the eight tests already shipped. A failing or hanging suite scores zero."
+    }
+  ]
+}

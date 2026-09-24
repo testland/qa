@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: stripe
+    schema: raw_stripe
+    tables:
+      - name: refunds
+
+models:
+  - name: stg_refunds
+    columns:
+      - name: refund_id
+        data_tests:
+          - unique
+          - not_null
+      - name: amount
+        data_tests:
+          - not_null

@@ -1,0 +1,46 @@
+{
+  "context": "A nightly suite has been green for six months on the exact path that failed, and the retro supplies a two-line change that already looks like the textbook fix. Predicted baseline failure: the agent knows that a public endpoint wants the open workload model, sees that Nathan's diff says injectOpen, and adopts it - possibly raising his 2,000 or adding a percentile assertion on top. It would not catch the outage either. Gatling's open injection family is named for users, not for rate: rampUsers(2000).during(ten minutes) injects two thousand users across the window, which is 3.3 arrivals a second, a thirty-fifth of the ~118/s the service died at, and atOnceUsers and stressPeakUsers are head counts in the same way. The only steps that hold an arrival rate are constantUsersPerSec and rampUsersPerSec, and the two families cannot be combined in one injection profile. The shipped simulation is the other half of the problem: injectClosed holds 500 concurrent users, so the load it applies is bounded by how fast the system answers - when signup slows, fewer iterations start and the test quietly applies less load exactly when it should be applying more. The evidence that settles what the suite had actually measured is arithmetic on the attached report: 84,388 merchant creations in a 720-second window is 117.2 a second, and production fell over at about 118. The suite had already found the ceiling and printed it as SUCCESS, because throughput under fixed concurrency is an output of the system's response time rather than an input the test controls. It stayed green because the only assertion was global failedRequests under 1% - a p95 of 4,106 ms at 0.25% KO satisfies that perfectly. Two further defects are visible and predicted to be missed: every iteration re-acquires a token, so /auth/token is 84,402 of the 252,991 requests and the auth service sits inside every measurement, and there is no think time anywhere, so the user count corresponds to nothing real. The claim presented at the quarterly review - 'sustains 500 concurrent merchants' - is not a capacity statement at all, and the response is expected to retire it rather than reprint it with a bigger number.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Both deliverables produced",
+      "max_score": 4,
+      "description": "The simulation file is rewritten and docs/perf-88-response.md exists covering all three things asked for. Missing either scores at most half; missing both scores zero."
+    },
+    {
+      "name": "Load is applied as a held arrival rate",
+      "max_score": 34,
+      "description": "The rewritten simulation drives a sustained arrival rate at or above the ~118 signups a second the service failed at, using constantUsersPerSec held for a meaningful window and reached via rampUsersPerSec, so the load applied no longer depends on how fast the service responds. MUST NOT keep injectClosed for this public signup path: retaining it, or changing only the numbers inside it, scores zero for this criterion regardless of every other improvement. MUST NOT deliver rampUsers, atOnceUsers or stressPeakUsers as the sustained load - they inject a head count across the window rather than holding a rate, and Nathan's rampUsers(2000) over ten minutes is 3.3 arrivals a second - so adopting his diff, or any variant of it that raises the head count, also scores zero even though it sits under injectOpen. Mixing open and closed steps in one injection profile scores zero; the two families cannot be combined. A held rate below the 118/s the outage began at scores at most half."
+    },
+    {
+      "name": "The run's own throughput figure derived",
+      "max_score": 20,
+      "description": "docs/perf-88-response.md computes the signup throughput the attached report already contains - 84,388 creations over the 720-second window, about 117 a second - and states that this is the number production failed at, so the suite had measured the ceiling and reported it as a pass. Full marks require the explanation: with concurrency held fixed, throughput is an output of the system's response time, so the test cannot push past what the system can absorb. Explaining the green history as '500 users was simply not enough load' scores zero - that is the retro's own wrong answer. Arguing the model qualitatively without producing the throughput number scores at most half."
+    },
+    {
+      "name": "Nathan's change refused on what it actually injects",
+      "max_score": 14,
+      "description": "The response says plainly that the proposed diff would not have caught this, and why: it is an open-family injection but it schedules a head count rather than a rate, so two thousand users spread over ten minutes is about 3.3 arrivals a second against the 118 that broke signup, and a failures-only assertion would pass on it anyway. MUST NOT endorse the diff, adopt it as a starting point, or recommend it alongside the real fix; doing so scores zero. Declining it purely on the grounds that 2,000 is the wrong number, without addressing what the injection step does, scores at most half."
+    },
+    {
+      "name": "A latency assertion gates the build",
+      "max_score": 10,
+      "description": "setUp().assertions(...) gains a response-time percentile assertion alongside the failed-requests one. Leaving the assertion block as failed-requests only scores zero: the attached green run has a 4,106 ms p95 at 0.25% KO and passes it."
+    },
+    {
+      "name": "Token acquisition taken out of the iteration",
+      "max_score": 10,
+      "description": "The /auth/token call is hoisted out of the per-iteration scenario - a before block, a shared token, or a feeder of pre-issued tokens - so the auth service stops being a third of the generated traffic and stops appearing inside every measurement. Leaving the token request as the first exec of the scenario scores zero. Noting the problem in the response document without changing the simulation scores at most half."
+    },
+    {
+      "name": "The quarterly-review claim retired",
+      "max_score": 8,
+      "description": "The response states what 'sustains 500 concurrent merchants' was worth - nothing, as a capacity figure - and gives the figure that is actually derivable, roughly 117 signups a second. Restating a concurrent-user count, at 500 or at any larger number, as the service's capacity scores zero."
+    },
+    {
+      "name": "Think time present",
+      "max_score": 6,
+      "description": "The scenario gains pause() between the requests rather than issuing them back to back. Leaving the scenario with no pause anywhere scores zero."
+    }
+  ]
+}

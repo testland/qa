@@ -1,0 +1,36 @@
+name: nightly-load
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  load:
+    runs-on: [self-hosted, load-runner]
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
+            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run the scheduled load test
+        env:
+          API_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+          API_TOKEN: ${{ secrets.STAGING_API_TOKEN }}
+        run: >
+          k6 run --vus 200 --duration 30m
+          --summary-export=runs/ci-nightly-summary.json tests/load/checkout.js
+
+      - name: Upload the summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-summary
+          path: runs/ci-nightly-summary.json

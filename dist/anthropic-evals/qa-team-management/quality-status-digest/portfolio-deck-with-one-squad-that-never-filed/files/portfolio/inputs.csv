@@ -1,0 +1,5 @@
+team,blast_radius_band,exposure_note,qe_headcount,open_roles,automation_ratio,structure
+checkout,high,"checkout and payment path, about 62% of revenue",4,2,60%,embedded
+search,,,6,1,85%,embedded
+identity,medium,"login and account recovery, all users",3,1,45%,siloed
+internal-tools,low,"internal admin console, 40 staff users",2,0,30%,siloed

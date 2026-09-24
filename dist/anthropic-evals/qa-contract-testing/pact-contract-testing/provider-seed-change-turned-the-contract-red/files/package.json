@@ -1,0 +1,11 @@
+{
+  "name": "storefront",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "test": "node --test apps/checkout-web/test/cart.test.js apps/checkout-web/test/catalog.consumer.spec.js"
+  },
+  "devDependencies": {
+    "@pact-foundation/pact": "^13.1.4"
+  }
+}

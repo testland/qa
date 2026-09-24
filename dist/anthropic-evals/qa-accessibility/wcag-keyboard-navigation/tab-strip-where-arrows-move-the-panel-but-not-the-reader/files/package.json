@@ -1,0 +1,8 @@
+{
+  "name": "analytics-tabs",
+  "version": "1.9.3",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

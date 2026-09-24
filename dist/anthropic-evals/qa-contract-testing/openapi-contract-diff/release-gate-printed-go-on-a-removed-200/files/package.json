@@ -1,0 +1,10 @@
+{
+  "name": "exports-api-release-tools",
+  "version": "4.7.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "gate": "node scripts/contract-gate.mjs artifacts/breaking-latest.json || true"
+  }
+}

@@ -1,0 +1,8 @@
+# gateway authorizations, 2026-09-04 16:14:20Z - 16:52:06Z (the incident window)
+# distinct customers with at least one failed authorization: 1,487
+# monthly active users: 241,000
+# support tickets tagged INC-2291 as of 2026-09-11: 63
+# fraction of the September availability error budget consumed: 0.29
+outcome,count,value_usd
+succeeded,1262,281430
+failed_gateway_timeout,1842,412640

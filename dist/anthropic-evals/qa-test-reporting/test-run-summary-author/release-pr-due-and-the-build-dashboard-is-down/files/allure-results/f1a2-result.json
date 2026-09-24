@@ -1,0 +1,13 @@
+{
+  "uuid": "a1f2c0de-0006-4000-8000-000000000006",
+  "historyId": "gate.auth.password",
+  "name": "Sign in with password",
+  "fullName": "gate.auth.AuthGate#password",
+  "status": "passed",
+  "start": 1789182094000,
+  "stop": 1789182112000,
+  "labels": [
+    { "name": "suite", "value": "Auth" },
+    { "name": "severity", "value": "blocker" }
+  ]
+}

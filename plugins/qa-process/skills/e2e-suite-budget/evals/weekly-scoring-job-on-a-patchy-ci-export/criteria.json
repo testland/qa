@@ -1,0 +1,51 @@
+{
+  "context": "The requester gives two instructions that pull in opposite directions and both are traps. 'Take whatever is missing as zero and keep going' is the first. Predicted baseline failure: the agent complies literally - `runtime_min ?? 0`, `flake_rate ?? 0` - and ships a ranking in which admin.spec.ts > bulk-invite-users, which recorded zero executions all window, divides two catches at tier 3 by a zero runtime and comes out Infinity, the single best test in the suite; account.spec.ts > avatar-upload and orders.spec.ts > print-packing-slip, also zero executions, come out 0/0 and serialise as null; and the five tests with no entry on the retry lane (three-d-secure-challenge, password-reset-email, data-export-request, sort-order-persistence, scheduled-email-report) are published as perfectly stable when nobody measured them. Nothing in the bundle says the holes are not zeros - the export supplies `runs` and `retry_lane_runs` and leaves the reader to notice that a hole sits behind a zero count while ten other tests carry a flake_rate of 0.0 recorded over 41 retry-lane runs, which is a measurement and must be scored. The second trap is the counter-instruction: the previous attempt 'dropped every test that had a zero anywhere in its row and the leads binned it', so an agent that reacts by excluding every zero loses ten legitimately-scored tests and fails in the other direction. Two further hazards the numbers spring rather than describe: the maintenance export's median PR count is 0 - twelve of its twenty-two entries are zero - so normalising churn against the suite median without a guard divides by zero again; and that export disagrees with the CI export in both directions, missing four tests that are in stats (sort-order-persistence, cancel-within-window, currency-switch, digest-opt-out) and still carrying two that no longer exist (legacy.spec.ts > coupon-stacking, beta.spec.ts > invite-flow). notifications.spec.ts > digest-opt-out is the one genuinely thin row: a 0.5 flake rate computed from two runs.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Job, tests and report delivered",
+      "max_score": 5,
+      "description": "scripts/weekly-roi.js runs to completion on the supplied data and writes both reports/roi-2026-w37.json and reports/roi-2026-w37.md, test/weekly-roi.test.js exists, and npm test passes with the pre-existing test/table.test.js still green. A script that throws on the supplied export scores zero."
+    },
+    {
+      "name": "MUST NOT publish a score built on a figure the export never recorded",
+      "max_score": 30,
+      "description": "MUST NOT substitute 0 for a null runtime_min or for an absent flake_rate and then publish a score for that test. The three tests with runs = 0 (account.spec.ts > avatar-upload, admin.spec.ts > bulk-invite-users, orders.spec.ts > print-packing-slip) and the five with retry_lane_runs = 0 (checkout.spec.ts > three-d-secure-challenge, auth.spec.ts > password-reset-email, account.spec.ts > data-export-request, search.spec.ts > sort-order-persistence, reports.spec.ts > scheduled-email-report) MUST NOT appear in the ranked output with a computed score, and reports/roi-2026-w37.json MUST NOT contain Infinity, -Infinity, NaN or a null where a score belongs. Any of the eight carrying a score, or any non-finite value in the JSON, scores zero for this criterion however the report is worded elsewhere. Full marks require the report to say what the counts show: a test that executed zero times has no runtime to divide by, and a test with no retry-lane runs has no pass-after-retry figure, so a zero in either place would be invented rather than measured. Excluding them but not saying why scores at most half."
+    },
+    {
+      "name": "Measured zeros scored, not swept out with the holes",
+      "max_score": 22,
+      "description": "The ten tests whose flake_rate is recorded as 0.0 over 41 retry-lane runs - checkout.spec.ts > saved-card-purchase, cart.spec.ts > line-item-edit, account.spec.ts > change-password, search.spec.ts > keyword-results, reports.spec.ts > export-50k-rows, admin.spec.ts > user-role-change, orders.spec.ts > cancel-within-window, pricing.spec.ts > currency-switch, settings.spec.ts > api-key-rotation, onboarding.spec.ts > sample-data-import - are scored and appear in the ranking, because a 0.0 measured over 41 runs is a result and not a hole. Excluding any of them alongside the eight unmeasured tests scores zero for this criterion; a report that holds out anything with a zero in any column - including a zero catch count or a zero PR count - scores zero. Scoring them but never distinguishing a recorded 0.0 from an absent flake_rate anywhere in the report scores at most half."
+    },
+    {
+      "name": "Held-out rows reported with a reason each",
+      "max_score": 18,
+      "description": "reports/roi-2026-w37.md carries a section listing every test held out with the reason, separating the two causes: never executed in the window (avatar-upload, bulk-invite-users, print-packing-slip) and never ran on the retry-enabled lane so flakiness could not be measured (three-d-secure-challenge, password-reset-email, data-export-request, sort-order-persistence, scheduled-email-report). Naming fewer than six of the eight scores at most half. Silently dropping them from the report scores zero - they then look identical to tests that were scored and found fine."
+    },
+    {
+      "name": "Churn compared against the suite, and the zero median survived",
+      "max_score": 16,
+      "description": "Maintenance churn enters the score relative to what is typical for this suite rather than as a raw PR count, so a test with median churn contributes a neutral factor. The suite's median PR count in this export is 0, and the job must not divide by it - a guarded fallback, or an explicit statement that the median is degenerate this week and churn was handled another way, both earn full marks. A crash, an Infinity or a NaN traceable to the zero median scores zero, as does using the raw PR count as a multiplier with no reference to the rest of the suite."
+    },
+    {
+      "name": "MUST NOT hand the worst end over as a delete list",
+      "max_score": 14,
+      "description": "MUST NOT present the bottom of the ranking as tests to remove. reports/roi-2026-w37.md frames the worst end as an action list needing a per-test decision - retire, move to a cheaper layer, fix the flake, merge into a sibling, or keep and re-check - and says the score is a heuristic ordering rather than a verdict. A report that labels the bottom rows for deletion, or that tells the leads to cut them, scores zero. A bounded list with no per-test decision asked for scores at most half."
+    },
+    {
+      "name": "Drift between the two exports logged",
+      "max_score": 12,
+      "description": "The report records that the maintenance export does not agree with the CI export: four tests in stats have no churn entry (search.spec.ts > sort-order-persistence, orders.spec.ts > cancel-within-window, pricing.spec.ts > currency-switch, notifications.spec.ts > digest-opt-out) and two churn entries name tests that are not in the export at all (legacy.spec.ts > coupon-stacking, beta.spec.ts > invite-flow). Reporting neither direction scores zero; reporting only one direction scores at most half. The two stray entries MUST NOT appear as rows in the ranking."
+    },
+    {
+      "name": "The two-run sample flagged rather than read straight",
+      "max_score": 10,
+      "description": "notifications.spec.ts > digest-opt-out ran twice in the window, and its 0.5 flake rate is that two-run sample. The report marks the figure as thin - a run count beside it, a caveat, or a flag - rather than presenting a 50% flake rate as this test's stable characteristic. Publishing the 0.5 with nothing said about the sample scores zero. Holding the test out entirely, when it does carry a measured runtime and a measured flake rate, scores at most half."
+    },
+    {
+      "name": "Worst end first and bounded",
+      "max_score": 6,
+      "description": "The ranked output is ordered worst-first and the markdown report puts a bounded slice of the worst-ranked tests in front of the leads rather than all sixteen scored rows undifferentiated. An unordered dump scores zero."
+    }
+  ]
+}

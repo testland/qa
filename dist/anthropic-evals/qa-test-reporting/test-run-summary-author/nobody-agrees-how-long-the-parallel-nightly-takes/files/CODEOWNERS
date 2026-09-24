@@ -1,0 +1,6 @@
+/e2e/admin/       @acme/platform-admin
+/e2e/checkout/    @acme/payments
+/e2e/orders/      @acme/orders
+/e2e/profile/     @acme/identity
+/e2e/search/      @acme/discovery
+/e2e/wishlist/    @acme/discovery

@@ -1,0 +1,13 @@
+{
+  "name": "@acme/storefront",
+  "version": "6.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "test:visual": "playwright test tests/visual"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.47.2",
+    "typescript": "5.6.2"
+  }
+}

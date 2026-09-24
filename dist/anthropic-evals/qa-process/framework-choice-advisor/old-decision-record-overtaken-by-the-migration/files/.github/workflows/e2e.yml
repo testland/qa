@@ -1,0 +1,16 @@
+name: e2e
+on: [pull_request]
+
+jobs:
+  storefront:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        shard: ['1/4', '2/4', '3/4', '4/4']
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm test
+      - run: npm run e2e:ci
+        env:
+          SHARD: ${{ matrix.shard }}

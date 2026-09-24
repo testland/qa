@@ -1,0 +1,23 @@
+$ git ls-files 'tests/*-snapshots/*' | sort
+
+tests/billing.spec.ts-snapshots/invoices-1-chromium-darwin.png
+tests/billing.spec.ts-snapshots/invoices-1-chromium-linux.png
+tests/billing.spec.ts-snapshots/invoices-1-firefox-linux.png
+tests/billing.spec.ts-snapshots/plan-1-chromium-darwin.png
+tests/billing.spec.ts-snapshots/plan-1-chromium-linux.png
+tests/billing.spec.ts-snapshots/plan-1-firefox-linux.png
+tests/dashboard.spec.ts-snapshots/overview-1-chromium-darwin.png
+tests/dashboard.spec.ts-snapshots/overview-1-chromium-linux.png
+tests/dashboard.spec.ts-snapshots/overview-1-firefox-darwin.png
+tests/dashboard.spec.ts-snapshots/overview-1-firefox-linux.png
+tests/dashboard.spec.ts-snapshots/widgets-1-chromium-darwin.png
+tests/dashboard.spec.ts-snapshots/widgets-1-chromium-linux.png
+tests/dashboard.spec.ts-snapshots/widgets-1-firefox-linux.png
+tests/settings.spec.ts-snapshots/profile-1-chromium-darwin.png
+tests/settings.spec.ts-snapshots/profile-1-chromium-linux.png
+tests/settings.spec.ts-snapshots/profile-1-firefox-linux.png
+tests/settings.spec.ts-snapshots/team-1-chromium-darwin.png
+tests/settings.spec.ts-snapshots/team-1-chromium-linux.png
+tests/settings.spec.ts-snapshots/team-1-firefox-linux.png
+
+19 files.

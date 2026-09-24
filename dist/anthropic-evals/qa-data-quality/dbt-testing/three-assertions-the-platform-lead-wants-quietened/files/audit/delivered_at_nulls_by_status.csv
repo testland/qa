@@ -1,0 +1,5 @@
+status,rows,rows_with_null_delivered_at
+delivered,1841207,0
+in_transit,12904,12904
+label_created,1214,1214
+exception,0,0

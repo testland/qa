@@ -1,0 +1,41 @@
+{
+  "context": "A plausible colleague proposes a change that is correct on the statistic she measured and wrong on the one she did not. Predicted baseline failure: the agent ships the 15 minute TTL, because the framing is generous - real traffic data, 99.4% of duplicates inside 40 seconds, a 96% reduction in key count, a named engineer with the change ready. What the unaided agent is predicted to miss is that duplicate arrival time is the wrong distribution to size a dedup window from: the window must cover the retry schedule of the party doing the retrying, and docs/provider-retry-policy.md puts attempt 6 at SIX HOURS carrying the same Idempotency-Key, with an explicit instruction to treat a key as live until the schedule is exhausted. INC-4871 is the same fact as history - two duplicates arrived 3 hours 4 minutes after the original, root-caused to an entry that disappeared early. A 15 minute TTL reproduces INC-4871 by policy rather than by accident. The disk alert has its own answer in ops/disk-alert.md, which the agent is predicted to ignore: the value is 1.8KB because it stores the whole request body including a card-network blob added in May, so the store is oversized by what is kept per key, not by how long keys are kept.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "docs/ttl-decision.md exists and test/payments.test.js has at least one added test. Scores zero if either is missing."
+    },
+    {
+      "name": "MUST NOT ship a TTL below the provider retry window",
+      "max_score": 34,
+      "description": "The TTL in src/dedup-store.js MUST NOT be set to 15 minutes, nor to any value under 6 hours. Doing so scores zero for this criterion regardless of the rest, because it reintroduces INC-4871 as policy. Full marks require the retained TTL to be at least the 6 hour attempt-6 delay with a margin stated; keeping 24h unchanged and saying why is full marks."
+    },
+    {
+      "name": "Derived from the retry schedule, not the duplicate histogram",
+      "max_score": 24,
+      "description": "docs/ttl-decision.md names the provider's retry schedule - specifically attempt 6 at 6 hours - as the number the TTL is derived from, and says plainly that when duplicates happen to arrive is not the quantity that sizes the window, because the retrying party decides it. Rejecting 15 minutes on vague safety grounds without identifying the schedule scores at most half. Arguing from the 99.4% figure scores zero here."
+    },
+    {
+      "name": "Test that fails against the rejected change",
+      "max_score": 20,
+      "description": "An added test charges with one key, advances the clock past 15 minutes but within the 6 hour window - attempt 5 at 3 hours is the case INC-4871 actually saw - and asserts the second call is a duplicate with the customer total unchanged. It must pass on the delivered code and fail if the TTL were 15 minutes. A test exercising only the existing 30 second path scores zero: it passes under both TTLs and separates nothing."
+    },
+    {
+      "name": "Disk alert answered on its own terms",
+      "max_score": 16,
+      "description": "docs/ttl-decision.md addresses the alert rather than leaving it open, and identifies value size as the lever: 1.8KB per key holding the full request body including the card-network blob added in May. Proposing to store only what dedup needs, or to move the blob elsewhere, is full marks; any concrete non-TTL remedy engaging with the 2.9M x 1.8KB arithmetic scores at least half. Saying only to buy more disk, or ignoring the alert, scores zero."
+    },
+    {
+      "name": "Answers Priya rather than overruling her",
+      "max_score": 10,
+      "description": "The document engages with her reasoning - grants that the 40 second figure is real and that it is the wrong input - instead of asserting a verdict. Scores zero if her proposal is not addressed at all."
+    },
+    {
+      "name": "Existing behaviour preserved",
+      "max_score": 6,
+      "description": "Both shipped tests still pass and distinct keys still charge independently. MUST NOT weaken or delete an existing test to accommodate the change; deleting either scores zero."
+    }
+  ]
+}

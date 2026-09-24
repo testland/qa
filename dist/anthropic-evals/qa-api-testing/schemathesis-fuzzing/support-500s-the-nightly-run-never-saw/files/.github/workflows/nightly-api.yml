@@ -1,0 +1,37 @@
+name: nightly-api
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  generated-cases:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install schemathesis
+      # The CDN migration put a proxy in front of staging, so we added the header
+      # and content-type validations on top of the defaults - Dana, 2026-02
+      - name: Generated cases against staging
+        env:
+          TOKEN: ${{ secrets.STAGING_TOKEN }}
+        run: |
+          schemathesis run https://staging.kestrel.dev/openapi.json \
+            --base-url https://staging.kestrel.dev \
+            --checks content_type_conformance \
+            --checks response_headers_conformance \
+            --hypothesis-max-examples 300 \
+            --workers 4 \
+            --header "Authorization: Bearer $TOKEN" \
+            --junit-xml=results.xml
+      - name: Document lint
+        run: node --test test/*.test.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-api-results
+          path: results.xml

@@ -1,0 +1,6 @@
+$ node ci/run-gate.js
+waivers loaded: 6, findings suppressed: 6
+findings: 8 in, 2 after waivers
+verdict: PASS
+$ echo $?
+0

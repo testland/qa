@@ -1,0 +1,14 @@
+{
+  "name": "orders-web",
+  "version": "2.14.0",
+  "private": true,
+  "scripts": {
+    "build-storybook": "storybook build",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "8.3.5",
+    "chromatic": "11.10.2",
+    "storybook": "8.3.5"
+  }
+}

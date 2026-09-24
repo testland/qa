@@ -1,0 +1,13 @@
+route,device_class,sessions,lcp_p75_ms,inp_p75_ms,cls_p75
+/,all,884210,4380,290,0.14
+/,phone,601264,5210,340,0.18
+/,desktop,241109,2290,160,0.04
+/,tablet,41837,3980,250,0.11
+/search,all,612884,4910,410,0.09
+/search,phone,417322,5740,470,0.12
+/search,desktop,166480,2640,210,0.03
+/search,tablet,29082,4420,360,0.08
+/listing,all,903117,3960,230,0.21
+/listing,phone,613230,4630,270,0.26
+/listing,desktop,245471,2180,130,0.05
+/listing,tablet,44416,3610,200,0.17

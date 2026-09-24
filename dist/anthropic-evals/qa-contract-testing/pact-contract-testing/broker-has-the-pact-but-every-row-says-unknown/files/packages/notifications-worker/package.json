@@ -1,0 +1,8 @@
+{
+  "name": "@acme/notifications-worker",
+  "version": "2.8.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

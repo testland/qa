@@ -1,0 +1,35 @@
+name: lighthouse
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    name: lighthouse (${{ matrix.profile }})
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [desktop, mobile]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Audit
+        env:
+          LH_PRESET: ${{ matrix.profile }}
+        run: npx lhci autorun
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lh-${{ matrix.profile }}
+          path: .lighthouseci/

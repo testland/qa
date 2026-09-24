@@ -1,0 +1,9 @@
+{
+  "name": "wavelet-cli",
+  "version": "3.0.2",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:integration": "node --test integration/*.test.mjs"
+  }
+}

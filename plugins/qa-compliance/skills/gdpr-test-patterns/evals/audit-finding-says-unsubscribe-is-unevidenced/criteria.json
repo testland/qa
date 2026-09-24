@@ -1,0 +1,41 @@
+{
+  "context": "Two things are wrong and the obvious repair catches neither. revokeConsent() flips consent.granted to false and stops: it never writes revokedAt, and mailer.isEligible() never reads the consent register at all - it reads user.marketingOptIn, a copy taken at signup. Predicted baseline failure on the test: the agent writes the reflexive withdrawal case - call preferences.unsubscribe(), assert 200, assert consentFor(email, 'marketing').granted is false - which passes on the first run against the broken implementation, so the finding is reported closed while marketing mail keeps going out. Predicted baseline failure on the fix: having found that, the agent takes the one-line repair and sets user.marketingOptIn = false inside revokeConsent. Every test it has written then goes green, and the withdrawal is still not durable, because src/importer.js rewrites that same copy every night from the partner feed - syncPartnerList() calls setMarketingOptIn(email, row.subscribed) for any address already on file and never consults the consent register, so a withdrawn subscriber whose partner row still says subscribed is eligible again by morning and nothing in the suite notices. The register is the only store that carries the withdrawal; eligibility has to derive from it, or the re-grant path has to consult it. The third predicted failure is the over-correction in the other direction: suppressing all mail for a withdrawn user, which takes the transactional receipt with it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT make withdrawal effective only in the user copy",
+      "max_score": 32,
+      "description": "MUST NOT close this by writing the withdrawal into user.marketingOptIn and stopping there. That field is overwritten by src/importer.js on every partner sync, so the withdrawal does not survive the night. Full marks require both halves: marketing eligibility derives from the consent register (or the re-grant path consults the register before applying a partner row), AND a test that runs syncPartnerList for the withdrawn address with subscribed: true after the withdrawal and asserts a marketing send is still suppressed. A change confined to setting user.marketingOptIn = false inside revokeConsent scores zero for this criterion however many withdrawal cases accompany it. Making eligibility follow the register but never exercising a sync after the withdrawal scores at most half."
+    },
+    {
+      "name": "MUST NOT evidence withdrawal by the consent row alone",
+      "max_score": 20,
+      "description": "MUST NOT leave the withdrawal half evidenced only by the 200 from unsubscribe and the record flipping to granted: false - that is half the workflow and it passes against the shipped implementation while mail keeps going out. Full marks require an assertion that after preferences.unsubscribe() a marketing send for that address comes back suppressed AND mailer.outboxFor(email) holds nothing for it. A test file whose assertions never leave the object returned by consentFor scores zero for this criterion. Asserting the suppressed status without the outbox, or the reverse, scores at most half."
+    },
+    {
+      "name": "Withdrawal is timestamped",
+      "max_score": 12,
+      "description": "revokedAt is written on the consent record when consent is withdrawn and a test asserts it is no longer null, so the register says when the withdrawal happened and not merely that it did. Scores zero if revokedAt is left unwritten or unasserted. Scores at most half if a test asserts it but no production change writes it, leaving the suite red."
+    },
+    {
+      "name": "Transactional mail survives the fix",
+      "max_score": 8,
+      "description": "MUST NOT suppress transactional mail for a subscriber who has withdrawn marketing consent. A test asserts campaigns.sendReceipt() (or an equivalent transactional send) still returns 'sent' after the withdrawal. A change that blocks all mail for a withdrawn address scores zero."
+    },
+    {
+      "name": "Finding document states what was found",
+      "max_score": 12,
+      "description": "docs/audit-finding-7.md names the defects concretely - that sending eligibility was reading a copy taken at registration rather than the consent register, and that the partner sync could put a withdrawn address back on the list - rather than reporting that coverage was added. A document that only lists the new tests scores zero; naming one of the two defects scores at most half."
+    },
+    {
+      "name": "Accepted file untouched",
+      "max_score": 6,
+      "description": "src/consent.signup.test.js is byte-unchanged and still passing, and npm test passes overall. Editing it, extending it, or moving its cases into the new file scores zero - the auditor has already walked that file."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "src/consent.withdrawal.test.js and docs/audit-finding-7.md both exist. Producing the document with no executable test scores zero for this item."
+    }
+  ]
+}

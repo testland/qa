@@ -1,0 +1,6 @@
+{
+  "name": "ci-filer",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": { "test": "node --test test/*.test.js" }
+}

@@ -1,0 +1,40 @@
+# DRAFT - P. Raman, 2026-09-11. Unfinished, see TODOs.
+name: pr-perf
+
+on:
+  pull_request:
+
+jobs:
+  perf:
+    runs-on: ubuntu-latest   # GitHub-hosted, 2 vCPU / 7 GB
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - run: npm ci
+
+      - name: Boot the API on the runner
+        run: |
+          npm start &
+          npx wait-on http://localhost:3000/health
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          curl -sS https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update && sudo apt-get install -y k6
+
+      # TODO 2h is obviously not going to work here
+      - name: Run the load script
+        env:
+          BASE_URL: http://localhost:3000
+          API_TOKEN: local-dev-token
+        run: k6 run --summary-export=reports/summary.json load/checkout.js || true
+
+      # TODO budget
+      - name: Gate
+        run: node scripts/perf-gate.mjs reports/summary.json

@@ -1,0 +1,75 @@
+{
+  "realm": "corp",
+  "enabled": true,
+  "sslRequired": "none",
+  "accessTokenLifespan": 300,
+  "clients": [
+    {
+      "clientId": "legacy-batch",
+      "name": "Nightly reconciliation job",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "batch-test-secret",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [],
+      "webOrigins": []
+    },
+    {
+      "clientId": "mobile-app",
+      "name": "Corp mobile client",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["com.corp.app://oauth/callback"],
+      "webOrigins": ["+"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "com.corp.app://oauth/logout"
+      }
+    },
+    {
+      "clientId": "reports-api",
+      "name": "Reports resource server",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "reports-test-secret",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "redirectUris": [],
+      "webOrigins": []
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "email": "alice@corp.example",
+      "emailVerified": true,
+      "firstName": "Alice",
+      "lastName": "Tran",
+      "credentials": [
+        { "type": "password", "value": "alice-test-pass", "temporary": false }
+      ],
+      "realmRoles": ["mobile-user"]
+    },
+    {
+      "username": "svc-batch",
+      "enabled": true,
+      "credentials": [
+        { "type": "password", "value": "batch-test-pass", "temporary": false }
+      ],
+      "realmRoles": ["batch-runner"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      { "name": "mobile-user", "description": "Signs in from the mobile app" },
+      { "name": "batch-runner", "description": "Runs the nightly reconciliation" }
+    ]
+  }
+}

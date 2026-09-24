@@ -1,0 +1,11 @@
+id,created,type,environment_label,fix_shipped,summary
+BUG-7690,2026-09-02,bug,production,2026-09-04,"Referral credit applied twice on the same invite"
+BUG-7701,2026-09-08,bug,production,2026-09-10,"Signup experiment bucketed returning users into both arms"
+BUG-7702,2026-09-09,bug,production,2026-09-11,"Promo banner rendered the wrong currency symbol in CA"
+BUG-7703,2026-09-09,bug,,2026-09-11,"Waitlist position off by one after a batch invite"
+BUG-7704,2026-09-10,bug,,,"Onboarding checklist does not persist a dismissed step"
+BUG-7705,2026-09-11,bug,production,2026-09-12,"Referral link 404s when the campaign slug has an underscore"
+BUG-7706,2026-09-11,bug,,2026-09-12,"Email capture modal reopens after a successful submit"
+BUG-7707,2026-09-10,bug,staging,2026-09-11,"Invite import crashed above 2000 addresses"
+REQ-2214,2026-09-09,feature_request,production,2026-09-12,"Allow a custom referral message"
+REQ-2219,2026-09-12,feature_request,production,,"Add a second CTA to the waitlist page"

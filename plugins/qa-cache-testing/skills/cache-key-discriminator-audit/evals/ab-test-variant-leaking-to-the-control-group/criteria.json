@@ -1,0 +1,51 @@
+{
+  "context": "A fix for this has already shipped, it did nothing, and the code still carries the comment claiming it works. Predicted baseline failure: the agent reads `vary: 'Accept-Language, X-Experiment-Bucket'` on the pricing response, concludes the arm is already nominated, and either declares the header layer correct and goes hunting elsewhere, or 'strengthens' it by adding another response header, another `Vary` entry, or a bucket value stamped onto the response. All of those are inert for the same reason: the appliance keys on request header fields - `src/edgeCache.js` records `req.headers[name]` at store time and compares `req.headers[name]` at lookup - and no request to this route carries `x-experiment-bucket`, so the value recorded against every stored variant is nothing and every arm matches every entry. The dump in `reports/experiment-4471.md` shows exactly that: 38 variants, `(none)` in the bucket column on all 38, 37 of them sharing one body hash. An assignment computed inside the application has no request header to nominate at all until something at the edge puts one there, which is why Wednesday's deploy moved the split by zero. The second predicted failure is that the agent takes one of the two offers on the table instead: `Vary: Cookie`, which nominates a value unique to each visitor and so stores one entry per session, or `private` / `no-store` / pulling the route off the edge, which the requester has already said he will sign off. Both convert a shared tier into a per-visitor one; `ops/origin-capacity.md` prices that at 68 req/s for this route alone against a 52 req/s pool ceiling with 31 req/s already on it, and records the 41-minute 2026-06-19 outage where it was tried. Nothing in the prompt asks for that number. Two smaller failures are predicted as well: `currentPlan` is a per-visitor field sitting inside a `public, max-age=600` body that a shared appliance stores and replays, and nothing in the prompt points at it; and `Accept-Language` stays nominated on a body that has no locale input anywhere in `src/pricing.js`, because taking a discriminator away is not a move anyone asked for.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT key the arm on a header the request never carries",
+      "max_score": 32,
+      "description": "The delivered change MUST NOT rest on `x-experiment-bucket` being set, stamped or nominated on the response. Full marks require the arm to be derived at the edge from an input the request already carries - the `vid` cookie run through `assignBucket` - and written onto the request before `cache.lookup` is called, so that two visitors in different arms produce two stored variants through one `createEdgeCache()`. It scores zero if, after the change, two visitors `assignBucket` places in different arms still share one stored variant, and zero if the only edit is to the response headers, the copy table, or the assignment function. Making the fix work but never explaining why the 2026-09-09 deploy was inert - that the appliance reads the nominated names off the request and the dump records `(none)` against all 38 variants - scores at most half."
+    },
+    {
+      "name": "MUST NOT turn the shared edge into a per-visitor cache",
+      "max_score": 20,
+      "description": "The shipped remedy MUST NOT be `Vary: Cookie`, a per-visitor or per-session value in the key, `private`, `no-store`, or removing `/pricing` from the edge. Shipping any of those scores zero for this criterion regardless of the rest. Full marks require the explicit verdict against Dmitri's change - a cookie value is unique per visitor, so nominating it stores one entry per session rather than keying more finely, and the arm has two values, not 41,200 - together with the refusal of the requester's own offer backed by the measured numbers he did not ask for: 68 req/s for this route alone against a 52 req/s ceiling with 31 req/s already on it, and the 2026-06-19 incident. Refusing both on general caution, with neither the cardinality argument nor a capacity figure, scores at most half."
+    },
+    {
+      "name": "Per-visitor field in the shared body found unprompted",
+      "max_score": 18,
+      "description": "`currentPlan` is identified as a per-visitor field inside a body the shared appliance is told to hold for ten minutes, and it is taken out of the stored body - dropped, or moved onto a response that is not held at the edge. Nothing in the prompt mentions it. Not finding it scores zero. Finding it and writing it up but leaving it in the stored body scores at most half. Fixing it by marking the whole response `private` scores zero, since that is the per-visitor collapse the previous criterion prohibits."
+    },
+    {
+      "name": "Accept-Language taken out of the Vary",
+      "max_score": 12,
+      "description": "`Accept-Language` is removed from the pricing response's `Vary`, because nothing in `src/pricing.js` reads a locale - the copy table is keyed on the arm alone - so it is an input that cannot change the body and nominating it only fragments the stored entries, which the 38-variant dump shows it doing. Leaving it nominated scores zero. Removing it with no reason given scores at most half."
+    },
+    {
+      "name": "Regression test drives two arms through one shared cache",
+      "max_score": 14,
+      "description": "`src/pricing.test.js` builds one `createEdgeCache()` instance, serves two visitors that `assignBucket` places in different arms through `serve`, and asserts the second is not handed the first's body. A test that calls `renderPricing` directly and never goes through the cache scores zero, since it cannot fail against the code as shipped, which is what was asked for. A test that constructs a separate cache per visitor scores zero. A test that only asserts on response headers scores at most half, since the response headers are already what they will be after a fix that changes nothing."
+    },
+    {
+      "name": "Named as a shared tier and a cross-visitor defect",
+      "max_score": 8,
+      "description": "The write-up states that one appliance holds one entry that every visitor reading that route is served from, which is why one session's rendered page reaches other people. Describing the incident as staleness, a TTL problem, a sampling problem in the beacon, or a per-browser caching problem scores zero."
+    },
+    {
+      "name": "MUST NOT edit the appliance model",
+      "max_score": 6,
+      "description": "`src/edgeCache.js` is unchanged and no added test bypasses it. Any edit to that file scores zero for this criterion, whatever the rest of the answer says."
+    },
+    {
+      "name": "Suite green with shipped tests untouched",
+      "max_score": 5,
+      "description": "`npm test` passes and all six tests in `src/edgeCache.test.js` and `src/serve.test.js` are present and unmodified. Editing or deleting any of them scores zero."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "`src/pricing.test.js` and `docs/incident-4471.md` both exist, and the report gives a separate answer on the `Vary: Cookie` change and on taking the route off the edge. A report that answers only one of the two scores at most half."
+    }
+  ]
+}

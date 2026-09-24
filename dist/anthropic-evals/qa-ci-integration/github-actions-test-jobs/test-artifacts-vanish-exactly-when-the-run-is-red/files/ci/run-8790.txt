@@ -1,0 +1,17 @@
+run 8790 - test - pull_request #612 - 14 Aug 2026 09:41 UTC
+Conclusion: failure
+
+  npm ci ............................... success  0m36s
+  Unit suite ........................... failure  1m52s
+      tests 214   pass 211   fail 3
+  Contract suite ....................... skipped
+  Upload junit + debug logs ............ skipped
+  Push coverage to the dashboard ....... skipped
+  Push preview image ................... skipped
+  Update the :latest tag ............... skipped
+
+Artifacts: (none)
+
+Comment from @pchandra, 21 Aug: "nothing to download on exactly the runs I care
+about, and payments got no contract result again - second time this month. i am
+rewriting this job so it stops bailing out halfway through."

@@ -1,0 +1,11 @@
+# app-prod, 2026-09-08 09:12-09:58 UTC. Unhandled exceptions on POST /checkout.
+
+09:12:41  voucher=DELX-0050  500  KeyError: 'D'   src/vouchers.py in voucher_cents
+09:12:44  voucher=DELX-0051  500  KeyError: 'D'   src/vouchers.py in voucher_cents
+09:13:02  voucher=DPRT-1180  500  KeyError: 'D'   src/vouchers.py in voucher_cents
+09:31:19  voucher=DELX-0094  500  KeyError: 'D'   src/vouchers.py in voucher_cents
+09:57:50  voucher=DPRT-1204  500  KeyError: 'D'   src/vouchers.py in voucher_cents
+
+# 1,180 requests in that window, all of them a checkout that did not complete.
+# DELX / DPRT are the partner batch the campaign tool started minting on the 8th.
+# Codes with tier A, B or C in the same window: 41,902, no errors.

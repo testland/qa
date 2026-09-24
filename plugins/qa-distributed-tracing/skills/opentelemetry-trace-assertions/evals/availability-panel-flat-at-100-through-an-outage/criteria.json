@@ -1,0 +1,56 @@
+{
+  "context": "The repo already contains a fix for this incident and it does not work. PR #2213 calls span.recordException(err) in the catch block of src/rates.js and stops there, so rates.fetch still ends with its status untouched, and the availability query in docs/slo.md counts only spans whose status.code is ERROR. An exception event is not a status. Predicted baseline failure: the agent reads the shipped test/pricing.trace.test.js, sees a green case named 'a refused connection is recorded on the fetch span', accepts that the failure is already on the span, and spends its effort adding attributes, a second log line, or a test that asserts the exception event again - all of which pass against unchanged source and leave the panel at 100.0%, which is exactly the state @bfoley's staging replay reported. The second predicted failure is the one @kmeier offers on the reopen thread and it is deliberately attractive: mark pricing.convert as an error whenever the cache is used. That moves the panel by declaring the service down while it is correctly serving orders from a cached rate, and test/pricing.test.js pins that the conversion must keep succeeding. The third is the test wiring: support/trace-setup.js never resets the exporter and the shipped cases already work around that by taking the last matching span out of an accumulating array, so a new case added in the house style silently depends on how many spans the cases before it happened to end.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT leave the failed dependency call ending without an error status",
+      "max_score": 30,
+      "description": "On the provider-down path the rates.fetch span must end with an error status, and the new coverage must assert that status explicitly, so the query in docs/slo.md counts it. Leaving the catch block as PR #2213 left it - recordException plus a warn line, no setStatus - scores zero for this criterion, as does any delivered suite that is green against src/ exactly as shipped. Adding more attributes or another exception event without setting the status scores zero. Setting the status but asserting nothing about it in the test scores at most half."
+    },
+    {
+      "name": "MUST NOT report the conversion itself as failed",
+      "max_score": 16,
+      "description": "pricing.convert returned a correct price from the cached rate and keeps a successful status. Taking @kmeier's suggestion - setting an error status on pricing.convert when the cache is used - scores zero for this criterion even if rates.fetch is also fixed, because it burns the budget on every request the service served correctly. Full marks additionally require the degradation to be recorded on the parent as an attribute naming which rate source was used, so cache-served conversions stay queryable; fixing rates.fetch and leaving nothing at all on the parent scores at most half."
+    },
+    {
+      "name": "MUST NOT let spans accumulate across cases",
+      "max_score": 14,
+      "description": "The delivered test/pricing.trace.test.js resets the in-memory exporter between cases, so each case sees only the spans its own exercise produced. Keeping the shipped pattern - filtering an accumulating array and taking the last element - or reaching a span by array position, or indexing a span count that only holds because of the cases that ran before it, scores zero for this criterion. Adding a reset for the new case only, while leaving the existing cases dependent on accumulation, scores at most half."
+    },
+    {
+      "name": "The failure is identified, not just counted",
+      "max_score": 14,
+      "description": "The failing rates.fetch span carries an attribute naming the class of failure taken from the thrown error, and the test asserts it, so a future outage can be broken down by cause rather than only counted against the budget. A free-text status message with no attribute naming the error type scores at most half. Nothing identifying the failure beyond the status scores zero."
+    },
+    {
+      "name": "MUST NOT break the fallback to make the trace honest",
+      "max_score": 12,
+      "description": "The cached-rate fallback must not be removed, rethrown, or made conditional, and test/pricing.test.js must still pass unmodified - a conversion against a dead provider still returns 8600 at the cached rate. Editing that file, or changing convert so the call now fails, scores zero for this criterion."
+    },
+    {
+      "name": "The remote call is marked as a remote call",
+      "max_score": 10,
+      "description": "rates.fetch is an outgoing call to another service and is emitted with the span kind for that rather than the default in-process kind, and the test asserts it. Leaving the kind at the default scores zero for this criterion."
+    },
+    {
+      "name": "Healthy path still covered",
+      "max_score": 8,
+      "description": "The delivered file still exercises a responding provider and asserts that path carries no error status. Dropping or weakening the shipped healthy case scores zero here - without it nothing stops an implementation that marks every fetch as an error."
+    },
+    {
+      "name": "MUST NOT edit the SLO query or the vendored mirror",
+      "max_score": 6,
+      "description": "docs/slo.md and vendor/tracing-sdk.js must not be modified. Rewriting the availability query so it counts something the service already emits - a warn line, an exception event, an unset status - scores zero here, as does any edit to the vendored file."
+    },
+    {
+      "name": "Deliverables produced and the suite green",
+      "max_score": 5,
+      "description": "test/pricing.trace.test.js covers both paths, docs/inc-2410-followup.md exists at ten lines or fewer, and npm test passes. A red suite scores zero for this criterion."
+    },
+    {
+      "name": "Follow-up note says what the traces failed to carry",
+      "max_score": 4,
+      "description": "docs/inc-2410-followup.md states what was missing from the spans during the window rather than restating the incident timeline, and is specific enough that a reader could tell whether a later change had undone it. A retelling of the incident scores zero."
+    }
+  ]
+}

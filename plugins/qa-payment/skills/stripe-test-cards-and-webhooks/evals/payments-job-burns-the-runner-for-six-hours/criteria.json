@@ -1,0 +1,46 @@
+{
+  "context": "Two defects hold this job up, and only one of them is reflexive. The reflexive one is the test file: when nothing arrives within the wait it logs a line and returns, so the job is green whether the endpoint works, rejects everything, or is not running - which is why a push that deliberately broke the router still passed. The one that decides the measurement is why nothing arrives at all. Deliveries forwarded by the CLI are signed with a secret the forwarder mints for that session; they are not signed with the secret of any endpoint registered in the dashboard. The endpoint verifies against STRIPE_WEBHOOK_SECRET, the live endpoint's secret, so every forwarded delivery fails verification - which is exactly what the one person who ran it end to end saw, one 'signature mismatch' per delivery. Predicted baseline failure: the agent reads docs/ci-secrets.md, sees a live secret being used in CI, and swaps in STRIPE_TEST_WEBHOOK_SECRET, because a test-mode endpoint's secret looks like the obvious counterpart. That is the same wrong shape as what is already there - a registered endpoint's secret - and it fails identically, so the job stays silent for the same reason while looking fixed. The other predicted failures are cosmetic: adding a shorter timeout or a longer wait, adding sleeps, or asserting on GET /debug/rejected being empty without ever making a delivery verify. A run that turns red for the right reason requires capturing the secret the forwarder issues and giving that to the server process before any event is triggered.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The endpoint verifies against the secret the forwarder issues",
+      "max_score": 32,
+      "description": "The job obtains the signing secret belonging to the forwarding session itself and exports it to the API process before any event is triggered - captured from the forwarder rather than read from repository secrets. MUST NOT point the server at STRIPE_TEST_WEBHOOK_SECRET or leave it on STRIPE_WEBHOOK_SECRET: both are registered endpoints' secrets, neither signs a forwarded delivery, and either scores zero for this criterion no matter how well the rest is done. Scores at most half if the secret is obtained but the forwarder is started before it is read, so the two are not the same session, or if the value is hardcoded into the workflow."
+    },
+    {
+      "name": "A delivery that never arrives, or is rejected, ends the run red",
+      "max_score": 24,
+      "description": "MUST NOT leave a path where a missing event is a pass. The early return in both tests is removed and replaced by a bounded wait that fails the test when the wait elapses; the fetch helper must not swallow a connection error into an empty list either. Scores zero if either `if (!event) ... return` survives, or if an unreachable endpoint still produces a passing test. Full marks additionally require a rejected delivery to be caught - an assertion that nothing landed in the rejected list, or that the received count matches what was triggered - since a 400 on every delivery is the state the job is in today."
+    },
+    {
+      "name": "The endpoint and the forwarder are confirmed up before the first trigger",
+      "max_score": 12,
+      "description": "The job waits for the API to answer and for forwarding to be established before running the tests, rather than assuming a backgrounded process is ready. Scores zero if the tests are started immediately after backgrounding with nothing between. A fixed sleep scores at most half; polling the endpoint until it answers, or waiting on the forwarder's own readiness output, scores full."
+    },
+    {
+      "name": "MUST NOT run the job against live credentials",
+      "max_score": 10,
+      "description": "MUST NOT leave STRIPE_API_KEY, the live key, in the job environment. Scores zero if it is still there. The test-mode key is what a job that triggers events should carry."
+    },
+    {
+      "name": "The job still terminates on its own",
+      "max_score": 8,
+      "description": "No step blocks the run: the forwarder does not hold the job open, and the run ends without relying on the job timeout to kill it. Scores zero if a foreground long-running command is reintroduced, or if the only thing ending the run is timeout-minutes."
+    },
+    {
+      "name": "Write-up says what a green run now proves",
+      "max_score": 10,
+      "description": "docs/ci-4102-fix.md explains each change and states what a green run establishes that the previous one did not - that a delivery was triggered, forwarded, verified and routed. Scores zero if it does not say which credential the endpoint now verifies against and why that one rather than the registered endpoints' secrets."
+    },
+    {
+      "name": "Offline suite untouched and passing",
+      "max_score": 6,
+      "description": "test/unit/ is unmodified and npm test passes. Scores zero if any unit test is edited, skipped or deleted."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The workflow is changed, test/webhooks/forwarded-events.test.js is changed, and docs/ci-4102-fix.md exists. Scores zero if the document is missing."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "ledger-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "test:a11y": "playwright test tests/a11y"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@playwright/test": "^1.49.1",
+    "axe-core": "^4.10.2"
+  }
+}

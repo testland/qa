@@ -1,0 +1,16 @@
+# Last run before the JUnit 5 migration (build 4471, junit 4.13.2 + surefire 3.2.5)
+# Gates in force for this run: mutationThreshold 70, coverageThreshold 75.
+# targetClasses at the time: com.acme.billing.* only.
+
+>> Line Coverage (for mutated classes only): 139/148 (94%)
+>> Generated 587 mutations Killed 417 (71%)
+>> Mutations with no coverage 22. Test strength 74%
+>> Ran 2,981 tests (5.08 tests per mutation)
+
+Survivors at the time: 170, mostly VoidMethodCallMutator on the audit-log calls,
+plus the free-shipping boundary in InvoiceService. Build passed with one point of
+headroom on the mutation gate.
+
+Line coverage for this module has sat between 93% and 94% for the whole of 2026
+— the nine uncovered lines are the IOException arms in the PDF renderer, which
+nobody has been able to trigger from a unit test.

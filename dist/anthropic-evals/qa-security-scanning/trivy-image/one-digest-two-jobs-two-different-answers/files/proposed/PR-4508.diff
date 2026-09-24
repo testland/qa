@@ -1,0 +1,17 @@
+PR #4508  "unblock 4.12.2 release scan"
+Author: @mreinholt   Reviewers: @sjadhav (approved)   Base: main
+
+ .trivyignore | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/.trivyignore b/.trivyignore
+--- a/.trivyignore
++++ b/.trivyignore
+@@ -1 +1,2 @@
+ CVE-2023-45853
++CVE-2026-21491
+
+PR body:
+  Release scan started failing this afternoon on a digest that passed this
+  morning. Adding the ID so we can ship tonight; will revisit Monday when
+  @dpetrova is back.

@@ -1,0 +1,10 @@
+# mail container log, run #4471, 14:02:10 - 14:02:33
+
+14:02:10.988  [smtp] connection from 127.0.0.1
+14:02:11.240  [smtp] message from <security@example.com> to <qa@example.com> accepted (3.1 kB)
+14:02:11.520  [smtp] message from <invites@example.com> to <teammate@example.com> accepted (2.7 kB)
+14:02:11.562  [smtp] message from <security@example.com> to <qa@example.com> accepted (3.1 kB)
+14:02:19.883  [smtp] message from <noreply@example.com> to <newuser@example.com> accepted (4.4 kB)
+14:02:20.012  [smtp] message from <digest@example.com> to <weekly@example.com> accepted (6.2 kB)
+14:02:25.050  [smtp] message from <noreply@example.com> to <newuser@example.com> accepted (4.4 kB)
+14:02:25.160  [smtp] message from <invites@example.com> to <teammate@example.com> accepted (2.7 kB)

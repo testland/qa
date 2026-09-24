@@ -1,0 +1,84 @@
+{
+  "capturedAt": "2026-09-08T08:41:00Z",
+  "pr": 1180,
+  "model": "openai:chat:gpt-5.4-mini-2026-04-02",
+  "reported": "9 passed, 0 failed",
+  "results": [
+    {
+      "id": "login-after-reset",
+      "success": true,
+      "output": "```json\n{\"summary\":\"Customer cannot sign in after completing a password reset\",\"priority\":\"high\",\"tags\":[\"auth\",\"password-reset\"]}\n```",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true },
+        { "type": "starts-with", "pass": false }
+      ]
+    },
+    {
+      "id": "duplicate-charge",
+      "success": true,
+      "output": "{\"summary\":\"Customer charged twice for the September invoice on order 88421\",\"priority\":\"normal\",\"tags\":[\"billing\",\"duplicate-charge\"]}",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true },
+        { "type": "starts-with", "pass": true }
+      ]
+    },
+    {
+      "id": "cancel-and-refund",
+      "success": true,
+      "output": "{\"summary\":\"Customer requests plan cancellation and a refund for the last month\",\"priority\":\"normal\",\"tags\":[\"billing\",\"cancellation\",\"refund\"]}\n\nLet me know if you would like me to draft the reply as well.",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true },
+        { "type": "starts-with", "pass": true }
+      ]
+    },
+    {
+      "id": "access-revoked",
+      "success": true,
+      "output": "{\"summary\":\"Entire team lost workspace access after the administrator left\",\"priority\":\"high\",\"tags\":[\"access\",\"offboarding\"],}",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true },
+        { "type": "starts-with", "pass": true }
+      ]
+    },
+    {
+      "id": "fourth-email",
+      "success": true,
+      "output": "Customer reports a fourth unanswered contact attempt and is asking for an update. No technical detail supplied.",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true }
+      ]
+    },
+    {
+      "id": "commande-non-livree",
+      "success": true,
+      "output": "Customer reports that order 55120 never arrived. Original message in French.",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true }
+      ]
+    },
+    {
+      "id": "install-thread",
+      "success": true,
+      "output": "Windows install still failing after a reinstall; antivirus interference suspected. Logs attached and awaiting review.",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true }
+      ]
+    },
+    {
+      "id": "declined-card",
+      "success": true,
+      "output": "Customer reports a declined card payment and asks to be contacted by phone.",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true }
+      ]
+    },
+    {
+      "id": "no-detail",
+      "success": true,
+      "output": "Report contains no actionable detail. Needs a follow-up question before it can be triaged.",
+      "componentResults": [
+        { "type": "llm-rubric", "pass": true }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+name: orders-load
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          docker run --rm -v "$PWD:/work" -w /work apache/jmeter:5.6.3 \
+            -n -t plans/orders.jmx -l artifacts/dev.jtl \
+            -JBASE_HOST=dev.orders.example.com -JPORT=8443 -JTHREADS=400
+
+  us-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          docker run --rm -v "$PWD:/work" -w /work apache/jmeter:5.6.3 \
+            -n -t plans/orders.jmx -l artifacts/us-staging.jtl \
+            -JBASE_HOST=staging.orders.example.com -JPORT=443 -JTHREADS=400
+
+  eu-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          docker run --rm -v "$PWD:/work" -w /work apache/jmeter:5.6.3 \
+            -n -t plans/orders.jmx -l artifacts/eu-staging.jtl \
+            -JBASE_HOST=eu-staging.orders.example.com -JPORT=443 -JTHREADS=80
+
+  prod:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          docker run --rm -v "$PWD:/work" -w /work apache/jmeter:5.6.3 \
+            -n -t plans/orders.jmx -l artifacts/prod.jtl \
+            -JBASE_HOST=orders.example.com -JPORT=443 -JTHREADS=400

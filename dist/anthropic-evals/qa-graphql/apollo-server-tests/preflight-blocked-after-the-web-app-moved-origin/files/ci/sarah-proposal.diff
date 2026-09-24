@@ -1,0 +1,14 @@
+commit 1f0c93a  sarah.mbeki  2026-09-09 18:22
+    cors: match the domain instead of listing every host
+
+diff --git a/src/cors-options.js b/src/cors-options.js
+@@
+ export const corsOptions = {
+-  origin: allowedOrigins,
++  origin: /\.parcelly\.com$/,
+   credentials: true,
+   methods: ['POST', 'OPTIONS'],
+   allowedHeaders: ['content-type', 'authorization'],
+ };
+
+# npm test on the branch: 5 passing, 0 failing.

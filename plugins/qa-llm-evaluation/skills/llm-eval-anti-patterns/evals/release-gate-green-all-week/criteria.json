@@ -1,0 +1,41 @@
+{
+  "context": "A gate that has visibly moved from an absolute threshold to a comparison against a stored prior run — the change an auditor would recommend — and whose write-up pre-argues against the two fixes that matter. Predicted baseline failure: the agent approves it, or raises only generic points, because the headline shape is right, the unit tests pass, and Nadia has already given a reason for each omission. Three defects in the attached files decide it and none is stated anywhere. First, `decide` in ci/gate.mjs returns `{ pass: true }` when the baseline is absent, `loadIfPresent` swallows the read error, and the workflow's fetch ends in `|| true`; the bucket expires objects after five days and nothing ran between 2026-09-03 and 2026-09-11, so the 2026-09-11 row in the gate log shows 0.79 passing against no baseline at all — a twelve-point drop the gate approved — and ci/gate.test.mjs has five passing tests, none of which calls decide with a missing baseline. Second, the comparison fires on any drop at all, and the log shows 771ab30 and 6ba4e57 each failing and then passing on a rerun of the same commit, which is the suite's run-to-run spread being treated as a regression and answered by rerunning until green; the fix is a band measured from repeated runs and a per-case diff of the same case set rather than a subtraction of two headline rates. Third, the publish step carries no branch condition, so `latest.json` is whatever ran last on any branch, and the 2026-09-12 comparison is against a run that itself passed without a baseline, which has quietly installed 0.79 as the standard. A baseline is also predicted to pad the report with reflex findings that are false here: this config has per-case cost and latency ceilings derived from the product SLO and the finance figure, two providers from different families, and a deterministic structural assertion, and it is predicted to flag the dateless Claude identifier as unpinned without checking that provider's versioning documentation.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "The gate passes when there is no baseline",
+      "max_score": 30,
+      "description": "The review identifies that ci/gate.mjs `decide` returns pass when `previous` is absent, that the workflow's `curl ... || true` and `loadIfPresent` make absence silent rather than an error, that the five-day bucket lifecycle plus the 2026-09-03 to 2026-09-11 gap makes absence routine, and that the 2026-09-11 row is that path firing — 0.79 admitted with no comparison. Missing this scores zero for this criterion regardless of the rest. Full marks require the fix as well: a missing baseline must fail the job, not pass it. Naming the null branch in the code without connecting it to the gate log or to the bucket lifecycle scores at most half."
+    },
+    {
+      "name": "Fires on run-to-run spread, and is being rerun until green",
+      "max_score": 22,
+      "description": "The review states that comparing two headline rates and failing on any drop makes the gate fire on the suite's own variation, and cites the log rows where commits 771ab30 and 6ba4e57 each fail and then pass on a rerun of the same commit with nothing changed. Full marks require the fix stated as a band measured from repeated runs of the same case set, plus a per-case comparison of baseline and candidate rather than a subtraction of two percentages. Accepting Nadia's argument that a tolerance is just a threshold with extra steps scores zero. Noting the rerun rows without naming the noise band or the per-case diff scores at most half."
+    },
+    {
+      "name": "The stored baseline is not keyed to anything",
+      "max_score": 20,
+      "description": "The review identifies that the publish step in .github/workflows/eval-gate.yml has no branch condition and the workflow runs on every push, so `latest.json` is whichever run finished last regardless of branch, and that the 2026-09-12 comparison therefore measures against a run that itself passed with no baseline. The fix is a baseline written only from the default branch. Missing the branch condition entirely scores zero; noting it without the consequence for the 2026-09-12 row scores at most half."
+    },
+    {
+      "name": "MUST NOT sign the gate off, and MUST NOT put the absolute threshold back as the gate",
+      "max_score": 18,
+      "description": "docs/friday-decision.md must not approve this job as the release gate for Friday. It must also not recommend restoring the 85% pass-rate threshold as the decision rule — an absolute number is a floor that can sit underneath the comparison, never the gate itself, and reverting to it reinstates exactly the blindness Nadia's write-up describes. Approving the gate scores zero for this criterion. Recommending the old threshold as the replacement also scores zero. Refusing without naming the shortest set of changes that would make the job signable scores at most half."
+    },
+    {
+      "name": "MUST NOT report controls that are present as missing",
+      "max_score": 12,
+      "description": "The findings table must not claim this suite has no cost or latency ceiling, no second provider, or no deterministic assertion: evals/promptfooconfig.yaml carries per-case `latency` and `cost` thresholds each annotated with the product figure it derives from, and two providers from different families. Reporting any of those as absent scores zero for this criterion. Full marks require the review to say plainly which parts are sound, as asked."
+    },
+    {
+      "name": "Model identifiers resolved rather than assumed",
+      "max_score": 14,
+      "description": "Where the review comments on the model identifiers in evals/promptfooconfig.yaml, it treats the question as whether each string resolves to the same weights next month and says that this must be read from each provider's own versioning documentation, noting that the grader identifier under `defaultTest.options.provider` is subject to the same question as the systems under test. Asserting that a dateless identifier is necessarily unpinned, or that adding a date suffix is the fix for every provider, scores zero for this criterion. Raising pinning as a concern without saying where the answer comes from scores at most half."
+    },
+    {
+      "name": "Deliverables produced and the code actually exercised",
+      "max_score": 5,
+      "description": "All three documents exist and docs/observed.md records at least one command run against the attached files with its literal output. A review with no executed command, or with output that does not match what the attached files produce, scores zero for this item."
+    }
+  ]
+}

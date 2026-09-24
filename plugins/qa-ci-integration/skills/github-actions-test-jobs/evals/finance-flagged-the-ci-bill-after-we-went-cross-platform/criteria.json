@@ -1,0 +1,56 @@
+{
+  "context": "A cost brief in which three of the five proposed savings do not save anything, the cheapest-looking one is actively dangerous, and the two changes that would genuinely help are not in the plan at all. Predicted baseline failure: the agent implements item 1 as written. Caching dependencies to stop paying 1.5 minutes of install on every job is the most natural CI cost move there is, the requester has already written the YAML, and nothing in the export contradicts it - but a key of `${{ runner.os }}-modules` carries nothing that changes when the dependencies do, and the cache action does not create a new cache when the key already matches an existing one, so the entry is written once in August and restored unchanged for the rest of the project's life. Worse, the path is `node_modules`, and `npm ci` deletes that directory before installing, so on the runs where it matters the restore is discarded and on the runs where it is honoured the job is testing a dependency tree that no longer matches package-lock.json - a silent wrong-code-under-test that presents as a saving. Item 2 is predicted to go the same way: `max-parallel` caps how many matrix jobs run at the same moment, not how many run, so the same six jobs still execute and the same minutes are still billed, and the only thing bought is a slower pull-request signal. Item 3's arithmetic is stated confidently and is wrong for the same family of reason - sharding divides elapsed time, not billed time, and multiplies the number of jobs so every shard pays its own checkout and install. Beyond the plan, two things the export evidences and nobody mentions: eleven jobs ran to exactly 360 minutes, all on the ten-times runner, which is the platform's own per-job ceiling rather than anything the suite did, and they alone are worth more than the entire Linux line; and the matrix carries no fail-fast setting, so it is already cancelling siblings by default, which is how REL-3327's leg was stopped before it reported - the correct change there costs money on a task whose stated goal is to save it. The export is also arranged so raw minutes and billable minutes rank the runners differently: macOS is 36% of the minutes and 79% of the money.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "MUST NOT cache the dependency tree behind a key that never changes",
+      "max_score": 26,
+      "description": "Item 1 MUST NOT be implemented as written. A cache step whose `path` is `node_modules`, or whose `key` contains nothing derived from package-lock.json, scores zero for this criterion regardless of the rest of the answer. Full marks need the refusal plus both reasons: the cache entry is not rewritten once its key matches an existing one, so a key with no lockfile hash in it is populated once and then restored forever even after the dependencies change; and `npm ci` removes node_modules before installing, so caching that directory does not remove the install it was meant to remove. Full marks also need a substitute that is actually safe - the package manager's download cache keyed on a hash of the lockfile, or the runtime setup action's own dependency caching - together with an honest statement that the saving is a fraction of the 1.5 minutes, not all of it. Refusing item 1 correctly but offering no working substitute scores at most half; giving one reason only, or fixing the key while leaving the path on node_modules, also scores at most half."
+    },
+    {
+      "name": "MUST NOT price a cap on simultaneous jobs as a saving",
+      "max_score": 18,
+      "description": "Item 2 MUST be corrected: capping how many matrix jobs run at once does not change how many jobs run or how many minutes are billed - the same six legs still execute, just in sequence - so it removes nothing from the bill and lengthens the wait for a pull-request result. Implementing `max-parallel` as a cost measure, or repeating the claim that it stops us paying for six machines, scores zero for this criterion. Accepting it explicitly for some other stated reason, such as smoothing runner contention, while saying plainly that it saves no money, scores full marks; refusing it outright with the right reason also scores full marks."
+    },
+    {
+      "name": "MUST NOT price sharding as a proportional saving",
+      "max_score": 18,
+      "description": "Item 3's arithmetic MUST be corrected: sharding divides elapsed time, not billed time, and on this matrix it multiplies the job count so each shard pays its own checkout and install on top. Repeating or endorsing the claim that four shards cost roughly a quarter scores zero for this criterion, and so does applying four-way sharding across the full operating-system and runtime matrix, which raises the bill the plan was written to lower. Accepting sharding narrowly for elapsed time on one tier while stating plainly that it saves no money scores full marks; refusing it outright with the right reason also scores full marks."
+    },
+    {
+      "name": "The jobs that ran to the platform's ceiling are dealt with",
+      "max_score": 18,
+      "description": "The answer identifies the eleven 360-minute jobs in the export as jobs that hit the per-job maximum duration rather than jobs that genuinely took six hours, notes that they are all on the runner billed at ten times, and adds a job-level time limit short enough that a hung job cannot burn a day of the most expensive runner again - the twelfth-longest job in the export is 14 minutes, so the honest ceiling is nowhere near six hours. Not mentioning them at all scores zero: nothing in Marco's five items touches them and together they are worth more than the whole Linux line. Naming them without adding the limit scores at most half."
+    },
+    {
+      "name": "MUST NOT buy the saving by cancelling sibling matrix jobs",
+      "max_score": 16,
+      "description": "The matrix MUST end up carrying an explicit `fail-fast: false`. Writing `fail-fast: true`, or leaving the matrix at its default so it keeps cancelling siblings, scores zero for this criterion - the default is what stopped REL-3327's leg before it reported, and a run that cancels the legs which have not yet spoken has spent money on the ones that did and learned nothing from them. Full marks need the change plus an acknowledgement in the document that it adds minutes which the rest of the plan has to cover. Setting it without connecting it to the blocker note scores at most half."
+    },
+    {
+      "name": "Superseded runs stop running to completion",
+      "max_score": 12,
+      "description": "A concurrency group is added so that when a newer commit lands on the same branch the older run is cancelled rather than finishing, which is the 148 runs in the export. Omitting it scores zero. A group keyed so that every branch shares one lane, so that unrelated branches cancel each other, scores at most half."
+    },
+    {
+      "name": "macOS coverage kept, and paid for by cadence",
+      "max_score": 12,
+      "description": "Item 4 MUST be refused - two of the three Q2 release blockers were found on a macOS leg and the notes on them are platform-specific, and the product ships a macOS app. Deleting the macOS leg outright scores zero. Keeping it on every pull request unchanged, with no answer for the fact that it is the majority of the bill, scores at most half: the saving has to come from running it less often rather than from not running it."
+    },
+    {
+      "name": "The sound item is taken, and the matrix is tiered by trigger",
+      "max_score": 10,
+      "description": "Item 5 is approved and implemented, and more generally the plan runs a small matrix on pull requests and the wider one on merges or on a schedule, with the jobs-per-run count given for each trigger as the output specification asks. Refusing all five of Marco's items scores zero here - one of them is right, and an answer that rejects the lot has failed in the opposite direction from an answer that accepts the lot."
+    },
+    {
+      "name": "The numbers are worked in billable minutes",
+      "max_score": 8,
+      "description": "The estimate in docs/ci-cost-plan.md applies the per-runner multipliers from the export, so a macOS minute is not counted as equal to a Linux minute. A plan that totals or ranks its savings in raw runner minutes scores zero - it is the specific error that makes the Windows and macOS legs look comparable when one costs five times the other."
+    },
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "The rewritten workflow file or files and docs/ci-cost-plan.md all exist, and the document carries a separate verdict on each of Marco's five items rather than one verdict on the plan as a whole."
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+digest-row: team=payments window=2026-08-31..2026-09-06 pass_rate=0.91 delta_pp=+2 escapes=1 deployments=7 flake_debt=8 rag=RED basis=defaults

@@ -1,0 +1,19 @@
+# tail of the sast step, main @ 88a0c2d, run 14822, 2026-09-09
+
+Runner: ubuntu-latest, 4 vCPU, 16 GB
+Image: semgrep/semgrep:1.99.0
+
+  ---- Semgrep CLI 1.99.0 ----
+Scanning 2914 files tracked by git with 1042 rules.
+
+  100%|##########################################|2914/2914 tasks
+
+Ran 1042 rules on 2902 files: 34 findings.
+12 files skipped, 3 files partially analyzed.
+
+Slowest rules (total seconds across all targets):
+  javascript.lang.security.audit.path-traversal.path-join-resolve-traversal   412.8
+  javascript.express.security.audit.express-open-redirect                     287.1
+  javascript.lang.security.audit.sqli.node-postgres-sqli                      201.4
+
+Step duration: 21m 51s

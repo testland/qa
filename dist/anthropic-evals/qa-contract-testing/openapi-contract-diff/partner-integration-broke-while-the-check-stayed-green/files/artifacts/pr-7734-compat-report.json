@@ -1,0 +1,32 @@
+[
+  {
+    "id": "response-success-status-added",
+    "level": 1,
+    "operation": "GET",
+    "operationId": "getExport",
+    "path": "/v1/exports/{exportId}",
+    "source": "/specs/spec/openapi.yaml",
+    "section": "paths",
+    "text": "the success response status '202' was added"
+  },
+  {
+    "id": "response-property-became-optional",
+    "level": 2,
+    "operation": "GET",
+    "operationId": "getExport",
+    "path": "/v1/exports/{exportId}",
+    "source": "/specs/spec/openapi.yaml",
+    "section": "paths",
+    "text": "the response property 'downloadUrl' became optional for the response status '200'"
+  },
+  {
+    "id": "response-optional-property-added",
+    "level": 1,
+    "operation": "GET",
+    "operationId": "getExport",
+    "path": "/v1/exports/{exportId}",
+    "source": "/specs/spec/openapi.yaml",
+    "section": "paths",
+    "text": "added the optional property 'expiresAt' to the response with the '200' status"
+  }
+]

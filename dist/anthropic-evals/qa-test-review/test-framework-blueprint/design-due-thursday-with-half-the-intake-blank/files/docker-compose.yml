@@ -1,0 +1,29 @@
+services:
+  api:
+    build: .
+    command: npm run dev:api
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=redis://redis:6379
+      - STRIPE_KEY=${STRIPE_KEY}
+      - POSTMARK_TOKEN=${POSTMARK_TOKEN}
+      - RATES_SERVICE_URL=http://rates-service:3100
+      - PARCELNET_URL=${PARCELNET_URL}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+      - rates-service
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  rates-service:
+    image: ghcr.io/brightline/rates-service:2.8.4
+    ports:
+      - "3100:3100"
+
+# There is deliberately no postgres service in this file. DATABASE_URL is
+# supplied from the environment - see .env.example.

@@ -1,0 +1,36 @@
+{
+  "context": "A smoke job that has been green 42 times while the four defects it exists to catch walked past it, and that already does the thing an agent is most likely to add. Predicted baseline failure: the agent reads test/smoke.test.js, sees that it selects the accented locale AND asserts the selection took (setLocale returns true, currentLocale() is 'en-XA'), concludes the assertions were merely too weak, and writes stronger layout assertions. Those pass too, and the job stays as blind as it was. The reason is in src/toolbar.js: LABELS is built at module load, before any locale is selected, so every render returns the English captured at import and no locale selected afterwards can reach the view. src/bootstrap.js requires the toolbar at the top of the file, so the running application behaves identically - which is why QA's staging walkthrough found nothing, and why their own note says it did not look very different from the English build. A confirmed switch is not a localized surface, and nothing in the job ever compares a rendered label against its English source. With the labels resolved per render, three controls overflow - saveDraft at 15 against 14, discard at 21 against 20, trial at 27 against 26, matching reports 1, 2 and 3 - and the bare 'Save' literal comes back untransformed, which is report 4. Two further failures are predicted. Tom's first change is the attractive one, because it reads as ordinary unit-test hygiene: assert t() comes back transformed for every key and drop the render walk. It would pass forever and would have caught none of the four, since every one of them lives between the string and the rendered row. His second change is fine and should be taken, so refusing the note wholesale is also wrong. And once the truncation assertion finally fires, reaching green by trimming the transform's added length or dropping a label from the walk is the third predicted path.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Locale proven at the rendered surface, not at the switch",
+      "max_score": 30,
+      "description": "The repaired job must establish that transformed text actually reaches the rendered rows before it asserts anything about layout - a rendered label compared against its English source, or asserted to carry the transform's own characters - and must fail loudly when it does not. Concluding that the assertions were merely too weak and adding more layout assertions scores zero, as does relying on setLocale's return value or currentLocale() as the proof, which the shipped job already does and which was true on all 42 green runs. Adding a render-level proof but leaving it as a soft check that cannot fail the job scores at most half."
+    },
+    {
+      "name": "The load-time labels found and fixed in the application",
+      "max_score": 20,
+      "description": "Identifies that src/toolbar.js resolves LABELS once at module load, before any locale is selected, so every render serves the English captured at import - and that src/bootstrap.js requires the toolbar at the top, so the running application does the same thing. Full marks require the fix in the application, with labels resolved at render time. Working around it only inside the test - re-requiring the module after selecting the locale, clearing the module cache, reordering the requires in the test file - scores at most half, since the shipped application still serves frozen English. Not identifying the load-time capture at all scores zero."
+    },
+    {
+      "name": "MUST NOT loosen the run to reach green",
+      "max_score": 16,
+      "description": "MUST NOT reach a green suite by reducing the length the transform adds, removing the vowel repetition, deleting or relaxing the truncation assertion once it finally fires, or excluding a label from the walk. Any of those scores zero here: the added length is the only reason a control that fits English but not a translation ever shows up, and three of the four escaped reports are exactly that."
+    },
+    {
+      "name": "The four escapes caught and fixed",
+      "max_score": 14,
+      "description": "With the locale reaching the view the suite fails on saveDraft, discard and trial, and on the bare 'Save' literal in src/toolbar.js, and all four are fixed in the application - the three controls given room, the literal routed through the lookup. Report 4 does not name the control, so it has to come out of the run rather than out of the report. Catching the overflows but leaving the unwrapped label, or the reverse, scores at most half. Producing no new failure at any point scores zero."
+    },
+    {
+      "name": "Tom's note answered on both halves",
+      "max_score": 10,
+      "description": "His first change is refused with the reason: asserting t() for every key never leaves the transform's own module, and all four escaped defects live between the string and the rendered row, so that job would stay green through the next release too. His second change - failing early on a missing or empty key - is cheap and correct and should be taken. Adopting the first change, or replacing the render walk with direct t() assertions by any route, scores zero. Refusing both halves scores at most half."
+    },
+    {
+      "name": "Deliverable produced and the English suite untouched",
+      "max_score": 5,
+      "description": "docs/smoke-findings.md exists and covers what the job was actually checking, each added assertion, the application changes and the decision on Tom's note; test/toolbar.test.js is byte-identical to the fixture; npm test passes. Modifying test/toolbar.test.js scores zero here."
+    }
+  ]
+}

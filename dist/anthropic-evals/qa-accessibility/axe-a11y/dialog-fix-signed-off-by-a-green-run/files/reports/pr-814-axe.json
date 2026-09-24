@@ -1,0 +1,55 @@
+{
+  "url": "http://localhost:3000/checkout",
+  "timestamp": "2026-09-12T09:41:55.109Z",
+  "testEngine": { "name": "axe-core", "version": "4.10.2" },
+  "testRunner": { "name": "axe" },
+  "toolOptions": { "reporter": "v1", "resultTypes": ["violations"] },
+  "violations": [],
+  "incomplete": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": ["cat.color", "wcag2aa", "wcag143"],
+      "description": "Ensures the contrast between foreground and background colours meets WCAG 2 AA thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast",
+      "nodes": [
+        {
+          "target": ["button.checkout-submit"],
+          "html": "<button class=\"checkout-submit\">Place order</button>",
+          "failureSummary": "Element background could not be determined due to a background gradient"
+        }
+      ]
+    },
+    {
+      "id": "aria-hidden-focus",
+      "impact": "serious",
+      "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+      "description": "Ensures aria-hidden elements are not focusable nor contain focusable elements",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/aria-hidden-focus",
+      "nodes": [
+        {
+          "target": [".page-shell"],
+          "html": "<div class=\"page-shell\" aria-hidden=\"true\">",
+          "failureSummary": "Element is focusable but axe could not determine whether it is visible"
+        }
+      ]
+    }
+  ],
+  "passes": [
+    { "id": "aria-dialog-name", "nodes": [{ "target": ["[data-testid=\"address-dialog\"]"] }] },
+    { "id": "button-name", "nodes": [{ "target": ["button.checkout-submit"] }] },
+    { "id": "label", "nodes": [{ "target": ["#dlg-street"] }] },
+    { "id": "html-has-lang", "nodes": [{ "target": ["html"] }] },
+    { "id": "document-title", "nodes": [{ "target": ["html"] }] },
+    { "id": "region", "nodes": [{ "target": ["main"] }] },
+    { "id": "landmark-one-main", "nodes": [{ "target": ["main"] }] },
+    { "id": "page-has-heading-one", "nodes": [{ "target": ["h1"] }] },
+    { "id": "empty-heading", "nodes": [{ "target": ["h2.panel-title"] }] }
+  ],
+  "inapplicable": [
+    { "id": "video-caption" },
+    { "id": "area-alt" },
+    { "id": "blink" },
+    { "id": "marquee" }
+  ]
+}

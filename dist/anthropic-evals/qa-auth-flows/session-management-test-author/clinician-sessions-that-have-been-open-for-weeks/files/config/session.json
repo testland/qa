@@ -1,0 +1,5 @@
+{
+  "idleMinutes": 30,
+  "rolling": true,
+  "cookieMaxAgeHours": 8
+}

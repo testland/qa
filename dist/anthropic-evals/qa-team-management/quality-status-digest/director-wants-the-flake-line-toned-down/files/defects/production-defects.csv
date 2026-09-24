@@ -1,0 +1,3 @@
+id,created,reached_production,fix_shipped,summary
+PAY-6779,2026-08-30,yes,2026-09-02,"Refund issued against the wrong capture on split-captured orders"
+PAY-6806,2026-09-10,no,2026-09-11,"Payout batch stalled in staging on a malformed IBAN"

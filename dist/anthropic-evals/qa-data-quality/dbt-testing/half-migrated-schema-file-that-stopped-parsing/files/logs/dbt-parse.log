@@ -1,0 +1,5 @@
+15:02:11  Running with dbt=1.10.4
+15:02:12  Registered adapter: snowflake=1.9.0
+15:02:18  Encountered an error:
+15:02:18  Parsing Error
+15:02:18    Invalid test config given in models/marts/schema.yml

@@ -1,0 +1,10 @@
+{
+  "name": "catalogue-search",
+  "version": "7.1.3",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "recall": "node -e \"const c=require('./data/catalogue.json'),q=require('./data/queries.json');const{buildIndex}=require('./src/ingest');const{measureRecall}=require('./src/recall');console.log('recall@10',measureRecall(buildIndex(c),c,q).toFixed(3))\"",
+    "page1": "node -e \"const c=require('./data/catalogue.json'),q=require('./data/queries.json');const{buildIndex}=require('./src/ingest');const ix=buildIndex(c);for(const x of q)console.log(x.id,x.text,'->',ix.search(x.vec,{k:3}).join(', '))\""
+  }
+}

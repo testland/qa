@@ -1,0 +1,41 @@
+{
+  "context": "A vendor review where the green test suite is the trap and the two real blockers are things nobody reported. Predicted baseline failure: the agent reads keys.js, sees arrows, Home, End, Enter, Space and Escape all handled, sees the shipped suite pass, and concludes the keyboard model is the conformant part of the component - which is exactly what Kestrel's support will claim. The row arithmetic is wrong. markup.html renders one table row per week, so the row holding the 16th runs 12 to 18, but handleKey computes the week boundaries from the day number modulo seven as though the month began on the first day of a week: Home on the 16th returns kst-cell-15 rather than kst-cell-12, End on the 16th returns kst-cell-21, which the markup shows sitting in the next row down, and Home on the 12th returns kst-cell-8, which is not rendered at all. The shipped test named 'Home and End jump to the ends of the week' asserts those two wrong values and is green, so the suite pins the defect rather than catching it, and an agent that treats a passing suite as evidence will report the keyboard model as fine. The second unreported blocker is role='presentation' on the calendar table: it makes the table's own rows and cells presentational, leaving the gridcell-roled day divs with no row or grid ancestor at all, so a user arrowing across the month is told nothing about where they are in it and there is no grid left for the October heading to name. Dan's third observation is real and its cause is not where a keyboard pass would look - statusFor returns hidden for a nights count of zero, so the polite region is out of the accessibility tree at the moment it first gains text, which is why only the first selection is silent. Kestrel's own suggested fix for it, raising the region to assertive, changes how loudly a region that is not present fails to announce and is predicted to be adopted because it comes from the vendor. Dan's first two observations describe the component working correctly and are the restraint half.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Report delivered with a verdict up front",
+      "max_score": 4,
+      "description": "reports/daterange-aria-review.md exists, gives a go / no-go in its first two lines, returns a verdict on each of Dan's three observations, and keeps the blocking findings separate from the things that are correct. A verdict buried after the findings scores at most half. No report scores zero. Editing any file under vendor/ scores zero for this item."
+    },
+    {
+      "name": "Home and End land outside the rendered week row",
+      "max_score": 30,
+      "description": "The report flags the week-boundary arithmetic in handleKey as a blocking finding and shows it with the values: markup.html renders the row holding the 16th as 12 through 18, so Home on the 16th must reach kst-cell-12 and End must reach kst-cell-18, while the shipped code returns kst-cell-15 and kst-cell-21 - the second of which is in the following row - because it derives the boundaries from the day number modulo seven and so assumes the month starts on the first day of a week. Missing this finding scores zero, and so does any report that presents the keyboard model as the conformant part of the component. Full marks additionally require the report to state that the shipped suite is not usable as evidence here, naming the green test that asserts those two wrong values, since that suite is what Kestrel's support will quote back. Naming Home/End as suspect without the concrete cell ids, or without noticing that the shipped test pins the wrong behaviour, scores at most half."
+    },
+    {
+      "name": "Calendar structure stripped from the date grid",
+      "max_score": 24,
+      "description": "The report flags role='presentation' on the calendar table as a blocker and states what it costs: the table's own rows and cells are made presentational, so the day divs carrying a gridcell role are left with no row or grid ancestor, their role has no context to be valid in, and a user arrowing across the month is never told which row or column they landed on - nor is there any element left carrying a grid role for the October heading to name. Missing this finding entirely scores zero. Naming role='presentation' as wrong without saying what the removed structure cost the user, or without connecting it to the orphaned day cells, scores at most half."
+    },
+    {
+      "name": "First announcement lost because the live region is not there yet",
+      "max_score": 16,
+      "description": "The report identifies Dan's observation 3 as real and traces it to statusFor returning hidden when the nights count is zero: the polite region is outside the accessibility tree at the moment it first receives text, which is why only the first selection is silent and every subsequent change announces. The fix is that the region is rendered and unhidden from the start with empty text, and only its content changes thereafter. Missing the finding scores zero. Repeating Dan's symptom, or attributing it to a missing role, to a timing bug, or to the politeness setting, scores at most half."
+    },
+    {
+      "name": "MUST NOT adopt the vendor's assertive suggestion",
+      "max_score": 12,
+      "description": "MUST NOT tell the requester to pass assertive, and MUST NOT propose role='alert' or role='status' as the answer to observation 3. Recommending any of them scores zero for this criterion. Full marks require the report to say why in one line the requester can send back: the politeness setting is already correct and is not what is failing - a region that is absent from the tree announces nothing at any priority - and raising it would make every later range change interrupt whatever the customer was listening to. Declining it with no reason, or leaving the suggestion unanswered, scores at most half."
+    },
+    {
+      "name": "MUST NOT report the working parts as defects",
+      "max_score": 12,
+      "description": "MUST NOT list as blocking findings: Dan's observation 1, the single tab stop on the calendar, which is how a grid of dates is meant to sit in the page's tab sequence; Dan's observation 2, the sold-out 16th still taking arrow focus, which already publishes its disabled state and would otherwise be a date the customer never learns is sold out; the aria-label on the icon-only Previous/Next buttons; the aria-hidden and focusable='false' SVGs inside them; aria-pressed on the Flexible dates toggle; the plain anchor used for the help link; or the label-and-input pairs for check-in and check-out. Two or more of these reported as defects scores zero; one scores at most half. Asking Kestrel to make every day cell tabbable, or to remove the tabindex='-1' values, scores zero regardless of the rest."
+    },
+    {
+      "name": "Verdict rests on the findings that are real",
+      "max_score": 8,
+      "description": "The no-go for Thursday is justified by the week-boundary arithmetic and the calendar-structure finding, with the lost first announcement alongside them, and not by Dan's observations 1 and 2. A go verdict scores zero. A no-go whose stated reasons are the single tab stop or the focusable sold-out date scores zero for this criterion, because the report would then be arguing for changes that make the component worse."
+    }
+  ]
+}

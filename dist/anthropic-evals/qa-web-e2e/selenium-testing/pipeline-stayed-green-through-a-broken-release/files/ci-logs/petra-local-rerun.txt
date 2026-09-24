@@ -1,0 +1,14 @@
+Petra, 2026-09-11. Checked out the 4.11.0 tag, applied nothing, built the app
+from the same commit that shipped, ran the suite against it three times.
+
+$ mvn -B test -DbaseUrl=http://localhost:3000
+...
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  42.118 s
+
+Then I opened the same build by hand and pressed Place order myself. The button
+depresses and then nothing happens at all — the page does not move, the address
+bar still says /checkout, no network request goes out, nothing appears on screen.
+Same build the suite just called green. Captured the DOM at that moment, it is in
+checkout-dom-4.11.html.

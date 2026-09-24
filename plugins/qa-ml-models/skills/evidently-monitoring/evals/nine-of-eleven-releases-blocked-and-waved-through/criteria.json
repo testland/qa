@@ -1,0 +1,51 @@
+{
+  "context": "A three-part patch where one part is right, one part removes the only signal that ever worked, and one part is the thing the tooling itself has been nagging the team to do for four months. Predicted baseline failure: the agent takes all three, and is most confident about the worst one. Part 3 is the trap - the check prints a stale-reference warning on every run, the reference really is 123 days old, 'compare the candidate against what production looks like now' sounds like basic hygiene, and refreshing a baseline from a trailing window is the single most attractive wrong move available here. It is also self-defeating twice over: the candidate evaluation slice is itself built from the four weeks of production before the candidate is cut, so a trailing four-week reference is very nearly the same rows, and the CRM change behind INC-2211 entered the warehouse on 2026-08-06, fifteen days before rc-6.4.0, which means a trailing reference would have absorbed it and produced no finding at all on the one candidate that mattered. Part 2 is the second refusal: the prediction column moving while inputs hold still is how concept drift and label-pipeline faults announce themselves, and the log shows it already worked once - churn_score failed alongside discount_pct on rc-6.4.0. Part 1 is legitimate and should be taken: the columns listed there are not in the model card's nineteen and they account for eight of the nine overrides. An agent that refuses the whole patch to be safe fails as surely as one that merges it, and a correct answer separates the three. The secondary predicted failure is structural - producing another all-or-nothing check, either still exiting non-zero on any failing test or advisory-only, rather than an outcome that depends on which column moved.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 5,
+      "description": "ci/churn_drift_gate.py and ci/gate_config.py are both rewritten, tests/test_gate_config.py is updated, and docs/gate-policy.md exists. Code with no policy document, or a document with no code change, scores zero for this item."
+    },
+    {
+      "name": "MUST NOT rebuild the reference from recent production traffic",
+      "max_score": 30,
+      "description": "MUST NOT adopt part 3 of the patch, and MUST NOT deliver a gate whose reference is computed from a trailing window, refreshed on a schedule, or regenerated because it has passed an age limit. A baseline that moves with production cannot register a change that arrives gradually or that is already present in both windows. Full marks require naming the cost on the attached evidence: the CRM change behind INC-2211 was in warehouse rows from 2026-08-06, fifteen days before rc-6.4.0 was cut, so a trailing four-week reference would have contained it and the check would have found nothing - and the candidate evaluation slice is itself the four weeks of production before the candidate, so the two datasets would largely be the same rows. Scores zero if the delivered configuration builds the reference from recent traffic in any form. Scores at most half if part 3 is refused but the answer says nothing about when the reference may legitimately be replaced; the release process makes that a promotion event, not an age."
+    },
+    {
+      "name": "MUST NOT drop the model output and label from the check",
+      "max_score": 24,
+      "description": "MUST NOT adopt part 2. Movement in `churn_score` while the inputs look stable is the only way concept drift and label-pipeline faults surface at all, and rc-6.4.0 is the case in point - churn_score failed alongside discount_pct, the override cost three points of AUC, and under the patch that column produces nothing. Scores zero if either churn_score or churn_label is excluded from the delivered monitored set. Scores at most half if they are kept but land in an outcome that notifies nobody and is recorded nowhere. An answer that keeps them only because it refused the whole patch, without engaging with Marek's campaign argument, scores at most half."
+    },
+    {
+      "name": "The columns the model does not read leave the blocking path",
+      "max_score": 16,
+      "description": "Part 1 is taken: request_id, session_uuid, account_id, etl_batch_id, record_checksum, ingested_at, scored_at, last_sync_at, raw_user_agent, support_note, crm_owner_email, billing_system_version and source_region no longer stop a release, which is identifiable by checking them against the nineteen columns in the model card. Scores zero if all 34 columns stay in the blocking path, which reproduces eight of the nine overrides, and zero if the answer refuses the patch wholesale - that leaves the team exactly where they are and the check gets merged over on Thursday anyway. Removing those columns from the report altogether rather than from the blocking decision scores at most half; a checksum column changing is still worth being able to see."
+    },
+    {
+      "name": "The outcome depends on which column moved",
+      "max_score": 14,
+      "description": "The delivered check produces at least two distinct outcomes from one run: drift in some columns exits non-zero and stops the candidate, drift in others is recorded or notified without failing the job. Scores zero if the result is still binary in either direction - exiting non-zero on the first failing test whatever produced it, or never failing at all. Scores at most half if docs/gate-policy.md describes a graded policy that the delivered code does not implement."
+    },
+    {
+      "name": "Per-column configuration rather than one global number",
+      "max_score": 10,
+      "description": "The columns that stay in the blocking path get a drift method and threshold chosen per column or per group, rather than everything being left on whatever the library picks by default. Scores zero if the only numeric change anywhere is a single global threshold applied to all columns, which is the same undifferentiated policy with a different constant."
+    },
+    {
+      "name": "Tests brought in line rather than deleted",
+      "max_score": 10,
+      "description": "tests/test_gate_config.py is rewritten to assert the delivered policy - for example that every schema column is assigned exactly one disposition and that the output and label columns are in the blocking one - and passes under `pytest -q`. Scores zero if the file is deleted, emptied, or marked skip/xfail."
+    },
+    {
+      "name": "Argues from the override log",
+      "max_score": 8,
+      "description": "docs/gate-policy.md uses the attached evidence: which columns drove each of the nine blocks, the four-minute override on rc-6.4.0, and INC-2211 with its 0.812 to 0.779 AUC fall. Scores zero if it reasons only from the code and never uses the log."
+    },
+    {
+      "name": "Generated schema left alone",
+      "max_score": 5,
+      "description": "MUST NOT edit ci/schema.py. It is generated from the warehouse, other jobs read it, and the request said to leave it. Any change to it scores zero here."
+    }
+  ]
+}
