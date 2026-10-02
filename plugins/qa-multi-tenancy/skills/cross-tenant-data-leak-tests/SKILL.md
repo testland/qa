@@ -356,7 +356,7 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -371,20 +371,26 @@ jobs:
         run: pip install -e ".[test]"
       - name: Create non-superuser role
         env:
-          PGPASSWORD: postgres
+          PGPASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+          APP_DB_PASSWORD: ${{ secrets.CI_APP_DB_PASSWORD }}
         run: |
           psql -h localhost -U postgres -d postgres -c "
-            CREATE ROLE app_user LOGIN PASSWORD 'app';
+            CREATE ROLE app_user LOGIN PASSWORD '$APP_DB_PASSWORD';
           "
       - name: Apply migrations
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost/test
+          DATABASE_URL: postgresql://postgres:${{ secrets.CI_DB_PASSWORD }}@localhost/test
         run: python manage.py migrate
       - name: Run cross-tenant suite
         env:
-          DATABASE_URL: postgresql://app_user:app@localhost/test
+          DATABASE_URL: postgresql://app_user:${{ secrets.CI_APP_DB_PASSWORD }}@localhost/test
         run: pytest tests/tenant_isolation/ --tb=short --no-header -v
 ```
+
+Both DB passwords come from repository secrets, which per the
+[GitHub Actions contexts reference](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts)
+are readable in service-container `env` and step `env`. Never write a
+literal DB password into the workflow, even for a throwaway CI database.
 
 Key: the **test job connects as `app_user`**, not as the
 postgres superuser. The migrations run as superuser; the tests
@@ -439,6 +445,8 @@ When a leak test fails:
   [owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema).
 - Postgres RLS bypass rules:
   `rls-reference` (non-Postgres engines in its references/other-engines.md).
+- GitHub Actions `secrets` context availability (CI job in Step 3):
+  [docs.github.com/en/actions/reference/workflows-and-actions/contexts](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts).
 - Attack-pattern catalog:
   [references/attack-patterns.md](references/attack-patterns.md); test
   skeletons: [references/framework-skeletons.md](references/framework-skeletons.md).

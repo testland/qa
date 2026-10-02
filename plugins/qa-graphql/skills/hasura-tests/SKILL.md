@@ -56,15 +56,15 @@ services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?set PG_PASSWORD}
 
   hasura:
     image: hasura/graphql-engine:v2.42.0
     ports: ["8080:8080"]
     depends_on: [postgres]
     environment:
-      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
-      HASURA_GRAPHQL_ADMIN_SECRET: test-secret
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${PG_PASSWORD}@postgres:5432/postgres
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET:?set HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_DISABLE_INTROSPECTION_PUBLIC_API: "true"  # per graphql-complexity-limit-tester references/introspection.md
       HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
 ```
@@ -73,13 +73,21 @@ services:
 docker compose -f docker-compose.test.yml up -d
 ```
 
+Never write the admin secret or DB password into the compose file or a
+test. Per [Compose interpolation][compose-interp], `${VAR}` is read from the
+shell or a git-ignored `.env`, and `${VAR:?error}` stops Compose when it is
+unset. Every command and test below reads `HASURA_GRAPHQL_ADMIN_SECRET` from
+the environment.
+
+[compose-interp]: https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/
+
 ### Apply metadata for test
 
 Per Hasura docs, the metadata API at `/v1/metadata`:
 
 ```bash
 curl -X POST http://localhost:8080/v1/metadata \
-  -H "x-hasura-admin-secret: test-secret" \
+  -H "x-hasura-admin-secret: $HASURA_GRAPHQL_ADMIN_SECRET" \
   -H "Content-Type: application/json" \
   -d @hasura/metadata-fixture.json
 ```
@@ -90,8 +98,8 @@ rules being tested.
 Or via hasura CLI:
 
 ```bash
-hasura migrate apply --endpoint http://localhost:8080 --admin-secret test-secret
-hasura metadata apply --endpoint http://localhost:8080 --admin-secret test-secret
+hasura migrate apply --endpoint http://localhost:8080 --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+hasura metadata apply --endpoint http://localhost:8080 --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
 ```
 
 ### Role-based permission tests
@@ -121,7 +129,7 @@ confirms it does not leak into the admin role.
 
 ```bash
 docker compose -f docker-compose.test.yml up -d
-hasura metadata apply --endpoint http://localhost:8080 --admin-secret test-secret
+hasura metadata apply --endpoint http://localhost:8080 --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
 pytest tests/hasura/
 docker compose -f docker-compose.test.yml down -v
 ```
@@ -143,7 +151,7 @@ Assertion patterns:
 ```python
 def test_user_cannot_update_other_users_row():
     resp = httpx.post(ENDPOINT, headers={
-        "x-hasura-admin-secret": "test-secret",
+        "x-hasura-admin-secret": os.environ["HASURA_GRAPHQL_ADMIN_SECRET"],
         "x-hasura-role": "user",
         "x-hasura-user-id": "3",
     }, json={
@@ -166,26 +174,34 @@ def test_user_cannot_update_other_users_row():
 jobs:
   hasura-permission-matrix:
     runs-on: ubuntu-latest
+    env:
+      HASURA_GRAPHQL_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
     services:
       postgres:
         image: postgres:16
-        env: { POSTGRES_PASSWORD: postgres }
+        env: { POSTGRES_PASSWORD: "${{ secrets.CI_DB_PASSWORD }}" }
         ports: [5432]
       hasura:
         image: hasura/graphql-engine:v2.42.0
         env:
-          HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-          HASURA_GRAPHQL_ADMIN_SECRET: ci-secret
+          HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${{ secrets.CI_DB_PASSWORD }}@postgres:5432/postgres
+          HASURA_GRAPHQL_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
           HASURA_GRAPHQL_DISABLE_INTROSPECTION_PUBLIC_API: "true"
         ports: [8080]
     steps:
       - uses: actions/checkout@v5
       - run: |
           npm install -g hasura-cli
-          hasura migrate apply --endpoint http://localhost:8080 --admin-secret ci-secret
-          hasura metadata apply --endpoint http://localhost:8080 --admin-secret ci-secret
+          hasura migrate apply --endpoint http://localhost:8080 --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+          hasura metadata apply --endpoint http://localhost:8080 --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
       - run: pytest tests/hasura/ --tb=short
 ```
+
+Per the [GitHub Actions contexts reference][gha-contexts], `secrets` is
+available in job `env` and in service-container `env`, so neither the admin
+secret nor the DB password appears in the workflow file.
+
+[gha-contexts]: https://docs.github.com/en/actions/reference/workflows-and-actions/contexts
 
 ## Anti-patterns
 
@@ -225,6 +241,9 @@ jobs:
   [hasura.io/docs/2.0/auth/authorization/quickstart/](https://hasura.io/docs/2.0/auth/authorization/quickstart/).
 - Hasura metadata API:
   [hasura.io/docs/2.0/api-reference/metadata-api/index/](https://hasura.io/docs/2.0/api-reference/metadata-api/index/).
+- Docker Compose variable interpolation (`${VAR:?error}`):
+  [compose-interp][compose-interp].
+- GitHub Actions `secrets` context availability: [gha-contexts][gha-contexts].
 - Introspection control:
   `graphql-complexity-limit-tester` (references/introspection.md).
 - Cross-plugin (tenant isolation):
