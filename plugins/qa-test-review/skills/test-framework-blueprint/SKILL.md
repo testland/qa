@@ -194,10 +194,26 @@ Three sub-decisions, each deferring to its own deeper tool:
   mechanics for the worked stack are `npx playwright test --shard=1/4` plus
   the blob reporter and `npx playwright merge-reports --reporter html`,
   per the [Playwright sharding docs](https://playwright.dev/docs/test-sharding).
-- **Retry policy and per-trigger filtering** (what runs per-PR vs per-merge
-  vs nightly) follow the cross-platform conventions in
-  `ci-test-job-conventions`;
-  the blueprint records the chosen matrix, not the rationale prose.
+- **Retry policy: test-level retries stay at 0 on a young suite.** Playwright
+  labels a test that fails and then passes on retry "flaky", and does not
+  retry failing tests by default, per the
+  [Playwright retries docs](https://playwright.dev/docs/test-retries). A
+  nonzero `retries` (config or `--retries`) turns that signal into a green
+  build, and lowering the count keeps the mechanism. Record two failure
+  classes separately: a runner lost before any test started is answered by
+  re-running the job (`gh run rerun <run-id> --failed`, per the
+  [GitHub re-run docs](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs));
+  a test that failed on its own merits is investigated or quarantined, never
+  retried green. Full retry-class table: `ci-test-job-conventions` §2.
+- **Per-trigger content differs.** Per-PR runs the fast tier (API plus a
+  smoke subset on one browser); merge to main runs the full suite; the
+  cross-browser matrix moves to merge or a nightly `schedule` trigger, never
+  every PR push (events per the
+  [GitHub Actions trigger reference](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows)).
+  Rows that differ only in name are one job copied everywhere. Full cadence
+  tiers: `ci-test-job-conventions` §5.
+- **Checkpoint:** before writing the matrix, confirm every row has
+  test-level retry 0 and that no two rows run the same content.
 
 **Decision output:** the CI matrix table (trigger × suite × shards × retry).
 
@@ -255,6 +271,14 @@ steps and ending with the implementation order lives in
   https://playwright.dev/docs/test-reporters
 - Playwright - *Sharding* (`--shard=x/y`, blob + `merge-reports`):
   https://playwright.dev/docs/test-sharding
+- Playwright - *Retries* (passed / flaky / failed, `retries`, `--retries`,
+  no retries by default):
+  https://playwright.dev/docs/test-retries
+- GitHub Actions - *Re-running workflows and jobs* (`gh run rerun --failed`):
+  https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs
+- GitHub Actions - *Events that trigger workflows* (`pull_request`, `push`
+  branch filters, `schedule`):
+  https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
 - pytest - *How to use fixtures* (five scopes, `conftest.py`, `yield`
   teardown, `autouse`):
   https://docs.pytest.org/en/stable/how-to/fixtures.html

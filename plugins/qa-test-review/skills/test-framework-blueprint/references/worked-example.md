@@ -82,8 +82,8 @@ email captured by a local SMTP sink.
 | Trigger | Suite | Shards | Retry |
 |---|---|---|---|
 | Per-PR | `tests/api` + `tests/e2e/invoicing` (smoke) | none (est. < 5 min) | 0 |
-| Merge to main | full `tests/` | none until runtime > 10 min, then 2-4 per `ci-test-job-conventions` §1 | 1 on runner failure only |
-| Nightly | full `tests/` against staging | as merge | 1, failures auto-filed |
+| Merge to main | full `tests/` | none until runtime > 10 min, then 2-4 per `ci-test-job-conventions` §1 | 0 test-level; re-run the job on runner loss |
+| Nightly | full `tests/` across browsers, against staging | as merge | 0 test-level; failures auto-filed |
 
 **Step 7 - Conventions + gates.** `docs/test-conventions.md` holds all six
 decision outputs above. A test-code critic wired as a PR check on `tests/**`;
