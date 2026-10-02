@@ -51,12 +51,22 @@ For CI / containerized usage:
 ```bash
 docker pull liquibase/liquibase:latest
 docker run --rm -v "$PWD/changelog:/liquibase/changelog" \
+  -e LIQUIBASE_COMMAND_PASSWORD \
   liquibase/liquibase \
   --url=jdbc:postgresql://host/db \
-  --username=user --password=pwd \
+  --username=user \
   --changelog-file=changelog/db.changelog-master.xml \
   update
 ```
+
+Keep the password off the command line. Per [lb-env][lb-env], any command
+option can be set as `LIQUIBASE_COMMAND_<option-name>`, and the docs
+recommend it to keep passwords off the command line and out of committed
+`liquibase.properties` files. `-e LIQUIBASE_COMMAND_PASSWORD` with no value
+forwards the host's variable into the container ([docker-env][docker-env]).
+
+[lb-env]: https://docs.liquibase.com/community/user-guide-5-0-3/what-are-liquibase-environment-variables
+[docker-env]: https://docs.docker.com/reference/cli/docker/container/run/
 
 Maven dependency / Gradle plugin available for in-build invocation - 
 consult [docs.liquibase.com][lb-docs].
@@ -190,11 +200,14 @@ The `includeAll` orders files alphabetically; use prefixes
 ```yaml
 - run: docker run --rm --network=host \
     -v "$PWD/changelog:/liquibase/changelog" \
+    -e LIQUIBASE_COMMAND_PASSWORD \
     liquibase/liquibase:latest \
     --url=jdbc:postgresql://localhost:5432/test \
-    --username=postgres --password=pwd \
+    --username=postgres \
     --changelog-file=/liquibase/changelog/db.changelog-master.xml \
     update
+  env:
+    LIQUIBASE_COMMAND_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
 - run: mvn test
 ```
 
@@ -237,6 +250,8 @@ downtime.
 - [lb-gh][lb-gh] - repository, install, supported databases
 - [lb-cl][lb-cl] - changelog concept page
 - [lb-docs][lb-docs] - full documentation
+- [lb-env][lb-env] - `LIQUIBASE_COMMAND_<option-name>` environment variables
+- [docker-env][docker-env] - `docker run -e VAR` forwards the host value
 - `flyway-migrations`,
   `atlas-migrations`,
   `sqlmesh-migrations` - sister

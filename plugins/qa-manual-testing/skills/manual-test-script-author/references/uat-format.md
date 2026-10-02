@@ -70,8 +70,8 @@ This corresponds to acceptance criterion **AC-1** in the SOW.
 - [ ] Test environment is at build `v1.4.5` (verified by tester).
 - [ ] Tester has not previously created an account on this UAT
       environment.
-- [ ] Test payment method is available: Stripe test card
-      4242 4242 4242 4242, any expiry, any CVC.
+- [ ] Test payment method is available: the Stripe test-mode Visa
+      card for a successful payment, any expiry, any CVC.
 - [ ] Tester has access to email inbox for `<email>@example.com`.
 
 ## Steps
@@ -84,7 +84,7 @@ This corresponds to acceptance criterion **AC-1** in the SOW.
 | 4    | Browse the catalog. Search for "BOOK-001".                         | Product page loads showing the item details and "Add to cart" button.   |      |      |       |
 | 5    | Click "Add to cart". Click the cart icon.                          | Cart page shows "BOOK-001" qty 1, $24.99.                                 |      |      |       |
 | 6    | Click "Checkout". Enter shipping address.                          | Order summary shows shipping cost; tax computed per address.             |      |      |       |
-| 7    | Enter payment details (test card 4242…). Click "Place order".      | Confirmation page shows order ID; total matches step 6.                  |      |      |       |
+| 7    | Enter payment details (Stripe test Visa). Click "Place order".     | Confirmation page shows order ID; total matches step 6.                  |      |      |       |
 | 8    | Open email inbox; verify confirmation email arrives within 5 min.  | Email shows order ID, items, total, expected delivery date.              |      |      |       |
 
 ## Acceptance criteria verification

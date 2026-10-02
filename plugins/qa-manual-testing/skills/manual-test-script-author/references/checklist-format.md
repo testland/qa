@@ -53,7 +53,7 @@ suite. Compress each to a single line with three slots:
 Examples:
 
 ```markdown
-[ ] **Login**: enter `qa-test-user@example.com` + valid pwd → dashboard loads in <3s.
+[ ] **Login**: enter `qa-test-user@example.com` + password from vault item `QA / qa-test-user` → dashboard loads in <3s.
 [ ] **Cart**: add `BOOK-001` → cart count badge shows "1".
 [ ] **Promo code**: apply `WELCOME10` → subtotal drops by 10%.
 [ ] **Checkout**: click `Place order` → confirmation page within 5s.
@@ -76,7 +76,7 @@ A 30-item flat list is hard to scan. Group:
 
 ### Auth flow
 
-- [ ] **Login** (existing user): `qa-test-user@example.com` + valid pwd → dashboard <3s
+- [ ] **Login** (existing user): `qa-test-user@example.com` + password from vault item `QA / qa-test-user` → dashboard <3s
 - [ ] **Logout**: click `Sign out` → redirect to `/login`
 - [ ] **Password reset**: click `Forgot password` → email arrives within 5 min
 
@@ -85,7 +85,7 @@ A 30-item flat list is hard to scan. Group:
 - [ ] **Add to cart**: SKU `BOOK-001` → cart count badge shows "1"
 - [ ] **Cart page**: navigate to `/cart` → item visible with qty 1, $24.99
 - [ ] **Promo code**: apply `WELCOME10` → subtotal drops to $22.49
-- [ ] **Checkout**: complete checkout with Stripe test card 4242 → confirmation page
+- [ ] **Checkout**: complete checkout with the Stripe test-mode Visa → confirmation page
 
 ### Account flow
 

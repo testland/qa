@@ -90,7 +90,9 @@ describe('Checkout flow', () => {
   beforeEach(() => {
     cy.visit('/login');
     cy.get('[data-testid="email"]').type('user@example.com');
-    cy.get('[data-testid="password"]').type('test-password');
+    cy.env(['USER_PASSWORD']).then(({ USER_PASSWORD }) => {
+      cy.get('[data-testid="password"]').type(USER_PASSWORD, { log: false });
+    });
     cy.get('[data-testid="signin-btn"]').click();
     cy.contains('Welcome').should('be.visible');
   });
@@ -101,7 +103,9 @@ describe('Checkout flow', () => {
     cy.get('[data-testid="cart-count"]').should('have.text', '1');
 
     cy.visit('/checkout');
-    cy.get('[name="card"]').type('4242 4242 4242 4242');
+    cy.env(['TEST_CARD_NUMBER']).then(({ TEST_CARD_NUMBER }) => {
+      cy.get('[name="card"]').type(TEST_CARD_NUMBER, { log: false });
+    });
     cy.contains('button', /place order/i).click();
     cy.contains('Order confirmed', { timeout: 10000 }).should('be.visible');
   });
@@ -110,6 +114,15 @@ describe('Checkout flow', () => {
 
 Per [cy-overview][cy], assertions auto-wait - no `cy.wait(2000)`
 needed.
+
+Never type a password or card number as a literal. Per [cy-env][cyenv],
+`cy.env()` (Cypress 15.10+) yields the requested keys, and per
+[cy-env-guide][cyenvguide] Cypress strips the `CYPRESS_` prefix, so CI
+sets `CYPRESS_USER_PASSWORD` from its secret store. `{ log: false }`
+keeps the value out of the Command Log.
+
+[cyenv]: https://docs.cypress.io/api/commands/env
+[cyenvguide]: https://docs.cypress.io/app/guides/environment-variables
 
 ## Step 4 - Use cypress-testing-library
 
@@ -148,7 +161,7 @@ Cypress.Commands.add('login', (email, password) => {
   cy.session([email, password], () => {
     cy.visit('/login');
     cy.findByLabelText('Email').type(email);
-    cy.findByLabelText('Password').type(password);
+    cy.findByLabelText('Password').type(password, { log: false });
     cy.findByRole('button', { name: /sign in/i }).click();
     cy.url().should('not.include', '/login');
   });
@@ -156,7 +169,9 @@ Cypress.Commands.add('login', (email, password) => {
 
 // Usage in tests:
 beforeEach(() => {
-  cy.login('user@example.com', 'pwd');
+  cy.env(['USER_PASSWORD']).then(({ USER_PASSWORD }) => {
+    cy.login('user@example.com', USER_PASSWORD);
+  });
 });
 ```
 
@@ -210,8 +225,9 @@ in every test and sleeps `cy.wait(3000)` before asserting the cart
 count. It flakes about 1 run in 5 on CI.
 
 1. The login block moves into a `login` custom command wrapped in
-   `cy.session(['user@example.com', pwd], ...)`, called from
-   `beforeEach` - the auth flow now runs once and is cached.
+   `cy.session(...)`, called from `beforeEach` with the password read
+   via `cy.env()` instead of the old literal - the auth flow now runs
+   once and is cached.
 2. `cy.wait(3000)` is deleted; the check becomes
    `cy.get('[data-testid="cart-count"]').should('have.text', '1')`,
    which auto-retries until the count settles.
@@ -251,6 +267,9 @@ flake disappears because every wait is now assertion-driven.
 - [cy][cy] - Cypress overview, key features (time-travel,
   automatic waiting, native browser access), three test types
   (E2E, component, accessibility).
+- [cyenv][cyenv] - `cy.env()` command: reads env keys, added in 15.10.0.
+- [cyenvguide][cyenvguide] - environment variables and secrets guide:
+  `CYPRESS_` prefix stripping.
 - `playwright-testing`,
   `selenium-testing`,
   `webdriverio-testing` - 

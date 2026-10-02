@@ -25,16 +25,23 @@ run tests against the migrated schema.
 ```yaml
 - name: Spin up Postgres
   uses: docker/setup-buildx-action@v3
-- run: docker run -d --name pg -p 5432:5432 -e POSTGRES_PASSWORD=pwd postgres:16
+- run: docker run -d --name pg -p 5432:5432 -e POSTGRES_PASSWORD="$FLYWAY_PASSWORD" postgres:16
+  env:
+    FLYWAY_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
 - name: Apply migrations
+  env:
+    FLYWAY_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
   run: |
-    docker run --rm --network=host \
+    docker run --rm --network=host -e FLYWAY_PASSWORD \
       -v "$PWD/db/migration:/flyway/sql" \
       flyway/flyway -url=jdbc:postgresql://localhost:5432/postgres \
-      -user=postgres -password=pwd migrate
+      -user=postgres migrate
 - name: Run tests
   run: mvn test
 ```
+
+Both steps read the password from the `CI_DB_PASSWORD` repository secret,
+so no literal value lands in the workflow file.
 
 For full integration with `testcontainers` (in the qa-test-environment
 plugin): spin up the DB via Testcontainers, then call `Flyway.configure()`

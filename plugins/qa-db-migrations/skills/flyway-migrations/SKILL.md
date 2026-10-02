@@ -37,7 +37,7 @@ plugin distributions ([fw-home][fw-home]). Common install paths:
 
 ```bash
 # Docker (zero-install for CI)
-docker run --rm flyway/flyway -url=jdbc:postgresql://host/db -user=usr -password=pwd migrate
+docker run --rm -e FLYWAY_PASSWORD flyway/flyway -url=jdbc:postgresql://host/db -user=usr migrate
 
 # Homebrew (macOS / Linux)
 brew install flyway
@@ -45,6 +45,14 @@ brew install flyway
 # Maven plugin (Spring Boot etc.)
 # add to pom.xml under <build><plugins>
 ```
+
+Never put the password on the command line or in a committed file. Flyway
+reads it from `FLYWAY_PASSWORD` ([fw-pass][fw-pass]), and per
+[docker-env][docker-env] a bare `-e FLYWAY_PASSWORD` forwards the host's
+value into the container; CI sets it from its secret store.
+
+[fw-pass]: https://documentation.red-gate.com/fd/environment-password-setting-277578929.html
+[docker-env]: https://docs.docker.com/reference/cli/docker/container/run/
 
 ## Step 2 - First migration
 
@@ -95,7 +103,7 @@ flags. Key settings:
 ```properties
 flyway.url=jdbc:postgresql://localhost:5432/mydb
 flyway.user=myuser
-flyway.password=mypass
+# no flyway.password here - export FLYWAY_PASSWORD instead (Step 1)
 flyway.locations=filesystem:db/migration,classpath:db/migration
 flyway.baselineOnMigrate=true        # auto-baseline empty schemas
 flyway.cleanDisabled=true            # CRITICAL for prod - disable destructive `clean`
@@ -163,6 +171,8 @@ Add an index on `users.email` and ship it through CI:
   databases
 - [fw-how][fw-how] - conceptual model: schema_history table,
   pending-migration semantics, ordering
+- [fw-pass][fw-pass] - `FLYWAY_PASSWORD` environment variable
+- [docker-env][docker-env] - `docker run -e VAR` forwards the host value
 - github.com/flyway/flyway - repository
 - `liquibase-migrations`,
   `atlas-migrations`,
