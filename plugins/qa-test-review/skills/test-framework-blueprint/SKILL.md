@@ -194,28 +194,17 @@ Three sub-decisions, each deferring to its own deeper tool:
   mechanics for the worked stack are `npx playwright test --shard=1/4` plus
   the blob reporter and `npx playwright merge-reports --reporter html`,
   per the [Playwright sharding docs](https://playwright.dev/docs/test-sharding).
-- **Retry policy: test-level retries stay at 0 on a young suite.** Playwright
-  labels a test that fails and then passes on retry "flaky", and does not
-  retry failing tests by default, per the
-  [Playwright retries docs](https://playwright.dev/docs/test-retries). A
-  nonzero `retries` (config or `--retries`) turns that signal into a green
-  build, and lowering the count keeps the mechanism. Record two failure
-  classes separately: a runner lost before any test started is answered by
-  re-running the job (`gh run rerun <run-id> --failed`, per the
-  [GitHub re-run docs](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs));
-  a test that failed on its own merits is investigated or quarantined, never
-  retried green. Full retry-class table: `ci-test-job-conventions` §2.
-- **Per-trigger content differs.** Per-PR runs the fast tier (API plus a
-  smoke subset on one browser); merge to main runs the full suite; the
-  cross-browser matrix moves to merge or a nightly `schedule` trigger, never
-  every PR push (events per the
-  [GitHub Actions trigger reference](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows)).
-  Rows that differ only in name are one job copied everywhere. Full cadence
-  tiers: `ci-test-job-conventions` §5.
-- **Checkpoint:** before writing the matrix, confirm every row has
-  test-level retry 0 and that no two rows run the same content.
+- **Retries: 0 at test level.** A test that passes only on retry is "flaky"
+  ([Playwright retries](https://playwright.dev/docs/test-retries)); a nonzero
+  `retries` turns it green. A runner lost before tests start gets a job
+  re-run (`gh run rerun <run-id> --failed`), never a test retry
+  (`ci-test-job-conventions` §2).
+- **Triggers differ.** Per-PR: API plus a one-browser smoke subset; merge to
+  main: full suite; cross-browser matrix: merge or nightly `schedule`, never
+  every PR (`ci-test-job-conventions` §5).
 
-**Decision output:** the CI matrix table (trigger × suite × shards × retry).
+**Decision output:** the CI matrix table (trigger × suite × shards × retry);
+before recording it, check every row has test retry 0 and distinct content.
 
 ## Step 7 - Conventions doc + review gates
 
