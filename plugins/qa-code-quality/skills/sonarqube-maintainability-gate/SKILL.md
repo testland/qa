@@ -3,6 +3,7 @@ name: sonarqube-maintainability-gate
 description: "Run SonarQube/SonarCloud against production code to surface Code Smells, Bugs, and Maintainability ratings - the maintainability lens rather than the security lens. Production-only scope via sonar.exclusions; test code is reviewed separately. Use when a team wants maintainability and technical-debt ratings gating PRs, or when an existing SonarQube project reports numbers nobody has tied to a quality gate."
 metadata:
   keywords: "sonarqube, sonarcloud, code-smell, maintainability, quality-gate"
+  version: "1.1.6"
 ---
 
 # sonarqube-maintainability-gate

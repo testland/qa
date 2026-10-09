@@ -3,6 +3,7 @@ name: platform-cert-overview-reference
 description: "Reference catalog of game-QA test categories and the four platform-holder certification regimes a multi-platform title submits to before release. Defines the six canonical test categories (functional / compliance / compatibility / performance / localization / accessibility) plus the multiplayer and content-rating cross-axes; documents the submission workflow, severity vocabulary, test-bench configurations, and known SLAs for Microsoft Xbox Requirements (XR), Sony TRC (gated PlayStation DevNet), Nintendo Lotcheck (gated Nintendo Developer Portal), and Steam Direct review; and includes the building-a-cert-checklist workflow that maps a target platform's requirement items to the six categories. Cites public sources inline; cites gated NDA portals by stable ID per PLUGIN_AUTHORING.md Step 4 fallback. Use when planning a game test pass or cert calendar, mapping internal QA findings to the platform's vocabulary, sequencing submissions across platforms, or emitting a pre-submission checklist."
 metadata:
   keywords: "xbox-cert, xr, playstation-trc, nintendo-lotcheck, steam-direct, submission, certification, release"
+  version: "1.4.17"
 ---
 
 # platform-cert-overview-reference

@@ -216,7 +216,9 @@ jobs:
       - name: Install ghz
         run: |
           curl -L https://github.com/bojand/ghz/releases/download/v0.120.0/ghz-linux-x86_64.tar.gz | tar xz
-          sudo mv ghz /usr/local/bin/
+          # user-owned bin dir on PATH: no sudo, no write to /usr/local/bin
+          mkdir -p "$HOME/.local/bin" && mv ghz "$HOME/.local/bin/"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Warm + load
         run: |
           ghz --config=tests/perf/ghz.config.json
@@ -297,6 +299,8 @@ review of distribution shape (long tail, bimodal, etc.).
   [ghz.sh/docs/usage](https://ghz.sh/docs/usage).
 - ghz install:
   [ghz.sh/docs/install](https://ghz.sh/docs/install).
+- `$GITHUB_PATH` for a user-owned install dir in CI:
+  [GitHub Actions: adding a system path](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#adding-a-system-path).
 - Status code interpretation:
   `grpc-streaming-test-author` (references/status-codes.md).
 - Streaming load (sibling):

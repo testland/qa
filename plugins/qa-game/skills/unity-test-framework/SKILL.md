@@ -3,6 +3,7 @@ name: unity-test-framework
 description: "Author and run the Unity game-engine Test Framework (`com.unity.test-framework`, currently v1.8). Distinct from the ThrowTheSwitch Unity C testing library at throwtheswitch.org/unity - the two tools share only a name. Covers package install via Package Manager, the EditMode vs PlayMode split, the [Test] / [UnityTest] / [SetUp] / [TearDown] / [UnityPlatform] attributes, assembly-definition setup (Editor folder vs asmdef with `includePlatforms` / `optionalUnityReferences: [TestAssemblies]`), Test Runner window, command-line batch invocation with `-runTests` / `-testPlatform` / `-testResults` / `-testFilter` / `-testCategory`, NUnit 3.5 assertion API, and CI integration. Use when the unit under test is C# Unity code that needs to exercise the Unity runtime or editor."
 metadata:
   keywords: "unity, unity3d, test-framework, utf, edit-mode, play-mode, nunit, csharp, game-engine"
+  version: "1.4.17"
 ---
 
 # unity-test-framework
@@ -267,10 +268,12 @@ Other practical limitations:
   create / mutate assets the way EditMode tests can.
 - **Coverage** requires the separate `com.unity.testtools.codecoverage`
   package; not included by default.
-- **License gating on CI** - Unity batch-mode CI requires either a
-  Personal/Plus license seat (`-username -password -serial`) or a manual `.ulf`
-  license file; consult Unity's documentation for the current activation flow
-  before standing up CI.
+- **License gating on CI** - Unity batch-mode CI requires either an activated
+  Personal/Plus license seat or a manual `.ulf` license file; consult Unity's
+  documentation for the current activation flow before standing up CI. Keep the
+  seat credentials or the `.ulf` contents in the CI secret store and inject them
+  as environment variables; never write them into a workflow file or a logged
+  command line.
 - **No public common exit-code definition** (per the command-line reference);
   parse XML, don't rely on exit code.
 - **EditMode test that enters PlayMode** is supported ("Edit Mode tests can

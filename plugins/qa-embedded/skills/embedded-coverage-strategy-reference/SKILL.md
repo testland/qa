@@ -3,6 +3,7 @@ name: embedded-coverage-strategy-reference
 description: "Pure-reference catalog of code-coverage strategy for embedded C/C++: the criteria hierarchy (statement / branch / decision / condition / MC/DC), the gcov toolchain (.gcno/.gcda, --coverage), the LLVM source-based toolchain (llvm-profdata / llvm-cov), host-build vs QEMU-build instrumentation, MISRA-C:2012 and DO-178C structural-coverage expectations by safety level (DAL A maps to MC/DC), and report-format choices. Use when choosing what structural-coverage level to require and wiring gcov / llvm-cov into the build; physical .gcda retrieval from hardware is in hardware-in-loop-reference, QEMU machine flags in qemu-system-test-runner, and to author the embedded tests themselves use googletest-embedded-arm or unity-test-framework-c."
 metadata:
   keywords: "coverage, gcov, llvm-cov, mcdc, misra, do-178c, embedded"
+  version: "1.3.8"
 ---
 
 # embedded-coverage-strategy-reference

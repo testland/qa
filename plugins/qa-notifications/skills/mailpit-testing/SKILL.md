@@ -51,15 +51,16 @@ Per [github.com/axllent/mailpit][mp-gh]:
 # macOS
 brew install mailpit
 
-# Linux + macOS via install script
-sudo sh < <(curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh)
-
-# Custom install path
-sudo INSTALL_PATH=/usr/bin sh < <(curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh)
+# Docker (Linux, macOS, Windows, CI) - per the [mp-docker][mp-docker] image page
+docker run -d --name=mailpit --restart unless-stopped -p 8025:8025 -p 1025:1025 axllent/mailpit
 ```
 
-Docker is the recommended path for CI; consult [mp-gh][mp-gh] for
-current Docker pull commands.
+Docker is the recommended path for CI. [mp-gh][mp-gh] also documents a
+shell install script that writes to `/usr/local/bin` with `sudo`; prefer the
+image or a release binary so a test setup never pipes remote code into a
+root shell.
+
+[mp-docker]: https://hub.docker.com/r/axllent/mailpit
 
 ## Step 2 - Start
 
@@ -223,6 +224,7 @@ steps:
 
 - [mp-docs][mp-docs] - official documentation
 - [mp-gh][mp-gh] - repository, install commands, ports
+- [mp-docker][mp-docker] - Docker image and `docker run` example (ports 8025 / 1025)
 - mailpit.axllent.org/docs/api-v1/ - REST API reference
 - End-to-end email-flow workflow (headers, multipart, links,
   unsubscribe, bounces): [references/email-flows.md](references/email-flows.md)

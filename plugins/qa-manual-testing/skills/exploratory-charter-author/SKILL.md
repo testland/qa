@@ -11,9 +11,8 @@ A charter is the structured-but-open frame of an SBTM session: it tells the
 tester what to **learn**, not what to click. This skill is the authoring
 workflow - from a raw input (spec, diff, incident) to a filled charter card.
 The card format itself, the session vocabulary, and the time-box rationale are
-owned by [`exploratory-testing`](../exploratory-testing/SKILL.md); the
-ready-to-fill card is its
-[references/charter-template.md](../exploratory-testing/references/charter-template.md).
+owned by `exploratory-testing`; the
+ready-to-fill card is its charter-template reference.
 This workflow fills that template - it does not redefine it.
 
 Input: a feature spec / story, a diff / changeset, a bug cluster / incident
@@ -41,35 +40,34 @@ promo codes apply" (too narrow - that's a scripted test).
 spec sections, diff blast-radius, or the bug cluster's common surface.
 
 Time-box lengths (60 / 90 / 120 min) and their rationale:
-[`exploratory-testing`](../exploratory-testing/SKILL.md).
+`exploratory-testing`.
 
-Suggested tours, and how many to pick per session:
-[references/tours.md](../exploratory-testing/references/tours.md).
+Suggested tours, and how many to pick per session: the tours reference in
+`exploratory-testing`.
 The charter suggests; the tester picks. For the Bad-data tour, point the
 tester at
-[`malicious-payload-bank`](../../../qa-test-data/skills/malicious-payload-bank/SKILL.md).
+`malicious-payload-bank`.
 
 ## Step 3 - Wire the deliverables (PROOF debrief)
 
 Sessions deliver a structured PROOF debrief into the
-[`exploratory-testing`](../exploratory-testing/SKILL.md) debrief template
-([references/debrief.md](../exploratory-testing/references/debrief.md)); the
+`exploratory-testing` debrief template (its debrief reference); the
 debrief fields and the session-sheet structure are owned by that skill.
 The charter's deliverables block names three things:
 
 - PROOF debrief at session end.
 - Defects in `BUG-*` format via
-  [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md).
+  `bug-repro-builder`.
 - Coverage notes: which areas had time, which didn't.
 
 ## Step 4 - Fill the charter card
 
 Assemble mission (Step 1), areas + time-box + suggested tours (Step 2), and
-deliverables (Step 3) into the card format from
-[references/charter-template.md](../exploratory-testing/references/charter-template.md),
+deliverables (Step 3) into the card format from the `exploratory-testing`
+charter-template reference,
 adding the source artifact ("Created from: story / diff / incident"), the
 target build / SHA, and an explicit out-of-scope list (performance / load →
-[`k6-load-testing`](../../../qa-load-testing/skills/k6-load-testing/SKILL.md);
+`k6-load-testing`;
 a11y → `qa-accessibility`; cross-browser → `qa-web-e2e`).
 
 ## Halt rules
@@ -88,16 +86,16 @@ Do **not** emit a charter that violates any of these:
 ## Hand-off targets
 
 - **Scripted steps rather than a charter** →
-  [`manual-test-script-author`](../manual-test-script-author/SKILL.md).
+  `manual-test-script-author`.
 - **Post-session debrief** →
-  [`exploratory-testing`](../exploratory-testing/SKILL.md) references/debrief.md.
+  the `exploratory-testing` debrief reference.
 - **Defects found during the session** →
-  [`bug-repro-builder`](../../../qa-bug-repro/agents/bug-repro-builder.md).
+  `bug-repro-builder`.
 
 ## References
 
 - Bach J. + Bach J., "Session-Based Test Management" - charter, session,
   debrief vocabulary: https://www.satisfice.com/exploratory-testing
-- [`exploratory-testing`](../exploratory-testing/SKILL.md) - owns the charter
+- `exploratory-testing` - owns the charter
   card template, tour catalog, session sheet, and PROOF debrief this workflow
   fills.

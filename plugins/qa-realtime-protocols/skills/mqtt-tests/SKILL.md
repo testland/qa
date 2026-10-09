@@ -3,6 +3,7 @@ name: mqtt-tests
 description: "Test MQTT v5.0 with Mosquitto broker in CI + paho-mqtt clients - QoS 0 / 1 / 2 delivery semantics, retained messages, Last Will and Testament (LWT), shared subscriptions ($share/group/topic), $SYS topic introspection. Critical for IoT, embedded, and M2M systems where wire-level guarantees matter. Also carries STOMP-over-WebSocket + AMQP 0-9-1 broker testing (Spring / RabbitMQ frame, ack-mode, and exchange/binding tests via Testcontainers) in references/stomp-amqp.md. Use when a product speaks MQTT, STOMP, or AMQP on the wire and QoS 1 / 2 redelivery, retained-message state, LWT, ack-mode, or broker-topology behavior needs a broker-backed test - including smoke-testing a new broker auth / ACL / persistence config."
 metadata:
   keywords: "mqtt, mqtt-v5, iot, mosquitto, paho-mqtt, realtime-protocols"
+  version: "1.3.5"
 ---
 
 # mqtt-tests

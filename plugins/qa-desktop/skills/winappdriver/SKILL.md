@@ -3,6 +3,7 @@ name: winappdriver
 description: "Authors and runs Windows UI tests against the WinAppDriver UIA surface via both invocation paths - the direct Microsoft W3C-WebDriver service (installing + launching `WinAppDriver.exe` on `127.0.0.1:4723`, `app` / `platformName` / `appArguments` / `appTopLevelWindow` capabilities) and the actively-maintained Appium 2.x wrapper (`appium driver install windows`, `appium:` prefixed capabilities, `windows:` gestures, PowerShell prerun/postrun hooks). Covers UWP / WPF / WinForms / Win32 apps, `AccessibilityId` / `Name` / `ClassName` locators, and Windows-runner CI. Use when driving a native Windows app from a Selenium-style client (C#, Java, Python, Ruby, JS) - directly when no Appium install is wanted, via Appium when the stack already runs Appium for iOS / Android / Mac2; for a C#-only FlaUI client use flaui-tests, and to choose among Windows desktop drivers first use desktop-test-strategy-reference."
 metadata:
   keywords: "windows, winappdriver, uia, webdriver, wpf, uwp"
+  version: "1.2.17"
 ---
 
 # winappdriver

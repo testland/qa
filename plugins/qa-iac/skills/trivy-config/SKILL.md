@@ -3,6 +3,7 @@ name: trivy-config
 description: "Runs Trivy's misconfiguration scanner (`trivy config`) against IaC directories to detect security issues across Terraform, CloudFormation, Kubernetes manifests, Helm charts, Dockerfiles, and Azure ARM templates - installs Trivy, scans with severity gating via `--exit-code`, suppresses findings via `.trivyignore` / `.trivyignore.yaml` or inline annotations, extends built-in checks with custom Rego policies, and emits SARIF for GitHub Code Scanning. Trivy is the tfsec successor - the forward path from tfsec per Aqua Security's own migration guidance - and the legacy tfsec workflow (install, custom YAML rules, ignore annotations, migration steps) is kept in references/tfsec-legacy.md. Use when adopting a consolidated IaC scanner for new projects, migrating away from tfsec (or still operating a Terraform-only tfsec stack), or scanning mixed IaC stacks with a single tool."
 metadata:
   keywords: "trivy, iac, misconfiguration, terraform, kubernetes, dockerfile, helm, cloudformation, rego, sarif, security"
+  version: "1.1.18"
 ---
 
 # trivy-config
@@ -39,28 +40,22 @@ RPM URL in Step 1 pins a tag rather than using `latest/download`.
 
 ## Step 1 - Install
 
-Per [trivy.dev installation docs][inst] (the RPM URL pins the Trivy tag
-from the Pinned versions section above):
+Per [trivy.dev installation docs][inst]:
 
 ```bash
 # macOS
 brew install trivy
 
-# Debian / Ubuntu
-sudo apt-get install wget apt-transport-https gnupg
-wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key \
-  | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
-echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] \
-  https://aquasecurity.github.io/trivy-repo/deb generic main" \
-  | sudo tee /etc/apt/sources.list.d/trivy.list
-sudo apt-get update && sudo apt-get install trivy
-
-# RPM (RHEL / Fedora)
-sudo rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.72.0/trivy_0.72.0_Linux-64bit.rpm
-
 # Docker (no local install)
 docker run --rm -v $(pwd):/workspace aquasec/trivy config /workspace
 ```
+
+Debian / Ubuntu and RHEL / Fedora hosts can also install Trivy from the
+project's apt repository or a release `.rpm` package (pin the tag from the
+Pinned versions section above), per [inst]. Both add a system package
+source and need root, so bake them into the runner image or config
+management rather than running them from a scan session. In CI, use the
+pinned `aquasecurity/trivy-action` from Step 7 instead.
 
 Verify: `trivy --version`.
 

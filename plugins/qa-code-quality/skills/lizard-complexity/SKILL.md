@@ -3,6 +3,7 @@ name: lizard-complexity
 description: "Run Lizard against production source to enforce per-function cyclomatic complexity (CCN), NLOC, and parameter-count thresholds - language-agnostic (30+ languages). Scoped to production code via `-x\"./tests/*\"`; test complexity is reviewed separately. Use when a codebase spans several languages and needs one complexity gate across all of them, or when a function has grown unreviewable and the team wants a numeric threshold in CI."
 metadata:
   keywords: "lizard, cyclomatic-complexity, ccn, code-metrics, quality-gate"
+  version: "1.1.5"
 ---
 
 # lizard-complexity

@@ -3,6 +3,7 @@ name: pdf-snapshot-tester
 description: "Test PDF outputs by converting per-page to images (`pdftocairo` / pdf2image / Poppler) and running pixel-diff (pixelmatch / Resemble.js / Pillow `ImageChops`) against approved baselines. Per-page-range targeting, threshold tuning, font-substitution warnings, byte-stable PDF metadata stripping (CreationDate, /ID); references/ carry cross-engine HTML→PDF regression (Chromium `page.pdf()` / WeasyPrint / wkhtmltopdf per-engine baselines, engine-agreement tests, font-embedding checks, engine-version pinning). Use when a product generates invoices, contracts, or regulatory filings whose layout must not shift, when a PDF template, font pack, or generation library is about to change, or when swapping / upgrading the PDF engine."
 metadata:
   keywords: "pdf-snapshot, visual-regression, pdftocairo, poppler, pixel-diff"
+  version: "1.1.10"
 ---
 
 # pdf-snapshot-tester

@@ -3,6 +3,7 @@ name: web-vitals-inp-deep
 description: "Deep INP (Interaction to Next Paint) testing: decomposes input delay, processing duration, and presentation delay via the web-vitals/attribution build, asserts per-interaction INP budgets in Playwright using PerformanceObserver plus the web-vitals visibilitychange flush, and identifies long tasks blocking the main thread. Use when a page feels unresponsive while LCP and CLS are green, or to gate key interactions (form submit, modal open, route change) under an INP budget in CI. Covers interactions only - for page-load Web Vitals gating use lighthouse-perf; for service-worker cache-strategy latency use the qa-pwa plugin's service-worker skills."
 metadata:
   keywords: "web-vitals, inp, core-web-vitals, responsiveness, performance"
+  version: "1.1.11"
 ---
 
 # web-vitals-inp-deep
@@ -153,11 +154,16 @@ relying on it alone.
 Lab + field don't always match. Pair lab tests with CrUX queries:
 
 ```bash
-# CrUX REST API
-curl -X POST 'https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=<API_KEY>' \
+# CrUX REST API - key from the environment, sent as a header
+curl -X POST 'https://chromeuxreport.googleapis.com/v1/records:queryRecord' \
+  -H "x-goog-api-key: $CRUX_API_KEY" \
   -H 'Content-Type: application/json' \
   -d '{"url":"https://yoursite.com/","metrics":["interaction_to_next_paint"]}'
 ```
+
+Send the key in the `x-goog-api-key` header rather than a `?key=` query
+parameter: per [Google API keys], a key in the URL is exposed to theft through
+URL scans.
 
 Field 75th percentile INP ≤ 200 ms = "Good" per the [INP web.dev
 article]. Lab passing + field failing = sample population mismatch
@@ -193,8 +199,11 @@ article]. Lab passing + field failing = sample population mismatch
   visibilitychange flush behavior
 - [MDN longtask] - Long Tasks API entry type and buffered observe
 - [MDN LoAF] - Long Animation Frames API (richer, not yet Baseline)
+- [Google API keys] - "Using an API key with REST": the `x-goog-api-key`
+  header, and why a key in the URL is exposed
 
 [INP web.dev article]: https://web.dev/articles/inp
 [web-vitals README]: https://github.com/GoogleChrome/web-vitals#readme
 [MDN longtask]: https://developer.mozilla.org/en-US/docs/Web/API/PerformanceLongTaskTiming
 [MDN LoAF]: https://developer.mozilla.org/en-US/docs/Web/API/PerformanceLongAnimationFrameTiming
+[Google API keys]: https://docs.cloud.google.com/docs/authentication/api-keys-use

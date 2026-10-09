@@ -13,6 +13,7 @@
     "catalog": "tsx scripts/ts/generate-catalog.ts",
     "inventory": "tsx scripts/ts/inventory.ts",
     "drift": "tsx scripts/ts/check-description-drift.ts",
+    "tessl-check": "tsx scripts/ts/check-tessl-manifests.ts",
     "audit": "tsx scripts/ts/content-audit.ts --strict",
     "version-check": "tsx scripts/ts/version-bump-check.ts",
     "evals:build": "tsx scripts/ts/compile-evals.ts",

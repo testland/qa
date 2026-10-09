@@ -10,6 +10,7 @@ description: "Configures Chaos Mesh for Kubernetes-native chaos engineering - pi
 Per [chaos-mesh-home][cm]:
 
 [cm]: https://chaos-mesh.org/
+[cm-helm]: https://chaos-mesh.org/docs/production-installation-using-helm/
 
 > "**Chaos Mesh** is a platform that 'brings various types of fault
 > simulation to Kubernetes and has an enormous capability to
@@ -33,12 +34,17 @@ ergonomics.
 
 ## Step 1 - Install
 
+Install with Helm, per [Chaos Mesh Helm install][cm-helm] (pin the chart
+`--version` you have validated; the docs recommend the `chaos-mesh`
+namespace):
+
 ```bash
-curl -sSL https://mirrors.chaos-mesh.org/v2.6.3/install.sh | bash
-# Or via Helm:
 helm repo add chaos-mesh https://charts.chaos-mesh.org
-helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-mesh --create-namespace
+helm install chaos-mesh chaos-mesh/chaos-mesh -n chaos-mesh --create-namespace --version 2.6.3
 ```
+
+Avoid piping the mirror's `install.sh` into a shell: it runs unreviewed
+remote code with your cluster credentials.
 
 Per [chaos-mesh-home][cm], "no special dependencies required - 
 Chaos Mesh deploys directly on Kubernetes clusters, including
@@ -249,6 +255,8 @@ triggers it.
 - [cm][cm] - Chaos Mesh overview: K8s-native, fault types,
   selector-based blast-radius control, workflow orchestration,
   dashboard with RBAC, Chaosd for physical machines.
+- [cm-helm][cm-helm] - Helm install: `helm repo add chaos-mesh`,
+  recommended `chaos-mesh` namespace, `--version` pinning.
 - LitmusChaos (references/litmus.md in `chaos-experiment-author`) - sibling K8s
   alternative.
 - Gremlin (references/gremlin.md in `chaos-experiment-author`) - multi-platform

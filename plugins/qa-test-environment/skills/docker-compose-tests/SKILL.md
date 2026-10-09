@@ -31,7 +31,7 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_PASSWORD: test
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?set PG_PASSWORD}
       POSTGRES_DB: orders_test
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d orders_test"]
@@ -53,7 +53,7 @@ services:
       context: .
       target: test
     environment:
-      DATABASE_URL: postgres://postgres:test@db:5432/orders_test
+      DATABASE_URL: postgres://postgres:${PG_PASSWORD}@db:5432/orders_test
       REDIS_URL: redis://cache:6379/0
     depends_on:
       db:
@@ -83,6 +83,13 @@ services:
 The `name:` top-level key sets the project name (which Compose
 normally derives from the working directory) - important for CI
 isolation, see Step 4.
+
+Even a throwaway test database gets its password from the environment
+(a CI secret, or a git-ignored `.env` locally), never a literal in the
+compose file. Per [Compose interpolation][compose-interp], `${VAR}` is read
+from the shell or `.env`, and `${VAR:?error}` stops Compose when it is unset.
+
+[compose-interp]: https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/
 
 ## Step 2 - Healthchecks are load-bearing
 
@@ -127,7 +134,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgres://postgres:test@db:5432/orders_test
+      DATABASE_URL: postgres://postgres:${PG_PASSWORD}@db:5432/orders_test
 
   app:
     image: orders-app:test
@@ -135,7 +142,7 @@ services:
       db: { condition: service_healthy }
       migrate: { condition: service_completed_successfully }
     environment:
-      DATABASE_URL: postgres://postgres:test@db:5432/orders_test
+      DATABASE_URL: postgres://postgres:${PG_PASSWORD}@db:5432/orders_test
 ```
 
 The chain - db healthy → migrate runs → migrate exits 0 → app starts - 

@@ -3,6 +3,7 @@ name: dr-drill-runner
 description: "The full DR-drill discipline for one service: author the runbook (per-tier RTO + RPO), pre-drill checklist (data sync state, alert silencing, customer comms), drill workflow (announce, fail-over, verify, fail-back) with timestamps, the supervised run protocol (refuse without declared RTO/RPO or against production, RTO/RPO monitoring cadence, abort-on-breach), and an auditor-ready post-drill report. Backup-integrity verification (SHA-256 + signature, restore spot checks, cross-region replication, retention, key recovery) and restore-time / RTO measurement (TTF segments, PITR latency, parallel-restore tuning, trend tracking) are worked in references. Per Google Cloud DR planning guide; covers cold / warm / hot standby tier-specific patterns. Use when a scheduled or post-incident failover drill for one service is being planned, executed, or written up, or when a new tier-1 service ships without a drill defined."
 metadata:
   keywords: "disaster-recovery, dr-drill, rto, rpo, failover, runbook"
+  version: "1.2.17"
 ---
 
 # dr-drill-runner
