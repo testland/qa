@@ -32,18 +32,22 @@ Follow Steps 1-9 in order - lint (Step 6) is the gate before apply
 Per [at-start][at-start]:
 
 ```bash
-# download the install script, then run it
-curl -sSf https://atlasgo.sh -o install-atlas.sh
-sh install-atlas.sh
-
-# Homebrew
+# Homebrew (macOS / Linux)
 brew install ariga/tap/atlas
 
-# Direct binary download (per platform):
-#   atlasbinaries.com/atlas/atlas-{linux-amd64,linux-arm64,
-#                                  darwin-amd64,darwin-arm64,
-#                                  windows-amd64}-latest
+# Docker: nothing to install, mount the migrations directory
+docker run --rm --net=host -v "$(pwd)/migrations:/migrations" \
+  arigaio/atlas migrate apply --url "$DATABASE_URL"
 ```
+
+In GitHub Actions, `uses: ariga/setup-atlas@v0` puts the CLI on the
+runner (Step 8, per [at-gha][at-gha]). The getting-started page also
+lists per-platform binaries with md5 and sha256 checksums; verify the
+checksum before running a downloaded binary. Prefer these over piping
+the vendor install script into a shell, which runs unreviewed remote
+code.
+
+[at-gha]: https://atlasgo.io/integrations/github-actions
 
 ## Step 2 - Define schema
 
@@ -186,6 +190,7 @@ requiring a real DBMS, paid Atlas Cloud) are catalogued in
 
 - [at-start][at-start] - getting-started, install commands,
   example schema, all `atlas` commands, supported databases
+- [at-gha][at-gha] - `ariga/setup-atlas` GitHub Action
 - atlasgo.io/docs - full documentation
 - github.com/ariga/atlas - repository
 - `flyway-migrations`,
