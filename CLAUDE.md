@@ -8,6 +8,23 @@ reviewed against the D1-D6 quality rubric before merge.
 If you're using Claude Code to contribute to this repo, this file tells you
 what conventions to follow.
 
+## Nothing private in GitHub content
+
+Nothing private goes into anything pushed to or posted on GitHub: code
+comments, committed files, commit messages, PR titles and descriptions,
+PR / issue / review comments, and releases and release notes.
+
+- No claude.ai session, thread, project or artifact links.
+- No local paths: no absolute drive or home-directory paths, temp or
+  scratchpad dirs, or Claude project-file paths (`/mnt/project-files/...`).
+  Use repo-relative paths, or `../<repo>` for a sibling checkout.
+- Commit messages carry no `Claude-Session:` trailer.
+- PR attribution keeps the `claude-projects-attribution` marker line and the
+  "Requested by" line, without the project thread link.
+
+Made-up paths inside skill examples and eval fixtures are fine; the rule
+covers real paths from a contributor's machine.
+
 ## Adding a new plugin
 
 ```bash
