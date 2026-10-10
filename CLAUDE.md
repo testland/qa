@@ -22,8 +22,9 @@ PR / issue / review comments, and releases and release notes.
 - PR attribution keeps the `claude-projects-attribution` marker line and the
   "Requested by" line, without the project thread link.
 
-Made-up paths inside skill examples and eval fixtures are fine; the rule
-covers real paths from a contributor's machine.
+Made-up paths inside skill examples and eval fixtures, and generic locations
+such as `~/.claude/`, are fine; the rule covers real paths from a
+contributor's machine.
 
 ## Adding a new plugin
 
