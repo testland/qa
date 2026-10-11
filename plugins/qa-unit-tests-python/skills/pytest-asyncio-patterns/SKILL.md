@@ -3,7 +3,7 @@ name: pytest-asyncio-patterns
 description: "Configures and runs async Python tests with pytest-asyncio: installs the plugin, selects asyncio_mode (auto vs strict), scopes event loops (function/class/module/session), writes async fixtures with @pytest_asyncio.fixture, mocks coroutines with AsyncMock, and tests FastAPI (httpx.AsyncClient + ASGITransport) and aiohttp (aiohttp_client fixture) applications. Use when a Python project contains async def test_ functions, FastAPI/aiohttp endpoints, or any asyncio-based code that needs pytest integration. Do NOT use for general pytest fixture design, parametrize patterns, or conftest.py structure without an asyncio-specific problem (event-loop scoping, mode config, AsyncMock, ASGI client): use python-unit-tests for those."
 metadata:
   keywords: "pytest, asyncio, async, fastapi, aiohttp, httpx, AsyncMock, event-loop, async-fixtures"
-  version: "1.2.16"
+  version: "1.2.17"
 ---
 
 # pytest-asyncio-patterns

@@ -158,6 +158,13 @@ reports the sham as skill value 64% of the time.
 On Tessl, `tessl eval run <skill-dir>` consumes the same files and returns an
 independent judgement plus a registry impact score.
 
+That run does not reach the registry page. The registry scores a skill by its
+latest published version, and the publish job uploads scenarios only for skills
+listed in `.github/tessl-eval-skills.txt`; every other skill publishes with
+`--skip-evals`, which caps its Score at 0.8 x Quality. Adding a skill to that
+list takes effect at its next version bump, and from then on every publish of it
+starts a paid scored run.
+
 ## Maintaining
 
 A criterion that scores identically at ceiling or floor in both arms is not

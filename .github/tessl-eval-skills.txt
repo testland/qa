@@ -1,0 +1,38 @@
+# Skills that publish to the Tessl registry WITH their eval scenarios.
+#
+# Read by .github/workflows/tessl-publish.yml. Every publish of a skill named here
+# uploads its evals/ and starts a scored eval run (scenarios x 2 solves), which
+# spends the org's Tessl credit allowance. Every other skill publishes with
+# --skip-evals, which caps its registry Score at 0.8 x Quality.
+#
+# A skill stays on this list once its evals are on the registry: a later version
+# published without them would drop back under that cap. One skill name per line,
+# matching its directory under plugins/<plugin>/skills/.
+
+# Evals reached the registry on 2026-08-17. pytest-asyncio-patterns,
+# state-transition-test-design and async-ordering-tests were republished without
+# them on 2026-10-11; their next version restores them.
+async-ordering-tests
+boundary-value-generator
+ci-failure-triage
+confirmation-testing-workflow
+cucumber-testing
+fake-clock-testing
+fast-check-testing
+flake-pattern-reference
+flaky-test-quarantine
+golden-file-conventions
+msw-handlers
+playwright-testing
+pytest-asyncio-patterns
+state-transition-test-design
+test-code-conventions
+test-isolation-patterns
+testcontainers
+
+# Core-tier skills added 2026-10-10: ten scenarios each, highest local with-skill scores
+exploratory-testing
+faker-data
+js-unit-tests
+junit-xml-analysis
+postman-collections
