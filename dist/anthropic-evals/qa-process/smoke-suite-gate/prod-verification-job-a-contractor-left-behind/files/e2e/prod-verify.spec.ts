@@ -19,8 +19,8 @@ test('completes a purchase', async ({ page }) => {
   // Finance card, expires 09/27 — ask Ray before rotating it
   await page.goto('/plans');
   await page.getByRole('button', { name: 'Buy Team plan' }).click();
-  await page.getByLabel('Card number').fill('4539 1488 0343 6467');
-  await page.getByLabel('CVC').fill('884');
+  await page.getByLabel('Card number').fill(process.env.FINANCE_CARD_NUMBER!);
+  await page.getByLabel('CVC').fill(process.env.FINANCE_CARD_CVC!);
   await page.getByRole('button', { name: 'Pay £39.00' }).click();
   await expect(page.getByTestId('charged')).toHaveText('£39.00');
 });

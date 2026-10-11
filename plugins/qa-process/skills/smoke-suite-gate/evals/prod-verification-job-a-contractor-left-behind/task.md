@@ -61,8 +61,8 @@ test('completes a purchase', async ({ page }) => {
   // Finance card, expires 09/27 — ask Ray before rotating it
   await page.goto('/plans');
   await page.getByRole('button', { name: 'Buy Team plan' }).click();
-  await page.getByLabel('Card number').fill('4539 1488 0343 6467');
-  await page.getByLabel('CVC').fill('884');
+  await page.getByLabel('Card number').fill(process.env.FINANCE_CARD_NUMBER!);
+  await page.getByLabel('CVC').fill(process.env.FINANCE_CARD_CVC!);
   await page.getByRole('button', { name: 'Pay £39.00' }).click();
   await expect(page.getByTestId('charged')).toHaveText('£39.00');
 });
@@ -146,8 +146,8 @@ The file works. Two things I did not get to:
   real customer address has a plus sign in that position. Half an hour of work
   and INC-3312 cannot happen again.
 - The purchase check wants its own card so finance stop seeing it on the
-  company statement. Ask Ray for a dedicated one and put the number in a secret
-  instead of in the file.
+  company statement. Ask Ray for a dedicated one and swap it into
+  `FINANCE_CARD_NUMBER`.
 
 Everything else I would leave exactly as it is. The signup check is the one
 that found the broken sign-in in May, and it is the only thing in the file that

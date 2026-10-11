@@ -13,7 +13,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-process](plugins/qa-process/) | 1.12.5 | 12 skills + 3 agents | 15 |
+| [qa-process](plugins/qa-process/) | 1.12.6 | 12 skills + 3 agents | 15 |
 | [qa-test-data](plugins/qa-test-data/) | 1.4.4 | 12 skills + 2 agents | 14 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.5 | 10 skills + 2 agents | 12 |
 | [qa-test-review](plugins/qa-test-review/) | 1.8.6 | 7 skills + 4 agents | 11 |
@@ -32,7 +32,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 | [qa-mobile](plugins/qa-mobile/) | 1.6.5 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.9.3 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.1 | 7 skills + 1 agents | 8 |
-| [qa-api-testing](plugins/qa-api-testing/) | 1.7.5 | 6 skills + 1 agents | 7 |
+| [qa-api-testing](plugins/qa-api-testing/) | 1.7.6 | 6 skills + 1 agents | 7 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.9 | 5 skills + 2 agents | 7 |
 | [qa-embedded](plugins/qa-embedded/) | 1.4.1 | 6 skills + 1 agents | 7 |
 | [qa-desktop](plugins/qa-desktop/) | 1.3.2 | 5 skills + 1 agents | 6 |
@@ -81,7 +81,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 | [qa-resilience](plugins/qa-resilience/) | 1.0.1 | 7 skills + 0 agents | 7 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.8.3 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.5.3 | 4 skills + 2 agents | 6 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.6.5 | 3 skills + 2 agents | 5 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.6.6 | 3 skills + 2 agents | 5 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.4.0 | 4 skills + 1 agents | 5 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.5.1 | 3 skills + 0 agents | 3 |
 

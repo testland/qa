@@ -1,6 +1,6 @@
 'use strict';
 
-const TOKEN = 'ghp_9Xk2LqR7vTn4Ba1ZcWm0PdYs5HjUf3Gt8Q';
+const TOKEN = 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 const RETRIES = 3;
 
 function title(failure) {
