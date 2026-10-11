@@ -3,6 +3,7 @@ name: event-sourcing-tests
 description: "Build event-sourcing + CQRS tests - the given-events / when-command / then-events aggregate test, replay determinism (same events produce the same state), event-versioning + upcasting, snapshot equivalence (replay-to-N vs snapshot-at-N must agree), retroactive event correction, and CQRS read-model projection tests (per-event projection deltas, idempotent + out-of-order apply, rebuild + zero-downtime swap, read-your-writes guard) with eventual-consistency convergence-window assertions in references/convergence-windows.md. Per martinfowler.com EventSourcing + CQRS references. Use when an event-sourced aggregate gains a new event type or a changed payload schema, when snapshots are introduced to shorten replay, when a read model is projected from the event stream, or when a documented convergence window needs a test."
 metadata:
   keywords: "event-sourcing, aggregate-replay, snapshot, upcasting, projection"
+  version: "1.2.13"
 ---
 
 # event-sourcing-tests

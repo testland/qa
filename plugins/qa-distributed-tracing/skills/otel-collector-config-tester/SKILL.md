@@ -3,6 +3,7 @@ name: otel-collector-config-tester
 description: "Validates OpenTelemetry Collector pipeline configurations and verifies spans flow end-to-end through the collector: runs `otelcol validate --config`, wires the `debug`/`file` exporter for span-output assertions, and integrates the full cycle into CI. Use when a collector config change (new receiver, processor swap, exporter wiring) needs correctness verification before deployment."
 metadata:
   keywords: "opentelemetry, distributed-tracing, collector, pipeline-testing, otelcol-validate, debug-exporter, file-exporter, observability-testing"
+  version: "1.1.10"
 ---
 
 # otel-collector-config-tester

@@ -3,6 +3,7 @@ name: elasticsearch-relevance-tests
 description: "Author search-engine relevance regression tests for Elasticsearch, OpenSearch, and Apache Solr. Core workflow on the Elasticsearch Ranking Evaluation API (`POST {index}/_rank_eval`) - judgment lists (query + expected docs at ranks), per-query metrics (Precision@K, Recall@K, MRR, DCG, ERR), reproducible test corpora; pair with Quepid + Splainer for interactive judgment authoring. Per-engine references cover the OpenSearch delta (Search Relevance Workbench, neural query DSL, hybrid BM25 + neural pipelines, ES-to-OS migration parity) and the Apache Solr delta (no _rank_eval: debugQuery score explain, LTR feature/model store REST, eDisMax qf/pf/mm tuning, external nDCG harness). Use before changing analyzers, synonyms, boosts, or query templates on an Elasticsearch, OpenSearch, or Solr index that serves user-facing search, so the NDCG / MRR baseline is captured first."
 metadata:
   keywords: "elasticsearch, rank-eval, relevance-testing, judgment-list, search-quality"
+  version: "1.2.7"
 ---
 
 # elasticsearch-relevance-tests

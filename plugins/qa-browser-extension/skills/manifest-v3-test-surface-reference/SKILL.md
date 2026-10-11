@@ -3,6 +3,7 @@ name: manifest-v3-test-surface-reference
 description: "Pure-reference catalog of the Manifest V3 test surface for Firefox + Chromium browser extensions. Maps each manifest field that changed from MV2 (manifest_version, background.service_worker vs background.scripts, action vs browser_action / page_action, host_permissions split, web_accessible_resources object-form, content_security_policy object-form), the runtime restrictions service workers impose (no DOM, no XMLHttpRequest, no localStorage, ephemeral lifecycle, synchronous listener registration, alarms instead of setTimeout), and the Firefox-vs-Chrome key matrix (browser_specific_settings.gecko, externally_connectable / offline_enabled gaps, MV2-only user_scripts manifest key); references/ carry Mozilla's web-ext CLI (lint via addons-linter, run on firefox-desktop / firefox-android / chromium targets, deterministic build, AMO sign). Use as the manifest-surface reference when authoring extension tests across both browsers, or when driving Firefox runs / AMO signing with web-ext."
 metadata:
   keywords: "browser-extension, manifest-v3, mv3, firefox-webextensions, chrome-extensions"
+  version: "1.2.9"
 ---
 
 # manifest-v3-test-surface-reference

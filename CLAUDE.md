@@ -153,6 +153,14 @@ update** - the "silent no-update" trap.
   `.github/workflows/version-bump.yml`, which runs on **pull requests AND direct
   pushes to `main`** - a component change without a matching bump fails CI either
   way. There is no bypass; a direct push to `main` is checked just like a PR.
+- **Tessl tiles:** every skill is also published to the Tessl registry from its
+  `.tessl-plugin/plugin.json` (`.github/workflows/tessl-publish.yml`). Changing a
+  skill's `SKILL.md`, `evals/` or that manifest needs a patch bump of the manifest
+  `version` too, or the publish job fails on `main`. Then run
+  `npm run tessl-check -- --fix`: it copies the SKILL.md description into the
+  manifest (the Tessl tile header shows that copy) and writes the manifest
+  version into `metadata.version` when the skill has a `metadata:` block. CI runs
+  `npm run tessl-check` without `--fix`.
 
 ### Keep testland-web in version parity (required)
 

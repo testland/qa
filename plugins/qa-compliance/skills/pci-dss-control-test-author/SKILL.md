@@ -180,18 +180,26 @@ def test_pan_only_transmitted_via_strong_crypto():
 ## Step 5 - Access control (Req 7 + 8)
 
 ```python
+import os
+
+# Test-account passwords come from the CI secret store via env vars, never
+# literals in test code (a literal password in a CDE test is itself a Req 8 finding).
+
 # generic shared accounts (e.g. 'admin' / 'svc-account') violate Req 8.2.1
 def test_cde_access_requires_unique_id():
     """Req 8.2.1: assign all users a unique ID before access to system components."""
     # No shared / generic accounts
-    response = client.post('/cde-api/login', json={'username': 'shared-svc', 'password': 'secret'})
+    response = client.post('/cde-api/login', json={
+        'username': 'shared-svc',
+        'password': os.environ['CDE_SHARED_SVC_PASSWORD'],
+    })
     assert response.status_code == 403
 
 def test_cde_access_requires_mfa():
     """Req 8.4: implement MFA for all access into the CDE."""
     response = client.post('/cde-api/login', json={
         'username': 'alice@example.com',
-        'password': correct_password,
+        'password': os.environ['CDE_TEST_USER_PASSWORD'],
         # No MFA token
     })
     assert response.status_code == 401

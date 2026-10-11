@@ -179,7 +179,9 @@ jobs:
       - uses: actions/checkout@v5
       - run: |
           curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.50.0/conftest_0.50.0_Linux_x86_64.tar.gz | tar xz
-          sudo mv conftest /usr/local/bin/
+          # user-owned bin dir on PATH: no sudo, no write to /usr/local/bin
+          mkdir -p "$HOME/.local/bin" && mv conftest "$HOME/.local/bin/"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Test policies
         run: opa test policies/
       - name: Conftest manifests
@@ -239,6 +241,8 @@ that violate the policy at admission time.
 - [opa][opa] - OPA overview, Rego language, common applications,
   CNCF graduated status.
 - Conftest at `conftest.dev`.
+- `$GITHUB_PATH` for a user-owned install dir in CI:
+  [GitHub Actions: adding a system path](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#adding-a-system-path).
 - OPA Gatekeeper at `open-policy-agent.github.io/gatekeeper/`.
 - `checkov-policy`,
   `trivy-config` - sister scanners with

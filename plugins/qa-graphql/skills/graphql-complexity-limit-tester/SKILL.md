@@ -3,6 +3,7 @@ name: graphql-complexity-limit-tester
 description: "The GraphQL attack-surface / hardening skill: crafts over-limit depth and complexity queries then asserts rejection before execution, verifying that graphql-depth-limit, graphql-cost-analysis, and graphql-armor (max-depth / cost-limit / max-tokens plugins) are actually enforced and not just configured; carries the introspection attack-surface catalog (what __schema exposes, per-framework disable controls, hideSchemaDetailsFromClientErrors) in references/introspection.md and the persisted-query allowlisting strategies (Apollo APQ protocol, auto-register vs strict-allowlist vs hybrid modes) in references/persisted-queries.md. Use when auditing a GraphQL service for DoS or schema-disclosure exposure, hardening a production deployment, or adding tests that prove the limits in CI."
 metadata:
   keywords: "graphql, depth-limit, complexity, cost-analysis, dos, security, graphql-armor, introspection, persisted-queries"
+  version: "1.4.4"
 ---
 
 # graphql-complexity-limit-tester

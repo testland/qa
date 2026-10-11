@@ -40,14 +40,15 @@ The scanner output identifies the credential class:
 | GitHub PAT (ghp_…) | GitHub | github.com/settings/tokens (or GraphQL API) |
 | GCP service account key | GCP IAM | `gcloud iam service-accounts keys create` + `delete` |
 | Azure service principal | Azure AD | `az ad sp credential reset` |
-| Stripe API key (sk_live_…) | Stripe | dashboard.stripe.com → API keys |
+| Stripe API key (sk_live_…) | Stripe | dashboard.stripe.com → API keys (manual roll in the dashboard) |
 | Twilio account+token | Twilio | console.twilio.com → API Keys |
 | Slack bot/user token (xoxb-…, xoxp-…) | Slack | api.slack.com/apps → OAuth & Permissions |
 | Database password (DB conn string) | DB-specific | `ALTER USER` etc. |
 | Custom JWT signing key | Internal | App-specific rotation logic |
 
-For automation-friendly providers (AWS, GitHub, GCP, Azure, Stripe,
-Twilio), rotation can be scripted. For others (often custom or
+For automation-friendly providers (AWS, GitHub, GCP, Azure, Twilio),
+rotation can be scripted. Payment-provider keys (Stripe) are rolled by a
+human in the provider dashboard, never by an unattended script. For others (often custom or
 on-prem), rotation is manual + documented.
 
 ## Step 2 - Pre-rotation: assess blast radius
@@ -89,7 +90,7 @@ The provider supports multiple active credentials simultaneously:
 
 This minimizes downtime risk. Most modern providers support it
 (AWS allows 2 active access keys per IAM user; GitHub supports
-multiple PATs; Stripe supports multiple API keys per account).
+multiple PATs).
 
 ```bash
 # Example: AWS IAM user "myapp"

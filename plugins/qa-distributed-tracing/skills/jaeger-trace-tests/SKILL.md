@@ -3,6 +3,7 @@ name: jaeger-trace-tests
 description: "Author integration tests that query a tracing backend for cross-service trace verification - Jaeger, Zipkin, or Grafana Tempo, same run-query-assert workflow. Jaeger all-in-one Docker for CI (OTLP gRPC :4317 + HTTP :4318 ingest, query API on :16686), `/api/traces?service=X&operation=Y` query patterns, span set + parent-child + duration assertions; Zipkin (:9411 REST API, B3 single/multi-header propagation tests, dependency graph) in references/zipkin.md; Tempo (TraceQL span selectors + structural operators, /api/search, single-binary Docker) in references/tempo.md. Use when verifying that a request produces the expected spans across service boundaries in a running Jaeger, Zipkin, or Tempo backend."
 metadata:
   keywords: "jaeger, distributed-tracing, integration-testing, opentelemetry, trace-query"
+  version: "1.1.10"
 ---
 
 # jaeger-trace-tests

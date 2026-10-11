@@ -9,7 +9,7 @@ description: "Builds a \"what to test next\" recommendation by combining a cover
 
 100% coverage isn't the goal; **risk-adjusted coverage** is. A
 50-line uncovered helper that hasn't been changed in 4 years is
-lower priority than a 10-line uncovered branch on a payment-handling
+lower priority than a 10-line uncovered branch on an access-control
 function that gets edited every week.
 
 This skill builds a ranked list of uncovered branches, scoring
@@ -200,9 +200,9 @@ targets per the [test pyramid][tp].
 |---|-------------------------------------|-----:|-------------------------------------|-------|-----:|----------------|
 | 1 | `src/checkout/promo.ts`              |  42 | `if (codeIsValid && !expired)`       | unit  | 0.91 | Add a unit test for the expired-code path. |
 | 2 | `src/checkout/promo.ts`              |  78 | `switch (codeType)` arm `'BOGO'`     | unit  | 0.85 | Add a unit test per arm; BOGO arm uncovered. |
-| 3 | `src/api/payments.ts`                | 134 | `if (provider === 'stripe')`         | service | 0.82 | Add an integration test for the stripe path. |
+| 3 | `src/api/shipping.ts`                | 134 | `if (carrier === 'ups')`             | service | 0.82 | Add an integration test for the UPS path. |
 | 4 | `src/checkout/cart.ts`               |  21 | `if (item.stock < quantity)`         | unit  | 0.78 | Add a unit test for stock-shortfall edge case. |
-| 5 | `src/api/payments.ts`                | 200 | `try / catch` (catch arm)            | service | 0.65 | Add a test that triggers the failure path. |
+| 5 | `src/api/shipping.ts`                | 200 | `try / catch` (catch arm)            | service | 0.65 | Add a test that triggers the failure path. |
 | 6 | `src/components/CheckoutModal.tsx`    |  88 | `if (showPromoBanner)`                | unit  | 0.55 | Add a snapshot/component test for the banner-hidden case. |
 | 7 | `src/api/orders.ts`                  | 156 | `if (status === 'fulfilled')`        | service | 0.48 | Add an integration test for the fulfilled-status path. |
 
@@ -219,8 +219,8 @@ For each target above, the recommended test shape:
 - **Unit (5)**: Add a per-branch test in the existing `*.spec.ts`;
   use `expect.fail` if no path triggers the branch yet.
 - **Service (2)**: Use `testcontainers`
-  to bring up a real Postgres + the Stripe sandbox; assert the
-  branch outcome.
+  to bring up a real Postgres + a stubbed carrier API
+  (`wiremock-stubs`); assert the branch outcome.
 ```
 
 ## Step 8 - Wire into CI as advisory
@@ -250,7 +250,7 @@ Step 7) but don't fail the build on it:
 ## Coverage debt ledger (drift over time)
 
 Aggregate coverage hides per-file decay: a repo can sit at 82%
-overall while the payment module slides from 95% to 60% across 30
+overall while the auth module slides from 95% to 60% across 30
 PRs, none of which crossed a gate threshold. The debt ledger is the
 **weekly, informational** (never gating) companion to the per-PR
 targeting above - it walks a rolling window of persisted coverage

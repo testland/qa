@@ -3,6 +3,7 @@ name: experiment-results-interpreter
 description: "Interprets the results of a valid online controlled experiment, one whose harness, SRM, and telemetry have already been confirmed. Covers the distinction between practical and statistical significance, reading confidence intervals instead of binary p-values, novelty and primacy week-over-week decay that causes post-ship reversion, interaction effects from concurrent experiments, Simpson's paradox in segmented results, and the ordered guardrail-check sequence required before a ship decision - with the deep methodology in references/: the peeking problem and its corrections (fixed-horizon, alpha-spending, always-valid mSPRT) in references/peeking.md, and guardrail-metric methodology (taxonomy, OEC relationship, pre-commitment, thresholds) in references/guardrails.md. Use when a data scientist or PM is ready to draw conclusions from an experiment, when designing a stop-early policy, or when declaring an experiment's guardrail set. Distinct from ab-test-validity-checklist (harness setup and SRM detection)."
 metadata:
   keywords: "experiment, a/b testing, statistical significance, practical significance, confidence intervals, novelty effect, primacy effect, interaction effects, simpsons paradox, guardrails, results interpretation"
+  version: "1.1.18"
 ---
 
 # experiment-results-interpreter

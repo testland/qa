@@ -38,14 +38,14 @@ dependency manifest.
 Per [sf-gh][sf-gh]:
 
 ```bash
-# curl install
-curl -sSfL https://get.anchore.io/syft | sudo sh -s -- -b /usr/local/bin
-
 # Homebrew
 brew install syft
 
 # Docker
 docker run --rm -v "$PWD:/scan" anchore/syft scan dir:/scan -o cyclonedx-json
+
+# Install script into a user-owned dir (-b sets the target; no sudo needed)
+curl -sSfL https://get.anchore.io/syft | sh -s -- -b "$HOME/.local/bin"
 ```
 
 Other paths (consult [sf-gh][sf-gh]): Scoop, Chocolatey, Nix.
@@ -158,8 +158,9 @@ and language packages (Ruby, Java, JavaScript, Python, .NET, Go, PHP,
 Rust).
 
 ```bash
-# Install
-curl -sSfL https://get.anchore.io/grype | sudo sh -s -- -b /usr/local/bin
+# Install (Homebrew, or the install script into a user-owned dir - no sudo)
+brew install grype
+# curl -sSfL https://get.anchore.io/grype | sh -s -- -b "$HOME/.local/bin"
 
 # Scan the Syft-generated SBOM (recommended)
 grype sbom:./sbom.json

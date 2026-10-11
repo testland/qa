@@ -9,6 +9,7 @@ description: "Runs dead-dependency analysis across JS, Python, and Rust projects
   exploitable ones before sprint planning; sibling cve-exploitability-triage ranks by EPSS/KEV exploitation signal, not code reachability."
 metadata:
   keywords: "reachability, dead-dependencies, sca, depcheck, knip, vulture, cargo-machete, prioritization"
+  version: "1.2.8"
 ---
 
 # reachability-analyzer

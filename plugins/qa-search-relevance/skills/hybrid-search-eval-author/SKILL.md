@@ -3,6 +3,7 @@ name: hybrid-search-eval-author
 description: "Evaluates hybrid retrieval pipelines (BM25 + vector + reranker) end-to-end: authors ground-truth judgment sets, computes nDCG@k and MRR over fused results, measures the lift from Reciprocal Rank Fusion vs weighted fusion vs single-stage retrieval, and quantifies reranker (cross-encoder/Cohere/bge) impact. Use when a production system combines lexical and semantic retrieval and you need a numeric relevance baseline, fusion-strategy comparison, or evidence that a reranker is earning its latency cost."
 metadata:
   keywords: "hybrid-search, reciprocal-rank-fusion, rrf, bm25, ndcg, mrr, reranker, cross-encoder, cohere-rerank, opensearch, elasticsearch"
+  version: "1.2.6"
 ---
 
 # hybrid-search-eval-author

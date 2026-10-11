@@ -3,6 +3,7 @@ name: notebook-ci-pipeline-author
 description: "The single home for Jupyter notebook testing: wires parameterized execution (papermill), output regression (nbval), function-level unit tests (testbook), output stripping (nbstripout), and artifact upload into one working GitHub Actions CI pipeline, with per-tool depth for papermill (parameters tag, CLI/API, sweeps) and nbval (strict/lax modes, per-cell markers, sanitize config) in references/. Includes a notebook PR review checklist covering untested notebooks, --nbval-lax misuse, hardcoded credentials, non-deterministic output cells, missing parameters tags, and committed outputs, with BLOCK / WARN / INFO severities and a BLOCK-or-PASS verdict. Use when notebooks must run as parameterized regression jobs in CI, when a repo ships .ipynb files whose outputs must stay stable, or when a PR that adds or modifies notebooks needs a structured quality review."
 metadata:
   keywords: "notebook-ci, papermill, nbval, testbook, github-actions, nbstripout, jupyter, pipeline"
+  version: "1.2.10"
 ---
 
 # notebook-ci-pipeline-author

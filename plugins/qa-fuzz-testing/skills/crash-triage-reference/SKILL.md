@@ -13,8 +13,8 @@ reading crash output from ASan, UBSan, and MSan; distinguishing
 LIKELY-EXPLOITABLE from BENIGN findings; collapsing duplicates by stack-hash;
 and minimizing reproducers. The "Bulk triage workflow" section applies these
 steps across a full artifact directory and ends in a BLOCK / PASS verdict.
-For sanitiser build flags and compatibility, see
-`coverage-guided-fuzzing` `references/sanitizer-integration.md`.
+For sanitiser build flags and compatibility, see the sanitizer-integration
+reference in the sibling `coverage-guided-fuzzing` skill.
 
 ## When to use
 
@@ -95,8 +95,8 @@ UBSan's runtime is "not expected to produce false positives" (per
 [clang.llvm.org/docs/UndefinedBehaviorSanitizer.html](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)),
 but its production use needs care: recovery modes that continue execution
 instead of aborting can mask bugs from the fuzzer. Always build with
-`-fno-sanitize-recover=all` for fuzzing (see `coverage-guided-fuzzing`
-`references/sanitizer-integration.md`).
+`-fno-sanitize-recover=all` for fuzzing (see the sanitizer-integration
+reference in `coverage-guided-fuzzing`).
 
 ## Reading MSan crash output
 
@@ -353,6 +353,6 @@ Report template:
   `-artifact_prefix`, `-rss_limit_mb`):
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html)
 - Sibling skill: `coverage-guided-fuzzing` - the umbrella whose
-  `references/sanitizer-integration.md` (build flags, sanitiser
-  compatibility) and `references/corpus-management.md` (corpus
+  sanitizer-integration reference (build flags, sanitiser
+  compatibility) and corpus-management reference (corpus
   discipline, seed selection) feed this triage

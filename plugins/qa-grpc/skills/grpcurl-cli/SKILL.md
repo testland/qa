@@ -243,7 +243,9 @@ jobs:
         run: |
           # release assets are version-stamped; bump the tag on upgrade
           curl -L https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_x86_64.tar.gz | tar xz
-          sudo mv grpcurl /usr/local/bin/
+          # user-owned bin dir on PATH: no sudo, no write to /usr/local/bin
+          mkdir -p "$HOME/.local/bin" && mv grpcurl "$HOME/.local/bin/"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Verify health endpoint
         run: |
           grpcurl -cacert ./certs/ca.crt \
@@ -316,6 +318,8 @@ This finds methods registered in reflection but returning
 
 - grpcurl README:
   [github.com/fullstorydev/grpcurl](https://github.com/fullstorydev/grpcurl/blob/master/README.md).
+- `$GITHUB_PATH` for a user-owned install dir in CI:
+  [GitHub Actions: adding a system path](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#adding-a-system-path).
 - Companion catalogs:
   `buf-cli-lint-breaking-build` (references/versioning-strategy.md),
   `grpc-streaming-test-author` (references/status-codes.md).

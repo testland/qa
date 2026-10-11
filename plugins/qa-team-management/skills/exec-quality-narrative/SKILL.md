@@ -3,6 +3,7 @@ name: exec-quality-narrative
 description: "Build-an-X workflow that turns already-computed quality data - weekly digests, KPI roll-ups, DORA delivery metrics, escape-defect trends, OKR grading - into an executive or QBR narrative structured by the Minto Pyramid Principle: governing answer first, MECE-grouped support beneath it, SCQA opening (Barbara Minto, The Pyramid Principle, ISBN 978-0273710516). Distinct from single-team digest computation (which computes the RAG digest from raw CI and tracker signals; this skill consumes such digests and writes the upward story), from portfolio-review aggregation (which aggregates teams into a portfolio review; this skill is the communication layer either output feeds), and from QA OKR authoring (forward-looking commitments; this skill narrates what happened and what it means). Use before a QBR, board update, or exec review when the data exists but the story does not."
 metadata:
   keywords: "executive-narrative, qbr, minto-pyramid, dora-metrics, quality-reporting, scqa"
+  version: "1.1.7"
 ---
 
 # exec-quality-narrative
