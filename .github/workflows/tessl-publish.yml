@@ -8,8 +8,11 @@ name: tessl-publish
 # there a duplicate version is the expected no-op rather than an error.
 #
 # Eval scenarios are NOT published by default: uploading them auto-starts a scored
-# eval run per skill, which spends the org's Tessl credit allowance. Run this
-# workflow manually with publish_evals=true to refresh them deliberately.
+# eval run per skill, which spends the org's Tessl credit allowance. Two exceptions:
+# skills listed in .github/tessl-eval-skills.txt always publish with their evals,
+# because the registry scores a skill by its latest version and one published
+# without evals is capped at 0.8 x Quality; and a manual run with
+# publish_evals=true uploads them for every skill it publishes.
 on:
   push:
     branches: [main]
@@ -47,12 +50,17 @@ jobs:
           BEFORE: ${{ github.event.before }}
           AFTER: ${{ github.sha }}
           PUBLISH_EVALS: ${{ inputs.publish_evals }}
+          EVAL_LIST: .github/tessl-eval-skills.txt
         run: |
           set -uo pipefail
           # Publishing evals also auto-starts a scored eval run per skill, which spends the org's
-          # Tessl credit allowance, so it stays opt-in via workflow_dispatch.
-          if [ "${PUBLISH_EVALS:-false}" = true ]; then eval_flag=; else eval_flag=--skip-evals; fi
-          echo "eval scenarios: ${eval_flag:-published (eval runs will start)}"
+          # Tessl credit allowance, so it stays opt-in: per skill via $EVAL_LIST, or for every
+          # skill via workflow_dispatch.
+          if [ "${PUBLISH_EVALS:-false}" = true ]; then
+            echo "eval scenarios: published for every skill (eval runs will start)"
+          else
+            echo "eval scenarios: published only for skills listed in $EVAL_LIST"
+          fi
           if [ -n "${BEFORE:-}" ] && git rev-parse --verify --quiet "${BEFORE}^{commit}" >/dev/null 2>&1; then
             mode=incremental
             mapfile -t dirs < <(git diff --name-only "$BEFORE" "$AFTER" \
@@ -69,7 +77,11 @@ jobs:
           : > /tmp/tessl-failures.txt
           for dir in "${dirs[@]}"; do
             { [ -n "$dir" ] && [ -f "$dir/.tessl-plugin/plugin.json" ]; } || continue
-            echo "::group::Publishing $dir"
+            eval_flag=--skip-evals; note=
+            if [ "${PUBLISH_EVALS:-false}" = true ] || { [ -f "$EVAL_LIST" ] && grep -qxF "${dir##*/}" "$EVAL_LIST"; }; then
+              eval_flag=; note=' with evals (a scored eval run will start)'
+            fi
+            echo "::group::Publishing $dir$note"
             if out=$(tessl skill publish "$dir" --workspace testland --public $eval_flag 2>&1); then
               echo "$out"; count=$((count + 1))
             elif printf '%s' "$out" | grep -qiE 'not available|already exists|already published'; then
