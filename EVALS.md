@@ -146,7 +146,7 @@ rubrics when it did:
 
 ## Running
 
-Locally, the harness in `C:\GitHub\.qa-eval\pilot` runs three arms - A the real
+Locally, the `.qa-eval/pilot` harness runs three arms - A the real
 skill, B no skill, S an unrelated skill - and applies the deterministic gate
 - delivered, collects, executes, passes - before any model grades anything. A
 run that delivered no test file is not a low score, it is not a result.
