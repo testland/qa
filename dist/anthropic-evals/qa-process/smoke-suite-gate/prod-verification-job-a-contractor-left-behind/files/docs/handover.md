@@ -7,8 +7,8 @@ The file works. Two things I did not get to:
   real customer address has a plus sign in that position. Half an hour of work
   and INC-3312 cannot happen again.
 - The purchase check wants its own card so finance stop seeing it on the
-  company statement. Ask Ray for a dedicated one and put the number in a secret
-  instead of in the file.
+  company statement. Ask Ray for a dedicated one and swap it into
+  `FINANCE_CARD_NUMBER`.
 
 Everything else I would leave exactly as it is. The signup check is the one
 that found the broken sign-in in May, and it is the only thing in the file that

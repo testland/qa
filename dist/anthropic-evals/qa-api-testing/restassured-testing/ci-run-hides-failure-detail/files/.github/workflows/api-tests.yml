@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     env:
-      API_TOKEN: "sk_live_9f3a71c4de8842b0a1"
+      API_TOKEN: "stg_xxxxxxxxxxxxxxxxxxxx"
     steps:
       - uses: actions/checkout@v5
 
