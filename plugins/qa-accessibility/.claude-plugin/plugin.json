@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-accessibility",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Accessibility testing against WCAG 2.2: automated scans with axe-core, pa11y, Lighthouse, WAVE and IBM Equal Access, plus manual screen-reader scripts. Covers keyboard navigation and focus traps, color contrast, ARIA authoring patterns, a CI gate that fails only on new violations, and per-page compliance reports by success criterion. A review agent (accessibility-code-critic) reads component source for WCAG anti-patterns.",
   "author": {
     "name": "testland",

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-localization",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Localization and internationalization testing: string coverage, pseudo-localization, right-to-left layouts, and locale date, number and currency formats.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://testland.io/plugins/qa-localization",

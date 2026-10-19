@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-backend",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, and feature flags + experimentation.",
   "author": {
     "name": "testland",

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-game",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Game testing for Unity, Unreal and Godot: engine test frameworks, frame-time and memory profiling, gameplay record and replay, and multiplayer coverage. Includes the six-category game-test taxonomy and a platform certification overview (Sony TRC, Nintendo Lotcheck, Xbox Requirements, Steam Direct). An authoring agent (game-test-scenario-author) detects the engine, scaffolds the test tree, and writes one scenario per spec.",
   "author": {
     "name": "testland",

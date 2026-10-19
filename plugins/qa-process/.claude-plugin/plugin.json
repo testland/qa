@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-process",
-  "version": "1.12.6",
+  "version": "1.12.7",
   "description": "Test process and strategy: risk-based testing, test strategies, Definition of Done, smoke gates, test pyramid balance, effort estimates and post-mortems. Also covers E2E suite budgets, test ideas from stories and live features, framework choice, and attack-surface checklists. Agents (release-readiness-checker, quality-coach, release-engineer) run multi-gate go / no-go checks, audit work against the Definition of Done, and walk a release runbook with human gates.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://testland.io/plugins/qa-process",

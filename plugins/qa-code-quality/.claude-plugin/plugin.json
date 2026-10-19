@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-code-quality",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Production code quality checks: SonarQube maintainability gates, Lizard complexity limits, Madge circular dependencies, and Knip dead-code detection. A critic agent (code-quality-critic) merges the tool reports, dedupes overlapping findings, and separates fix-now items from the backlog. Production code only; test-code hygiene lives in qa-test-review.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://testland.io/plugins/qa-code-quality",

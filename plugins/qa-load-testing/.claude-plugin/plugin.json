@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-load-testing",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "Load and performance testing with k6 and JMeter, Lighthouse CI for Web Vitals, SLO-driven load plans, and performance budget gates. Covers tool choice and load profiles (with Gatling and Locust references), per-interaction INP budgets, flame-graph analysis, and database query-plan analysis.",
   "author": {
     "name": "testland",

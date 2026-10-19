@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-bdd",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "description": "Behavior-driven development with Cucumber, Behave and Reqnroll: Gherkin from user stories and acceptance criteria, step libraries, and living docs. Converts stories, acceptance-criteria lists, manual steps or raw specs into Gherkin, keeps step definitions DRY, and covers SpecFlow-to-Reqnroll migration. Agents (bdd-scenario-author, gherkin-style-reviewer) write scenarios with step stubs and flag imperative steps and technical leakage.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://testland.io/plugins/qa-bdd",

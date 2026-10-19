@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-compliance",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Compliance testing for GDPR, CCPA/CPRA, HIPAA, PCI DSS v4.0, SOC 2 and ISO/IEC 27001: control tests, audit-trail tests, and evidence collection. Scores existing tests and evidence against a framework's criteria, packages SOC 2 Type II evidence for auditors, and runs an adversarial readiness review.",
   "author": {
     "name": "testland",

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-bug-repro",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "Bug reproduction and triage: well-formed bug reports, minimal failing tests built from issue reports, and CI failure classification before a fix starts. Also classifies production escapes by root gap. Agents (bug-report-from-recording, bug-repro-builder, defect-pipeline-runner) turn Playwright traces and HAR files into bug reports, build the repro test, and run the weekly defect review that clusters the backlog and narrates trends.",
   "author": {
     "name": "testland",

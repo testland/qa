@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-flake-triage",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Flaky test triage: find the condition a flake depends on, quarantine it with an expiry date, fix known flake patterns, and track flake rates. Agents (e2e-flake-bisector, regression-bisector) rerun a test under varied conditions with a shared-state isolation stage, and run git bisect to find the commit that introduced a regression, with a perf-measurement mode.",
   "author": {
     "name": "testland",

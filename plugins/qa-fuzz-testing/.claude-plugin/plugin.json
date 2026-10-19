@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-fuzz-testing",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Coverage-guided fuzzing with libFuzzer, AFL++, cargo-fuzz, Go native fuzzing, Atheris and Jazzer, plus sanitizer crash triage. Covers fuzzer choice, corpus management, sanitizer integration, and ASan / UBSan / MSan crash classification with bulk triage. A builder agent (fuzz-target-author) scaffolds a fuzz harness from a function signature. Binary and system-level fuzzing, distinct from qa-property-based and qa-api-testing/schemathesis-fuzzing.",
   "author": {
     "name": "testland",

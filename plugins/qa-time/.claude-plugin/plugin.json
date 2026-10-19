@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-time",
-  "version": "1.2.25",
+  "version": "1.2.26",
   "description": "Time and timezone testing: fake clocks across runtimes, DST transitions, leap seconds, and timezone test matrices built from a codebase's date handling. Fake clocks cover freezegun, Jest and Sinon fake timers, timecop, java.time.Clock, .NET TimeProvider and libfaketime. A critic agent (time-handling-critic) flags naive now() calls and DST-unsafe arithmetic.",
   "author": {
     "name": "testland",

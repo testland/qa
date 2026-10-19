@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-web-e2e",
-  "version": "1.11.4",
+  "version": "1.11.5",
   "description": "Web E2E testing with Playwright, Cypress, Selenium and WebdriverIO, plus cloud grids, a self-hosted Selenium Grid 4, and cross-browser test matrices. Covers BrowserStack, Sauce Labs and LambdaTest, traffic-based T1/T2/T3 browser tiers, and a framework decision guide. Agents (playwright-codegen-reviewer, automation-harness-bootstrapper) refactor recorded Playwright or Cypress Studio specs and scaffold a full E2E harness for a repo with no suite.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://testland.io/plugins/qa-web-e2e",

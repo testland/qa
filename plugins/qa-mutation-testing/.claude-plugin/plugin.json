@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-mutation-testing",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Mutation testing with StrykerJS, Stryker.NET, PIT, mutmut and Mull: one canonical tool per language, plus triage of surviving mutants. Survivor triage classifies why each mutant lived (missing case, weak assertion, equivalent mutant) and drafts the tests that kill it.",
   "author": {
     "name": "testland",
