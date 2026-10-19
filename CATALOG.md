@@ -9,7 +9,7 @@ Within each category, plugins are sorted by **Total** (skills + agents); larger 
 
 ## Foundations
 
-_Test process, environment, data, reporting, impact, roles, review._
+_Test process and strategy, test data, environments, reporting, impact analysis, test review, test management and QA team management._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -24,7 +24,7 @@ _Test process, environment, data, reporting, impact, roles, review._
 
 ## Functional testing
 
-_API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit tests._
+_API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutation and property-based testing, and unit tests per language._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -46,7 +46,7 @@ _API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit te
 
 ## Quality engineering
 
-_Data quality, visual regression, accessibility, localization, charts, PDF/print, modern web._
+_Accessibility, visual regression, data quality, localization, PDF and print output, browser extensions and progressive web apps._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -60,7 +60,7 @@ _Data quality, visual regression, accessibility, localization, charts, PDF/print
 
 ## Security & compliance
 
-_SAST, DAST, SCA, secrets, SBOM, compliance._
+_SAST, DAST, SCA, secrets and SBOM scanning, infrastructure as code, fuzzing, compliance, test-data privacy and multi-tenant isolation._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -73,7 +73,7 @@ _SAST, DAST, SCA, secrets, SBOM, compliance._
 
 ## Operations & resilience
 
-_Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
+_Flaky-test triage, bug reproduction, defect management, load testing, resilience drills, and shift-left and shift-right checks._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -87,7 +87,7 @@ _Flake triage, bug repro, chaos, resilience drills, shift-right/left, load._
 
 ## Backend & distributed systems
 
-_DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS, serverless, time & timezones._
+_DB migrations, async jobs, caching, concurrency, distributed tracing, saga and CQRS, serverless, and time and timezones._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -102,7 +102,7 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS
 
 ## Integrations & protocols
 
-_GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature flags, experimentation._
+_GraphQL, gRPC, real-time protocols, auth flows, notifications, payments, feature flags and A/B experiments._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -116,7 +116,7 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature
 
 ## AI & ML
 
-_LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, search relevance._
+_LLM evaluation, ML model testing, AI-assisted test generation and review, and search relevance._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -127,7 +127,7 @@ _LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, 
 
 ## Tooling
 
-_IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
+_CI integration, CLI tool testing, code-quality gates and manual testing._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
@@ -138,7 +138,7 @@ _IaC, CI integration, CLI tools, code quality, compatibility, manual testing._
 
 ## Role bundles
 
-_One-command role installs - each bundles a curated capability set as dependencies: qa-starter essentials plus frontend, backend, security, performance, mobile/desktop, AI/ML & data, and leadership._
+_One-command role installs: each bundle pulls in the plugins one QA role needs, from qa-starter essentials to leadership._
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
