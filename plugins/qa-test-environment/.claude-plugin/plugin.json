@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-environment",
   "version": "1.4.3",
-  "description": "Test environment management: 4 skills (testcontainers, docker-compose-tests, feature-flag-test-harness, playwright-fixture-builder) and 2 agents (db-snapshot-restore, test-environment-bootstrapper). Composes with e2e-flake-bisector in qa-flake-triage (its shared-state isolation stage) for shared-state diagnosis.",
+  "description": "Test environment setup: Testcontainers and Docker Compose services, Playwright fixtures, database snapshot and restore, and flag-aware test harnesses. Agents (test-environment-bootstrapper, db-snapshot-restore) wire a full integration environment for a greenfield service and reset the database between tests. Shared-state diagnosis composes with e2e-flake-bisector in qa-flake-triage.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

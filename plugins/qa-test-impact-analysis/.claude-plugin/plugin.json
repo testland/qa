@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-impact-analysis",
   "version": "1.2.0",
-  "description": "Test impact analysis (TIA) and regression-suite hygiene: 2 skills (regression-suite-selector, test-removal-criteria) and 1 agent (regression-suite-curator). Selector cuts per-PR run time; the curator manages long-term suite signal/noise at quarterly and sprint grains, gated by test-removal-criteria.",
+  "description": "Test impact analysis: run only the tests a change affects, and keep the regression suite lean with evidence-based test removal. The selector cuts per-PR run time; a curation agent (regression-suite-curator) reviews per-test signal and noise at quarterly and sprint grains, gated by the removal criteria.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

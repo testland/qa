@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-shift-left",
   "version": "1.5.1",
-  "description": "Shift-left QA: 3 skills (spec-testability-heuristics with the pre-implementation review workflow, non-functional-requirement-extractor, stride-threat-modeling with the from-spec workflow). Acceptance-criteria extraction and Gherkin coverage mapping moved to qa-bdd; data-contract extraction moved to qa-data-quality.",
+  "description": "Shift-left QA: testability reviews of specs before implementation, non-functional requirements turned into testable thresholds, and STRIDE threat modeling. Acceptance-criteria extraction and Gherkin coverage mapping live in qa-bdd; data-contract extraction lives in qa-data-quality.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

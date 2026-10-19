@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-ai-assisted",
   "version": "1.4.0",
-  "description": "AI-assisted test generation + curation: 3 skills (ai-test-generator, ai-spec-coverage-mapper, model-based-test-graph-author) and 2 agents (ai-test-curator, ai-test-shallow-coverage-critic). Covers spec-to-test generation with confidence scoring, spec coverage gap mapping, the full MBT graph-to-suite pipeline, and adversarial curation including the input-domain coverage audit.",
+  "description": "AI-assisted test generation: LLM-written tests from natural-language specs with confidence scoring, spec coverage gap mapping, and model-based testing. Builds state-machine models and turns them into test suites, and adds adversarial review agents (ai-test-curator, ai-test-shallow-coverage-critic) that catch hallucinated APIs, weak assertions, and happy-path-only coverage.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"

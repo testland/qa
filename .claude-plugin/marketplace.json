@@ -13,462 +13,462 @@
     {
       "name": "qa-data-quality",
       "source": "./plugins/qa-data-quality",
-      "description": "Data quality testing for analytical pipelines: 5 skills (dbt-testing, great-expectations, soda-checks, data-quality-gate, data-quality-conventions) and 2 agents (schema-diff-reviewer, data-anomaly-triager).",
+      "description": "Data quality testing for analytical pipelines: dbt tests, Great Expectations, Soda checks, data contracts, and a go / no-go release gate. Extracts data contracts from data-product specs and covers tool choice and severity conventions. Agents (schema-diff-reviewer, data-anomaly-triager) review schema diffs for breaking changes and classify failed checks by anomaly type and likely owner.",
       "strict": true,
       "category": "quality-engineering"
     },
     {
       "name": "qa-visual-regression",
       "source": "./plugins/qa-visual-regression",
-      "description": "Visual regression testing: 7 skills (percy-visual-regression-testing, chromatic-visual-regression-testing, playwright-snapshots with the responsive breakpoint matrix, storybook-visual-regression-testing, chart-render-tests covering Chart.js / D3 / Vega chart regression, visual-baseline-conventions, visual-baseline-gate emitting binding gate artifacts) and 2 agents (visual-diff-classifier with a per-PR summary mode, visual-baseline-curator).",
+      "description": "Visual regression testing with Percy, Chromatic, Playwright screenshots and Storybook, plus chart rendering tests for Chart.js, D3 and Vega. Covers responsive breakpoint matrices, baseline conventions, and a binding baseline gate. Agents (visual-diff-classifier, visual-baseline-curator) sort diffs into intentional, incidental or regression and propose an initial baseline set.",
       "strict": true,
       "category": "quality-engineering"
     },
     {
       "name": "qa-contract-testing",
       "source": "./plugins/qa-contract-testing",
-      "description": "Contract testing for microservices: 5 skills (contract-compatibility-gate, graphql-schema-regression, openapi-contract-diff, pact-contract-testing, protobuf-compat-checking) and 2 agents (contract-drift-investigator, contract-test-scaffolder).",
+      "description": "Contract testing for microservices: Pact consumer and provider tests, OpenAPI, GraphQL and Protobuf breaking-change checks, and a combined deploy gate. The gate aggregates Pact can-i-deploy, oasdiff, graphql-inspector and buf breaking into one go / no-go verdict. Agents (contract-drift-investigator, contract-test-scaffolder) trace contract drift to its source and scaffold contract tests from a spec.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-flake-triage",
       "source": "./plugins/qa-flake-triage",
-      "description": "Flake triage: 4 skills (flake-dashboard-author, flake-pattern-reference, flake-remediation-guide, flaky-test-quarantine) and 5 agents (ai-flake-detector, e2e-flake-bisector, e2e-test-trend-reporter, parallel-isolation-checker, regression-bisector).",
+      "description": "Flaky test triage: find the condition a flake depends on, quarantine it with an expiry date, fix known flake patterns, and track flake rates. Agents (e2e-flake-bisector, regression-bisector) rerun a test under varied conditions with a shared-state isolation stage, and run git bisect to find the commit that introduced a regression, with a perf-measurement mode.",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-bug-repro",
       "source": "./plugins/qa-bug-repro",
-      "description": "Bug reproduction workflow: 1 skill (bug-report-template) and 9 agents (bug-report-from-recording, bug-repro-builder, crash-stack-trace-analyzer, defect-clusterer, defect-pipeline-runner, defect-trend-narrator, escape-defect-analyzer, failure-classifier, test-failure-debugger).",
+      "description": "Bug reproduction and triage: well-formed bug reports, minimal failing tests built from issue reports, and CI failure classification before a fix starts. Also classifies production escapes by root gap. Agents (bug-report-from-recording, bug-repro-builder, defect-pipeline-runner) turn Playwright traces and HAR files into bug reports, build the repro test, and run the weekly defect review that clusters the backlog and narrates trends.",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-shift-left",
       "source": "./plugins/qa-shift-left",
-      "description": "Shift-left QA: 4 skills (acceptance-criteria-extractor, gherkin-scenario-coverage-map, data-contract-extractor, nfr-extractor) and 4 agents (definition-of-done-checker, spec-to-suite-orchestrator, testability-reviewer, threat-model-from-spec).",
+      "description": "Shift-left QA: testability reviews of specs before implementation, non-functional requirements turned into testable thresholds, and STRIDE threat modeling. Acceptance-criteria extraction and Gherkin coverage mapping live in qa-bdd; data-contract extraction lives in qa-data-quality.",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-api-testing",
       "source": "./plugins/qa-api-testing",
-      "description": "API testing: 8 skills (api-chaos-runner, api-testing-getting-started, karate-testing, postman-collections, restassured-testing, restler-fuzzing, schemathesis-fuzzing, tavern-testing) and 2 agents (api-test-author, api-test-tool-selector).",
+      "description": "API testing with Postman and Newman, REST Assured and Karate, plus Schemathesis and RESTler fuzzing and API tests run under injected network chaos. An authoring agent (api-test-author) picks the tool from observable project facts and writes one functional test per endpoint and scenario.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-load-testing",
       "source": "./plugins/qa-load-testing",
-      "description": "Load and performance testing: 9 skills (load-testing-overview - tool selection, load profiles, incident triage, Gatling/Locust references; k6-load-testing with latency-percentile interpretation; jmeter-load-testing; lighthouse-perf with budget authoring; web-vitals-inp-deep for per-interaction INP budgets; perf-budget-gate; flame-graph-analyzer; db-query-plan-analyzer; slo-load-test-plan).",
+      "description": "Load and performance testing with k6 and JMeter, Lighthouse CI for Web Vitals, SLO-driven load plans, and performance budget gates. Covers tool choice and load profiles (with Gatling and Locust references), per-interaction INP budgets, flame-graph analysis, and database query-plan analysis.",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-test-data",
       "source": "./plugins/qa-test-data",
-      "description": "Test data engineering: 17 skills (bogus-data, boundary-value-generator, e2e-test-narrative-builder, factory-bot-data, faker-data, golden-file-conventions, malicious-payload-bank, mimesis-data, mountebank-imposters, msw-handlers, negative-test-generator, pairwise-test-case-generator, seed-data-curator, synthetic-data-tool-selector, synthetic-pii-generator, test-data-patterns, wiremock-stubs) and 3 agents (golden-file-manager, mock-server-composer, test-data-setup-agent).",
+      "description": "Test data engineering: Faker and factories, WireMock and MSW API mocks, seed datasets, golden files, and boundary, pairwise and negative test inputs. Includes FactoryBot, Mimesis and Bogus, a Mountebank reference, synthetic PII, and a malicious payload bank. Agents (golden-file-manager, test-data-setup-agent) maintain snapshot baselines and set up a feature's full test-data layer.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-accessibility",
       "source": "./plugins/qa-accessibility",
-      "description": "Atomic accessibility coverage: 13 skills (a11y-violation-gate, aria-authoring-patterns, axe-a11y, ibm-equal-access-a11y, lighthouse-a11y, pa11y-a11y, screen-reader-test-author, wave-a11y, wcag-checklist-builder, wcag-color-contrast, wcag-focus-trap, wcag-keyboard-navigation, wcag-compliance-reporter) and 2 agents (accessibility-code-critic, screen-reader-test-executor).",
+      "description": "Accessibility testing against WCAG 2.2: automated scans with axe-core, pa11y, Lighthouse, WAVE and IBM Equal Access, plus manual screen-reader scripts. Covers keyboard navigation and focus traps, color contrast, ARIA authoring patterns, a CI gate that fails only on new violations, and per-page compliance reports by success criterion. A review agent (accessibility-code-critic) reads component source for WCAG anti-patterns.",
       "strict": true,
       "category": "quality-engineering"
     },
     {
       "name": "qa-test-environment",
       "source": "./plugins/qa-test-environment",
-      "description": "Test environment management: 4 skills (docker-compose-tests, feature-flag-test-harness, playwright-fixture-builder, testcontainers) and 2 agents (db-snapshot-restore, test-environment-bootstrapper). Composes with parallel-isolation-checker in qa-flake-triage for shared-state diagnosis.",
+      "description": "Test environment setup: Testcontainers and Docker Compose services, Playwright fixtures, database snapshot and restore, and flag-aware test harnesses. Agents (test-environment-bootstrapper, db-snapshot-restore) wire a full integration environment for a greenfield service and reset the database between tests. Shared-state diagnosis composes with e2e-flake-bisector in qa-flake-triage.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-reporting",
       "source": "./plugins/qa-test-reporting",
-      "description": "Test reporting + coverage analytics: 15 skills - parsers (junit-xml-analysis, lcov-analysis, cobertura-analysis, allure-reports), build-an-X reporters (coverage-diff-reporter, test-run-summary-author), commercial integrations (extentreports, currents-integration, testrail-integration, xray-integration, zephyr-integration), per-language coverage analyzers (jest-coverage-analysis, jacoco-analysis, coverage-py-analysis), and test-coverage-targeter - plus 2 agents (daily-test-suite-aggregator, release-quality-report-agent).",
+      "description": "Test reporting and coverage analytics: JUnit XML, LCOV and Cobertura parsing, Allure reports, coverage diffs, and test run summaries for pull requests. Also covers JaCoCo and coverage.py analysis, risk-ranked coverage targets, TestRail / Xray / Zephyr Scale result sync, and Currents analytics. Agents (daily-test-suite-aggregator, release-quality-report-agent) roll up daily results across suites and assemble a release-quality go / no-go report. Jest and Vitest coverage lives in qa-unit-tests-js.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-impact-analysis",
       "source": "./plugins/qa-test-impact-analysis",
-      "description": "Test impact analysis + regression-suite hygiene: 2 skills (regression-suite-selector, coverage-debt-tracker) and 2 agents (test-suite-pruner, regression-suite-curator).",
+      "description": "Test impact analysis: run only the tests a change affects, and keep the regression suite lean with evidence-based test removal. The selector cuts per-PR run time; a curation agent (regression-suite-curator) reviews per-test signal and noise at quarterly and sprint grains, gated by the removal criteria.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-review",
       "source": "./plugins/qa-test-review",
-      "description": "Test code reviewers for test files only — production code is out of scope. 5 skills (object-model-patterns, test-code-conventions, test-framework-blueprint, test-isolation-patterns, test-step-design-patterns) and 6 agents (assertion-quality-reviewer, e2e-selector-quality-critic, framework-architecture-auditor, mocking-anti-pattern-detector, test-code-critic, test-suite-health-auditor).",
+      "description": "Test code review for test files only: conventions, isolation, object-model patterns, framework architecture audits, and test suite health checks. Includes a framework blueprint for new suites and a test design scorecard. Agents (test-code-critic, e2e-selector-quality-critic, framework-architecture-auditor, test-suite-health-auditor) review structure, assertions and mocking, selector fragility, framework architecture, and suite health. Production code is out of scope.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-manual-testing",
       "source": "./plugins/qa-manual-testing",
-      "description": "Manual scripted + exploratory testing: 14 skills (bug-bash-facilitator, crusspic-stmpl-heuristic, decision-table-test-design, exploratory-tours-reference, fcc-cuts-vids-heuristic, hiccupps-f-heuristic, manual-test-debrief, manual-test-script-author, manual-testing-getting-started, sbtm-reference, sfdpot-heuristic, state-transition-test-design, test-execution-checklist, uat-script-author) and 3 agents (charter-coach, session-debrief-coach, test-script-quality-critic). Covers SBTM, Whittaker's seven tours, Bach + Bolton's heuristic catalogues (HICCUPPS-F oracles, SFDPOT variation, FCC CUTS VIDS modelling, CRUSSPIC STMPL quality criteria), UAT, bug bashes, and PROOF debriefs.",
+      "description": "Manual and exploratory testing: scripted test cases, session-based exploratory charters, decision-table and state-transition test design, and bug bashes. Covers SBTM, Whittaker's tours, Bach and Bolton's heuristics, UAT scripts, and PROOF debriefs. A critic agent (test-script-quality-critic) flags vague preconditions and bundled steps in authored scripts.",
       "strict": true,
       "category": "tooling"
     },
     {
       "name": "qa-property-based",
       "source": "./plugins/qa-property-based",
-      "description": "Property-based testing libraries: 5 skills covering Hypothesis (Python), fast-check (JS/TS), proptest (Rust), jqwik (JVM), and QuickCheck (Haskell) + ScalaCheck - each ships authoring + run + shrinking + CI integration - plus 3 agents (property-based-test-author, property-based-tool-selector, vacuous-property-critic).",
+      "description": "Property-based testing with Hypothesis (Python), fast-check (JS/TS), proptest (Rust) and jqwik (JVM): generators, shrinking, and CI integration. Agents (property-based-test-author, vacuous-property-critic) write one property per invariant and flag assume-heavy or always-true properties.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-shift-right",
       "source": "./plugins/qa-shift-right",
-      "description": "Production-side QA per ISTQB-canonical shift right (\"a test approach to test a system continuously in production\"): 4 skills (feature-flag-experiment-validator, prod-canary-validator, rum-to-synthetic-gap-analyzer, synthetic-monitor-author) and 2 agents (canary-and-experiment-coordinator, observability-to-test).",
+      "description": "Shift-right production QA: synthetic monitors, canary validation against baseline metrics, A/B experiment significance checks, and release runbooks. Follows the ISTQB definition of shift right (testing a system continuously in production) and covers RUM coverage gaps and multi-team cutovers. An agent (observability-to-test) turns production alerts and errors into regression tests.",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-mobile",
       "source": "./plugins/qa-mobile",
-      "description": "Mobile + mobile-web E2E testing: 11 skills covering xcuitest-suite, espresso-suite, appium-testing, detox-testing, maestro-flows, flutter-testing, mobile-device-matrix-toolkit, mobile-web-emulation-runner, touch-gesture-tester, mobile-web-perf-budget, mobile-a11y-test-author - plus 3 agents (mobile-driver-selector, mobile-test-author, mobile-test-scaffolder).",
+      "description": "Mobile app testing: XCUITest and Espresso for native apps, Appium, Detox and Maestro across platforms, Flutter tests, and mobile accessibility checks. XCUITest also covers macOS desktop apps, and a tiered device matrix keeps CI cost down. An authoring agent (mobile-test-author) detects the driver, scaffolds a harness when none exists, and writes one test per spec. Mobile-web viewport emulation lives in qa-web-e2e.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-mutation-testing",
       "source": "./plugins/qa-mutation-testing",
-      "description": "Mutation testing across languages: 5 skills (mull-mutation, mutmut-mutation, pitest-mutation, stryker-mutation, stryker-net-mutation) and 2 agents (mutation-survivor-explainer, mutation-tool-selector).",
+      "description": "Mutation testing with StrykerJS, Stryker.NET, PIT, mutmut and Mull: one canonical tool per language, plus triage of surviving mutants. Survivor triage classifies why each mutant lived (missing case, weak assertion, equivalent mutant) and drafts the tests that kill it.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-process",
       "source": "./plugins/qa-process",
-      "description": "Test process + methodology: 19 skills + 7 agents covering risk-based testing, DoD, test strategy, blameless post-mortems, release readiness, smoke gating, pyramid analysis, TDD coaching, E2E budgets.",
+      "description": "Test process and strategy: risk-based testing, test strategies, Definition of Done, smoke gates, test pyramid balance, effort estimates and post-mortems. Also covers E2E suite budgets, test ideas from stories and live features, framework choice, and attack-surface checklists. Agents (release-readiness-checker, quality-coach, release-engineer) run multi-gate go / no-go checks, audit work against the Definition of Done, and walk a release runbook with human gates.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-resilience",
       "source": "./plugins/qa-resilience",
-      "description": "Chaos engineering, fault injection, and resilience drills: 7 skills (chaos-experiment-author, chaos-mesh, toxiproxy-chaos, failure-injection-test-author, chaos-drill-protocol, dr-drill-runner, error-budget-tests). Chaos-experiment design with steady-state pre-flight validation and LitmusChaos/Gremlin routing, the chaos-drill run protocol with abort gates, Chaos Mesh, Toxiproxy, and combined HTTP+TCP fault injection, plus the DR-drill discipline (backup verification + restore-time / RTO measurement in references) and error-budget gating with burn-rate alerting and incident metrics.",
+      "description": "Chaos engineering and resilience drills: chaos experiment design, Chaos Mesh and Toxiproxy fault injection, disaster recovery drills, error-budget gates. Covers steady-state hypotheses with LitmusChaos and Gremlin routing, a drill run protocol with pre-flight and abort gates, combined HTTP and TCP fault injection, backup restore and RTO measurement, and burn-rate alerting with MTTR / MTBF / MTTD / MTTA incident metrics.",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-bdd",
       "source": "./plugins/qa-bdd",
-      "description": "BDD pipelines: 10 skills (acceptance-test-from-criteria, bdd-getting-started, bdd-step-library-curator, behave-testing, cucumber-testing, gherkin-from-stories, living-documentation-publisher, manual-step-to-gherkin, reqnroll-testing, specflow-testing) and 2 agents (bdd-scenario-author, gherkin-style-reviewer).",
+      "description": "Behavior-driven development with Cucumber, Behave and Reqnroll: Gherkin from user stories and acceptance criteria, step libraries, and living docs. Converts stories, acceptance-criteria lists, manual steps or raw specs into Gherkin, keeps step definitions DRY, and covers SpecFlow-to-Reqnroll migration. Agents (bdd-scenario-author, gherkin-style-reviewer) write scenarios with step stubs and flag imperative steps and technical leakage.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-localization",
       "source": "./plugins/qa-localization",
-      "description": "Localization (l10n) + i18n testing: 4 skills (i18n-string-coverage, locale-format-validator, pseudo-localization-runner, rtl-rendering-tester) and 1 agent (l10n-audit-runner).",
+      "description": "Localization and internationalization testing: string coverage, pseudo-localization, right-to-left layouts, and locale date, number and currency formats.",
       "strict": true,
       "category": "quality-engineering"
     },
     {
       "name": "qa-ai-assisted",
       "source": "./plugins/qa-ai-assisted",
-      "description": "AI-assisted test generation + curation: 3 skills (ai-spec-coverage-mapper, ai-test-generator, model-based-test-graph-author) and 3 agents (ai-test-curator, ai-test-shallow-coverage-critic, mbt-suite-builder).",
+      "description": "AI-assisted test generation: LLM-written tests from natural-language specs with confidence scoring, spec coverage gap mapping, and model-based testing. Builds state-machine models and turns them into test suites, and adds adversarial review agents (ai-test-curator, ai-test-shallow-coverage-critic) that catch hallucinated APIs, weak assertions, and happy-path-only coverage.",
       "strict": true,
       "category": "ai-ml"
     },
     {
       "name": "qa-web-e2e",
       "source": "./plugins/qa-web-e2e",
-      "description": "Web E2E framework wrappers + cross-browser strategy and grids: 8 skills (playwright-testing carrying the cross-browser matrix reference, cypress-testing, selenium-testing, webdriverio-testing, cloud-grid-e2e covering BrowserStack / Sauce Labs / LambdaTest, selenium-grid-4-runner for the self-hosted grid, browser-matrix-strategy-reference with the T1/T2/T3 tiering + compatibility budget + matrix review checklist, and the web-e2e-overview decision guide) and 2 agents (playwright-codegen-reviewer, which also reviews Cypress Studio recordings, and automation-harness-bootstrapper, which scaffolds a full E2E harness skeleton for a repo with no suite).",
+      "description": "Web E2E testing with Playwright, Cypress, Selenium and WebdriverIO, plus cloud grids, a self-hosted Selenium Grid 4, and cross-browser test matrices. Covers BrowserStack, Sauce Labs and LambdaTest, traffic-based T1/T2/T3 browser tiers, and a framework decision guide. Agents (playwright-codegen-reviewer, automation-harness-bootstrapper) refactor recorded Playwright or Cypress Studio specs and scaffold a full E2E harness for a repo with no suite.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-ci-integration",
       "source": "./plugins/qa-ci-integration",
-      "description": "CI/CD test workflow patterns: 4 skills (github-actions-test-jobs, gitlab-ci-test-jobs, jenkinsfile-test-stages, ci-test-job-conventions - the latter carries the CircleCI patterns in references/) and 1 agent (ci-pipeline-health-critic).",
+      "description": "CI/CD test pipelines for GitHub Actions, GitLab CI/CD and Jenkins: matrix builds, sharding, retries, test reports, and artifact handling. Shared conventions cover when to shard and retry, flake quarantine, and per-trigger cadence, with CircleCI patterns in references. A critic agent (ci-pipeline-health-critic) flags test-pipeline anti-patterns such as retries that mask flakiness.",
       "strict": true,
       "category": "tooling"
     },
     {
       "name": "qa-iac",
       "source": "./plugins/qa-iac",
-      "description": "Infrastructure-as-code testing + security policy: 4 skills (helm-chart-tester, policy-as-code-runner, checkov-policy, trivy-config - the tfsec successor, with the legacy tfsec workflow in its references) and 1 agent (terraform-plan-reviewer). Cross-scanner IaC finding triage is handled by security-finding-triager in the qa-security-scanning plugin.",
+      "description": "Infrastructure-as-code testing: Checkov and Trivy misconfiguration scans, OPA, Conftest and Cedar policy tests, Helm chart tests, Terraform plan review. Trivy config is the tfsec successor, with the legacy tfsec workflow in references. A review agent (terraform-plan-reviewer) flags destructive and security-degrading plan changes. Cross-scanner IaC triage is handled by security-finding-triager in qa-security-scanning.",
       "strict": true,
       "category": "security-compliance"
     },
     {
       "name": "qa-cli-tools",
       "source": "./plugins/qa-cli-tools",
-      "description": "CLI + TUI testing tools: 4 skills (bats-testing, cli-output-conventions, pester-cli-testing, tui-snapshot-tester).",
+      "description": "CLI and terminal UI testing: Bats for shell scripts and binaries, Pester for PowerShell, TUI snapshot tests, and conventions for testable CLI output. Snapshot tests capture rendered terminal frames as text or SVG and diff them on every run; the output conventions cover exit codes, stdout vs stderr, and machine-readable modes.",
       "strict": true,
       "category": "tooling"
     },
     {
       "name": "qa-llm-evaluation",
       "source": "./plugins/qa-llm-evaluation",
-      "description": "LLM and prompt evaluation: 7 skills (deepeval-evaluation, giskard-llm, langfuse-tracing, llm-regression-suite-author, openai-evals, promptfoo-evaluation, ragas-evaluation) and 2 agents (llm-red-team-planner, prompt-eval-reviewer). Covers the mainstream OSS LLM-eval ecosystem: Promptfoo + OpenAI Evals + DeepEval + Ragas for functional eval, Giskard for adversarial scan, Langfuse for production observability.",
+      "description": "LLM and prompt evaluation with Promptfoo, DeepEval and Ragas, Giskard vulnerability scans, Langfuse tracing, and golden-dataset regression suites. Audits eval suites for methodology errors. Agents (prompt-eval-reviewer, llm-red-team-planner) review an eval suite and plan adversarial probe campaigns across the OWASP LLM Top 10.",
       "strict": true,
       "category": "ai-ml"
     },
     {
       "name": "qa-db-migrations",
       "source": "./plugins/qa-db-migrations",
-      "description": "Database migration testing: 4 skills (atlas-migrations, flyway-migrations, liquibase-migrations, sqlmesh-migrations) and 2 agents (db-migration-performance-critic, migration-blast-radius-reviewer). Covers schema-change safety, blast-radius review, and rollback verification across the major migration tools.",
+      "description": "Database migration testing for Flyway, Liquibase and Atlas: classify every schema change by risk and review blast radius and locking before it ships. Sorts DDL and DML into an eight-category operation taxonomy. A review agent (migration-blast-radius-reviewer) covers blast radius plus DDL performance: CONCURRENTLY index builds, ACCESS EXCLUSIVE rewrites, post-migration ANALYZE, and lock-time estimates.",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-async-jobs",
       "source": "./plugins/qa-async-jobs",
-      "description": "Background job and queue testing: 8 skills (bullmq-tests, celery-tests, cron-job-test-author, idempotency-test-author, kafka-consumer-tests, rabbitmq-tests, sidekiq-tests, sqs-tests) and 1 agent (async-job-health-critic). Covers async job runners, queue patterns, scheduled jobs, and idempotency guarantees.",
+      "description": "Background job and queue testing for Sidekiq, Celery, BullMQ, SQS, RabbitMQ and Kafka consumers, plus cron schedules and idempotency guarantees. A read-only critic agent (async-job-health-critic) flags missing retry limits, absent dead-letter routing, and other at-least-once reliability defects in queue and worker code.",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-auth-flows",
       "source": "./plugins/qa-auth-flows",
-      "description": "Auth flow testing: 6 skills (auth0-tests, keycloak-tests, mfa-flow-test-author, oauth-flow-test-author, okta-tests, session-management-test-author) and 1 agent (token-storage-security-critic). Anchored on OAuth 2.0 / RFC 7636 PKCE / RFC 9700 / OWASP ASVS V3.",
+      "description": "Authentication flow testing: OAuth 2.0 with PKCE, multi-factor authentication, and session management, plus Keycloak, Auth0 and Okta integration tests. Anchored on RFC 7636, RFC 9700 and OWASP ASVS V3. A critic agent (token-storage-security-critic) flags tokens in localStorage, auth cookies missing httpOnly / Secure / SameSite, and tokens leaking into logs or URLs.",
       "strict": true,
       "category": "integrations-protocols"
     },
     {
       "name": "qa-notifications",
       "source": "./plugins/qa-notifications",
-      "description": "Notifications + messaging testing across email/SMS/push/webhooks: 7 skills (email-flow-test-author, in-app-notification-test-author, mailhog-testing, mailpit-testing, push-notification-test-author, sms-test-author, webhook-delivery-tester) and 1 agent (notification-delivery-critic).",
+      "description": "Notification testing across email, SMS, push and webhooks: Mailpit inboxes, Twilio test numbers, FCM, APNs and Web Push, and signed webhook delivery. Covers in-app notifications and legacy MailHog in references, and both webhook senders and receivers. A critic agent (notification-delivery-critic) flags missing idempotency keys, bounce handling, and other delivery defects.",
       "strict": true,
       "category": "integrations-protocols"
     },
     {
       "name": "qa-security-scanning",
       "source": "./plugins/qa-security-scanning",
-      "description": "Unified security scanning across five domains - SAST (semgrep-rules, sonarqube-rules, codeql-queries, language-native-sast, multi-tool-finding-triage), DAST (zap-baseline, nuclei-dast), SCA (snyk-test, osv-scanner, dependabot-config, renovate-config, npm-pip-maven-audit, reachability-analyzer, cve-exploitability-triage), secrets (gitleaks-scanning, trufflehog-scanning, secrets-rotation-runner), and SBOM + container (syft-generation, sbom-formats, trivy-image, vex-author): 21 skills and 1 agent (security-finding-triager), the cross-domain adversarial unifier that gates multi-scanner output into one BLOCK / PASS verdict per domain. Every scanner skill includes a mandatory False-positive triage section.",
+      "description": "Security scanning across SAST, DAST, SCA, secrets and SBOM: Semgrep, CodeQL, SonarQube, ZAP, Nuclei, Snyk, OSV-Scanner, gitleaks, Syft and Trivy. Also covers language-native SAST linters, Dependabot and Renovate, package-manager audits, reachability and CVE exploitability triage, secret rotation, and VEX. A gate agent (security-finding-triager) normalizes, dedupes and waiver-checks multi-scanner output, including IaC findings from qa-iac, into one BLOCK / PASS verdict per domain. Every scanner skill includes a false-positive triage section.",
       "strict": true,
       "category": "security-compliance"
     },
     {
       "name": "qa-compliance",
       "source": "./plugins/qa-compliance",
-      "description": "Compliance test patterns + readiness review: 8 skills (audit-trail-test-author, ccpa-test-patterns, compliance-evidence-generator, gdpr-test-patterns, hipaa-test-patterns, iso27001-test-patterns, pci-dss-control-test-author, soc2-evidence-collector) and 1 agent (compliance-readiness-reviewer). Covers regulated-industry test pattern catalogs.",
+      "description": "Compliance testing for GDPR, CCPA/CPRA, HIPAA, PCI DSS v4.0, SOC 2 and ISO/IEC 27001: control tests, audit-trail tests, and evidence collection. Scores existing tests and evidence against a framework's criteria, packages SOC 2 Type II evidence for auditors, and runs an adversarial readiness review.",
       "strict": true,
       "category": "security-compliance"
     },
     {
       "name": "qa-unit-tests-js",
       "source": "./plugins/qa-unit-tests-js",
-      "description": "JS/TS unit testing per-framework wrappers: 5 skills (ava-tests, jasmine-tests, jest-tests, mocha-tests, vitest-tests) and 1 agent (js-test-author). Per-framework lifecycle (configure / run / mock / coverage / CI). Does not duplicate qa-test-review test code hygiene.",
+      "description": "JavaScript and TypeScript unit testing with Jest and Vitest: configuration, mocking, coverage, CI, and choosing between the two. References cover Mocha maintenance, Jasmine-to-Jest migration, and deep coverage analysis. Test-code hygiene lives in qa-test-review.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-unit-tests-python",
       "source": "./plugins/qa-unit-tests-python",
-      "description": "Python unit testing per-framework wrappers: 5 skills (doctest-tests, nose2-tests, pytest-asyncio-patterns, pytest-tests, unittest-tests) and 1 agent (python-test-author).",
+      "description": "Python unit testing with pytest: fixtures, parametrize, markers, mocking, coverage and CI, plus async tests with pytest-asyncio. Covers framework choice and test conventions, with unittest and doctest as references.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-unit-tests-jvm",
       "source": "./plugins/qa-unit-tests-jvm",
-      "description": "JVM unit testing per-framework wrappers: 6 skills (assertj, junit5-tests, kotest-tests, scalatest, spock-tests, testng-tests) and 2 agents (jvm-framework-selector, jvm-test-author).",
+      "description": "JVM unit testing with JUnit 5: parameterized tests, lifecycle hooks, extensions, coverage and CI, plus framework choice for Java, Kotlin, Groovy and Scala. References cover Kotest, Spock, TestNG, ScalaTest and AssertJ.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-unit-tests-net",
       "source": "./plugins/qa-unit-tests-net",
-      "description": ".NET unit testing per-framework wrappers: 4 skills (fluentassertions, mstest-tests, nunit-tests, xunit-tests) and 2 agents (dotnet-test-author, dotnet-test-framework-selector).",
+      "description": ".NET unit testing with xUnit.net: Fact and Theory tests, fixtures, parallel execution and CI, with NUnit, MSTest and FluentAssertions as references. Recommends xUnit for new projects, follows an existing NUnit or MSTest convention, and notes the FluentAssertions v8 license change.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-unit-tests-go-rust",
       "source": "./plugins/qa-unit-tests-go-rust",
-      "description": "Go + Rust unit testing per-framework wrappers: 5 skills (cargo-test, ginkgo-tests, go-rust-mocking, go-test, rstest-tests) and 2 agents (go-rust-framework-selector, go-rust-test-author).",
+      "description": "Go and Rust unit testing: table-driven Go tests with t.Run subtests, benchmarks, native fuzzing and the race detector, plus cargo test with Criterion. Each language skill covers framework choice and test conventions, with Ginkgo and Go mocking, rstest and mockall as references.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-code-quality",
       "source": "./plugins/qa-code-quality",
-      "description": "Production code quality: 5 skills (sonarqube-maintainability-gate, codeclimate-config, lizard-complexity, madge-deps, knip-dead-code) and 1 agent (code-quality-critic). Production-only scope; test-code hygiene is owned by qa-test-review.",
+      "description": "Production code quality checks: SonarQube maintainability gates, Lizard complexity limits, Madge circular dependencies, and Knip dead-code detection. A critic agent (code-quality-critic) merges the tool reports, dedupes overlapping findings, and separates fix-now items from the backlog. Production code only; test-code hygiene lives in qa-test-review.",
       "strict": true,
       "category": "tooling"
     },
     {
       "name": "qa-ml-models",
       "source": "./plugins/qa-ml-models",
-      "description": "ML model testing: 7 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, model-performance-regression-gate, model-risk-evidence-matrix, notebook-ci-pipeline-author). Covers tabular + NLP + vision validation, drift monitoring with alert triage, group fairness with a risk-tiered promotion gate, per-prediction explainability, and the Jupyter notebook CI pipeline (papermill + nbval + testbook + nbstripout).",
+      "description": "ML model testing: Giskard and Deepchecks validation, Evidently drift monitoring, Fairlearn fairness metrics, and model performance regression gates. Assigns risk tiers with the fairness and explainability evidence each tier requires, and wires Jupyter notebook CI with papermill, nbval, testbook and nbstripout.",
       "strict": true,
       "category": "ai-ml"
     },
     {
       "name": "qa-distributed-tracing",
       "source": "./plugins/qa-distributed-tracing",
-      "description": "Distributed tracing assertion testing: 6 skills (jaeger-trace-tests, opentelemetry-trace-assertions, otel-collector-config-tester, tempo-trace-tests, trace-spec-author, zipkin-trace-tests) and 1 agent (trace-coverage-reviewer). Asserts on production trace shape (spans, attributes, parent links, status), not just on aggregate metrics.",
+      "description": "Distributed tracing tests with OpenTelemetry: assert span names, attributes, parent links and status, and query Jaeger, Zipkin or Tempo in CI. Validates OpenTelemetry Collector pipelines and writes per-feature trace specs. A review agent (trace-coverage-reviewer) finds untraced critical paths and spans missing semantic-convention attributes.",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-realtime-protocols",
       "source": "./plugins/qa-realtime-protocols",
-      "description": "Real-time protocol testing: 7 skills (grpc-streaming-tests, mqtt-tests, server-sent-events-tests, sse-load-tests, stomp-amqp-tests, webhook-replay-tests, websocket-tests) and 1 agent (realtime-protocol-reviewer). Anchored on RFC 6455, WHATWG SSE, gRPC streaming, MQTT v5, and the Standard Webhooks signature scheme.",
+      "description": "Real-time protocol testing: WebSocket handshakes and close codes, Server-Sent Events, and MQTT v5 QoS, retained messages and shared subscriptions. Includes SSE load testing with k6 and STOMP / AMQP broker testing in references. A review agent (realtime-protocol-reviewer) flags missing reconnect backoff and unhandled close codes. gRPC streaming lives in qa-grpc and webhooks in qa-notifications.",
       "strict": true,
       "category": "integrations-protocols"
     },
     {
       "name": "qa-pdf-print",
       "source": "./plugins/qa-pdf-print",
-      "description": "PDF + print rendering tests: 4 skills (html-to-pdf-regression, pdf-accessibility-checker, pdf-snapshot-tester, print-stylesheet-tests) and 1 agent (pdf-test-author). Covers print/PDF output where qa-visual-regression covers screen output.",
+      "description": "PDF and print testing: per-page PDF snapshot diffs, cross-engine HTML-to-PDF regression, print stylesheet checks, and PDF/UA accessibility. Covers print and PDF output where qa-visual-regression covers the screen.",
       "strict": true,
       "category": "quality-engineering"
     },
     {
       "name": "qa-search-relevance",
       "source": "./plugins/qa-search-relevance",
-      "description": "Search relevance testing: 6 skills (elasticsearch-relevance-tests, hybrid-search-eval-author, judgment-list-author, opensearch-relevance-tests, solr-relevance-tests, vector-search-recall-tests) and 1 agent (relevance-regression-reviewer). IR-metrics-driven NDCG / MRR / Recall@k regression detection.",
+      "description": "Search relevance testing for Elasticsearch, OpenSearch, Solr, vector and hybrid search: judgment lists and NDCG, MRR and recall@k regression checks. Builds judgment lists with rater guidelines, benchmarks vector recall against latency, and measures fusion lift in hybrid pipelines. A review agent (relevance-regression-reviewer) compares before and after metrics per query.",
       "strict": true,
       "category": "ai-ml"
     },
     {
       "name": "qa-concurrency",
       "source": "./plugins/qa-concurrency",
-      "description": "Concurrency + race-condition testing: 6 skills (async-ordering-tests, deadlock-detection-harness, go-race-detector-workflow, jepsen-patterns, mvcc-isolation-tests, race-condition-test-author) and 1 agent (concurrency-critic). Code-level data races, distinct from qa-resilience (infrastructure fault injection).",
+      "description": "Concurrency testing: deterministic race-condition tests, deadlock detection, async ordering checks, and database MVCC isolation-level tests. Includes ThreadSanitizer and the Go race detector with goleak, plus a critic agent (concurrency-critic) that flags unguarded shared state and lock-ordering risks. Code-level races, distinct from qa-resilience (infrastructure fault injection).",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-saga-cqrs",
       "source": "./plugins/qa-saga-cqrs",
-      "description": "Saga + CQRS + event sourcing test patterns: 5 skills (cqrs-projection-tests, event-sourcing-tests, eventual-consistency-tests, outbox-pattern-test-author, saga-transaction-tests) and 1 agent (saga-critic). Covers ACD-without-isolation saga tests, replay determinism, and projection consistency windows.",
+      "description": "Saga, CQRS and event sourcing tests: compensating actions, the transactional outbox, replay determinism, and projection consistency windows. A critic agent (saga-critic) flags missing compensating transactions and other distributed-transaction defects.",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-team-management",
       "source": "./plugins/qa-team-management",
-      "description": "QA people-and-org toolkit for QA managers and heads of quality: 5 skills (career-ladder-author, exec-quality-narrative, performance-feedback-author, skill-matrix-author, tester-one-on-one-planner) and 1 agent (team-capability-gap-analyst). Covers team capability mapping per ISTQB CTAL-TM v3.0 Managing the Team, IC/management career ladders, GROW-model 1:1s, SBI evidence-based feedback, and Minto-pyramid executive quality narratives.",
+      "description": "QA team management for QA managers and heads of quality: skill matrices with gap analysis, quality status digests, structured hiring, and exec narratives. Covers capability mapping per ISTQB CTAL-TM v3.0, the hiring chain from job description to 30-60-90 onboarding, and Minto-pyramid quality narratives. An agent (qa-manager) produces the weekly red / amber / green status digest from CI, tracker, and quarantine data.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-test-data-privacy",
       "source": "./plugins/qa-test-data-privacy",
-      "description": "PII detection, masking, and synthetic data generation for test environments: 8 skills (data-masking-techniques-reference, faker-synthetic-data, k-anonymity-verifier, pii-categories-reference, pii-masking-pipeline-builder, presidio-pii-detection, synthea-healthcare-data, test-data-governance-reference) and 1 agent (pii-leak-critic).",
+      "description": "Test data privacy: detect and mask PII with Presidio, verify k-anonymity on masked datasets, and generate synthetic patient records with Synthea. The masking pipeline runs detect, mask and verify, with PII-category, masking-technique and Faker-substitution catalogs in references.",
       "strict": true,
       "category": "security-compliance"
     },
     {
       "name": "qa-defect-management",
       "source": "./plugins/qa-defect-management",
-      "description": "Defect management discipline (taxonomy, lifecycle, workflows): 3 reference skills (bug-lifecycle-reference, severity-vs-priority-reference, defect-taxonomy-istqb) + 4 platform-workflow skills (jira-bug-workflow-runner, linear-bug-workflow-runner, github-issues-bug-workflow, azuredevops-bug-workflow) + 1 build skill (bug-report-from-failure) + 4 agents (duplicate-defect-finder, bug-report-critic, ci-defect-filer, defect-fix-verifier). Distinct from qa-bug-repro which covers reproduction + clustering + trend narration; this covers triage workflow + taxonomy + severity classification, and closes the lifecycle with post-fix confirmation testing.",
+      "description": "Defect management: severity vs priority classification, bug tracker workflows on Jira, Linear, GitHub Issues and Azure DevOps, and fix confirmation. Agents (ci-defect-filer, defect-fix-verifier) turn CI failures into deduplicated tracker bugs and re-run a defect's reproduction once a fix is claimed. Distinct from qa-bug-repro, which covers reproduction, report authoring, and the weekly defect review.",
       "strict": true,
       "category": "operations-resilience"
     },
     {
       "name": "qa-test-management",
       "source": "./plugins/qa-test-management",
-      "description": "Test case management discipline (pre-execution authoring + lifecycle + traceability): 1 reference skill (test-case-anatomy-reference) + 5 platform case-management skills (testrail-case-management, xray-case-management, zephyr-scale-case-management, allure-testops-case-management, qase-io-case-management) + 1 build skill (traceability-matrix-builder) + 2 agents (test-case-quality-critic, tcm-migration-agent). Distinct from qa-test-reporting's *-integration skills (post-execution result sync); this is pre-execution case authoring + repository management.",
+      "description": "Test case management for TestRail, Xray, Zephyr Scale, Allure TestOps and Qase: case authoring, ISO 29119-3 case anatomy, and traceability matrices. Agents (test-case-quality-critic, tcm-migration-agent) audit test cases against the review rubric and migrate cases between tools. Covers pre-execution case management; result sync lives in qa-test-reporting.",
       "strict": true,
       "category": "foundations"
     },
     {
       "name": "qa-fuzz-testing",
       "source": "./plugins/qa-fuzz-testing",
-      "description": "Structure-aware coverage-guided fuzzing: 3 reference skills (corpus-management-reference, sanitiser-integration-reference, crash-triage-reference) + 7 per-language fuzzer skills (libfuzzer-cpp, afl-plus-plus, go-native-fuzzing, cargo-fuzz-rust, atheris-python-fuzzing, jazzer-jvm-fuzzing, ossfuzz-integration) + 1 dispatcher skill (fuzz-tool-selector) + 2 agents (fuzz-target-author, fuzz-findings-critic). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.",
+      "description": "Coverage-guided fuzzing with libFuzzer, AFL++, cargo-fuzz, Go native fuzzing, Atheris and Jazzer, plus sanitizer crash triage. Covers fuzzer choice, corpus management, sanitizer integration, and ASan / UBSan / MSan crash classification with bulk triage. A builder agent (fuzz-target-author) scaffolds a fuzz harness from a function signature. Binary and system-level fuzzing, distinct from qa-property-based and qa-api-testing/schemathesis-fuzzing.",
       "strict": true,
       "category": "security-compliance"
     },
     {
       "name": "qa-multi-tenancy",
       "source": "./plugins/qa-multi-tenancy",
-      "description": "Tenant-isolation testing for B2B SaaS: row-level security, cross-tenant leak detection, tenant-id propagation tracing, isolation-model references (silo / pool / bridge), and adversarial review of tenant-leak risk.",
+      "description": "Tenant isolation testing for B2B SaaS: cross-tenant leak tests with a CI gate, row-level security, and tenant onboarding and offboarding tests. Includes silo / pool / bridge isolation models and a Postgres-first RLS reference. A review agent (tenant-leak-critic) traces tenant-id propagation through a diff to find leak risks.",
       "strict": true,
       "category": "security-compliance"
     },
     {
       "name": "qa-grpc",
       "source": "./plugins/qa-grpc",
-      "description": "gRPC testing tooling: buf-CLI lint and breaking-build, ghz load testing, grpcurl CLI, grpc-mock servers, protobuf versioning strategy reference, gRPC streaming test patterns, and status-code mapping reference. Distinct from qa-realtime-protocols/grpc-streaming-tests (wire-level streaming semantics) and qa-contract-testing/protobuf-compat-checking (schema-level breaking detection); this plugin scopes to tooling, load, linting, and framework-level testing.",
+      "description": "gRPC testing: buf lint and breaking-change gates, ghz load tests, grpcurl, mock servers, and streaming RPC test suites. Includes the protobuf versioning catalog, interceptor test patterns, and a status-code catalog. A review agent (grpc-service-reviewer) flags missing status-code assertions and deadline handling. Distinct from qa-contract-testing/protobuf-compat-checking (schema-level breaking detection).",
       "strict": true,
       "category": "integrations-protocols"
     },
     {
       "name": "qa-graphql",
       "source": "./plugins/qa-graphql",
-      "description": "GraphQL server testing: introspection attack-surface reference, persisted-query strategy, per-framework testing (Apollo Server, GraphQL Yoga, Hasura, Mercurius, Pothos), and an N+1 query detector. Distinct from qa-contract-testing/graphql-schema-regression (contract drift detection); this plugin covers server/runtime + framework-specific patterns.",
+      "description": "GraphQL server testing for Apollo Server, GraphQL Yoga and Hasura: subscriptions, N+1 detection and fixes, and depth and cost limit hardening. Mercurius is covered in the Yoga references, and introspection and persisted-query hardening in the limits skill. Distinct from qa-contract-testing/graphql-schema-regression, which detects schema drift; this plugin tests the server runtime.",
       "strict": true,
       "category": "integrations-protocols"
     },
     {
       "name": "qa-cache-testing",
       "source": "./plugins/qa-cache-testing",
-      "description": "Cache testing across layers: Redis cache patterns, CDN cache-purge testing (Cloudflare, Fastly, CloudFront), Varnish VTC syntax, browser Cache-Control tests, cache-coherence + stampede + stale-while-revalidate references, and a cache-key collision detector. Covers RFC 9111 HTTP caching and the canonical multi-tier cache discipline (browser to CDN to app to data store).",
+      "description": "Cache testing across browser, CDN, proxy, application and data-store layers: Redis, CDN purges, Varnish VTC tests, and cache-key collision audits. Covers RFC 9111 HTTP caching, Cloudflare / Fastly / CloudFront purge APIs, browser Cache-Control tests, and cache-coherence patterns with stampede and stale-while-revalidate references. A detector agent (cache-key-collision-detector) finds keys missing a tenant, user or locale discriminator.",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-feature-flags",
       "source": "./plugins/qa-feature-flags",
-      "description": "Feature-flag platform testing + experimentation harness testing: SDK-specific tests for LaunchDarkly plus the OpenFeature umbrella (Unleash, Flagsmith, GrowthBook); the feature-flag test matrix reference; the experiment-sdk-testing umbrella (Statsig, Optimizely, Split.io, Amplitude Experiment, VWO); AB-test validity checklist; experiment-results interpreter (peeking + guardrail references); stale-flag detector with the removal runbook; flag-coverage-gap detector; sample-ratio-mismatch (SRM) detector. Distinct from qa-test-environment/feature-flag-test-harness (generic flag-aware test harness) and qa-shift-right/feature-flag-experiment-validator (validates production experiment results); this plugin scopes to platform-SDK testing, flag-lifecycle hygiene, and experimentation-harness integrity.",
+      "description": "Feature-flag and experimentation testing: LaunchDarkly and OpenFeature SDK tests, flag test matrices, A/B test validity, and experiment result analysis. Covers Unleash, Flagsmith and GrowthBook through OpenFeature, and hermetic harnesses for Statsig, Optimizely, Split.io, Amplitude Experiment and VWO. Agents (flag-coverage-gap-detector, stale-flag-detector, sample-ratio-mismatch-detector) find untested flag branches, stale flags, and sample ratio mismatch. Distinct from qa-test-environment/feature-flag-test-harness and qa-shift-right/feature-flag-experiment-validator.",
       "strict": true,
       "category": "integrations-protocols"
     },
     {
       "name": "qa-serverless",
       "source": "./plugins/qa-serverless",
-      "description": "Serverless platform testing: AWS SAM Local, .NET Lambda Test Tools, Cloudflare Workers Miniflare, Vercel Edge Runtime, Netlify Functions, Serverless Framework, plus cold-start + timeout budget references and a serverless integration-test builder. Covers Lambda / Workers / Edge runtimes which have specific testing patterns (cold-start budgets, timeout testing, local emulators, edge-runtime divergence) absent from generic web-server test plugins.",
+      "description": "Serverless testing for AWS Lambda, Azure Functions and Cloudflare Workers: local emulators, cold-start and timeout budgets, and integration test suites. Builds integration tests from SAM, Serverless Framework, Wrangler, Vercel or Netlify definitions and covers .NET Lambda test tools. A critic agent (serverless-cold-start-critic) flags cold-start anti-patterns.",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-time",
       "source": "./plugins/qa-time",
-      "description": "Time-related testing: fake-clock libraries (libfaketime, sinon-fake-timers, jest-fake-timers, freezegun, timecop, mockclock), DST + leap-second references, ISO-8601 vs RFC 3339 reference, and a timezone test matrix builder. Covers time-based bugs (DST transitions, leap seconds, timezone arithmetic, clock skew) which are high-incident-rate but specific tooling is scattered.",
+      "description": "Time and timezone testing: fake clocks across runtimes, DST transitions, leap seconds, and timezone test matrices built from a codebase's date handling. Fake clocks cover freezegun, Jest and Sinon fake timers, timecop, java.time.Clock, .NET TimeProvider and libfaketime. A critic agent (time-handling-critic) flags naive now() calls and DST-unsafe arithmetic.",
       "strict": true,
       "category": "backend-distributed"
     },
     {
       "name": "qa-payment",
       "source": "./plugins/qa-payment",
-      "description": "Payment platform sandbox testing: Stripe test cards + webhooks, Adyen test mode, PayPal sandbox, Braintree test cards; 3DS test flow + PCI DSS scope + payment flow states references; refund + chargeback + webhook-replay builders. Distinct from qa-compliance/pci-dss-control-test-author (compliance / scope verification); this plugin is platform-specific sandbox testing + payment flow state matrices.",
+      "description": "Payment testing for Stripe, Adyen, PayPal and Braintree sandboxes: test cards, webhooks, subscription billing, refunds, chargebacks and 3DS flows. Includes a payment lifecycle state reference and a review agent (payment-flow-critic) that flags missing idempotency keys and other high-incident payment defects. Distinct from qa-compliance/pci-dss-control-test-author (PCI DSS scope and controls).",
       "strict": true,
       "category": "integrations-protocols"
     },
     {
       "name": "qa-browser-extension",
       "source": "./plugins/qa-browser-extension",
-      "description": "Firefox + Chrome extension testing: 3 skills (playwright-extension-fixtures with the reload matrix + chrome.storage quota tests, chrome-extension-messaging-tests, manifest-v3-test-surface-reference with the web-ext Firefox CLI) and 1 agent (extension-test-author, which composes them to author one Playwright spec per behavior spec).",
+      "description": "Browser extension testing for Chrome and Firefox: Playwright extension fixtures, message-passing tests, and the Manifest V3 test surface. Includes the reload matrix, chrome.storage quota tests and the web-ext Firefox CLI, plus an authoring agent (extension-test-author) that writes one Playwright spec per behavior spec.",
       "strict": true,
       "category": "quality-engineering"
     },
     {
       "name": "qa-embedded",
       "source": "./plugins/qa-embedded",
-      "description": "Embedded C/C++ testing: GoogleTest on ARM, ThrowTheSwitch Unity-C and Ceedling, gcov coverage, QEMU system emulation",
+      "description": "Embedded C/C++ testing: GoogleTest on ARM, Unity and Ceedling with CMock mocks, QEMU system emulation, gcov coverage, and hardware-in-the-loop. An authoring agent (embedded-test-author) detects the framework and execution path, scaffolds the harness when none exists, and writes one unit test per spec.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-game",
       "source": "./plugins/qa-game",
-      "description": "Game engine testing (Unity, Unreal, Godot), platform certification overview (Sony TRC, Nintendo Lotcheck, MS XR, Steam Direct), multiplayer state machine coverage, and gameplay recording/replay",
+      "description": "Game testing for Unity, Unreal and Godot: engine test frameworks, frame-time and memory profiling, gameplay record and replay, and multiplayer coverage. Includes the six-category game-test taxonomy and a platform certification overview (Sony TRC, Nintendo Lotcheck, Xbox Requirements, Steam Direct). An authoring agent (game-test-scenario-author) detects the engine, scaffolds the test tree, and writes one scenario per spec.",
       "strict": true,
       "category": "functional-testing"
     },
     {
       "name": "qa-pwa",
       "source": "./plugins/qa-pwa",
-      "description": "PWA testing: 5 skills (workbox-tests carrying the cache-strategy design reference, web-push-tests, service-worker-lifecycle-tests carrying the general Playwright SW harness, offline-fallback-tests, add-to-homescreen-flow-tests carrying the install-flow reference contract) and 1 agent (pwa-test-author, one Playwright spec per PWA surface) - the single home for service-worker, install-flow, and cache-strategy testing, distinct from qa-notifications' cross-channel push harness",
+      "description": "Progressive web app testing: service worker lifecycle, Workbox caching strategies, offline fallbacks, web push subscriptions, and the install flow. An authoring agent (pwa-test-author) writes one Playwright spec per PWA surface. Distinct from the cross-channel push harness in qa-notifications.",
       "strict": true,
       "category": "quality-engineering"
     },
     {
       "name": "qa-desktop",
       "source": "./plugins/qa-desktop",
-      "description": "Desktop application testing across Windows (WinAppDriver, Appium-Windows), macOS (XCTest UI, Apple Accessibility Inspector), Linux (AT-SPI), Electron (Playwright _electron API), and Qt (QtTest framework)",
+      "description": "Desktop application testing for Windows (FlaUI, WinAppDriver), Electron (Playwright) and Qt (Qt Test), with a driver decision table. Also covers Linux AT-SPI, Spectron migration, and a test-review hazard checklist. An authoring agent (desktop-test-author) detects the driver, scaffolds a test project when none exists, and writes per-flow tests. macOS XCTest UI tests live in qa-mobile.",
       "strict": true,
       "category": "functional-testing"
     },
@@ -489,7 +489,7 @@
     {
       "name": "qa-role-backend",
       "source": "./plugins/qa-role-backend",
-      "description": "Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, feature flags, and experimentation.",
+      "description": "Backend, API & distributed-systems QA role bundle: one-command install of API/contract/GraphQL/gRPC/real-time testing, auth flows, notifications, payment, async jobs, DB migrations, caching, concurrency, saga/CQRS, distributed tracing, serverless, time/timezones, and feature flags + experimentation.",
       "strict": true,
       "category": "role-bundles"
     },
@@ -503,7 +503,7 @@
     {
       "name": "qa-role-performance",
       "source": "./plugins/qa-role-performance",
-      "description": "Performance & reliability QA role bundle: one-command install of load testing, chaos engineering, resilience drills, and shift-left / shift-right production QA.",
+      "description": "Performance & reliability QA role bundle: one-command install of load testing, chaos engineering + resilience drills, and shift-left / shift-right production QA.",
       "strict": true,
       "category": "role-bundles"
     },

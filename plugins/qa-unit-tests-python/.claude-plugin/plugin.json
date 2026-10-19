@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-python",
   "version": "1.4.4",
-  "description": "Python unit testing: 2 skills - the python-unit-tests umbrella covering pytest (fixtures / parametrize / markers / config / mocking / coverage / CI), framework choice, and authoring conventions with stdlib unittest and doctest as references, plus the standalone pytest-asyncio-patterns skill for async testing.",
+  "description": "Python unit testing with pytest: fixtures, parametrize, markers, mocking, coverage and CI, plus async tests with pytest-asyncio. Covers framework choice and test conventions, with unittest and doctest as references.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-python",
   "repository": "https://github.com/testland/qa",
