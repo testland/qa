@@ -7,7 +7,7 @@ help:
 	@echo "  compose     Validate agent -> skill preload references"
 	@echo "  catalog     Regenerate CATALOG.md from marketplace.json"
 	@echo "  inventory   Print marketplace inventory snapshot"
-	@echo "  drift       Flag plugin.json descriptions whose component counts disagree with disk"
+	@echo "  drift       Flag plugin descriptions that disagree with the plugin's skills/agents (also run by validate)"
 	@echo "  tessl-check Flag Tessl manifests out of step with SKILL.md (npm run tessl-check -- --fix repairs)"
 	@echo "  version-check  Flag plugins changed without a plugin.json version bump (run before pushing)"
 	@echo "  evals       Recompile the Anthropic eval manifests from the scenarios"

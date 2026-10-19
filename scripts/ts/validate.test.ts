@@ -109,6 +109,34 @@ Body.
 `,
   );
 
+  // Plugin whose description has drifted from its contents: it claims two
+  // skills and an agent but ships one skill, and its marketplace entry
+  // carries different text.
+  write(
+    'plugins/drift-plugin/.claude-plugin/plugin.json',
+    JSON.stringify({
+      name: 'drift-plugin',
+      version: '0.1.0',
+      description: 'Drift fixture: 2 skills (real-skill, ghost-skill) and 1 agent (ghost-agent).',
+    }),
+  );
+  write(
+    'plugins/drift-plugin/skills/real-skill/SKILL.md',
+    `---
+name: real-skill
+description: Filler skill that exists on disk so the drift-plugin description has one true claim among its stale ones.
+---
+Body.
+`,
+  );
+  write(
+    '.claude-plugin/marketplace.json',
+    JSON.stringify({
+      name: 'fixture-marketplace',
+      plugins: [{ name: 'drift-plugin', source: './plugins/drift-plugin', description: 'Drift fixture: real-skill only.' }],
+    }),
+  );
+
   const r = spawnSync('npx', ['tsx', 'scripts/ts/validate.ts', root], {
     encoding: 'utf8',
     shell: process.platform === 'win32',
@@ -136,6 +164,14 @@ describe('validate', () => {
       expect(output).toContain(needle);
     });
   }
+
+  it('flags plugin description drift', () => {
+    expect(output).toContain('description claims 2 skills');
+    expect(output).toContain("names skill 'ghost-skill'");
+    expect(output).toContain("names agent 'ghost-agent'");
+    expect(output).toContain('differs from plugins/drift-plugin/.claude-plugin/plugin.json');
+    expect(output).not.toContain("names skill 'real-skill'");
+  });
 
   it('exits non-zero when fixtures contain known violations', () => {
     expect(status).not.toBe(0);

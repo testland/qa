@@ -6,9 +6,13 @@
 //
 // Structural only. Persona-shaped scopes are NOT rejected here - reviewer
 // judgment on D3/D4 catches those (docs/CONTRIBUTING.md).
+//
+// Also fails when a plugin description (plugin.json or its marketplace.json
+// entry) disagrees with what the plugin ships: see lib/description-drift.ts.
 
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { descriptionProblems } from './lib/description-drift.ts';
 import { byCodepoint, dirNames, exists, fileNames, pluginNames } from './lib/repo.ts';
 
 const ROOT = process.argv[2] ?? '.';
@@ -218,6 +222,8 @@ for (const jf of jsonFiles(ROOT)) {
     fail(jf, 'invalid JSON syntax');
   }
 }
+// Plugin descriptions must match what the plugin ships (lib/description-drift.ts).
+for (const p of descriptionProblems(ROOT).problems) fail(p.file, p.reason);
 
 if (warnCount) console.log(`validate: ${warnCount} prose-style warning(s) (advisory — not blocking)`);
 if (exitCode === 0) console.log('validate: all checks passed');
