@@ -8,6 +8,9 @@
 > its skills also install into any agent via the skills.sh CLI. Every component
 > is reviewed before merge.
 
+Browse the catalog on [testland.io/plugins](https://testland.io/plugins): every
+plugin, skill, and agent with its documentation.
+
 ## Why testland-qa
 
 - **Six-dimension quality rubric** applied at manual PR review, with a hard
@@ -120,11 +123,11 @@ activate on demand, so a focused set keeps things sharp.
 
 | If you're a | Try first |
 |---|---|
-| Manual / exploratory tester | [qa-manual-testing](plugins/qa-manual-testing/) · [qa-bdd](plugins/qa-bdd/) · [qa-bug-repro](plugins/qa-bug-repro/) |
-| Test automation engineer | [qa-web-e2e](plugins/qa-web-e2e/) · [qa-api-testing](plugins/qa-api-testing/) · [qa-unit-tests-js](plugins/qa-unit-tests-js/) |
-| Performance engineer | [qa-load-testing](plugins/qa-load-testing/) · [qa-resilience](plugins/qa-resilience/) |
-| Security tester | [qa-security-scanning](plugins/qa-security-scanning/) · [qa-iac](plugins/qa-iac/) · [qa-compliance](plugins/qa-compliance/) |
-| Lead / manager / head of quality | [qa-team-management](plugins/qa-team-management/) · [qa-test-management](plugins/qa-test-management/) · [qa-process](plugins/qa-process/) |
+| Manual / exploratory tester | [qa-manual-testing](https://testland.io/plugins/qa-manual-testing) · [qa-bdd](https://testland.io/plugins/qa-bdd) · [qa-bug-repro](https://testland.io/plugins/qa-bug-repro) |
+| Test automation engineer | [qa-web-e2e](https://testland.io/plugins/qa-web-e2e) · [qa-api-testing](https://testland.io/plugins/qa-api-testing) · [qa-unit-tests-js](https://testland.io/plugins/qa-unit-tests-js) |
+| Performance engineer | [qa-load-testing](https://testland.io/plugins/qa-load-testing) · [qa-resilience](https://testland.io/plugins/qa-resilience) |
+| Security tester | [qa-security-scanning](https://testland.io/plugins/qa-security-scanning) · [qa-iac](https://testland.io/plugins/qa-iac) · [qa-compliance](https://testland.io/plugins/qa-compliance) |
+| Lead / manager / head of quality | [qa-team-management](https://testland.io/plugins/qa-team-management) · [qa-test-management](https://testland.io/plugins/qa-test-management) · [qa-process](https://testland.io/plugins/qa-process) |
 
 ### Or adopt a whole role at once
 
@@ -134,17 +137,17 @@ A **role bundle** installs a curated set for your role in a single command.
 
 | Bundle | Role |
 |---|---|
-| [qa-starter](plugins/qa-starter/) | Essentials every tester needs (start here) |
-| [qa-role-manual-tester](plugins/qa-role-manual-tester/) | Manual tester / QA analyst |
-| [qa-role-automation-engineer](plugins/qa-role-automation-engineer/) | Test automation engineer |
-| [qa-role-sdet](plugins/qa-role-sdet/) | SDET (automation plus per-language unit testing) |
-| [qa-role-frontend](plugins/qa-role-frontend/) | Frontend / web-app QA and UI automation |
-| [qa-role-backend](plugins/qa-role-backend/) | Backend / API / distributed systems |
-| [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | Mobile / desktop / cross-platform |
-| [qa-role-security](plugins/qa-role-security/) | Application security and compliance |
-| [qa-role-performance](plugins/qa-role-performance/) | Performance and reliability |
-| [qa-role-ai](plugins/qa-role-ai/) | AI/ML and data-pipeline QA |
-| [qa-role-leadership](plugins/qa-role-leadership/) | QA lead / manager / head of quality |
+| [qa-starter](https://testland.io/plugins/qa-starter) | Essentials every tester needs (start here) |
+| [qa-role-manual-tester](https://testland.io/plugins/qa-role-manual-tester) | Manual tester / QA analyst |
+| [qa-role-automation-engineer](https://testland.io/plugins/qa-role-automation-engineer) | Test automation engineer |
+| [qa-role-sdet](https://testland.io/plugins/qa-role-sdet) | SDET (automation plus per-language unit testing) |
+| [qa-role-frontend](https://testland.io/plugins/qa-role-frontend) | Frontend / web-app QA and UI automation |
+| [qa-role-backend](https://testland.io/plugins/qa-role-backend) | Backend / API / distributed systems |
+| [qa-role-mobile-desktop](https://testland.io/plugins/qa-role-mobile-desktop) | Mobile / desktop / cross-platform |
+| [qa-role-security](https://testland.io/plugins/qa-role-security) | Application security and compliance |
+| [qa-role-performance](https://testland.io/plugins/qa-role-performance) | Performance and reliability |
+| [qa-role-ai](https://testland.io/plugins/qa-role-ai) | AI/ML and data-pipeline QA |
+| [qa-role-leadership](https://testland.io/plugins/qa-role-leadership) | QA lead / manager / head of quality |
 
 Bundles overlap where roles do (installing a plugin twice is harmless). The
 per-language unit-test plugins and a few language-agnostic extras stay à la
