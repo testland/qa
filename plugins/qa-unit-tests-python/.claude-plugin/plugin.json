@@ -4,7 +4,7 @@
   "version": "1.4.4",
   "description": "Python unit testing with pytest: fixtures, parametrize, markers, mocking, coverage and CI, plus async tests with pytest-asyncio. Covers framework choice and test conventions, with unittest and doctest as references.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-python",
+  "homepage": "https://testland.io/plugins/qa-unit-tests-python",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "unit-tests", "python", "pytest", "unittest", "doctest", "pytest-asyncio"]

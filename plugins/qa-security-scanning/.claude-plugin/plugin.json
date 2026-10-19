@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-security-scanning",
+  "homepage": "https://testland.io/plugins/qa-security-scanning",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "security", "scanning", "sast", "dast", "sca", "secrets", "sbom", "semgrep", "sonarqube", "codeql", "bandit", "gosec", "zap", "nuclei", "snyk", "osv-scanner", "dependabot", "renovate", "gitleaks", "trufflehog", "syft", "grype", "trivy", "cyclonedx", "spdx", "openvex", "epss", "kev", "owasp"]

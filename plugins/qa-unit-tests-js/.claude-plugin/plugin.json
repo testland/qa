@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-js",
+  "homepage": "https://testland.io/plugins/qa-unit-tests-js",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "unit-tests", "javascript", "typescript", "jest", "vitest", "mocha", "jasmine"]

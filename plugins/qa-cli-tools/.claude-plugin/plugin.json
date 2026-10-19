@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-cli-tools",
+  "homepage": "https://testland.io/plugins/qa-cli-tools",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "cli", "bats", "tui", "snapshot", "shell-script"]

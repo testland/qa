@@ -4,7 +4,7 @@
   "version": "1.3.2",
   "description": "Search relevance testing for Elasticsearch, OpenSearch, Solr, vector and hybrid search: judgment lists and NDCG, MRR and recall@k regression checks. Builds judgment lists with rater guidelines, benchmarks vector recall against latency, and measures fusion lift in hybrid pipelines. A review agent (relevance-regression-reviewer) compares before and after metrics per query.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-search-relevance",
+  "homepage": "https://testland.io/plugins/qa-search-relevance",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "search-relevance", "elasticsearch", "opensearch", "solr", "vector-search", "ndcg", "mrr", "ann-benchmarks"]

@@ -4,7 +4,7 @@
   "version": "1.12.6",
   "description": "Test process and strategy: risk-based testing, test strategies, Definition of Done, smoke gates, test pyramid balance, effort estimates and post-mortems. Also covers E2E suite budgets, test ideas from stories and live features, framework choice, and attack-surface checklists. Agents (release-readiness-checker, quality-coach, release-engineer) run multi-gate go / no-go checks, audit work against the Definition of Done, and walk a release runbook with human gates.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-process",
+  "homepage": "https://testland.io/plugins/qa-process",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "process", "risk-based-testing", "definition-of-done", "test-strategy"]

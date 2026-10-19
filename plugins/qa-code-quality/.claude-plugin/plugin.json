@@ -4,7 +4,7 @@
   "version": "1.2.1",
   "description": "Production code quality checks: SonarQube maintainability gates, Lizard complexity limits, Madge circular dependencies, and Knip dead-code detection. A critic agent (code-quality-critic) merges the tool reports, dedupes overlapping findings, and separates fix-now items from the backlog. Production code only; test-code hygiene lives in qa-test-review.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-code-quality",
+  "homepage": "https://testland.io/plugins/qa-code-quality",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "code-quality", "sonarqube", "qlty", "lizard", "madge", "knip", "complexity", "dead-code"]

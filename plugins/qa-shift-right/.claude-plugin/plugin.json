@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-shift-right",
+  "homepage": "https://testland.io/plugins/qa-shift-right",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "shift-right", "synthetic-monitoring", "observability"]

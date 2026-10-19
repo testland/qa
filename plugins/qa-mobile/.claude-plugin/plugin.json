@@ -4,7 +4,7 @@
   "version": "1.6.5",
   "description": "Mobile app testing: XCUITest and Espresso for native apps, Appium, Detox and Maestro across platforms, Flutter tests, and mobile accessibility checks. XCUITest also covers macOS desktop apps, and a tiered device matrix keeps CI cost down. An authoring agent (mobile-test-author) detects the driver, scaffolds a harness when none exists, and writes one test per spec. Mobile-web viewport emulation lives in qa-web-e2e.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-mobile",
+  "homepage": "https://testland.io/plugins/qa-mobile",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "mobile-testing", "ios", "android", "react-native", "flutter"]

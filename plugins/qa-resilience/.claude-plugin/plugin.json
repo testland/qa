@@ -4,7 +4,7 @@
   "version": "1.0.1",
   "description": "Chaos engineering and resilience drills: chaos experiment design, Chaos Mesh and Toxiproxy fault injection, disaster recovery drills, error-budget gates. Covers steady-state hypotheses with LitmusChaos and Gremlin routing, a drill run protocol with pre-flight and abort gates, combined HTTP and TCP fault injection, backup restore and RTO measurement, and burn-rate alerting with MTTR / MTBF / MTTD / MTTA incident metrics.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-resilience",
+  "homepage": "https://testland.io/plugins/qa-resilience",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "chaos-engineering", "resilience", "dr-drill", "backup-verification", "rto", "rpo", "error-budget", "mttr", "mtbf", "sre"]

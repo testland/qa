@@ -4,7 +4,7 @@
   "version": "1.3.1",
   "description": "Saga, CQRS and event sourcing tests: compensating actions, the transactional outbox, replay determinism, and projection consistency windows. A critic agent (saga-critic) flags missing compensating transactions and other distributed-transaction defects.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-saga-cqrs",
+  "homepage": "https://testland.io/plugins/qa-saga-cqrs",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "saga", "cqrs", "event-sourcing", "eventual-consistency", "compensating-transaction"]

@@ -4,7 +4,7 @@
   "version": "1.2.1",
   "description": "Localization and internationalization testing: string coverage, pseudo-localization, right-to-left layouts, and locale date, number and currency formats.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-localization",
+  "homepage": "https://testland.io/plugins/qa-localization",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "i18n", "l10n", "localization", "rtl"]

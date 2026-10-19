@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-compliance",
+  "homepage": "https://testland.io/plugins/qa-compliance",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "security", "compliance", "gdpr", "ccpa", "cpra", "soc2", "hipaa", "pci-dss", "iso27001", "audit-trail"]

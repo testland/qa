@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-db-migrations",
+  "homepage": "https://testland.io/plugins/qa-db-migrations",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "database", "migrations", "flyway", "liquibase", "atlas", "sqlmesh", "schema"]

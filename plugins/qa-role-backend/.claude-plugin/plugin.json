@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-backend",
+  "homepage": "https://testland.io/plugins/qa-role-backend",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

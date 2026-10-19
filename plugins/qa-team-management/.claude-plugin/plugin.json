@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-team-management",
+  "homepage": "https://testland.io/plugins/qa-team-management",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "qa-team-management", "skill-matrix", "gap-analysis", "executive-reporting", "test-management", "hiring", "structured-interview", "quality-digest"]

@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-test-review",
+  "homepage": "https://testland.io/plugins/qa-test-review",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

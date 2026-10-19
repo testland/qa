@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-llm-evaluation",
+  "homepage": "https://testland.io/plugins/qa-llm-evaluation",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "llm", "prompt", "evaluation", "rag", "ai-testing", "promptfoo", "deepeval", "ragas", "giskard", "langfuse"]

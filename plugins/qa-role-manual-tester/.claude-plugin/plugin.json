@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-manual-tester",
+  "homepage": "https://testland.io/plugins/qa-role-manual-tester",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

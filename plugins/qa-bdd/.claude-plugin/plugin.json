@@ -4,7 +4,7 @@
   "version": "1.9.3",
   "description": "Behavior-driven development with Cucumber, Behave and Reqnroll: Gherkin from user stories and acceptance criteria, step libraries, and living docs. Converts stories, acceptance-criteria lists, manual steps or raw specs into Gherkin, keeps step definitions DRY, and covers SpecFlow-to-Reqnroll migration. Agents (bdd-scenario-author, gherkin-style-reviewer) write scenarios with step stubs and flag imperative steps and technical leakage.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-bdd",
+  "homepage": "https://testland.io/plugins/qa-bdd",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "bdd", "cucumber", "gherkin", "atdd"]

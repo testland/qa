@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-auth-flows",
+  "homepage": "https://testland.io/plugins/qa-auth-flows",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "auth", "oauth", "oidc", "sso", "keycloak", "auth0", "okta", "session", "csrf", "pkce"]

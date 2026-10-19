@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-jvm",
+  "homepage": "https://testland.io/plugins/qa-unit-tests-jvm",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [
