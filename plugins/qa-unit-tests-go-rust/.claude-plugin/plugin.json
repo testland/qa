@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-go-rust",
-  "version": "1.3.0",
-  "description": "Go + Rust unit testing: 2 umbrella skills - go-unit-tests (stdlib testing: table-driven t.Run subtests, benchmarks, native fuzzing, coverage, -race CI; Ginkgo + Go mocking as references) and rust-unit-tests (cargo test: #[test], integration + doc tests, coverage, Criterion; rstest + mockall as references) - each with framework choice and test-authoring conventions.",
+  "version": "1.3.1",
+  "description": "Go and Rust unit testing: table-driven Go tests with t.Run subtests, benchmarks, native fuzzing and the race detector, plus cargo test with Criterion. Each language skill covers framework choice and test conventions, with Ginkgo and Go mocking, rstest and mockall as references.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-go-rust",
+  "homepage": "https://testland.io/plugins/qa-unit-tests-go-rust",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

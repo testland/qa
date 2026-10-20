@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-desktop",
-  "version": "1.3.2",
-  "description": "Desktop application testing across Windows (FlaUI, WinAppDriver - direct or Appium-invoked), Linux (AT-SPI), Electron (Playwright _electron API, incl. Spectron migration), and Qt (QtTest framework), with the driver decision table and test-review hazard checklist in desktop-test-strategy-reference, plus the desktop-test-author agent that detects the driver, scaffolds a fresh test project when none exists, and authors per-flow tests (macOS XCTest lives in qa-mobile's xcuitest-suite)",
+  "version": "1.3.3",
+  "description": "Desktop application testing for Windows (FlaUI, WinAppDriver), Electron (Playwright) and Qt (Qt Test), with a driver decision table. Also covers Linux AT-SPI, Spectron migration, and a test-review hazard checklist. An authoring agent (desktop-test-author) detects the driver, scaffolds a test project when none exists, and writes per-flow tests. macOS XCTest UI tests live in qa-mobile.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-desktop",
+  "homepage": "https://testland.io/plugins/qa-desktop",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "desktop", "flaui", "automation-driver-selection"]

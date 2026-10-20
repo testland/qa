@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-accessibility",
-  "version": "1.4.2",
-  "description": "Atomic accessibility coverage: 7 skills (wcag-keyboard-navigation with the focus-trap pattern, wcag-color-contrast, aria-authoring-patterns, screen-reader-test-author with checklists + widget matrices + guided sessions, a11y-violation-gate, the axe-a11y scanner umbrella covering axe-core / pa11y / Lighthouse a11y / WAVE / IBM Equal Access, wcag-compliance-reporter) and 1 agent (accessibility-code-critic).",
+  "version": "1.4.3",
+  "description": "Accessibility testing against WCAG 2.2: automated scans with axe-core, pa11y, Lighthouse, WAVE and IBM Equal Access, plus manual screen-reader scripts. Covers keyboard navigation and focus traps, color contrast, ARIA authoring patterns, a CI gate that fails only on new violations, and per-page compliance reports by success criterion. A review agent (accessibility-code-critic) reads component source for WCAG anti-patterns.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-accessibility",
+  "homepage": "https://testland.io/plugins/qa-accessibility",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

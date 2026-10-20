@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-net",
-  "version": "1.2.0",
-  "description": ".NET unit testing: 1 umbrella skill (dotnet-unit-tests) covering xUnit.net as the primary framework (Fact/Theory parametrization, fixtures, parallelism, CI), framework choice (xUnit for new projects; match an existing NUnit/MSTest convention), and test-authoring conventions, with NUnit, MSTest, and FluentAssertions (incl. the v8 license change) as references.",
+  "version": "1.2.1",
+  "description": ".NET unit testing with xUnit.net: Fact and Theory tests, fixtures, parallel execution and CI, with NUnit, MSTest and FluentAssertions as references. Recommends xUnit for new projects, follows an existing NUnit or MSTest convention, and notes the FluentAssertions v8 license change.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-net",
+  "homepage": "https://testland.io/plugins/qa-unit-tests-net",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

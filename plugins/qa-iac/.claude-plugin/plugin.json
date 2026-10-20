@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-iac",
-  "version": "1.2.1",
-  "description": "Infrastructure-as-code testing + security policy: 4 skills (helm-chart-tester, policy-as-code-runner, checkov-policy, trivy-config - the tfsec successor, with the legacy tfsec workflow in its references) and 1 agent (terraform-plan-reviewer). Cross-scanner IaC finding triage is handled by security-finding-triager in the qa-security-scanning plugin.",
+  "version": "1.2.2",
+  "description": "Infrastructure-as-code testing: Checkov and Trivy misconfiguration scans, OPA, Conftest and Cedar policy tests, Helm chart tests, Terraform plan review. Trivy config is the tfsec successor, with the legacy tfsec workflow in references. A review agent (terraform-plan-reviewer) flags destructive and security-degrading plan changes. Cross-scanner IaC triage is handled by security-finding-triager in qa-security-scanning.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-iac",
+  "homepage": "https://testland.io/plugins/qa-iac",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "iac", "terraform", "helm", "opa", "checkov", "tfsec", "trivy", "policy-as-code"]

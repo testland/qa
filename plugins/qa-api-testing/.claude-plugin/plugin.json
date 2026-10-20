@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-api-testing",
-  "version": "1.7.7",
-  "description": "API testing: 6 skills (postman-collections, restassured-testing, karate-testing, schemathesis-fuzzing, restler-fuzzing, api-chaos-runner) and 1 agent (api-test-author, which picks the tool from the README's decision table and emits one functional test per endpoint + scenario).",
+  "version": "1.7.8",
+  "description": "API testing with Postman and Newman, REST Assured and Karate, plus Schemathesis and RESTler fuzzing and API tests run under injected network chaos. An authoring agent (api-test-author) picks the tool from observable project facts and writes one functional test per endpoint and scenario.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-api-testing",
+  "homepage": "https://testland.io/plugins/qa-api-testing",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

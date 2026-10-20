@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-pwa",
-  "version": "1.3.1",
-  "description": "PWA testing: 5 skills (workbox-tests carrying the cache-strategy design reference, web-push-tests, service-worker-lifecycle-tests carrying the general Playwright SW harness, offline-fallback-tests, add-to-homescreen-flow-tests carrying the install-flow reference contract) and 1 agent (pwa-test-author, one Playwright spec per PWA surface) - the single home for service-worker, install-flow, and cache-strategy testing, distinct from qa-notifications' cross-channel push harness",
+  "version": "1.3.2",
+  "description": "Progressive web app testing: service worker lifecycle, Workbox caching strategies, offline fallbacks, web push subscriptions, and the install flow. An authoring agent (pwa-test-author) writes one Playwright spec per PWA surface. Distinct from the cross-channel push harness in qa-notifications.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-pwa",
+  "homepage": "https://testland.io/plugins/qa-pwa",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "pwa"]

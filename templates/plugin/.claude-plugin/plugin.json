@@ -7,7 +7,7 @@
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/PLUGIN_NAME_KEBAB",
+  "homepage": "https://testland.io/plugins/PLUGIN_NAME_KEBAB",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "PRIMARY_KEYWORD"]

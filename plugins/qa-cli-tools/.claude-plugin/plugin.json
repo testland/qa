@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-cli-tools",
-  "version": "1.1.11",
-  "description": "CLI + TUI testing tools: 4 skills (bats-testing, pester-cli-testing, tui-snapshot-tester, cli-output-conventions).",
+  "version": "1.1.12",
+  "description": "CLI and terminal UI testing: Bats for shell scripts and binaries, Pester for PowerShell, TUI snapshot tests, and conventions for testable CLI output. Snapshot tests capture rendered terminal frames as text or SVG and diff them on every run; the output conventions cover exit codes, stdout vs stderr, and machine-readable modes.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-cli-tools",
+  "homepage": "https://testland.io/plugins/qa-cli-tools",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "cli", "bats", "tui", "snapshot", "shell-script"]

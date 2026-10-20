@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-data",
-  "version": "1.4.5",
-  "description": "Test data engineering: 12 skills (faker-data, synthetic-data-toolkit umbrella for FactoryBot / mimesis / Bogus, wiremock-stubs with a Mountebank multi-protocol reference, msw-handlers, golden-file-conventions, seed-data-curator, pairwise-test-case-generator, boundary-value-generator, synthetic-pii-generator, malicious-payload-bank, negative-test-generator, test-data-patterns) and 2 agents (golden-file-manager, test-data-setup-agent).",
+  "version": "1.4.6",
+  "description": "Test data engineering: Faker and factories, WireMock and MSW API mocks, seed datasets, golden files, and boundary, pairwise and negative test inputs. Includes FactoryBot, Mimesis and Bogus, a Mountebank reference, synthetic PII, and a malicious payload bank. Agents (golden-file-manager, test-data-setup-agent) maintain snapshot baselines and set up a feature's full test-data layer.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-test-data",
+  "homepage": "https://testland.io/plugins/qa-test-data",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "test-data"]

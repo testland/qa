@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-multi-tenancy",
-  "version": "1.3.10",
-  "description": "Tenant-isolation testing for B2B SaaS: cross-tenant leak-test planning + runtime CI gate (isolation models silo / pool / bridge included), row-level security across Postgres and other engines, tenant provisioning/offboarding tests, and adversarial tenant-leak review with tenant-id propagation tracing.",
+  "version": "1.3.11",
+  "description": "Tenant isolation testing for B2B SaaS: cross-tenant leak tests with a CI gate, row-level security, and tenant onboarding and offboarding tests. Includes silo / pool / bridge isolation models and a Postgres-first RLS reference. A review agent (tenant-leak-critic) traces tenant-id propagation through a diff to find leak risks.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-multi-tenancy",
+  "homepage": "https://testland.io/plugins/qa-multi-tenancy",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "multi-tenancy"]

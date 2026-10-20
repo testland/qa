@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-shift-right",
-  "version": "1.4.0",
-  "description": "Production-side QA per ISTQB-canonical shift-right ('a test approach to test a system continuously in production'): 4 skills (synthetic-monitor-author with RUM-coverage gap analysis, prod-canary-validator, feature-flag-experiment-validator, release-runbook-author with the multi-team cutover-sequence reference) and 1 agent (observability-to-test).",
+  "version": "1.4.1",
+  "description": "Shift-right production QA: synthetic monitors, canary validation against baseline metrics, A/B experiment significance checks, and release runbooks. Follows the ISTQB definition of shift right (testing a system continuously in production) and covers RUM coverage gaps and multi-team cutovers. An agent (observability-to-test) turns production alerts and errors into regression tests.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-shift-right",
+  "homepage": "https://testland.io/plugins/qa-shift-right",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "shift-right", "synthetic-monitoring", "observability"]

@@ -45,7 +45,7 @@ jobs:
       - name: Content audit (description / body length + Windows-path hygiene)
         run: npm run audit
 
-      - name: Check plugin.json description count drift
+      - name: Check plugin descriptions match plugin contents (plugin.json + marketplace.json)
         run: npm run drift
 
       - name: Check Tessl manifests match their SKILL.md (description, metadata.version)

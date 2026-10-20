@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-mutation-testing",
-  "version": "1.3.1",
-  "description": "Mutation testing across languages: 6 skills (stryker-mutation, stryker-net-mutation, pitest-mutation, mutmut-mutation, mull-mutation, mutant-survival-triage). One canonical tool per language (JS/TS Stryker, .NET Stryker.NET, JVM PIT, Python Mutmut, C/C++ Mull - decision table in the README), plus the survivor-triage workflow that classifies why mutants survived and drafts the killing tests.",
+  "version": "1.3.2",
+  "description": "Mutation testing with StrykerJS, Stryker.NET, PIT, mutmut and Mull: one canonical tool per language, plus triage of surviving mutants. Survivor triage classifies why each mutant lived (missing case, weak assertion, equivalent mutant) and drafts the tests that kill it.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-mutation-testing",
+  "homepage": "https://testland.io/plugins/qa-mutation-testing",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

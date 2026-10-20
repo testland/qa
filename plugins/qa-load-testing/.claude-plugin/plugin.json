@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-load-testing",
-  "version": "1.9.2",
-  "description": "Load and performance testing: 9 skills (load-testing-overview - tool selection, load profiles, incident triage, Gatling/Locust references; k6-load-testing with latency-percentile interpretation; jmeter-load-testing; lighthouse-perf with budget authoring; web-vitals-inp-deep for per-interaction INP budgets; perf-budget-gate; flame-graph-analyzer; db-query-plan-analyzer; slo-load-test-plan).",
+  "version": "1.9.3",
+  "description": "Load and performance testing with k6 and JMeter, Lighthouse CI for Web Vitals, SLO-driven load plans, and performance budget gates. Covers tool choice and load profiles (with Gatling and Locust references), per-interaction INP budgets, flame-graph analysis, and database query-plan analysis.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-load-testing",
+  "homepage": "https://testland.io/plugins/qa-load-testing",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

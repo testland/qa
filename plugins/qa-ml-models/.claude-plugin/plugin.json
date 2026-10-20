@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-ml-models",
-  "version": "1.4.2",
-  "description": "ML model testing: 7 skills (giskard-tests, deepchecks-tests, evidently-monitoring, fairlearn-fairness, model-performance-regression-gate, model-risk-evidence-matrix, notebook-ci-pipeline-author). Covers tabular + NLP + vision validation, drift monitoring with alert triage, group fairness with a risk-tiered promotion gate, per-prediction explainability, and the Jupyter notebook CI pipeline (papermill + nbval + testbook + nbstripout).",
+  "version": "1.4.3",
+  "description": "ML model testing: Giskard and Deepchecks validation, Evidently drift monitoring, Fairlearn fairness metrics, and model performance regression gates. Assigns risk tiers with the fairness and explainability evidence each tier requires, and wires Jupyter notebook CI with papermill, nbval, testbook and nbstripout.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-ml-models",
+  "homepage": "https://testland.io/plugins/qa-ml-models",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "ml-models", "fairness", "drift-detection", "giskard", "deepchecks", "evidently", "fairlearn", "explainability"]

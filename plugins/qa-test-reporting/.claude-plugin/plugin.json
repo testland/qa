@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-reporting",
-  "version": "1.6.6",
-  "description": "Test reporting + coverage analytics: 10 skills covering JUnit XML and LCOV + Cobertura parsers, Allure, build-an-X reporters (coverage-diff, test-run-summary-author), the test-management-sync umbrella (TestRail / Xray / Zephyr Scale) plus Currents analytics, per-language coverage analyzers (JaCoCo, coverage.py; Jest/Vitest coverage lives in qa-unit-tests-js), a risk-weighted coverage targeter with a coverage debt ledger, and 2 agents (daily-test-suite-aggregator, release-quality-report-agent) for cross-suite roll-ups and release-quality reporting.",
+  "version": "1.6.7",
+  "description": "Test reporting and coverage analytics: JUnit XML, LCOV and Cobertura parsing, Allure reports, coverage diffs, and test run summaries for pull requests. Also covers JaCoCo and coverage.py analysis, risk-ranked coverage targets, TestRail / Xray / Zephyr Scale result sync, and Currents analytics. Agents (daily-test-suite-aggregator, release-quality-report-agent) roll up daily results across suites and assemble a release-quality go / no-go report. Jest and Vitest coverage lives in qa-unit-tests-js.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-test-reporting",
+  "homepage": "https://testland.io/plugins/qa-test-reporting",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

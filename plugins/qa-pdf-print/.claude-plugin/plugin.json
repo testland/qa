@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-pdf-print",
-  "version": "1.2.1",
-  "description": "PDF + print rendering tests: 3 skills (pdf-snapshot-tester with cross-engine HTML-to-PDF regression, print-stylesheet-tests, pdf-accessibility-checker). Covers print/PDF output where qa-visual-regression covers screen output.",
+  "version": "1.2.2",
+  "description": "PDF and print testing: per-page PDF snapshot diffs, cross-engine HTML-to-PDF regression, print stylesheet checks, and PDF/UA accessibility. Covers print and PDF output where qa-visual-regression covers the screen.",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-pdf-print",
+  "homepage": "https://testland.io/plugins/qa-pdf-print",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "pdf", "print", "rendering", "weasyprint", "playwright", "wcag", "pdf-ua", "verapdf"]

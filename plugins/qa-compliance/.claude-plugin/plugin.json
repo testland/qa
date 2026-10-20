@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-compliance",
-  "version": "1.4.2",
-  "description": "Compliance test patterns + readiness scoring: 6 skills (gdpr-test-patterns with the CCPA/CPRA catalog in references, soc2-evidence-collector with cross-framework evidence packaging, hipaa-test-patterns, pci-dss-control-test-author, audit-trail-test-author, compliance-coverage-scoring with ISO/IEC 27001 Annex A patterns and an adversarial readiness-review mode). Covers regulated-industry test pattern catalogs.",
+  "version": "1.4.3",
+  "description": "Compliance testing for GDPR, CCPA/CPRA, HIPAA, PCI DSS v4.0, SOC 2 and ISO/IEC 27001: control tests, audit-trail tests, and evidence collection. Scores existing tests and evidence against a framework's criteria, packages SOC 2 Type II evidence for auditors, and runs an adversarial readiness review.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-compliance",
+  "homepage": "https://testland.io/plugins/qa-compliance",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "security", "compliance", "gdpr", "ccpa", "cpra", "soc2", "hipaa", "pci-dss", "iso27001", "audit-trail"]

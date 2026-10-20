@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-js",
-  "version": "1.3.5",
-  "description": "JavaScript/TypeScript unit testing: 1 umbrella skill (js-unit-tests) covering Jest + Vitest as co-primary frameworks (configure / run / mock / coverage / CI), framework choice, and test-authoring conventions, with references for Mocha maintenance, Jasmine-to-Jest migration, and deep coverage analysis. Does not duplicate qa-test-review test code hygiene.",
+  "version": "1.3.6",
+  "description": "JavaScript and TypeScript unit testing with Jest and Vitest: configuration, mocking, coverage, CI, and choosing between the two. References cover Mocha maintenance, Jasmine-to-Jest migration, and deep coverage analysis. Test-code hygiene lives in qa-test-review.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-unit-tests-js",
+  "homepage": "https://testland.io/plugins/qa-unit-tests-js",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "unit-tests", "javascript", "typescript", "jest", "vitest", "mocha", "jasmine"]

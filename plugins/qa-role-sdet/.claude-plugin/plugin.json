@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-role-sdet",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "SDET role bundle: one-command install of the full automation-engineer stack plus per-language unit testing (JS/TS, Python, JVM, .NET, Go/Rust), contract testing, mutation testing, code quality, test impact analysis, and load testing. Organized around the job role, not a technology stack.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-role-sdet",
+  "homepage": "https://testland.io/plugins/qa-role-sdet",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": [

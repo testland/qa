@@ -17,16 +17,16 @@ const CATALOG = join(ROOT, 'CATALOG.md');
 const TO_STDOUT = process.argv.includes('--stdout');
 
 const CATEGORY_ORDER: [string, string, string][] = [
-  ['foundations', 'Foundations', 'Test process, environment, data, reporting, impact, roles, review.'],
-  ['functional-testing', 'Functional testing', 'API, BDD, E2E, mobile, contract, mutation, property-based, per-language unit tests.'],
-  ['quality-engineering', 'Quality engineering', 'Data quality, visual regression, accessibility, localization, charts, PDF/print, modern web.'],
-  ['security-compliance', 'Security & compliance', 'SAST, DAST, SCA, secrets, SBOM, compliance.'],
-  ['operations-resilience', 'Operations & resilience', 'Flake triage, bug repro, chaos, resilience drills, shift-right/left, load.'],
-  ['backend-distributed', 'Backend & distributed systems', 'DB migrations, async jobs, caching, concurrency, distributed tracing, saga/CQRS, serverless, time & timezones.'],
-  ['integrations-protocols', 'Integrations & protocols', 'GraphQL, gRPC, real-time protocols, auth flows, notifications, payment, feature flags, experimentation.'],
-  ['ai-ml', 'AI & ML', 'LLM evaluation, ML model testing, AI-assisted test generation, data notebooks, search relevance.'],
-  ['tooling', 'Tooling', 'IaC, CI integration, CLI tools, code quality, compatibility, manual testing.'],
-  ['role-bundles', 'Role bundles', 'One-command role installs - each bundles a curated capability set as dependencies: qa-starter essentials plus frontend, backend, security, performance, mobile/desktop, AI/ML & data, and leadership.'],
+  ['foundations', 'Foundations', 'Test process and strategy, test data, environments, reporting, impact analysis, test review, test management and QA team management.'],
+  ['functional-testing', 'Functional testing', 'API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutation and property-based testing, and unit tests per language.'],
+  ['quality-engineering', 'Quality engineering', 'Accessibility, visual regression, data quality, localization, PDF and print output, browser extensions and progressive web apps.'],
+  ['security-compliance', 'Security & compliance', 'SAST, DAST, SCA, secrets and SBOM scanning, infrastructure as code, fuzzing, compliance, test-data privacy and multi-tenant isolation.'],
+  ['operations-resilience', 'Operations & resilience', 'Flaky-test triage, bug reproduction, defect management, load testing, resilience drills, and shift-left and shift-right checks.'],
+  ['backend-distributed', 'Backend & distributed systems', 'DB migrations, async jobs, caching, concurrency, distributed tracing, saga and CQRS, serverless, and time and timezones.'],
+  ['integrations-protocols', 'Integrations & protocols', 'GraphQL, gRPC, real-time protocols, auth flows, notifications, payments, feature flags and A/B experiments.'],
+  ['ai-ml', 'AI & ML', 'LLM evaluation, ML model testing, AI-assisted test generation and review, and search relevance.'],
+  ['tooling', 'Tooling', 'CI integration, CLI tool testing, code-quality gates and manual testing.'],
+  ['role-bundles', 'Role bundles', 'One-command role installs: each bundle pulls in the plugins one QA role needs, from qa-starter essentials to leadership.'],
 ];
 const CATEGORY_KEYS = CATEGORY_ORDER.map(([k]) => k);
 

@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-browser-extension",
-  "version": "1.3.1",
-  "description": "Firefox + Chrome extension testing: 3 skills (playwright-extension-fixtures with the reload matrix + chrome.storage quota tests, chrome-extension-messaging-tests, manifest-v3-test-surface-reference with the web-ext Firefox CLI) and 1 agent (extension-test-author, which composes them to author one Playwright spec per behavior spec).",
+  "version": "1.3.2",
+  "description": "Browser extension testing for Chrome and Firefox: Playwright extension fixtures, message-passing tests, and the Manifest V3 test surface. Includes the reload matrix, chrome.storage quota tests and the web-ext Firefox CLI, plus an authoring agent (extension-test-author) that writes one Playwright spec per behavior spec.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-browser-extension",
+  "homepage": "https://testland.io/plugins/qa-browser-extension",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "browser-extension"]

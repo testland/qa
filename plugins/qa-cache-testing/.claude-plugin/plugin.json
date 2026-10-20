@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-cache-testing",
-  "version": "1.3.1",
-  "description": "Cache testing across layers: 5 skills (redis-cache-tests, cdn-cache-purge-tests with browser-tier Cache-Control tests in references, varnish-test-vtc-syntax, cache-coherence-patterns-reference with stampede + stale-while-revalidate references, cache-key-discriminator-audit) and 1 agent (cache-key-collision-detector). Covers RFC 9111 HTTP caching and the canonical multi-tier cache discipline (browser to CDN to app to data store).",
+  "version": "1.3.2",
+  "description": "Cache testing across browser, CDN, proxy, application and data-store layers: Redis, CDN purges, Varnish VTC tests, and cache-key collision audits. Covers RFC 9111 HTTP caching, Cloudflare / Fastly / CloudFront purge APIs, browser Cache-Control tests, and cache-coherence patterns with stampede and stale-while-revalidate references. A detector agent (cache-key-collision-detector) finds keys missing a tenant, user or locale discriminator.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-cache-testing",
+  "homepage": "https://testland.io/plugins/qa-cache-testing",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "cache"]

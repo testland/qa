@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-concurrency",
-  "version": "1.2.20",
-  "description": "Concurrency + race-condition testing: 4 skills (race-condition-test-author with the Go -race + goleak workflow in references, deadlock-detection-harness, async-ordering-tests, mvcc-isolation-tests) and 1 agent (concurrency-critic). Code-level data races, distinct from qa-resilience (infrastructure fault injection).",
+  "version": "1.2.21",
+  "description": "Concurrency testing: deterministic race-condition tests, deadlock detection, async ordering checks, and database MVCC isolation-level tests. Includes ThreadSanitizer and the Go race detector with goleak, plus a critic agent (concurrency-critic) that flags unguarded shared state and lock-ordering risks. Code-level races, distinct from qa-resilience (infrastructure fault injection).",
   "author": { "name": "testland", "url": "https://testland.io/" },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-concurrency",
+  "homepage": "https://testland.io/plugins/qa-concurrency",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "concurrency", "race-condition", "deadlock", "thread-sanitizer", "jepsen", "mvcc", "isolation"]

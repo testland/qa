@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-llm-evaluation",
-  "version": "1.4.2",
-  "description": "LLM and prompt evaluation: 7 skills (promptfoo-evaluation, openai-evals, deepeval-evaluation, ragas-evaluation, giskard-llm, langfuse-tracing, llm-regression-suite-author, llm-eval-anti-patterns) and 2 agents (prompt-eval-reviewer, llm-red-team-planner).",
+  "version": "1.4.3",
+  "description": "LLM and prompt evaluation with Promptfoo, DeepEval and Ragas, Giskard vulnerability scans, Langfuse tracing, and golden-dataset regression suites. Audits eval suites for methodology errors. Agents (prompt-eval-reviewer, llm-red-team-planner) review an eval suite and plan adversarial probe campaigns across the OWASP LLM Top 10.",
   "author": {
     "name": "testland",
     "url": "https://testland.io/"
   },
-  "homepage": "https://github.com/testland/qa/tree/main/plugins/qa-llm-evaluation",
+  "homepage": "https://testland.io/plugins/qa-llm-evaluation",
   "repository": "https://github.com/testland/qa",
   "license": "MIT",
   "keywords": ["qa", "testing", "llm", "prompt", "evaluation", "rag", "ai-testing", "promptfoo", "deepeval", "ragas", "giskard", "langfuse"]

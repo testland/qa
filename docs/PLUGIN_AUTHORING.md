@@ -352,8 +352,13 @@ When all components in the plugin land:
 
 1. Bump `plugins/<name>/.claude-plugin/plugin.json` `"version"` from
    `0.1.0` to `1.0.0`.
-2. Update the plugin's marketplace.json description with the final
-   component count if needed.
+2. Make the plugin description match what shipped, word for word in
+   `plugin.json` and the plugin's `marketplace.json` entry. Open with a
+   self-contained summary sentence (it is the plugin page's lead and meta
+   description on testland.io), describe capabilities rather than counts, and
+   name only skills and agents that exist. `npm run validate` fails on a count
+   or a named component the plugin does not ship, and on the two copies
+   differing.
 3. Run all three CI scripts.
 4. Tag: `git tag <plugin-name>-1.0.0 && git push --tags`.
 
