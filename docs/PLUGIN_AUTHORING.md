@@ -174,6 +174,10 @@ Marketplace conventions (stricter than Anthropic's namespace-only rule):
     test, rewriting six such descriptions trigger-first took the
     unit-testing pack from 9 of 24 runs loading the right skill to 23 of 24
     (`packs/evals/`, `scripts/packs-eval.sh`).
+  - For tasks Claude thinks it already knows (a quick pytest or Go test),
+    also name what the skill has that Claude doesn't: "Has the pytest
+    checklist for edge cases and weak assertions" took the pytest prompt
+    from 0-1 of 3 runs to 3 of 4. Name only what the body really contains.
   - Claude Code lists skill descriptions within a budget of 1% of the
     context window and drops whole descriptions once the listing is over it
     ([skills docs](https://code.claude.com/docs/en/skills.md)); on Sonnet

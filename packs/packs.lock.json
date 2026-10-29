@@ -288,7 +288,7 @@
   },
   "testland-unit-testing": {
     "version": "1.0.1",
-    "hash": "d933e6f8b43891d9141b0019ff61e737a4d12c8905acc816ca410b1f7177a661",
+    "hash": "1ca9a194e9d76d80d39c52bacd33451b20607dc5a88a38d7b6f6e6d4153a6211",
     "skills": [
       "js-unit-tests",
       "pytest-asyncio-patterns",

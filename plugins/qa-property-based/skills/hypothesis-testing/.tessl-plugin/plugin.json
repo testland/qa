@@ -1,6 +1,6 @@
 {
   "name": "testland/hypothesis-testing",
-  "description": "Use whenever the task mentions property-based tests, generative tests, invariants or round-trip properties in Python (Hypothesis), e.g. parse/format or encode/decode pairs: @given strategies for dates, text and data structures, assume and filters, shrinking and settings profiles.",
+  "description": "Use whenever the task mentions property-based, generative or invariant tests in Python (Hypothesis), e.g. parse/format or encode/decode pairs: @given strategies, composite strategies, assume and filters, settings and CI. Has round-trip and metamorphic property templates to start from.",
   "private": false,
   "skills": [
     "."

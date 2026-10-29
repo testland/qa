@@ -1,6 +1,6 @@
 {
   "name": "testland/python-unit-tests",
-  "description": "Use whenever the task is to write, add, fix or review Python tests, even quick pytest tests for a single function: fixtures and conftest.py, parametrize tables, markers, mocking with pytest-mock, coverage gates, xdist and CI, plus unittest and doctest suites.",
+  "description": "Use whenever the task is to write, add, fix or review Python tests, even quick pytest tests for a single function: edge cases, fixtures and conftest.py, parametrize tables, mocking, markers, coverage gates and CI. Has the pytest checklist for edge cases and weak assertions.",
   "private": false,
   "skills": [
     "."

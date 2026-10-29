@@ -1,6 +1,6 @@
 ---
 name: python-unit-tests
-description: "Use whenever the task is to write, add, fix or review Python tests, even quick pytest tests for a single function: fixtures and conftest.py, parametrize tables, markers, mocking with pytest-mock, coverage gates, xdist and CI, plus unittest and doctest suites."
+description: "Use whenever the task is to write, add, fix or review Python tests, even quick pytest tests for a single function: edge cases, fixtures and conftest.py, parametrize tables, mocking, markers, coverage gates and CI. Has the pytest checklist for edge cases and weak assertions."
 ---
 
 # python-unit-tests
@@ -10,6 +10,7 @@ description: "Use whenever the task is to write, add, fix or review Python tests
 Per [docs.pytest.org/en/stable][pt-docs]:
 
 [pt-docs]: https://docs.pytest.org/en/stable/
+[pt-raises]: https://docs.pytest.org/en/stable/how-to/assert.html#assertions-about-expected-exceptions
 
 pytest is the de facto Python test framework. Unlike stdlib `unittest`, it
 uses function-style tests (no `TestCase`), fixture-based dependency
@@ -239,6 +240,12 @@ When authoring a new unit test in an existing project:
 4. **Assert the spec's concrete outcome** - no `assert True` /
    `self.assertTrue(True)` smoke asserts. Plain `assert` in pytest
    functions; `self.assertEqual` in TestCase classes (diff-aware).
+   **Cover the edges, not only the happy path**: empty and whitespace
+   input, the smallest and largest valid values, one step past each
+   boundary, and malformed input. Assert each documented error with
+   `pytest.raises(ValueError, match=...)` ([pytest: expected exceptions][pt-raises]);
+   for systematic boundaries generate the cases with
+   `boundary-value-generator` (qa-test-data).
 5. **Use present data peers only**: `mimesis` in dev-deps → locale-aware
    fixtures via `synthetic-data-toolkit` (qa-test-data); never install
    packages as a side effect. 3+ interacting inputs → generate the case
@@ -276,6 +283,7 @@ When authoring a new unit test in an existing project:
 - [pt-docs][pt-docs] - official pytest documentation
 - docs.pytest.org/en/stable/how-to/fixtures.html - fixtures
 - docs.pytest.org/en/stable/how-to/parametrize.html - parametrize
+- [pt-raises][pt-raises] - `pytest.raises` and `match` for expected exceptions
 - pypi.org/project/pytest-mock - pytest-mock plugin
 - pypi.org/project/pytest-xdist - parallel execution
 - [references/unittest.md](references/unittest.md) - stdlib unittest +
