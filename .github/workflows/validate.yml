@@ -50,3 +50,6 @@ jobs:
 
       - name: Check Tessl manifests match their SKILL.md (description, metadata.version)
         run: npm run tessl-check
+
+      - name: Check every plugin is in one directory pack and packs/packs.lock.json is current
+        run: npm run packs:check

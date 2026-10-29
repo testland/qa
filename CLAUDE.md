@@ -41,6 +41,9 @@ Then author the components. When all components are written, bump the
 plugin's `plugin.json` `version` from `0.1.0` to `1.0.0` and run validation
 (see below).
 
+Add the new plugin to one pack in `packs/packs.json` (see "Directory packs"
+below); `npm run packs:check` fails until it is in exactly one pack.
+
 ### Role-bundle plugins (one-command role installs)
 
 A **role bundle** (`qa-starter` and the `qa-role-*` family) is a special plugin
@@ -196,6 +199,16 @@ complete until testland-web is resynced and shipped in lockstep:
 Never push a plugin or version change here without the matching testland-web
 resync; the two repos ship together.
 
+## Directory packs
+
+The same skills are published to the Claude plugin directory as 11
+non-overlapping packs in `testland/qa-skills`, generated from this repo by
+`make packs` (map in `packs/packs.json`, versions in `packs/packs.lock.json`,
+details in [`packs/README.md`](packs/README.md)). Never edit testland/qa-skills
+by hand; `.github/workflows/packs-sync.yml` replaces it on each release. Any
+change to a skill or agent changes a pack's hash, so run `make packs` (or
+`make all`) and commit `packs/packs.lock.json` with the change.
+
 ## Local validation flow
 
 Run these before opening a PR (or before any direct push to `main`); CI runs the
@@ -205,6 +218,7 @@ same:
 npm run validate             # lint: kebab-case, required fields, no placeholders
 npm run compose   # agent → skill preload references valid
 npm run version-check  # every touched plugin bumped its plugin.json version
+npm run packs:check    # every plugin in one pack; packs/packs.lock.json current
 ```
 
 Or run all checks plus catalog regeneration in one go:
