@@ -210,7 +210,6 @@ PR description must cite ticket ID + approver before merge.
 ## References
 
 - [`sonarqube-maintainability-gate`](../skills/sonarqube-maintainability-gate/SKILL.md),
-  [`codeclimate-config`](../skills/codeclimate-config/SKILL.md),
   [`lizard-complexity`](../skills/lizard-complexity/SKILL.md),
   [`madge-deps`](../skills/madge-deps/SKILL.md),
   [`knip-dead-code`](../skills/knip-dead-code/SKILL.md) - preloaded

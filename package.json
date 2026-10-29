@@ -18,6 +18,8 @@
     "version-check": "tsx scripts/ts/version-bump-check.ts",
     "evals:build": "tsx scripts/ts/compile-evals.ts",
     "evals:check": "tsx scripts/ts/compile-evals.ts --check",
+    "packs": "tsx scripts/ts/build-packs.ts",
+    "packs:check": "tsx scripts/ts/build-packs.ts --check",
     "new-plugin": "tsx scripts/ts/new-plugin.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"

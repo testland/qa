@@ -8,3 +8,6 @@ node_modules/
 # eval fixtures ship stub SDKs under node_modules; they are generated output, not deps
 !dist/anthropic-evals/**/node_modules/
 parity-typescript.json
+
+# Directory packs built by `make packs` (pushed to testland/qa-skills by CI)
+build/

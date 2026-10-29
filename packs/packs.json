@@ -1,0 +1,153 @@
+{
+  "$comment": "Pack map for the directory packs published to testland/qa-skills. Every plugin that owns skills or agents is in exactly one pack. Build with `make packs`; see packs/README.md.",
+  "repository": "https://github.com/testland/qa-skills",
+  "sourceRepository": "https://github.com/testland/qa",
+  "homepage": "https://testland.io",
+  "packs": [
+    {
+      "name": "testland-essentials",
+      "displayName": "Testland Essentials",
+      "description": "Core QA workflow for any team: test strategy and planning, test data and environments, test review against conventions, test reports and CI results, CI integration, and flaky-test triage.",
+      "keywords": ["qa", "testing", "test-strategy", "test-data", "flaky-tests", "test-review", "ci"],
+      "examplePrompts": [
+        "Review this test file against our test conventions and list what to fix.",
+        "This test fails one run in ten on CI. Find the cause and propose a fix.",
+        "Write a risk-based test plan for the checkout redesign."
+      ],
+      "plugins": ["qa-process", "qa-test-data", "qa-test-review", "qa-test-reporting", "qa-ci-integration", "qa-flake-triage", "qa-test-environment"]
+    },
+    {
+      "name": "testland-backend",
+      "displayName": "Testland Backend",
+      "description": "Testing backend and distributed systems: async jobs and queues, caches, concurrency and race conditions, database migrations, distributed tracing, feature flags and experiments, sagas and CQRS, serverless functions, and time and timezones.",
+      "keywords": ["qa", "testing", "backend", "distributed-systems", "migrations", "concurrency", "serverless", "feature-flags"],
+      "examplePrompts": [
+        "Write a test that proves this lazy initialisation has no race condition.",
+        "Check this database migration for locking and data-loss risk before we run it.",
+        "Our background job runs twice after a retry. Write tests that catch it."
+      ],
+      "plugins": ["qa-async-jobs", "qa-cache-testing", "qa-concurrency", "qa-db-migrations", "qa-distributed-tracing", "qa-feature-flags", "qa-saga-cqrs", "qa-serverless", "qa-time"]
+    },
+    {
+      "name": "testland-api",
+      "displayName": "Testland API",
+      "description": "Testing APIs and integrations: REST API tests, consumer-driven contracts, GraphQL, gRPC, auth flows (OAuth, OIDC, Keycloak, Auth0, Okta), real-time protocols, email and push notifications, and payment flows.",
+      "keywords": ["qa", "testing", "api-testing", "contract-testing", "graphql", "grpc", "oauth", "payments"],
+      "examplePrompts": [
+        "Write contract tests between our web app and the orders API.",
+        "Add tests for the OAuth authorization-code flow with PKCE.",
+        "Test our Stripe webhook handler against retries and duplicate events."
+      ],
+      "plugins": ["qa-api-testing", "qa-contract-testing", "qa-graphql", "qa-grpc", "qa-auth-flows", "qa-realtime-protocols", "qa-notifications", "qa-payment"]
+    },
+    {
+      "name": "testland-security",
+      "displayName": "Testland Security",
+      "description": "Security testing and compliance: SAST, DAST, dependency, secret and SBOM scanning, infrastructure-as-code checks, fuzzing, compliance controls, test-data privacy, and multi-tenant isolation tests.",
+      "keywords": ["qa", "security", "sast", "dast", "sca", "secrets", "sbom", "fuzzing", "compliance"],
+      "examplePrompts": [
+        "Add dependency vulnerability scanning to our CI and tell me which findings matter.",
+        "Scan this repo's history for leaked secrets and set up a pre-commit check.",
+        "Write tests proving one tenant can never read another tenant's data."
+      ],
+      "plugins": ["qa-security-scanning", "qa-compliance", "qa-iac", "qa-test-data-privacy", "qa-multi-tenancy", "qa-fuzz-testing"]
+    },
+    {
+      "name": "testland-web",
+      "displayName": "Testland Web",
+      "description": "Testing web front ends: browser end-to-end tests, visual regression, accessibility, localization, PDF and print output, browser extensions, and progressive web apps.",
+      "keywords": ["qa", "testing", "web", "e2e", "playwright", "visual-regression", "accessibility", "pwa"],
+      "examplePrompts": [
+        "Set up Playwright end-to-end tests for our sign-up flow.",
+        "Audit this page for WCAG 2.2 accessibility issues and write tests for them.",
+        "Add visual regression checks to our component library."
+      ],
+      "plugins": ["qa-web-e2e", "qa-visual-regression", "qa-accessibility", "qa-localization", "qa-pdf-print", "qa-browser-extension", "qa-pwa"]
+    },
+    {
+      "name": "testland-unit-testing",
+      "displayName": "Testland Unit Testing",
+      "description": "Unit and code-level testing: unit tests for JavaScript and TypeScript, Python, JVM, .NET, Go and Rust, mutation testing, property-based testing, BDD, and CLI tool tests.",
+      "keywords": ["qa", "testing", "unit-tests", "mutation-testing", "property-based-testing", "bdd", "cli"],
+      "examplePrompts": [
+        "Write pytest unit tests for this module, including edge cases.",
+        "Run mutation testing on this package and show which tests are too weak.",
+        "Add property-based tests for this date-parsing function."
+      ],
+      "plugins": ["qa-unit-tests-js", "qa-unit-tests-python", "qa-unit-tests-jvm", "qa-unit-tests-net", "qa-unit-tests-go-rust", "qa-mutation-testing", "qa-property-based", "qa-bdd", "qa-cli-tools"]
+    },
+    {
+      "name": "testland-ai",
+      "displayName": "Testland AI",
+      "description": "Testing AI and data systems: LLM evaluation and red-teaming, ML model tests, search relevance, AI-assisted test generation and review, and data quality checks.",
+      "keywords": ["qa", "testing", "llm-evaluation", "ml-testing", "search-relevance", "data-quality"],
+      "examplePrompts": [
+        "Build an evaluation suite for our RAG chatbot's answers.",
+        "Add a regression gate so a retrained model can't ship if it got worse.",
+        "Write data quality checks for this pipeline's output table."
+      ],
+      "plugins": ["qa-llm-evaluation", "qa-ml-models", "qa-search-relevance", "qa-ai-assisted", "qa-data-quality"]
+    },
+    {
+      "name": "testland-mobile-desktop",
+      "displayName": "Testland Mobile and Desktop",
+      "description": "Testing native apps and devices: iOS and Android, desktop apps, embedded and hardware-in-the-loop systems, and games.",
+      "keywords": ["qa", "testing", "mobile", "ios", "android", "desktop", "embedded", "games"],
+      "examplePrompts": [
+        "Set up Appium tests for our Android login screen.",
+        "Write UI tests for our Electron desktop app.",
+        "Plan hardware-in-the-loop tests for this firmware update."
+      ],
+      "plugins": ["qa-mobile", "qa-desktop", "qa-embedded", "qa-game"]
+    },
+    {
+      "name": "testland-performance",
+      "displayName": "Testland Performance",
+      "description": "Performance, resilience and production checks: load testing, chaos and resilience drills, synthetic monitors, canary validation, and release runbooks.",
+      "keywords": ["qa", "testing", "load-testing", "performance", "resilience", "chaos", "canary"],
+      "examplePrompts": [
+        "Write a k6 load test for our checkout API with pass/fail thresholds.",
+        "Plan a chaos experiment for losing one database replica.",
+        "Check whether this canary is safe to promote."
+      ],
+      "plugins": ["qa-load-testing", "qa-resilience", "qa-shift-right"]
+    },
+    {
+      "name": "testland-manual-testing",
+      "displayName": "Testland Manual Testing",
+      "description": "Manual and exploratory testing: test design techniques, exploratory charters and sessions, bug reproduction and reports, defect tracking, and test case management.",
+      "keywords": ["qa", "testing", "manual-testing", "exploratory-testing", "bug-reports", "test-management"],
+      "examplePrompts": [
+        "Write an exploratory testing charter for the new search filters.",
+        "Turn these notes into a bug report with clear reproduction steps.",
+        "Design test cases for this form using boundary values and decision tables."
+      ],
+      "plugins": ["qa-manual-testing", "qa-bug-repro", "qa-defect-management", "qa-test-management"]
+    },
+    {
+      "name": "testland-leadership",
+      "displayName": "Testland Leadership",
+      "description": "Quality leadership and planning: QA team management and reporting, test impact analysis, code-quality gates, and shift-left reviews of specs and designs.",
+      "keywords": ["qa", "quality-engineering", "test-impact-analysis", "code-quality", "shift-left", "qa-management"],
+      "examplePrompts": [
+        "Write this week's quality status digest for the leadership team.",
+        "Which tests should run for this change? Use test impact analysis.",
+        "Review this spec for testability before the team starts building."
+      ],
+      "plugins": ["qa-team-management", "qa-test-impact-analysis", "qa-code-quality", "qa-shift-left"]
+    }
+  ],
+  "recipes": [
+    { "role": "Starter (any tester)", "packs": ["testland-essentials"] },
+    { "role": "Frontend", "packs": ["testland-essentials", "testland-web"] },
+    { "role": "Backend", "packs": ["testland-essentials", "testland-api", "testland-backend"] },
+    { "role": "SDET", "packs": ["testland-essentials", "testland-web", "testland-api", "testland-unit-testing"] },
+    { "role": "Automation engineer", "packs": ["testland-essentials", "testland-web", "testland-api", "testland-mobile-desktop"] },
+    { "role": "Mobile and desktop", "packs": ["testland-essentials", "testland-mobile-desktop"] },
+    { "role": "Performance", "packs": ["testland-essentials", "testland-performance"] },
+    { "role": "Security", "packs": ["testland-essentials", "testland-security"] },
+    { "role": "AI and ML", "packs": ["testland-essentials", "testland-ai"] },
+    { "role": "Manual tester", "packs": ["testland-essentials", "testland-manual-testing"] },
+    { "role": "Leadership", "packs": ["testland-essentials", "testland-leadership", "testland-manual-testing"] }
+  ]
+}

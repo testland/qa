@@ -1,0 +1,66 @@
+name: packs-sync
+
+# Rebuilds the directory packs from packs/packs.json and replaces the content of
+# testland/qa-skills with them, in one commit named after the source commit.
+# Runs on a published release (one directory review round per release, not per
+# merge) or by hand. Needs the QA_SKILLS_TOKEN secret: a fine-grained token with
+# Contents read/write on testland/qa-skills only.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: packs-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install tooling
+        run: npm ci
+
+      - name: Check the pack map and lock file are current
+        run: npm run packs:check
+
+      - name: Build the packs
+        run: |
+          npm run packs
+          git diff --exit-code packs/packs.lock.json
+
+      - name: Replace testland/qa-skills with the build
+        env:
+          QA_SKILLS_TOKEN: ${{ secrets.QA_SKILLS_TOKEN }}
+          SOURCE_SHA: ${{ github.sha }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          if [ -z "$QA_SKILLS_TOKEN" ]; then
+            echo "::error::QA_SKILLS_TOKEN is not set; add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          git clone "https://x-access-token:${QA_SKILLS_TOKEN}@github.com/testland/qa-skills.git" qa-skills
+          cd qa-skills
+          git checkout -B main
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a ../build/packs/. .
+          git add -A
+          if git diff --cached --quiet; then
+            echo "testland/qa-skills already matches this build."
+            exit 0
+          fi
+          git -c user.name=elv1s42 -c user.email=elv1s42k@gmail.com commit -q \
+            -m "Sync from testland/qa@${SOURCE_SHA::7}${RELEASE_TAG:+ (${RELEASE_TAG})}"
+          git push origin main

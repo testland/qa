@@ -133,7 +133,7 @@ _CI integration, CLI tool testing, code-quality gates and manual testing._
 |---|---|---|---:|
 | [qa-manual-testing](plugins/qa-manual-testing/) | 1.10.9 | 6 skills + 1 agents | 7 |
 | [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.2 | 4 skills + 1 agents | 5 |
-| [qa-code-quality](plugins/qa-code-quality/) | 1.2.2 | 4 skills + 1 agents | 5 |
+| [qa-code-quality](plugins/qa-code-quality/) | 1.2.3 | 4 skills + 1 agents | 5 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.12 | 4 skills + 0 agents | 4 |
 
 ## Role bundles
