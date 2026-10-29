@@ -251,5 +251,5 @@ ambiguous case); rollback is automatic on clear failure.
   base."
 - `synthetic-monitor-author` - sibling: continuous-in-production verification (different
   cadence, different goal).
-- `feature-flag-experiment-validator` - sibling: A/B test analysis (different statistical framework
+- `experiment-results-interpreter` (qa-feature-flags plugin) - A/B test analysis (different statistical framework
   but related).

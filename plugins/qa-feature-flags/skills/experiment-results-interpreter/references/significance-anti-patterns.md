@@ -1,4 +1,4 @@
-# Anti-patterns - feature-flag-experiment-validator
+# Significance-check anti-patterns
 
 Each row maps a common analysis mistake to the step that prevents it.
 

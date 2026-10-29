@@ -1,9 +1,4 @@
----
-name: feature-flag-experiment-validator
-description: "Validates the statistical significance of an A/B / feature-flag experiment result - computes per-metric effect size + p-value (chi-square for proportions, Welch's t-test for continuous metrics), applies a multiple-comparison correction (Bonferroni / Benjamini-Hochberg) when N>1 metric, surfaces practical-vs-statistical-significance distinction, and emits a ship/don't-ship verdict per metric. Use when an experiment has finished and someone is about to ship the winning variant off a dashboard readout, when a result rests on a small sample, or when more than one metric was compared - the rigorous version of \"the variant looks better in the dashboard.\""
----
-
-# feature-flag-experiment-validator
+# Significance check per metric
 
 ## Overview
 
@@ -13,7 +8,7 @@ tests are "sensitive to variance; they require a large sample size
 in order to reduce standard error and produce a statistically
 significant result" ([ab-test-wiki][ab]; per-cohort toggle routing
 per [feature-toggles][toggles]). Without proper analysis, teams ship
-variants that "look better" but aren't actually better. This skill
+variants that "look better" but aren't actually better. This reference
 validates the analysis.
 
 [ab]: https://en.wikipedia.org/wiki/A/B_testing
@@ -190,7 +185,7 @@ Emit a per-metric results table (type, control, treatment, relative
 effect, raw and adjusted p-value, MDE met, verdict), then a verdict
 explanation, a ship/pause recommendation, and a power-analysis note.
 Full worked report:
-[references/output-example.md](references/output-example.md).
+[references/output-example.md](significance-output-example.md).
 
 ## Step 7 - Recommended cadence
 
@@ -210,7 +205,7 @@ tests.
 ## Anti-patterns
 
 Seven analysis mistakes and their fixes:
-[references/anti-patterns.md](references/anti-patterns.md).
+[references/anti-patterns.md](significance-anti-patterns.md).
 
 ## Limitations
 
@@ -236,9 +231,9 @@ Seven analysis mistakes and their fixes:
 - [feature-toggles][toggles] - experiment toggles: per-cohort
   routing; "highly dynamic ... requires sufficient runtime to
   generate statistically valid results."
-- `feature-flag-test-harness` (in the qa-test-environment plugin) - harness that runs the experiment IN test (this skill
+- `feature-flag-test-harness` (in the qa-test-environment plugin) - harness that runs the experiment IN test (this reference
   validates the experiment IN production).
-- `prod-canary-validator` - 
+- `prod-canary-validator` (qa-shift-right) -
   sibling: same statistical framework, different application
   (canary verdict vs experiment verdict).
-- `synthetic-monitor-author` - sibling: production-side verification, different role.
+- `synthetic-monitor-author` (qa-shift-right) - sibling: production-side verification, different role.

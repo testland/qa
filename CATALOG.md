@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `npm run catalog`).
 
-**77 plugins · 405 components**
+**77 plugins · 400 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -64,7 +64,7 @@ _SAST, DAST, SCA, secrets and SBOM scanning, infrastructure as code, fuzzing, co
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-security-scanning](plugins/qa-security-scanning/) | 1.0.3 | 21 skills + 1 agents | 22 |
+| [qa-security-scanning](plugins/qa-security-scanning/) | 1.1.0 | 17 skills + 1 agents | 18 |
 | [qa-compliance](plugins/qa-compliance/) | 1.4.3 | 6 skills + 0 agents | 6 |
 | [qa-iac](plugins/qa-iac/) | 1.2.2 | 4 skills + 1 agents | 5 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.3.2 | 4 skills + 0 agents | 4 |
@@ -81,8 +81,8 @@ _Flaky-test triage, bug reproduction, defect management, load testing, resilienc
 | [qa-resilience](plugins/qa-resilience/) | 1.0.2 | 7 skills + 0 agents | 7 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.8.5 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.5.4 | 4 skills + 2 agents | 6 |
-| [qa-shift-right](plugins/qa-shift-right/) | 1.4.1 | 4 skills + 1 agents | 5 |
 | [qa-defect-management](plugins/qa-defect-management/) | 1.7.0 | 2 skills + 2 agents | 4 |
+| [qa-shift-right](plugins/qa-shift-right/) | 1.5.0 | 3 skills + 1 agents | 4 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.5.2 | 3 skills + 0 agents | 3 |
 
 ## Backend & distributed systems
@@ -106,7 +106,7 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payments, featur
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.6.0 | 5 skills + 3 agents | 8 |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.7.0 | 5 skills + 3 agents | 8 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.3.4 | 6 skills + 1 agents | 7 |
 | [qa-graphql](plugins/qa-graphql/) | 1.5.5 | 6 skills + 0 agents | 6 |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.16 | 5 skills + 1 agents | 6 |

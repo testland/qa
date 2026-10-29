@@ -14,7 +14,7 @@ updates) when a new version is available for a declared dependency, configured
 via `.github/dependabot.yml` at the repo root.
 
 This is a **reference skill** - it defines the config surface; it doesn't run
-scans (that's `snyk-test` or `osv-scanner`). Dependabot complements SCA tools by
+scans (that's `dependency-vulnerability-scanning`). Dependabot complements SCA tools by
 automating the upgrade PR.
 
 ## When to use
@@ -244,8 +244,5 @@ safer than minor / major). Full workflow:
 - docs.github.com/en/code-security/dependabot - full Dependabot docs
 - docs.github.com/en/code-security/dependabot/dependabot-security-updates - security updates feature
 - github.com/dependabot/fetch-metadata - auto-merge helper
-- `snyk-test`,
-  `osv-scanner`,
-  `renovate-config`,
-  `npm-pip-maven-audit` - 
-  sister tools
+- `dependency-vulnerability-scanning`,
+  `renovate-config` - sister tools

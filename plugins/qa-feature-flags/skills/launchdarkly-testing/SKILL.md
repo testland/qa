@@ -158,7 +158,7 @@ replaces it.
 - **Doesn't validate LaunchDarkly's UI-side rollout math.**
   Platform-side bucketing is separately tested.
 - **No experiment-results validation.** That's
-  `feature-flag-experiment-validator` (in the qa-shift-right plugin).
+  `experiment-results-interpreter`.
 - **`FileDataSource` schema is LaunchDarkly-internal.** Refer
   to LD docs for the format.
 

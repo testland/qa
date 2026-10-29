@@ -4,12 +4,12 @@ description: "Runs dead-dependency analysis across JS, Python, and Rust projects
   using ecosystem-native static tools (`depcheck`/`knip` for JS, `vulture` for
   Python, `cargo-machete` for Rust), then cross-references the unused-dependency
   list against SCA findings to downrank vulns in code that is never loaded.
-  Use when SCA output (from `osv-scanner`, `snyk-test`, or `npm-pip-maven-audit`)
+  Use when SCA output (from OSV-Scanner, Snyk, or a native audit; see dependency-vulnerability-scanning)
   is too noisy to triage and the team needs to separate unreachable CVEs from
   exploitable ones before sprint planning; sibling cve-exploitability-triage ranks by EPSS/KEV exploitation signal, not code reachability."
 metadata:
   keywords: "reachability, dead-dependencies, sca, depcheck, knip, vulture, cargo-machete, prioritization"
-  version: "1.2.8"
+  version: "1.2.9"
 ---
 
 # reachability-analyzer
@@ -43,8 +43,8 @@ the vulnerable code is unreachable at runtime. Treat it accordingly.
 ## How to use
 
 1. Run SCA first and save the findings JSON - this skill annotates existing
-   findings, it does not replace them. See `osv-scanner` (or `snyk-test` /
-   `npm-pip-maven-audit`) for full setup:
+   findings, it does not replace them. See `dependency-vulnerability-scanning` for full
+   setup:
 
    ```bash
    osv-scanner scan -r . --format json --output osv.json
@@ -179,7 +179,4 @@ eliminating both the CVE and the unused weight in one change.
   vulture CLI reference, confidence values, whitelist generation
 - [github.com/bnjbvr/cargo-machete](https://github.com/bnjbvr/cargo-machete) -
   cargo-machete CLI reference, exit codes, Cargo.toml metadata
-- `osv-scanner`,
-  `snyk-test`,
-  `npm-pip-maven-audit` - SCA tools whose
-  output this skill annotates
+- `dependency-vulnerability-scanning` - the SCA scans whose output this skill annotates

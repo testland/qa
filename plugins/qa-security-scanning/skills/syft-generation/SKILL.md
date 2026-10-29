@@ -1,6 +1,6 @@
 ---
 name: syft-generation
-description: "Generates, scans, and diffs Software Bills of Materials (SBOMs) with the Anchore stack - Syft generation from container images / directories / archives across OCI / Docker / Singularity formats (output CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON, cosign attestation); the paired generate + scan workflow with Grype (`grype sbom:./sbom.json`, `--fail-on high`, `--only-fixed`, `.grype.yaml` ignore rules with mandatory `expires:`, EPSS/KEV prioritization); and SBOM-to-SBOM diffing via `cyclonedx diff --component-versions` to gate CI on net-new components and detect supply-chain drift between builds. Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance), SBOM-driven vulnerability scanning, or dependency-drift detection between releases."
+description: "Generates, scans, and diffs Software Bills of Materials (SBOMs) with the Anchore stack - Syft generation from container images / directories / archives across OCI / Docker / Singularity formats (output CycloneDX-JSON / SPDX-JSON / Syft-JSON / table / GitHub-JSON, cosign attestation); the paired generate + scan workflow with Grype (`grype sbom:./sbom.json`, `--fail-on high`, `--only-fixed`, `.grype.yaml` ignore rules with mandatory `expires:`, EPSS/KEV prioritization); and SBOM-to-SBOM diffing via `cyclonedx diff --component-versions` to gate CI on net-new components and detect supply-chain drift between builds. A references/ chapter covers choosing between CycloneDX and SPDX (components, VEX, SPDX 3 profiles). Use when the team needs SBOM artifacts for compliance (US EO 14028, EU CRA, FDA medical-device guidance), SBOM-driven vulnerability scanning, or dependency-drift detection between releases."
 ---
 
 # syft-generation
@@ -77,8 +77,8 @@ Per [sf-gh][sf-gh], the common formats are `cyclonedx-json` (CycloneDX 1.5+,
 broad support), `spdx-json` (SPDX 2.3, preferred by US federal procurement),
 and `syft-json` (richest metadata). For Grype scan input (Step 7) use
 `syft-json` or `cyclonedx-json`; for compliance delivery the consumer
-dictates (SPDX-JSON US federal, CycloneDX-JSON most EU) - see `sbom-formats`
-for the format-choice guidance. The full format catalog is in
+dictates (SPDX-JSON US federal, CycloneDX-JSON most EU) - see
+[references/sbom-formats.md](references/sbom-formats.md) for the format-choice guidance. The full format catalog is in
 [references/formats.md](references/formats.md).
 
 ## Step 4 - Source types
@@ -210,7 +210,7 @@ grype db import grype-db-v6-2026-05-06.tar.gz  # pinned version for CI
 ```
 
 Grype's DB is Anchore-curated; coverage differs from OSV.dev / Snyk / NVD -
-pair with `osv-scanner` or `snyk-test` for consensus. No
+pair with OSV-Scanner or Snyk (`dependency-vulnerability-scanning`) for consensus. No
 reachability analysis: every CVE on a declared component counts.
 
 ## Step 8 - Diffing SBOMs across versions
@@ -302,10 +302,9 @@ dependency-graph submission automatically when `format: github-json`.
 
 | Sister tool | Use |
 |---|---|
-| `sbom-formats` | Reference for CycloneDX + SPDX schemas and format choice |
 | `trivy-image` | Alternative scanner (built-in SBOM gen + scan in one pass) |
 | `vex-author` | OpenVEX documents that filter Grype findings (Step 7) |
-| `osv-scanner` | Cross-plugin: also accepts SBOM input |
+| `dependency-vulnerability-scanning` | OSV-Scanner and Snyk also accept SBOM input |
 
 ## Anti-patterns
 
@@ -350,6 +349,6 @@ dependency-graph submission automatically when `format: github-json`.
 - openvex.dev - OpenVEX specification; first.org/epss - EPSS data source
 - ntia.gov/SBOM - NTIA SBOM minimum elements
 - whitehouse.gov/briefing-room/presidential-actions/2021/05/12/executive-order-on-improving-the-nations-cybersecurity/ - US EO 14028
-- `sbom-formats`,
-  `trivy-image`,
+- [references/sbom-formats.md](references/sbom-formats.md) - CycloneDX + SPDX schemas and format choice
+- `trivy-image`,
   `vex-author` - sister tools

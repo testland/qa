@@ -1,9 +1,4 @@
----
-name: trufflehog-scanning
-description: "Configures and runs TruffleHog v3 - secret scanner with **live verification** (validates discovered secrets against provider APIs to confirm actual exposure vs entropy false positive); supports per-source subcommands (`git`, `github`, `gitlab`, `filesystem`, `s3`, `docker`, `gcs`, `postman`); `--results=verified` filter for high-precision output; `--exclude-detectors=TYPE` for noise reduction; exits 183 on findings via `--fail`. Use when the team needs verified secret findings (low false-positive rate) or scans across cloud + repo + container surfaces."
----
-
-# trufflehog-scanning
+# TruffleHog (live-verified secret scanning)
 
 ## Overview
 
@@ -28,7 +23,7 @@ unverified hits in CI gating.
   Docker images, Postman workspaces.
 - Verified-only output for CI gating (block only confirmed-real
   secrets; track unverified separately).
-- Layered with `gitleaks-scanning`
+- Layered with gitleaks (the main skill)
   for cross-tool consensus.
 
 ## Step 1 - Install
@@ -221,7 +216,7 @@ jobs:
 
 ## Step 8 - Cross-tool layering
 
-Pair with `gitleaks-scanning`:
+Pair with gitleaks (the main skill):
 - gitleaks: faster, regex-based, runs in pre-commit
 - trufflehog: slower (verification calls), high-precision, runs in
   CI
@@ -256,7 +251,6 @@ formats not yet in gitleaks' rule library).
 
 - [th-gh][th-gh] - repository, install, commands, exit codes
 - trufflesecurity.com - company site
-- `gitleaks-scanning` - 
-  sister scanner
+- gitleaks (the main skill) - sister scanner
 - `secrets-rotation-runner` - 
   rotation workflow after detection
