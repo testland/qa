@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-feature-flags",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Feature-flag and experimentation testing: LaunchDarkly and OpenFeature SDK tests, flag test matrices, A/B test validity, and experiment result analysis. Covers Unleash, Flagsmith and GrowthBook through OpenFeature, and hermetic harnesses for Statsig, Optimizely, Split.io, Amplitude Experiment and VWO. Agents (flag-coverage-gap-detector, stale-flag-detector, sample-ratio-mismatch-detector) find untested flag branches, stale flags, and sample ratio mismatch. Distinct from qa-test-environment/feature-flag-test-harness and qa-shift-right/feature-flag-experiment-validator.",
   "author": {
     "name": "testland",

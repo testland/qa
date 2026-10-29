@@ -1,6 +1,6 @@
 # SPDX - Software Package Data Exchange (format reference)
 
-Companion reference for `sbom-formats`. Consult when the SBOM consumer
+Companion reference for [sbom-formats.md](sbom-formats.md). Consult when the SBOM consumer
 requires SPDX (US Federal procurement, Linux Foundation members,
 license-compliance focus); the SKILL.md covers CycloneDX and the
 format-choice guidance.

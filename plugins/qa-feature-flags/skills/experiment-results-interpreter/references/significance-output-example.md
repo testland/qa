@@ -1,6 +1,6 @@
 # Worked output example - experiment validation
 
-The report this skill emits, for a multi-metric experiment where the
+The report the significance check emits, for a multi-metric experiment where the
 primary metric wins but a guardrail metric regresses.
 
 ```markdown

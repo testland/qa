@@ -1,6 +1,6 @@
 # SPDX 3.0 profiles and tooling
 
-Extended reference for the SPDX chapter of `sbom-formats` (see [spdx.md](spdx.md)). See
+Extended reference for the SPDX chapter of [sbom-formats.md](sbom-formats.md) (see [spdx.md](spdx.md)). See
 [spdx.dev/specifications][spdx-spec] for the source spec.
 
 ## SPDX 3.0 profiles

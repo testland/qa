@@ -5,7 +5,7 @@ demand and the most lift over what a strong model does unaided. Everything else
 in [`CATALOG.md`](CATALOG.md) is the extended tier — still reviewed, still
 maintained, still installable; this page is where a new user should start.
 
-**94 core skills · 25 core agents** (of 332 skills / 73 agents total).
+**94 core skills · 25 core agents** (of 327 skills / 73 agents total).
 
 ## Core skills
 

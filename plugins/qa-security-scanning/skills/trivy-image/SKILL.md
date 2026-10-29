@@ -1,6 +1,6 @@
 ---
 name: trivy-image
-description: "Configures and runs Trivy for container image scanning: Aqua Security's all-in-one scanner combining vuln + secret + misconfiguration + license detection in one pass; `trivy image {image}` with --severity HIGH,CRITICAL filter; --format sarif/json (incl. scan-embedded CycloneDX; for standalone SBOM generation see syft-generation + sbom-formats); .trivyignore CVE suppression file; --ignore-unfixed for actionable filter; --scanners vuln/misconfig/license/secret toggle. Use when the team wants a single tool covering container image security across multiple dimensions, not for producing a standalone CycloneDX SBOM."
+description: "Configures and runs Trivy for container image scanning: Aqua Security's all-in-one scanner combining vuln + secret + misconfiguration + license detection in one pass; `trivy image {image}` with --severity HIGH,CRITICAL filter; --format sarif/json (incl. scan-embedded CycloneDX; for standalone SBOM generation and format choice see syft-generation); .trivyignore CVE suppression file; --ignore-unfixed for actionable filter; --scanners vuln/misconfig/license/secret toggle. Use when the team wants a single tool covering container image security across multiple dimensions, not for producing a standalone CycloneDX SBOM."
 ---
 
 # trivy-image
@@ -137,7 +137,7 @@ Per [tv-img][tv-img]:
 
 Secret findings appear alongside vuln findings in the same report.
 For deeper secret-scanning patterns, see `gitleaks-scanning`
-+ `trufflehog-scanning`.
++ `gitleaks-scanning` (TruffleHog in its references).
 
 ## Step 7 - Misconfiguration scanning
 
@@ -247,5 +247,4 @@ standalone SBOM plus the Grype scan for cross-DB consensus on findings, and
 - github.com/aquasecurity/trivy - repository
 - openvex.dev - OpenVEX specification (used by `--vex` flag)
 - [references/ci-and-composition.md](references/ci-and-composition.md) - full CI workflow + sister-tool composition
-- `syft-generation`,
-  `sbom-formats` - sister tools
+- `syft-generation` (incl. its SBOM formats reference) - sister tool

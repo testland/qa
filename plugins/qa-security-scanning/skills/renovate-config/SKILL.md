@@ -263,8 +263,5 @@ renovate:
 - docs.renovatebot.com/presets-config - built-in preset list
 - mend.io/renovate - Mend Renovate (SaaS)
 - github.com/renovatebot/renovate - repository
-- `snyk-test`,
-  `osv-scanner`,
-  `dependabot-config`,
-  `npm-pip-maven-audit` - 
-  sister tools
+- `dependency-vulnerability-scanning`,
+  `dependabot-config` - sister tools

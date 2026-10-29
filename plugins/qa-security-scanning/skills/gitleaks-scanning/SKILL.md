@@ -1,6 +1,6 @@
 ---
 name: gitleaks-scanning
-description: "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; plus baseline management for legacy debt - onboarding a repo with historical findings via `--baseline-path` snapshots, `.gitleaksignore`, cross-tool suppression consistency with TruffleHog, and rot-prevention cadence. Use when the team needs OSS secret scanning at commit time + CI gate, or is adopting scanning on a repo with pre-existing findings."
+description: "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; plus baseline management for legacy debt - onboarding a repo with historical findings via `--baseline-path` snapshots, `.gitleaksignore`, cross-tool suppression consistency with TruffleHog, and rot-prevention cadence; TruffleHog live verification (provider-API checks, `--results=verified` CI gating, scanning GitHub orgs, S3 and Docker images) is a reference. Use when the team needs OSS secret scanning at commit time + CI gate, or is adopting scanning on a repo with pre-existing findings."
 ---
 
 # gitleaks-scanning
@@ -27,7 +27,7 @@ for non-git (e.g., extracted CI artifact); `stdin` for diff-piping.
   ever committed; not just current state).
 - Custom rule library for org-internal secret formats (internal
   API key prefixes, etc.).
-- Layered with `trufflehog-scanning`
+- Layered with TruffleHog ([references/trufflehog.md](references/trufflehog.md))
   for live-validation cross-check.
 
 ## How to use
@@ -221,8 +221,7 @@ A team enables gitleaks on a 4-year-old private repo.
 ## Limitations
 
 - Regex + entropy can't catch all secret formats; pair with
-  `trufflehog-scanning`
-  (live-validation) for higher precision.
+  TruffleHog live validation ([references/trufflehog.md](references/trufflehog.md)) for higher precision.
 - Rewriting git history is destructive + only effective if all
   copies are scrubbed (forks / clones / mirrors typically aren't).
 - Custom rules require regex skill; complex secret formats
@@ -237,6 +236,6 @@ A team enables gitleaks on a 4-year-old private repo.
 - gitleaks.io - landing page
 - Baseline management for legacy findings:
   [references/baseline.md](references/baseline.md)
-- `trufflehog-scanning` - sister scanner (live verification)
+- [references/trufflehog.md](references/trufflehog.md) - TruffleHog, the live-verification layer
 - `secrets-rotation-runner` - 
   build-an-X for rotation workflow after detection

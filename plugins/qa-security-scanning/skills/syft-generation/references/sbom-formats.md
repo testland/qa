@@ -1,16 +1,11 @@
----
-name: sbom-formats
-description: "Reference for the two SBOM specification families and how to choose between them - CycloneDX v1.6 (OWASP-curated, security-focused: components, services, dependencies, first-class vulnerabilities[] with embedded VEX, formulation, ML/SaaS BOMs; XML / JSON / Protobuf) as the primary format, with SPDX 2.3 + 3.0 (Linux Foundation, license-focused: packages, relationships, license expressions, Tag-Value/JSON encodings, ISO/IEC 5962:2021) covered as a reference. Includes per-language generators, schema validation, sign + attest CI wiring, and the format-choice guidance (CycloneDX for security-focused consumers; SPDX for US Federal procurement, Linux Foundation, and license-compliance contexts). Use when the user asks to write or validate an SBOM in CycloneDX or SPDX form, or the team must pick its SBOM format."
----
-
-# sbom-formats
+# SBOM formats: CycloneDX and SPDX
 
 ## Overview
 
 Two specification families dominate the SBOM landscape. CycloneDX is the
-OWASP-curated, security-focused format and this skill's primary subject;
+OWASP-curated, security-focused format and this file's primary subject;
 SPDX is the Linux Foundation's license-focused standard, covered in
-[references/spdx.md](references/spdx.md).
+[spdx.md](spdx.md).
 
 Per [cyclonedx.org/specification/overview][cdx-spec], CycloneDX's
 distinguishing features vs SPDX:
@@ -28,16 +23,15 @@ distinguishing features vs SPDX:
 - **SaaS BOMs** - describes hosted services not just shipped
   artifacts
 
-This is a **reference skill** - defines the schemas + tooling landscape;
-doesn't run scans. Pair with `syft-generation` to generate SBOMs in either
-format from real codebases.
+This reference defines the schemas and tooling landscape; the main
+skill generates SBOMs in either format from real codebases.
 
 ## Choosing a format
 
 | Signal | Pick |
 |---|---|
 | Security-focused consumer (vuln tracking, supply-chain attestation) | CycloneDX |
-| US Federal procurement (NIST SP 800-218 + EO 14028 guidance) | SPDX ([references/spdx.md](references/spdx.md)) |
+| US Federal procurement (NIST SP 800-218 + EO 14028 guidance) | SPDX ([spdx.md](spdx.md)) |
 | License-compliance focus (richest license-expression vocabulary) | SPDX |
 | Linux Foundation member organization workflow | SPDX |
 | EU consumers / broad modern tooling | CycloneDX (most common) |
@@ -56,7 +50,7 @@ license blocks use them.
 - The use case is security-focused (vuln tracking, supply-chain
   attestation) over licensing-focused.
 - A consumer (vendor, customer, regulator) requires CycloneDX or SPDX
-  format specifically (SPDX: [references/spdx.md](references/spdx.md)).
+  format specifically (SPDX: [spdx.md](spdx.md)).
 - Per-language CycloneDX-native tooling is preferred over Syft+convert.
 
 ## How to use
@@ -65,7 +59,7 @@ Work the numbered Steps in order: generate the BOM (Steps 1-2), add a
 VEX-style `analysis` record per triaged finding (Steps 3, 5), validate
 against the schema (Step 4), then sign + attest in CI (Step 6). Pin the
 `specVersion` your consumer agreed; bump `version` on each re-issue.
-For an SPDX consumer, follow [references/spdx.md](references/spdx.md)
+For an SPDX consumer, follow [spdx.md](spdx.md)
 instead.
 
 ## Step 1 - Top-level structure
@@ -126,7 +120,7 @@ Per [cdx-spec][cdx-spec]:
 | `formulation[]` | optional | Build metadata |
 
 Component types and per-language native generators are cataloged in
-[references/component-types-and-tooling.md](references/component-types-and-tooling.md);
+[component-types-and-tooling.md](component-types-and-tooling.md);
 the `purl` (Package URL) field is the canonical component identifier.
 
 ## Step 3 - Vulnerability block (VEX-equivalent)
@@ -172,7 +166,7 @@ npx @cyclonedx/cyclonedx-bom validate sbom.json
 
 Validation catches structural issues (missing required fields,
 invalid PURLs, unknown component types) before publishing. For SPDX
-validation (`pyspdxtools`), see [references/spdx.md](references/spdx.md).
+validation (`pyspdxtools`), see [spdx.md](spdx.md).
 
 ## Step 5 - VEX integration
 
@@ -240,7 +234,7 @@ reachability analysis.
 | Skip `serialNumber` field | Can't deduplicate across re-generations | Generate URN UUID per BOM |
 | Use `metadata.tools[]` v1.4 schema in 1.6+ | Schema evolution; tools shape changed | Use `metadata.tools.components[]` (newer schema) |
 | Skip `dependencies[]` block | Loss of dep-graph info; downstream tools degrade | Always include (Step 1) |
-| Hand-author CycloneDX | Schema is large; errors easy to introduce | Use generators ([references](references/component-types-and-tooling.md)) |
+| Hand-author CycloneDX | Schema is large; errors easy to introduce | Use generators ([references](component-types-and-tooling.md)) |
 | Skip schema validation | Invalid SBOMs pass into prod; downstream consumers fail | Validate in CI (Step 4) |
 | Pick format by tooling habit, not consumer | Consumer rejects the delivery | Format-choice table (Choosing a format) |
 
@@ -256,19 +250,17 @@ reachability analysis.
   supports them.
 - SPDX-specific limitations (weaker vuln support, strict license
   expressions, 3.0 tooling maturity) are in
-  [references/spdx.md](references/spdx.md).
+  [spdx.md](spdx.md).
 
 ## References
 
 - [cdx-spec][cdx-spec] - official CycloneDX specification
-- [references/spdx.md](references/spdx.md) - SPDX 2.3 + 3.0 format reference
-- [references/component-types-and-tooling.md](references/component-types-and-tooling.md) - CycloneDX component types + per-language native tooling
-- [references/spdx3-profiles-and-tooling.md](references/spdx3-profiles-and-tooling.md) - SPDX 3.0 profiles + tooling landscape
+- [spdx.md](spdx.md) - SPDX 2.3 + 3.0 format reference
+- [component-types-and-tooling.md](component-types-and-tooling.md) - CycloneDX component types + per-language native tooling
+- [spdx3-profiles-and-tooling.md](spdx3-profiles-and-tooling.md) - SPDX 3.0 profiles + tooling landscape
 - cyclonedx.org - landing
 - github.com/CycloneDX - org with per-language tools
 - github.com/package-url/purl-spec - Package URL spec
 - openvex.dev - OpenVEX standalone spec (compatible with CycloneDX
   1.4+ embedded VEX)
-- `syft-generation`,
-  `trivy-image`,
-  `vex-author` - sister tools
+- `trivy-image`, `vex-author` - sister skills
