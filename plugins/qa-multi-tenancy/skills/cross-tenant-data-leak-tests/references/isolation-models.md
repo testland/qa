@@ -58,7 +58,7 @@ Tenant isolation is implemented by combining:
   or AWS Cognito ID token; the source of truth for "who is this request
   for".
 - **Authorisation policy** - Postgres Row-Level Security per
-  `rls-reference`, AWS IAM dynamic policies
+  [row-level-security.md](row-level-security.md), AWS IAM dynamic policies
   generated per tenant, application-level authorisation middleware.
 - **Resource ABAC tags** - tag each tenant resource with
   `tenant-id=<x>`, then enforce via IAM condition keys.
@@ -111,7 +111,7 @@ identity providers) where pool-like leaks are possible.
   [learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models).
 - Microsoft Deployment Stamps pattern (related):
   [learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp](https://learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp).
-- Supabase RLS guide (consumed in `rls-reference`):
+- Supabase RLS guide (consumed in [row-level-security.md](row-level-security.md)):
   [supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security).
 - Per-model detail: [models.md](models.md); test surface: [test-surfaces.md](test-surfaces.md).
 - Consumed by: `cross-tenant-data-leak-tests` (host skill).

@@ -1,9 +1,4 @@
----
-name: payment-flow-states-reference
-description: "Pure-reference catalog of payment lifecycle state machines across Stripe, Adyen, PayPal, and Braintree: canonical states (created / requires_action / processing / succeeded / requires_capture / canceled / failed), authorisation vs capture, asynchronous webhook states, refund / dispute / chargeback transitions, and the 3-D Secure (EMVCo 3DS 2.x) frictionless / challenge flow paths with per-gateway 3DS test cards (references/3ds-flows.md). Use when designing tests for payment flows, auditing state-handling code, or covering a 3DS round-trip; this is the state model, not a builder - to author suites on it use payment-flow-test-author (refunds, disputes, webhook replay)."
----
-
-# payment-flow-states-reference
+# Payment flow states
 
 ## Overview
 
@@ -17,9 +12,9 @@ Per [stripe.com/docs/payments/payment-intents](https://docs.stripe.com/payments/
 
 The full per-platform terminology grid, the per-provider state machines, and
 the async webhook / refund / dispute detail live in
-[references/payment-state-machines.md](references/payment-state-machines.md).
+[payment-state-machines.md](payment-state-machines.md).
 
-## When to use
+## When to read this
 
 - Designing a payment-flow test suite.
 - Auditing state-handling code for a payment integration.
@@ -44,7 +39,7 @@ states, in order:
 Each provider names these differently. The full canonical-to-provider grid
 and the four per-provider state machines (Stripe PaymentIntent, Adyen
 Authorisation/Capture, PayPal Order, Braintree Transaction) are in
-[references/payment-state-machines.md](references/payment-state-machines.md).
+[payment-state-machines.md](payment-state-machines.md).
 
 ## Authorisation vs capture
 
@@ -68,7 +63,7 @@ Per [stripe.com/docs/payments/capture](https://docs.stripe.com/payments/place-a-
 1. **Identify the platform and flow** - which provider, and whether it is
    auth-only or auth+capture (see Authorisation vs capture).
 2. **Map its state machine** from
-   [references/payment-state-machines.md](references/payment-state-machines.md) -
+   [payment-state-machines.md](payment-state-machines.md) -
    translate the canonical states into that provider's terminology.
 3. **Enumerate the async transitions** - the webhook states plus the
    refund, dispute, and chargeback transitions the flow can reach.
@@ -115,7 +110,7 @@ mutating call.
 | Surface | Test |
 |---|---|
 | Created → succeeded (happy path) | Standard test-card; assert each state observed |
-| Requires-action (3DS) | Initiate with a challenge test card ([Stripe](https://docs.stripe.com/testing#regulatory-cards) `4000 0027 6000 3184`, [Adyen](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers) `4917 6100 0000 0000`); assert `requires_action` / `RedirectShopper` with `next_action.type = redirect_to_url`; complete the issuer-hosted challenge; confirm and assert `succeeded`. Repeat with a frictionless card (Stripe `4000 0000 0000 3055`) - must reach `succeeded` with no challenge. Per [references/3ds-flows.md](references/3ds-flows.md) |
+| Requires-action (3DS) | Initiate with a challenge test card ([Stripe](https://docs.stripe.com/testing#regulatory-cards) `4000 0027 6000 3184`, [Adyen](https://docs.adyen.com/development-resources/test-cards-and-credentials/test-card-numbers) `4917 6100 0000 0000`); assert `requires_action` / `RedirectShopper` with `next_action.type = redirect_to_url`; complete the issuer-hosted challenge; confirm and assert `succeeded`. Repeat with a frictionless card (Stripe `4000 0000 0000 3055`) - must reach `succeeded` with no challenge. Per [3ds-flows.md](3ds-flows.md) |
 | Failed (insufficient funds) | Use insufficient-funds test card; assert state |
 | Cancelled before capture | Manual-capture + cancel; assert state |
 | Webhook idempotency | Replay webhook twice; assert idempotent handling |
@@ -153,13 +148,11 @@ mutating call.
 - Per-platform state machines (terminology grid, Stripe / Adyen / PayPal /
   Braintree state machines, webhook / refund / dispute detail, with their
   provider-doc citations):
-  [references/payment-state-machines.md](references/payment-state-machines.md).
+  [payment-state-machines.md](payment-state-machines.md).
 - 3DS 2.x flow paths (frictionless / challenge, SCA under PSD2, per-step test
-  surface): [references/3ds-flows.md](references/3ds-flows.md); per-gateway
-  3DS test cards: [references/gateway-test-cards.md](references/gateway-test-cards.md).
+  surface): [3ds-flows.md](3ds-flows.md); per-gateway
+  3DS test cards: [gateway-test-cards.md](gateway-test-cards.md).
 - PCI DSS scope catalog: `pci-dss-control-test-author` (in the qa-compliance
   plugin) and its references/pci-scope.md.
-- Consumed by:
-  `stripe-test-cards-and-webhooks`,
-  `payment-gateway-sandboxes`,
-  `payment-flow-test-author`.
+- Used by: the main skill, `stripe-test-cards-and-webhooks`,
+  `payment-gateway-sandboxes`.

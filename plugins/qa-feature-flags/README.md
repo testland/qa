@@ -7,8 +7,7 @@ Feature-flag platform testing + experimentation harness testing: LaunchDarkly SD
 | Type | Name | Description |
 | --- | --- | --- |
 | Skill | [launchdarkly-testing](skills/launchdarkly-testing/SKILL.md) | Wraps LaunchDarkly server-side SDK testing patterns: TestData data source for hermetic tests (no network), file-based data source for fix... |
-| Skill | [openfeature-sdk-testing](skills/openfeature-sdk-testing/SKILL.md) | OpenFeature (CNCF vendor-neutral) SDK testing umbrella: InMemoryProvider hermetic tests, EvaluationDetails assertions, hooks; plus Unleash / Flagsmith / GrowthBook vendor references. |
-| Skill | [feature-flag-test-matrix-reference](skills/feature-flag-test-matrix-reference/SKILL.md) | Flag-state combinatorics + coverage strategies, the coverage-suite building workflow, and kill-switch test categories (references/killswitch.md). |
+| Skill | [openfeature-sdk-testing](skills/openfeature-sdk-testing/SKILL.md) | OpenFeature (CNCF vendor-neutral) SDK testing umbrella: InMemoryProvider hermetic tests, EvaluationDetails assertions, hooks; plus Unleash / Flagsmith / GrowthBook vendor references and the flag test-matrix workflow (pairwise / risk-driven coverage, kill-switch categories). |
 | Skill | [ab-test-validity-checklist](skills/ab-test-validity-checklist/SKILL.md) | Workflow-driven skill that builds an A/B test validity checklist from an experiment proposal. |
 | Skill | [experiment-sdk-testing](skills/experiment-sdk-testing/SKILL.md) | Shared offline-datafile / hermetic-init pattern with per-vendor references for Statsig, Optimizely, Split.io, Amplitude Experiment, and VWO. |
 | Skill | [experiment-results-interpreter](skills/experiment-results-interpreter/SKILL.md) | Interprets valid experiment results; peeking-problem and guardrail-metric methodology in references/. |

@@ -1,4 +1,4 @@
-# Manifest matrix + field shapes - manifest-v3-test-surface-reference
+# Manifest matrix + field shapes
 
 Deep-lookup detail for the summary tables in SKILL.md: exact MV2/MV3 field
 shapes, the full Firefox/Chrome key matrix, and the two service-worker

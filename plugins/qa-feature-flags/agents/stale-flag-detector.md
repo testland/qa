@@ -1,13 +1,16 @@
 ---
 name: stale-flag-detector
-description: "Read-only specialist that scans a codebase for stale feature flags - flags at 100% rollout for long enough to remove, kill-switches that haven't been touched in months, experiments that have already shipped, and orphan flags (referenced in code but not in the platform, or vice versa) - and returns a ranked removal-candidate list plus the safe-removal runbook for each (pre-removal verification, code + platform-side removal steps, post-removal checks, rollback plan). Use proactively monthly / quarterly as flag-debt audit, or as a pre-flight check before a major refactor. Preloads feature-flag-test-matrix-reference."
+description: "Read-only specialist that scans a codebase for stale feature flags - flags at 100% rollout for long enough to remove, kill-switches that haven't been touched in months, experiments that have already shipped, and orphan flags (referenced in code but not in the platform, or vice versa) - and returns a ranked removal-candidate list plus the safe-removal runbook for each (pre-removal verification, code + platform-side removal steps, post-removal checks, rollback plan). Use proactively monthly / quarterly as flag-debt audit, or as a pre-flight check before a major refactor. Preloads openfeature-sdk-testing (its flag test-matrix reference)."
 tools: "Read, Grep, Glob, Bash(git log *)"
 model: sonnet
 skills:
-  - feature-flag-test-matrix-reference
+  - openfeature-sdk-testing
 ---
 
 A read-only specialist that ranks stale feature flags for removal.
+
+The flag test-matrix reference ships with the preloaded `openfeature-sdk-testing` skill as
+[references/feature-flag-test-matrix.md](../skills/openfeature-sdk-testing/references/feature-flag-test-matrix.md); read it before the steps below.
 
 ## When invoked
 
@@ -147,8 +150,8 @@ Attach this condensed runbook to each removal candidate the report emits:
    and delete the OFF component if unused elsewhere; use the
    linter / TypeScript to find dead imports.
 4. **Update tests** - remove per-flag isolation tests, update any matrix
-   containing the flag and the committed `flag-coverage.yaml` (per preloaded
-   `feature-flag-test-matrix-reference`), keep behaviour tests (no longer
+   containing the flag and the committed `flag-coverage.yaml` (per the flag test-matrix
+   reference of the preloaded `openfeature-sdk-testing`), keep behaviour tests (no longer
    flag-gated).
 5. **Platform-side removal, after the code deploy** - archive, don't
    delete, where the platform supports it (LaunchDarkly / Unleash /
@@ -212,7 +215,7 @@ Returns a markdown report. Does not modify files.
 - LaunchDarkly archive doc:
   [launchdarkly.com/docs](https://launchdarkly.com/docs/).
 - Coverage matrix + suite building (the test side):
-  [`feature-flag-test-matrix-reference`](../skills/feature-flag-test-matrix-reference/SKILL.md).
+  [`openfeature-sdk-testing` flag test-matrix reference](../skills/openfeature-sdk-testing/references/feature-flag-test-matrix.md).
 - Per-platform SDKs (for archive steps):
   [`launchdarkly-testing`](../skills/launchdarkly-testing/SKILL.md),
   [`openfeature-sdk-testing`](../skills/openfeature-sdk-testing/SKILL.md)

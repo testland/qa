@@ -1,6 +1,6 @@
 # Defect categorisation taxonomies
 
-Reference companion to `severity-vs-priority-reference`. Catalogs the three
+Reference companion to [severity-vs-priority.md](severity-vs-priority.md). Catalogs the three
 load-bearing defect taxonomies:
 
 1. **IEEE 1044-2009** - the formal anomaly-classification standard
@@ -52,7 +52,7 @@ Where in the lifecycle the defect originated.
 
 ### 3. Anomaly severity
 
-Per the severity scale in the main `severity-vs-priority-reference` SKILL.
+Per the severity scale in [severity-vs-priority.md](severity-vs-priority.md).
 
 ### 4. Cause classification
 

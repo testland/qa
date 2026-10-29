@@ -1,13 +1,13 @@
 # Row-level security on non-Postgres engines
 
-Companion reference for `rls-reference`. The host skill covers Postgres RLS
+Companion reference for [row-level-security.md](row-level-security.md). That file covers Postgres RLS
 in full; this file covers the four non-Postgres engines that appear most in
 multi-tenant B2B SaaS stacks: MySQL / MariaDB, CockroachDB, Vitess, and
 SQL Server.
 
 ## Overview
 
-The host skill covers Postgres RLS in
+That file covers Postgres RLS in
 full. This reference covers the four non-Postgres engines that appear most
 in multi-tenant B2B SaaS stacks. For each engine the spine below gives
 the isolation primitive, the tenant-context essence, and a minimal
@@ -172,6 +172,6 @@ bypass table (CDC, Change Tracking, indexed views, FILESTREAM):
 - Vitess Keyspaces: [vitess.io/docs/21.0/concepts/keyspace/](https://vitess.io/docs/21.0/concepts/keyspace/).
 - SQL Server RLS: [learn.microsoft.com/en-us/sql/relational-databases/security/row-level-security](https://learn.microsoft.com/en-us/sql/relational-databases/security/row-level-security).
 - SQL Server `CREATE SECURITY POLICY`: [learn.microsoft.com/en-us/sql/t-sql/statements/create-security-policy-transact-sql](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-security-policy-transact-sql).
-- Postgres counterpart: the host `rls-reference` SKILL.md.
+- Postgres counterpart: [row-level-security.md](row-level-security.md).
 - Model context: the isolation-models reference in `cross-tenant-data-leak-tests`.
 - Consumed by: `cross-tenant-data-leak-tests` (planning section + runtime gate).

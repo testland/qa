@@ -1,6 +1,6 @@
 ---
 name: redis-cache-tests
-description: "Wraps Redis cache testing: EXPIRE / PEXPIRE / TTL verification (Redis 7+ NX/XX/GT/LT flags), cache-aside write-then-invalidate (write source → DEL key → assert fresh read), eviction under memory pressure (maxmemory + allkeys-lru), pub/sub invalidation across nodes, and tenant key-namespacing. Use when Redis is the app's primary cache. For the CDN/browser HTTP tier use cdn-cache-purge-tests; a runnable test, not the cache-coherence-patterns-reference catalog (which owns the stampede + stale-while-revalidate references)."
+description: "Wraps Redis cache testing: EXPIRE / PEXPIRE / TTL verification (Redis 7+ NX/XX/GT/LT flags), cache-aside write-then-invalidate (write source → DEL key → assert fresh read), eviction under memory pressure (maxmemory + allkeys-lru), pub/sub invalidation across nodes, and tenant key-namespacing. References cover cache-coherence patterns across tiers, stampede and stale-while-revalidate. Use when Redis is the app's primary cache or when choosing a cache invalidation strategy. For the CDN/browser HTTP tier use cdn-cache-purge-tests."
 ---
 
 # redis-cache-tests
@@ -24,7 +24,7 @@ behaviours that real bugs hide in.
 - Verifying eviction policy under memory pressure.
 - Tenant-namespace tests for cache-key isolation.
 - Stampede-mitigation tests per
-  `cache-coherence-patterns-reference` references/stampede.md.
+  [references/stampede.md](references/stampede.md).
 
 ## Authoring
 
@@ -96,7 +96,7 @@ def test_expire_gt_only_extends(r):
 
 ### Cache-aside write-then-invalidate
 
-Per `cache-coherence-patterns-reference`
+Per [references/cache-coherence-patterns.md](references/cache-coherence-patterns.md)
 cache-aside pattern:
 
 ```python
@@ -139,7 +139,7 @@ def test_lru_evicts_oldest_under_pressure(r):
 
 ### Cache stampede mitigation
 
-Per `cache-coherence-patterns-reference` references/stampede.md:
+Per [references/stampede.md](references/stampede.md):
 
 ```python
 import concurrent.futures, threading
@@ -283,7 +283,7 @@ jobs:
 - testcontainers Redis module:
   [testcontainers-python.readthedocs.io](https://testcontainers-python.readthedocs.io/).
 - Companion catalog:
-  `cache-coherence-patterns-reference` (incl. references/stampede.md).
+  [references/cache-coherence-patterns.md](references/cache-coherence-patterns.md) (incl. [references/stampede.md](references/stampede.md)).
 - Tenant cache leaks:
   `cross-tenant-data-leak-tests`
   Test 10.

@@ -1,9 +1,9 @@
 ---
 name: playwright-extension-fixtures
-description: "Author the Playwright fixture layer every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe - plus, in references/, the extension load / reload matrix (which edit re-evaluates which surface), the `chrome.storage` test suite (area selection, quota-exceeded, `storage.onChanged`, managed read-only), and the per-surface assertion recipes (popup, content script, background messaging, MV3 auto-suspend survival). Use when authoring or debugging the fixture a Chromium extension test imports, when an edit appears to have no effect and you need the reload matrix, or when authoring popup / content-script / storage tests."
+description: "Author the Playwright fixture layer every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe - plus, in references/, the Manifest V3 test surface (MV2-to-MV3 field changes, service-worker limits, Firefox vs Chrome keys, `web-ext`), the load / reload matrix, the `chrome.storage` suite (areas, quota, `storage.onChanged`, managed), and per-surface assertion recipes (popup, content script, background messaging, MV3 auto-suspend survival). Use when authoring or debugging the fixture a Chromium extension test imports, when an edit appears to have no effect and you need the reload matrix, or when authoring popup / content-script / storage tests."
 metadata:
   keywords: "playwright, chromium, launchpersistentcontext, test-fixtures, browser-extension"
-  version: "1.2.7"
+  version: "1.2.8"
 ---
 
 # playwright-extension-fixtures
@@ -32,7 +32,7 @@ Composes with:
 - [references/extension-surface-tests.md](references/extension-surface-tests.md) - per-surface assertion recipes (popup, content script, messaging, storage persistence, auto-suspend) run from this fixture.
 - [references/reload-matrix.md](references/reload-matrix.md) - which edits require which reload; the manual `chrome://extensions` gesture this fixture automates.
 - [references/storage-tests.md](references/storage-tests.md) - the `chrome.storage` area / quota / event test suite run from this fixture's SW context.
-- `manifest-v3-test-surface-reference` - the manifest fields the fixture is testing against.
+- [references/manifest-v3-test-surface.md](references/manifest-v3-test-surface.md) - the manifest fields the fixture is testing against.
 
 ## When to use
 
@@ -266,12 +266,12 @@ Key choices:
 - **Chromium-only.** Per [pw-ext], the fixture covers
   Chromium-family extensions only. Firefox WebExtensions test
   differently - see the `web-ext` reference in
-  `manifest-v3-test-surface-reference`
+  [references/manifest-v3-test-surface.md](references/manifest-v3-test-surface.md)
   (references/web-ext-firefox.md) for the Mozilla-side runner.
 - **MV3 SW lifecycle is asynchronous.** The 30s auto-suspend is
   non-deterministic; tests timing-sensitive to it should use
   `chrome.alarms` (see
-  `manifest-v3-test-surface-reference`).
+  [references/manifest-v3-test-surface.md](references/manifest-v3-test-surface.md)).
 - **Custom args at own risk.** Per [pw-ext]: *"Use custom browser
   args at your own risk, as some of them may break Playwright
   functionality."*
@@ -295,4 +295,4 @@ Key choices:
 - [references/storage-tests.md](references/storage-tests.md) - the
   `chrome.storage` quota / area / event test suite.
 - Composes:
-  `manifest-v3-test-surface-reference`.
+  [references/manifest-v3-test-surface.md](references/manifest-v3-test-surface.md).

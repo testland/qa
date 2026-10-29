@@ -54,7 +54,7 @@ Regardless of gateway, a payment integration suite has the same skeleton:
    redeliver unacknowledged events; process-exactly-once is the contract.
    The full replay workflow is `payment-flow-test-author`.
 5. **Map the state machine** - each gateway names the same lifecycle
-   differently; translate via `payment-flow-states-reference` before
+   differently; translate via `payment-flow-test-author` (its payment-states reference) before
    asserting on states.
 
 ## CI integration
@@ -83,7 +83,7 @@ Per-gateway variable lists are in each reference.
 |---|---|---|
 | Prod credentials in tests | Real settlement / real charges | Sandbox-only keys, per-env config |
 | Skip webhook signature validation | Spoofed events trigger fulfillment | Verify per the gateway's scheme |
-| Treat the sync API return as final | All three gateways finalize async | Webhook-driven state, per `payment-flow-states-reference` |
+| Treat the sync API return as final | All three gateways finalize async | Webhook-driven state, per `payment-flow-test-author` (its payment-states reference) |
 | One happy-path test | Decline / 3DS / fraud paths untested | One test per documented outcome row |
 | Hardcoded merchant/account IDs | Per-env accounts drift | Env vars |
 | One suite for all gateways | Result-code vocabularies differ | Per-gateway test directory |
@@ -105,7 +105,7 @@ Per-gateway variable lists are in each reference.
   [references/paypal.md](references/paypal.md).
 - Braintree sandbox, amount-based magic values, webhook parser:
   [references/braintree.md](references/braintree.md).
-- Companion catalog: `payment-flow-states-reference` (state machines + 3DS
+- Companion catalog: `payment-flow-test-author` (its payment-states reference: state machines + 3DS
   flows).
 - Flow suites on top of the sandboxes: `payment-flow-test-author`.
 - Stripe: `stripe-test-cards-and-webhooks`,

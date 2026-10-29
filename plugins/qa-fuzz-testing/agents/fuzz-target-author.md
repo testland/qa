@@ -5,10 +5,12 @@ tools: "Read, Grep, Glob, Write, Edit, Bash(git *), Bash(clang *), Bash(go *), B
 model: sonnet
 skills:
   - coverage-guided-fuzzing
-  - crash-triage-reference
 ---
 
 A builder agent that scaffolds a coverage-guided fuzz target from a function signature, routed via the coverage-guided-fuzzing routing tree.
+
+The crash-triage reference ships with the preloaded `coverage-guided-fuzzing` skill as
+[references/crash-triage.md](../skills/coverage-guided-fuzzing/references/crash-triage.md); read it before the steps below.
 
 ## When invoked
 
@@ -141,5 +143,5 @@ Refuses to: scaffold for a non-pure function (global state / I/O / randomness) w
 
 ## References
 
-- Preloaded skills: [`coverage-guided-fuzzing`](../skills/coverage-guided-fuzzing/SKILL.md) (routing tree, corpus + sanitizer catalogs in its references/), [`crash-triage-reference`](../skills/crash-triage-reference/SKILL.md).
+- Preloaded skills: [`coverage-guided-fuzzing`](../skills/coverage-guided-fuzzing/SKILL.md) (routing tree, corpus + sanitizer catalogs in its references/), [`coverage-guided-fuzzing` crash-triage reference](../skills/coverage-guided-fuzzing/references/crash-triage.md).
 - Per-engine references (via the umbrella): [libfuzzer.md](../skills/coverage-guided-fuzzing/references/libfuzzer.md), [afl-plus-plus.md](../skills/coverage-guided-fuzzing/references/afl-plus-plus.md), [go-native-fuzzing.md](../skills/coverage-guided-fuzzing/references/go-native-fuzzing.md), [cargo-fuzz.md](../skills/coverage-guided-fuzzing/references/cargo-fuzz.md), [atheris.md](../skills/coverage-guided-fuzzing/references/atheris.md), [jazzer.md](../skills/coverage-guided-fuzzing/references/jazzer.md).

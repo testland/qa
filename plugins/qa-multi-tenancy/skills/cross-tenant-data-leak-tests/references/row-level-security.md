@@ -1,9 +1,4 @@
----
-name: rls-reference
-description: "Pure-reference catalog of row-level security for tenant isolation, Postgres-first. Covers enabling RLS (ALTER TABLE ... ENABLE ROW LEVEL SECURITY, default-deny semantics), CREATE POLICY syntax (USING vs WITH CHECK clauses, FOR SELECT/INSERT/UPDATE/DELETE/ALL, permissive vs restrictive, TO role_name), bypassing RLS (superuser / BYPASSRLS / table owner / FORCE ROW LEVEL SECURITY), tenant context patterns (current_user, current_setting, JWT claims via Supabase auth.uid() / auth.jwt()), and performance discipline (wrapping auth functions in SELECT, index on policy-referenced columns). Row/tenant isolation on the non-Postgres engines - MySQL / MariaDB invoker views, CockroachDB native RLS, Vitess vindex sharding, SQL Server security policies - lives in references/other-engines.md. Use as the RLS-pattern reference for tenant isolation on any of these engines. Consumed by cross-tenant-data-leak-tests."
----
-
-# rls-reference
+# Row-level security for tenant isolation
 
 ## Overview
 
@@ -18,21 +13,18 @@ RLS "restricts which rows users can access based on per-user policies." Unlike
 standard SQL `GRANT` / `REVOKE` privileges which act on whole tables, RLS
 controls **row visibility and modification** per role.
 
-This skill is a **pure reference** consumed by the tenant-leak test authors and
-reviewers. Postgres is the primary engine; MySQL / MariaDB, CockroachDB, Vitess,
+This reference is used by tenant-leak test authors and reviewers. Postgres is the primary engine; MySQL / MariaDB, CockroachDB, Vitess,
 and SQL Server are covered in
-[references/other-engines.md](references/other-engines.md). For the broader
-model context see the isolation-models reference in
-`cross-tenant-data-leak-tests`.
+[other-engines.md](other-engines.md). For the broader
+model context see [isolation-models.md](isolation-models.md).
 
-## When to use
+## When to read this
 
 - Designing tenant isolation on a Postgres-backed pool / bridge model (for
   MySQL / MariaDB, CockroachDB, Vitess, or SQL Server see
-  [references/other-engines.md](references/other-engines.md)).
+  [other-engines.md](other-engines.md)).
 - Auditing existing RLS policies for correctness.
-- Writing tests that verify RLS denies cross-tenant access (per
-  `cross-tenant-data-leak-tests`).
+- Writing tests that verify RLS denies cross-tenant access (per the main skill).
 - Onboarding a new table to the tenant_id discriminator pattern.
 
 ## How to use
@@ -40,13 +32,13 @@ model context see the isolation-models reference in
 1. Enable AND force RLS on every tenant-bearing table (`ENABLE` then `FORCE ROW
    LEVEL SECURITY`) so the table owner obeys policies too.
 2. Pick a tenant context source from
-   [references/tenant-context-patterns.md](references/tenant-context-patterns.md)
+   [tenant-context-patterns.md](tenant-context-patterns.md)
    and confirm the app sets it per transaction (`SET LOCAL`) from an
    authenticated session, never from request input.
 3. Write the tenant policy using
-   [references/create-policy-syntax.md](references/create-policy-syntax.md) and a
+   [create-policy-syntax.md](create-policy-syntax.md) and a
    shape from
-   [references/policy-and-bypass-patterns.md](references/policy-and-bypass-patterns.md) -
+   [policy-and-bypass-patterns.md](policy-and-bypass-patterns.md) -
    scope `USING` + `WITH CHECK` to the tenant discriminator.
 4. Confirm the app connection role is not a superuser, lacks `BYPASSRLS`, and
    either does not own the table or runs with `FORCE ROW LEVEL SECURITY`.
@@ -87,14 +79,14 @@ Per Postgres docs, this is the production-safe default for multi-tenant tables.
 
 The full grammar plus `USING` vs `WITH CHECK`, per-command policies, permissive
 vs restrictive combination, and `TO role_name` scoping:
-[references/create-policy-syntax.md](references/create-policy-syntax.md).
+[create-policy-syntax.md](create-policy-syntax.md).
 
 ## Tenant context patterns
 
 The policy needs a source of truth for the current tenant. Four canonical
 patterns - `current_setting()` with `SET LOCAL`, `current_user` / `session_user`,
 Supabase `auth.uid()` / `auth.jwt()`, and in-policy JWT claim parsing:
-[references/tenant-context-patterns.md](references/tenant-context-patterns.md).
+[tenant-context-patterns.md](tenant-context-patterns.md).
 
 ## Policy patterns and bypass
 
@@ -102,7 +94,7 @@ The three tenant-isolation policy shapes (strict discriminator, tenant + per-row
 ACL, admin override), the three RLS bypass categories (superuser / BYPASSRLS /
 table owner), and the operations that always bypass RLS (FK, unique, TRUNCATE,
 REFERENCES):
-[references/policy-and-bypass-patterns.md](references/policy-and-bypass-patterns.md).
+[policy-and-bypass-patterns.md](policy-and-bypass-patterns.md).
 
 ## Performance discipline
 
@@ -167,7 +159,7 @@ VALUES ('22222222-2222-2222-2222-222222222222', 'leak');
 
 Run the existing test suite under a non-superuser, non-BYPASSRLS,
 non-table-owner role. If passing tests rely on RLS bypass, the suite is silently
-invalid for production. Per `cross-tenant-data-leak-tests` the gate test must use
+invalid for production. Per the main skill, the gate test must use
 a tenant-A session to attempt access to tenant-B-owned rows and assert 0 rows
 returned.
 
@@ -218,16 +210,15 @@ for both reads and writes.
   [postgresql.org/docs/current/sql-createpolicy.html](https://www.postgresql.org/docs/current/sql-createpolicy.html).
 - Supabase RLS guide:
   [supabase.com/docs/guides/database/postgres/row-level-security](https://supabase.com/docs/guides/database/postgres/row-level-security).
-- [references/create-policy-syntax.md](references/create-policy-syntax.md) -
+- [create-policy-syntax.md](create-policy-syntax.md) -
   full CREATE POLICY grammar and clause semantics.
-- [references/tenant-context-patterns.md](references/tenant-context-patterns.md) -
+- [tenant-context-patterns.md](tenant-context-patterns.md) -
   four tenant context source patterns.
-- [references/policy-and-bypass-patterns.md](references/policy-and-bypass-patterns.md) -
+- [policy-and-bypass-patterns.md](policy-and-bypass-patterns.md) -
   tenant policy shapes and RLS bypass rules.
-- [references/other-engines.md](references/other-engines.md) -
+- [other-engines.md](other-engines.md) -
   row/tenant isolation on MySQL / MariaDB, CockroachDB, Vitess, and SQL Server
   (per-engine detail in mysql-mariadb.md, cockroachdb.md, vitess.md,
   sqlserver.md).
-- Tenant isolation context: the isolation-models reference in
-  `cross-tenant-data-leak-tests`.
-- Consumed by: `cross-tenant-data-leak-tests` (planning section + runtime gate).
+- Tenant isolation context: [isolation-models.md](isolation-models.md).
+- Used by the main skill's planning section and runtime gate.

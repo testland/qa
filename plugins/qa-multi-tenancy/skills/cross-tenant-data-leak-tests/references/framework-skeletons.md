@@ -54,7 +54,7 @@ class TestDocumentsTenantIsolation:
 
 ## Postgres RLS-direct (language-agnostic)
 
-For surfaces relying on RLS per `rls-reference`,
+For surfaces relying on RLS per [row-level-security.md](row-level-security.md),
 also test at the DB layer:
 
 ```sql

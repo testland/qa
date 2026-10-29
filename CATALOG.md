@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `npm run catalog`).
 
-**77 plugins · 413 components**
+**77 plugins · 405 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -19,7 +19,7 @@ _Test process and strategy, test data, environments, reporting, impact analysis,
 | [qa-test-review](plugins/qa-test-review/) | 1.8.7 | 7 skills + 4 agents | 11 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.4.4 | 4 skills + 2 agents | 6 |
 | [qa-team-management](plugins/qa-team-management/) | 1.3.3 | 4 skills + 1 agents | 5 |
-| [qa-test-management](plugins/qa-test-management/) | 1.3.2 | 3 skills + 2 agents | 5 |
+| [qa-test-management](plugins/qa-test-management/) | 1.3.3 | 3 skills + 2 agents | 5 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.2.1 | 2 skills + 1 agents | 3 |
 
 ## Functional testing
@@ -54,8 +54,8 @@ _Accessibility, visual regression, data quality, localization, PDF and print out
 | [qa-accessibility](plugins/qa-accessibility/) | 1.4.3 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.1.2 | 6 skills + 2 agents | 8 |
 | [qa-pwa](plugins/qa-pwa/) | 1.3.3 | 5 skills + 1 agents | 6 |
-| [qa-browser-extension](plugins/qa-browser-extension/) | 1.3.2 | 3 skills + 1 agents | 4 |
 | [qa-localization](plugins/qa-localization/) | 1.2.2 | 4 skills + 0 agents | 4 |
+| [qa-browser-extension](plugins/qa-browser-extension/) | 1.4.0 | 2 skills + 1 agents | 3 |
 | [qa-pdf-print](plugins/qa-pdf-print/) | 1.2.2 | 3 skills + 0 agents | 3 |
 
 ## Security & compliance
@@ -67,9 +67,9 @@ _SAST, DAST, SCA, secrets and SBOM scanning, infrastructure as code, fuzzing, co
 | [qa-security-scanning](plugins/qa-security-scanning/) | 1.0.3 | 21 skills + 1 agents | 22 |
 | [qa-compliance](plugins/qa-compliance/) | 1.4.3 | 6 skills + 0 agents | 6 |
 | [qa-iac](plugins/qa-iac/) | 1.2.2 | 4 skills + 1 agents | 5 |
-| [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.3.11 | 3 skills + 1 agents | 4 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.3.2 | 4 skills + 0 agents | 4 |
-| [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.4.2 | 2 skills + 1 agents | 3 |
+| [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.4.0 | 2 skills + 1 agents | 3 |
+| [qa-fuzz-testing](plugins/qa-fuzz-testing/) | 1.5.0 | 1 skills + 1 agents | 2 |
 
 ## Operations & resilience
 
@@ -79,10 +79,10 @@ _Flaky-test triage, bug reproduction, defect management, load testing, resilienc
 |---|---|---|---:|
 | [qa-load-testing](plugins/qa-load-testing/) | 1.9.3 | 9 skills + 0 agents | 9 |
 | [qa-resilience](plugins/qa-resilience/) | 1.0.2 | 7 skills + 0 agents | 7 |
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.8.4 | 3 skills + 3 agents | 6 |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.8.5 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.5.4 | 4 skills + 2 agents | 6 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.6.7 | 3 skills + 2 agents | 5 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.4.1 | 4 skills + 1 agents | 5 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.7.0 | 2 skills + 2 agents | 4 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.5.2 | 3 skills + 0 agents | 3 |
 
 ## Backend & distributed systems
@@ -92,11 +92,11 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga and 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.11 | 8 skills + 1 agents | 9 |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.3.2 | 5 skills + 1 agents | 6 |
-| [qa-serverless](plugins/qa-serverless/) | 1.4.2 | 5 skills + 1 agents | 6 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.4.0 | 4 skills + 1 agents | 5 |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.2.22 | 4 skills + 1 agents | 5 |
 | [qa-db-migrations](plugins/qa-db-migrations/) | 1.3.4 | 4 skills + 1 agents | 5 |
 | [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.2.5 | 4 skills + 1 agents | 5 |
+| [qa-serverless](plugins/qa-serverless/) | 1.5.0 | 4 skills + 1 agents | 5 |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.3.2 | 3 skills + 1 agents | 4 |
 | [qa-time](plugins/qa-time/) | 1.2.26 | 3 skills + 1 agents | 4 |
 
@@ -106,12 +106,12 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payments, featur
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-feature-flags](plugins/qa-feature-flags/) | 1.5.4 | 6 skills + 3 agents | 9 |
+| [qa-feature-flags](plugins/qa-feature-flags/) | 1.6.0 | 5 skills + 3 agents | 8 |
 | [qa-auth-flows](plugins/qa-auth-flows/) | 1.3.4 | 6 skills + 1 agents | 7 |
-| [qa-graphql](plugins/qa-graphql/) | 1.5.4 | 6 skills + 0 agents | 6 |
+| [qa-graphql](plugins/qa-graphql/) | 1.5.5 | 6 skills + 0 agents | 6 |
 | [qa-grpc](plugins/qa-grpc/) | 1.2.16 | 5 skills + 1 agents | 6 |
-| [qa-payment](plugins/qa-payment/) | 1.5.3 | 5 skills + 1 agents | 6 |
 | [qa-notifications](plugins/qa-notifications/) | 1.3.4 | 4 skills + 1 agents | 5 |
+| [qa-payment](plugins/qa-payment/) | 1.6.0 | 4 skills + 1 agents | 5 |
 | [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.4.3 | 3 skills + 1 agents | 4 |
 
 ## AI & ML

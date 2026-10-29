@@ -1,6 +1,6 @@
 # Cross-tier coherence problems and the per-tier test surface
 
-Deep reference for `cache-coherence-patterns-reference` SKILL.md. Consult
+Deep reference for [cache-coherence-patterns.md](cache-coherence-patterns.md). Consult
 when auditing an existing multi-tier cache for coherence bugs and when
 deciding what to test at each tier.
 

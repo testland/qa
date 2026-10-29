@@ -74,7 +74,7 @@ def create_case(project_code, title, description=None, preconditions=None,
 | `status` | 0=Actual, 1=Draft, 2=Deprecated |
 
 Note Qase priority is inverted (1=High here vs 1=Critical in IEEE 1044; map
-per `severity-vs-priority-reference` in the qa-defect-management plugin).
+per `bug-tracker-workflow` (its severity-vs-priority reference) in the qa-defect-management plugin).
 
 ## Steps
 
@@ -282,5 +282,5 @@ surface from this case-management API).
   by stable URL).
 - Qase API reference (Swagger / OpenAPI) - developers.qase.io.
 - qase-python SDK - github.com/qase-tms/qase-python.
-- `severity-vs-priority-reference` (qa-defect-management plugin) - the
+- `bug-tracker-workflow` (its severity-vs-priority reference, qa-defect-management plugin) - the
   severity / priority mapping convention.

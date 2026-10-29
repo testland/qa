@@ -239,7 +239,7 @@ jobs:
   [references/browser-cache-control.md](references/browser-cache-control.md),
   [references/playwright-cache-recipes.md](references/playwright-cache-recipes.md).
 - Companion catalog:
-  `cache-coherence-patterns-reference` (incl. stampede + SWR/SIE in its
+  `redis-cache-tests` (its cache-coherence reference, incl. stampede + SWR/SIE in its
   references/).
 - Sibling tools:
   `redis-cache-tests`,

@@ -1,13 +1,12 @@
 # qa-fuzz-testing
 
-Structure-aware coverage-guided fuzzing: the `coverage-guided-fuzzing` umbrella skill (fuzzer choice + engine-generic workflow, with libFuzzer, AFL++, cargo-fuzz, Go native, Atheris, Jazzer, corpus-management, and sanitizer-integration as references) + `crash-triage-reference` (per-crash reading and the bulk BLOCK/PASS triage workflow) + 1 agent (fuzz-target-author). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.
+Structure-aware coverage-guided fuzzing: the `coverage-guided-fuzzing` umbrella skill (fuzzer choice + engine-generic workflow, with libFuzzer, AFL++, cargo-fuzz, Go native, Atheris, Jazzer, corpus-management, sanitizer-integration and crash triage (per-crash reading and the bulk BLOCK/PASS triage workflow) as references) + 1 agent (fuzz-target-author). Distinct from qa-property-based (hypothesis-driven + shrinking) and qa-api-testing/schemathesis-fuzzing (API-layer); this is binary/system-level coverage-guided fuzzing.
 
 ## Components
 
 | Type | Name | Description |
 | --- | --- | --- |
-| skill | [coverage-guided-fuzzing](skills/coverage-guided-fuzzing/SKILL.md) | Fuzzer-choice routing tree + engine-generic workflow (target, corpus, sanitizers, CI); per-engine depth (libFuzzer, AFL++, cargo-fuzz, Go native, Atheris, Jazzer) plus corpus-management and sanitizer-integration catalogs as references |
-| Skill | [crash-triage-reference](skills/crash-triage-reference/SKILL.md) | Triaging fuzzer crashes: ASan/UBSan/MSan reading, exploitability classification, stack-hash dedup, minimization, and the bulk triage workflow ending in a BLOCK/PASS verdict |
+| skill | [coverage-guided-fuzzing](skills/coverage-guided-fuzzing/SKILL.md) | Fuzzer-choice routing tree + engine-generic workflow (target, corpus, sanitizers, CI); per-engine depth (libFuzzer, AFL++, cargo-fuzz, Go native, Atheris, Jazzer) plus corpus-management, sanitizer-integration and crash-triage catalogs as references |
 | agent | [fuzz-target-author](agents/fuzz-target-author.md) | Scaffold a fuzz target from a function signature (routed via the umbrella's routing tree) |
 
 ## Differentiation

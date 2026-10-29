@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-defect-management",
-  "version": "1.6.7",
+  "version": "1.7.0",
   "description": "Defect management: severity vs priority classification, bug tracker workflows on Jira, Linear, GitHub Issues and Azure DevOps, and fix confirmation. Agents (ci-defect-filer, defect-fix-verifier) turn CI failures into deduplicated tracker bugs and re-run a defect's reproduction once a fix is claimed. Distinct from qa-bug-repro, which covers reproduction, report authoring, and the weekly defect review.",
   "author": {
     "name": "testland",

@@ -5,7 +5,6 @@ tools: "Read, Write, Edit, Grep, Glob, Bash(npx playwright test *), Bash(web-ext
 model: inherit
 skills:
   - playwright-extension-fixtures
-  - manifest-v3-test-surface-reference
   - chrome-extension-messaging-tests
 ---
 
@@ -36,7 +35,7 @@ Parse the project's `manifest.json`. Read `"manifest_version"` - value `3` means
 
 ### Step 2 - Pick the test infrastructure
 
-Playwright extension fixtures are the canonical Chromium runner because per [Playwright Chrome extensions docs][pw-ext], Chromium extension tests use `chromium.launchPersistentContext` with `--disable-extensions-except=$EXT_DIR` + `--load-extension=$EXT_DIR` to load the unpacked extension into a persistent context. Default to Playwright extension fixtures (see [`playwright-extension-fixtures`](../skills/playwright-extension-fixtures/SKILL.md)) unless the spec is Firefox-only - in which case use Mozilla's `web-ext run` runner per [`manifest-v3-test-surface-reference` references/web-ext-firefox.md](../skills/manifest-v3-test-surface-reference/references/web-ext-firefox.md).
+Playwright extension fixtures are the canonical Chromium runner because per [Playwright Chrome extensions docs][pw-ext], Chromium extension tests use `chromium.launchPersistentContext` with `--disable-extensions-except=$EXT_DIR` + `--load-extension=$EXT_DIR` to load the unpacked extension into a persistent context. Default to Playwright extension fixtures (see [`playwright-extension-fixtures`](../skills/playwright-extension-fixtures/SKILL.md)) unless the spec is Firefox-only - in which case use Mozilla's `web-ext run` runner per [`playwright-extension-fixtures` references/web-ext-firefox.md](../skills/playwright-extension-fixtures/references/web-ext-firefox.md).
 
 [pw-ext]: https://playwright.dev/docs/chrome-extensions
 
@@ -79,5 +78,5 @@ Write one new file at `tests/extension-<surface>.spec.ts` (Playwright convention
 ## Hand-off targets
 
 - **Per-surface skill** → [`playwright-extension-fixtures`](../skills/playwright-extension-fixtures/SKILL.md) (fixture layer; reload matrix + storage-test templates in its references/), [`chrome-extension-messaging-tests`](../skills/chrome-extension-messaging-tests/SKILL.md).
-- **Reference** → [`manifest-v3-test-surface-reference`](../skills/manifest-v3-test-surface-reference/SKILL.md) (manifest matrix; `web-ext` Firefox runner in its references/).
+- **Reference** → [`playwright-extension-fixtures` MV3 test-surface reference](../skills/playwright-extension-fixtures/references/manifest-v3-test-surface.md) (manifest matrix; `web-ext` Firefox runner in its references/).
 - **Test-code review** → `test-code-conventions` (qa-test-review).
