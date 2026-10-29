@@ -1,6 +1,6 @@
 ---
 name: stripe-test-cards-and-webhooks
-description: "Wraps Stripe API testing patterns: test-mode initialization, the canonical test cards (4242 success; 4000 0000 0000 0002 declined; 4000 0027 6000 3184 3DS challenge per the 3DS flows reference in payment-flow-states-reference), the Stripe CLI webhook flow (`stripe listen --forward-to`), the Stripe CLI fixture commands (`stripe trigger payment_intent.succeeded`), and the webhook signature verification (Stripe-Signature header + HMAC-SHA256). Use when testing Stripe-integrated code."
+description: "Wraps Stripe API testing patterns: test-mode initialization, the canonical test cards (4242 success; 4000 0000 0000 0002 declined; 4000 0027 6000 3184 3DS challenge per the 3DS flows reference in payment-flow-test-author), the Stripe CLI webhook flow (`stripe listen --forward-to`), the Stripe CLI fixture commands (`stripe trigger payment_intent.succeeded`), and the webhook signature verification (Stripe-Signature header + HMAC-SHA256). Use when testing Stripe-integrated code."
 ---
 
 # stripe-test-cards-and-webhooks
@@ -18,7 +18,7 @@ deterministically produce success / decline / 3DS challenge.
 - Tests for code that integrates Stripe.
 - Verifying webhook handling.
 - 3DS challenge flow tests per the 3DS flows reference in
-  `payment-flow-states-reference`.
+  `payment-flow-test-author` (its payment-states reference).
 
 ## Authoring
 
@@ -198,7 +198,7 @@ jobs:
 - Stripe CLI:
   [docs.stripe.com/stripe-cli](https://docs.stripe.com/stripe-cli).
 - Companion catalog:
-  `payment-flow-states-reference` (state machines + 3DS flows);
+  `payment-flow-test-author` (its payment-states reference: state machines + 3DS flows);
   PCI scope: `pci-dss-control-test-author` (qa-compliance).
 - Other gateways:
   `payment-gateway-sandboxes` (Adyen / PayPal / Braintree).

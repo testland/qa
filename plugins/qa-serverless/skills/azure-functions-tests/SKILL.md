@@ -3,7 +3,7 @@ name: azure-functions-tests
 description: "Runs Azure Functions locally using Azure Functions Core Tools v4 (`func start`), Azurite storage emulation, and framework-native unit tests for handler code (.NET isolated worker model, Node.js v4, Python v2). Covers HTTP, queue, and timer trigger testing, admin-endpoint invocation for non-HTTP triggers, and binding verification via local.settings.json. Use when testing Azure Functions before deployment, reproducing trigger behaviour without live Azure services, or gating function handler logic in CI."
 metadata:
   keywords: "azure-functions, func-start, azurite, isolated-worker, http-trigger, queue-trigger, timer-trigger, serverless, local-testing"
-  version: "1.3.5"
+  version: "1.3.6"
 ---
 
 # azure-functions-tests
@@ -116,7 +116,7 @@ gated in CI, with no live Azure Storage account.
   by `func start`. Test with connection strings locally; verify RBAC
   in a staging environment.
 - Cold-start behaviour differs from production. For cold-start budgets see
-  `cold-start-budget-reference`.
+  `serverless-integration-test-builder` (its cold-start budget reference).
 
 ## References
 
@@ -136,6 +136,6 @@ gated in CI, with no live Azure Storage account.
   [learn.microsoft.com/azure/azure-functions/functions-manually-run-non-http](https://learn.microsoft.com/en-us/azure/azure-functions/functions-manually-run-non-http)
 - Sibling skills:
   `aws-sam-local-testing`,
-  `cold-start-budget-reference`,
+  `serverless-integration-test-builder` (its cold-start budget reference),
   `cloudflare-workers-miniflare`,
   `serverless-integration-test-builder`

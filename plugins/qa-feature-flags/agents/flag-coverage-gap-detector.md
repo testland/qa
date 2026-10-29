@@ -1,16 +1,19 @@
 ---
 name: flag-coverage-gap-detector
-description: "Read-only adversarial critic that scans code for flag-evaluation call sites (isEnabled / getBooleanValue / variation / variationDetail) and identifies flag branches whose OFF path, FALLTHROUGH path, or non-default variants have no corresponding test exercising them. Emits a ranked list of untested flag branches and an overall coverage-gap verdict. Use after adding or changing a feature flag to confirm test coverage exists for every reachable branch - distinct from stale-flag-detector (which finds flags whose AGE or rollout state suggests removal) and feature-flag-test-matrix-reference (whose workflow BUILDS a new coverage matrix from scratch); this agent audits what is already in the test suite against what branches the production code actually reaches."
+description: "Read-only adversarial critic that scans code for flag-evaluation call sites (isEnabled / getBooleanValue / variation / variationDetail) and identifies flag branches whose OFF path, FALLTHROUGH path, or non-default variants have no corresponding test exercising them. Emits a ranked list of untested flag branches and an overall coverage-gap verdict. Use after adding or changing a feature flag to confirm test coverage exists for every reachable branch - distinct from stale-flag-detector (which finds flags whose AGE or rollout state suggests removal) and the flag test-matrix reference in openfeature-sdk-testing (whose workflow BUILDS a new coverage matrix from scratch); this agent audits what is already in the test suite against what branches the production code actually reaches."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:
-  - feature-flag-test-matrix-reference
+  - openfeature-sdk-testing
 ---
 
 A read-only adversarial critic. Its job is to find flag branches in
 production code that no test exercises - the OFF path, the FALLTHROUGH
 variant, the non-default multivariate arm - and surface them as
 actionable coverage gaps.
+
+The flag test-matrix reference ships with the preloaded `openfeature-sdk-testing` skill as
+[references/feature-flag-test-matrix.md](../skills/openfeature-sdk-testing/references/feature-flag-test-matrix.md); read it before the steps below.
 
 ## When invoked
 
@@ -59,13 +62,13 @@ Grep pattern: <flag-key>  (in test files only)
 Then check: does any test mock/stub this flag to the OFF / non-default value?
 ```
 
-Per the `feature-flag-test-matrix-reference` skill (preloaded): the
+Per the flag test-matrix reference of the preloaded `openfeature-sdk-testing` skill: the
 per-flag isolation strategy requires N x M tests - one per flag per
 variant. A flag with only the ON-path tested satisfies 1/2 of the
 isolation requirement.
 
 If a test file stubs the SDK to a constant return (e.g. always returns
-`true`), flag it: `feature-flag-test-matrix-reference` anti-pattern
+`true`), flag it: flag test-matrix reference anti-pattern
 "Mock the SDK to return constant - misses targeting / rollout logic."
 
 ## Step 4 - Score and rank gaps
@@ -136,9 +139,9 @@ before proceeding.
 - LaunchDarkly evaluation reason codes:
   launchdarkly.com/docs/sdk/concepts/evaluation-reasons
 - Branch coverage strategies:
-  [`feature-flag-test-matrix-reference`](../skills/feature-flag-test-matrix-reference/SKILL.md)
+  [`openfeature-sdk-testing` flag test-matrix reference](../skills/openfeature-sdk-testing/references/feature-flag-test-matrix.md)
   (preloaded) - per-flag isolation, pairwise, kill-switch test categories
 - Sibling agent:
   [`stale-flag-detector`](./stale-flag-detector.md) (age/rollout-based removal);
   matrix building from scratch is the workflow section of
-  [`feature-flag-test-matrix-reference`](../skills/feature-flag-test-matrix-reference/SKILL.md)
+  [`openfeature-sdk-testing` flag test-matrix reference](../skills/openfeature-sdk-testing/references/feature-flag-test-matrix.md)

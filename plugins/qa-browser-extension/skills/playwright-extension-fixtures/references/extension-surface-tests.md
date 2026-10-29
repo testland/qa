@@ -132,7 +132,7 @@ storage persistence across reload - the extension's core surfaces are covered.
 ## Limitations
 
 - These recipes target Chromium; Firefox WebExtensions use Mozilla's
-  `web-ext` tooling (see `manifest-v3-test-surface-reference`,
+  `web-ext` tooling (see [manifest-v3-test-surface.md](manifest-v3-test-surface.md),
   references/web-ext-firefox.md).
 - Some extension APIs (`chrome.declarativeNetRequest`) cannot be
   fully unit-tested without a browser; integration tests are required.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-graphql",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "GraphQL server testing for Apollo Server, GraphQL Yoga and Hasura: subscriptions, N+1 detection and fixes, and depth and cost limit hardening. Mercurius is covered in the Yoga references, and introspection and persisted-query hardening in the limits skill. Distinct from qa-contract-testing/graphql-schema-regression, which detects schema drift; this plugin tests the server runtime.",
   "author": {
     "name": "testland",

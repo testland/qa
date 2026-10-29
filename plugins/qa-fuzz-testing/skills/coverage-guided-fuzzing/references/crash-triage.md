@@ -1,22 +1,17 @@
----
-name: crash-triage-reference
-description: "Reference catalog for triaging fuzzer crash artifacts - reading ASan, UBSan, and MSan output; classifying findings as LIKELY-EXPLOITABLE, MEDIUM, or BENIGN; deduplicating by stack-hash; minimizing reproducers with -minimize_crash; plus the bulk triage workflow for a full artifact directory (inventory, reproduce, classify, dedupe, BLOCK/PASS verdict with refuse-to-proceed rules and a report template). Use when you need to understand what a specific crash means, build exploitability intuition, work a set of findings by hand, or run a campaign-level triage that ends in a release verdict."
----
-
-# crash-triage-reference
+# Crash triage
 
 ## Overview
 
-Pure-reference catalog for working with fuzzer crash artifacts produced by
+Reference catalog for working with fuzzer crash artifacts produced by
 libFuzzer, AFL++, or cargo-fuzz campaigns using clang sanitisers. Covers
 reading crash output from ASan, UBSan, and MSan; distinguishing
 LIKELY-EXPLOITABLE from BENIGN findings; collapsing duplicates by stack-hash;
 and minimizing reproducers. The "Bulk triage workflow" section applies these
 steps across a full artifact directory and ends in a BLOCK / PASS verdict.
-For sanitiser build flags and compatibility, see the sanitizer-integration
-reference in the sibling `coverage-guided-fuzzing` skill.
+For sanitiser build flags and compatibility, see
+[sanitizer-integration.md](sanitizer-integration.md).
 
-## When to use
+## When to read this
 
 - Reading a raw ASan / UBSan / MSan crash report and identifying the bug class.
 - Deciding whether a finding blocks a release (LIKELY-EXPLOITABLE) or is a
@@ -95,8 +90,8 @@ UBSan's runtime is "not expected to produce false positives" (per
 [clang.llvm.org/docs/UndefinedBehaviorSanitizer.html](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)),
 but its production use needs care: recovery modes that continue execution
 instead of aborting can mask bugs from the fuzzer. Always build with
-`-fno-sanitize-recover=all` for fuzzing (see the sanitizer-integration
-reference in `coverage-guided-fuzzing`).
+`-fno-sanitize-recover=all` for fuzzing (see
+[sanitizer-integration.md](sanitizer-integration.md)).
 
 ## Reading MSan crash output
 
@@ -352,7 +347,6 @@ Report template:
 - LLVM libFuzzer (artifact naming, `-minimize_crash`, `-runs`, `-exact_artifact_path`,
   `-artifact_prefix`, `-rss_limit_mb`):
   [llvm.org/docs/LibFuzzer.html](https://llvm.org/docs/LibFuzzer.html)
-- Sibling skill: `coverage-guided-fuzzing` - the umbrella whose
-  sanitizer-integration reference (build flags, sanitiser
-  compatibility) and corpus-management reference (corpus
-  discipline, seed selection) feed this triage
+- [sanitizer-integration.md](sanitizer-integration.md) (build flags,
+  sanitiser compatibility) and [corpus-management.md](corpus-management.md)
+  (corpus discipline, seed selection) feed this triage

@@ -1,6 +1,6 @@
 # Defect lifecycle states and transitions
 
-Reference companion to `severity-vs-priority-reference`. Catalogs the
+Reference companion to [severity-vs-priority.md](severity-vs-priority.md). Catalogs the
 ISTQB-canonical defect lifecycle and maps it to Jira, Linear, and GitHub
 Issues workflows. Consumed by `bug-tracker-workflow` for state-transition
 logic.

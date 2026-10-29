@@ -1,6 +1,6 @@
 ---
 name: serverless-integration-test-builder
-description: "Workflow-driven skill that builds the integration-test suite for a serverless application from its IaC definition (SAM template / serverless.yml / Wrangler config / Vercel functions / Netlify functions). Walks through: identifying the function inventory + event sources, picking the right local-emulator per function (sam local / Miniflare / netlify dev / vercel dev / serverless-offline), generating test events per event source, asserting on cold-start + timeout budgets, and emitting the test directory + CI config. Use when introducing integration tests to a serverless project."
+description: "Workflow-driven skill that builds the integration-test suite for a serverless application from its IaC definition (SAM template / serverless.yml / Wrangler config / Vercel functions / Netlify functions). Walks through: identifying the function inventory + event sources, picking the right local-emulator per function (sam local / Miniflare / netlify dev / vercel dev / serverless-offline), generating test events per event source, asserting on cold-start + timeout budgets (per-runtime budget reference), and emitting the test directory + CI config. Use when introducing integration tests to a serverless project."
 ---
 
 # serverless-integration-test-builder
@@ -133,7 +133,7 @@ describe('get-user', () => {
   });
 
   test('completes within timeout budget', async () => {
-    // Per cold-start-budget-reference references/timeout-budgets.md: timeout=10s; want headroom
+    // Per references/timeout-budgets.md: timeout=10s; want headroom
     const start = Date.now();
     await handler({ ...event, pathParameters: { id: '1' } } as any, {} as any);
     const elapsed = Date.now() - start;
@@ -145,7 +145,7 @@ describe('get-user', () => {
 ## Step 5 - Cold-start + timeout budget assertions
 
 For each function, derive a budget from
-`cold-start-budget-reference` (cold-start tables + timeout budgets in
+[references/cold-start-budget.md](references/cold-start-budget.md) (cold-start tables + timeout budgets in
 its references/timeout-budgets.md).
 
 Typical cold starts per runtime (per AWS / Cloudflare / Vercel
@@ -245,7 +245,7 @@ Two-tier: local-fast tests on every PR; deploy + smoke on main.
 ## Gaps
 
 - `legacy-export` - no integration tests; on backlog.
-- Cold-start tests not feasible locally for any function (per `cold-start-budget-reference`).
+- Cold-start tests not feasible locally for any function (per [references/cold-start-budget.md](references/cold-start-budget.md)).
 
 ## How to add a new function
 
@@ -281,7 +281,7 @@ This skill produces:
 ## References
 
 - Companion catalog:
-  `cold-start-budget-reference` (cold-start + timeout budgets).
+  [references/cold-start-budget.md](references/cold-start-budget.md) (cold-start + timeout budgets).
 - Per-platform tools:
   `aws-sam-local-testing` (incl. .NET in references/dotnet.md),
   `cloudflare-workers-miniflare`,

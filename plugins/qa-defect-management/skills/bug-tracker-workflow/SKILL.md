@@ -1,6 +1,6 @@
 ---
 name: bug-tracker-workflow
-description: "Repairs defect bookkeeping that reports the wrong numbers - a weekly summary showing zero in the top severity band, a 'new defects this week' figure counting items already fixed, duplicates that were never merged, or one script moving issues across several boards whose workflows disagree. Files, transitions, dedupes, and searches bugs through one tracker-agnostic workflow across Jira, Linear, GitHub Issues, and Azure DevOps: authenticate, dedupe-search before creating, classify severity and priority, transition lifecycle states, and wire idempotent CI-driven filing from test failures. Jira Cloud REST API v3 is worked in full in the body (ADF descriptions, runtime transition lookup, JQL triage and duplicate queries, dry-run bulk transitions). Use when tracker data, defect metrics, or cross-board transitions are wrong or need automating."
+description: "Repairs defect bookkeeping that reports the wrong numbers - a weekly summary showing zero in the top severity band, a 'new defects this week' figure counting items already fixed, duplicates that were never merged, or one script moving issues across several boards whose workflows disagree. Files, transitions, dedupes, and searches bugs through one tracker-agnostic workflow across Jira, Linear, GitHub Issues, and Azure DevOps: authenticate, dedupe-search before creating, classify severity and priority, transition lifecycle states, and wire idempotent CI-driven filing from test failures. Jira Cloud REST API v3 is worked in full (ADF descriptions, runtime transition lookup, JQL triage and duplicate queries, dry-run bulk transitions); references hold the severity-vs-priority 5x5 matrix, defect lifecycle states and IEEE 1044 taxonomy. Use when tracker data, defect metrics, or cross-board transitions are wrong or need automating."
 ---
 
 # bug-tracker-workflow
@@ -26,7 +26,7 @@ The tracker-agnostic rules that hold on all four platforms:
   existing bug on a hit, and fail closed (skip the create, surface the
   error) if the search itself errors.
 - **Severity and priority are different axes** - keep both fields and score
-  them independently (`severity-vs-priority-reference`).
+  them independently ([references/severity-vs-priority.md](references/severity-vs-priority.md)).
 - **Never hard-code lifecycle identifiers.** Jira transition IDs, Linear
   state names, and ADO state strings are all tenant/team/process-specific -
   discover them at runtime.
@@ -46,7 +46,7 @@ The tracker-agnostic rules that hold on all four platforms:
 ## Worked primary - Jira Cloud REST API v3
 
 Jira's workflow engine maps cleanly to the canonical defect lifecycle (see
-the lifecycle reference in `severity-vs-priority-reference`), but every
+[references/lifecycle.md](references/lifecycle.md)), but every
 project's actual workflow is configurable, so the runner looks up transition
 IDs at runtime rather than hard-coding them. All calls per
 [developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/).
@@ -270,7 +270,7 @@ wiring:
 | Hard-coding transition IDs / state names | Workflow or process-template updates break the runner silently | Discover at runtime (Jira `GET /transitions`, Linear `workflowStates` by `type`, ADO process template) |
 | Plain-text `description` in Jira | API returns 400 - Jira v3 requires ADF | Wrap as `{"type": "doc", "version": 1, "content": [...]}` |
 | No deduplication before create | Each retry of a flaky test creates a new bug | Search by summary first; comment on existing |
-| Severity as built-in `priority` | Conflates two axes (`severity-vs-priority-reference`) | Use a custom Severity field or `severity-*` labels |
+| Severity as built-in `priority` | Conflates two axes ([references/severity-vs-priority.md](references/severity-vs-priority.md)) | Use a custom Severity field or `severity-*` labels |
 | Storing the API token in code | Token leak | Use environment variables / secret stores |
 | Polling metadata endpoints on every call | Rate-limited | Cache per workflow scheme, refresh on 4xx |
 | Bulk transitions without dry-run | Cannot easily reverse if wrong state | Always run in dry-run mode first; log all changes |
@@ -305,7 +305,7 @@ wiring:
   [references/github-issues.md](references/github-issues.md),
   [references/azuredevops.md](references/azuredevops.md) - each carries its
   own platform-doc citations.
-- Sibling reference: `severity-vs-priority-reference` (classification,
+- Classification reference: [references/severity-vs-priority.md](references/severity-vs-priority.md) (classification,
   lifecycle states, taxonomy).
 - Fed by: the from-CI-failure spec workflow in `bug-report-template`
   (qa-bug-repro).

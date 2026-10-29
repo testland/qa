@@ -65,8 +65,8 @@ public void Handler_LogsInput()
 ## Remaining-time behaviour
 
 Set `RemainingTime` low to exercise timeout-aware handlers (the
-early-return pattern in the cold-start-budget-reference
-references/timeout-budgets.md):
+early-return pattern in the timeout-budgets reference of
+`serverless-integration-test-builder`):
 
 ```csharp
 var context = new TestLambdaContext { RemainingTime = TimeSpan.FromSeconds(3) };

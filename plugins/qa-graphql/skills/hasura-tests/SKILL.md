@@ -248,7 +248,7 @@ secret nor the DB password appears in the workflow file.
   `graphql-complexity-limit-tester` (references/introspection.md).
 - Cross-plugin (tenant isolation):
   `cross-tenant-data-leak-tests`,
-  `rls-reference`.
+  `cross-tenant-data-leak-tests` (its row-level-security reference).
 - Sibling frameworks:
   `apollo-server-tests`,
   `graphql-yoga-tests`.

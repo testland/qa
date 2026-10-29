@@ -103,7 +103,7 @@ skills:
 
 ## Step 5 - Severity / priority sanity
 
-Per `severity-vs-priority-reference` (qa-defect-management plugin): both
+Per the severity-vs-priority reference in `bug-tracker-workflow` (qa-defect-management plugin): both
 fields populated independently, and severity matches stated impact (a case
 verifying a critical flow should not be Severity = Trivial). Watch the
 inverted Qase priority enum (1=High).
@@ -222,7 +222,7 @@ The agent **refuses** to:
 - Composes with:
   [`tcm-case-management`](../skills/tcm-case-management/SKILL.md) (live-API
   access patterns per vendor),
-  `severity-vs-priority-reference` (qa-defect-management plugin).
+  `bug-tracker-workflow` (its severity-vs-priority reference, qa-defect-management plugin).
 - ISTQB glossary - test case / equivalence partitioning / boundary value
   analysis / traceability: https://glossary.istqb.org/
 - Mozilla bug-writing guide - observable / reproducible failure principle

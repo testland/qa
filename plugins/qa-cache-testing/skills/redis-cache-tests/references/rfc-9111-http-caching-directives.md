@@ -1,6 +1,6 @@
 # RFC 9111 HTTP caching directives
 
-Deep reference for `cache-coherence-patterns-reference` SKILL.md. Consult
+Deep reference for [cache-coherence-patterns.md](cache-coherence-patterns.md). Consult
 when designing the `Cache-Control`, `Vary`, and `ETag` contract that the
 browser and CDN tiers enforce.
 

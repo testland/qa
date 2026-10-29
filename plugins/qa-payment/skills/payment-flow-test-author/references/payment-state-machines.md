@@ -1,6 +1,6 @@
 # Per-platform payment state machines
 
-Deep reference for `payment-flow-states-reference` SKILL.md. Consult when
+Deep reference for [payment-flow-states.md](payment-flow-states.md). Consult when
 mapping the canonical lifecycle onto a specific provider, or when auditing
 that a state-handling integration covers every provider-specific state. The
 canonical-state names and the decision workflow stay in the SKILL; the full

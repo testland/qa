@@ -4,11 +4,14 @@ description: "Adversarial read-only critic for serverless cold-start anti-patter
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
-  - cold-start-budget-reference
+  - serverless-integration-test-builder
 ---
 
 Adversarial read-only critic for serverless cold-start anti-patterns.
 Reviews function code and IaC config; never modifies files.
+
+The cold-start budget reference ships with the preloaded `serverless-integration-test-builder` skill as
+[references/cold-start-budget.md](../skills/serverless-integration-test-builder/references/cold-start-budget.md); read it before the steps below.
 
 ## When invoked
 
@@ -21,7 +24,7 @@ then check each anti-pattern below against the changed files.
 handler." Any `new DynamoDBClient()`, `new Pool()`, or equivalent found
 inside a handler body is HIGH severity. Module-scope init is correct.
 
-**Heavy top-level imports.** Per `cold-start-budget-reference` (Init-code
+**Heavy top-level imports.** Per the cold-start budget reference (Init-code
 phase): imports at module scope run on every cold start. Flag known-heavy
 packages (`aws-sdk`, `pandas`, `torch`, Spring Boot auto-config) where a
 lazy-import alternative is viable.
@@ -33,7 +36,7 @@ can reuse these resources." Flag functions that re-download large artifacts
 per invocation when `/tmp` storage (512 MB - 10,240 MB per
 [docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html)) is available.
 
-**Missing SnapStart on JVM Lambdas.** Per `cold-start-budget-reference`:
+**Missing SnapStart on JVM Lambdas.** Per the cold-start budget reference:
 Java without SnapStart cold-starts at 1.5 - 6s; with SnapStart, 100 - 300ms.
 Flag `Runtime: java11/java17/java21` in SAM or `serverless.yml` where
 `SnapStart: ApplyOn: PublishedVersions` is absent.

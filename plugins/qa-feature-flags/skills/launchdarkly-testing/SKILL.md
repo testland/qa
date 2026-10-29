@@ -1,6 +1,6 @@
 ---
 name: launchdarkly-testing
-description: "Wraps LaunchDarkly server-side SDK testing patterns: TestData data source for hermetic tests (no network), file-based data source for fixture-driven tests, flag override patterns (TestData.update for per-test flag values), and assignment-integrity tests. Use when writing tests for code that uses LaunchDarkly flags; to decide which flag combinations those tests should cover in the first place, see feature-flag-test-matrix-reference."
+description: "Wraps LaunchDarkly server-side SDK testing patterns: TestData data source for hermetic tests (no network), file-based data source for fixture-driven tests, flag override patterns (TestData.update for per-test flag values), and assignment-integrity tests. Use when writing tests for code that uses LaunchDarkly flags; to decide which flag combinations those tests should cover in the first place, see the flag test-matrix reference in openfeature-sdk-testing."
 ---
 
 # launchdarkly-testing
@@ -172,7 +172,7 @@ replaces it.
   [launchdarkly.com/docs/sdk/features/flags-from-files](https://launchdarkly.com/docs/sdk/features/flags-from-files).
 - Deciding WHICH flag combinations to cover is a separate step this skill does
   not do: when code branches on several flags, load
-  `feature-flag-test-matrix-reference` for the matrix, then come back here to
+  `openfeature-sdk-testing` (its flag test-matrix reference) for the matrix, then come back here to
   pin each flag's value per test.
 - Sibling SDK umbrella:
   `openfeature-sdk-testing` (OpenFeature + Unleash / Flagsmith / GrowthBook

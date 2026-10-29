@@ -1,6 +1,6 @@
 ---
 name: cross-tenant-data-leak-tests
-description: "Workflow-driven skill that plans and implements the cross-tenant leak-test suite - from surface inventory to the runtime CI gate a multi-tenant codebase must pass on every PR. The planning section inventories tenant-bearing surfaces (tables, APIs, object storage, search, queues, caches), classifies each by isolation model (silo / pool / bridge, per references/isolation-models.md), and derives the OWASP WSTG-ATHZ-02 coverage matrix. The battery defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the 404-vs-403 disclosure trade-off, the Postgres-RLS-direct patterns, and the CI integration (non-superuser non-BYPASSRLS role, fail the build on any leak). Use when designing or implementing a tenant-isolation test suite, adding the CI gate to an existing project, or investigating a leak finding."
+description: "Workflow-driven skill that plans and implements the cross-tenant leak-test suite - from surface inventory to the runtime CI gate a multi-tenant codebase must pass on every PR. The planning section inventories tenant-bearing surfaces (tables, APIs, object storage, search, queues, caches), classifies each by isolation model (silo / pool / bridge, per references/isolation-models.md), and derives the OWASP WSTG-ATHZ-02 coverage matrix. The battery defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the 404-vs-403 disclosure trade-off, Postgres RLS policies and tests (row-level-security reference), and the CI gate (non-superuser non-BYPASSRLS role, fail on any leak). Use when designing or implementing a tenant-isolation test suite, adding the CI gate to an existing project, or investigating a leak finding."
 ---
 
 # cross-tenant-data-leak-tests
@@ -109,7 +109,7 @@ For Postgres-backed apps, this is the most-common-bug step:
 | Role that **owns** the tenant table (and table not `FORCE`d) | Bypasses RLS. **Do not use** unless `FORCE ROW LEVEL SECURITY` is set. |
 | Plain application role (no BYPASSRLS, not owner) | **Correct** - same role prod uses. |
 
-Per `rls-reference`,
+Per [references/row-level-security.md](references/row-level-security.md),
 verify with:
 
 ```sql
@@ -212,7 +212,7 @@ def test_cannot_create_fk_referencing_other_tenant(
 
 This tests FK-based leak via reference: the FK constraint
 **bypasses RLS** per
-`rls-reference`,
+[references/row-level-security.md](references/row-level-security.md),
 so the FK must be validated at application layer too.
 
 ### Test 6 - Unique-collision side channel
@@ -235,7 +235,7 @@ def test_unique_violation_does_not_disclose_other_tenant_existence(
 ```
 
 Per
-`rls-reference`:
+[references/row-level-security.md](references/row-level-security.md):
 "Foreign key constraint checks, Unique constraint checks,
 TRUNCATE, and REFERENCES privilege checks bypass RLS." Solution:
 make `slug` unique per tenant: `UNIQUE (tenant_id, slug)`.
@@ -333,7 +333,7 @@ ROLLBACK;
 ```
 
 Per
-`rls-reference`:
+[references/row-level-security.md](references/row-level-security.md):
 test fails if either assertion fails (count != 0, or INSERT
 succeeds).
 
@@ -444,7 +444,7 @@ When a leak test fails:
 - OWASP WSTG-ATHZ-02 (consumed in the planning section):
   [owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/05-Authorization_Testing/02-Testing_for_Bypassing_Authorization_Schema).
 - Postgres RLS bypass rules:
-  `rls-reference` (non-Postgres engines in its references/other-engines.md).
+  [references/row-level-security.md](references/row-level-security.md) (non-Postgres engines in [references/other-engines.md](references/other-engines.md)).
 - GitHub Actions `secrets` context availability (CI job in Step 3):
   [docs.github.com/en/actions/reference/workflows-and-actions/contexts](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts).
 - Attack-pattern catalog:

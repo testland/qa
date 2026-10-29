@@ -1,6 +1,6 @@
 ---
 name: payment-flow-test-author
-description: "Build-an-X workflow that authors the full payment-flow test suite in three phases: the refund matrix (full / partial / multiple-partials / over-refund / already-refunded, per-gateway APIs for Stripe, Adyen, PayPal, Braintree), the chargeback / dispute suite (Visa + Mastercard reason codes, evidence submission windows, won / lost / accepted dispositions), and webhook replay + recovery via gateway-native simulators (Stripe CLI trigger / resend, Adyen Customer Area resend, PayPal Webhook Simulator, Braintree sampleNotification). Driven by the state model in payment-flow-states-reference. Use when building refund, dispute, or payment-webhook-robustness coverage for a payment integration; for generic (non-payment) webhook receiver testing use webhook-delivery-tester in the qa-notifications plugin."
+description: "Build-an-X workflow that authors the full payment-flow test suite in three phases: the refund matrix (full / partial / multiple-partials / over-refund / already-refunded, per-gateway APIs for Stripe, Adyen, PayPal, Braintree), the chargeback / dispute suite (Visa + Mastercard reason codes, evidence submission windows, won / lost / accepted dispositions), and webhook replay + recovery via gateway-native simulators (Stripe CLI trigger / resend, Adyen Customer Area resend, PayPal Webhook Simulator, Braintree sampleNotification). Driven by the payment state model and 3DS flows in references. Use when building refund, dispute, or payment-webhook-robustness coverage for a payment integration; for generic (non-payment) webhook receiver testing use webhook-delivery-tester in the qa-notifications plugin."
 ---
 
 # payment-flow-test-author
@@ -11,7 +11,7 @@ The three highest-incident payment surfaces after the happy path - refunds,
 disputes, and webhook handling - are one suite-authoring job, because they
 share the same substrate: the gateway's async state machine. This workflow
 builds all three phases in dependency order, driven by the canonical states
-in `payment-flow-states-reference`.
+in [references/payment-flow-states.md](references/payment-flow-states.md).
 
 Common bugs each phase catches: double-refund and
 partial-refund-not-summing (Phase 1); missed evidence deadlines and
@@ -28,7 +28,7 @@ and spoofable handlers (Phase 3).
 
 Before writing any test, translate the canonical lifecycle
 (created → requires_action → processing → succeeded → refunded / disputed)
-into your gateway's vocabulary using `payment-flow-states-reference`. Every
+into your gateway's vocabulary using [references/payment-flow-states.md](references/payment-flow-states.md). Every
 assertion below is on a state from that grid, and every async assertion
 waits on the webhook, never the synchronous API return.
 
@@ -225,6 +225,6 @@ Report the matrix per release and document deliberate gaps.
   [references/replay-simulators.md](references/replay-simulators.md).
 - Advanced recovery scenarios:
   [references/advanced-recovery-scenarios.md](references/advanced-recovery-scenarios.md).
-- State model: `payment-flow-states-reference`.
+- State model: [references/payment-flow-states.md](references/payment-flow-states.md).
 - Sandboxes: `payment-gateway-sandboxes`, `stripe-test-cards-and-webhooks`.
 - Generic webhook receiver testing: `webhook-delivery-tester` (qa-notifications).

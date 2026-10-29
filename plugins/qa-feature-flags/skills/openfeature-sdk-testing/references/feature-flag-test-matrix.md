@@ -1,9 +1,4 @@
----
-name: feature-flag-test-matrix-reference
-description: "Feature-flag test matrix design: the flag-state combinatorics problem (N flags × M variants × K user-segments = N×M×K test cases), the canonical coverage strategies (pairwise interaction coverage; default-only smoke; full matrix; risk-driven matrix), the workflow for building the coverage suite from a flag inventory (grep-based inventory, per-flag classification, PICT pairwise generation, per-cell test skeletons), the dedicated kill-switch test categories (references/killswitch.md: graceful degradation, fail-static default, kill latency, mid-flight consistency), and the flags-vs-experiments distinction. Use when designing the flag-test surface for a new project, building or auditing flag-test coverage, or authoring kill-switch tests."
----
-
-# feature-flag-test-matrix-reference
+# Feature-flag test matrix
 
 ## Overview
 
@@ -14,12 +9,12 @@ combinations. At realistic numbers (50 flags, 2 variants each,
 segments, it's 1500. Testing every combination is infeasible, so the
 matrix has to be sampled deliberately rather than enumerated.
 
-This skill is both the reference (the combinatorics + strategies below) and
+This file is both the reference (the combinatorics + strategies below) and
 the coverage-suite-building workflow (see Building the coverage suite); the
-per-SDK test mechanics live in `launchdarkly-testing` and
-`openfeature-sdk-testing`.
+per-SDK test mechanics live in `launchdarkly-testing` and in the main
+`openfeature-sdk-testing` skill.
 
-## When to use
+## When to read this
 
 - Designing the test surface for a new flag-heavy product.
 - Auditing existing flag-test coverage - are critical
@@ -143,7 +138,7 @@ describe('auth flag matrix', () => {
 
 5. **Add the special-category tests** regardless of matrix coverage:
    kill-switch deactivation latency (see
-   [references/killswitch.md](references/killswitch.md)), default-on-error
+   [killswitch.md](killswitch.md)), default-on-error
    (SDK failure returns the call-site default), and sticky-assignment (same
    user, same variant across evaluations).
 6. **Commit the matrix + document the gaps** - `flag-coverage.yaml` in the
@@ -154,7 +149,7 @@ describe('auth flag matrix', () => {
 
 | Category | Test |
 |---|---|
-| **Kill-switch** | Setting flag → off must halt the feature within N seconds (cache TTL); full four-category treatment in [references/killswitch.md](references/killswitch.md) |
+| **Kill-switch** | Setting flag → off must halt the feature within N seconds (cache TTL); full four-category treatment in [killswitch.md](killswitch.md) |
 | **Percentage rollout** | Flag at 10% → ~10% of users in 'on' bucket; SDK assignment stable per user |
 | **Targeted rollout** | Targeting `region=EU` → only EU users get treatment |
 | **Sticky assignment** | Same user → same variant across sessions and re-launches |
@@ -239,10 +234,8 @@ Result: a handful of targeted cases instead of the full cross-product, with the 
 - GrowthBook test docs:
   [docs.growthbook.io/lib/node](https://docs.growthbook.io/lib/node).
 - Kill-switch test categories:
-  [references/killswitch.md](references/killswitch.md).
-- Consumed by:
-  `launchdarkly-testing`,
-  `openfeature-sdk-testing`.
+  [killswitch.md](killswitch.md).
+- Used by: `launchdarkly-testing` and the main skill.
 - Removal side: `stale-flag-detector` agent.
 - Cross-plugin:
   `ab-test-validity-checklist`,

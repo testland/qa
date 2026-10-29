@@ -159,7 +159,7 @@ jobs:
 |---|---|---|
 | Skip `sam build` between code changes | Stale package; old code runs | `sam build` (or watch mode) |
 | `sam local invoke` for full-suite | Spawn cost per invocation; slow | `sam local start-lambda` once, invoke many |
-| Compare local timing to prod | Docker overhead; cold-start model differs per `cold-start-budget-reference` | Test correctness locally; latency in prod |
+| Compare local timing to prod | Docker overhead; cold-start model differs per `serverless-integration-test-builder` (its cold-start budget reference) | Test correctness locally; latency in prod |
 | No event-payload generation | Hand-rolled events miss fields | `sam local generate-event` |
 | Mock AWS SDK calls locally | Tests pass but prod IAM / endpoints fail | Use LocalStack or test against real low-cost AWS account |
 | Skip API Gateway routing test | Lambda alone passes; API GW integration breaks | `sam local start-api` |
@@ -169,7 +169,7 @@ jobs:
 
 - **Docker overhead.** Cold starts in SAM Local are 5-15s
   (Docker container spin-up); not representative of prod
-  cold-start budgets per `cold-start-budget-reference`.
+  cold-start budgets per `serverless-integration-test-builder` (its cold-start budget reference).
 - **Doesn't test IAM.** Local invocations run with your AWS
   CLI credentials, not the Lambda's role.
 - **Doesn't test event-source mapping.** SQS / DynamoDB Streams /
@@ -190,7 +190,7 @@ jobs:
 - .NET handler-direct testing:
   [references/dotnet.md](references/dotnet.md).
 - Companion catalog:
-  `cold-start-budget-reference` (cold-start + timeout budgets).
+  `serverless-integration-test-builder` (its cold-start budget reference: cold-start + timeout budgets).
 - Sibling tools:
   `cloudflare-workers-miniflare`,
   `azure-functions-tests`.

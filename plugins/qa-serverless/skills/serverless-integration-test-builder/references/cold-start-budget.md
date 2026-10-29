@@ -1,9 +1,4 @@
----
-name: cold-start-budget-reference
-description: "Pure-reference catalog of latency budgets across serverless runtimes: cold starts AND timeouts. Covers AWS Lambda's three-phase cold start (Init: download+unzip+runtime-bootstrap; Init code: imports + module load; Invoke: handler execution), Cloudflare Workers' isolate model (sub-millisecond cold starts via V8 isolates per developers.cloudflare.com), Vercel Edge Runtime, Lambda SnapStart for JVM (snapshot-restore for Java), and provisioned-concurrency trade-offs, plus Lambda timeout + billing budgets in references/timeout-budgets.md (the 15-minute hard limit, getRemainingTimeInMillis, per-ms billing, memory-CPU scaling, the API Gateway 29s / SQS visibility-timeout integration cascade). Use when designing latency or timeout budgets, choosing a runtime, sizing memory, or auditing cold-start variance in production."
----
-
-# cold-start-budget-reference
+# Cold-start and timeout budgets
 
 ## Overview
 
@@ -18,7 +13,7 @@ Lambda's cold start has three phases:
 Phases 1 + 2 are the "cold" part. Phase 3 is what runs every
 invocation (cold or warm).
 
-## When to use
+## When to read this
 
 - Designing a latency budget for a Lambda / Workers / Edge
   function.
@@ -130,7 +125,7 @@ Lambda's 15-minute hard limit, the `getRemainingTimeInMillis` early-return
 pattern, per-ms billing and the memory-CPU relationship, and the
 integration timeout cascade (API Gateway's hard 29s, SQS visibility
 timeouts, Lambda@Edge limits) are cataloged in
-[references/timeout-budgets.md](references/timeout-budgets.md).
+[timeout-budgets.md](timeout-budgets.md).
 
 ## Testable behaviours
 
@@ -197,8 +192,6 @@ provisioned-concurrency spend.
 - Vercel Edge Runtime:
   [vercel.com/docs/functions/edge-runtime](https://vercel.com/docs/functions/edge-runtime).
 - Timeout + billing budgets:
-  [references/timeout-budgets.md](references/timeout-budgets.md).
-- Consumed by:
-  `aws-sam-local-testing`,
-  `cloudflare-workers-miniflare`,
-  `serverless-integration-test-builder`.
+  [timeout-budgets.md](timeout-budgets.md).
+- Used by: the main skill, `aws-sam-local-testing`,
+  `cloudflare-workers-miniflare`, `azure-functions-tests`.

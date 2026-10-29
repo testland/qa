@@ -381,8 +381,7 @@ pass/fail plus a single verdict (`pass`, `block`, `pass-with-caveats`).
    justification - rare but legitimate. Severity always equal to priority =
    flag as suspicious (likely auto-equated). Scales in
    [references/severity-and-priority-scales.md](references/severity-and-priority-scales.md);
-   deeper classification rules in `severity-vs-priority-reference`
-   (qa-defect-management).
+   deeper classification rules in `bug-tracker-workflow` (its severity-vs-priority reference, qa-defect-management plugin).
 4. **Reproduction quality.** Must include a commit SHA (not "Production" -
    that isn't a commit), a runnable command, a one-line observation, and
    expected vs actual. Missing any = BLOCK.

@@ -4,12 +4,15 @@ description: "Adversarial read-only reviewer of payment-integration code (PR dif
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:
-  - payment-flow-states-reference
+  - payment-flow-test-author
   - pci-dss-control-test-author
 ---
 
 Adversarial read-only critic of payment-integration code. Does not modify
 files. Emits a per-finding verdict and BLOCK or PASS.
+
+The payment-states reference ships with the preloaded `payment-flow-test-author` skill as
+[references/payment-flow-states.md](../skills/payment-flow-test-author/references/payment-flow-states.md); read it before the steps below.
 
 ## When invoked
 
@@ -41,7 +44,7 @@ files. Emits a per-finding verdict and BLOCK or PASS.
    [docs.stripe.com/payments/payment-intents/verifying-status](https://docs.stripe.com/payments/payment-intents/verifying-status):
    `requires_action` stays in limbo; fulfillment must wait for the
    `payment_intent.succeeded` webhook, not the synchronous API return.
-   Equivalent states in preloaded `payment-flow-states-reference` (Adyen
+   Equivalent states in the payment-states reference of the preloaded `payment-flow-test-author` (Adyen
    `RedirectShopper`, PayPal `PAYER_ACTION_REQUIRED`). Flag synchronous-return
    fulfillment paths.
 
@@ -65,6 +68,6 @@ On a clean diff: `No defects detected. Verdict: PASS`.
 
 - Refuse PASS when any Critical finding remains.
 - Refuse PASS when `requires_action` handling is absent and the integration
-  targets EU cards (PSD2 SCA scope per preloaded `payment-flow-states-reference`).
+  targets EU cards (PSD2 SCA scope per the payment-states reference of the preloaded `payment-flow-test-author`).
 - Refuse to modify any file; read-only.
 - Uncited claims are a hard reject.

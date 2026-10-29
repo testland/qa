@@ -1,9 +1,4 @@
----
-name: severity-vs-priority-reference
-description: "Pure-reference catalog for defect classification: severity (impact on the system / user) vs priority (urgency of fix) on independent axes - the canonical 5-point severity scale (Critical / High / Medium / Low / Trivial), the 5-point priority scale (Immediate / High / Medium / Low / Deferred), the 5x5 matrix with worked S1/P5 and S5/P1 examples, and IEEE 1044-2009 severity classes; plus the full defect lifecycle (ISTQB-canonical states new / open / assigned / fixed / verified / closed / reopened / deferred / rejected / duplicate, allowed and forbidden transitions, tracker vocabulary maps) and the defect-categorisation taxonomies (IEEE 1044 anomaly classification, ISTQB CTAL-TA root-cause categories, Orthogonal Defect Classification) in references. Use when triaging or classifying a defect, configuring a tracker's severity/priority/state fields, reviewing a bug report's classification, or running root-cause analysis."
----
-
-# severity-vs-priority-reference
+# Severity vs priority
 
 ## Overview
 
@@ -18,25 +13,25 @@ scheduling, escalation, and SLA enforcement.
   business context (customer commitments, regulatory deadlines,
   release timing).
 
-This skill is a **pure reference** consumed by defect-report
-review (which rejects reports that conflate the two),
-`bug-tracker-workflow`, and downstream triage tooling. Two
+This reference is used by defect-report review (which rejects
+reports that conflate the two), the tracker workflow in the main
+skill, and downstream triage tooling. Two
 companion references extend it: the defect **lifecycle** (states,
 allowed / forbidden transitions, tracker vocabulary) in
-[references/lifecycle.md](references/lifecycle.md), and the
+[lifecycle.md](lifecycle.md), and the
 **categorisation taxonomies** (IEEE 1044, ISTQB CTAL-TA root
-cause, ODC) in [references/taxonomy.md](references/taxonomy.md).
+cause, ODC) in [taxonomy.md](taxonomy.md).
 
-## When to use
+## When to read this
 
 - Reviewing whether a bug report's severity + priority are both
   set and consistent with the defect description.
 - Configuring a tracker's severity / priority field options.
 - Coaching a tester / triager on the distinction.
 - Checking a state transition against the canonical lifecycle
-  (see [references/lifecycle.md](references/lifecycle.md)).
+  (see [lifecycle.md](lifecycle.md)).
 - Categorising defects for root-cause analysis or process metrics
-  (see [references/taxonomy.md](references/taxonomy.md)).
+  (see [taxonomy.md](taxonomy.md)).
 
 ## How to use
 
@@ -161,8 +156,8 @@ However:
   business day, P3 = 1 week. SLAs are tracker config, not
   severity-derived.
 
-See [references/lifecycle.md](references/lifecycle.md)
-for the state transitions; this skill defines the orthogonal
+See [lifecycle.md](lifecycle.md)
+for the state transitions; this file defines the orthogonal
 severity / priority fields.
 
 ## Common confusions
@@ -185,7 +180,7 @@ severity / priority fields.
 | Azure DevOps | Built-in `Severity` (1 - Critical / 2 - High / 3 - Medium / 4 - Low) | Built-in `Priority` (1 / 2 / 3 / 4) |
 | Bugzilla | Built-in `Severity` + `Priority` | Same |
 
-`bug-tracker-workflow` covers the platform-specific configuration
+The main skill covers the platform-specific configuration
 for Jira, Linear, GitHub Issues, and Azure DevOps.
 
 ## Anti-patterns
@@ -224,6 +219,6 @@ for Jira, Linear, GitHub Issues, and Azure DevOps.
 - Linear "Priority levels" - Linear priority docs.
 - GitHub Issues - labels + Projects status documentation.
 - Companion references:
-  [references/lifecycle.md](references/lifecycle.md),
-  [references/taxonomy.md](references/taxonomy.md),
-  [references/tracker-vocabulary-map.md](references/tracker-vocabulary-map.md).
+  [lifecycle.md](lifecycle.md),
+  [taxonomy.md](taxonomy.md),
+  [tracker-vocabulary-map.md](tracker-vocabulary-map.md).

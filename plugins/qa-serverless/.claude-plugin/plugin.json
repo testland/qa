@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-serverless",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Serverless testing for AWS Lambda, Azure Functions and Cloudflare Workers: local emulators, cold-start and timeout budgets, and integration test suites. Builds integration tests from SAM, Serverless Framework, Wrangler, Vercel or Netlify definitions and covers .NET Lambda test tools. A critic agent (serverless-cold-start-critic) flags cold-start anti-patterns.",
   "author": {
     "name": "testland",

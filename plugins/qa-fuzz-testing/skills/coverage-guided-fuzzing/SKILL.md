@@ -1,6 +1,6 @@
 ---
 name: coverage-guided-fuzzing
-description: "Coverage-guided fuzzing across every mainstream engine - libFuzzer (C/C++ in-process), AFL++ (out-of-process, QEMU mode for closed-source binaries), cargo-fuzz (Rust), Go native fuzzing (go test -fuzz), Atheris (Python), and Jazzer (JVM, @FuzzTest). Body covers choosing the right fuzzer for the language and build type (the routing tree) plus the engine-generic workflow: writing a small deterministic fuzz target, seed-corpus + dictionary construction, sanitizer selection (ASan + UBSan default, compatibility matrix), corpus minimisation, crash-artifact handling, and CI smoke-fuzz wiring with a cached corpus. Per-engine depth (flags, harness syntax, CI jobs) lives in references, as do the corpus-management and sanitizer-integration catalogs. Use when a project needs fuzz coverage and no fuzzer is chosen yet, or when authoring / running / maintaining a fuzz campaign with any of these engines. For triaging the resulting crashes see crash-triage-reference."
+description: "Coverage-guided fuzzing across every mainstream engine - libFuzzer (C/C++ in-process), AFL++ (out-of-process, QEMU mode for closed-source binaries), cargo-fuzz (Rust), Go native fuzzing (go test -fuzz), Atheris (Python), and Jazzer (JVM, @FuzzTest). Body covers choosing the right fuzzer for the language and build type (the routing tree) plus the engine-generic workflow: writing a small deterministic fuzz target, seed-corpus + dictionary construction, sanitizer selection (ASan + UBSan default, compatibility matrix), corpus minimisation, crash-artifact handling, and CI smoke-fuzz wiring with a cached corpus. Per-engine depth (flags, harness syntax, CI jobs) lives in references, as do corpus management, sanitizer integration and crash triage (ASan / UBSan / MSan output, exploitability, stack-hash dedup, minimization). Use when a project needs fuzz coverage and no fuzzer is chosen yet, when authoring / running / maintaining a fuzz campaign, or when triaging its crashes."
 ---
 
 # coverage-guided-fuzzing
@@ -155,7 +155,7 @@ Run locally until coverage plateaus; minimise the corpus periodically
 input before filing it. Crash artifacts (`crash-<sha1>` etc.) and their
 handling are cataloged in
 [references/corpus-management.md](references/corpus-management.md);
-classification and exploitability rules live in `crash-triage-reference`.
+classification and exploitability rules live in [references/crash-triage.md](references/crash-triage.md).
 
 ### Step 5 - CI wiring
 
@@ -198,8 +198,9 @@ reference file.
   CI jobs differ per engine.
 - Cross-language targets (e.g. JNI) need two campaigns: Jazzer for the
   Java side, libFuzzer for the C side.
-- Crash triage (classification, dedup, exploitability, verdicts) is the
-  `crash-triage-reference` sibling's scope, not this skill's.
+- Crash triage (classification, dedup, exploitability, verdicts) is
+  covered in [references/crash-triage.md](references/crash-triage.md), not
+  in this file's steps.
 
 ## References
 
@@ -217,4 +218,4 @@ reference file.
 - cargo-fuzz - [github.com/rust-fuzz/cargo-fuzz](https://github.com/rust-fuzz/cargo-fuzz)
 - Atheris - [github.com/google/atheris](https://github.com/google/atheris)
 - Jazzer - [github.com/CodeIntelligenceTesting/jazzer](https://github.com/CodeIntelligenceTesting/jazzer)
-- `crash-triage-reference` - reading + classifying the crashes this workflow produces
+- [references/crash-triage.md](references/crash-triage.md) - reading + classifying the crashes this workflow produces

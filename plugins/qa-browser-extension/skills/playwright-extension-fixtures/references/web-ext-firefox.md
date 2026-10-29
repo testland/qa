@@ -1,6 +1,6 @@
 # web-ext - Mozilla's CLI for Firefox WebExtension testing
 
-Companion reference for `manifest-v3-test-surface-reference`. Consult when
+Companion reference for [manifest-v3-test-surface.md](manifest-v3-test-surface.md). Consult when
 the extension targets Firefox (signing is mandatory for distribution) or when
 cross-browser test runs need a single CLI that drives both Firefox and
 Chromium against the same source tree.

@@ -1,14 +1,16 @@
 ---
 name: tenant-leak-critic
-description: "Adversarial agent that reviews a PR or set of changed files for tenant-leak risk. Inspects the diff for: new tenant-bearing surfaces without isolation tests, tenant_id derived from untrusted input, missing tenant filters in DB queries, async messages without tenant context, cache keys without tenant prefix, log lines disclosing cross-tenant identifiers, RLS policies missing FORCE ROW LEVEL SECURITY, and gaps in the coverage matrix from cross-tenant-data-leak-tests planning. Includes a propagation-tracing step that follows tenant_id from each changed entry point (HTTP handler, queue listener, scheduled job) to every DB query, external call, log line, and emitted message, flagging where it is dropped or sourced from untrusted input. Use proactively before merging any PR that touches tenant-bearing code, or when investigating a leak finding. Returns a verdict (pass / block) + per-finding action list. Preloads rls-reference + cross-tenant-data-leak-tests."
+description: "Adversarial agent that reviews a PR or set of changed files for tenant-leak risk. Inspects the diff for: new tenant-bearing surfaces without isolation tests, tenant_id derived from untrusted input, missing tenant filters in DB queries, async messages without tenant context, cache keys without tenant prefix, log lines disclosing cross-tenant identifiers, RLS policies missing FORCE ROW LEVEL SECURITY, and gaps in the coverage matrix from cross-tenant-data-leak-tests planning. Includes a propagation-tracing step that follows tenant_id from each changed entry point (HTTP handler, queue listener, scheduled job) to every DB query, external call, log line, and emitted message, flagging where it is dropped or sourced from untrusted input. Use proactively before merging any PR that touches tenant-bearing code, or when investigating a leak finding. Returns a verdict (pass / block) + per-finding action list. Preloads cross-tenant-data-leak-tests (incl. its row-level-security reference)."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:
-  - rls-reference
   - cross-tenant-data-leak-tests
 ---
 
 An adversarial critic that returns a single verdict on tenant-leak risk for a PR or change set.
+
+The row-level-security reference ships with the preloaded `cross-tenant-data-leak-tests` skill as
+[references/row-level-security.md](../skills/cross-tenant-data-leak-tests/references/row-level-security.md); read it before the steps below.
 
 ## When invoked
 
@@ -55,7 +57,7 @@ attack patterns:
   the migration to also add the policy.
 - New table with RLS enabled but no `FORCE ROW LEVEL SECURITY` →
   high warning (table owner bypasses). Per
-  [`rls-reference`](../skills/rls-reference/SKILL.md):
+  [`cross-tenant-data-leak-tests` row-level-security reference](../skills/cross-tenant-data-leak-tests/references/row-level-security.md):
   "For production tenant tables... the application connection
   role must NOT own the table (or, if it owns the table, FORCE
   ROW LEVEL SECURITY must be set)."
