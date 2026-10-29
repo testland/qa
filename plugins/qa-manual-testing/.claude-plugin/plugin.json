@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-manual-testing",
-  "version": "1.10.8",
+  "version": "1.10.9",
   "description": "Manual and exploratory testing: scripted test cases, session-based exploratory charters, decision-table and state-transition test design, and bug bashes. Covers SBTM, Whittaker's tours, Bach and Bolton's heuristics, UAT scripts, and PROOF debriefs. A critic agent (test-script-quality-critic) flags vague preconditions and bundled steps in authored scripts.",
   "author": {
     "name": "testland",

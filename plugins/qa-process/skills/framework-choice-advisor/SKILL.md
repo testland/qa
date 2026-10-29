@@ -7,14 +7,12 @@ description: "Reference catalog for picking a test automation framework or QA to
 
 ## Overview
 
-A team is starting a new test automation suite and needs to pick the stack: framework, runner, assertion library, reporter, CI integration, fixture system, parallelisation strategy, retry policy. Auto-scaffolding the whole framework in one shot is the integration-friction failure mode that dominates AI-in-testing adoption ([2025 World Quality Report](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/): 37% of teams). The honest deliverable is **decision support**, not auto-scaffolding.
-
-This skill is a **pure reference**: a decision tree + tradeoff matrix the team uses as a checklist. It does not generate framework boilerplate. After the team picks a stack, the per-framework skills (`playwright-testing`, `cypress-testing`, etc.) document the configuration; this skill stops at "you picked Playwright + Jest, here's the canonical directory layout to use".
+Decision support for picking a test stack (framework, runner, reporter, CI shape): score the project's needs, compare per layer, then record one decision or an explicit deferral. It does not generate boilerplate; after the choice, the per-framework skill (`playwright-testing`, `cypress-testing`, ...) configures it.
 
 ## When to use
 
 - Greenfield: starting a new test automation suite from zero.
-- Migration: the team is moving off a legacy framework (most commonly Selenium to Playwright, whose auto-waiting removes the manual-wait flakiness that dominates Selenium suites, per the [Playwright actionability docs](https://playwright.dev/docs/actionability)).
+- Migration: the team is moving off a legacy framework (for example Selenium to Playwright).
 - Multi-stack consolidation: the team has three frameworks across product areas and is deciding which to standardise on.
 - Hiring-driven re-evaluation: the team's skills mix shifted (e.g., from Java to TypeScript) and the framework choice should follow.
 
@@ -37,52 +35,44 @@ Six NFR axes drive framework choice. Score each 1 - 5 for the project; rank them
 | **Ecosystem maturity** | Third-party integrations the team needs (visual regression, accessibility, perf, contract). |
 | **Hire-ability** | Can the team hire engineers familiar with the framework? Smaller frameworks → smaller talent pool. |
 
+**Checkpoint before Step 2.** Write the six scores down, each with the
+evidence behind it (a manifest line, a CI wall-clock figure, the team's
+language list, a roadmap item with a date), and get the team to confirm
+the ranking. If a top-ranked axis cannot be scored from evidence today
+(language not decided, no stable product surface), stop and go to
+Step 6 (defer) instead of reading the matrix. A roadmap line ("Android
+in H2") is a condition that would reopen the decision, not a score.
+
 ## Step 2 - Framework tradeoff matrix (web E2E)
 
 | Framework | Cross-browser | Mobile | Language | Speed (parallel) | Ecosystem | Hire-ability | Notes |
 |---|---|---|---|---|---|---|---|
-| **Playwright** | Chromium / Firefox / WebKit native, all in one runtime | Mobile-viewport emulation + real device via Playwright Mobile (beta) | TS / JS / Python / .NET / Java | Excellent (auto-parallel, sharding built-in) | Strong (trace viewer, visual snapshots, fixtures, MCP integration) | High (fastest-growing 2024-26) | A common default for greenfield web E2E; its built-in auto-waiting removes the manual-wait flakiness that dominates Selenium suites ([Playwright actionability](https://playwright.dev/docs/actionability)). |
-| **Cypress** | Chromium-family + Firefox + WebKit (newer) | Mobile viewport only; no real-device | JS / TS only | Good (parallel via Cypress Cloud; CLI-parallel limited) | Strong (huge plugin ecosystem) | High | Strong DX for component testing; runs inside-browser limits cross-origin and iframe scenarios. |
+| **Playwright** | Chromium / Firefox / WebKit native, all in one runtime | Mobile-viewport emulation; experimental Android support (Chrome for Android, WebView) ([Android API](https://playwright.dev/docs/api/class-android)) | TS / JS / Python / .NET / Java | Excellent (auto-parallel, sharding built-in) | Strong (trace viewer, visual snapshots, fixtures, MCP integration) | High | A common default for greenfield web E2E; its built-in auto-waiting removes the manual-wait flakiness that dominates Selenium suites ([Playwright actionability](https://playwright.dev/docs/actionability)). |
+| **Cypress** | Chromium-family + Firefox; WebKit only behind `experimentalWebKitSupport` ([experiments](https://docs.cypress.io/app/references/experiments)) | Mobile viewport only; no real-device | JS / TS only | Good (parallel via Cypress Cloud; CLI-parallel limited) | Strong (huge plugin ecosystem) | High | Strong DX for component testing; runs inside-browser limits cross-origin and iframe scenarios. |
 | **Selenium / WebdriverIO** | All browsers via WebDriver protocol | Real device via Appium | All major languages (Java / Python / C# / JS / Ruby) | Moderate (Selenium Grid; WDIO improves on Selenium's runner) | Mature (oldest ecosystem) | Highest (historical talent pool) | Mature but more flake-prone than Playwright: async-wait is the single largest flake category at 45% ([Luo et al. 2014](https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf)), and Selenium leaves that synchronization manual. Migration target, not greenfield default. |
 | **TestCafe** | All browsers; proxy-based (no WebDriver) | Mobile via emulators | JS / TS | Moderate | Smaller ecosystem | Lower | Niche; integrated runner. |
-| **Puppeteer** | Chromium-only natively (Firefox via experimental) | Limited | JS / TS | Good | Smaller than Playwright | Lower | Mostly superseded by Playwright (the team that built Puppeteer started Playwright). |
+| **Puppeteer** | Chrome and Firefox (stable Firefox from v23, [supported browsers](https://pptr.dev/supported-browsers)) | Limited | JS / TS | Good | Smaller than Playwright | Lower | Browser automation library rather than a test runner; pair it with Jest or similar. |
 
-The 2026-recommendation tree for greenfield web E2E:
+Decision tree for greenfield web E2E:
 - **Multi-browser required + multi-language team** → Playwright.
 - **Single-browser (Chromium) + JS-only team** → Playwright or Cypress; Cypress has stronger component-testing DX.
 - **Legacy / migration off existing Selenium suite** → either incremental migration to Playwright (preferred) or modernise the Selenium suite via WebdriverIO's runner ergonomics.
 
 ## Step 3 - Framework tradeoff matrix (other test layers)
 
-### Mobile native
+The per-layer matrices (mobile native, API / contract, performance)
+are in [references/other-layers.md](references/other-layers.md). The
+short rules:
 
-| Framework | Platform | Language | Notes |
-|---|---|---|---|
-| **Espresso** | Android native | Kotlin / Java | Google's first-party. In-process, fast, deterministic. |
-| **XCUITest** | iOS native | Swift / Obj-C | Apple's first-party. In-process. |
-| **Appium** | iOS + Android (and others) | All major | Cross-platform unifier; trades depth for breadth. WebDriver-based - same flake patterns as Selenium. |
-| **Detox** | React Native | JS / TS | RN-specialist; grey-box testing. |
-
-Decision: if the team is single-platform native (iOS only or Android only), use the first-party framework. Cross-platform → Appium, accept the WebDriver flake-tax. React-Native specifically → Detox.
-
-### API / contract
-
-| Framework | Scope | Language | Notes |
-|---|---|---|---|
-| **RestAssured** | REST API integration tests | Java / Kotlin | The JVM-default; mature, deeply integrated with JUnit / TestNG. |
-| **Karate** | REST + SOAP + GraphQL + gRPC | Karate DSL (Cucumber-like) | DSL-first; lowers barrier for non-Java testers. |
-| **schemathesis** | OpenAPI / GraphQL property-based fuzzing | Python | Generative; complements example-based tests. |
-| **Pact** | Consumer-driven contract tests | JS / JVM / Python / Go / Ruby / .NET | Different category - contract, not integration. See `pact-contract-testing`. |
-| **Postman / Newman** | Collection-driven API tests | Postman DSL | UI-driven authoring; not code-first. Often used by non-engineers. |
-
-### Performance
-
-| Framework | Scope | Language | Notes |
-|---|---|---|---|
-| **k6** | Load + perf, code-first | JS (with TS support) | Grafana's; lowest barrier for engineers, excellent CI integration. |
-| **Locust** | Load + perf, code-first | Python | Open-source; user-class-based modelling. |
-| **JMeter** | Load + perf, GUI-first | XML config | Mature, ecosystem-heavy; GUI-driven authoring is the trade-off. |
-| **Gatling** | Load + perf, code-first | Scala / Java / Kotlin | High-throughput; JVM stack. |
+- **Mobile:** single-platform native app → that platform's first-party
+  framework (Espresso, XCUITest); both platforms with one suite →
+  Appium; React Native → Detox.
+- **API / contract:** JVM team → RestAssured; non-programmer authors →
+  Karate or Postman / Newman; consumer-driven contracts are a separate
+  decision (`pact-contract-testing`).
+- **Performance:** pick the tool in the team's language (k6 for JS,
+  Locust for Python, Gatling for JVM); JMeter when a GUI-built plan is
+  already in place.
 
 ## Step 4 - Reference directory layouts
 
@@ -149,10 +139,10 @@ flip conditions - is in
 ## Limitations
 
 - **Coverage is the web / mobile / API / perf canonical set.** Specialised layers (desktop apps via Spectron / Tauri, embedded devices, hardware-in-loop) are out of scope.
-- **Tradeoff matrix is point-in-time.** Frameworks evolve quickly; the 2026 ranking will be stale in 18 months. Re-read this skill before every greenfield decision.
+- **Tradeoff matrix is point-in-time (checked October 2026).** Frameworks change quickly; re-check each row against the framework's docs before a greenfield decision.
 - **Tradeoffs are illustrative.** A specific product can have constraints that flip the recommendation - e.g., a Salesforce internal app where the legacy stack is JVM-only would override the "Playwright by default" guidance.
 - **Hire-ability is geography-dependent.** "Hire-ability" assumes US / EU markets in the matrix; for other markets, the team's local pool is the authority.
-- **No automated framework scaffolding.** Per the introduction, this is intentional - auto-scaffolded boilerplate is the dominant failure mode the [research](https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/) flags. Use the per-framework skill after the decision.
+- **No automated framework scaffolding.** Intentional: the output is a recorded decision. Use the per-framework skill after it.
 - **Closed-platform comparison is a different axis.** Mabl / Testim / Functionize / TestSigma are no-code platforms; they compete with this entire category, not with one framework. The "code vs no-code" strategic call stays with the team; once the team is comparing commercial vendors, use the procurement workflow in [references/vendor-evaluation.md](references/vendor-evaluation.md).
 
 ## Hand-off targets
@@ -161,7 +151,7 @@ flip conditions - is in
 - **Record the choice** → [references/decision-record-format.md](references/decision-record-format.md).
 - **Commercial-vendor procurement** → [references/vendor-evaluation.md](references/vendor-evaluation.md).
 - **Tune the layer balance after the framework is in place** → `test-pyramid-balancer`.
-- **Convert Selenium suite → Playwright (the most common 2026 migration)** → migration is a project, not an agent; this skill provides the decision input, the per-framework skills provide the target configuration.
+- **Convert Selenium suite → Playwright** → migration is a project, not an agent; this skill provides the decision input, the per-framework skills provide the target configuration.
 
 ## References
 
@@ -171,7 +161,10 @@ flip conditions - is in
 - Martin Fowler - Page Object pattern (canonical definition): https://martinfowler.com/bliki/PageObject.html
 - Luo et al., "An Empirical Analysis of Flaky Tests" (FSE 2014) - async-wait is the largest flake category (45%), the class Selenium leaves to manual synchronization: https://mir.cs.illinois.edu/marinov/publications/LuoETAL14FlakyTestsAnalysis.pdf
 - Playwright actionability docs - built-in auto-waiting and auto-retrying assertions that remove a major Selenium flake source: https://playwright.dev/docs/actionability
-- Capgemini World Quality Report 2025-26 - 37% cite integration friction as the dominant AI-in-testing blocker (justifies why this is decision-support, not auto-scaffolding): https://www.capgemini.com/insights/research-library/world-quality-report-2025-26/
+- Playwright Android (experimental): https://playwright.dev/docs/api/class-android
+- Cypress experiments (`experimentalWebKitSupport`): https://docs.cypress.io/app/references/experiments
+- Puppeteer supported browsers: https://pptr.dev/supported-browsers
+- [references/other-layers.md](references/other-layers.md) - mobile, API / contract, and performance matrices with their sources.
 - ISTQB glossary - test automation framework: https://glossary.istqb.org/en_US/term/test-automation-framework
 - ISTQB glossary - keyword-driven testing (relevant to Karate / Postman DSL choice): https://glossary.istqb.org/en_US/term/keyword-driven-testing
 - ISO/IEC 25010 - quality characteristics (used in Step 1 NFR scoring): https://en.wikipedia.org/wiki/ISO/IEC_25010

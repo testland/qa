@@ -174,8 +174,6 @@ Add an index on `users.email` and ship it through CI:
 - [fw-pass][fw-pass] - `FLYWAY_PASSWORD` environment variable
 - [docker-env][docker-env] - `docker run -e VAR` forwards the host value
 - github.com/flyway/flyway - repository
-- `liquibase-migrations`,
-  `atlas-migrations`,
-  `sqlmesh-migrations` - sister
-  tools (Liquibase = changelog-driven; Atlas = declarative HCL;
-  SQLMesh = data-pipeline + schema)
+- `liquibase-migrations`, `atlas-migrations` - sister tools
+  (Liquibase = changelog-driven; Atlas = declarative HCL / SQL with
+  lint)

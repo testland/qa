@@ -1,360 +1,196 @@
 ---
 name: service-worker-lifecycle-tests
-description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per [w3c-github-io/ServiceWorker][sw-spec] (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers per [MDN Service Worker API][mdn-sw], `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). The general Playwright SW harness, `service-worker-mock` unit tests, and cache-strategy assertions live in references/. Use when authoring the baseline lifecycle spec, when a deploy leaves users stuck on the old service worker, or when a site's caching / offline behavior is uncovered."
+description: "Build-an-X workflow that emits per-SW state-transition tests covering the six `ServiceWorkerState` values per the W3C Service Worker spec (`parsed → installing → installed → activating → activated → redundant`), the `install` / `activate` / `fetch` event handlers, `event.waitUntil()` lifetime extension, `ServiceWorkerGlobalScope.skipWaiting()` and `Clients.claim()` upgrade-path semantics, the `statechange` event on `ServiceWorker` objects, `ServiceWorkerRegistration.update()`, and `navigator.serviceWorker.controller` checks. Output: a Playwright spec file with one test per transition plus a clean upgrade-path test (v1 active → v2 installed/waiting → v2 activated, with claim()). The general Playwright SW harness, `service-worker-mock` unit tests, and cache-strategy assertions live in references/. Use when authoring the baseline lifecycle spec, when a deploy leaves users stuck on the old service worker, or when a site's caching / offline behavior is uncovered."
 metadata:
   keywords: "service-worker, lifecycle, skip-waiting, clients-claim, statechange"
-  version: "1.2.7"
+  version: "1.2.8"
 ---
 
 # service-worker-lifecycle-tests
 
 ## Overview
 
-A service worker moves through six formal states per the W3C
-spec [sw-spec]: *"`parsed`, `installing`, `installed`, `activating`,
-`activated`, `redundant`"*. Most "PWA broke after deploy" bugs are
-lifecycle bugs - a v2 SW stuck in `installed` (waiting) behind a v1
-that won't release control; a `skipWaiting()` that activates v2 but
-leaves v1's caches alive; a `Clients.claim()` race against a hot-
-reload that flips the `navigator.serviceWorker.controller`
-mid-fetch.
+Produces `tests/sw-lifecycle.spec.mjs`: one Playwright test per
+service-worker lifecycle transition plus a v1 → v2 upgrade test. The
+states are `parsed`, `installing`, `installed`, `activating`,
+`activated`, `redundant`, and `statechange` fires on the
+`ServiceWorker` object when its state changes ([spec][sw-spec]). Most
+"stale after deploy" bugs are here: v2 stuck waiting behind v1, v2
+active but tabs still on v1, or v1 caches left behind.
 
-This skill produces the per-SW lifecycle spec - a Playwright
-file with one test per transition cell plus a worked v1 → v2
-upgrade-path test. The builder itself is laser-focused on the state
-machine; the general Playwright harness (`context.serviceWorkers()` +
-`waitForEvent('serviceworker')` patterns, `service-worker-mock` unit
-tests) and per-cache-strategy assertions are in
-[references/playwright-sw-harness.md](references/playwright-sw-harness.md).
-
-[sw-spec]: https://w3c.github.io/ServiceWorker/
-[mdn-sw]: https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
-[mdn-skipwaiting]: https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
-[mdn-claim]: https://developer.mozilla.org/en-US/docs/Web/API/Clients/claim
-
-Composes with:
-
-- `add-to-homescreen-flow-tests` (references/install-flow-reference.md) - the install-gate Stage 1 service-worker-registered prerequisite, which
-  *this* builder takes as input (assumes registration already
-  works).
-- `workbox-tests` - the
-  `workbox-window` event vocabulary (`installed`, `waiting`,
-  `controlling`, `activated`, `redundant`) is the page-side
-  observable for the same state machine asserted here from the SW
-  side.
+Registration itself is the input, not the subject: it is covered by
+`add-to-homescreen-flow-tests` (its install-flow reference). For the
+page-side `workbox-window` events, see `workbox-tests`.
 
 ## When to use
 
-- New PWA - author the baseline lifecycle spec before the team
-  ships any SW logic that mutates state.
-- Upgrade-path regression - a deploy left users on v1 because v2's
-  `skipWaiting()` was missing; emit the per-transition test cells
-  to catch it next time.
-- "Stale UI after deploy" reports - the test cells localize
-  whether the bug is `skipWaiting`, `Clients.claim`, or cache
-  invalidation.
-- Migrating from Workbox `workbox-window` to a hand-rolled
-  registration helper - assert the same five events still fire.
+- A new PWA needs a baseline lifecycle spec.
+- A deploy left users on the old service worker.
+- Stale-UI reports need narrowing to `skipWaiting`, `clients.claim`, or
+  cache cleanup.
 
-## Workflow
-
-### Step 1 - Capture the SW under test
-
-Read the SW file the team ships and record three facts:
-
-| Fact | Where to find |
-|---|---|
-| Registration URL | `<script>` tag or `navigator.serviceWorker.register('/sw.js')` in the page bundle |
-| Whether `skipWaiting()` is called in `install` | `self.skipWaiting()` inside an `install` listener |
-| Whether `Clients.claim()` is called in `activate` | `self.clients.claim()` inside an `activate` listener |
+## Step 1 - Inventory the service worker
 
 ```bash
-# Inventory
-grep -E "skipWaiting|clients\.claim" src/sw.ts > sw-lifecycle-inventory.txt
+grep -nE "skipWaiting|clients\.claim|caches\.delete|waitUntil" src/sw.*
 ```
 
-Per [mdn-sw], `skipWaiting()` activates sooner and `Clients.claim()` claims
-existing pages. The combination matters - `skipWaiting` without `claim`
-activates the new SW but leaves current tabs uncontrolled until reload.
+Record whether `install` calls `skipWaiting()` and `activate` calls
+`clients.claim()`. `skipWaiting()` makes a waiting worker active
+without waiting for old tabs to close ([MDN][mdn-skipwaiting]);
+`claim()` makes an active worker control pages that are already open
+([MDN][mdn-claim]). The expectations in Steps 4-5 depend on both.
 
-### Step 2 - Test: state machine entry - fresh install
+## Step 2 - Add the versioned fixture server
 
-On first access to a SW-controlled page the worker downloads and installs
-immediately per [mdn-sw]. The first-install test:
+Copy the server from
+[references/test-fixtures.md](references/test-fixtures.md) to
+`tests/fixtures/sw-server.mjs`, replacing its `sw()` body with the
+real service worker's install / activate logic and keeping the
+`VERSION` constant, the version-named cache, and the `message` handler.
+Start it from Playwright's `webServer` and run this spec with one
+worker.
 
-```ts
+## Step 3 - Write the spec
+
+Helpers and the three core tests (verified 15/15 passing serially on
+Chromium against the fixture server):
+
+```js
 import { test, expect } from '@playwright/test';
 
-test('first install transitions parsed → installing → installed → activating → activated', async ({ context, page }) => {
-  await page.goto('https://localhost:3000/');
+const BASE = 'http://localhost:3000';
+const setSwVersion = (request, v) => request.post(`${BASE}/__test/sw-version/${v}`);
+const swVersion = (page) => page.evaluate(() => new Promise((resolve) => {
+  const ch = new MessageChannel();
+  ch.port1.onmessage = (e) => resolve(e.data);
+  navigator.serviceWorker.controller.postMessage('version', [ch.port2]);
+}));
 
-  // Capture statechange events as soon as the SW is reachable
-  const observed = await page.evaluate(() => new Promise<string[]>((resolve) => {
-    const states: string[] = [];
-    navigator.serviceWorker.register('/sw.js').then(reg => {
+test.beforeEach(async ({ request }) => { await setSwVersion(request, 1); });
+
+test('first install reaches activated', async ({ page }) => {
+  await page.goto(BASE + '/');
+  const observed = await page.evaluate(() => new Promise((resolve) => {
+    const states = [];
+    navigator.serviceWorker.register('/sw.js').then((reg) => {
       const w = reg.installing ?? reg.waiting ?? reg.active;
-      if (!w) { resolve(states); return; }
       states.push(w.state);
+      if (w.state === 'activated') return resolve(states);
       w.addEventListener('statechange', () => {
         states.push(w.state);
         if (w.state === 'activated' || w.state === 'redundant') resolve(states);
       });
     });
-    // Hard timeout
-    setTimeout(() => resolve(states), 10_000);
   }));
-
-  // Per sw-spec, the formal enum is parsed / installing / installed / activating / activated / redundant.
-  // Expect at minimum installed and activated in the trace.
-  expect(observed).toContain('installed');
   expect(observed).toContain('activated');
 });
-```
 
-`statechange` fires on the corresponding `ServiceWorker` object whenever its
-`state` attribute changes per [sw-spec].
-
-### Step 3 - Test: `event.waitUntil` extends the install phase
-
-Per [mdn-sw], `waitUntil()` on an `install` / `activate` event holds functional
-events (`fetch`, `push`) until its promise resolves - so a slow precache keeps
-the SW in `installing`.
-
-```ts
-test('SW install with slow precache stays in installing until waitUntil resolves', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
-
-  const phase = await page.evaluate(() => new Promise<string>((resolve) => {
-    navigator.serviceWorker.register('/sw-slow-install.js').then(reg => {
-      const w = reg.installing;
-      if (!w) { resolve('no installing'); return; }
-      // Sample state at ~500ms - the slow install should still be 'installing'
-      setTimeout(() => resolve(w.state), 500);
-    });
-  }));
-
-  expect(['installing', 'installed']).toContain(phase);
+test('waitUntil holds the install phase', async ({ page }) => {
+  await page.goto(BASE + '/');
+  const ms = await page.evaluate(async () => {
+    const t0 = performance.now();
+    const reg = await navigator.serviceWorker.register('/sw-slow-install.js', { scope: '/slow/' });
+    const w = reg.installing;
+    await new Promise((r) => w.addEventListener('statechange', () => w.state !== 'installing' && r()));
+    return performance.now() - t0;
+  });
+  expect(ms).toBeGreaterThanOrEqual(1900);
 });
-```
 
-This requires a slow-install SW fixture under `tests/fixtures/sw-slow-install.js`
-that calls `event.waitUntil(new Promise(r => setTimeout(r, 2000)))`
-inside its `install` handler.
-
-### Step 4 - Test: `skipWaiting()` collapses the waiting phase
-
-Per [mdn-skipwaiting], `skipWaiting()` "causes the waiting service
-worker to become the active service worker." Test the transition:
-
-```ts
-test('skipWaiting() makes v2 active without page reload', async ({ context, page }) => {
-  // Load v1
-  await page.goto('https://localhost:3000/?sw-version=1');
+test('v1 to v2: skipWaiting + claim flip the controller and clean caches', async ({ page, request }) => {
+  await page.goto(BASE + '/');
   await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+  expect(await swVersion(page)).toBe(1);
 
-  // Deploy v2 (the test server flips the SW response based on a query param header)
-  await page.evaluate(async () => {
+  await setSwVersion(request, 2);
+  const states = page.evaluate(() => new Promise(async (resolve) => {
     const reg = await navigator.serviceWorker.getRegistration();
-    await reg!.update();
-  });
-
-  const waitingThenActive = await page.evaluate(() => new Promise<string>(async (resolve) => {
-    const reg = await navigator.serviceWorker.getRegistration();
-    // v2 should land in waiting…
-    if (reg!.waiting) {
-      // …then transition to activating when skipWaiting() fires
-      reg!.waiting.addEventListener('statechange', e => {
-        resolve((e.target as ServiceWorker).state);
-      });
-    } else {
-      resolve(reg!.active?.state ?? 'unknown');
-    }
+    const old = reg.active;
+    old.addEventListener('statechange', () => old.state === 'redundant' && resolve(old.state));
   }));
-
-  // After skipWaiting(), v2 reaches activated without manual reload
-  expect(['activating', 'activated']).toContain(waitingThenActive);
-});
-```
-
-If the SW under test does *not* call `skipWaiting()`, this test
-must assert v2 stays in `installed/waiting` until all v1-controlled
-tabs close - flip the expectation accordingly.
-
-### Step 5 - Test: `Clients.claim()` flips the controller
-
-Per [mdn-claim], `Clients.claim()` lets an active SW set itself as the
-controller for all in-scope clients.
-
-```ts
-test('clients.claim() makes v2 control the page mid-session', async ({ page, context }) => {
-  // v1 is active and controlling
-  await page.goto('https://localhost:3000/?sw-version=1');
-  const v1ScriptURL = await page.evaluate(() => navigator.serviceWorker.controller?.scriptURL);
-  expect(v1ScriptURL).toMatch(/sw-v1/);
-
-  // Trigger v2 deploy + claim
-  await page.evaluate(async () => {
+  const found = page.evaluate(() => new Promise(async (resolve) => {
     const reg = await navigator.serviceWorker.getRegistration();
-    await reg!.update();
-  });
-
-  // After claim() in v2's activate handler, controller flips
-  const v2ScriptURL = await page.waitForFunction(() => {
-    const c = navigator.serviceWorker.controller;
-    return c && c.scriptURL.includes('sw-v2') ? c.scriptURL : null;
-  });
-  expect(await v2ScriptURL.jsonValue()).toMatch(/sw-v2/);
-});
-```
-
-Per [mdn-sw], `skipWaiting()` and `claim()` together force-activate the new SW;
-one without the other leaves a gap (see Step 1).
-
-### Step 6 - Test: old SW transitions to `redundant`
-
-Per [sw-spec], `redundant` is the terminal state - the old SW
-enters it when superseded. The transition is the cleanup signal
-the `activate` handler typically uses to drop old caches:
-
-```ts
-test('old SW transitions to redundant after v2 activates', async ({ context, page }) => {
-  await page.goto('https://localhost:3000/?sw-version=1');
-
-  const v1 = await page.evaluate(async () => {
-    const reg = await navigator.serviceWorker.getRegistration();
-    return reg!.active;
-  });
-
-  const finalState = await page.evaluate(() => new Promise<string>(async (resolve) => {
-    const reg = await navigator.serviceWorker.getRegistration();
-    const oldSW = reg!.active;
-    if (!oldSW) { resolve('no old'); return; }
-    oldSW.addEventListener('statechange', () => {
-      if (oldSW.state === 'redundant') resolve('redundant');
-    });
-    // Trigger v2 update path
-    await reg!.update();
-    setTimeout(() => resolve(oldSW.state), 8_000);
+    reg.addEventListener('updatefound', () => resolve(true));
   }));
+  await page.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update());
 
-  expect(finalState).toBe('redundant');
+  expect(await found).toBe(true);
+  expect(await states).toBe('redundant');
+  await expect.poll(() => swVersion(page)).toBe(2);
+  await expect.poll(() => page.evaluate(() => caches.keys())).toEqual(['app-v2']);
 });
 ```
 
-### Step 7 - Test: `navigator.serviceWorker.controller` semantics
+What each test proves:
 
-Per [mdn-sw], `navigator.serviceWorker.controller` returns the SW
-controlling the current page, or `null` if no SW controls it (e.g.
-hard-reload, force-bypass, or fresh first load before activation).
-Test the boundary cases:
+| Test | Transition | Fails when |
+|---|---|---|
+| first install | `installing` → `activated` | install handler throws or a precache URL 404s |
+| waitUntil | `installing` held ~2 s | `waitUntil` missing, so fetch / push can arrive before precache finishes |
+| v1 → v2 | `updatefound`; v1 → `redundant`; controller reports 2; only `app-v2` cache left | missing `skipWaiting`, missing `claim`, or no cache cleanup |
 
-```ts
-test('controller is null on first hard-reload, set after activation', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/');
+## Step 4 - Variant: no `skipWaiting()`
 
-  // First load: controller may be null until claim() runs (or until next navigation)
-  const initialController = await page.evaluate(() => navigator.serviceWorker.controller?.scriptURL ?? null);
-  // Either null (no claim) or set (claim called in activate)
+If the inventory shows no `skipWaiting()`, v2 must stay waiting while a
+v1 page is open. Replace the v1 → v2 expectations with:
 
-  // After a reload, the SW must be controlling
-  await page.reload();
-  const reloadedController = await page.evaluate(() => navigator.serviceWorker.controller?.scriptURL);
-  expect(reloadedController).toBeTruthy();
-});
+```js
+await expect.poll(() => page.evaluate(async () =>
+  (await navigator.serviceWorker.getRegistration()).waiting?.state)).toBe('installed');
+expect(await swVersion(page)).toBe(1);   // still controlled by v1
 ```
 
-Per [mdn-sw]: a hard-reload (`Ctrl+Shift+R`) bypasses the SW - 
-`controller` is `null` for that page even if an SW is registered.
-Playwright's `page.reload({ waitUntil: 'networkidle' })` is a soft
-reload; the SW controls it.
+then close every page, open a new one, and assert `swVersion` is 2.
 
-### Step 8 - Test: `updatefound` event on registration
+## Step 5 - Variant: `skipWaiting()` without `claim()`
 
-Per [mdn-sw], the registration object fires `updatefound` when a
-new SW is in the `installing` state. This is the canonical
-"deploy detected" event for "Update available" banners:
+v2 activates but the open page keeps `controller === null` or the old
+controller until it navigates. Assert `swVersion` is still 1 after
+`redundant`, then `page.reload()` and assert 2. A reload from
+Playwright is a normal reload, so the service worker handles it; a
+user's shift-reload bypasses the worker ([MDN Service Worker API][mdn-sw]).
 
-```ts
-test('updatefound fires when a new SW is found', async ({ page, context }) => {
-  await page.goto('https://localhost:3000/?sw-version=1');
+## Step 6 - When a test fails
 
-  const found = await page.evaluate(() => new Promise<boolean>(async (resolve) => {
-    const reg = await navigator.serviceWorker.getRegistration();
-    reg!.addEventListener('updatefound', () => resolve(true));
-    await reg!.update();
-    setTimeout(() => resolve(false), 5_000);
-  }));
+| Failing check | Look at |
+|---|---|
+| Never reaches `activated` | Errors in the worker's own console (`chrome://serviceworker-internals` in a headed run) and precache URLs that 404 |
+| `updatefound` never fires | The server still returns identical bytes, or the script is served from HTTP cache (`Cache-Control`) |
+| Version stays 1 | `skipWaiting()` / `claim()` missing (Steps 4-5 decide which is intended) |
+| Old cache remains | `activate` deletes only known names; delete every name except the current one |
+| Passes alone, fails in the full run | More than one worker is flipping the server version |
 
-  expect(found).toBe(true);
-});
-```
+Fix the cause, re-run the single test with `--repeat-each=5`, then the
+whole file.
 
-### Step 9 - Emit the lifecycle spec artifact
+## Step 7 - Coverage matrix
 
-Write `tests/sw-lifecycle.spec.ts` with all eight test cells above, paired with
-a `tests/sw-lifecycle-coverage.yaml` matrix mapping each spec to its
-state-machine cell and reference. The full matrix and the worked v1 -> v2
-upgrade-path spec are in
-[references/upgrade-path.md](references/upgrade-path.md):
-
-```yaml
-# tests/sw-lifecycle-coverage.yaml
-matrix:
-  fresh_install:
-    spec: "first install transitions parsed → installing → installed → activating → activated"
-    states: [parsed, installing, installed, activating, activated]
-    ref: sw-spec ServiceWorkerState enum
-  # waituntil, skipwaiting, claim, redundant, controller_semantics, updatefound
-```
-
-CI gates on every matrix row having at least one passing test.
-
-## Worked example: a v1 → v2 upgrade-path test
-
-The full worked `tests/sw-upgrade-path.spec.ts` for an SW using `skipWaiting()`
-+ `Clients.claim()` is in
-[references/upgrade-path.md](references/upgrade-path.md). It exercises four
-state transitions (installed → activating in v2, activated → redundant in v1)
-plus the cache-cleanup convention. Pair it with the per-transition cells from
-Steps 2 - 8 for the full lifecycle surface.
+Write `tests/sw-lifecycle-coverage.yaml` mapping each test to its
+transition (template in
+[references/upgrade-path.md](references/upgrade-path.md)) and fail CI
+when a row has no passing test.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Assert state by polling `reg.installing` vs `reg.waiting` vs `reg.active` | Race: the field flips between samples | Listen on `statechange` (Step 2) |
-| Skip the `waitUntil` test | Slow installs that block fetch/push are invisible until prod | Step 3 with a fixture SW |
-| Test only the `skipWaiting()` half | Without `claim()`, current tabs stay on v1 forever per [mdn-claim] | Step 5 covers the second half |
-| Hard-reload between v1 and v2 | Bypasses the SW per [mdn-sw]; loses the lifecycle signal | Use `reg.update()` (Steps 5, 6) |
-| Assume `updatefound` fires every navigation | Per [mdn-sw], only when a *new* SW is found | Step 8 explicitly drives `update()` |
-| Treat `redundant` as an error | It's the *terminal cleanup* state per [sw-spec] for superseded SWs | Step 6 asserts it as success |
-| Skip the per-version cache-cleanup test | A v2 that activates but doesn't delete v1 caches doubles storage | Include in the worked upgrade path test |
-| Pin the exact transition ordering | The spec allows intermediate states to be observed or not depending on timing | Assert presence with `toContain`, not exact array equality (Step 2) |
+| Polling `reg.installing` / `waiting` / `active` | The fields change between samples | Listen for `statechange` |
+| Versioning via a page query parameter | `update()` re-fetches the same script bytes | Flip the version on the server (Step 2) |
+| Asserting `scriptURL` to tell v1 from v2 | Same URL for both versions | Ask the worker its version (`swVersion`) |
+| Fixed sleeps (`setTimeout(…, 500)`) | Passes or fails by machine speed | Wait on events and `expect.poll` |
+| Parallel workers sharing the version server | Tests flip each other's version | One worker for this spec |
+| Exact state-array equality | Intermediate states may not be observed | `toContain` / final state only |
 
 ## Limitations
 
-- **`waitUntil` test timing is heuristic.** Step 3 samples at 500ms;
-  faster machines may see `installed` already. Use `waitForFunction`
-  with a state predicate for production-grade tests.
-- **`controller` on first load** can be `null` or set depending on
-  whether the SW calls `claim()` per [mdn-sw]; Step 7 covers both
-  branches. Tests that hard-pin to one will flake.
-- **Cross-tab lifecycle** isn't observed by this builder. Two open
-  tabs share the SW registration but each has its own
-  `serviceWorker.controller`; a full multi-tab assertion needs a
-  second `context.newPage()`.
-- **Hard-reload (`Ctrl+Shift+R`) behavior** can't be triggered
-  programmatically in Playwright - `page.reload()` is always soft.
-  Manual smoke covers this cell.
-- **The push and fetch events** that `waitUntil` gates aren't
-  tested here directly; pair with
-  `web-push-tests` (push side) and the cache-strategy tests in
-  [references/playwright-sw-harness.md](references/playwright-sw-harness.md)
-  (fetch side).
-- **Browser variance.** Firefox and WebKit implement the state
-  machine but report `statechange` with slightly different
-  intermediate samples per [sw-spec]; the assertions here use
-  `toContain` to absorb the variance.
+- Chromium-verified; Firefox and WebKit run the same lifecycle but may
+  report fewer intermediate states, so assert final states.
+- Multi-tab behaviour needs a second `context.newPage()` and is not in
+  the core spec.
+- Push and fetch handling are covered by `web-push-tests` and the
+  cache-strategy tests in
+  [references/playwright-sw-harness.md](references/playwright-sw-harness.md).
 
 ## References
 
@@ -365,6 +201,8 @@ Steps 2 - 8 for the full lifecycle surface.
   [mdn-sw].
 - MDN `ServiceWorkerGlobalScope.skipWaiting()` - [mdn-skipwaiting].
 - MDN `Clients.claim()` - [mdn-claim].
+- Versioned fixture server and config -
+  [references/test-fixtures.md](references/test-fixtures.md).
 - General Playwright SW harness, `service-worker-mock` unit tests,
   cache-strategy assertions -
   [references/playwright-sw-harness.md](references/playwright-sw-harness.md)
@@ -376,3 +214,8 @@ Steps 2 - 8 for the full lifecycle surface.
 - Sibling builders:
   `offline-fallback-tests`,
   `add-to-homescreen-flow-tests`.
+
+[sw-spec]: https://w3c.github.io/ServiceWorker/
+[mdn-sw]: https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
+[mdn-skipwaiting]: https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting
+[mdn-claim]: https://developer.mozilla.org/en-US/docs/Web/API/Clients/claim

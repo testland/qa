@@ -123,3 +123,58 @@ it('sends FCM message with correct shape', async () => {
   );
 });
 ```
+
+## Payload variants
+
+### Silent (background) push - APNs
+
+A background notification's `aps` holds only `content-available: 1`,
+and the request carries `apns-push-type: background` and
+`apns-priority: 5` ([pushing background updates][apns-bg]).
+
+```javascript
+it('builds a background sync push', () => {
+  const { payload, headers } = buildSilentSyncPush({ since: 42 });
+  expect(payload.aps).toEqual({ 'content-available': 1 });   // nothing user-facing
+  expect(payload.since).toBe(42);
+  expect(headers['apns-push-type']).toBe('background');
+  expect(headers['apns-priority']).toBe('5');
+});
+```
+
+### Deep link
+
+```python
+def test_order_push_deep_links_to_order_screen():
+    payload = build_order_push(order_id=123)
+    assert payload["data"]["route"] == "/orders/123"
+
+def test_deep_link_uses_the_order_id():
+    assert build_order_push(order_id=7)["data"]["route"] == "/orders/7"
+```
+
+The second case catches a builder that returns a constant route.
+
+### FCM topic routing
+
+```javascript
+it('subscribes the device to the order-updates topic it later sends to', async () => {
+  const subscribe = jest.spyOn(admin.messaging(), 'subscribeToTopic')
+    .mockResolvedValue({ successCount: 1, failureCount: 0, errors: [] });
+  const send = jest.spyOn(admin.messaging(), 'send').mockResolvedValue('projects/p/messages/1');
+
+  await subscribeToOrderUpdates('device-token-1', 'user-9');
+  await broadcastOrderUpdate('user-9', { status: 'shipped' });
+
+  expect(subscribe).toHaveBeenCalledWith(['device-token-1'], 'order-updates-user-9');
+  expect(send.mock.calls[0][0].topic).toBe('order-updates-user-9');
+  expect(send.mock.calls[0][0].token).toBeUndefined();
+});
+```
+
+`subscribeToTopic(tokens, topic)` and `send(message)` are the
+firebase-admin Messaging methods; a message names exactly one of
+`token`, `topic` or `condition` ([FCM send docs][fcm-send]).
+
+[apns-bg]: https://developer.apple.com/documentation/usernotifications/pushing-background-updates-to-your-app
+[fcm-send]: https://firebase.google.com/docs/cloud-messaging/send-message

@@ -1,214 +1,179 @@
 ---
 name: mailpit-testing
-description: "The email-testing home: configures and runs Mailpit - modern dev-mailbox server for SMTP testing with built-in REST API for assertions; default SMTP `1025` + Web UI `8025`; Chaos mode (configurable SMTP errors for resilience testing), message tagging, search filters. Carries the end-to-end email-flow workflow (multipart body, link-rewrite resolution, unsubscribe per RFC 8058, bounce + complaint webhooks) in references/email-flows.md and the legacy MailHog capture patterns + migration path in references/mailhog-legacy.md. Use when developing or testing email-sending code locally / in CI - SMTP capture, full-flow assertions, or migrating an existing MailHog deployment."
+description: "Captures and tests outgoing email with Mailpit, a local SMTP server that catches test emails and exposes them through a REST API for assertions; default SMTP `1025` + Web UI `8025`; Chaos mode (configurable SMTP errors for resilience testing), message tagging, search filters. Carries the end-to-end email-flow workflow (multipart body, link-rewrite resolution, unsubscribe per RFC 8058, bounce + complaint webhooks) in references/email-flows.md and the legacy MailHog capture patterns + migration path in references/mailhog-legacy.md. Use when developing or testing email-sending code locally / in CI - SMTP capture, full-flow assertions, or migrating an existing MailHog deployment."
 ---
 
 # mailpit-testing
 
 ## Overview
 
-Per [mailpit.axllent.org/docs/][mp-docs]:
-
-[mp-docs]: https://mailpit.axllent.org/docs/
-
-> "Mailpit is packed full of features for developers wanting to test
-> SMTP and emails. It acts as an SMTP server, provides a modern web
-> interface to view & test intercepted emails."
-
-Per [mp-docs][mp-docs] the differentiated features:
-
-- "Chaos feature to enable configurable SMTP errors for testing
-  application resilience."
-- "Message tagging, including manual tagging or automated tagging
-  using filtering and 'plus addressing'."
-- "A REST API for integration testing"
-
-Mailpit succeeded MailHog as the de facto OSS dev mailbox in the
-mid-2020s; new projects start with Mailpit by default.
+Mailpit is an SMTP server for tests: it captures every message the app
+sends, shows it in a web UI and exposes it through a REST API, and its
+Chaos feature returns configurable SMTP errors for resilience tests
+([docs][mp-docs]). It never delivers mail.
 
 ## When to use
 
-- The repo has email-sending code (transactional emails, password
-  reset, notifications) that needs local + CI testing.
-- Tests assert on captured email content (subject, body, headers,
-  attachments).
-- The team needs Chaos mode to test app resilience to SMTP errors
-  (bounce, timeout, rate-limit).
-- The full email flow needs coverage beyond capture - headers,
-  multipart body, links, unsubscribe, bounces - per
+- The app sends transactional email (password reset, sign-in links,
+  notifications) and tests must assert on what was sent.
+- Retry and dead-letter code needs real SMTP errors (Chaos, Step 5).
+- The full flow needs coverage beyond capture (headers, multipart,
+  links, unsubscribe, bounces):
   [references/email-flows.md](references/email-flows.md).
-- Migrating from MailHog (Mailpit is API-compatible at the SMTP
-  layer + has a richer REST API) - per
-  [references/mailhog-legacy.md](references/mailhog-legacy.md).
+- An existing MailHog setup is being replaced:
+  [references/migrating-to-mailpit.md](references/migrating-to-mailpit.md).
 
-## Step 1 - Install
-
-Per [github.com/axllent/mailpit][mp-gh]:
-
-[mp-gh]: https://github.com/axllent/mailpit
+## Step 1 - Run it
 
 ```bash
-# macOS
-brew install mailpit
-
-# Docker (Linux, macOS, Windows, CI) - per the [mp-docker][mp-docker] image page
-docker run -d --name=mailpit --restart unless-stopped -p 8025:8025 -p 1025:1025 axllent/mailpit
+docker run -d --name mailpit -p 8025:8025 -p 1025:1025 axllent/mailpit:v1.32
+# or: brew install mailpit && mailpit
 ```
 
-Docker is the recommended path for CI. [mp-gh][mp-gh] also documents a
-shell install script that writes to `/usr/local/bin` with `sudo`; prefer the
-image or a release binary so a test setup never pipes remote code into a
-root shell.
+SMTP listens on 1025 and the web UI / API on 8025 ([repository][mp-gh]).
+Pin an image tag; the API changes between releases. Prefer the image or
+a release binary over the repository's install script, which pipes
+remote code into a root shell.
 
-[mp-docker]: https://hub.docker.com/r/axllent/mailpit
-
-## Step 2 - Start
-
-Per [mp-gh][mp-gh]:
-
-> "The Mailpit web UI listens by default on `http://0.0.0.0:8025`
-> and the SMTP port on `0.0.0.0:1025`."
-
-Foreground:
+**Check it is up before any test:**
 
 ```bash
-mailpit
-# Web UI: http://localhost:8025
-# SMTP:   localhost:1025
+curl -fsS http://localhost:8025/api/v1/info   # 200 with version and message count
 ```
 
-As a background service on macOS:
+## Step 2 - Point the app at it
 
-```bash
-brew services start mailpit
-```
+| Stack | Setting |
+|---|---|
+| Django | `EMAIL_HOST=localhost`, `EMAIL_PORT=1025` |
+| Spring | `spring.mail.host=localhost`, `spring.mail.port=1025` |
+| Rails | `smtp_settings: { address: "localhost", port: 1025 }` |
+| Nodemailer | `createTransport({ host: "localhost", port: 1025 })` |
 
-Discover all options:
+Mailpit accepts unauthenticated SMTP by default ([SMTP options][mp-smtp]).
+If production uses SMTP auth, test it for real: start Mailpit with
+`--smtp-auth-file <file> --smtp-auth-allow-insecure` and add a test that
+a wrong password is rejected. Never use `--smtp-auth-accept-any` for
+that: it accepts any username and password, or none, so a broken
+credential still passes ([SMTP options][mp-smtp]).
 
-```bash
-mailpit -h
-```
+## Step 3 - Give each test its own address
 
-## Step 3 - Configure your app's SMTP
-
-Point the application's SMTP config at Mailpit:
-
-```yaml
-# example: Rails action_mailer config
-smtp_settings:
-  address: localhost
-  port: 1025
-  domain: localhost
-  authentication: nil   # Mailpit accepts unauthenticated SMTP by default
-```
-
-Equivalent envs work for Django (`EMAIL_HOST=localhost`,
-`EMAIL_PORT=1025`), Spring (`spring.mail.host=localhost`,
-`spring.mail.port=1025`), Node nodemailer, etc.
-
-## Step 4 - Assert via REST API
-
-Per [mp-docs][mp-docs] Mailpit ships a "REST API for integration
-testing." The canonical endpoints (consult [mp-docs][mp-docs] for
-current paths per release) follow this shape:
+Tests that share one mailbox and clear it with `DELETE /api/v1/messages`
+delete each other's mail when they run in parallel. Instead, send each
+test to a unique plus-address. Plus-addressing tags are on by default:
+`alice+t-3f9a@example.com` gets the tag `t-3f9a` ([tagging][mp-tag]).
 
 ```python
-import requests
+# tests/email/mailpit.py
+import time, uuid, requests
 
 BASE = "http://localhost:8025"
 
-def test_password_reset_sends_email():
-    # 1. Clear inbox before the test
-    requests.delete(f"{BASE}/api/v1/messages")
+def unique_address(local="alice", domain="example.com"):
+    return f"{local}+t-{uuid.uuid4().hex[:8]}@{domain}"
 
-    # 2. Trigger the email send
-    trigger_password_reset("alice@example.com")
-
-    # 3. Poll until the email lands (typical: <1s)
-    msg = poll_for_message(BASE, to="alice@example.com", timeout=5)
-
-    # 4. Assert
-    assert msg["Subject"] == "Reset your password"
-    assert "/reset?token=" in msg["Text"]
-    assert msg["To"][0]["Address"] == "alice@example.com"
-```
-
-```python
-def poll_for_message(base, to, timeout):
-    import time
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        response = requests.get(f"{base}/api/v1/search", params={"query": f"to:{to}"})
-        messages = response.json().get("messages", [])
-        if messages:
-            return requests.get(f"{base}/api/v1/message/{messages[0]['ID']}").json()
+def wait_for_message(to, timeout=5.0):
+    """Poll search scoped to one recipient; return the full message."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        found = requests.get(f"{BASE}/api/v1/search",
+                             params={"query": f'to:"{to}"'}, timeout=2).json()
+        if found["messages"]:
+            msg_id = found["messages"][0]["ID"]
+            return requests.get(f"{BASE}/api/v1/message/{msg_id}", timeout=2).json()
         time.sleep(0.1)
-    raise AssertionError(f"No email to {to} within {timeout}s")
+    raise AssertionError(f"no message to {to} within {timeout}s")
+
+def delete_messages_to(to):
+    requests.delete(f"{BASE}/api/v1/search", params={"query": f'to:"{to}"'}, timeout=2)
 ```
 
-The exact endpoint paths may evolve - always check the live API
-schema at `http://localhost:8025/api/v1/` (Mailpit ships an
-OpenAPI schema for self-introspection).
+`GET /api/v1/search` and `DELETE /api/v1/search` take the same search
+query, so a test only ever reads or deletes its own messages
+([API][mp-api]). Clean up in teardown with `delete_messages_to`, or not
+at all; never with an unscoped delete on a parallel path.
 
-## Step 5 - Chaos mode
-
-Per [mp-docs][mp-docs]: "Chaos feature to enable configurable SMTP
-errors for testing application resilience."
-
-Use cases for app-level resilience testing:
-
-- Verify retry-with-backoff works when SMTP returns 421 / 451
-- Verify dead-letter handling for permanent failures (5xx)
-- Verify rate-limit handling (server returns 421 4.7.0)
-
-Per [mp-docs][mp-docs], Chaos is configurable per-recipient or
-globally; consult the live docs for current Chaos API shape.
-
-## Step 6 - Tagging + plus-addressing
-
-Per [mp-docs][mp-docs]: "automated tagging using filtering and
-'plus addressing'."
-
-Pattern for test-isolation: each test sends to
-`alice+test-${test_id}@example.com`; Mailpit auto-tags by the
-`+test-...` suffix; tests filter by tag to isolate their email
-batch from concurrent test runs:
+## Step 4 - Assert on the full message
 
 ```python
-import uuid
-test_id = uuid.uuid4().hex[:8]
-to_addr = f"alice+test-{test_id}@example.com"
-trigger_email(to_addr)
-msg = requests.get(
-    f"{BASE}/api/v1/search",
-    params={"query": f'tag:"test-{test_id}"'},
-).json()["messages"][0]
+import re
+
+def test_password_reset_email():
+    to = unique_address()
+    trigger_password_reset(to)              # the app call under test
+    msg = wait_for_message(to)
+
+    assert msg["Subject"] == "Reset your password"
+    assert msg["To"][0]["Address"] == to
+    assert msg["From"]["Address"] == "no-reply@example.com"
+    m = re.search(r"/reset\?token=([A-Za-z0-9_-]{20,})", msg["Text"])
+    assert m, "reset link with a real token missing from the text part"
+    assert m.group(1) != "undefined"
 ```
 
-## Step 7 - CI integration
+`GET /api/v1/message/{ID}` (singular) returns `Subject`, `From`, `To`,
+`Text` and `HTML` ([API][mp-api]). Assert on extracted values directly:
+an assertion inside a loop over links passes when the list is empty.
+Message IDs are generated per send, so never hard-code one.
+
+## Step 5 - Chaos: real SMTP errors
+
+Start Mailpit with Chaos enabled (`--enable-chaos`, or
+`--chaos-triggers Sender:451:100` to set a trigger at startup)
+([Chaos][mp-chaos]). Then set triggers per test through the API:
+
+```python
+def set_chaos(**triggers):
+    # e.g. set_chaos(Recipient={"ErrorCode": 451, "Probability": 100})
+    r = requests.put(f"{BASE}/api/v1/chaos", json=triggers, timeout=2)
+    r.raise_for_status()
+
+def test_transient_error_is_retried():
+    to = unique_address()
+    set_chaos(Recipient={"ErrorCode": 451, "Probability": 100})
+    try:
+        send_notification(to)                # app should queue a retry
+        assert_retry_scheduled(to)
+    finally:
+        set_chaos()                          # {} resets every trigger to 0%
+    run_retry_worker()
+    assert wait_for_message(to)["Subject"]
+```
+
+`PUT /api/v1/chaos` takes `Sender`, `Recipient` and `Authentication`
+triggers, each with `ErrorCode` (400-599) and `Probability` (0-100);
+omitted triggers reset to 0%, and the route errors if Chaos is not
+enabled ([API][mp-api]). Cover 4xx (retry with backoff) and 5xx (stop
+after one attempt) separately. Chaos is server-wide, so run Chaos tests
+in their own job or serially. A provider bounce webhook is a different
+event; see [references/email-flows.md](references/email-flows.md).
+
+## Step 6 - CI
 
 ```yaml
 services:
   mailpit:
-    image: axllent/mailpit:latest
-    ports: [1025:1025, 8025:8025]
-
-steps:
-  - run: pytest tests/integration/email/ -v
+    image: axllent/mailpit:v1.32
+    ports: ["1025:1025", "8025:8025"]
     env:
-      SMTP_HOST: localhost
-      SMTP_PORT: 1025
+      MP_ENABLE_CHAOS: "true"
+steps:
+  - run: curl --retry 10 --retry-connrefused -fsS http://localhost:8025/api/v1/info
+  - run: pytest tests/email -n 4
+    env: { SMTP_HOST: localhost, SMTP_PORT: "1025" }
 ```
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Skip per-test inbox clear | Stale messages cause false-positives | DELETE /api/v1/messages in setup (Step 4) |
-| Assume Mailpit handles authenticated SMTP | Default config is unauthenticated; auth tests need explicit config | Configure `--smtp-auth-allow-insecure` or proper auth config |
-| Hardcode message IDs in tests | IDs are random per send; tests fail | Search by recipient/subject (Step 4) |
-| Skip polling; assert immediately | Sub-second SMTP delivery isn't guaranteed | Poll with timeout (Step 4) |
-| Test only happy path | Misses retry/dead-letter scenarios | Use Chaos mode (Step 5) |
+| Unscoped `DELETE /api/v1/messages` in `beforeEach` | Parallel workers delete each other's mail | Unique address per test, scoped search delete (Step 3) |
+| Fixed sleep, then read the newest message | Reads another test's mail or nothing | Poll search scoped to the recipient (Step 3) |
+| `--smtp-auth-accept-any` | Any credential passes; auth bugs ship | Real auth file + wrong-password test (Step 2) |
+| Hard-coded message IDs | IDs are generated per send | Search by recipient (Step 3) |
+| Assertions only inside a loop over extracted links | Empty capture passes | Assert on the extracted value (Step 4) |
+| Only the happy path | Retry / dead-letter code untested | Chaos (Step 5) |
 
 ## Limitations
 
@@ -218,16 +183,27 @@ steps:
 - Some advanced SMTP features (DKIM signing assertion, SPF lookup)
   are not Mailpit's focus; verify via separate tooling.
 - The REST API surface evolves between Mailpit releases; pin a
-  specific version in CI (`axllent/mailpit:v1.20.0` not `:latest`).
+  specific tag in CI (`axllent/mailpit:v1.32`, not `:latest`).
 
 ## References
 
-- [mp-docs][mp-docs] - official documentation
-- [mp-gh][mp-gh] - repository, install commands, ports
-- [mp-docker][mp-docker] - Docker image and `docker run` example (ports 8025 / 1025)
-- mailpit.axllent.org/docs/api-v1/ - REST API reference
+- [Mailpit documentation][mp-docs] - features, Chaos, REST API.
+- [Repository][mp-gh] - install options, default ports.
+- [Docker image][mp-docker] - image and tags.
+- [REST API][mp-api] - `/api/v1/info`, `/api/v1/search` (GET and DELETE), `/api/v1/message/{ID}`, `/api/v1/chaos`.
+- [SMTP options][mp-smtp] - unauthenticated default, `--smtp-auth-file`, `--smtp-auth-allow-insecure`, `--smtp-auth-accept-any`.
+- [Tagging][mp-tag] - plus-address tags on by default.
+- [Chaos][mp-chaos] - `--enable-chaos`, `--chaos-triggers`.
 - End-to-end email-flow workflow (headers, multipart, links,
   unsubscribe, bounces): [references/email-flows.md](references/email-flows.md)
 - MailHog (legacy) capture + migration:
-  [references/mailhog-legacy.md](references/mailhog-legacy.md)
-  (+ [references/migrating-to-mailpit.md](references/migrating-to-mailpit.md))
+  [references/mailhog-legacy.md](references/mailhog-legacy.md) and
+  [references/migrating-to-mailpit.md](references/migrating-to-mailpit.md)
+
+[mp-docs]: https://mailpit.axllent.org/docs/
+[mp-gh]: https://github.com/axllent/mailpit
+[mp-docker]: https://hub.docker.com/r/axllent/mailpit
+[mp-api]: https://mailpit.axllent.org/docs/api-v1/
+[mp-smtp]: https://mailpit.axllent.org/docs/configuration/smtp/
+[mp-tag]: https://mailpit.axllent.org/docs/usage/tagging/
+[mp-chaos]: https://mailpit.axllent.org/docs/integration/chaos/

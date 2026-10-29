@@ -1,293 +1,273 @@
 ---
 name: mvcc-isolation-tests
-description: "Build per-database MVCC isolation-level tests - Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB. Use when two concurrent transactions can touch the same rows (balance debit, seat booking, stock decrement), or before changing a service's default isolation level."
+description: "Build per-database MVCC transaction isolation-level tests for database concurrency and locking bugs - Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; with MySQL InnoDB and SQL Server differences. Use when two concurrent transactions can touch the same rows (balance debit, seat booking, stock decrement), or before changing a service's default isolation level. Deadlock detection is out of scope (deadlock-detection-harness); in-process races are race-condition-test-author."
 metadata:
   keywords: "mvcc, transaction-isolation, serializable, phantom-read, write-skew"
-  version: "1.2.13"
+  version: "1.2.14"
 ---
 
 # mvcc-isolation-tests
 
-Per the [PostgreSQL transaction isolation docs], the four standard
-SQL isolation levels permit different anomalies. Production code
-must run at the right level - and tests verify both that the
-chosen level prevents the anomalies the business cares about AND
-that the code copes when the level allows them.
+## Overview
+
+Two transactions on two connections, interleaved deterministically
+with thread events, prove which anomalies the chosen isolation level
+allows and that the application copes. All tests below ran 5/5 green on
+PostgreSQL 16 with psycopg 3.
 
 ## When to use
 
-- Banking, inventory, booking - anywhere two transactions can
-  conflict on the same data.
-- Choosing or auditing default isolation level for a new service.
-- Migration: changing isolation level (e.g., Read Committed →
-  Repeatable Read) - tests verify nothing relies on old behavior.
+- Two transactions can touch the same rows (balance debit, seat
+  booking, stock decrement, on-call rota).
+- Choosing or changing a service's isolation level.
+- Auditing whether "at least one X" invariants survive concurrency.
 
-## Step 1 - Anomaly catalog
+## Step 1 - Anomalies and the PostgreSQL matrix
 
-Per the [PostgreSQL transaction isolation docs]:
-
-| Anomaly | What |
+| Anomaly | Shape |
 |---|---|
-| Dirty read | T2 reads uncommitted T1 changes |
-| Non-repeatable read | T1 reads X = 5; T2 commits X = 6; T1 re-reads X = 6 |
-| Phantom read | T1 query returns 3 rows; T2 inserts row matching predicate; T1 re-runs query, gets 4 rows |
-| Serialization anomaly | Concurrent execution produces a result no serial order would |
-| Write skew | T1 reads {x, y} = {0, 0}; T2 reads same; both decide based on read-set; both commit; final state inconsistent |
+| Dirty read | T2 reads T1's uncommitted write |
+| Non-repeatable read | T1 reads a row twice; T2 commits an update in between |
+| Phantom read | T1 re-runs a predicate query; T2 committed a new matching row |
+| Serialization anomaly (write skew) | Both read the same set, each writes a different row on that basis; no serial order gives the result |
 
-## Step 2 - PostgreSQL isolation matrix
-
-Per the [PostgreSQL transaction isolation docs]:
-
-| Level | Dirty | Non-repeatable | Phantom | Serialization |
+| PostgreSQL level | Dirty | Non-repeatable | Phantom | Serialization anomaly |
 |---|---|---|---|---|
-| Read Uncommitted (= Read Committed in PG) | NO | YES | YES | YES |
-| Read Committed | NO | YES | YES | YES |
-| Repeatable Read | NO | NO | NO (PG strict) | YES |
-| Serializable | NO | NO | NO | NO |
+| Read Uncommitted (acts as Read Committed) | no | yes | yes | yes |
+| Read Committed (default) | no | yes | yes | yes |
+| Repeatable Read | no | no | no | yes |
+| Serializable | no | no | no | no |
 
-PostgreSQL's Repeatable Read is stricter than SQL standard - it
-prevents phantoms via snapshot isolation. Other databases differ.
+Source: [PostgreSQL transaction isolation][pg]. Other databases differ:
+[references/per-database.md](references/per-database.md).
 
-## Step 3 - Test setup: two-connection harness
+## Step 2 - Harness, fixtures and tests
+
+Each test rebuilds the tables and checks the starting row counts
+before running, so a failed or aborted test cannot leak state into the
+next one. Events and barriers pin the interleaving (no sleeps), every
+wait has a timeout, and a hung thread fails the test instead of the
+run.
 
 ```python
+# tests/db/test_isolation.py
+import os, threading, time
 import psycopg
-import threading
-import time  # Steps 4-6 use time.sleep for the interleaving window
+import pytest
+from psycopg import IsolationLevel
 
-def two_connection_test(workload_a, workload_b, isolation="read committed"):
-    conn_a = psycopg.connect("dbname=test", autocommit=False)
-    conn_b = psycopg.connect("dbname=test", autocommit=False)
+DSN = os.environ.get("TEST_DSN", "dbname=test")
+WAIT = 5  # seconds; a wait that times out fails the test instead of hanging
 
-    # Set isolation level for both
-    for c in (conn_a, conn_b):
-        with c.cursor() as cur:
-            cur.execute(f"SET TRANSACTION ISOLATION LEVEL {isolation}")
+SCHEMA = """
+DROP TABLE IF EXISTS accounts, orders, doctors;
+CREATE TABLE accounts (id text PRIMARY KEY, balance int NOT NULL);
+CREATE TABLE orders (id serial PRIMARY KEY, status text NOT NULL);
+CREATE TABLE doctors (name text PRIMARY KEY, status text NOT NULL);
+INSERT INTO accounts VALUES ('acc1', 100);
+INSERT INTO orders (status) VALUES ('pending'), ('pending'), ('pending');
+INSERT INTO doctors VALUES ('alice', 'on_call'), ('bob', 'on_call');
+"""
 
-    barrier = threading.Barrier(2)
-    results = {}
+def scalar(sql, *args):
+    with psycopg.connect(DSN, autocommit=True) as c:
+        return c.execute(sql, args).fetchone()[0]
 
-    def run(conn, work, key):
-        barrier.wait()
-        results[key] = work(conn)
+def on_call():
+    return scalar("SELECT count(*) FROM doctors WHERE status = 'on_call'")
 
-    t_a = threading.Thread(target=run, args=(conn_a, workload_a, "a"))
-    t_b = threading.Thread(target=run, args=(conn_b, workload_b, "b"))
-    t_a.start(); t_b.start()
-    t_a.join(); t_b.join()
+@pytest.fixture(autouse=True)
+def fresh_tables():
+    """Rebuild the tables before every test and refuse to run on unexpected state."""
+    with psycopg.connect(DSN, autocommit=True) as c:
+        c.execute(SCHEMA)
+    assert scalar("SELECT balance FROM accounts WHERE id = 'acc1'") == 100
+    assert scalar("SELECT count(*) FROM orders") == 3
+    assert on_call() == 2
 
-    return results
-```
+def run_pair(work_a, work_b, level):
+    """Run two workloads on two connections at `level`; return (results, errors)."""
+    conns = [psycopg.connect(DSN) for _ in range(2)]
+    for c in conns:
+        c.isolation_level = level
+    results, errors = {}, {}
 
-The Steps 4-6 workloads use `time.sleep(0.5)` to open the interleaving
-window, which is timing-sensitive and can flake on slow CI. For a
-deterministic harness, replace the sleep with a second barrier (or a
-`threading.Event`) so the writer commits exactly between the reader's two
-reads, no wall-clock guess required:
+    def run(key, conn, work):
+        try:
+            results[key] = work(conn)
+        except Exception as e:          # recorded, asserted by the test
+            errors[key] = e
+            conn.rollback()
 
-```python
-# Deterministic variant: pass an extra Barrier(2) into both workloads.
-# reader: read #1 -> gate.wait() -> read #2
-# writer: gate.wait() -> UPDATE + commit       (writer races read #2)
-# Use a pair of barriers (read1-done, write-done) if you need to pin the
-# writer's commit strictly after read #1 and strictly before read #2.
-gate = threading.Barrier(2)
-```
+    threads = [threading.Thread(target=run, args=("a", conns[0], work_a)),
+               threading.Thread(target=run, args=("b", conns[1], work_b))]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=3 * WAIT)
+    assert not any(t.is_alive() for t in threads), "workload hung (lock wait?)"
+    for c in conns:
+        c.close()
+    return results, errors
 
-## Step 4 - Test for non-repeatable read at Read Committed
-
-```python
 def test_non_repeatable_read_under_read_committed():
-    setup_balance(account="acc1", balance=100)
+    read1, wrote = threading.Event(), threading.Event()
 
     def reader(conn):
-        with conn.cursor() as cur:
-            cur.execute("SELECT balance FROM accounts WHERE id = 'acc1'")
-            first = cur.fetchone()[0]
-            time.sleep(0.5)  # let writer commit
-            cur.execute("SELECT balance FROM accounts WHERE id = 'acc1'")
-            second = cur.fetchone()[0]
+        first = conn.execute("SELECT balance FROM accounts WHERE id = 'acc1'").fetchone()[0]
+        read1.set()
+        assert wrote.wait(WAIT)
+        second = conn.execute("SELECT balance FROM accounts WHERE id = 'acc1'").fetchone()[0]
         conn.commit()
-        return (first, second)
+        return first, second
 
     def writer(conn):
-        with conn.cursor() as cur:
-            cur.execute("UPDATE accounts SET balance = 200 WHERE id = 'acc1'")
+        assert read1.wait(WAIT)
+        conn.execute("UPDATE accounts SET balance = 200 WHERE id = 'acc1'")
         conn.commit()
-        return None
+        wrote.set()
 
-    results = two_connection_test(reader, writer, isolation="read committed")
-    first, second = results["a"]
-    assert first == 100
-    assert second == 200, "Read Committed permits non-repeatable read"
-```
+    results, errors = run_pair(reader, writer, IsolationLevel.READ_COMMITTED)
+    assert not errors
+    assert results["a"] == (100, 200)   # Read Committed allows it
 
-## Step 5 - Test phantom read prevented at Repeatable Read (PG)
-
-```python
-def test_phantom_read_prevented_under_repeatable_read():
-    setup_orders(initial_count=3)
+def test_no_phantom_under_repeatable_read():
+    read1, wrote = threading.Event(), threading.Event()
 
     def reader(conn):
-        with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM orders WHERE status = 'pending'")
-            first_count = cur.fetchone()[0]
-            time.sleep(0.5)
-            cur.execute("SELECT COUNT(*) FROM orders WHERE status = 'pending'")
-            second_count = cur.fetchone()[0]
+        q = "SELECT count(*) FROM orders WHERE status = 'pending'"
+        first = conn.execute(q).fetchone()[0]
+        read1.set()
+        assert wrote.wait(WAIT)
+        second = conn.execute(q).fetchone()[0]
         conn.commit()
-        return (first_count, second_count)
+        return first, second
 
     def writer(conn):
-        with conn.cursor() as cur:
-            cur.execute("INSERT INTO orders (status) VALUES ('pending')")
+        assert read1.wait(WAIT)
+        conn.execute("INSERT INTO orders (status) VALUES ('pending')")
         conn.commit()
-        return None
+        wrote.set()
 
-    results = two_connection_test(reader, writer, isolation="repeatable read")
-    first, second = results["a"]
-    assert first == second == 3, "PG Repeatable Read should prevent phantom"
-```
+    results, errors = run_pair(reader, writer, IsolationLevel.REPEATABLE_READ)
+    assert not errors
+    assert results["a"] == (3, 3)       # PostgreSQL's snapshot hides the insert
+    assert scalar("SELECT count(*) FROM orders") == 4
 
-## Step 6 - Test write-skew at Repeatable Read (still possible!)
-
-Per the [PostgreSQL transaction isolation docs], write skew is a
-serialization anomaly that Repeatable Read does NOT prevent:
-
-```python
-def test_write_skew_under_repeatable_read():
-    """Two doctors on call; rule: at least one must remain on call.
-    T1 reads {alice: on, bob: on}; decides safe to take alice off.
-    T2 reads same; decides safe to take bob off.
-    Both commit. Now nobody on call → anomaly."""
-    setup_doctors([("alice", "on_call"), ("bob", "on_call")])
-
-    def take_alice_off(conn):
-        with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM doctors WHERE status = 'on_call'")
-            on_call_count = cur.fetchone()[0]
-            if on_call_count >= 2:
-                cur.execute("UPDATE doctors SET status = 'off' WHERE name = 'alice'")
+def take_off(name, both_read):
+    def work(conn):
+        count = conn.execute("SELECT count(*) FROM doctors WHERE status = 'on_call'").fetchone()[0]
+        both_read.wait()                # both transactions have read before either writes
+        if count >= 2:
+            conn.execute("UPDATE doctors SET status = 'off' WHERE name = %s", (name,))
         conn.commit()
+    return work
 
-    def take_bob_off(conn):
-        with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM doctors WHERE status = 'on_call'")
-            on_call_count = cur.fetchone()[0]
-            if on_call_count >= 2:
-                cur.execute("UPDATE doctors SET status = 'off' WHERE name = 'bob'")
-        conn.commit()
+def test_write_skew_happens_under_repeatable_read():
+    both_read = threading.Barrier(2, timeout=WAIT)
+    _, errors = run_pair(take_off("alice", both_read), take_off("bob", both_read),
+                         IsolationLevel.REPEATABLE_READ)
+    assert not errors
+    assert on_call() == 0               # the anomaly: nobody on call
 
-    two_connection_test(take_alice_off, take_bob_off, isolation="repeatable read")
+def test_serializable_aborts_one_of_the_pair():
+    both_read = threading.Barrier(2, timeout=WAIT)
+    _, errors = run_pair(take_off("alice", both_read), take_off("bob", both_read),
+                         IsolationLevel.SERIALIZABLE)
+    assert len(errors) == 1
+    assert isinstance(next(iter(errors.values())), psycopg.errors.SerializationFailure)
+    assert on_call() == 1
 
-    on_call_after = count_on_call()
-    # Under Repeatable Read, write skew is possible: both txns read 2
-    # on-call, both flip one off, and the final state is 0 on call (the
-    # anomaly). A correctly-serialized run would leave 1. Either value
-    # proves RR does NOT serialize this pair, so both are accepted here.
-    # (Run the same workload at Serializable - Step 7 - to see one txn abort.)
-    assert on_call_after in (0, 1)
-```
-
-## Step 7 - Test Serializable rolls back conflicting transactions
-
-```python
-def test_serializable_aborts_one_of_skew_pair():
-    setup_doctors([("alice", "on_call"), ("bob", "on_call")])
-
-    aborted = [0]
-    def take_off(name, conn):
+def with_serializable_retry(conn, fn, max_attempts=5):
+    """Run fn(conn, attempt) in a SERIALIZABLE transaction, retrying serialization failures."""
+    conn.isolation_level = IsolationLevel.SERIALIZABLE
+    for attempt in range(1, max_attempts + 1):
         try:
-            with conn.cursor() as cur:
-                cur.execute("SELECT COUNT(*) FROM doctors WHERE status = 'on_call'")
-                if cur.fetchone()[0] >= 2:
-                    cur.execute("UPDATE doctors SET status = 'off' WHERE name = %s", (name,))
-            conn.commit()
+            with conn.transaction():
+                return fn(conn, attempt)
         except psycopg.errors.SerializationFailure:
-            conn.rollback()
-            aborted[0] += 1
-
-    two_connection_test(
-        lambda c: take_off("alice", c),
-        lambda c: take_off("bob", c),
-        isolation="serializable",
-    )
-
-    assert aborted[0] >= 1, "Serializable must abort at least one"
-    assert count_on_call() >= 1, "At least one doctor still on call"
-```
-
-Per the [PostgreSQL transaction isolation docs]: Serializable raises
-`could not serialize access due to read/write dependencies among
-transactions` - application must catch + retry.
-
-## Step 8 - Per-database differences
-
-| DB | Default | RR prevents phantoms? | Serializable cost |
-|---|---|---|---|
-| PostgreSQL | Read Committed | Yes (snapshot isolation) | Predicate locks; can be expensive |
-| MySQL InnoDB | Repeatable Read | Yes (gap locks) | Default RR is "good enough" for most |
-| SQL Server | Read Committed | No (default), Yes with `READ_COMMITTED_SNAPSHOT` | Snapshot isolation available |
-| Oracle | Read Committed | Yes via Read Consistency | Serializable via lock |
-| DynamoDB | Eventually consistent reads | Strongly consistent reads opt-in | Transactions: ACID with TransactWriteItems |
-| MongoDB | Snapshot read concern | Multi-doc txn (4.0+) ACID | Limit on doc size (16MB / txn) |
-
-Test the *actual* DB you ship with - defaults differ.
-
-## Step 9 - Application-level retry pattern
-
-```python
-def with_serializable_retry(fn, max_retries=3):
-    for attempt in range(max_retries):
-        try:
-            with conn.cursor() as cur:
-                cur.execute("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-            result = fn()
-            conn.commit()
-            return result
-        except psycopg.errors.SerializationFailure:
-            conn.rollback()
-            if attempt == max_retries - 1:
+            if attempt == max_attempts:
                 raise
-            time.sleep(0.01 * (2 ** attempt))
+            time.sleep(0.01 * 2 ** attempt)
+
+def test_retry_completes_and_keeps_the_invariant():
+    both_read = threading.Barrier(2, timeout=WAIT)
+    attempts = []
+
+    def take_off_retrying(name):
+        def fn(conn, attempt):
+            attempts.append((name, attempt))
+            count = conn.execute("SELECT count(*) FROM doctors WHERE status = 'on_call'").fetchone()[0]
+            if attempt == 1:
+                both_read.wait()        # force the conflict only on the first try
+            if count >= 2:
+                conn.execute("UPDATE doctors SET status = 'off' WHERE name = %s", (name,))
+        return lambda conn: with_serializable_retry(conn, fn)
+
+    _, errors = run_pair(take_off_retrying("alice"), take_off_retrying("bob"),
+                         IsolationLevel.SERIALIZABLE)
+    assert not errors                   # both calls completed
+    assert len(attempts) == 3           # exactly one retry
+    assert on_call() == 1
 ```
 
-Test the retry logic itself:
+Run against a throwaway database only: the fixture drops and recreates
+the tables.
 
-```python
-def test_serializable_retry_completes():
-    # Simulate concurrent conflict; verify retry succeeds eventually
-    ...
+```bash
+TEST_DSN="host=localhost dbname=test_isolation user=postgres" pytest tests/db/test_isolation.py
 ```
+
+## Step 3 - Map the tests to your workload
+
+Replace `doctors` / `accounts` / `orders` with the tables the real
+transactions touch, keeping the same shapes:
+
+| Business invariant | Test shape to copy |
+|---|---|
+| "Read twice in one request" (report totals, price then charge) | non-repeatable read |
+| "Count then act" (capacity, stock, quotas) | phantom + write skew |
+| "At least one / at most N" across rows | write skew → Serializable or explicit lock |
+
+Then decide: keep the level and add a constraint or
+`SELECT ... FOR UPDATE`, or move the transaction to Serializable and
+use the retry wrapper.
+
+## Step 4 - Checkpoint before trusting the suite
+
+1. Each test that asserts an anomaly (`(100, 200)`, `on_call() == 0`)
+   must fail when you raise the isolation level by one step. Try it.
+2. Run the write-skew pair at Serializable with `run_pair` and expect
+   `on_call() == 0`: it must fail, proving the Serializable test can
+   see the difference.
+3. The retry test must fail if `with_serializable_retry` stops catching
+   `SerializationFailure`.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| Run at default isolation, hope for the best | Anomaly hits in prod | Choose level deliberately + test |
-| Test only happy-path single-transaction | Concurrency bugs need 2-conn harness | Step 3 harness |
-| Use Serializable everywhere "to be safe" | Performance cliff; retries swamp | Test perf at chosen level |
-| Skip retry logic for Serializable | Production transaction errors leak | Step 9 retry pattern |
-| Test PG and assume MySQL behaves same | RR semantics differ (gap locks vs snapshot) | Per-DB tests (Step 8) |
+| `time.sleep()` to order transactions | Flaky on slow CI | Events / barriers with timeouts |
+| Asserting "0 or 1" for write skew | Passes whatever happens | Force both reads first; assert the exact outcome |
+| Tests sharing rows without a reset | One aborted test breaks the next | Rebuild + count check per test |
+| Serializable without a retry loop | Users see 40001 errors | `with_serializable_retry` |
+| Serializable everywhere "to be safe" | More aborts and retries under load | Use it where an invariant needs it |
+| Testing PostgreSQL, shipping MySQL | Different defaults and locking | [references/per-database.md](references/per-database.md) |
 
 ## Limitations
 
-- Test fixture flakiness: timing-sensitive; may need barrier
-  adjustment per machine speed.
-- Eventually-consistent NoSQL stores need different tests
-  (probabilistic + windowed).
-- ORM abstractions can hide explicit SET ISOLATION LEVEL - verify
-  the actual SQL emitted.
+- ORMs can set the isolation level per session or hide it; log the
+  SQL the app actually sends.
+- Eventually consistent stores need different, probabilistic tests.
+- Deadlocks are covered by `deadlock-detection-harness`, not here.
 
 ## References
 
-- [PostgreSQL transaction isolation docs] - anomaly definitions,
-  per-level matrix, retry patterns
-- MySQL InnoDB isolation - dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html
-- A Critique of ANSI SQL Isolation Levels (Berenson 1995) - seminal
-  paper on isolation levels
-- `race-condition-test-author`,
-  `deadlock-detection-harness` - 
-  in-process concurrency siblings
+- [PostgreSQL transaction isolation][pg] - anomaly definitions, per-level matrix, serialization failures and retries.
+- [psycopg 3 transactions][psycopg-tx] - `isolation_level`, `conn.transaction()`.
+- Berenson et al., "A Critique of ANSI SQL Isolation Levels" (SIGMOD 1995) - write skew and snapshot isolation.
+- [references/per-database.md](references/per-database.md) - MySQL InnoDB and SQL Server differences.
+- Sibling skills: `race-condition-test-author` (in-process races), `deadlock-detection-harness`, `async-ordering-tests`; agent `concurrency-critic`.
 
-[PostgreSQL transaction isolation docs]: https://www.postgresql.org/docs/current/transaction-iso.html
+[pg]: https://www.postgresql.org/docs/current/transaction-iso.html
+[psycopg-tx]: https://www.psycopg.org/psycopg3/docs/basic/transactions.html

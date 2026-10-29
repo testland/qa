@@ -1,253 +1,253 @@
 ---
 name: race-condition-test-author
-description: "Build deterministic race-condition tests - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++ data race detection; run the Go race detector end-to-end (`go test -race`, GORACE tuning, `-count`/`-cpu` stress, goroutine-leak gating with go.uber.org/goleak - references/go.md); use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing. Use when a defect only reproduces under load on shared in-process state (cache, counter, connection pool, lazy-init singleton), when writing the regression test for a race-condition incident before the fix lands, or when adding `-race` to a Go CI matrix."
+description: "Build deterministic race-condition and thread-safety tests for flaky, load-only concurrency bugs - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++ data race detection; run the Go race detector end-to-end (`go test -race`, GORACE tuning, `-count`/`-cpu` stress, goroutine-leak gating with go.uber.org/goleak - references/go.md); use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing. Use when a defect only reproduces under load on shared in-process state (cache, counter, connection pool, lazy-init singleton), when writing the regression test for a race-condition incident before the fix lands, or when adding `-race` to a Go CI matrix."
 metadata:
   keywords: "race-condition, data-race, thread-sanitizer, jcstress, concurrency-testing"
-  version: "1.2.14"
+  version: "1.2.15"
 ---
 
 # race-condition-test-author
 
-Race conditions are the canonical "works on my machine, breaks under
-load" bug. Tests must drive shared-state access deterministically
-(barriers, latches) AND non-deterministically (sanitizers, stress)
-to expose them.
+## Overview
+
+Two complementary tools: a deterministic test that forces the bad
+interleaving with a start gate (or a hook inside the critical window),
+and a detector or stress harness (TSan, `go test -race`, jcstress) that
+explores interleavings you did not think of. A race fix is done when a
+test that failed before the fix passes after it, repeatedly.
 
 ## When to use
 
-- Service handles concurrent requests on shared in-process state
-  (caches, counters, connection pools).
-- Race-condition incident retro: build a regression test before
-  fixing.
-- Pre-release smoke: TSan-instrumented binary catches data races
-  that compile clean.
+- A defect reproduces only under load on shared in-process state
+  (cache, counter, pool, lazy singleton).
+- A race incident needs a regression test before the fix lands.
+- Adding a race detector to CI, or finding out why the existing one
+  never fails.
 
-## Step 1 - Identify shared mutable state
+## Step 1 - Find the shared mutable state
 
-Code-review checklist:
+Check each of: module-level / static mutable variables; singletons
+with mutable fields; get-then-set on caches or maps without a lock or
+CAS; per-request data stored on shared objects; pools; lazy
+initialisation ("if not initialised, initialise"). For each, write
+down the two operations that must not interleave.
 
-- Static / global / module-level mutable variables
-- Singleton instances with mutable fields
-- Cache structures with read-and-modify ("get-then-set" without
-  CAS)
-- Per-request state stored on shared objects (mutable request
-  context)
-- Connection pools / object pools without internal lock
-- Lazy-init patterns ("if not initialized, initialize")
+## Step 2 - Force the interleaving
 
-For each: ask "what if two threads / goroutines / async tasks hit
-this concurrently?"
-
-## Step 2 - Deterministic interleaving via barriers
+A start gate makes both threads enter together; a hook inside the
+window makes the collision certain instead of likely:
 
 ```python
 import threading
 
-def test_lazy_init_thread_safe():
-    target = LazyService()  # has private _instance + lazy_get()
-    barrier = threading.Barrier(parties=2)
-    results = [None, None]
+def test_lazy_init_creates_one_instance(monkeypatch):
+    in_window = threading.Barrier(2, timeout=0.5)
+    real_build = LazyService._build
 
-    def worker(idx):
-        barrier.wait()  # both threads stop here, then race
-        results[idx] = target.lazy_get()
+    def slow_build(self):
+        try:
+            in_window.wait()      # unfixed: both threads meet here, inside the window
+        except threading.BrokenBarrierError:
+            pass                  # fixed: only one thread gets here; carry on
+        return real_build(self)
 
-    t1 = threading.Thread(target=worker, args=(0,))
-    t2 = threading.Thread(target=worker, args=(1,))
-    t1.start(); t2.start()
-    t1.join(); t2.join()
+    monkeypatch.setattr(LazyService, "_build", slow_build)
+    target = LazyService()
+    results, errors = [None, None], []
 
-    assert results[0] is results[1], "Lazy init created two instances under race"
+    def worker(i):
+        try:
+            results[i] = target.lazy_get()
+        except Exception as e:    # surface worker failures to the test thread
+            errors.append(e)
+
+    threads = [threading.Thread(target=worker, args=(i,)) for i in (0, 1)]
+    for t in threads: t.start()
+    for t in threads: t.join(timeout=10)
+    assert not errors
+    assert results[0] is results[1], "lazy init built two instances"
 ```
 
-Barrier ensures both threads start the contended section at the
-same time - much higher probability of triggering the race than
-naive `threading.Thread()`.
+Verified with a check-then-build `LazyService`: the unfixed code fails
+3/3 runs (both threads meet inside the window and build twice); with a
+lock around check-and-build it passes 3/3, because only one thread
+reaches `_build` and its barrier wait times out after 0.5 s. The same
+test serves before and after the fix.
 
-## Step 3 - ThreadSanitizer for C/C++/Go
+Assertions belong on the test thread. An assertion or `t.Fatal`
+inside a worker thread, goroutine or executor task can fail silently;
+collect results and errors and assert after `join()`.
 
-Per the [ThreadSanitizer docs], TSan detects data races at runtime
-with ~5-15× overhead. For C/C++:
+## Step 3 - Detectors: TSan and Go `-race`
+
+C / C++ ([ThreadSanitizer][tsan]):
 
 ```bash
 clang -fsanitize=thread -g -O1 program.c -o program
-./program
+TSAN_OPTIONS="halt_on_error=0" ./program; echo "exit=$?"
 ```
 
-For Go, the native data race detector:
+TSan typically costs 5-15x time and 5-10x memory ([ThreadSanitizer][tsan]).
+A report changes the exit status to `exitcode` (default 66); setting
+`exitcode=0` in CI makes a run that found races pass
+([TSan flags][tsan-flags]). Never suppress a finding to get green: a
+suppression is for third-party code you cannot change, with a ticket.
+`TSAN_OPTIONS=enable_adaptive_delay=1` injects delays at
+synchronisation points to expose more interleavings ([ThreadSanitizer][tsan]).
 
-```bash
-go test -race ./...
-go run -race main.go
-```
+Go: `go test -race ./...`. The race detector needs cgo, and typically
+costs 5-10x memory and 2-20x time ([Go race detector][go-race]). The full
+Go workflow (GORACE, `-count` / `-cpu` stress, start gates with
+channels, goroutine-leak gating with goleak) is in
+[references/go.md](references/go.md); goleak filter choices are in
+[references/goleak-filter-options.md](references/goleak-filter-options.md).
+The race detector finds unsynchronised memory access only; it says
+nothing about goroutines that never exit.
 
-The full Go workflow - GORACE options (`log_path`, `halt_on_error`,
-`history_size`), stress amplification via `-count`/`-cpu`, `go vet`
-loop-capture checks, goroutine-leak gating with goleak, and the CI
-matrix - is in [references/go.md](references/go.md).
+## Step 4 - jcstress for JVM publication and reordering
 
-Output for a detected race:
-
-```
-WARNING: DATA RACE
-Read at 0x... by goroutine 7:
-  main.read+0x...
-    main.go:42
-
-Previous write at 0x... by goroutine 6:
-  main.write+0x...
-    main.go:38
-```
-
-Per the [ThreadSanitizer docs], adaptive delay injection
-(`TSAN_OPTIONS=enable_adaptive_delay=1`) helps surface races at
-synchronization points.
-
-## Step 4 - jcstress for JVM
-
-Per the [jcstress docs], jcstress is "the experimental harness ... for
-the correctness of concurrency support in the JVM."
+jcstress runs `@Actor` methods concurrently on a fresh `@State`
+object per trial and classifies results with `@Outcome`
+([jcstress][jcstress]). Put the shared field on the state object so
+every trial publishes it anew, and mark the illegal observation
+`FORBIDDEN` so one occurrence fails the run:
 
 ```java
+import org.openjdk.jcstress.annotations.*;
+import org.openjdk.jcstress.infra.results.II_Result;
+import static org.openjdk.jcstress.annotations.Expect.*;
+
 @JCStressTest
-@Outcome(id = "0, 0", expect = ACCEPTABLE, desc = "Initial values")
+@Outcome(id = "0, 0", expect = ACCEPTABLE, desc = "Nothing seen yet")
 @Outcome(id = "1, 1", expect = ACCEPTABLE, desc = "Both writes seen")
-@Outcome(id = "0, 1", expect = ACCEPTABLE, desc = "Saw partial")
-@Outcome(id = "1, 0", expect = FORBIDDEN, desc = "Reordered - bug")
+@Outcome(id = "0, 1", expect = ACCEPTABLE, desc = "Only x seen")
+@Outcome(id = "1, 0", expect = FORBIDDEN,  desc = "y seen without x")
 @State
-public class CounterTest {
-    int x, y;
+public class PublicationTest {
+    volatile int x, y;           // remove volatile to watch 1, 0 become possible
 
-    @Actor
-    public void writer() { x = 1; y = 1; }
-
-    @Actor
-    public void reader(II_Result r) {
-        r.r1 = y;
-        r.r2 = x;
-    }
+    @Actor public void writer() { x = 1; y = 1; }
+    @Actor public void reader(II_Result r) { r.r1 = y; r.r2 = x; }
 }
 ```
 
-`@Actor` methods run concurrently on different threads; `@Outcome`
-classifies observed `(r1, r2)` pairs. `FORBIDDEN` outcomes indicate
-a memory-model violation (in this case, reordering allowed under JMM
-unless `volatile` or `final`).
-
-Run:
-
 ```bash
-java -jar jcstress.jar -m quick CounterTest
+java -jar target/jcstress.jar -t PublicationTest
 ```
 
-Per the [jcstress docs]: tests are probabilistic; longer runs find
-more reorderings.
+A clean jcstress run means the forbidden outcome was not observed in
+the interleavings explored, not that it cannot happen; say so when
+closing a ticket.
 
-## Step 5 - Loom virtual-thread interleavings (Java 21+)
+## Step 5 - Volume: virtual threads and property tests
 
-Java 21+ Project Loom enables cheap virtual threads. Use to test
-many-concurrent-task interleavings without OS thread cost:
+Virtual threads (Java 21+) make thousands of concurrent tasks cheap:
 
 ```java
 @Test
-void test_handles_10000_concurrent_orders() throws Exception {
-    var orderService = new OrderService();
+void placesTenThousandOrdersWithoutLoss() throws Exception {
+    var service = new OrderService();
     try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
         var futures = IntStream.range(0, 10_000)
-            .mapToObj(i -> executor.submit(() -> orderService.place(i)))
+            .mapToObj(i -> executor.submit(() -> service.place(i)))
             .toList();
-        for (var f : futures) f.get();
+        for (var f : futures) f.get();   // rethrows task failures here
     }
-    assertEquals(10_000, orderService.totalProcessed());
+    assertEquals(10_000, service.totalProcessed());
 }
 ```
 
-Virtual threads run M:N on OS threads - the JVM scheduler interleaves
-them aggressively, exposing schedule-dependent races.
-
-## Step 6 - Property-based + concurrency
-
-Combine Hypothesis (Python) / fast-check (JS) with concurrency:
+Property-based concurrency (Hypothesis) checks invariants over random
+operation mixes:
 
 ```python
-from hypothesis import given, strategies as st
 import threading
+from hypothesis import assume, given, strategies as st
 
-@given(operations=st.lists(st.tuples(st.sampled_from(["read", "write"]), st.integers()), min_size=10, max_size=100))
-def test_counter_property_under_concurrency(operations):
+@given(st.lists(st.tuples(st.sampled_from(["read", "write"]), st.integers()), min_size=10, max_size=100))
+def test_counter_ends_on_a_written_value(ops):
+    writes = [v for op, v in ops if op == "write"]
+    assume(writes)
     counter = ThreadSafeCounter()
-    threads = []
-    for op, val in operations:
-        if op == "write":
-            threads.append(threading.Thread(target=lambda v=val: counter.set(v)))
-        else:
-            threads.append(threading.Thread(target=counter.get))
-
+    threads = [threading.Thread(target=(lambda v=v: counter.set(v)) if op == "write" else counter.get)
+               for op, v in ops]
     for t in threads: t.start()
     for t in threads: t.join()
-
-    # Property: final value is one of the written values
-    assert counter.get() in [v for op, v in operations if op == "write"]
+    assert counter.get() in writes
 ```
 
-Cross-ref `qa-property-based` plugin for property-based test
-authoring patterns.
+Volume tests raise the odds; they never prove absence. Pair them with
+Step 2 for the specific bug.
 
-## Step 7 - CI integration
+## Step 6 - Checkpoint: red before the fix, green after
+
+1. Run the new test against the unfixed code: it must fail. Record the
+   observed numbers (for example "expected 10,000, got 9,412 over 50
+   rounds") in the ticket.
+2. Apply the fix; run the test repeatedly (`-count=50`,
+   `pytest --count=50` with pytest-repeat, or rounds inside the test):
+   it must pass every time.
+3. If step 1 passed, the test does not reach the race. Widen the window
+   (Step 2 hook), move the gate closer to the critical section, or add
+   `-cpu 1,2,4` / more rounds, and repeat step 1.
+
+## Step 7 - CI
 
 ```yaml
-# Go
-- name: Run race detector
-  run: go test -race ./...
+- name: Go race detector
+  env: { CGO_ENABLED: "1" }
+  run: go test -race -count=3 -cpu 1,4 -timeout 20m ./...
 
-# C/C++
 - name: TSan build + test
   run: |
-    cmake -B build -DCMAKE_C_FLAGS="-fsanitize=thread -g -O1"
-    cmake --build build
-    ./build/test_runner
+    cmake -B build-tsan -DCMAKE_C_FLAGS="-fsanitize=thread -g -O1" -DCMAKE_CXX_FLAGS="-fsanitize=thread -g -O1"
+    cmake --build build-tsan
+    ./build-tsan/test_runner        # non-zero (66) when TSan reports
 
-# Java
-- name: jcstress quick run
-  run: java -jar jcstress.jar -m quick -r results/
+- name: jcstress
+  run: java -jar target/jcstress.jar -t PublicationTest
 ```
 
-Note the latency cost: `go test -race` ~3× slower; jcstress quick
-mode ~minutes per test class.
+Keep at least one instrumented matrix leg; never mark it
+`continue-on-error`, and never set `exitcode=0`.
 
 ## Anti-patterns
 
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
-| `time.sleep(0.001)` to "force" interleaving | Non-deterministic; flake | Use barriers (Step 2) |
-| Run race tests once and assume green | Probabilistic; some races take hours | Multiple runs OR longer runs OR sanitizers |
-| Skip TSan in CI for "release" builds | Race in release; CI passed without `-race` | TSan in CI for at least one matrix dimension (Step 7) |
-| Depend on assertion in worker thread | Thread death silent; main thread sees pass | Use futures + assert from main |
-| Test only the bug-causing race, not similar | Other shared state has same pattern; bugs ship | Code-review checklist (Step 1) |
+| `sleep()` to "force" interleaving | Flaky; passes on fast machines | Start gate or in-window hook (Step 2) |
+| Assertions inside worker threads / goroutines | Failures vanish; test passes | Collect, then assert on the test thread |
+| One green run after the fix | Races are probabilistic | Repeated runs (Step 6) |
+| Detector step `continue-on-error` or `exitcode=0` | Findings never fail the build | Blocking step (Step 7) |
+| Suppressing a finding in your own code | Ships the race | Fix it, or ticket + owner |
+| Build tag excluding concurrent tests from `-race` | The detector never sees the contended code | Run them under `-race` |
 
 ## Limitations
 
-- TSan finds only data races (unsynchronized concurrent access),
-  not higher-level race conditions (correct-but-non-atomic
-  multi-step operations).
-- jcstress is JVM-only; no equivalent for non-JVM stacks.
-- Go's `-race` overhead is real (~5-10× memory); CI matrix
-  budget required.
-- Loom virtual threads (Java 21+) require recent JDK; older
-  versions need OS threads.
+- TSan and `-race` find data races, not logical races in correctly
+  synchronised multi-step operations; Step 2 tests cover those.
+- jcstress is JVM-only.
+- Database-level races between transactions belong to
+  `mvcc-isolation-tests`.
 
 ## References
 
-- [ThreadSanitizer docs] - clang `-fsanitize=thread`, runtime
+- [tsan] - clang `-fsanitize=thread`, runtime
   options, adaptive delay
-- [jcstress docs] - `@JCStressTest`, `@Actor`, `@Outcome` outcomes
+- [jcstress] - `@JCStressTest`, `@Actor`, `@Outcome` outcomes
+- [TSan flags][tsan-flags] - `exitcode` (default 66), `halt_on_error`, `suppressions`
+- [Go race detector][go-race] - overhead, cgo requirement, GORACE
 - ThreadSanitizer C++ Manual - github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
 - [references/go.md](references/go.md) - Go race detector + goleak
   workflow (GORACE, stress, CI matrix)
+- [references/goleak-filter-options.md](references/goleak-filter-options.md) - goleak ignore options
 - `deadlock-detection-harness` - 
   sister skill for deadlock-specific patterns
 - `async-ordering-tests` - 
   sister skill for async/await ordering
+- `mvcc-isolation-tests` - database transaction races
 
-[ThreadSanitizer docs]: https://clang.llvm.org/docs/ThreadSanitizer.html
-[jcstress docs]: https://github.com/openjdk/jcstress
+[tsan]: https://clang.llvm.org/docs/ThreadSanitizer.html
+[tsan-flags]: https://github.com/google/sanitizers/wiki/ThreadSanitizerFlags
+[go-race]: https://go.dev/doc/articles/race_detector
+[jcstress]: https://github.com/openjdk/jcstress

@@ -16,7 +16,7 @@ Three push platforms dominate:
 | **FCM** (Android + cross-platform) | Google Firebase |
 
 Each platform has distinct test patterns; Step 1 picks the isolation
-level and Steps 2 - 4 cover the per-platform test approach.
+level and Steps 2-4 cover each platform.
 
 ## When to use
 
@@ -34,9 +34,9 @@ level and Steps 2 - 4 cover the per-platform test approach.
 2. Pick the isolation level; default to mocking the SDK send method (Step 1).
 3. Author the happy-path payload-shape test for each channel (Steps 2 - 4, [references/platform-test-patterns.md](references/platform-test-patterns.md)).
 4. Add the invalid-token cleanup test for the 410 / unregistered path (Steps 2 - 4).
-5. Cover silent-vs-alert, click-action deep links, and FCM topic routing (Steps 5 - 7).
-6. Assert production-vs-sandbox environment routing so tests never reach real users (Step 3).
-7. Run the per-channel checklist in Step 8 and reconcile against the Anti-patterns table.
+5. Cover silent-vs-alert, deep links, and FCM topic routing (Step 5).
+6. Assert sandbox-only APNs endpoints so tests never reach real users (Step 3).
+7. Sabotage-check each test (Step 6), then run the Step 7 checklist.
 
 ## Step 1 - Choose the test isolation level
 
@@ -50,89 +50,73 @@ level and Steps 2 - 4 cover the per-platform test approach.
 
 ## Step 2 - Web Push tests
 
-Per IETF RFC 8030 (Web Push Protocol): the user-agent subscribes via `pushManager.subscribe()`, the app server sends an encrypted (RFC 8291) + VAPID-signed (RFC 8292) push to the returned endpoint, and the service worker's `push` event calls `self.registration.showNotification()`. Status code `410 Gone` means the subscription is invalid (user revoked or expired); the app must remove it from storage.
-
-Mock `webPush.sendNotification` and assert payload shape plus the 410 cleanup path; add a service-worker harness test that dispatches a synthetic `PushEvent`. Full Node.js + service-worker recipes: [references/platform-test-patterns.md](references/platform-test-patterns.md).
+Mock `webPush.sendNotification`, assert the payload, and test that a
+`410 Gone` from the push service deletes the stored subscription
+([RFC 8030 §6.2][rfc8030] - the subscription has expired or been
+revoked). Add a service-worker test that dispatches a synthetic
+`PushEvent` and asserts `showNotification` gets the right title and
+body. Recipes: [references/platform-test-patterns.md](references/platform-test-patterns.md).
 
 ## Step 3 - APNs tests
 
-Apple Push Notification Service has two environments per
-[developer.apple.com/documentation/usernotifications][apns-docs]:
-
-[apns-docs]: https://developer.apple.com/documentation/usernotifications
-
-| Environment | Use |
-|---|---|
-| `api.sandbox.push.apple.com` | Development; uses development APNs certificate |
-| `api.push.apple.com` | Production |
-
-Tests typically run against sandbox + use a development APNs
-certificate or Auth Key (`.p8` file). Mock `apns_client.send`, assert the `aps` payload shape (alert title / body, sound), and cover the HTTP 410 (`Unregistered`) token-cleanup path. Python recipes: [references/platform-test-patterns.md](references/platform-test-patterns.md).
+Mock the APNs client, assert the `aps` payload, and test that a 410
+with reason `Unregistered` removes the device token
+([sending requests to APNs][apns-send]). Assert the client is built for
+`api.sandbox.push.apple.com` in every test and CI configuration;
+`api.push.apple.com` reaches real users.
 
 ## Step 4 - FCM tests
 
-Firebase Cloud Messaging supports HTTP v1 API + legacy HTTP API.
-Use HTTP v1 for new code (legacy deprecated). Mock `admin.messaging().send`, assert the cross-platform message shape (`token`, `notification`, `data`, `android`, `apns`), and test the `messaging/registration-token-not-registered` cleanup path (same as APNs Step 3). Node.js recipe: [references/platform-test-patterns.md](references/platform-test-patterns.md).
+Use the HTTP v1 API: the legacy HTTP and XMPP APIs were deprecated on
+20 June 2023 and their shutdown began on 22 July 2024
+([FCM migration guide][fcm-v1]). Mock `admin.messaging().send`, assert
+the message (`token` or `topic`, `notification`, `data`, `android`,
+`apns`), and test that `messaging/registration-token-not-registered`
+removes the token.
 
-## Step 5 - Silent vs alert push
+## Step 5 - Payload variants: silent, deep link, topic
 
-- **Alert push**: shows a notification UI; user sees + taps.
-  Standard pattern.
-- **Silent push** (also "background push"): doesn't show UI; wakes
-  the app to do background work. Apple imposes throttling on these
-  per [apns-docs][apns-docs].
+Code for each is in the "Payload variants" section of
+[references/platform-test-patterns.md](references/platform-test-patterns.md).
+What each test must assert:
 
-Tests should distinguish the two and assert correct payload:
+| Variant | Assert |
+|---|---|
+| Silent (background) push, APNs | `aps` holds only `content-available: 1` (no `alert`, `sound`, `badge`); request headers `apns-push-type: background` and `apns-priority: 5`. The system may throttle or drop these, so the app must not depend on every one arriving ([background updates][apns-bg]) |
+| Alert push | `alert` title and body present; `apns-push-type: alert` |
+| Deep link | The payload's link / `data` route points at the exact screen (`/orders/123`), built from the entity id, not a constant |
+| FCM topic | Subscribe call uses the topic name the sender publishes to; a send to that topic uses `topic`, not `token` |
 
-```javascript
-it('uses content-available for background sync', () => {
-  const payload = buildSilentSyncPush();
-  expect(payload.aps['content-available']).toBe(1);
-  expect(payload.aps.alert).toBeUndefined();   // no UI for silent
-});
-```
+Opening the deep link on a device needs device automation
+(`appium-testing`, `espresso-suite`, `xcuitest-suite`).
 
-## Step 6 - Click-action / deep-link tests
+## Step 6 - Check the suite catches regressions
 
-The push payload includes a click-action / URL that opens a
-specific app screen. Test that the right deep-link is in the
-payload:
+Before calling the suite done, prove each test can fail:
 
-```python
-def test_order_push_deep_links_to_order_screen():
-    payload = build_order_push(order_id=123)
-    assert payload["data"]["click_action"] == "/orders/123"
-```
+1. Comment out the token / subscription delete in the cleanup handler:
+   the 410 / `Unregistered` / `registration-token-not-registered` tests
+   must go red. Restore it.
+2. Change the deep-link builder to a constant route: the deep-link test
+   must go red.
+3. Add `alert` to the silent payload: the silent-push test must go red.
+4. `grep -rn "api.push.apple.com" tests/ config/test*`: no hits.
 
-End-to-end click-action tests require device automation (Espresso /
-XCUITest); cross-ref `appium-testing` (in the qa-mobile plugin).
+A test that stays green through its own sabotage is not testing the
+path; fix the assertion (usually it asserts on the mock call instead of
+the stored state) and repeat.
 
-## Step 7 - Topic vs targeted routing
+## Step 7 - Per-channel checklist
 
-FCM supports topic subscriptions (broadcast to all subscribers of a
-topic) vs targeted (single device token). Tests for topic routing:
+For each channel the app uses:
 
-```javascript
-it('subscribes user to order-updates topic', async () => {
-  const subSpy = jest.spyOn(admin.messaging(), 'subscribeToTopic')
-    .mockResolvedValue({ successCount: 1, failureCount: 0, errors: [] });
-
-  await subscribeToOrderUpdates('user-device-token', userId);
-
-  expect(subSpy).toHaveBeenCalledWith(['user-device-token'], `user-${userId}`);
-});
-```
-
-## Step 8 - End-to-end test recipe
-
-For each push channel:
-
-1. ✅ Happy-path send with correct payload shape (Steps 2 - 4)
-2. ✅ Invalid-token cleanup on 410 / unregistered response (Steps 2 - 4)
-3. ✅ Silent vs alert distinction (Step 5)
-4. ✅ Click-action / deep-link assertion (Step 6)
-5. ✅ Topic subscription handling (FCM, Step 7)
-6. ✅ Production vs sandbox environment routing (Step 3)
+1. Happy-path send with correct payload (Steps 2-4)
+2. Invalid-token cleanup asserted on stored state (Steps 2-4)
+3. Silent vs alert payload and headers (Step 5)
+4. Deep link (Step 5)
+5. Topic routing (FCM, Step 5)
+6. Sandbox-only endpoints in tests (Step 3)
+7. Each test seen failing once (Step 6)
 
 ## Worked example
 
@@ -151,8 +135,10 @@ An e-commerce app sends a Web Push "order shipped" notification and must clean u
 | Test only happy path | Miss expired-token cleanup; storage grows; spam to dead devices | Step 2-4 410 / 404 / unregistered tests |
 | Hardcode VAPID public key in tests + checked into repo | Key rotation breaks tests | Inject via env var |
 | Send to real production APNs in tests | Real users get test push | Sandbox environment (Step 3) |
-| Skip silent-vs-alert distinction | Apple throttles silent push; missing flag → notifications dropped | content-available test (Step 5) |
-| Skip click-action test | Deep links break silently after refactors | Step 6 |
+| Silent payload with `alert` or without `apns-push-type: background` / `apns-priority: 5` | Not delivered as a background update | Step 5 |
+| Skip deep-link test | Deep links break silently after refactors | Step 5 |
+| Cleanup test asserts only that the mock was called | Passes when the delete is gone | Assert stored state; sabotage check (Step 6) |
+| FCM legacy server key / `fcm.googleapis.com/fcm/send` | Legacy API shut down from July 2024 | HTTP v1 (Step 4) |
 
 ## Limitations
 
@@ -172,11 +158,13 @@ An e-commerce app sends a Web Push "order shipped" notification and must clean u
 
 - [references/platform-test-patterns.md](references/platform-test-patterns.md) - full Web Push / APNs / FCM test-pattern code
 - [references/in-app.md](references/in-app.md) - in-app notification workflow (WebSocket / SSE / Firebase listeners, unread state, fan-out, reconnect); Firebase listener patterns in [references/firebase-listener-tests.md](references/firebase-listener-tests.md)
-- IETF RFC 8030 - Web Push Protocol
+- [RFC 8030][rfc8030] - Web Push Protocol (410 for an expired subscription)
 - IETF RFC 8291 - Message Encryption for Web Push
 - IETF RFC 8292 - VAPID for Web Push
-- [apns-docs][apns-docs] - Apple Push Notification Service
-- firebase.google.com/docs/cloud-messaging - Firebase Cloud Messaging
+- [Apple: sending notification requests to APNs][apns-send] - endpoints, headers, error reasons
+- [Apple: pushing background updates][apns-bg] - silent push payload, headers, throttling
+- [Apple User Notifications][apns-docs]
+- [FCM: migrate from legacy APIs to HTTP v1][fcm-v1] - deprecation and shutdown dates
 - web.dev/explore/notifications - Push API + Notifications API
 - npmjs.com/package/web-push - Node.js web-push library
 - pypi.org/project/apns2 - Python APNs HTTP/2 library
@@ -185,3 +173,9 @@ An e-commerce app sends a Web Push "order shipped" notification and must clean u
 - `appium-testing`,
   `xcuitest-suite`,
   `espresso-suite` - device-side click-action verification
+
+[apns-docs]: https://developer.apple.com/documentation/usernotifications
+[apns-send]: https://developer.apple.com/documentation/usernotifications/sending-notification-requests-to-apns
+[apns-bg]: https://developer.apple.com/documentation/usernotifications/pushing-background-updates-to-your-app
+[rfc8030]: https://www.rfc-editor.org/rfc/rfc8030
+[fcm-v1]: https://firebase.google.com/docs/cloud-messaging/migrate-v1
