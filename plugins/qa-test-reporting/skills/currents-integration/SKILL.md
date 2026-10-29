@@ -1,6 +1,6 @@
 ---
 name: currents-integration
-description: "Wires Currents.dev cross-run test analytics into a Playwright suite: installs `@currents/playwright`, authors `currents.config.ts` (env-sourced `recordKey` + `projectId`), registers `currentsReporter()`, enables trace/video/screenshot artifacts, and runs via `npx pwc` so per-test traces stream to the Currents dashboard with over-time flakiness, slowest-test, and pass-rate trends. Use when a Playwright suite needs hosted cross-run suite-health analytics; for a static per-run report use extentreports or allure-reports, and to sync results into TestRail / Xray / Zephyr test management use test-management-sync."
+description: "Use when a Playwright suite needs hosted analytics across runs: flakiness over time, slowest tests and pass-rate trends. Sets up Currents.dev with @currents/playwright, currents.config.ts, the reporter, traces, videos and screenshots, and runs via npx pwc."
 ---
 
 # currents-integration

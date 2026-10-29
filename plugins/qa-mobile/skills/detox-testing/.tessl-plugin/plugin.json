@@ -1,9 +1,9 @@
 {
   "name": "testland/detox-testing",
-  "description": "Authors React Native E2E tests with Detox (Wix) - gray-box architecture (runs in-process with the app), `element(by.id|by.text|by.label)` matchers, `waitFor()` for explicit sync beyond Detox's automatic async tracking, Jest runner. Use when the app is React Native and speed matters. For Flutter use flutter-testing; for black-box cross-platform use appium-testing; for YAML-declarative flows use maestro-flows; for non-RN native use xcuitest-suite or espresso-suite.",
+  "description": "Use whenever a React Native app needs end-to-end tests with Detox: gray-box runs inside the app, by.id, by.text and by.label matchers, waitFor for extra sync, and the Jest runner. Flutter is flutter-testing; cross-platform black-box is appium-testing; YAML flows are maestro-flows.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.8"
+  "version": "1.4.9"
 }

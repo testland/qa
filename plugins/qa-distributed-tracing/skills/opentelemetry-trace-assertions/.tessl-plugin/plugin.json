@@ -1,9 +1,9 @@
 {
   "name": "testland/opentelemetry-trace-assertions",
-  "description": "Author trace-shape assertions in tests using OpenTelemetry SDK in-memory exporter - capture spans during test execution, assert on span name + attributes + status + kind + parent-child structure. Cross-language patterns (Python `InMemorySpanExporter` + `SimpleSpanProcessor`, JS `InMemorySpanExporter.getFinishedSpans()`, Java `OpenTelemetryExtension`); CI integration. Use when a service is instrumented with the OpenTelemetry SDK and downstream alerts, SLOs, or dashboards depend on specific span names or attributes that a refactor could silently drop.",
+  "description": "Use when a service is instrumented with OpenTelemetry and alerts, SLOs or dashboards depend on span names or attributes a refactor could drop. Captures spans with the in-memory exporter in tests (Python, JS, Java) and asserts on names, attributes, status, kind and structure.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.11"
+  "version": "1.1.12"
 }

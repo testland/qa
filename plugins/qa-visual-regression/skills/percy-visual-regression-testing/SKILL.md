@@ -1,6 +1,6 @@
 ---
 name: percy-visual-regression-testing
-description: "Authors Percy visual snapshot tests via the @percy/cli + framework SDK (Playwright, Cypress, Selenium, Storybook), runs them with `percy exec -- {test command}`, configures viewports / masking / ignored regions, and reviews diffs in the Percy build UI. Use when the project ships visual regression coverage to BrowserStack Percy."
+description: "Use when visual regression tests run on BrowserStack Percy: @percy/cli with the Playwright, Cypress, Selenium or Storybook SDK, percy exec, viewports, masks and ignored regions, and reviewing diffs in Percy builds."
 ---
 
 # percy-visual-regression-testing

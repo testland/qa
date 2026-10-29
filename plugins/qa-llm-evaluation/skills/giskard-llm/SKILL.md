@@ -1,6 +1,6 @@
 ---
 name: giskard-llm
-description: "Authors and runs Giskard LLM scans - adversarial test-case generation for LLM applications via `giskard.scan(model)` covering 7 vulnerability categories (hallucination, harmful_content, prompt_injection, sensitive_information_disclosure, stereotypes, robustness, basic_sycophancy); wraps any callable model behind `giskard.Model(model_predict, model_type=\"text_generation\", ...)`; emits HTML report. Use when the user needs adversarial / red-team coverage on top of functional eval suites."
+description: "Use when an LLM app needs adversarial or red-team tests on top of functional evals. Runs giskard.scan on any model wrapped as giskard.Model to probe hallucination, harmful content, prompt injection, sensitive data disclosure, stereotypes, robustness and sycophancy, with an HTML report."
 ---
 
 # giskard-llm

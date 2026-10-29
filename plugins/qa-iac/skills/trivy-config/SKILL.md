@@ -1,9 +1,9 @@
 ---
 name: trivy-config
-description: "Runs Trivy's misconfiguration scanner (`trivy config`) against IaC directories to detect security issues across Terraform, CloudFormation, Kubernetes manifests, Helm charts, Dockerfiles, and Azure ARM templates - installs Trivy, scans with severity gating via `--exit-code`, suppresses findings via `.trivyignore` / `.trivyignore.yaml` or inline annotations, extends built-in checks with custom Rego policies, and emits SARIF for GitHub Code Scanning. Trivy is the tfsec successor - the forward path from tfsec per Aqua Security's own migration guidance - and the legacy tfsec workflow (install, custom YAML rules, ignore annotations, migration steps) is kept in references/tfsec-legacy.md. Use when adopting a consolidated IaC scanner for new projects, migrating away from tfsec (or still operating a Terraform-only tfsec stack), or scanning mixed IaC stacks with a single tool."
+description: "Use when adopting one IaC misconfiguration scanner for Terraform, CloudFormation, Kubernetes, Helm, Dockerfiles and ARM, or migrating off tfsec: trivy config with severity gating, .trivyignore suppressions, custom Rego checks and SARIF for GitHub code scanning. Legacy tfsec is in its references."
 metadata:
   keywords: "trivy, iac, misconfiguration, terraform, kubernetes, dockerfile, helm, cloudformation, rego, sarif, security"
-  version: "1.1.18"
+  version: "1.1.19"
 ---
 
 # trivy-config

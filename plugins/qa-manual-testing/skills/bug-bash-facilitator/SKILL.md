@@ -1,6 +1,6 @@
 ---
 name: bug-bash-facilitator
-description: "Builds a structured bug-bash session - pre-bash kit (charter, test-data prep, environment setup, sign-up sheet), in-bash structure (role rotation across cohorts, shared backlog board, real-time triage), scoring rubric (severity weighting, novelty bonus), and a post-bash same-day wrap-up authored by the facilitator (not a standalone debrief: for post-session writeups without a live bash, use the PROOF debrief in exploratory-testing). Use when a team needs a coordinated multi-tester sweep before a release or after a major change - converts an ad-hoc \"everyone test for an hour\" into a recorded, comparable session with deliverables."
+description: "Use when a team wants a coordinated bug bash before a release or after a big change instead of an ad-hoc 'everyone test for an hour'. Prepares the charter, data, environments and sign-up, runs roles, a shared board and live triage, scores findings and writes the same-day wrap-up."
 ---
 
 # bug-bash-facilitator

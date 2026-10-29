@@ -1,15 +1,9 @@
 ---
 name: reachability-analyzer
-description: "Runs dead-dependency analysis across JS, Python, and Rust projects
-  using ecosystem-native static tools (`depcheck`/`knip` for JS, `vulture` for
-  Python, `cargo-machete` for Rust), then cross-references the unused-dependency
-  list against SCA findings to downrank vulns in code that is never loaded.
-  Use when SCA output (from OSV-Scanner, Snyk, or a native audit; see dependency-vulnerability-scanning)
-  is too noisy to triage and the team needs to separate unreachable CVEs from
-  exploitable ones before sprint planning; sibling cve-exploitability-triage ranks by EPSS/KEV exploitation signal, not code reachability."
+description: "Use when dependency vulnerability scan output is too noisy and CVEs in code that is never loaded should be set aside. Finds unused dependencies with depcheck or knip (JS), vulture (Python) and cargo-machete (Rust) and downranks their findings. EPSS and KEV ranking is cve-exploitability-triage."
 metadata:
   keywords: "reachability, dead-dependencies, sca, depcheck, knip, vulture, cargo-machete, prioritization"
-  version: "1.2.9"
+  version: "1.2.10"
 ---
 
 # reachability-analyzer

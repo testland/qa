@@ -1,6 +1,6 @@
 ---
 name: synthea-healthcare-data
-description: "Author and run Synthea (MITRE's open-source synthetic patient population simulator) to produce HIPAA-safe synthetic medical records for testing health IT systems. Covers Gradle build, population-size and state-specific generation, FHIR R4 / STU3 / DSTU2 / C-CDA / CSV / CPCDS output formats, disease-module customisation, and the lifecycle-simulation approach (birth-through-death patient journeys with realistic demographics). Use when testing FHIR servers, EHR integrations, claims processing, or any health IT system that needs realistic patient records without HIPAA exposure (distinct from the generic Faker family - qa-test-data faker-data for fixtures, the pii-masking-pipeline-builder faker-masking-operators reference for masking substitution; this is health-domain-specific)."
+description: "Use when testing FHIR servers, EHR integrations, claims processing or other health IT needs realistic patient records with no HIPAA exposure. Runs MITRE Synthea to simulate patient populations and outputs FHIR R4, STU3, DSTU2, C-CDA or CSV, with custom disease modules."
 ---
 
 # synthea-healthcare-data

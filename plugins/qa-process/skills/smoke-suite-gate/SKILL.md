@@ -1,6 +1,6 @@
 ---
 name: smoke-suite-gate
-description: "Build-an-X workflow for a critical-path smoke suite that runs in <5 minutes - picks the 5-15 highest-business-value journeys (login, hero flow, checkout, payment, primary read), implements as fast E2E or API tests, gates per-deploy, retries on transient failures with quarantine. Use as the canary-precursor or per-deploy verification gate; the team's \"if this fails, the build can't proceed\" floor."
+description: "Use when a team needs a fast per-deploy gate: a smoke suite of 5-15 critical journeys (login, checkout, payment, main read path) that runs in under 5 minutes as E2E or API tests and blocks the deploy when it fails, with retries for transient failures."
 ---
 
 # smoke-suite-gate

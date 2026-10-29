@@ -1,9 +1,9 @@
 {
   "name": "testland/renovate-config",
-  "description": "Reference for `renovate.json` - Mend Renovate dependency-update orchestrator (multi-platform: GitHub / GitLab / Bitbucket / Azure DevOps / Gitea); top-level keys (`extends` for preset references, `schedule`, `prConcurrentLimit`, `vulnerabilityAlerts`); `packageRules[]` array with `matchPackageNames` / `matchUpdateTypes` / `automerge` matching; `ignoreDeps`, `addLabels`, `automergeSchedule`. Use when authoring or reviewing Renovate configs in any repo platform Renovate supports.",
+  "description": "Use when writing or reviewing renovate.json for Mend Renovate on GitHub, GitLab, Bitbucket, Azure DevOps or Gitea: preset extends, schedules, PR limits, vulnerability alerts, packageRules matching with automerge, ignored dependencies and labels.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.4"
+  "version": "1.2.5"
 }

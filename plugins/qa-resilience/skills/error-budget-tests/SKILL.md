@@ -1,9 +1,9 @@
 ---
 name: error-budget-tests
-description: "Build error-budget gate tests - SLO + error-budget calculation per Google SRE workbook (\"difference between target uptime and actual uptime\"); burn-rate alerting; monthly-budget exhaustion test; freeze-trigger when budget consumed. Per sre.google embracing-risk reference. Includes the incident-metrics reference for MTTR / MTBF / MTTD / MTTA - per-incident record schema, calculation formulae, exclusion rules, dashboards-as-code, and target-vs-actual alerting. Use when an SLO and error budget are written down but nothing verifies that burn-rate alerts fire or that the release freeze engages when the budget runs out, or when MTTR / MTBF dashboards report numbers nobody can reproduce."
+description: "Use when an SLO and error budget exist but nothing proves burn-rate alerts fire or the release freeze engages when the budget runs out, or MTTR and MTBF numbers can't be reproduced. Tests error-budget math, burn-rate alerts, exhaustion and freeze triggers, and incident metric calculations."
 metadata:
   keywords: "error-budget, slo, sre, burn-rate, feature-freeze"
-  version: "1.2.15"
+  version: "1.2.16"
 ---
 
 # error-budget-tests

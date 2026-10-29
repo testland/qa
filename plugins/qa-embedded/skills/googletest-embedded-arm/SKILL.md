@@ -1,9 +1,9 @@
 ---
 name: googletest-embedded-arm
-description: "Author and run GoogleTest 1.17+ for embedded C++ on ARM targets - TEST() / TEST_F() / TEST_P() / TYPED_TEST(), EXPECT_* vs ASSERT_* assertions, fixtures with SetUp() / TearDown(), value-parameterised tests, GoogleMock when paired, cross-compile with arm-none-eabi-g++, run on host or under QEMU via the qemu-system-test-runner skill, --gtest_filter / --gtest_output=xml:results.xml / --gtest_shuffle / --gtest_repeat command-line flags, and XML / JSON output parsing for CI. Use when the unit-under-test is C++ (modern C++17+) and the team wants the de-facto C++ test framework instead of the C-only Unity. For C use unity-test-framework-c; for pure C mocks see the CMock reference in ceedling-build-runner."
+description: "Use when embedded C++ (C++17 or later) on ARM needs unit tests with GoogleTest: TEST, TEST_F and parameterized tests, EXPECT vs ASSERT, fixtures, GoogleMock, cross-compiling with arm-none-eabi-g++, running on host or QEMU and XML output for CI. Pure C uses unity-test-framework-c."
 metadata:
   keywords: "googletest, gtest, gmock, embedded, arm, c++, cortex-m, cortex-a"
-  version: "1.3.8"
+  version: "1.3.9"
 ---
 
 # googletest-embedded-arm

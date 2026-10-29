@@ -1,6 +1,6 @@
 ---
 name: api-chaos-runner
-description: "Runs the project's existing API tests under injected network chaos - latency, timeouts, dropped connections, bandwidth caps, packet loss - via Toxiproxy (notes on Pumba / Gremlin / LitmusChaos). Builds a per-scenario chaos matrix and reports which assertions break under which conditions, verifying resilience patterns (retry, circuit-breaker, timeout, fallback). Unlike schemathesis-fuzzing and restler-fuzzing, which generate new tests from a schema, this drives your EXISTING example-based suite."
+description: "Use when an existing API test suite should be rerun under network faults to prove retries, timeouts, circuit breakers and fallbacks work. Injects latency, timeouts, dropped connections, bandwidth caps and packet loss with Toxiproxy and reports which assertions break under which fault."
 ---
 
 # api-chaos-runner

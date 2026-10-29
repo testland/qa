@@ -1,6 +1,6 @@
 ---
 name: push-notification-test-author
-description: "Build-an-X for push notification tests (push notifications, web push, FCM / APNs push messages) across Web Push (RFC 8030 / VAPID), Apple Push Notification Service (APNs), and Firebase Cloud Messaging (FCM) - covers subscription handshake, payload encryption, badge / sound / click-action assertions, expired-subscription cleanup, silent-vs-alert, and topic-vs-targeted routing; also carries the in-app notification test workflow (WebSocket / SSE / Firebase-listener delivery, read-unread state, multi-session fan-out, offline-then-reconnect) in references/in-app.md. Use when authoring tests for any push or in-app notification flow."
+description: "Use when push or in-app notifications need tests: Web Push with VAPID, Apple APNs and Firebase FCM subscription, payload encryption, badge, sound and click actions, expired subscriptions, silent vs alert pushes and topic routing, plus in-app delivery over WebSocket or SSE with read state."
 ---
 
 # push-notification-test-author

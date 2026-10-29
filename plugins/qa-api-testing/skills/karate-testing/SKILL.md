@@ -1,6 +1,6 @@
 ---
 name: karate-testing
-description: "Authors Karate `.feature` files using its Gherkin-flavored DSL for HTTP API tests, leverages the `match` keyword with fuzzy validators (#number / #string / #regex / contains / arrays), runs the suite via JUnit 5 plus Maven Surefire, and produces JUnit XML for CI gating. Use when the project is on the JVM and prefers a feature-file authoring flow over Java-DSL fluent chains; for those fluent chains use restassured-testing, for the same YAML-style flow on a Python/pytest stack use tavern-testing."
+description: "Use when a JVM project wants HTTP API tests written as Karate .feature files instead of Java code: the Gherkin-style DSL, match with fuzzy validators, JUnit 5 and Maven runs, and JUnit XML for CI. For Java fluent tests use restassured-testing; for Python YAML tests use tavern-testing."
 ---
 
 # karate-testing

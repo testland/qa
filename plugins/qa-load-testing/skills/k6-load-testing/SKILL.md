@@ -1,6 +1,6 @@
 ---
 name: k6-load-testing
-description: "Authors k6 JavaScript load-test scripts (VU loops + checks + sleeps), configures the `options` block with `stages` (ramp-up patterns) and `thresholds` (p(95) latency, error rate), runs via `k6 run script.js` or `--vus / --duration` ad-hoc flags, and uses thresholds as the CI pass/fail signal. Includes a latency-percentile interpretation reference: tail ratio (p99/p50), bimodal-distribution detection, coordinated omission and why naive p99 is optimistic, and constant-vus vs constant-arrival-rate executors. Use when the project ships HTTP / WebSocket / gRPC load tests and the team wants developer-friendly JavaScript authoring, or when a k6 threshold passes but the system still feels slow."
+description: "Use whenever HTTP, WebSocket or gRPC load tests should be written in JavaScript with k6, or a k6 threshold passes but the system still feels slow: VU scripts with checks, stages for ramps, thresholds on p95 latency and errors as the CI gate, and how to read tail latency and coordinated omission."
 ---
 
 # k6-load-testing

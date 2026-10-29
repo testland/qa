@@ -1,9 +1,9 @@
 {
   "name": "testland/serverless-integration-test-builder",
-  "description": "Workflow-driven skill that builds the integration-test suite for a serverless application from its IaC definition (SAM template / serverless.yml / Wrangler config / Vercel functions / Netlify functions). Walks through: identifying the function inventory + event sources, picking the right local-emulator per function (sam local / Miniflare / netlify dev / vercel dev / serverless-offline), generating test events per event source, asserting on cold-start + timeout budgets (per-runtime budget reference), and emitting the test directory + CI config. Use when introducing integration tests to a serverless project.",
+  "description": "Use when a serverless project (SAM, serverless.yml, Wrangler, Vercel or Netlify functions) has no integration tests yet. Inventories functions and event sources, picks a local emulator per function, generates test events, asserts cold-start and timeout budgets, and emits the tests and CI config.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.4"
+  "version": "1.3.5"
 }

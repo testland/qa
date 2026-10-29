@@ -1,6 +1,6 @@
 ---
 name: gitleaks-scanning
-description: "Configures and runs gitleaks - Go-based secret scanner with `gitleaks git` (scan local git via `git log -p`), `gitleaks dir` (filesystem), `gitleaks stdin` (pipe); 100+ built-in rules + custom rules in `.gitleaks.toml` ([[rules]] with regex / entropy / keywords / tags); allowlist via [[rules.allowlists]] (commits / paths / stopwords); pre-commit hook + GitHub Action integration; plus baseline management for legacy debt - onboarding a repo with historical findings via `--baseline-path` snapshots, `.gitleaksignore`, cross-tool suppression consistency with TruffleHog, and rot-prevention cadence; TruffleHog live verification (provider-API checks, `--results=verified` CI gating, scanning GitHub orgs, S3 and Docker images) is a reference. Use when the team needs OSS secret scanning at commit time + CI gate, or is adopting scanning on a repo with pre-existing findings."
+description: "Use when a team needs open-source secret scanning on commits and in CI, or is adopting it on a repo with existing leaks: gitleaks git, dir and stdin scans, custom rules and allowlists in .gitleaks.toml, pre-commit and GitHub Action setup, baselines, and TruffleHog live verification."
 ---
 
 # gitleaks-scanning

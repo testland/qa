@@ -1,6 +1,6 @@
 ---
 name: bug-tracker-workflow
-description: "Repairs defect bookkeeping that reports the wrong numbers - a weekly summary showing zero in the top severity band, a 'new defects this week' figure counting items already fixed, duplicates that were never merged, or one script moving issues across several boards whose workflows disagree. Files, transitions, dedupes, and searches bugs through one tracker-agnostic workflow across Jira, Linear, GitHub Issues, and Azure DevOps: authenticate, dedupe-search before creating, classify severity and priority, transition lifecycle states, and wire idempotent CI-driven filing from test failures. Jira Cloud REST API v3 is worked in full (ADF descriptions, runtime transition lookup, JQL triage and duplicate queries, dry-run bulk transitions); references hold the severity-vs-priority 5x5 matrix, defect lifecycle states and IEEE 1044 taxonomy. Use when tracker data, defect metrics, or cross-board transitions are wrong or need automating."
+description: "Use when defect counts or reports are wrong (missing top-severity bugs, fixed items counted as new, unmerged duplicates) or bug filing and transitions need automating. One workflow for Jira, Linear, GitHub Issues and Azure DevOps: dedupe before filing, severity vs priority, lifecycle and CI filing."
 ---
 
 # bug-tracker-workflow

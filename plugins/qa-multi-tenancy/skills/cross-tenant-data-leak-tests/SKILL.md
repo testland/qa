@@ -1,6 +1,6 @@
 ---
 name: cross-tenant-data-leak-tests
-description: "Workflow-driven skill that plans and implements the cross-tenant leak-test suite - from surface inventory to the runtime CI gate a multi-tenant codebase must pass on every PR. The planning section inventories tenant-bearing surfaces (tables, APIs, object storage, search, queues, caches), classifies each by isolation model (silo / pool / bridge, per references/isolation-models.md), and derives the OWASP WSTG-ATHZ-02 coverage matrix. The battery defines the canonical test patterns (read-other-tenant-by-id, list-leak, spoofed-tenant-id-in-body, JWT-replay, FK-cross-tenant, unique-collision side channel, object-storage IDOR, search-index-direct-query, async-job-context-reload, cache-key-collision), the 404-vs-403 disclosure trade-off, Postgres RLS policies and tests (row-level-security reference), and the CI gate (non-superuser non-BYPASSRLS role, fail on any leak). Use when designing or implementing a tenant-isolation test suite, adding the CI gate to an existing project, or investigating a leak finding."
+description: "Use when designing or adding tenant isolation tests to a multi-tenant app, adding a CI leak gate, or investigating a leak. Inventories tenant-bearing surfaces, then tests read-by-ID, list leaks, spoofed tenant IDs, JWT replay, storage IDOR, search, jobs and caches, plus Postgres row-level security."
 ---
 
 # cross-tenant-data-leak-tests

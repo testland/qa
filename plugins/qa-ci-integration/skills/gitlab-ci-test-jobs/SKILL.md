@@ -1,6 +1,6 @@
 ---
 name: gitlab-ci-test-jobs
-description: "Configures GitLab CI/CD test stages - `.gitlab-ci.yml` with parallel matrix, artifact reports (junit, coverage), services (postgres, redis), needs / dependencies between jobs, only/except + rules for trigger filtering, retry policy. Use when the project hosts on GitLab and the team wants idiomatic GitLab CI patterns."
+description: "Use whenever the task is to run tests in GitLab CI/CD: test stages in .gitlab-ci.yml, parallel matrix jobs, junit and coverage artifact reports, Postgres or Redis services, needs between jobs, rules for triggers and retry policy."
 ---
 
 # gitlab-ci-test-jobs

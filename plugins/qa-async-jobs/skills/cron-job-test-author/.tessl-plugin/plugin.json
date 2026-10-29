@@ -1,9 +1,9 @@
 {
   "name": "testland/cron-job-test-author",
-  "description": "Build-an-X for cron / scheduler job tests - cron-expression validation patterns (5-field standard `min hour day-month month day-week` + 6-field with seconds + named-list extensions), DST + leap-day edge cases, missed-execution detection (machine downtime catch-up), overlapping-run protection (lock + stale-lock recovery), timezone semantics. Use when authoring tests for cron jobs, Kubernetes CronJobs, BullMQ repeat-jobs, Sidekiq schedulers, or any time-based job runner.",
+  "description": "Use when cron jobs, Kubernetes CronJobs, BullMQ repeat jobs, Sidekiq schedules or any time-based job need tests: cron expression validation, DST and leap-day edge cases, catch-up after downtime, overlapping-run locks with stale-lock recovery, and time zones.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.5"
+  "version": "1.3.6"
 }

@@ -1,6 +1,6 @@
 ---
 name: graphql-n-plus-one-remediation
-description: "Detects and fixes the GraphQL N+1 pattern: scans a repo, PR diff, or schema type for list-returning resolvers (grep-driven detection workflow), traces the resolver tree to locate the fan-out (one parent query returns N rows, then a child field resolver fires once per row), classifies every child field resolver as safe or N+1 risk, and applies one of three fixes: per-request DataLoader batching, eager projection in the parent resolver, or selection-set-aware prefetch. Use when reviewing a PR that adds or changes a list-returning resolver, when a connection-pool exhaustion or slow-query alert traces back to GraphQL traffic, or when a resolver trace shows a child field resolved once per parent row."
+description: "Use whenever a GraphQL query fires one database query per item (N+1), a slow-query alert traces to GraphQL, or a PR adds a list resolver: find the fan-out, write a test that counts queries, and fix it with DataLoader batching, parent projection or selection-set prefetch."
 ---
 
 # graphql-n-plus-one-remediation

@@ -1,9 +1,9 @@
 ---
 name: vector-search-recall-tests
-description: "Vector search benchmarking - recall@k vs latency tradeoffs, ground-truth construction via brute-force, HNSW tuning (M / ef_construct / ef per Qdrant docs), embedding-model-upgrade drift detection. Use ANN-Benchmarks framework for cross-engine comparison; per-engine clients (Qdrant, Weaviate, pgvector, Pinecone, Elasticsearch k-NN, Milvus) for in-product tests. Use when HNSW / IVF parameters are being tuned or an embedding model is swapped, and recall@k on the existing corpus has never been measured against brute-force ground truth."
+description: "Use when HNSW or IVF parameters are being tuned, an embedding model is swapped, or vector search recall was never measured. Builds brute-force ground truth, measures recall@k against latency and detects embedding drift for Qdrant, Weaviate, pgvector, Pinecone, Elasticsearch k-NN and Milvus."
 metadata:
   keywords: "vector-search, ann-benchmarks, hnsw, recall-at-k, embedding-drift"
-  version: "1.2.7"
+  version: "1.2.8"
 ---
 
 # vector-search-recall-tests

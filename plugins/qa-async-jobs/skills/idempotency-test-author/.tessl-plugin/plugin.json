@@ -1,9 +1,9 @@
 {
   "name": "testland/idempotency-test-author",
-  "description": "Build-an-X for idempotency tests in any async/job/API context - idempotency-key handling (per Stripe / AWS prescriptive guidance pattern), retry-safe semantics (exactly-once vs at-least-once vs at-most-once), side-effect commutativity verification, fingerprint-based dedup, idempotency-window tuning. Use when authoring tests for any system where the same input could be processed twice (SQS Standard at-least-once, RabbitMQ requeue, retry-on-error logic, webhook redelivery, browser double-click, mobile-network retry).",
+  "description": "Use whenever the same request or message could be processed twice (at-least-once queues, retries, webhook redelivery, double clicks, mobile retries) and duplicates must have no extra effect. Tests idempotency keys, delivery semantics, fingerprint dedup and the idempotency window.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.7"
+  "version": "1.3.8"
 }

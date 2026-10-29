@@ -1,6 +1,6 @@
 ---
 name: browser-matrix-strategy-reference
-description: "Pure-reference for designing and reviewing a browser / OS / device test matrix from traffic data - the T1/T2/T3 tier-membership heuristics (T1 >=5% traffic, T2 1-5% or statutory, T3 <1% with customer demand), the traffic-share sources (own analytics, StatCounter, MDN browser-compat-data), a worked matrix template with tier-change log, the matrix review checklist (staleness, T1 oversize, below-threshold T1 entries, missing real-device coverage), how to justify dropping a legacy browser (IE11, old iOS Safari), and the compatibility budget (tier caps, CI cost formula, published support statement) in references/compatibility-budget.md. Use when designing an initial matrix, capping or publishing a support policy, running a quarterly re-tier review, or making the case to drop a browser. This is the WHAT-to-test strategy reference - to execute the matrix use playwright-testing browser projects (bundled engines), selenium-grid-4-runner (self-hosted), or cloud-grid-e2e (managed grids)."
+description: "Use when deciding which browsers, OS versions and devices to test: a three-tier matrix built from traffic data, quarterly re-tier reviews, a published support policy and test budget, or the case for dropping an old browser. The Playwright, Selenium Grid and cloud-grid skills run it."
 ---
 
 # browser-matrix-strategy-reference

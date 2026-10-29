@@ -1,6 +1,6 @@
 ---
 name: synthetic-monitor-author
-description: "Drafts a synthetic monitor configuration for one critical user journey - picks the platform (Datadog Synthetics, Pingdom, Checkly, New Relic, etc.), authors the scripted-transaction body (Playwright-style for browser checks; HTTP-step for API checks), wires the cadence (typical 1-15 min), defines per-step assertions (DOM presence, API status, response shape) and aggregate alert thresholds (consecutive-failure count + on-call routing). Includes the RUM-coverage gap method for deciding which journeys to monitor: score real-user journeys from RUM / CrUX data by session volume times business value, diff against the existing monitor inventory, and emit a ranked gap list. Use when a critical journey needs continuous-in-production verification per ISTQB-canonical shift-right (\"a test approach to test a system continuously in production\"), or when synthetic coverage was never systematically derived from real usage data."
+description: "Use when a critical user journey needs continuous checks in production, or monitor coverage was never derived from real usage. Writes a synthetic monitor for Datadog, Pingdom, Checkly or New Relic with browser or API steps, cadence, checks and alerts, and ranks unmonitored journeys from RUM data."
 ---
 
 # synthetic-monitor-author

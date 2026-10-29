@@ -1,6 +1,6 @@
 ---
 name: pii-masking-pipeline-builder
-description: "Build-an-X workflow that owns the full detect → mask → verify pipeline for PII in test data. Walks the author through (1) classifying each field against the cross-regime PII catalog (GDPR / CCPA-CPRA / NIST SP 800-122 / HIPAA, in references/pii-categories.md), (2) picking a masking operator from the techniques catalog (seven canonical operators + Presidio operators + privacy models, in references/masking-techniques.md), (3) deciding pseudonymisation (reversible, in GDPR scope) vs anonymisation (irreversible, out of scope), (4) ordering the pipeline (detect → operator → audit) and emitting a deployable YAML config for Presidio + Faker + Synthea wrappers (Faker-as-masking-operator detail in references/faker-masking-operators.md), and (5) running the adversarial verification pass that re-detects PII in the masked output and blocks promotion on a leak. Use when non-production environments need masked production data - from field classification through runnable masking config to the leak audit."
+description: "Use when non-production environments need masked production data. Classifies each field against GDPR, CCPA, NIST and HIPAA PII categories, picks a masking operator, decides pseudonymization vs anonymization, emits a Presidio, Faker and Synthea config and blocks promotion if a re-scan finds PII."
 ---
 
 # pii-masking-pipeline-builder

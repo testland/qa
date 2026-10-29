@@ -1,9 +1,9 @@
 {
   "name": "testland/giskard-tests",
-  "description": "Test ML models with Giskard's scan() vulnerability detector + test catalog (performance, robustness, fairness, data leakage, ethical issues) for tabular and NLP models. Wrap a prediction function in giskard.Model + a DataFrame in giskard.Dataset; emit test suites that pass/fail in CI. Use when a trained tabular or NLP model is about to ship with no test suite of its own, or when a feature-engineering or hyperparameter change needs a pre-merge scan for newly introduced vulnerabilities.",
+  "description": "Use when a trained tabular or NLP model is about to ship with no tests of its own, or a feature or hyperparameter change needs a pre-merge check. Runs Giskard scan and its test catalog for performance, robustness, fairness, data leakage and ethical issues, and emits suites that pass or fail in CI.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.5"
+  "version": "1.3.6"
 }

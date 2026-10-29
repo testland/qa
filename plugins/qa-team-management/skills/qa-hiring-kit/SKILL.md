@@ -1,6 +1,6 @@
 ---
 name: qa-hiring-kit
-description: "End-to-end structured hiring for QA / SDET / automation / test-lead / quality-manager roles - one chain from job description through interview question bank, competency-anchored scoring rubric, interviewer calibration guide, and post-interview panel debrief, to the 30-60-90 day onboarding plan. Implements the canonical Levashina 2014 et al. structured-interview methodology with ISTQB-aligned competency vocabulary, so the JD a candidate reads, the rubric the panel scores, and the ramp plan the manager runs all describe the same role. Use when opening a QA requisition, authoring any artifact of the hiring loop (JD, questions, rubric, calibration guide, onboarding plan), or running the panel debrief to a defensible hire / no-hire decision."
+description: "Use when opening a QA, SDET, automation, test lead or quality manager role or running any part of the hiring loop: job description, interview questions, a competency-anchored scoring rubric, interviewer calibration, the panel debrief to a hire or no-hire decision and a 30-60-90 day onboarding plan."
 ---
 
 # qa-hiring-kit

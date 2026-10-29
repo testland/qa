@@ -1,9 +1,9 @@
 ---
 name: unity-test-framework
-description: "Author and run the Unity game-engine Test Framework (`com.unity.test-framework`, currently v1.8). Distinct from the ThrowTheSwitch Unity C testing library at throwtheswitch.org/unity - the two tools share only a name. Covers package install via Package Manager, the EditMode vs PlayMode split, the [Test] / [UnityTest] / [SetUp] / [TearDown] / [UnityPlatform] attributes, assembly-definition setup (Editor folder vs asmdef with `includePlatforms` / `optionalUnityReferences: [TestAssemblies]`), Test Runner window, command-line batch invocation with `-runTests` / `-testPlatform` / `-testResults` / `-testFilter` / `-testCategory`, NUnit 3.5 assertion API, and CI integration. Use when the unit under test is C# Unity code that needs to exercise the Unity runtime or editor."
+description: "Use whenever C# code in a Unity game-engine project needs tests that use the Unity runtime or editor: Unity Test Framework EditMode vs PlayMode tests, [Test] and [UnityTest], assembly definitions, the Test Runner window, batch-mode command-line runs and CI. Not the ThrowTheSwitch C library."
 metadata:
   keywords: "unity, unity3d, test-framework, utf, edit-mode, play-mode, nunit, csharp, game-engine"
-  version: "1.4.17"
+  version: "1.4.18"
 ---
 
 # unity-test-framework

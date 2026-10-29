@@ -1,6 +1,6 @@
 ---
 name: aws-sam-local-testing
-description: "Wraps AWS SAM (Serverless Application Model) Local CLI for testing Lambda functions locally: `sam local invoke` (single invocation with event payload), `sam local start-api` (local API Gateway emulator), `sam local start-lambda` (local Lambda invoke endpoint for AWS SDK clients), and event-payload generation (`sam local generate-event`). For C#/.NET Lambdas, references/dotnet.md covers handler-direct testing with Amazon.Lambda.TestUtilities (TestLambdaContext, TestLambdaLogger) and the dotnet-lambda CLI. Use when testing Lambda + API Gateway + integrated AWS services locally."
+description: "Use when AWS Lambda functions with API Gateway need testing locally: sam local invoke with event payloads, start-api for a local API Gateway, start-lambda for SDK clients and generate-event, plus .NET Lambda handler tests with Amazon.Lambda.TestUtilities."
 ---
 
 # aws-sam-local-testing

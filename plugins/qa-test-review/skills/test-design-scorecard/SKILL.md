@@ -1,6 +1,6 @@
 ---
 name: test-design-scorecard
-description: "Scores test files 1 to 5 on six design axes (AAA phase separation, single-responsibility, naming, fixture coupling, magic literals, setup time) using explicit per-level anchors that settle what separates a 2 from a 4, then turns the scores into growth-framed feedback and a per-author trend report; the per-PR and per-author rollup examples and trend-reporting conventions live in references/. Owns the scoring and the write-up only: the conventions being scored live in a separate conventions catalog such as `test-code-conventions`, and block-or-approve gating belongs to an adversarial review. Use when a test diff needs a graded coaching read rather than a merge verdict: onboarding a new engineer, a team deliberately ramping up test discipline, or a quarterly per-author trend where the output is a conversation, not a gate."
+description: "Use when a test diff needs a graded coaching review rather than a merge verdict: onboarding a new engineer, ramping up test discipline, or a quarterly per-author trend. Scores tests 1-5 on six design axes with explicit anchors and writes growth-framed feedback."
 ---
 
 # test-design-scorecard

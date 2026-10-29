@@ -1,9 +1,9 @@
 ---
 name: multiplayer-state-machine-coverage
-description: "Build a coverage matrix for a networked-game state machine that exercises connect / authority-handoff / disconnect / reconnect / host-migration paths across Unity Netcode for GameObjects, Unreal Engine replication, and Mirror Networking. Workflow: enumerate the engine's connection states + ownership states + replicated-property update rules, cross them against latency / loss / out-of-order packet injection, encode each combination as a test fixture, and emit a go / no-go gate. Use before submitting a multiplayer title to platform cert - Microsoft's cert guide lists 'Multiplayer does not work as expected' as one of the most common Hold reasons, and Xbox XR-067 (MPSD session state) is failed by uncovered state-machine paths."
+description: "Use before a multiplayer game goes to platform cert, where broken multiplayer is a common rejection. Builds a coverage matrix for connect, authority handoff, disconnect, reconnect and host migration under latency, loss and reordering for Unity Netcode, Unreal and Mirror, with a go/no-go gate."
 metadata:
   keywords: "multiplayer, netcode, unity-ngo, unreal-replication, mirror-networking, state-machine, host-migration, reconnect, xr-067"
-  version: "1.4.17"
+  version: "1.4.18"
 ---
 
 # multiplayer-state-machine-coverage

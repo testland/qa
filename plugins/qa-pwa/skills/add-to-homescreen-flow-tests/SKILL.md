@@ -1,9 +1,9 @@
 ---
 name: add-to-homescreen-flow-tests
-description: "The single install-flow skill: the reference contract for the PWA install flow (installability gate fields, `beforeinstallprompt` handshake, per-platform paths - Android WebAPK / iOS Share menu / Firefox no-op - and the `display-mode` post-install signal, in references/install-flow-reference.md) plus the build-an-X workflow that emits the Add-to-Home-Screen suite. Walks the four-stage timeline, emitting one test per gate cell per [web.dev/articles/install-criteria][install-criteria], the deferred-prompt → `prompt()` → `userChoice` chain per [web.dev/articles/customize-install][customize-install], the iOS Safari manual-metadata branch (`apple-touch-icon`) per [web.dev/learn/pwa/installation][learn-pwa], and the post-install `(display-mode: standalone)` MQ assertion. Output: a Playwright spec with per-stage cells plus a coverage matrix. Use when a PWA's manifest, icons, or install handler change, when install conversion drops at an unknown stage, or when triaging a flaky install assertion."
+description: "Use when a PWA's manifest, icons or install handler change, install conversions drop, or an install test is flaky. Builds Playwright tests for the install flow: installability criteria, the beforeinstallprompt and userChoice chain, the iOS Safari path and display-mode standalone after install."
 metadata:
   keywords: "add-to-homescreen, beforeinstallprompt, appinstalled, display-mode, apple-touch-icon"
-  version: "1.2.7"
+  version: "1.2.8"
 ---
 
 # add-to-homescreen-flow-tests

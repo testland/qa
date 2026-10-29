@@ -1,6 +1,6 @@
 ---
 name: celery-tests
-description: "Authors and runs Celery task tests in Python - `pytest-celery` fixtures (`celery_app`, `celery_worker` per-test, `celery_session_worker` per-session); `task_always_eager` config NOT recommended for unit tests; `apply()` for synchronous test invocation; mock-and-patch retry patterns via `unittest.mock.patch` on `task.retry`. Use when the user works with Celery task workers and needs unit / integration tests across function-style or class-style tasks."
+description: "Use whenever Python Celery tasks need unit or integration tests: pytest-celery celery_app and worker fixtures, apply() for synchronous calls, why task_always_eager misleads, and mocking task.retry to test retry behavior, for function and class-based tasks."
 ---
 
 # celery-tests

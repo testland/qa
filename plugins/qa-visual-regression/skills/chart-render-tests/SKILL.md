@@ -1,9 +1,9 @@
 ---
 name: chart-render-tests
-description: "Chart-render regression testing across the three chart-library families - Canvas (Chart.js: locator screenshot snapshot + `canvas.toDataURL()` diff with animations disabled), SVG (D3: `outerHTML` structural snapshot with generated-ID normalization + per-element data-binding tests), and declarative specs (Vega / Vega-Lite: JSON Schema validation + Vega-Lite → Vega compile test). Detects the family from package.json imports (chart.js / d3 / vega-lite), then applies the matching recipe; full per-library depth with citations in references/chartjs.md, references/d3.md, references/vega.md. Use when a dashboard or data product renders charts and their output needs regression coverage - before a chart-library major upgrade, after a theming change, or when runtime-generated Vega specs must be proven valid before render."
+description: "Use when a dashboard renders charts that need regression tests, before a chart library upgrade or after a theme change. Canvas charts (Chart.js) get screenshot and toDataURL diffs, SVG (D3) gets normalized structure snapshots, and Vega or Vega-Lite specs get schema and compile checks."
 metadata:
   keywords: "chart-regression, chartjs, d3, vega, canvas-snapshot, svg-snapshot"
-  version: "1.0.1"
+  version: "1.0.2"
 ---
 
 # chart-render-tests

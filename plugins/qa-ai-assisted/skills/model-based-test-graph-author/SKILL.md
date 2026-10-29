@@ -1,6 +1,6 @@
 ---
 name: model-based-test-graph-author
-description: "Build-an-X workflow for model-based testing (MBT) per the canonical definition - authors a state-machine model of the SUT (states + transitions + guards + actions), validates the model is connected and complete, and runs the full graph-to-suite pipeline: pick a coverage criterion, generate covering paths, bridge each path into an acceptance-criterion entry ai-test-generator consumes, and assemble the generated tests into a suite file with confidence tiers and a curation note routing to ai-test-curator before merge. Per Wikipedia (en.wikipedia.org/wiki/Model-based_testing): MBT \"leverages model-based design for designing and possibly executing tests.\" Use when a complex stateful flow (checkout, onboarding, multi-step wizard) needs systematic coverage that ad-hoc tests miss, or when the whole model-to-suite pipeline should run in one coordinated pass."
+description: "Use when a complex stateful flow (checkout, onboarding, multi-step wizard) needs systematic model-based coverage that ad-hoc tests miss. Builds a state-machine model, checks it is complete, picks a coverage criterion, generates covering paths and turns them into a curated test suite."
 ---
 
 # model-based-test-graph-author

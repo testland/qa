@@ -1,6 +1,6 @@
 ---
 name: session-management-test-author
-description: "Build-an-X for session management tests per OWASP ASVS V3 - cookie attribute coverage (Secure / HttpOnly / SameSite=Strict|Lax), session-fixation defense (regenerate session ID on login), absolute + idle timeout, concurrent-session limits, logout invalidation across devices, CSRF token handling, session-binding to TLS / IP / device fingerprint. Use when authoring tests for any web app's session layer, regardless of framework (Express session, Django sessions, Spring Security, ASP.NET, Rails, etc.)."
+description: "Use whenever a web app's session layer needs tests, in any framework: cookie flags (Secure, HttpOnly, SameSite), session ID regeneration on login, idle and absolute timeouts, concurrent-session limits, logout on all devices, CSRF tokens and session binding, per OWASP ASVS V3."
 ---
 
 # session-management-test-author

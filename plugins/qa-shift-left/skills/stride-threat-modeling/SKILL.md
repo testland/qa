@@ -1,6 +1,6 @@
 ---
 name: stride-threat-modeling
-description: "Enumerates security threats against a feature specification or design using Microsoft's six STRIDE categories (spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege), each paired with the security property it violates. Covers the asset-and-trust-boundary walk that produces threat rows, the threat-row output schema, a likelihood x impact triage rule labelled plainly as practitioner convention rather than standard, a worked example, an anti-pattern catalog, and the from-spec workflow: read the spec, run the walk end to end, and write the threat-model document into the repo, with a no-fabrication rule for asset-free specs. Enumerates threats against a design; it does not scan code, run a penetration test, or audit control compliance. Use when a PRD section, user story, design doc, or architecture sketch touching authentication, user data, payments, file uploads, or an external integration is about to enter implementation and no threat model exists for it yet."
+description: "Use when a design, story or architecture sketch touching login, user data, payments, file uploads or an external integration is about to be built with no threat model. Walks assets and trust boundaries through Microsoft's STRIDE categories, triages threats and writes the threat model into the repo."
 ---
 
 # stride-threat-modeling

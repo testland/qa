@@ -1,6 +1,6 @@
 ---
 name: chromatic-visual-regression-testing
-description: "Authors and runs Chromatic visual tests on Storybook, Playwright, or Cypress projects via the `chromatic` CLI; configures baselines, TurboSnap, UI Review, and CI gating; reads exit codes for change-vs-error classification. Use when the project ships visual regression coverage to Chromatic Cloud."
+description: "Use when visual regression tests run on Chromatic Cloud for Storybook, Playwright or Cypress: the chromatic CLI, baselines, TurboSnap, UI Review, CI gating and reading exit codes to tell visual changes from errors."
 ---
 
 # chromatic-visual-regression-testing

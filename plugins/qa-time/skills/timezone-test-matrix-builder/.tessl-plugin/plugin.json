@@ -1,9 +1,9 @@
 {
   "name": "testland/timezone-test-matrix-builder",
-  "description": "Builds a timezone, daylight saving time (DST), and leap year / leap second test matrix from wherever a codebase reads or formats dates and times. Finds time-handling code (grep for datetime / Date / Instant / time.time / timezone), sorts each spot into storage, business-logic, display, cron, or billing, picks the edge cases that matter (DST spring-forward / fall-back, ambiguous local time, leap day Feb 29, ISO 8601 / RFC 3339 round-trip, zone-database updates), and emits per-spot test stubs wired to the language's fake-clock (mock-time) library. Use when a codebase needs timezone, DST, and leap-year test coverage derived from its own date/time usage.",
+  "description": "Use when a codebase needs time zone, DST and leap-year test coverage derived from its own date and time code. Finds where times are stored, computed, displayed, scheduled or billed, picks the edge cases that matter and writes test stubs using the language's fake-clock library.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.19"
+  "version": "1.2.20"
 }

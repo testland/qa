@@ -1,9 +1,9 @@
 ---
 name: model-performance-regression-gate
-description: "Computes held-out metrics (accuracy, F1, AUC, RMSE) for a retrained model and compares them against the current production model, failing promotion when any metric regresses beyond a configured tolerance. Adds per-segment checks via Deepchecks WeakSegmentsPerformance so a model that improves globally but regresses on a key slice is still blocked. Use when a retrained model is a candidate for promotion and the CI pipeline must enforce a per-metric pass/fail gate before the artifact is pushed to the model registry."
+description: "Use when a retrained ML model is a candidate for promotion and CI must block it if it got worse. Compares held-out accuracy, F1, AUC or RMSE with the production model within a tolerance, and checks key segments with Deepchecks so a global gain cannot hide a slice regression."
 metadata:
   keywords: "model-regression, ci-gate, model-promotion, performance-comparison, ml-testing, deepchecks, scikit-learn"
-  version: "1.3.7"
+  version: "1.3.8"
 ---
 
 # model-performance-regression-gate

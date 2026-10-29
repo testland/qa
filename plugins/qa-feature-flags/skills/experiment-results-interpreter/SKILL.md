@@ -1,9 +1,9 @@
 ---
 name: experiment-results-interpreter
-description: "Interprets the results of a valid online controlled experiment, one whose harness, SRM, and telemetry have already been confirmed: computes per-metric significance (chi-square for proportions, Welch's t-test for continuous metrics, Bonferroni / Benjamini-Hochberg across metrics, power check), then separates practical from statistical significance, reads confidence intervals instead of binary p-values, checks novelty and primacy decay, interaction effects from concurrent experiments, Simpson's paradox in segments, and the ordered guardrail check before a ship decision. References hold the significance computation, the peeking problem (fixed-horizon, alpha-spending, always-valid mSPRT) and guardrail methodology. Use when someone is about to ship a winning variant off a dashboard readout, when a result rests on a small sample or many metrics, when designing a stop-early policy, or when declaring guardrails. Distinct from ab-test-validity-checklist (design gates and SRM detection)."
+description: "Use when an A/B test result is read for a ship decision, especially off a dashboard, a small sample or many metrics. Computes significance per metric with multiple-comparison correction, reads confidence intervals, checks novelty, interactions, Simpson's paradox, guardrails and stop-early rules."
 metadata:
   keywords: "experiment, a/b testing, statistical significance, practical significance, confidence intervals, novelty effect, primacy effect, interaction effects, simpsons paradox, guardrails, results interpretation"
-  version: "1.1.19"
+  version: "1.1.20"
 ---
 
 # experiment-results-interpreter

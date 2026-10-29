@@ -1,9 +1,9 @@
 ---
 name: hardware-in-loop-reference
-description: "Pure-reference catalog of hardware-in-the-loop (HIL) testing for embedded systems. Defines the HIL pattern (ECU-under-test + real-time plant simulator + I/O cards emulating sensors / actuators / buses), the V-cycle progression (MIL → SIL → PIL → HIL), the canonical vendor stack (NI VeriStand + PXI / CompactRIO, dSPACE SCALEXIO / MicroAutoBox, Vector CANoe + VT System, Speedgoat real-time targets), bus emulation per protocol (CAN / CAN FD / LIN / FlexRay / Automotive Ethernet / SOME-IP), fault-injection patterns (short-to-ground, open-circuit, signal corruption), DO-178C / ISO 26262 / IEC 61508 alignment, and the test-evidence chain HIL produces. Use as the HIL terminology + vendor + standard reference when scoping an embedded test rig or interpreting an automotive / aerospace / industrial HIL test report."
+description: "Use when scoping an embedded hardware-in-the-loop (HIL) rig or reading an automotive, aerospace or industrial HIL report: MIL, SIL, PIL and HIL stages, NI, dSPACE, Vector and Speedgoat stacks, CAN, LIN, FlexRay and Ethernet emulation, fault injection and ISO 26262, DO-178C and IEC 61508 evidence."
 metadata:
   keywords: "hil, hardware-in-loop, embedded, automotive, ecu, iso-26262, do-178c, canoe, veristand"
-  version: "1.3.6"
+  version: "1.3.7"
 ---
 
 # hardware-in-loop-reference

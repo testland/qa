@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-review",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "description": "Test code review for test files only: conventions, isolation, object-model patterns, framework architecture audits, and test suite health checks. Includes a framework blueprint for new suites and a test design scorecard. Agents (test-code-critic, e2e-selector-quality-critic, framework-architecture-auditor, test-suite-health-auditor) review structure, assertions and mocking, selector fragility, framework architecture, and suite health. Production code is out of scope.",
   "author": {
     "name": "testland",

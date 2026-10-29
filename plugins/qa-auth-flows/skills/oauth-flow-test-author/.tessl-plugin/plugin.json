@@ -1,9 +1,9 @@
 {
   "name": "testland/oauth-flow-test-author",
-  "description": "Build-an-X for OAuth 2.0 / OIDC flow tests - authorization-code with PKCE per RFC 7636 (canonical for browser/native/mobile clients), client-credentials per RFC 6749 §1.3.4 (M2M), refresh-token rotation per RFC 9700 (token-binding + reuse-detection), state parameter for CSRF defense per RFC 6749 §10.12, nonce parameter for OIDC ID-token replay defense, scope-grant verification, redirect-URI strict matching. Use when authoring tests for any OAuth/OIDC client or resource server, regardless of the underlying IdP (Keycloak / Auth0 / Okta / mock).",
+  "description": "Use whenever an OAuth 2.0 or OpenID Connect client or resource server needs tests, whatever the identity provider: auth code with PKCE, client credentials, refresh-token rotation and reuse detection, state and nonce checks, scopes and strict redirect-URI matching, per the RFCs.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.14"
+  "version": "1.2.15"
 }

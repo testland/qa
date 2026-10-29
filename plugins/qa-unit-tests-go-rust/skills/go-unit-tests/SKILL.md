@@ -1,6 +1,6 @@
 ---
 name: go-unit-tests
-description: "Go unit testing with the stdlib `testing` package - `func TestXxx(t *testing.T)` convention, the table-driven idiom with `t.Run` subtests, `t.Parallel()`, benchmarks (`BenchmarkXxx` + benchstat), examples (`ExampleXxx`), native fuzzing (`FuzzXxx`, Go 1.18+), coverage (`-cover` / `-coverprofile` + threshold gating), build tags, `t.Helper()` / `t.Cleanup`, and `-race` CI. Includes framework choice (stdlib `testing` is the idiomatic default; Ginkgo BDD for Kubernetes-ecosystem projects via references) and test-authoring conventions (framework detection from go.sum + existing suite files, `_test.go` placement, `t.Errorf` vs `t.Fatalf`). References cover Ginkgo + Gomega and Go mocking (gomock, testify/mock). Use for any Go unit-test task: writing table-driven tests, benchmarks, fuzz targets, coverage gates, or CI wiring."
+description: "Use whenever the task is to write, add, fix or review Go tests, even a quick table-driven test for one function: t.Run subtests, t.Parallel, helpers, fuzz tests, benchmarks, race detection and coverage with go test, plus Ginkgo and gomock or testify mocks."
 ---
 
 # go-unit-tests

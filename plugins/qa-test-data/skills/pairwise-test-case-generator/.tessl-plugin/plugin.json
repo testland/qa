@@ -1,9 +1,9 @@
 {
   "name": "testland/pairwise-test-case-generator",
-  "description": "Generates parameterized test inputs combining boundary-value, equivalence-class, and pairwise-combinatorial cases from a typed multi-input specification - produces the cross-product of cases up to a configurable strength (1-wise / 2-wise / N-wise) using all-pairs reduction so the test surface stays tractable. Emits cases in the project's test-runner-native parametrize format. Use when a function or endpoint takes 3+ inputs whose interactions matter and full Cartesian product would explode.",
+  "description": "Use when a function or endpoint takes 3 or more inputs whose combinations matter and the full Cartesian product is too large. Combines boundary values, equivalence classes and pairwise (or N-wise) reduction into parameterized cases in the project's runner format.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.6"
+  "version": "1.3.7"
 }

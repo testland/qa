@@ -1,9 +1,9 @@
 ---
 name: judgment-list-author
-description: "Bootstraps human-relevance judgment lists (query sets, grading scales, rater guidelines, inter-rater agreement, Quepid tooling, TREC-style pooling, and refresh cadence) that serve as ground truth for search-relevance test suites. Use when a team needs to create or refresh the judgment corpus before running NDCG / MRR / Recall@k evaluations."
+description: "Use when a team must create or refresh the human relevance judgments that search tests rely on, before running NDCG, MRR or recall evaluations: query sets, grading scales, rater guidelines, inter-rater agreement, Quepid, TREC-style pooling and refresh cadence."
 metadata:
   keywords: "judgment-list, qrels, relevance-ground-truth, quepid, trec, inter-rater-agreement, ndcg"
-  version: "1.2.5"
+  version: "1.2.6"
 ---
 
 # judgment-list-author

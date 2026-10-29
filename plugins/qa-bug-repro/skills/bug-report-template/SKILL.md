@@ -1,6 +1,6 @@
 ---
 name: bug-report-template
-description: "Builds a well-formed bug (defect) report from raw observation notes - fills in summary, environment, steps to reproduce, expected vs actual, and severity rationale - and validates that each field has the load-bearing content reviewers and engineers need to triage. Also converts a single test-failure record (JUnit XML, Allure JSON, pytest log, Playwright report) into a classified, ready-to-file bug spec, and provides the adversarial review checklist that gates a report before it enters the tracker (required fields, single-description title test, severity-priority independence, reproduction quality). Use when a stakeholder reports a problem informally, when a CI failure artefact needs to become a triageable report, or when a drafted report needs a pre-filing quality audit."
+description: "Use when someone reports a problem informally, a CI failure (JUnit XML, Allure, pytest or Playwright output) must become a bug report, or a draft needs a quality check before filing. Fills summary, environment, steps, expected vs actual and severity rationale, then checks each field is usable."
 ---
 
 # bug-report-template

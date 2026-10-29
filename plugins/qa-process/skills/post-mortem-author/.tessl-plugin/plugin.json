@@ -1,9 +1,9 @@
 {
   "name": "testland/post-mortem-author",
-  "description": "Build-an-X workflow that produces a blameless post-mortem from an incident - captures the timeline (chronological event sequence with sources), root cause analysis (what + why, not who), impact (users / revenue / SLO debt), action items (with owners + due dates + measurable success criteria), and \"what went well\" (intentional). Per Google SRE: \"Blameless postmortems are a tenet of SRE culture.\" Use after every user-visible incident, not just severe ones.",
+  "description": "Use after any user-visible incident to write a blameless post-mortem: a sourced timeline, root cause (what and why, not who), impact on users, revenue and SLOs, action items with owners, dates and success criteria, and what went well.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.9"
+  "version": "1.10.10"
 }

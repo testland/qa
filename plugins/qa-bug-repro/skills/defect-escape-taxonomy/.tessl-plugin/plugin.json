@@ -1,9 +1,9 @@
 {
   "name": "testland/defect-escape-taxonomy",
-  "description": "Classifies a defect that reached production into one of three root gap categories (test gap, process gap, tooling gap) and one of thirteen sub-patterns, applying the earliest-layer rule: the category is the earliest layer that should have caught the defect, expressed as a property of the system and never of a person. Each sub-pattern carries the typical prevention fix, so the finding names an actionable class of gap. Rejects blame language and generic prevention assets such as 'add more tests'. Does not triage or prioritize the defect, does not write the missing test, and does not run a full incident postmortem. Use when a defect has been confirmed in production and the team needs to name which class of gap let it through before deciding what to build.",
+  "description": "Use when a defect has been confirmed in production and the team must name which class of gap let it through before deciding what to build. Classifies it as a test, process or tooling gap and one of thirteen sub-patterns at the earliest layer that should have caught it, with the fix, without blame.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.6.4"
+  "version": "1.6.5"
 }

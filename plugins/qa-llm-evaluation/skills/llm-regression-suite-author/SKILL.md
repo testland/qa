@@ -1,9 +1,9 @@
 ---
 name: llm-regression-suite-author
-description: "Builds a versioned golden-dataset LLM regression suite for tracking quality across model upgrades: structures a versioned JSONL/CSV golden dataset, configures deterministic eval runs (temperature 0, seed), wires assertion layers (exact, semantic similarity, LLM-as-judge, rubric), enforces a pass-rate threshold with diff reporting vs the baseline model, and gates CI on regression. Use when upgrading an LLM provider model and needing a repeatable before/after quality gate, or when a prompt regression suite must track output quality across model versions over time."
+description: "Use when upgrading an LLM model or provider needs a repeatable before/after quality gate, or prompt quality must be tracked across model versions. Builds a versioned golden dataset, deterministic runs, exact, semantic, judge and rubric checks, and a pass-rate CI gate with a baseline diff."
 metadata:
   keywords: "llm-regression, golden-dataset, model-upgrade, promptfoo, deepeval, pass-rate, deterministic-eval"
-  version: "1.3.7"
+  version: "1.3.8"
 ---
 
 # llm-regression-suite-author

@@ -1,9 +1,9 @@
 {
   "name": "testland/test-pyramid-balancer",
-  "description": "Build-an-X workflow that analyzes a repo's test mix (unit / integration / E2E counts + runtimes) and recommends rebalancing toward the test pyramid ratios per the change-set shape - pure-logic-heavy repo wants ~80/15/5; UI-heavy repo wants ~60/25/15. Detects 'ice-cream cone' (E2E-heavy) and 'hourglass' (integration-thin) anti-patterns. Use when the user asks about test distribution, test strategy, test balance, too many E2E tests, slow CI caused by tests, testing best practices, or rebalancing their test suite; also suitable for quarterly calibration of the test mix to codebase reality.",
+  "description": "Use when asked about test distribution or balance: too many E2E tests, slow CI caused by tests, or rebalancing a suite. Counts unit, integration and E2E tests with runtimes, detects ice-cream-cone and hourglass shapes, and recommends target ratios for the codebase's shape.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.8"
+  "version": "1.10.9"
 }

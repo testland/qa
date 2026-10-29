@@ -1,6 +1,6 @@
 ---
 name: non-functional-requirement-extractor
-description: "Reads a PRD, design doc, or product brief and pulls out the non-functional requirements (performance, accessibility, security, internationalization, reliability, observability) as concrete, threshold-bound, testable assertions. Maps every NFR to its measurement source (Lighthouse, axe, OWASP ASVS, WCAG criterion, etc.) so the test suite knows what to assert against. Use after gherkin-from-stories (qa-bdd) handles functional requirements."
+description: "Use when a PRD, design doc or product brief must be turned into testable non-functional requirements. Extracts performance, accessibility, security, i18n, reliability and observability needs as threshold-bound assertions, each mapped to its measurement source (Lighthouse, axe, OWASP ASVS, WCAG)."
 ---
 
 # non-functional-requirement-extractor

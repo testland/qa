@@ -1,6 +1,6 @@
 ---
 name: coverage-py-analysis
-description: "Configures coverage.py for Python projects - wires `coverage run` (replacing `python` for instrumentation), enables branch coverage via the `--branch` flag or `branch = True` config, manages the `.coverage` data file (single-process and `combine` for parallel pytest-xdist runs), authors `.coveragerc` with `source` / `omit` / `fail_under`, and emits the format the downstream tool needs (`coverage report` for terminal, `coverage xml` for Cobertura, `coverage html` for human review, `coverage lcov` for SaaS, `coverage json` for programmatic post-processing). Use for any Python test stack (pytest, unittest, nose) that needs PR-time coverage signal."
+description: "Use when a Python project (pytest or unittest) needs code coverage: coverage run, branch coverage, combining parallel xdist data, .coveragerc source, omit and fail_under settings, and terminal, HTML, Cobertura XML, LCOV or JSON reports for CI."
 ---
 
 # coverage-py-analysis

@@ -1,6 +1,6 @@
 ---
 name: buf-cli-lint-breaking-build
-description: "Wraps the buf CLI for protobuf PR gating: `buf build` (compile .proto), `buf lint` (STANDARD rules: snake_case fields, Service suffix), `buf breaking --against {ref}` (detect wire/codegen breakage vs a git/BSR baseline), and `buf format`. Use as the CI proto-lint + breaking-change gate, or to debug a breaking failure by rule ID (e.g. FIELD_NO_DELETE_UNLESS_NUMBER_RESERVED) and pick the FILE/PACKAGE/WIRE_JSON/WIRE ruleset per consumer. This is the detection TOOL that enforces the rules and carries the catalog of what is breaking and why (field-number reservation, wire-safe vs wire-incompatible changes, oneof/map constraints, the four buf categories) in references/versioning-strategy.md; for cross-service schema contract testing use protobuf-compat-checking - not this."
+description: "Use when .proto files need a CI gate or a buf failure needs debugging: buf build, buf lint (STANDARD rules), buf breaking against a git or BSR baseline, buf format, and choosing the rule category per consumer. Explains which changes break wire or generated code and why."
 ---
 
 # buf-cli-lint-breaking-build

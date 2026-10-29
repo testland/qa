@@ -1,9 +1,9 @@
 {
   "name": "testland/sidekiq-tests",
-  "description": "Authors and runs Sidekiq job tests in Ruby - three Sidekiq::Testing modes (`fake!` jobs accumulate in arrays, `inline!` runs jobs immediately, `disable!` enqueues to Redis as normal); RSpec + Minitest helper patterns; clears jobs between tests via `Sidekiq::Worker.clear_all`; assertion patterns on `MyWorker.jobs.size` and `MyWorker.jobs.first[:args]`. Use when the user works with Sidekiq workers and needs unit / integration tests for job enqueueing, scheduling, retry behavior, or unique-job semantics.",
+  "description": "Use whenever Ruby Sidekiq workers need tests: the fake!, inline! and disable! testing modes, RSpec and Minitest helpers, clearing jobs between tests, and assertions on enqueued jobs, arguments, scheduling, retries and unique jobs.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.2"
+  "version": "1.3.3"
 }

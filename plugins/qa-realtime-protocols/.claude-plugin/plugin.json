@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-realtime-protocols",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Real-time protocol testing: WebSocket handshakes and close codes, Server-Sent Events, and MQTT v5 QoS, retained messages and shared subscriptions. Includes SSE load testing with k6 and STOMP / AMQP broker testing in references. A review agent (realtime-protocol-reviewer) flags missing reconnect backoff and unhandled close codes. gRPC streaming lives in qa-grpc and webhooks in qa-notifications.",
   "author": {
     "name": "testland",

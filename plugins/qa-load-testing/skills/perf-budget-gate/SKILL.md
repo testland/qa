@@ -1,6 +1,6 @@
 ---
 name: perf-budget-gate
-description: "Builds a unified release-readiness gate that aggregates verdicts from any combination of k6 / JMeter / Gatling / Locust load runners and Lighthouse CI Web Vitals, applies severity-aware pass/fail thresholds, and emits a single go / no-go decision with per-metric deltas vs the main-branch baseline. Posts the delta as a PR comment when the team has the integration set up. Use when authoring a CI step that gates a deployment on cross-runner perf compatibility."
+description: "Use when a deploy should be blocked by performance regressions from several tools. Combines k6, JMeter, Gatling or Locust results with Lighthouse CI Web Vitals, applies severity-aware thresholds against the main-branch baseline and returns one go/no-go with per-metric deltas."
 ---
 
 # perf-budget-gate

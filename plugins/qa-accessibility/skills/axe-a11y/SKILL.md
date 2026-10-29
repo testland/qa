@@ -1,6 +1,6 @@
 ---
 name: axe-a11y
-description: "Automated accessibility scanning across the five engines - axe-core (primary), pa11y, Lighthouse a11y, WAVE, and IBM Equal Access. Authors and runs axe-core scans via the `axe.run()` JavaScript API or the @axe-core/playwright / @axe-core/cli wrappers, parses `violations[]` into per-rule severity, configures rule disable / disable-by-tag patterns, and emits CI-gateable output; references/ carry the pa11y CLI (htmlcs + axe runners), Lighthouse CI `categories:accessibility` assertions, the WAVE API / overlay, and IBM Equal Access (Section 508) with their verified CLI / API / config. Use for any automated a11y scanner setup - axe-core for JS/TS UI test suites on every PR, and the references for CLI-only, Lighthouse-pipeline, WebAIM-branded, or Section 508 scanning."
+description: "Use whenever pages or components need automated accessibility scanning: axe-core via axe.run(), @axe-core/playwright or the CLI on every PR, rule configuration and CI-gateable results, plus pa11y, Lighthouse CI accessibility, WAVE and IBM Equal Access (Section 508) in its references."
 ---
 
 # axe-a11y

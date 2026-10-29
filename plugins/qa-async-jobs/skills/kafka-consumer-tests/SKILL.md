@@ -1,6 +1,6 @@
 ---
 name: kafka-consumer-tests
-description: "Tests Apache Kafka consumer and producer logic across KafkaJS (Node.js), kafka-go (Go), and Spring Kafka (Java) - spins up a real broker via the Testcontainers Kafka module, asserts offset management and consumer-group rebalance behavior, distinguishes at-least-once from exactly-once (EOS / transactions), validates idempotent producer configuration, and routes unprocessable messages to a dead-letter topic. Use when the user works with Kafka producers or consumers in any language and needs integration or unit tests that exercise delivery semantics, offset commits, rebalance handling, or dead-letter routing."
+description: "Use whenever Kafka producers or consumers need tests, in KafkaJS, kafka-go or Spring Kafka: a real broker via Testcontainers, offset commits, consumer-group rebalances, at-least-once vs exactly-once transactions, idempotent producers and dead-letter topics."
 ---
 
 # kafka-consumer-tests

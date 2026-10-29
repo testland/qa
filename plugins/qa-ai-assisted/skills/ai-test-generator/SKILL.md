@@ -1,6 +1,6 @@
 ---
 name: ai-test-generator
-description: "Generates tests from natural-language specs (acceptance criteria, user stories, requirements) using an LLM, with confidence scoring per test case (LLM self-assessment plus heuristics: assertion quality, naming, completeness), batching uncertain cases for human review, and integration with the team's existing test framework. Use when the user asks to generate unit tests from acceptance criteria, convert user stories to test cases, automate test creation from requirements, or augment a spec-driven test suite with AI-generated stubs that are then curated before merge."
+description: "Use when tests should be generated from acceptance criteria, user stories or requirements with an LLM. Scores confidence per test case (self-assessment plus assertion, naming and completeness checks), batches uncertain cases for human review and emits tests in the team's existing framework."
 ---
 
 # ai-test-generator

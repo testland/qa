@@ -1,9 +1,9 @@
 {
   "name": "testland/trace-spec-author",
-  "description": "Build a trace specification document per feature - defines the trace shape (root span + child spans + key attributes per OpenTelemetry semantic conventions) that production code MUST emit. The spec drives both implementation reviews AND trace-assertion tests, so a single declarative document is the source of truth for what observability \"looks like\" for a feature. Use before instrumenting a new feature, when existing spans have grown organically with no agreed shape, or after an incident where a debugging session stalled on missing span attributes.",
+  "description": "Use before instrumenting a new feature, when spans have grown with no agreed shape, or after an incident where debugging stalled on missing attributes. Writes a trace spec per feature (root and child spans, key attributes per OpenTelemetry conventions) that drives code review and trace tests.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.8"
+  "version": "1.1.9"
 }

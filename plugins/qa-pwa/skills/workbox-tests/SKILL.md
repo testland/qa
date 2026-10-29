@@ -1,9 +1,9 @@
 ---
 name: workbox-tests
-description: "Test Workbox-built service workers - pin behavior of the named recipes (`pageCache`, `staticResourceCache`, `imageCache`, `googleFontsCache`, `offlineFallback`, `warmStrategyCache`) per [developer.chrome.com/docs/workbox/modules/workbox-recipes][wb-recipes]; validate `workbox-precaching` manifest injection (`__WB_MANIFEST` revisioning); assert `workbox-routing` route handler matches; assert `workbox-expiration` and `workbox-cacheable-response` plugin gates; and verify the `workbox-window` registration helper events (`installed`, `waiting`, `controlling`, `activated`). Cache-strategy design (which strategy per route type, TTL + version-bump invalidation, migrating a hand-rolled sw.js to Workbox) lives in references/cache-strategy-design.md. Use when a project ships (or is adopting) a Workbox service worker and its strategy choices or recipe behavior need pinning against refactors or a version upgrade."
+description: "Use when a project uses or is adopting a Workbox service worker and its caching must stay stable across refactors or upgrades: recipe behavior, precache manifest injection, routes, expiration and cacheable-response plugins, workbox-window events, and choosing a cache strategy per route."
 metadata:
   keywords: "workbox, workbox-recipes, workbox-window, precaching, service-worker"
-  version: "1.2.7"
+  version: "1.2.8"
 ---
 
 # workbox-tests

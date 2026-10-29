@@ -1,9 +1,9 @@
 {
   "name": "testland/visual-baseline-gate",
-  "description": "Consumes pre-classified visual-diff JSON and a reviewer-signed acceptance log to produce a single go/no-go CI verdict for visual regression. Blocks when intentional baseline changes lack a non-author reviewer sign-off or when regressions are present, and emits the binding gate artifacts - visual-gate.json + visual-gate.md - with fail-closed handling of a missing classifier run and author-cannot-self-approve enforcement, so the pipeline can exit non-zero on BLOCK. Use when the gate's input is pre-classified diff data and the enforcement concern is reviewer approval and a binding CI verdict.",
+  "description": "Use when visual diffs are already classified and CI needs one binding go/no-go: blocks on regressions or on intended baseline changes without sign-off from a reviewer who is not the author, fails closed when the classifier did not run, and writes visual-gate.json and .md.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.13"
+  "version": "1.3.14"
 }

@@ -160,9 +160,29 @@ Marketplace conventions (stricter than Anthropic's namespace-only rule):
   (`web-e2e-overview`), one per plugin at most. Do not name them for the
   reader's state (`getting-started`); a skill installed on its own has no
   plugin context to be new to.
-- Descriptions should end with an explicit trigger sentence - "Use when …"
-  (skills) or a delegation cue like "Use proactively when …" (agents). The
-  description, not the name, is what makes Claude invoke the component.
+- **Skill descriptions start with the trigger and stay at or under 300
+  characters.** Open with "Use when …", "Use whenever …", "Use before …" or
+  "Use after …" in the words a
+  user would type ("Use whenever the task is to write, add, fix or review
+  Python tests, even quick pytest tests for a single function: …"), then
+  name the tools and what the skill covers. Agents keep a delegation cue
+  like "Use proactively when …". The description, not the name, is what
+  makes Claude invoke the component, and two measured failures drive this
+  rule:
+  - A description that opens with flags and APIs and puts "Use when" last
+    loses to Claude's own knowledge on familiar tasks: in the pack load
+    test, rewriting six such descriptions trigger-first took the
+    unit-testing pack from 9 of 24 runs loading the right skill to 23 of 24
+    (`packs/evals/`, `scripts/packs-eval.sh`).
+  - For tasks Claude thinks it already knows (a quick pytest or Go test),
+    also name what the skill has that Claude doesn't: "Has the pytest
+    checklist for edge cases and weak assertions" took the pytest prompt
+    from 0-1 of 3 runs to 3 of 4. Name only what the body really contains.
+  - Claude Code lists skill descriptions within a budget of 1% of the
+    context window and drops whole descriptions once the listing is over it
+    ([skills docs](https://code.claude.com/docs/en/skills.md)); on Sonnet
+    the debug log reports a 30,000-character budget. A pack of 50 skills at
+    the old ~650-character average is over it on its own.
 
 ## Step 3 - Run the single-description test
 

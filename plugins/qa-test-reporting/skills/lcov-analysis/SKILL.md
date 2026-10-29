@@ -1,6 +1,6 @@
 ---
 name: lcov-analysis
-description: "Parses both mainstream coverage interchange formats: LCOV `.info` text files (produced by gcov, llvm-cov, Coverage.py via `py2lcov`, JaCoCo via `xml2lcov`, Devel::Cover, Jest via `lcov` reporter, NYC, and most others) and Cobertura XML (coverage-04.dtd - emitted by JaCoCo, coverage.py `--xml`, Jest's `cobertura` reporter, coverlet, gocover-cobertura; full parser in references/cobertura.md). Extracts per-file line / function / branch metrics from the canonical record keywords (TN/SF/FN/FNDA/FNF/FNH/BRDA/BRF/BRH/DA/LH/LF), computes the diff vs a baseline, and emits per-file gating verdicts. Use for PR coverage gates that don't depend on a specific language runtime, whichever of the two formats the CI emits."
+description: "Use when a coverage gate must work across languages from LCOV .info or Cobertura XML files (gcov, llvm-cov, coverage.py, JaCoCo, Jest, nyc, coverlet). Parses per-file line, function and branch metrics, compares with a baseline and returns per-file pass or fail verdicts."
 ---
 
 # lcov-analysis

@@ -1,6 +1,6 @@
 ---
 name: pci-dss-control-test-author
-description: "Build-an-X for PCI DSS v4.0 scope verification - cardholder data environment (CDE) boundary tests, segmentation tests (PCI Req 1), prohibited-data-storage assertions per Req 3 (no full track data, no CVV/CAV2/CVC2/CID, no PIN/PIN block post-authorization), key-management tests per Req 3.6, encryption-of-transmissions per Req 4; includes the scope catalog (SAQ A / A-EP / D levels, PAN-storage rules, hosted-fields / tokenization scope-reduction patterns) in references/pci-scope.md. Use when authoring PCI DSS scope-reduction + control tests for any system handling payment-card data, or when determining a payment integration's SAQ level."
+description: "Use when a system handling payment card data needs PCI DSS v4.0 tests or an SAQ level: cardholder data environment boundaries, network segmentation, no stored CVV, track data or PIN, key management, encrypted transmission, and scope reduction with hosted fields or tokens."
 ---
 
 # pci-dss-control-test-author

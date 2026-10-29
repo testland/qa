@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-ml-models",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "ML model testing: Giskard and Deepchecks validation, Evidently drift monitoring, Fairlearn fairness metrics, and model performance regression gates. Assigns risk tiers with the fairness and explainability evidence each tier requires, and wires Jupyter notebook CI with papermill, nbval, testbook and nbstripout.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://testland.io/plugins/qa-ml-models",

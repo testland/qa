@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-security-scanning",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Security scanning across SAST, DAST, SCA, secrets and SBOM: Semgrep, CodeQL, SonarQube, ZAP, Nuclei, Snyk, OSV-Scanner, gitleaks, Syft and Trivy. Also covers language-native SAST linters, Dependabot and Renovate, package-manager audits, reachability and CVE exploitability triage, secret rotation, and VEX. A gate agent (security-finding-triager) normalizes, dedupes and waiver-checks multi-scanner output, including IaC findings from qa-iac, into one BLOCK / PASS verdict per domain. Every scanner skill includes a false-positive triage section.",
   "author": {
     "name": "testland",

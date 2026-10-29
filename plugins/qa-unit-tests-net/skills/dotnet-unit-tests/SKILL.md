@@ -1,6 +1,6 @@
 ---
 name: dotnet-unit-tests
-description: ".NET unit testing (C# / F# / VB.NET) with xUnit.net as the primary framework - `[Fact]` single tests, `[Theory]` + `[InlineData]`/`[ClassData]`/`[MemberData]` parametrization, class and collection fixtures (`IClassFixture` / `ICollectionFixture`), parallel-execution config, `ITestOutputHelper` output, skip/traits filtering, and `dotnet test` CI with trx + coverage. Includes framework choice (xUnit for new projects; match an existing NUnit/MSTest convention detected from csproj PackageReferences; legacy .NET Framework 4.x → NUnit or MSTest) and test-authoring conventions (AAA mapping, argument-order traps, no fabricated methods, no smoke asserts). References cover NUnit (`[TestCase]`, constraint-model `Assert.That`), MSTest (`[TestClass]` / `[DataRow]` / TestContext), and the FluentAssertions `.Should()` catalog including the v8 commercial-license change. Use for any .NET unit-test task: choosing or configuring a framework, writing or parameterizing tests, fixtures, or wiring CI."
+description: "Use whenever the task is to write, add, fix or review .NET unit tests in C#, F# or VB.NET, even a quick test for one method: xUnit.net by default, plus NUnit and MSTest. Covers Fact and Theory tables, fixtures, mocking, FluentAssertions, async tests and coverage with dotnet test."
 ---
 
 # dotnet-unit-tests
