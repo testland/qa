@@ -34,6 +34,23 @@ version, so they don't start a new directory review.
 - Skill and agent names are unique inside a pack.
 - A pack stays under 512 files.
 
+## Load test
+
+`packs/evals/<pack>/<case>/` holds trigger cases for `claude plugin eval`:
+each prompt names a task, and its grader passes when Claude loads the expected
+skill with the whole pack installed. They catch two failures that per-skill
+evals miss: a description that doesn't lead with its trigger, and a pack whose
+skill listing is over Claude Code's
+[listing budget](https://code.claude.com/docs/en/skills.md), which drops
+descriptions so Claude sees only the skill name.
+
+```bash
+scripts/packs-eval.sh testland-api 3   # builds the packs, runs each case 3 times
+```
+
+Write prompts that stand alone: the run starts in an empty directory, so a
+prompt about "our repository" makes Claude look for code instead of a skill.
+
 ## Publishing
 
 `.github/workflows/packs-sync.yml` runs on a published release (or by hand). It
