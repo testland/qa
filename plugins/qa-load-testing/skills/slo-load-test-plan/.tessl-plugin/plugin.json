@@ -1,9 +1,9 @@
 {
   "name": "testland/slo-load-test-plan",
-  "description": "Turns a service's SLOs and endpoint traffic mix into a named scenario matrix: one scenario per SLO boundary condition, a load profile (smoke, average-load, stress, soak, spike, breakpoint) per scenario, an open or closed workload injection model, a threshold expression derived from the SLO the scenario guards, and an error-budget calculation that sets the soak run's failure allowance. Stays runner-agnostic and fixes the pass/fail line before any tool is configured. Use when an SLO document and an endpoint list both exist but nobody has decided which load runs to make, what shape of load each carries, or what number would count as a failure.",
+  "description": "Use when SLOs and an endpoint list exist but nobody has decided which load tests to run, what load each carries or what counts as failure. Turns each SLO into scenarios with a load profile, workload model, pass/fail threshold and error-budget allowance, before any tool is configured.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.8.7"
+  "version": "1.8.8"
 }

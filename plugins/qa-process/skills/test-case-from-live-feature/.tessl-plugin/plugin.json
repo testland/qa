@@ -1,9 +1,9 @@
 {
   "name": "testland/test-case-from-live-feature",
-  "description": "Build-an-X workflow that produces a test-case matrix from a **live, undocumented feature** - running app at a URL, screen recording, screenshot, or verbal brief - by combining structured exploration (Playwright trace / DevTools / accessibility tree) with the four canonical heuristic test-design models bundled in references/ (Bach's HTSM / SFDPOT product elements, Whittaker's How-to-Break-Software attacks, Bolton's FEW HICCUPPS consistency oracles, ISO/IEC 25010 quality characteristics). Output is a structured case matrix, not an exploratory session charter. Use when there is no story, no AC, and no documentation - only a live feature - or as the heuristic reference layer for zero-documentation test design.",
+  "description": "Use when a feature has no story, acceptance criteria or docs, only a running app, recording, screenshot or verbal brief, and it needs test cases. Explores the feature and applies HTSM/SFDPOT, Whittaker attacks, FEW HICCUPPS oracles and ISO 25010 to produce a test case matrix.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.16"
+  "version": "1.10.17"
 }

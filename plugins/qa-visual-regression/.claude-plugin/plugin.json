@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-visual-regression",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Visual regression testing with Percy, Chromatic, Playwright screenshots and Storybook, plus chart rendering tests for Chart.js, D3 and Vega. Covers responsive breakpoint matrices, baseline conventions, and a binding baseline gate. Agents (visual-diff-classifier, visual-baseline-curator) sort diffs into intentional, incidental or regression and propose an initial baseline set.",
   "author": {
     "name": "testland",

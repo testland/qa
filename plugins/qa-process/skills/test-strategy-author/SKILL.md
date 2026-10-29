@@ -1,6 +1,6 @@
 ---
 name: test-strategy-author
-description: "Authors a test strategy document (a master test plan) for a project, release, or feature - covers scope, in/out, test types per layer (unit / integration / contract / E2E / perf / security / a11y), risk-based test prioritization that maps top risks to test investment (per `risk-matrix`), tooling stack, environments, exit criteria, and ownership. Includes a risk-based test-planning workflow that turns a feature scope plus the risk matrix into a budgeted per-risk test plan with owners, effort estimates, and an explicit risks-not-addressed section. Use when a team needs the release-readiness artifact stakeholders sign off on before significant test investment, or a risk-prioritized test plan for a feature or quarter."
+description: "Use when a project, release or feature needs a test strategy or master test plan that stakeholders sign off: scope, test types per layer, risk-based prioritization, tools, environments, exit criteria and ownership, plus a budgeted per-risk test plan with owners and effort."
 ---
 
 # test-strategy-author

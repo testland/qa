@@ -1,6 +1,6 @@
 ---
 name: jmeter-load-testing
-description: "Authors Apache JMeter `.jmx` test plans (Thread Groups + HTTP samplers + assertions + listeners) in the JMeter GUI, runs them headlessly via `jmeter -n -t plan.jmx -l results.jtl`, generates an HTML dashboard with `-e -o`, and gates CI on JTL parsing. Use when the project has an existing JMeter investment, needs JVM-native load tooling, or works in domains with strong JMeter community support (banking, telecom, enterprise)."
+description: "Use when a project already uses Apache JMeter or needs JVM-native load testing: .jmx test plans with thread groups, HTTP samplers, assertions and listeners, headless jmeter -n runs, the HTML dashboard and CI gates from JTL results."
 ---
 
 # jmeter-load-testing

@@ -1,6 +1,6 @@
 ---
 name: openapi-contract-diff
-description: "Diffs two OpenAPI versions for breaking changes (removed endpoints, deleted schemas, narrowed enums, response shape changes) using `oasdiff breaking`, severity-classifies the findings (ERR / WARN / INFO), and gates CI with `--fail-on`. Use when reviewing an OpenAPI spec change in a PR or on a release tag."
+description: "Use when a pull request or release changes an OpenAPI spec and breaking changes must be caught: removed endpoints, deleted schemas, narrowed enums, changed responses. Runs oasdiff breaking, grades findings ERR, WARN or INFO and gates CI with --fail-on."
 ---
 
 # openapi-contract-diff

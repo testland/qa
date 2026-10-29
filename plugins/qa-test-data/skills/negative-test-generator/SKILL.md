@@ -1,6 +1,6 @@
 ---
 name: negative-test-generator
-description: "Covers the refusal paths a handler already implements but nothing tests - a batch endpoint that must apply all rows or none, optimistic-concurrency version conflicts between two editors, or a delete that deliberately separates who you are from what you may do from the state the record is in. For each happy-path test, produces companions exercising input validation rejection, missing required fields, type mismatches, authorization failures, rate-limit errors, and adversarial payloads from the malicious-payload-bank, emitted as parameterized tests in the project's runner format. Use when code has deliberate error paths and the suite only proves the success case."
+description: "Use when code has deliberate error paths but the tests only prove the success case. For each happy-path test, generates parameterized tests for validation errors, missing fields, wrong types, authorization failures, rate limits, conflicts and attack payloads in the project's test runner format."
 ---
 
 # negative-test-generator

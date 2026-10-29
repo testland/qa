@@ -1,6 +1,6 @@
 ---
 name: gherkin-from-stories
-description: "Converts requirements in any input shape into Gherkin scenarios - a user story (\"As a … I want … so that …\"), a signed-off acceptance-criteria list (ATDD: @AC-N-tagged scenarios, NotImplementedError step stubs, AC-to-test traceability table), existing manual test steps (declarative rewrite that strips UI mechanics), or a raw spec / PRD section (acceptance-criteria extraction with Gherkin or plain-list output). Maps criteria to Scenario blocks, detects Scenario Outline opportunities, factors shared Background, reuses the curated step library, and flags implicit preconditions instead of fabricating them. Emits Gherkin (plus stubs in ATDD mode): runner detection and full step wiring belong to bdd-scenario-author. Use whenever requirements text of any shape needs to become a .feature file."
+description: "Use whenever user stories, acceptance criteria, manual test steps or a spec section need to become Gherkin .feature files. Maps criteria to scenarios, finds Scenario Outlines and Background, reuses existing steps and flags hidden preconditions. Writes Gherkin only, not step code."
 ---
 
 # gherkin-from-stories

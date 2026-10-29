@@ -1,6 +1,6 @@
 ---
 name: zap-baseline
-description: "Configures and runs OWASP ZAP baseline scanning: `zap-baseline.py` Docker-packaged spider + passive scan suitable for CI gating; supports `-t target_url` + `-r html_report` + `-c config_file` rule customization (INFO/IGNORE/FAIL warnings) and Ajax spider via `-j` for JS-heavy SPAs; `zap-full-scan.py` active companion for staging. Covers authenticated scans end to end as a reference - ZAP Context, auth methods (form/JSON/script/browser), session management, verification strategy, OAuth/bearer injection, context XML export for `-n` - plus DAST cadence planning (PR-blocking passive baseline, nightly ZAP full + nuclei active layer, baseline-finding ratchet for legacy apps). Use when the user runs OWASP ZAP for pre-prod web app DAST, needs coverage of routes behind a login wall, or is designing a team's DAST rollout cadence."
+description: "Use when a web app needs OWASP ZAP scanning before production: the Docker baseline passive scan as a CI gate, the full active scan for staging, the Ajax spider for SPAs, scans behind a login (forms, JSON, OAuth or bearer tokens) and a rollout plan from PR baseline to nightly active scans."
 ---
 
 # zap-baseline

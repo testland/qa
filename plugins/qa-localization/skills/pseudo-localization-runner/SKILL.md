@@ -1,6 +1,6 @@
 ---
 name: pseudo-localization-runner
-description: "Configures pseudo-localization for the app (replaces translatable strings with accented variants like \"Submit\" → \"Şüƀɱîţ\" + 35% length expansion) - surfaces UI issues without needing actual translators: hardcoded strings, truncation, encoding, and bidi handling. Use when preparing an app for translation (i18n / internationalization), validating l10n infrastructure, or when the user mentions pseudo-localization or localization testing."
+description: "Use when preparing an app for translation, checking localization infrastructure, or when pseudo-localization comes up. Replaces strings with accented, 35%-longer variants to expose hardcoded text, truncation, encoding and bidi problems without real translators."
 ---
 
 # pseudo-localization-runner

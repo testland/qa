@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-property-based",
-  "version": "1.2.21",
+  "version": "1.2.22",
   "description": "Property-based testing with Hypothesis (Python), fast-check (JS/TS), proptest (Rust) and jqwik (JVM): generators, shrinking, and CI integration. Agents (property-based-test-author, vacuous-property-critic) write one property per invariant and flag assume-heavy or always-true properties.",
   "author": {
     "name": "testland",

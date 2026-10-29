@@ -1,6 +1,6 @@
 ---
 name: release-runbook-author
-description: "Turns one service's release into a written six-phase runbook: pre-flight checks, a smoke gate, a canary observation window, a named human promote gate, progressive rollout, and post-release verification. Fixes each phase's pass criteria as a delta against a recorded baseline rather than a bare absolute number, gives canary and rollout separate windows and separate thresholds, and emits a per-phase evidence table that becomes the release record. The multi-team cutover-sequence procedure - dependency-ordered gates with one named owner each, hard timeboxes, written rollback triggers, and the reverse-order rollback path - is worked in references for windows where several teams cut over interdependent services. Use when a single service is about to ship and its release steps exist only as tribal knowledge or a chat thread, or when a shared release window needs its cutover order, gate owners, and rollback path written down."
+description: "Use when a service is about to ship and its release steps live only in people's heads or a chat thread, or a shared release window needs its cutover order. Writes a six-phase runbook (pre-flight, smoke, canary, promote gate, rollout, verification) with baseline-relative criteria and rollback paths."
 ---
 
 # release-runbook-author

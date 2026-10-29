@@ -1,6 +1,6 @@
 ---
 name: rtl-rendering-tester
-description: "Build-an-X workflow for verifying RTL (right-to-left) layouts - runs the test suite under Arabic / Hebrew / Persian / Urdu locales, asserts the `dir=\"rtl\"` attribute is set, verifies layout mirrors correctly (text alignment, icon positions, scrollbar location), uses logical CSS properties (`start`/`end` over `left`/`right`) per W3C guidance, captures per-locale screenshots for visual review. Use when the app supports RTL languages."
+description: "Use when an app supports right-to-left languages (Arabic, Hebrew, Persian, Urdu). Runs the suite under RTL locales, checks dir=rtl, mirrored layout, icons and alignment, logical CSS properties instead of left and right, and captures screenshots per locale for review."
 ---
 
 # rtl-rendering-tester

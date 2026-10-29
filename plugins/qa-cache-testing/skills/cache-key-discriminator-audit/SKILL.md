@@ -1,6 +1,6 @@
 ---
 name: cache-key-discriminator-audit
-description: "Audits whether a cache key carries every discriminator the cached response actually depends on, so two requests that must not share a slot cannot collide. Ranks identity discriminators (tenant, user, authorization scope, plan tier) above presentation ones (locale, region, currency, feature flag), maps each missing discriminator to the data-exposure or wrong-content consequence it causes, classifies each key-and-value pair into a critical / high / medium severity band (including the Python lru_cache-on-an-instance-method trap), and writes the fix as a namespaced key builder plus the matching HTTP Vary header. Use when a cache key is being designed or changed, when a per-user or per-tenant response is about to be stored in a shared cache or CDN, or when investigating a report that one user or tenant saw another's data."
+description: "Use when a cache key is designed or changed, a per-user or per-tenant response is about to go into a shared cache or CDN, or someone saw another user's data. Checks the key holds every value the response depends on (tenant, user, scope, locale) and writes the fixed key and Vary header."
 ---
 
 # cache-key-discriminator-audit

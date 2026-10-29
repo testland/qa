@@ -16,6 +16,7 @@ const STRICT = process.argv.includes('--strict');
 const SKILL_BODY_HARDCAP = 600;
 const AGENT_BODY_HARDCAP = 350;
 const SKILL_BODY_ADVISORY = 500;
+const SKILL_DESC_ADVISORY = 300;
 
 // Components where a literal Windows path is the vendor-canonical install
 // location for a Windows-only tool, not a hygiene oversight. Reviewed 2026-05-27.
@@ -88,6 +89,12 @@ for (const p of components) {
   if (!isAgent && bodyLines > SKILL_BODY_ADVISORY) {
     add('skill_body_over_500', { path: p, body_lines: bodyLines });
   }
+
+  // Skill descriptions lead with the trigger and fit the skill-listing budget
+  // (docs/PLUGIN_AUTHORING.md, Naming rules).
+  if (!isAgent && (descLen > SKILL_DESC_ADVISORY || !/^Use (when|whenever|before|after|for)\b/.test(fm.desc))) {
+    add('skill_desc_not_trigger_first', { path: p, desc_len: descLen });
+  }
 }
 
 // Every plugin README lists its components in a markdown table. That row count
@@ -131,6 +138,7 @@ const SEVERITY: [string, 'CRITICAL' | 'WARNING'][] = [
   ['readme_count_mismatch', 'CRITICAL'],
   ['windows_path', 'WARNING'],
   ['skill_body_over_500', 'WARNING'],
+  ['skill_desc_not_trigger_first', 'WARNING'],
 ];
 
 let critical = 0;

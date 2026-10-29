@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-cache-testing",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Cache testing across browser, CDN, proxy, application and data-store layers: Redis, CDN purges, Varnish VTC tests, and cache-key collision audits. Covers RFC 9111 HTTP caching, Cloudflare / Fastly / CloudFront purge APIs, browser Cache-Control tests, and cache-coherence patterns with stampede and stale-while-revalidate references. A detector agent (cache-key-collision-detector) finds keys missing a tenant, user or locale discriminator.",
   "author": {
     "name": "testland",

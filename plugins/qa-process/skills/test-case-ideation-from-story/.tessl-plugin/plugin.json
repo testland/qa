@@ -1,9 +1,9 @@
 {
   "name": "testland/test-case-ideation-from-story",
-  "description": "Turns a thin or ambiguous story into a reviewable test list - a backlog item that is a short paragraph plus the click-through support recorded for themselves, a spec that is mostly a list of accepted formats, or a tech design pasted into the ticket while the last few releases still shipped missed cases. Takes the story or feature spec and emits a markdown test-case matrix, one row per case (id, title, precondition, steps, expected, tier), covering happy path, alternate paths, boundaries, and negative paths, before any test code is written. Output is the human-reviewable matrix that goes into TestRail / Qase / Xray, not Gherkin scenarios. Use when a story needs its cases enumerated and agreed before automation starts.",
+  "description": "Use when a thin or ambiguous user story or spec needs its test cases listed and agreed before automation. Produces a markdown test case matrix (id, title, precondition, steps, expected, tier) covering happy, alternate, boundary and negative paths, ready for TestRail, Qase or Xray.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.9"
+  "version": "1.10.10"
 }

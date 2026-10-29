@@ -1,9 +1,9 @@
 ---
 name: test-framework-blueprint
-description: "Build-an-X workflow that takes an SDET from no test suite to a complete framework design in seven steps - inventory the SUT, choose runner + language, directory layout + fixture architecture, object-model decision, test data + mocking wiring, reporting + CI integration, conventions doc + review gates - producing a written framework blueprint (directory tree, fixture list, chosen patterns, CI matrix) plus an implementation order. This is the whole-framework design workflow - not the Step 2 runner-choice decision on its own, not the Step 4 object-model pattern catalog it defers to, and not the scaffolder that generates the harness skeleton once the blueprint exists. Use when designing a test automation framework from scratch or re-architecting one that grew organically."
+description: "Use when designing a test automation framework from scratch or re-architecting one that grew organically. Walks seven steps from inventorying the app to runner, layout, fixtures, object model, data and mocks, reporting, CI and conventions, and outputs a written blueprint with a build order."
 metadata:
   keywords: "test-framework, framework-design, blueprint, fixtures, sdet, playwright, test-architecture"
-  version: "1.6.18"
+  version: "1.6.19"
 ---
 
 # test-framework-blueprint

@@ -1,6 +1,6 @@
 ---
 name: flutter-testing
-description: "Authors Flutter tests across the three-layer pyramid - unit (`flutter test`), widget (`testWidgets` + `WidgetTester`), integration (`integration_test` on simulator/emulator/device). Picks the right layer per change, mocks via `mockito` + `build_runner`, LCOV coverage, CI with the Flutter Action. Use when the app is Flutter and the team wants its first-party stack. For React Native use detox-testing; for black-box cross-platform use appium-testing; for YAML-declarative flows use maestro-flows."
+description: "Use whenever a Flutter app needs tests: unit tests with flutter test, widget tests with testWidgets and WidgetTester, integration_test on simulators, emulators or devices, choosing the layer per change, mockito with build_runner, LCOV coverage and CI."
 ---
 
 # flutter-testing

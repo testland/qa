@@ -1,9 +1,9 @@
 {
   "name": "testland/coverage-diff-reporter",
-  "description": "Builds a per-PR coverage delta report from any pair of LCOV / Cobertura / JSON coverage outputs (current run + baseline from the merge target) - emits a per-file table with line% / branch% deltas, called-out new files, hidden drops (overall +0.1pp but one file -8pp), and a single-line PR-comment summary. Use when the team has coverage in CI but needs human-readable PR feedback that points at the specific file the reviewer should focus on, not just an aggregate number.",
+  "description": "Use when a pull request needs readable coverage feedback rather than one total. Compares current and baseline coverage (LCOV, Cobertura or JSON) and reports per-file line and branch deltas, new files and hidden drops, with a one-line summary for the PR comment.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.10"
+  "version": "1.4.11"
 }

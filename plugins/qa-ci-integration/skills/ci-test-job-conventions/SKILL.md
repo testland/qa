@@ -1,6 +1,6 @@
 ---
 name: ci-test-job-conventions
-description: "Pure-reference for cross-CI test workflow conventions - when to shard (and how many shards), retry policy (which failures are safe to retry), flake-quarantine integration, artifact retention, per-trigger cadence (per-PR vs per-merge vs nightly), concurrency-cancel patterns, per-job timeouts, secret management, and cross-CI portability. Use as the team's reference for CI test-workflow design across GitHub Actions / GitLab CI / Jenkins / CircleCI; per-CI reporting and per-language reporter / cache-key lookups live in references/, as do the CircleCI test-config patterns (.circleci/config.yml workflows, test splitting, orbs, contexts - references/circleci.md)."
+description: "Use when designing how tests run in CI on any platform (GitHub Actions, GitLab CI, Jenkins, CircleCI): how many shards, which failures are safe to retry, quarantine, artifact retention, per-PR vs nightly cadence, cancel-on-push, timeouts and secrets. CircleCI config patterns are in its references."
 ---
 
 # ci-test-job-conventions

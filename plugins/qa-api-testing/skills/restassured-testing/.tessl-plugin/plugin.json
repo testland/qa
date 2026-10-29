@@ -1,9 +1,9 @@
 {
   "name": "testland/restassured-testing",
-  "description": "Strengthens and speeds up JVM API test suites - assertions so loose that an empty `200 OK` passed for three days, a 220-test suite spending fourteen minutes mostly waiting on sequential HTTP calls, or endpoints exercised through a hand-rolled JDK HTTP client with JSON parsed by hand. Authors REST Assured (Java) tests in the given().when().then() BDD-style DSL: status code and JSON / XML path assertions, authentication (Basic, OAuth2, API key), Maven / Gradle dependencies, JUnit 5 execution, and Surefire / JaCoCo reports for CI gating. Use when the project is on the JVM and its API tests miss real assertions, run too slowly, or are written by hand.",
+  "description": "Use whenever Java/JVM API tests need writing or fixing: loose assertions that let an empty 200 pass, slow sequential suites, or hand-rolled HTTP clients. Writes REST Assured given/when/then tests with status, JSON and XML path assertions, auth, JUnit 5, Maven or Gradle and CI reports.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.5.8"
+  "version": "1.5.9"
 }

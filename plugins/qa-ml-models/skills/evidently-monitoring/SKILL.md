@@ -1,9 +1,9 @@
 ---
 name: evidently-monitoring
-description: "Use Evidently OSS (100+ evaluation metrics, declarative testing API) to detect data drift, target drift, and model-performance regression, wired into CI as a gate (a Report run with include_tests) and into production monitoring as a continuous check; reports as HTML + JSON for both human review and pipeline assertions. Includes a drift-alert triage playbook: classify the fired alert's signal, rank root-cause hypotheses (upstream schema change, pipeline bug, training-serving skew, seasonality, genuine population shift), and pick rollback, retrain, quarantine, or alert re-tuning. Use when you need a drift or quality gate, a scheduled monitoring job, or a structured triage of a fired drift alert, for a tabular ML model. Built on the Evidently API specifically: for DeepChecks-based validation suites use deepchecks-tests instead."
+description: "Use when a tabular ML model needs a drift or quality gate in CI, a scheduled monitoring job, or triage of a fired drift alert. Uses Evidently reports with tests for data drift, target drift and performance regression, and a playbook to pick rollback, retrain, quarantine or alert re-tuning."
 metadata:
   keywords: "evidently, data-drift, model-monitoring, drift-detection, production-monitoring"
-  version: "1.3.8"
+  version: "1.3.9"
 ---
 
 # evidently-monitoring

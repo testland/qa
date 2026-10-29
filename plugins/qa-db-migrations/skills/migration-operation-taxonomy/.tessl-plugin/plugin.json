@@ -1,9 +1,9 @@
 {
   "name": "testland/migration-operation-taxonomy",
-  "description": "Classifies every DDL and DML statement in a database migration into an eight-category operation taxonomy (additive, backwards-compatible alter, locking, lock-escalating, breaking, data-loss, unsafe default, index-missing foreign key) and assigns a Critical, Warning, or Info severity justified by the lock mode and table-rewrite behavior the target engine actually performs. Records where PostgreSQL and MySQL/InnoDB diverge for the same logical statement, and where behavior is version-gated (PostgreSQL 11 removed the table rewrite for a constant DEFAULT; MySQL 8.0.12 made ADD COLUMN instant). Use when a migration file appears in a diff or a review queue and someone must decide, before it reaches a production-sized table, which statements are safe and which will stall writes or destroy data.",
+  "description": "Use when a database migration appears in a diff or review queue and someone must decide which statements are safe before it hits a large production table. Classifies each statement (additive, locking, breaking, data-loss and more) with the lock and rewrite behavior of PostgreSQL or MySQL.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.9"
+  "version": "1.2.10"
 }

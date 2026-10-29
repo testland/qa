@@ -1,9 +1,9 @@
 {
   "name": "testland/azure-functions-tests",
-  "description": "Runs Azure Functions locally using Azure Functions Core Tools v4 (`func start`), Azurite storage emulation, and framework-native unit tests for handler code (.NET isolated worker model, Node.js v4, Python v2). Covers HTTP, queue, and timer trigger testing, admin-endpoint invocation for non-HTTP triggers, and binding verification via local.settings.json. Use when testing Azure Functions before deployment, reproducing trigger behaviour without live Azure services, or gating function handler logic in CI.",
+  "description": "Use when Azure Functions need testing before deploy: running them locally with Core Tools v4 and Azurite, unit tests for .NET isolated, Node v4 and Python v2 handlers, HTTP, queue and timer triggers, admin-endpoint calls and binding checks in local.settings.json.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.6"
+  "version": "1.3.7"
 }

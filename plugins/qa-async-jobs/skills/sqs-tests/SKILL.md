@@ -1,6 +1,6 @@
 ---
 name: sqs-tests
-description: "Tests AWS SQS queue interactions - Standard (at-least-once delivery, near-unlimited throughput) vs FIFO (exactly-once processing, ordered) queue semantics; visibility-timeout interaction model; dead-letter queue (DLQ) for poison-message isolation; message retention period (default 4 days, configurable 60s - 1209600s); test patterns via LocalStack or `aws-sdk-client-mock` (TypeScript) / `moto` (Python). Use when the user works with AWS SQS producers/consumers and needs unit/integration tests for queue interactions."
+description: "Use whenever code that sends or receives AWS SQS messages needs tests: Standard vs FIFO semantics, visibility timeouts, dead-letter queues for poison messages and retention, using LocalStack, aws-sdk-client-mock for TypeScript or moto for Python."
 ---
 
 # sqs-tests

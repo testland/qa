@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-jvm",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "JVM unit testing with JUnit 5: parameterized tests, lifecycle hooks, extensions, coverage and CI, plus framework choice for Java, Kotlin, Groovy and Scala. References cover Kotest, Spock, TestNG, ScalaTest and AssertJ.",
   "author": {
     "name": "testland",

@@ -1,9 +1,9 @@
 ---
 name: race-condition-test-author
-description: "Build deterministic race-condition and thread-safety tests for flaky, load-only concurrency bugs - identify shared mutable state, drive interleavings via barriers / latches / manual scheduling; use ThreadSanitizer (clang `-fsanitize=thread`) for C/C++ data race detection; run the Go race detector end-to-end (`go test -race`, GORACE tuning, `-count`/`-cpu` stress, goroutine-leak gating with go.uber.org/goleak - references/go.md); use jcstress (`@JCStressTest` + `@Actor` + `@Outcome`) for JVM stress; use Loom virtual-thread interleavings for parallel testing. Use when a defect only reproduces under load on shared in-process state (cache, counter, connection pool, lazy-init singleton), when writing the regression test for a race-condition incident before the fix lands, or when adding `-race` to a Go CI matrix."
+description: "Use when a bug only appears under load on shared in-process state (cache, counter, pool, lazy singleton), or a race needs a regression test before the fix. Forces interleavings with barriers and latches, and runs ThreadSanitizer, go test -race with goleak, or jcstress for the JVM."
 metadata:
   keywords: "race-condition, data-race, thread-sanitizer, jcstress, concurrency-testing"
-  version: "1.2.15"
+  version: "1.2.16"
 ---
 
 # race-condition-test-author

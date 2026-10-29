@@ -1,6 +1,6 @@
 ---
 name: chaos-experiment-author
-description: "Build-an-X workflow for a chaos experiment per the Principles of Chaos Engineering - defines steady-state hypothesis, picks the variables (real-world events: network latency, node failure, region outage), sets the blast radius (which percentage / namespace / user cohort), automates execution, and emits the verdict (steady-state held / didn't hold). Includes the five-check pre-flight validation of the steady-state hypothesis (measurable, baselined, SLI-backed tolerance, defined measurement window, metric moves under the fault) with hard-reject rules, and routes the tool choice: Chaos Mesh has its own standalone skill, while LitmusChaos and Gremlin setup live in this skill's references. Use to scope and pre-flight-validate a chaos experiment before running it via Chaos Mesh / Litmus / Gremlin / Toxiproxy."
+description: "Use when scoping a chaos engineering experiment before running it: a steady-state hypothesis, real-world faults (latency, node or region failure), blast radius, automation and the verdict, with a five-check validation of the hypothesis and LitmusChaos and Gremlin setup. Chaos Mesh has its own skill."
 ---
 
 # chaos-experiment-author

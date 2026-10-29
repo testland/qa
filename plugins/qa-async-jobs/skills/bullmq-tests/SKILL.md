@@ -1,6 +1,6 @@
 ---
 name: bullmq-tests
-description: "Authors and runs BullMQ job tests in TypeScript / JavaScript - `Queue` and `Worker` patterns, processor mocking, retry/backoff/repeat-job assertions, FlowProducer for parent-child job dependencies, QueueEvents listeners; tests use a real Redis instance (Docker / Testcontainers / `ioredis-mock` for stricter unit-test isolation). Use when the user works with BullMQ in Node.js services and needs unit / integration tests for queue producers, worker processors, or flow orchestration."
+description: "Use whenever a Node.js or TypeScript service uses BullMQ and its queues or workers need tests: producers, worker processors, retries, backoff and repeat jobs, FlowProducer parent-child jobs and QueueEvents, against real Redis (Docker, Testcontainers) or ioredis-mock."
 ---
 
 # bullmq-tests

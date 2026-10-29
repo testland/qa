@@ -1,6 +1,6 @@
 ---
 name: trivy-image
-description: "Configures and runs Trivy for container image scanning: Aqua Security's all-in-one scanner combining vuln + secret + misconfiguration + license detection in one pass; `trivy image {image}` with --severity HIGH,CRITICAL filter; --format sarif/json (incl. scan-embedded CycloneDX; for standalone SBOM generation and format choice see syft-generation); .trivyignore CVE suppression file; --ignore-unfixed for actionable filter; --scanners vuln/misconfig/license/secret toggle. Use when the team wants a single tool covering container image security across multiple dimensions, not for producing a standalone CycloneDX SBOM."
+description: "Use when container images need one scanner for vulnerabilities, secrets, misconfigurations and licenses: trivy image with severity filters, SARIF or JSON output, .trivyignore suppressions, --ignore-unfixed and scanner toggles. For a standalone SBOM use syft-generation."
 ---
 
 # trivy-image

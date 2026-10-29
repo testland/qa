@@ -1,6 +1,6 @@
 ---
 name: wiremock-stubs
-description: "Authors WireMock stub mappings for HTTP service mocking - `stubFor` with verb/path/header matchers + `willReturn` response shaping, lifecycle via `WireMockServer` (start / stop) or JUnit `WireMockExtension`, request verification via `verify()`, and dynamic-port allocation for parallel tests. Also carries the Mountebank multi-protocol workflow (TCP / SMTP / LDAP / gRPC imposters, record-playback proxying) in references/mountebank.md. Use when the project is JVM-based and tests need to mock HTTP dependencies (third-party APIs, internal microservices) at the network layer, or when mocking must go beyond HTTP."
+description: "Use whenever Java/JVM tests call a slow, flaky, rate-limited or paid HTTP API: stub it with WireMock so tests run offline, including faults such as timeouts and 500 responses, request verification and parallel-safe ports. Mountebank for TCP, SMTP, LDAP and gRPC is in its references."
 ---
 
 # wiremock-stubs

@@ -1,9 +1,9 @@
 {
   "name": "testland/exploratory-charter-author",
-  "description": "Authoring workflow that turns a feature spec, risk area, or bug cluster into an exploratory testing charter (a session plan for unscripted testing) per Jonathan and James Bach's Session-Based Test Management (SBTM) - frames the one-sentence mission, scopes 3-7 areas, picks a 60 / 90 / 120 min time-box, suggests tours, wires the PROOF debrief deliverables, and checks the result against halt rules. Use when a feature has too many unknowns to script (new feature / refactor blast-radius / bug cluster) and the team needs an exploratory test plan instead of step-by-step test cases. Authors the charter only: the full charter card template, session vocabulary, debrief template, and session review live in the exploratory-testing skill this workflow composes with.",
+  "description": "Use when a feature has too many unknowns to script (new feature, risky refactor, bug cluster) and the team needs an exploratory test plan. Writes a session-based testing charter: one-sentence mission, 3-7 areas, a 60, 90 or 120 minute time-box, suggested tours and the debrief deliverables.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.0.3"
+  "version": "1.0.4"
 }

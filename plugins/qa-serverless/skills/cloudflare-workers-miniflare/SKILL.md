@@ -1,6 +1,6 @@
 ---
 name: cloudflare-workers-miniflare
-description: "Wraps Miniflare 3 (the official Cloudflare Workers simulator) and Wrangler dev for testing Workers locally. Covers Miniflare's getMiniflare() programmatic API (workerd-backed simulation matching prod), the wrangler dev local-mode (live-reload during dev), KV / Durable Objects / R2 / D1 bindings emulation, and Vitest + @cloudflare/vitest-pool-workers for in-process tests. Use when testing Cloudflare Workers code locally."
+description: "Use when Cloudflare Workers code needs tests locally: Miniflare 3 (workerd-backed), wrangler dev, emulated KV, Durable Objects, R2 and D1 bindings, and in-process tests with Vitest and @cloudflare/vitest-pool-workers."
 ---
 
 # cloudflare-workers-miniflare

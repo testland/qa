@@ -1,6 +1,6 @@
 ---
 name: bdd-step-library-curator
-description: "Keeps a BDD step-definition library DRY across a Cucumber / Behave / Reqnroll project - inventories every step definition, detects duplicates (different patterns matching the same intent), recommends canonical consolidations, reorganizes steps by domain, publishes a step-library README the team greps for \"is there already a step for X?\" before authoring new ones, and builds a scenario coverage map that fingerprints new Gherkin scenarios against the live suite to classify each as duplicate, partial overlap, or genuine gap before any test is authored. Use when a BDD project's step count grows past ~50, on a quarterly step-library review, when a new engineer is about to write a duplicate step, or when fresh .feature files need a covered-already check."
+description: "Use when a Cucumber, Behave or Reqnroll project has grown past ~50 step definitions, before writing a step that may already exist, or when new .feature files need a duplicate check. Inventories steps, merges duplicates, publishes a step-library README and a scenario coverage map."
 ---
 
 # bdd-step-library-curator

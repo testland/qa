@@ -1,6 +1,6 @@
 ---
 name: appium-testing
-description: "Runs and repairs mobile UI suites driven by Appium - sessions that stop launching after an Appium server upgrade, an iOS or Android half switched off in CI because the simulator or emulator will not boot, unstable waits around one-time codes and other out-of-app steps, and locators that break on every redesign. Covers the WebDriver protocol, driver choice per platform (XCUITest for iOS, UiAutomator2 / Espresso for Android, Mac2 for macOS, Windows for desktop), `desiredCapabilities`, client bindings in JS / Python / Java / Ruby / .NET, and running against simulators, emulators, and device farms. Use when a mobile suite fails, flakes, or only runs on one platform, or when one suite must cover both iOS and Android."
+description: "Use when a mobile UI suite fails, flakes or runs on only one platform, an Appium upgrade breaks sessions, or one suite must cover iOS and Android: Appium drivers (XCUITest, UiAutomator2, Espresso), capabilities, clients in JS, Python, Java, Ruby or .NET, and simulators, emulators and device farms."
 ---
 
 # appium-testing

@@ -1,6 +1,6 @@
 ---
 name: flake-axis-bisection
-description: "Locates the condition a known-flaky test actually depends on by holding the test constant and varying one axis at a time (isolation, execution order, worker count, viewport, network latency, repetition depth), recording a pass/fail count per variation, and testing whether the gap between two conditions exceeds sampling noise. Covers choosing the run count N from the failure rate you need to detect, binomial confidence intervals on a measured reproduction rate, a two-proportion comparison rule, what a zero-failure result does and does not prove, and the resource-collision walk (DB row, DB schema, file path, port, env var, module state, inode, cookie jar) used once parallelism is implicated. Use when a specific test is already known to fail intermittently, reading its source has not explained why, and a decision about what to change must rest on measurement rather than on a plausible-sounding guess."
+description: "Use when one test is known to fail intermittently and reading its code has not explained why. Varies one condition at a time (isolation, order, workers, viewport, latency, repetition), counts passes and failures with confidence intervals, and walks shared resources once parallelism is implicated."
 ---
 
 # flake-axis-bisection

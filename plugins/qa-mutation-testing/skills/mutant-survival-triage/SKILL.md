@@ -1,6 +1,6 @@
 ---
 name: mutant-survival-triage
-description: "Normalizes a surviving-mutant record across StrykerJS, PIT, mutmut, and Mull into one shape, classifies why it survived (missing case, weak assertion, equivalent mutant, unreachable code, flaky killer), applies per-mutator heuristics for conditional-boundary, arithmetic-operator, statement-removal, and constant mutations, and drafts the specific test that would kill it. Includes the full read-only investigation workflow: take a mutation report (Stryker JSON / PIT XML / mutmut output / Mull JSON) plus the repo at the same commit, read each survivor's mutated line and covering tests, classify, and propose - never auto-rewriting tests. Treats equivalence as a judgment call, because deciding whether a mutant is equivalent to the original is undecidable in general, so a residual survivor rate is expected rather than a defect. Use when a mutation run has finished and the report lists surviving mutants (typically 5+) that nobody has yet explained or turned into concrete test cases."
+description: "Use when a mutation testing run (StrykerJS, PIT, mutmut or Mull) has finished and surviving mutants need explaining. Classifies each survivor (missing case, weak assertion, equivalent, unreachable, flaky) and drafts the test that would kill it, without rewriting tests automatically."
 ---
 
 # mutant-survival-triage

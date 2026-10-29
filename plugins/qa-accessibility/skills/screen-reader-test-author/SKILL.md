@@ -1,6 +1,6 @@
 ---
 name: screen-reader-test-author
-description: "Builds the full manual-accessibility artifact surface: step-by-step screen-reader test scripts for NVDA (Windows), JAWS (Windows), VoiceOver (macOS / iOS), or TalkBack (Android) with per-step keystroke + expected announcement; per-archetype WCAG 2.2 checklists (references/wcag-checklist.md); per-widget keystroke matrices pairing expected NVDA and VoiceOver announcements with the WCAG SC each row verifies (references/widget-matrix.md); and a guided NVDA / VoiceOver session protocol that merges script + checklist into a signed pass/fail session report. Use when authoring an accessibility-acceptance test, checklist, or widget matrix the team will run before sign-off, when scripting a manual a11y audit, OR when walking a tester through a guided screen-reader session."
+description: "Use when a feature needs manual screen-reader testing before sign-off: step-by-step scripts for NVDA, JAWS, VoiceOver or TalkBack with keystrokes and expected announcements, WCAG 2.2 checklists per page type, widget keystroke matrices and a guided session with a signed report."
 ---
 
 # screen-reader-test-author

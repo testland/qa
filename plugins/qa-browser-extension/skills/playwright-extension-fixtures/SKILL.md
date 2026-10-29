@@ -1,9 +1,9 @@
 ---
 name: playwright-extension-fixtures
-description: "Author the Playwright fixture layer every Chromium extension test depends on - `chromium.launchPersistentContext` with `--disable-extensions-except=$DIR` + `--load-extension=$DIR`, the `channel: 'chromium'` selection that unlocks headless extension support, the `context.serviceWorkers()` + `waitForEvent('serviceworker')` race-handling pattern, and the `extensionId = serviceWorker.url().split('/')[2]` extraction recipe - plus, in references/, the Manifest V3 test surface (MV2-to-MV3 field changes, service-worker limits, Firefox vs Chrome keys, `web-ext`), the load / reload matrix, the `chrome.storage` suite (areas, quota, `storage.onChanged`, managed), and per-surface assertion recipes (popup, content script, background messaging, MV3 auto-suspend survival). Use when authoring or debugging the fixture a Chromium extension test imports, when an edit appears to have no effect and you need the reload matrix, or when authoring popup / content-script / storage tests."
+description: "Use when writing or debugging Playwright tests for a Chromium browser extension: the persistent-context fixture that loads the extension and finds its ID, why an edit seems to have no effect (reload matrix), and popup, content-script, storage and MV3 service-worker tests."
 metadata:
   keywords: "playwright, chromium, launchpersistentcontext, test-fixtures, browser-extension"
-  version: "1.2.8"
+  version: "1.2.9"
 ---
 
 # playwright-extension-fixtures

@@ -1,9 +1,9 @@
 ---
 name: deepchecks-tests
-description: "Run Deepchecks suites (data integrity, train-test validation, model evaluation) on tabular / NLP / vision data + models. Pass `result.passed_conditions()` to CI to gate on regressions; the same checks run during research, CI, and production monitoring per the Deepchecks lifecycle posture. Use before training to catch train-test leakage and data-integrity defects in a tabular, NLP, or vision dataset, and to re-run the same suite on production samples to detect drift."
+description: "Use before training to catch train-test leakage and data integrity problems in tabular, NLP or vision data, and to rerun the same suite on production samples for drift. Runs Deepchecks data integrity, train-test validation and model evaluation suites and gates CI on passed conditions."
 metadata:
   keywords: "deepchecks, ml-testing, data-validation, train-test-split, model-evaluation"
-  version: "1.3.5"
+  version: "1.3.6"
 ---
 
 # deepchecks-tests

@@ -1,9 +1,9 @@
 {
   "name": "testland/madge-deps",
-  "description": "Run Madge against a JS/TS production source tree to detect circular dependencies, find orphan modules, and visualize the module graph. Scoped to production code via `excludeRegExp` for test files. Use when a build compiles but throws `Cannot read property X of undefined` on a module that is clearly imported, or when a repo needs a CI gate that blocks new import cycles.",
+  "description": "Use when a JS/TS build compiles but a clearly imported module is undefined at runtime, or CI should block new import cycles. Runs Madge on production code to find circular dependencies and orphan modules and draw the module graph, excluding test files.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.5"
+  "version": "1.1.6"
 }

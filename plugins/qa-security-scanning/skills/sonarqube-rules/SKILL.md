@@ -1,6 +1,6 @@
 ---
 name: sonarqube-rules
-description: "Configures and runs SonarQube / SonarCloud - multi-language SAST + Quality Gate platform with built-in Sonar Way rule profiles + custom rule plugins; integrates `sonar-scanner` with `sonar-project.properties` config; supports Quality Gate definitions including new-code-period blocking, branch + PR analysis, and per-issue suppression via `// NOSONAR` comment or `@SuppressWarnings(\"squid:RULE_ID\")` annotation. Use when the user runs SonarQube Community / Developer / Enterprise edition or SonarCloud, or needs a multi-language SAST + code-quality platform with persistent issue tracking."
+description: "Use when a team runs SonarQube or SonarCloud for multi-language static analysis and code quality: sonar-scanner and sonar-project.properties, Sonar Way profiles and custom rules, quality gates on new code, branch and PR analysis, and NOSONAR or SuppressWarnings suppressions."
 ---
 
 # sonarqube-rules

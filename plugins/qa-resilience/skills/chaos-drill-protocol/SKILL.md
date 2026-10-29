@@ -1,6 +1,6 @@
 ---
 name: chaos-drill-protocol
-description: "Run protocol and run workflow for a chaos experiment that has already been designed: the four pre-flight gates (non-production target, measured healthy baseline, live observability, a rollback that has actually been exercised), how to pick a conservative blast-radius bound, the sampling cadence and abort criteria fixed in writing before injection, the per-runner inject and abort commands (Chaos Mesh / Litmus / Gremlin / Toxiproxy), the refuse-to-start rules (no blast-radius bound, production context, degraded baseline, offline observability, unexercised rollback), and the recovery-validation step with its tolerance and timeout. Owns execution safety only, not experiment design: the steady-state hypothesis, the fault to inject, and the experiment file come from chaos-experiment-author. Use when an experiment definition exists and a fault is about to be injected into a running system, and the go/no-go gates, abort thresholds, and recovery check still need to be agreed and written down before the fault starts."
+description: "Use when a chaos experiment is already designed and a fault is about to be injected into a running system. Sets the go/no-go gates (non-production, healthy baseline, live monitoring, tested rollback), blast-radius bound, abort criteria, inject and abort commands and the recovery check."
 ---
 
 # chaos-drill-protocol

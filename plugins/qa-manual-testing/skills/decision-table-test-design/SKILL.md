@@ -1,9 +1,9 @@
 ---
 name: decision-table-test-design
-description: "Derives human-readable manual test cases from a business-rule spec via a decision table: identify conditions and actions, build the full 2^n-column matrix, collapse columns with irrelevant entries, strike infeasible combinations, then emit one test case per remaining column (each feasible column is one coverage item per ISTQB CTFL v4.0 section 4.2.3). A deep single-technique walkthrough rather than a broad multi-lens case matrix; the output is manual step/expected cases rather than parameterized test code, and it covers how cases are derived rather than how a case record is structured. Use when a spec's outcome depends on interacting conditions (pricing, eligibility, discounts, routing rules) rather than the boundaries of a single input."
+description: "Use when a spec's outcome depends on several interacting conditions (pricing, eligibility, discounts, routing rules) and needs manual test cases. Builds a decision table, collapses irrelevant and impossible combinations and writes one test case per remaining column, per ISTQB."
 metadata:
   keywords: "decision table, test design, istqb, ctfl, business rules, combinations, black-box, manual testing"
-  version: "1.7.12"
+  version: "1.7.13"
 ---
 
 # decision-table-test-design

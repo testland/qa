@@ -1,6 +1,6 @@
 ---
 name: stryker-net-mutation
-description: "Configures Stryker.NET for mutation testing of .NET Core / .NET Framework projects - installs `dotnet-stryker` global tool, scopes mutation to specific csproj, supports xUnit / NUnit / MSTest, authors `stryker-config.json` with thresholds, runs in CI. Use when a .NET test suite needs mutation-quality verification - closes the .NET ecosystem gap left by Stryker.NET being newer than the JS variant."
+description: "Use when a .NET (C#) test suite needs mutation testing to show whether the tests catch bugs. Sets up Stryker.NET: the dotnet-stryker tool, project scoping, xUnit, NUnit or MSTest, stryker-config.json thresholds and CI runs."
 ---
 
 # stryker-net-mutation

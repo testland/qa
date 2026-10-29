@@ -1,9 +1,9 @@
 ---
 name: electron-playwright
-description: "Authors Playwright `_electron` tests for packaged Electron desktop apps - launches the app via `electron.launch({ args })`, returns an `ElectronApplication` handle, drives renderer windows as Playwright `Page` objects, and probes the main process via `electronApp.evaluate(({ app, BrowserWindow }) => …)`. Distinct from ordinary browser page automation: this wraps the `_electron` API for launching packaged Electron apps and probing main + renderer processes. Includes the legacy Spectron reference and Spectron-to-Playwright migration shopping list (references/spectron-migration.md). Use for end-to-end tests of Electron apps where main-process state, IPC, and renderer DOM must all be asserted from one suite, or when migrating a deprecated Spectron suite."
+description: "Use whenever an Electron desktop app needs end-to-end tests, or a Spectron suite must be migrated: Playwright's _electron.launch, renderer windows as Pages, main-process checks via electronApp.evaluate, and IPC and DOM assertions from one suite."
 metadata:
   keywords: "electron, playwright, desktop, main-process, renderer"
-  version: "1.2.20"
+  version: "1.2.21"
 ---
 
 # electron-playwright

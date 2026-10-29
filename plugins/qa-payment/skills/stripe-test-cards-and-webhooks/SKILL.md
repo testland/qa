@@ -1,6 +1,6 @@
 ---
 name: stripe-test-cards-and-webhooks
-description: "Wraps Stripe API testing patterns: test-mode initialization, the canonical test cards (4242 success; 4000 0000 0000 0002 declined; 4000 0027 6000 3184 3DS challenge per the 3DS flows reference in payment-flow-test-author), the Stripe CLI webhook flow (`stripe listen --forward-to`), the Stripe CLI fixture commands (`stripe trigger payment_intent.succeeded`), and the webhook signature verification (Stripe-Signature header + HMAC-SHA256). Use when testing Stripe-integrated code."
+description: "Use whenever code that takes payments with Stripe needs tests: test-mode keys, test cards for success, declines and 3D Secure, stripe listen to forward webhooks locally, stripe trigger fixtures, and Stripe-Signature verification."
 ---
 
 # stripe-test-cards-and-webhooks

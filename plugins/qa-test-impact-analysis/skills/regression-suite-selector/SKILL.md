@@ -1,6 +1,6 @@
 ---
 name: regression-suite-selector
-description: "Builds a CI workflow that runs only the subset of tests impacted by a PR's changes - combines a per-test → source-file dependency map (built from coverage profiles or, in build-graph projects, queried from the build system itself like Bazel `rdeps`) with the PR's `git diff --name-only`, then selects the union of (impacted by changed files + previously failing + newly added). Always pairs with a periodic full-suite run so a misconfigured map can't silently shrink coverage. Use when the regression suite is large enough that PR-time CI is the bottleneck and a full run is reserved for nightly / pre-release."
+description: "Use when the regression suite is so large that PR-time CI is the bottleneck. Builds a CI step that runs only tests affected by the PR's changed files (from coverage maps or Bazel rdeps), plus previously failing and new tests, while a periodic full run guards against a stale map."
 ---
 
 # regression-suite-selector

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-browser-extension",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Browser extension testing for Chrome and Firefox: Playwright extension fixtures, message-passing tests, and the Manifest V3 test surface. Includes the reload matrix, chrome.storage quota tests and the web-ext Firefox CLI, plus an authoring agent (extension-test-author) that writes one Playwright spec per behavior spec.",
   "author": {
     "name": "testland",

@@ -1,6 +1,6 @@
 ---
 name: risk-matrix
-description: "The risk-based testing (RBT) umbrella: risk matrix and risk register authoring, likelihood x impact scoring, risk storming, calibration, and risk-to-test coverage mapping. Produces the per-feature / per-release matrix artifact (structured intake: feature, category, impact 1-5 by likelihood 1-5, score; heatmap; mitigations with owners and due dates), supporting lightweight and heavyweight (FMEA / Cost of Exposure) methods per RBT canon, plus a risk coverage mapping workflow that proves which tests, cases, or monitors back each registered risk. references/ carries the product-risk and project-risk register variants, the risk-storming facilitation guide, matrix calibration against observed defect data, and a register review checklist. Use for any risk-based-testing artifact: building a matrix or register, running a risk-storming session, calibrating ratings against defects, or mapping risks onto test coverage."
+description: "Use for any risk-based testing artifact: a risk matrix or register with likelihood x impact scores, a risk-storming session, calibrating ratings against real defects, or mapping each risk to the tests and monitors that cover it. Supports light and heavy methods (FMEA, Cost of Exposure)."
 ---
 
 # risk-matrix

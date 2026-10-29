@@ -1,6 +1,6 @@
 ---
 name: failure-injection-test-author
-description: "Orchestrates WireMock fault stubs (HTTP-level fault: 500s, malformed JSON, slow responses) with Toxiproxy (TCP-level: latency, packet loss, reset) into a single resilience test scenario - the test starts both, applies fault per scenario, runs the SUT against the impaired endpoints, verifies the SUT's resilience patterns. Use when one test must reproduce a combined network + HTTP failure - a cross-layer failure mode from an incident postmortem that neither pure HTTP fault stubs nor pure TCP chaos can cover alone, because most real failures span both layers."
+description: "Use when one test must reproduce a failure that spans HTTP and network layers, such as an incident nobody can recreate with HTTP stubs or TCP chaos alone. Combines WireMock fault stubs (500s, bad JSON, slow replies) with Toxiproxy (latency, loss, resets) and checks the app's resilience."
 ---
 
 # failure-injection-test-author

@@ -1,9 +1,9 @@
 {
   "name": "testland/cli-output-conventions",
-  "description": "Conventions for designing AND testing CLI output so it stays parseable and assertable - exit-code policy (0 success, non-zero failure with stable codes per failure mode), `stdout` for primary data / `stderr` for messages, `--json` / `--plain` for machine-readable output, deterministic ordering and timestamps, `NO_COLOR` / TTY-aware color, `-q` / `--verbose` discipline, and stable `--help` / `--version`. Built on the [Command Line Interface Guidelines][clig]. Use when designing or testing a CLI's output - a new flag, command, or error message, writing CLI assertions, or fixing flaky tests caused by non-deterministic output; it is the assertion contract for `bats-testing` and tells `tui-snapshot-tester` what does NOT need a snapshot.",
+  "description": "Use when designing or testing a command-line tool's output: a new flag, command or error message, CLI assertions, or flaky tests caused by unstable output. Sets the contract for exit codes, stdout vs stderr, --json output, ordering, color and --help, based on the Command Line Interface Guidelines.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.1.9"
+  "version": "1.1.10"
 }

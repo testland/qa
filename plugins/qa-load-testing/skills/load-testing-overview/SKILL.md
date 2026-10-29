@@ -1,6 +1,6 @@
 ---
 name: load-testing-overview
-description: "Teaches load and performance testing from zero: a tool-selection table choosing between k6, JMeter, Gatling, Locust, and Artillery from observable project facts; the six load profiles (smoke, average-load, stress, spike, soak, breakpoint); open vs closed workload models; why percentiles beat averages; turning a run into a pass/fail CI gate with a first runnable k6 script; a performance-incident triage workflow (confirm with a k6 smoke run, flame-graph the hot path, check slow queries, localize the cause); and full Gatling (Simulation DSL, injectOpen/injectClosed, setUp().assertions()) and Locust (HttpUser + @task locustfile, headless / distributed runs, CSV gating) deep dives in references. Use when a service needs performance coverage and the tool, load profile, or pass/fail threshold has not been decided yet, or when a live performance incident needs cause localization."
+description: "Use when a service needs load or performance testing and no tool, load profile or pass/fail threshold is chosen yet, or a live performance incident needs its cause found. Picks k6, JMeter, Gatling, Locust or Artillery, explains the six load profiles and percentiles, and gives a first CI gate."
 ---
 
 # load-testing-overview

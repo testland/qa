@@ -1,9 +1,9 @@
 {
   "name": "testland/prod-canary-validator",
-  "description": "Builds a canary-validation workflow that compares a canary deploy's metrics against the baseline (current main) - picks the metric set (error rate, p50/p95/p99 latency, business KPIs like checkout-completion), defines per-metric thresholds (absolute + relative-to-baseline), runs a statistical-comparison check (effect size + significance) over the canary's observation window, and emits a promote/rollback verdict. Use as the gate between canary deploy and full rollout - the deterministic version of \"the on-call eyeballs the dashboard for 30 min.",
+  "description": "Use when a canary deploy needs an automatic promote or rollback decision instead of someone watching dashboards. Compares the canary's error rate, p50, p95 and p99 latency and business KPIs with the baseline over the observation window, with absolute and relative thresholds and a significance check.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.9"
+  "version": "1.3.10"
 }

@@ -1,6 +1,6 @@
 ---
 name: redis-cache-tests
-description: "Wraps Redis cache testing: EXPIRE / PEXPIRE / TTL verification (Redis 7+ NX/XX/GT/LT flags), cache-aside write-then-invalidate (write source → DEL key → assert fresh read), eviction under memory pressure (maxmemory + allkeys-lru), pub/sub invalidation across nodes, and tenant key-namespacing. References cover cache-coherence patterns across tiers, stampede and stale-while-revalidate. Use when Redis is the app's primary cache or when choosing a cache invalidation strategy. For the CDN/browser HTTP tier use cdn-cache-purge-tests."
+description: "Use when Redis is the app's cache and its behavior needs tests, or when choosing a cache invalidation strategy: TTLs, cache-aside write and invalidate, eviction under memory pressure, pub/sub invalidation across nodes and tenant key namespaces, plus stampede and stale-while-revalidate patterns."
 ---
 
 # redis-cache-tests

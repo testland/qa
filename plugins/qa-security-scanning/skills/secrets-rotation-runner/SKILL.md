@@ -1,6 +1,6 @@
 ---
 name: secrets-rotation-runner
-description: "Build-an-X for the secret-rotation workflow after detection - detect via gitleaks/trufflehog/kingfisher → identify provider via verifier → rotate via provider API (AWS IAM / GitHub PAT / Stripe / GCP / Azure / Twilio / Slack / etc.) → invalidate old secret → audit log via observability stack → post-mortem cross-ref. Use when a secret is detected in code (or proactively for periodic rotation) - assume git-history scrub does NOT prevent compromise."
+description: "Use when a secret is found in code or history, or for scheduled rotation: identify the provider, rotate the credential through its API (AWS IAM, GitHub, Stripe, GCP, Azure, Twilio, Slack and more), revoke the old one, log the audit trail and link the post-mortem. Scrubbing git history is not enough."
 ---
 
 # secrets-rotation-runner

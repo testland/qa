@@ -79,6 +79,10 @@ Single-description test:
 - [ ] No `and` joining unrelated clauses
 - [ ] Concrete verbs (no "helps with", "manages", "handles")
 - [ ] Includes proactive trigger condition for agents ("Use when..." / "Use proactively after...")
+- [ ] Skills: starts with the trigger ("Use when..." / "Use whenever..." /
+      "Use before..." / "Use after...") and
+      is at most 300 characters (see `docs/PLUGIN_AUTHORING.md` § Naming
+      rules for the load-test evidence)
 
 Score: __/5
 

@@ -1,9 +1,9 @@
 {
   "name": "testland/reqnroll-testing",
-  "description": "Configures Reqnroll (the canonical .NET BDD framework) - install via `dotnet add package Reqnroll`, author `.feature` files in Gherkin, write step bindings as `[Given/When/Then]`-decorated methods in any C# class, runs via `dotnet test`. Reqnroll is the SpecFlow successor (SpecFlow reached end-of-life 2024-12-31); covers the SpecFlow-to-Reqnroll migration path, and references/specflow-legacy.md maintains not-yet-migrated SpecFlow projects. Use for .NET projects starting BDD, migrating from SpecFlow, or maintaining legacy SpecFlow suites.",
+  "description": "Use when a .NET project starts BDD, migrates from SpecFlow (end-of-life 2024-12-31) or maintains a legacy SpecFlow suite. Configures Reqnroll: Gherkin .feature files, [Given/When/Then] C# bindings, hooks and dotnet test runs.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.7.7"
+  "version": "1.7.8"
 }

@@ -1,6 +1,6 @@
 ---
 name: dst-transition-reference
-description: "Pure-reference catalog of Daylight Saving Time (DST) transition patterns and their canonical bug classes. Covers the spring-forward (skipped hour: 02:00 → 03:00 local) and fall-back (repeated hour: 02:00 → 01:00 local) transitions, the historical irregularity of DST (different jurisdictions, transitions on different dates, some regions abolish DST or never adopted it), the IANA timezone database (tz / Olson DB) as the canonical source, and the testable behaviors DST creates (duplicate / missing local timestamps, cron jobs that fire 0 or 2 times, billing periods that miss / double-count, recurring meetings on transition days). Per-jurisdiction DST-rule tables, refreshable per-region test-data fixtures, and the leap-second reference (23:59:60 insertion, time_t stalls, leap-smear vs step, monotonic-clock fixes) live in references/. Use when designing or auditing time-handling code or test cases, or when auditing leap-second assumptions."
+description: "Use when designing or auditing time-handling code or its tests around daylight saving time: skipped and repeated hours, jurisdiction differences, the IANA tz database, cron jobs that fire zero or two times, billing and meetings on transition days, plus leap seconds and clock smearing."
 ---
 
 # dst-transition-reference

@@ -1,9 +1,9 @@
 {
   "name": "testland/flaui-tests",
-  "description": "Authors and runs FlaUI-based Windows UI tests - the .NET-native wrapper around Microsoft UI Automation (UIA2 + UIA3). Covers the `FlaUI.Core` / `FlaUI.UIA2` / `FlaUI.UIA3` NuGet packages, `Application.Launch` / `Application.Attach` lifecycles, `ConditionFactory` + `FindFirstDescendant` locator patterns, `Retry` waits, and xUnit / NUnit / MSTest harness integration. Use when the test stack is C# / .NET-first and the team wants idiomatic in-process UIA calls rather than the HTTP/JSON wire protocol of `winappdriver` (direct or Appium-wrapped).",
+  "description": "Use when a Windows desktop app needs UI tests from C# or .NET with in-process UI Automation calls: FlaUI UIA2 and UIA3 packages, launching or attaching to the app, ConditionFactory locators, Retry waits and xUnit, NUnit or MSTest. For the WebDriver protocol use winappdriver.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.20"
+  "version": "1.2.21"
 }

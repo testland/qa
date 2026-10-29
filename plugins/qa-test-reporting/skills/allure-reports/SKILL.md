@@ -1,6 +1,6 @@
 ---
 name: allure-reports
-description: "Configures Allure Report (test-runner adapter install, `allure-results` directory wiring, `categories.json` for failure classification, `history-trend.json` retention via the copy-history-between-runs pattern), runs the Allure CLI to convert `allure-results` to a static HTML site, and uploads the report as a CI artifact. Use when the team needs richer test reporting than JUnit XML - step-level attachments, per-test history, retry tracking, and severity / epic / feature labeling across framework-agnostic adapters (pytest, Jest, JUnit, TestNG, NUnit, Mocha). As a rich static HTML report generator, it is the open-source alternative to the sunset ExtentReports (JVM/.NET per-test HTML narrative); for hosted cross-run flakiness analytics rather than a static per-run report use currents-integration."
+description: "Use when a team wants richer test reports than JUnit XML: steps, attachments, per-test history, retries and severity or feature labels. Sets up Allure Report adapters for pytest, Jest, JUnit, TestNG, NUnit or Mocha, failure categories, history trends and the static HTML site as a CI artifact."
 ---
 
 # allure-reports

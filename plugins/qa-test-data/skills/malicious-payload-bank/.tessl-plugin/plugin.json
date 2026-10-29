@@ -1,9 +1,9 @@
 {
   "name": "testland/malicious-payload-bank",
-  "description": "Reference catalog of curated adversarial input payloads keyed by attack class - SQL injection, XSS, SSRF, path traversal, command injection, XXE, prototype pollution, regex DoS, Unicode confusables, header injection - plus per-context guidance for which payloads apply (URL parameter / form input / JSON body / file upload). Use when authoring negative-test cases for input validation, fuzz targets, or a security-focused test suite that needs to exercise the OWASP Top 10 attack surface.",
+  "description": "Use when writing negative tests for input validation, fuzz targets or security tests that need real attack strings: SQL injection, XSS, SSRF, path traversal, command injection, XXE, prototype pollution, ReDoS, Unicode confusables and header injection, with which payloads fit each input context.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.5"
+  "version": "1.3.6"
 }

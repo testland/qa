@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-ci-integration",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "CI/CD test pipelines for GitHub Actions, GitLab CI/CD and Jenkins: matrix builds, sharding, retries, test reports, and artifact handling. Shared conventions cover when to shard and retry, flake quarantine, and per-trigger cadence, with CircleCI patterns in references. A critic agent (ci-pipeline-health-critic) flags test-pipeline anti-patterns such as retries that mask flakiness.",
   "author": { "name": "testland", "url": "https://testland.io/" },
   "homepage": "https://testland.io/plugins/qa-ci-integration",

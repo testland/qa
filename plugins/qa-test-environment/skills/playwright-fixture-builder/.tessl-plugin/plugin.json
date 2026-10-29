@@ -1,9 +1,9 @@
 {
   "name": "testland/playwright-fixture-builder",
-  "description": "Builds reusable Playwright fixtures via `test.extend` - picks the right scope (test vs worker), wires the `use(value)` setup/teardown split, composes auth (storageState per worker), database (per-test snapshot/restore), and feature-flag fixtures into one custom `test` object the whole suite imports. Outputs the `fixtures.ts` file plus per-fixture review notes (scope rationale, teardown ordering, `workerInfo.workerIndex` for parallel isolation). Use when the suite has copy-pasted `beforeEach` boilerplate that should be a fixture, or when adding auth / db / flag setup that crosses many specs.",
+  "description": "Use when a Playwright suite has copy-pasted beforeEach setup that should be a fixture, or needs shared login, database or feature-flag setup across many specs. Builds test.extend fixtures with the right test or worker scope, setup and teardown, and per-worker isolation.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.4"
+  "version": "1.2.5"
 }

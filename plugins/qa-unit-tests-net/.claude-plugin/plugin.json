@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-unit-tests-net",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": ".NET unit testing with xUnit.net: Fact and Theory tests, fixtures, parallel execution and CI, with NUnit, MSTest and FluentAssertions as references. Recommends xUnit for new projects, follows an existing NUnit or MSTest convention, and notes the FluentAssertions v8 license change.",
   "author": {
     "name": "testland",

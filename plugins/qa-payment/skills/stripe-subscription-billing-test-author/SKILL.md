@@ -1,9 +1,9 @@
 ---
 name: stripe-subscription-billing-test-author
-description: "Builds test suites for Stripe recurring-billing flows: trial-to-paid conversion, proration on plan upgrade and downgrade, dunning on failed renewal, cancel and reactivation, and the full subscription webhook event matrix (invoice.payment_failed, customer.subscription.updated, customer.subscription.deleted, invoice.paid). Uses Stripe Billing test clocks (POST /v1/test_helpers/test_clocks) to time-travel through billing cycles without calendar delay. Distinct from stripe-test-cards-and-webhooks (one-time PaymentIntents) and payment-flow-test-author (idempotency + replay robustness). Does not cover single-event CLI replay or handler idempotency testing (see payment-flow-test-author for those). Use when authoring tests for subscription or recurring-billing integrations."
+description: "Use when Stripe subscriptions or recurring billing need tests: trial to paid, proration on upgrade and downgrade, dunning on failed renewals, cancel and reactivate, and the subscription webhook events, using Stripe test clocks to skip through billing cycles without waiting."
 metadata:
   keywords: "stripe, billing, subscriptions, recurring, test-clocks, dunning, proration, trial"
-  version: "1.4.5"
+  version: "1.4.6"
 ---
 
 # stripe-subscription-billing-test-author
