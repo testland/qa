@@ -7,14 +7,24 @@ description: "Pure reference catalog of the cross-language object-construction p
 
 ## Overview
 
-This skill is a **pure reference** - no execution steps. It is the catalog cited when auditing a test framework's data-construction approach. It complements `faker-data`, `synthetic-data-toolkit` (FactoryBot / mimesis / Bogus), `synthetic-pii-generator` (cross-language), and `golden-file-conventions` (snapshot pattern). Those skills document the tools; this skill documents the patterns.
+A catalog of six ways to construct test data. Pick the pattern here,
+then configure the tool with `faker-data` or `synthetic-data-toolkit`.
 
-## When to use
+## How to use this catalog
 
-- Designing test-data construction strategy for a new framework - pick the right pattern before reaching for the tool.
-- Auditing an existing framework where test data is the bottleneck (every test re-creates the world; tests run for minutes; data drifts between tests).
-- Migrating between tools (Ruby's FactoryBot → Python's factory_boy, JS's Fishery → Python's Polyfactory) - the pattern stays; the tool changes.
-- Onboarding engineers - point them at the canonical pattern citation.
+1. **Inventory.** List how the suite builds data today: grep for inline
+   object literals, shared `setUp` / `beforeAll` state, factory files,
+   snapshot files, and any production dump loaded into test databases.
+2. **Pick.** For each entity, choose a pattern from the
+   [Pattern-selection guide](#pattern-selection-guide). One construction
+   pattern per entity type; Builder over Factory is the only common mix.
+3. **Check.** Run the pattern's anti-pattern table against the existing
+   code. Stop and fix any production data that is not anonymised before
+   anything else (Pattern 6).
+4. **Hand off.** Configure the tool with the skill in
+   [Hand-off targets](#hand-off-targets), then re-run the suite twice in
+   random order (`pytest --random-order` with pytest-random-order, [`jest --randomize`][jcli]) to confirm
+   no test depends on another's data.
 
 Do **not** use this skill to:
 
@@ -66,7 +76,7 @@ const admin = aUser().withRole("admin").build();
 
 **Definition:** A Factory is a registered, named template for creating an object. Traits are named modifiers (`:admin`, `:disabled`, `:premium`) that compose with the base template. Associations express relationships (`user.org`, `org.plan`).
 
-**Example (Ruby FactoryBot, cited as the canonical implementation):**
+**Example (Ruby FactoryBot, the reference implementation):**
 
 ```ruby
 factory :user do
@@ -84,6 +94,29 @@ end
 
 # Test usage:
 admin_user = create(:user, :admin, :with_org)
+```
+
+**The same factory in Python** ([factory_boy reference][fb]): traits live
+in `class Params` and switch on with one boolean; `SubFactory` builds the
+association with the caller's strategy, so `build()` saves nothing.
+
+```python
+import factory
+
+class UserFactory(factory.Factory):
+    class Meta:
+        model = User
+
+    name = factory.Faker("name")
+    email = factory.Faker("email")
+    role = "standard"
+    org = None
+
+    class Params:
+        admin = factory.Trait(role="admin")
+        with_org = factory.Trait(org=factory.SubFactory(OrgFactory))
+
+admin_user = UserFactory.build(admin=True, with_org=True)  # not persisted
 ```
 
 **Cross-language equivalents** (canonical per-language tool; URLs in References):
@@ -105,7 +138,7 @@ admin_user = create(:user, :admin, :with_org)
 |---|---|
 | Factory definitions that hard-code IDs (`id: 1`) | Tests collide in parallel; factories must let the DB / Faker assign |
 | Traits that overlap silently (`:admin` and `:premium` both set `role`) | Order-dependent behaviour; trait composition becomes unpredictable |
-| Factories that persist by default (`create` is the only mode) | Slow tests, unnecessary DB writes. Builders should expose `build` / `attributes` / `create` strategies (see `synthetic-data-toolkit` references/factory-bot.md) |
+| Factories that persist by default (`create` is the only mode) | Slow tests, unnecessary DB writes. Use the `build` strategy unless the test reads from the DB (`synthetic-data-toolkit`, FactoryBot reference) |
 | One mega-factory for the entire domain | Becomes a god-object; every test pulls a fully-populated graph |
 
 ## Pattern 3 - Object Mother
@@ -143,7 +176,7 @@ admin_user = create(:user, :admin, :with_org)
 | **Shared Fixture** | Multiple tests share one initialised state. Fastest; brittle to test ordering. |
 | **Persistent Fresh Fixture** | Fresh state per test, but persisted in a transaction that rolls back at teardown. The pragmatic middle ground. |
 
-**Fowler on the trade-off** ([Eradicating Non-Determinism in Tests](https://martinfowler.com/articles/nonDeterminism.html)): "I prefer the former [Fresh Fixture], as it's often easier - and in particular easier to find the source of a problem." But: "rebuilding the database each time can add a lot of time to test runs, so that argues for switching to a clean-up strategy."
+Fowler prefers rebuilding state per test because failures are easier to trace, and switches to clean-up only when rebuilding is too slow ([Eradicating Non-Determinism in Tests](https://martinfowler.com/articles/nonDeterminism.html)).
 
 ### When to use Fresh Fixture (default)
 
@@ -188,11 +221,9 @@ admin_user = create(:user, :admin, :with_org)
 
 ## Pattern 6 - Production-Data Anonymisation
 
-**Canonical source:** ISO/IEC 25024 (data quality) and GDPR / CCPA requirements; `synthetic-pii-generator` is the companion PII-synthesis skill. Tooling vendors listed in References.
+**Canonical source:** GDPR Recital 26: pseudonymised data is still personal data, and only truly anonymous information falls outside the regulation ([Recital 26][r26]). `synthetic-pii-generator` is the companion PII-synthesis skill.
 
-**Definition:** Anonymisation is the technique of using production data (or production-shaped data) for testing **after** removing or masking personally-identifiable information (PII), commercially-sensitive data, and any field that would breach privacy / compliance if leaked to a test environment.
-
-**Why this is a pattern, not just a tool concern:** The pattern dictates that **no production data enters a test environment without anonymisation** - even if the test environment is "internal only." Cross-environment data leakage is a dominant security failure mode in test-data management (2025 Verizon DBIR; see References).
+**Definition:** Using production data (or production-shaped data) for testing only **after** removing or masking personal data, commercially sensitive data, and any field that would breach privacy or compliance if leaked from a test environment.
 
 ### The three anonymisation flavours
 
@@ -200,13 +231,14 @@ admin_user = create(:user, :admin, :with_org)
 |---|---|---|
 | **Masking** | Replace sensitive fields with deterministic placeholders (`X***` for surnames; static fake date) | Production-shape preserved; field-level reversible if needed |
 | **Synthesis** | Generate fake data that statistically resembles production (length distributions, locale mix) | No mapping back to production; safest |
-| **Tokenisation** | Replace sensitive values with tokens that map back via a secured lookup | When the test environment needs to round-trip data to production (rare in QA) |
+| **Tokenisation** | Replace sensitive values with tokens that map back via a secured lookup | Round-tripping to production (rare in QA). This is pseudonymisation: the data is still personal data under GDPR |
 
 ### Anti-patterns
 
 | Anti-pattern | Why it fails |
 |---|---|
-| Copying production DB to staging "for realism" | Cross-environment data leakage; GDPR / CCPA / HIPAA breach surface |
+| Copying production DB to staging "for realism", even "internal only" | Test environments have weaker access control; raw personal data leaks from there |
+| Treating masked or tokenised data as anonymous | Reversible or linkable data is still personal data (Recital 26) |
 | Anonymisation that preserves the join keys | Sensitive relations (who bought what) survive the anonymisation |
 | Anonymisation in CI that doesn't anonymise in dev local | Engineers have raw prod data on their laptops |
 | Anonymisation as a one-time operation | Production data changes; anonymisation must run continuously |
@@ -252,16 +284,21 @@ admin_user = create(:user, :admin, :with_org)
 - Martin Fowler - *Eradicating Non-Determinism in Tests* (Fresh Fixture vs Shared Fixture trade-off, the load-bearing quote on test isolation): https://martinfowler.com/articles/nonDeterminism.html
 - Gerard Meszaros - *xUnit Test Patterns: Refactoring Test Code* (2007) (the seminal reference for fixture patterns; cite by book ISBN 978-0131495050).
 - thoughtbot - `factory_bot` (Ruby; the canonical Factory implementation): https://github.com/thoughtbot/factory_bot
-- FactoryBoy team - `factory_boy` (Python equivalent): https://github.com/FactoryBoy/factory_boy
+- FactoryBoy team - `factory_boy` (Python equivalent): https://github.com/FactoryBoy/factory_boy ; reference docs for `Trait`, `SubFactory`, `Faker`, `build` / `create`: [factory_boy reference][fb]
 - thoughtbot - `fishery` (TypeScript Factory): https://github.com/thoughtbot/fishery
 - bchavez - `Bogus` (.NET; Faker-style with factory affordances): https://github.com/bchavez/Bogus
+- Jest CLI - `--randomize`: [jestjs.io/docs/cli][jcli]
+- pytest-random-order - `--random-order`: https://github.com/jbasko/pytest-random-order
 - Jest - Snapshot Testing (the cross-language reference for the snapshot pattern): https://jestjs.io/docs/snapshot-testing
 - Michael Feathers - *Working Effectively with Legacy Code* (the characterisation-tests progenitor of golden-file testing): ISBN 978-0131177055.
 - Wikipedia - *Test fixture* (Meszaros's four-phase test pattern): https://en.wikipedia.org/wiki/Test_fixture
-- 2025 Verizon DBIR - cited for the cross-environment data leakage risk in production-data testing: https://www.verizon.com/business/resources/reports/dbir/
 - ISTQB glossary - test data: https://glossary.istqb.org/en_US/term/test-data
 - ISTQB glossary - fixture: https://glossary.istqb.org/en_US/term/test-fixture
-- ISO/IEC 25024 - data quality model (cited for anonymisation requirements).
+- GDPR Recital 26 - pseudonymised vs anonymous data: [gdpr-info.eu][r26]
 - Anonymisation / synthetic-data tooling: Tonic.ai (https://www.tonic.ai/), Gretel.ai (https://gretel.ai/), K2view (https://www.k2view.com/).
 - `faker-data`, `synthetic-data-toolkit`, `synthetic-pii-generator`, `golden-file-conventions`, `seed-data-curator` - the per-tool and operational siblings.
 - `object-model-patterns`, `test-isolation-patterns` - sister architecture-tier pattern catalogs (step design is `test-code-conventions` §11).
+
+[fb]: https://factoryboy.readthedocs.io/en/stable/reference.html
+[r26]: https://gdpr-info.eu/recitals/no-26/
+[jcli]: https://jestjs.io/docs/cli

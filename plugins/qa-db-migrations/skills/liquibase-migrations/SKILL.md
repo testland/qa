@@ -7,12 +7,7 @@ description: "Authors and runs Liquibase database migrations - changelog-driven 
 
 ## Overview
 
-Per [github.com/liquibase/liquibase][lb-gh]:
-
 [lb-gh]: https://github.com/liquibase/liquibase
-
-> "Liquibase helps millions of developers track, version, and
-> deploy database schema changes."
 
 Liquibase's distinguishing feature vs Flyway: changesets are
 **format-portable** (XML / YAML / JSON / SQL) and **rollback-aware** - each changeset declares its own rollback action, enabling
@@ -38,40 +33,43 @@ State tracked in two tables (per Liquibase docs):
 
 ## Step 1 - Install
 
-Per [lb-gh][lb-gh] the documented quickstart:
+Pick one runner and pin its version:
 
 ```bash
-# Download installer per platform from liquibase.com/download
-# Add liquibase to PATH
-liquibase init start-h2    # spin up an H2 dev DB to try it out
-```
-
-For CI / containerized usage:
-
-```bash
-docker pull liquibase/liquibase:latest
+# CLI in a container (CI and local)
 docker run --rm -v "$PWD/changelog:/liquibase/changelog" \
   -e LIQUIBASE_COMMAND_PASSWORD \
-  liquibase/liquibase \
-  --url=jdbc:postgresql://host/db \
-  --username=user \
-  --changelog-file=changelog/db.changelog-master.xml \
-  update
+  liquibase/liquibase:5.0.4 \
+  --url=jdbc:postgresql://host/db --username=app \
+  --changelog-file=changelog/db.changelog-master.yaml \
+  status --verbose
 ```
 
-Keep the password off the command line. Per [lb-env][lb-env], any command
-option can be set as `LIQUIBASE_COMMAND_<option-name>`, and the docs
-recommend it to keep passwords off the command line and out of committed
-`liquibase.properties` files. `-e LIQUIBASE_COMMAND_PASSWORD` with no value
-forwards the host's variable into the container ([docker-env][docker-env]).
+Keep the password off the command line: any command option can be set
+as `LIQUIBASE_COMMAND_<option-name>` ([environment variables][lb-env]),
+and `-e LIQUIBASE_COMMAND_PASSWORD` with no value forwards the host's
+variable into the container ([docker run][docker-env]).
 
-[lb-env]: https://docs.liquibase.com/community/user-guide-5-0-3/what-are-liquibase-environment-variables
-[docker-env]: https://docs.docker.com/reference/cli/docker/container/run/
+Maven ([Maven integration][lb-mvn]):
 
-Maven dependency / Gradle plugin available for in-build invocation - 
-consult [docs.liquibase.com][lb-docs].
+```xml
+<plugin>
+  <groupId>org.liquibase</groupId>
+  <artifactId>liquibase-maven-plugin</artifactId>
+  <version>5.0.4</version>
+  <configuration>
+    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
+    <url>${env.DB_URL}</url>
+    <username>${env.DB_USER}</username>
+    <password>${env.DB_PASSWORD}</password>
+  </configuration>
+</plugin>
+```
 
-[lb-docs]: https://docs.liquibase.com/
+then `mvn liquibase:validate liquibase:update`. Spring Boot: with
+`spring-boot-starter-liquibase` on the classpath, migrations run at
+startup and before tests, reading `db/changelog/db.changelog-master.yaml`
+unless `spring.liquibase.change-log` says otherwise ([Spring Boot][sb-lb]).
 
 ## Step 2 - Changelog + changeset basics
 
@@ -118,20 +116,42 @@ Equivalent forms in XML / JSON / SQL exist - pick by team
 preference; they're functionally equivalent at apply time. (Per
 [lb-docs][lb-docs] for format-specific syntax.)
 
-## Step 3 - Core commands
+## Step 3 - Gate: validate and preview before `update`
 
-Per [lb-gh][lb-gh] and Liquibase command reference:
+Run these in order; stop at the first failure:
+
+```bash
+liquibase validate                       # 1. syntax, duplicate id/author/file, checksums
+liquibase status --verbose               # 2. which changesets are pending
+liquibase update-sql > pending.sql       # 3. read the SQL that update would run
+liquibase update                         # 4. apply
+```
+
+`validate` checks that the changelog parses, that no `id` / `author` /
+`file` combination repeats, and that no applied changeset's checksum
+changed ([validate][lb-validate]). `update-sql` prints the SQL `update`
+would run so it can be reviewed; it does not check that SQL for
+correctness ([update-sql][lb-updatesql]).
+
+**On a checksum error,** someone edited a changeset that already ran.
+Revert the edit and put the change in a new changeset. Only if the edit
+is deliberately harmless (a comment, whitespace), add that changeset's
+new checksum to a `validCheckSum` entry and say why in the PR; never
+clear checksums to make the gate pass.
+
+**On a held lock** after an interrupted run, confirm no other
+Liquibase process is running, then `liquibase release-locks`
+([release-locks][lb-locks]).
+
+Other commands:
 
 | Command | Use |
 |---|---|
-| `liquibase update` | Apply pending changesets |
-| `liquibase status` | List pending changesets |
 | `liquibase history` | Show executed changesets |
-| `liquibase rollback <tag>` | Roll back to a tagged state |
+| `liquibase tag <tag>` / `rollback <tag>` | Mark a state; roll back to it |
 | `liquibase rollback-count <n>` | Roll back the last N changesets |
-| `liquibase tag <tag-name>` | Mark current state with a tag (for later rollback) |
-| `liquibase changelog-sync` | Mark all pending changesets as applied without running them (legacy adoption) |
-| `liquibase validate` | Check changelog syntax + checksums |
+| `liquibase update-testing-rollback` | Update, roll back the same changesets, update again: proves every rollback works ([update-testing-rollback][lb-utr]) |
+| `liquibase changelog-sync` | Mark pending changesets as applied without running them (adopting an existing schema) |
 
 ## Step 4 - Preconditions
 
@@ -198,27 +218,39 @@ The `includeAll` orders files alphabetically; use prefixes
 ## Step 7 - CI integration
 
 ```yaml
-- run: docker run --rm --network=host \
-    -v "$PWD/changelog:/liquibase/changelog" \
-    -e LIQUIBASE_COMMAND_PASSWORD \
-    liquibase/liquibase:latest \
-    --url=jdbc:postgresql://localhost:5432/test \
-    --username=postgres \
-    --changelog-file=/liquibase/changelog/db.changelog-master.xml \
-    update
-  env:
-    LIQUIBASE_COMMAND_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
-- run: mvn test
+services:
+  postgres:
+    image: postgres:17
+    env: { POSTGRES_PASSWORD: ci }
+    ports: ["5432:5432"]
+steps:
+  - uses: actions/checkout@v4
+  - name: Liquibase gate on a throwaway database
+    env:
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://localhost:5432/postgres
+      LIQUIBASE_COMMAND_USERNAME: postgres
+      LIQUIBASE_COMMAND_PASSWORD: ci
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog/db.changelog-master.yaml
+    run: |
+      lb() { docker run --rm --network=host -v "$PWD/changelog:/liquibase/changelog" \
+        -e LIQUIBASE_COMMAND_URL -e LIQUIBASE_COMMAND_USERNAME \
+        -e LIQUIBASE_COMMAND_PASSWORD -e LIQUIBASE_COMMAND_CHANGELOG_FILE \
+        liquibase/liquibase:5.0.4 "$@"; }
+      lb validate
+      lb update-sql
+      lb update-testing-rollback
 ```
 
-Per the `testcontainers` skill, ephemeral DB +
-liquibase update is the standard pattern.
+The job fails on the first failing command (`bash -e` is the default
+shell on GitHub-hosted runners), so a checksum error stops it before
+anything is applied. Run the same `validate` step in the deploy job
+before `update` against each real environment.
 
-## Step 8 - Composition with sister tools
+## Step 8 - Review risky changesets
 
-Before merge, apply adversarial review of new changesets -
-classify as additive / breaking / data-loss / locking; estimate
-downtime.
+Run the `migration-blast-radius-reviewer` agent on new changesets and
+classify each with `migration-operation-taxonomy` (additive, breaking,
+data-loss, locking) before merge.
 
 ## Anti-patterns
 
@@ -226,7 +258,8 @@ downtime.
 |---|---|---|
 | Reuse a changeset `id` after it's been deployed | Checksum mismatch on next `update`; deploys fail | New `id` per change; never edit deployed changesets |
 | Rollback section omitted | `liquibase rollback` fails silently; downtime | Author rollback per changeset (Step 2) |
-| Use `runAlways: true` for migrations | Reruns every deploy; data corruption risk | `runAlways` is for `runInTransaction: false` admin scripts only |
+| `runAlways: true` on schema or data changes | Re-runs on every deploy | Reserve it for idempotent statements (grants, view refreshes) |
+| Editing an applied changeset, then clearing checksums | History no longer matches the database | New changeset; `validCheckSum` only for harmless edits (Step 3) |
 | Mix XML + YAML + JSON in one repo | Reviewer cognitive load; sloppy diffs | Pick one format per repo |
 | Skip preconditions on conditional changes | Apply fails on environments where preconditions don't hold | Use `dbms`/`tableExists` preconditions (Step 4) |
 
@@ -238,10 +271,8 @@ downtime.
 - Cross-DBMS portability of changesets has limits - DBMS-specific
   syntax (e.g., Postgres JSONB columns) requires `dbms` precondition
   + per-DBMS variants.
-- The `DATABASECHANGELOGLOCK` table can deadlock if a previous run
-  crashed mid-update; `liquibase release-locks` recovers (note: this
-  command name varies between Liquibase versions; consult
-  [lb-docs][lb-docs]).
+- An interrupted run leaves `DATABASECHANGELOGLOCK` locked;
+  `liquibase release-locks` clears it (Step 3).
 - Liquibase Pro features (Quality Checks, Drift Reports, Targeted
   Rollback) are paid; the OSS edition covers the patterns above.
 
@@ -252,8 +283,19 @@ downtime.
 - [lb-docs][lb-docs] - full documentation
 - [lb-env][lb-env] - `LIQUIBASE_COMMAND_<option-name>` environment variables
 - [docker-env][docker-env] - `docker run -e VAR` forwards the host value
-- `flyway-migrations`,
-  `atlas-migrations`,
-  `sqlmesh-migrations` - sister
-  tools (Flyway = SQL-first versioned; Atlas = declarative HCL;
-  SQLMesh = data-pipeline + schema)
+- [validate][lb-validate], [update-sql][lb-updatesql], [update-testing-rollback][lb-utr], [release-locks][lb-locks] - command pages
+- [Maven integration][lb-mvn], [Spring Boot Liquibase][sb-lb]
+- `flyway-migrations`, `atlas-migrations` - sister tools (Flyway =
+  SQL-first versioned; Atlas = declarative HCL / SQL with lint);
+  `migration-operation-taxonomy` and `migration-blast-radius-reviewer`
+  for risk review
+
+[lb-validate]: https://docs.liquibase.com/commands/utility/validate.html
+[lb-updatesql]: https://docs.liquibase.com/commands/update/update-sql.html
+[lb-utr]: https://docs.liquibase.com/commands/update/update-testing-rollback.html
+[lb-locks]: https://docs.liquibase.com/commands/utility/release-locks.html
+[lb-mvn]: https://docs.liquibase.com/tools-integrations/maven/getting-started-liquibase-maven.html
+[sb-lb]: https://docs.spring.io/spring-boot/how-to/data-initialization.html
+[lb-docs]: https://docs.liquibase.com/
+[lb-env]: https://docs.liquibase.com/community/user-guide-5-0-3/what-are-liquibase-environment-variables
+[docker-env]: https://docs.docker.com/reference/cli/docker/container/run/

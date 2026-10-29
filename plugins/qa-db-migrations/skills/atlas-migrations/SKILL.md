@@ -19,13 +19,13 @@ desired schema and Atlas plans, lints, tests, and applies the changes
    schema diffs (`atlas migrate diff`); migrations apply forward
    (`atlas migrate apply`).
 
-Most production teams use versioned mode for the audit trail; dev
-loops often use declarative mode for fast iteration.
+Use versioned mode where every change needs a reviewed file and an
+audit trail; declarative mode suits fast local iteration.
 
 ## How to use
 
-Follow Steps 1-9 in order - lint (Step 6) is the gate before apply
-(Step 5).
+Follow the steps in order. Lint and validate (Step 5) are the gate:
+nothing reaches `migrate apply` (Step 6) until they pass.
 
 ## Step 1 - Install
 
@@ -97,65 +97,94 @@ This generates a timestamped migration file in `migrations/` (e.g.,
 `20260506120000_initial.sql`). Subsequent calls with a new schema
 generate new migrations against the previous state.
 
-## Step 5 - Apply versioned migrations
+## Step 5 - Gate: validate and lint before any apply
 
-**Verify (gate before applying):** run Step 6 lint first and assert it
-reports no destructive / data-loss findings; if it flags one, fix the
-migration (add a `DEFAULT`, split the change, or add a new migration)
-and re-run lint until clean. Only then apply:
+`atlas migrate lint` needs Atlas Pro from v0.38 (`atlas login` first);
+without it, keep `migrate validate` and use the `migration-blast-radius-reviewer`
+agent for the risk review ([lint docs][at-lint]).
+
+1. **Make the risky analyzers fail.** Only `destructive` fails lint by
+   default (exit code 1); data-dependent and backward-incompatible
+   findings are only reported ([analyzers][at-an]). Turn them into
+   errors in `atlas.hcl`:
+
+   ```hcl
+   lint {
+     data_depend  { error = true }   # MF1xx: NOT NULL add, new unique index on existing data
+     incompatible { error = true }   # BC1xx: rename / drop of tables and columns
+   }
+   ```
+
+2. **Run the gate:**
+
+   ```bash
+   atlas migrate validate --dir "file://migrations" \
+     --dev-url "docker://postgres/17/dev?search_path=public"
+   atlas migrate lint --dir "file://migrations" \
+     --dev-url "docker://postgres/17/dev?search_path=public" --latest 1
+   ```
+
+   `validate` checks the directory against `atlas.sum` and, with
+   `--dev-url`, replays the files to check the SQL ([CLI reference][at-cli]).
+
+3. **Fix and re-lint.** For each finding, change the migration, not the
+   rule: add a `DEFAULT` or backfill before `SET NOT NULL` (MF103/MF104),
+   split a rename into add-copy-drop across releases (BC), build the
+   index `CONCURRENTLY` on PostgreSQL (PG1xx). Re-run
+   `atlas migrate diff`/`atlas migrate hash` after editing an unapplied
+   file, then repeat step 2 until it exits 0. Suppress a finding with
+   `-- atlas:nolint <code>` only with a comment saying why and a
+   reviewer's sign-off.
+
+## Step 6 - Apply versioned migrations
 
 ```bash
+atlas migrate apply --url "$DATABASE_URL" --dry-run   # print the SQL
 atlas migrate apply --url "$DATABASE_URL"
 ```
 
-Atlas tracks state in `atlas_schema_revisions` table - each applied
-migration is recorded with its hash, so tampering is detected on
-subsequent applies.
+Read the dry-run SQL before the real run ([CLI reference][at-cli]). Atlas
+records each applied version in the `atlas_schema_revisions` table, so
+the next apply starts after the last recorded one.
 
-## Step 6 - Lint migrations
+## Step 7 - Hash and integrity
 
-Per [at-start][at-start]:
-
-```bash
-atlas migrate lint --dev-url "..." --latest 1
-```
-
-Lints the most recent migration for: data loss, narrow-column
-operations (e.g., `varchar(50)` → `varchar(20)`), missing default
-on a `NOT NULL` add, lock-escalating ops on large tables, schema
-backwards-incompatibility.
-
-The lint output is the value-add over Flyway / Liquibase - those
-tools are syntax-only; Atlas knows about destructive patterns.
-
-## Step 7 - Hash + integrity
-
-Atlas computes hashes for each migration file. If a developer edits
-an already-applied migration, `atlas migrate apply` fails until
-`atlas migrate hash` re-syncs (intentional act). This protects
-against silent migration tampering.
+`atlas.sum` holds a hash per migration file. Editing a file changes the
+hash and `migrate validate` / `migrate apply` fail until
+`atlas migrate hash` is run, which must be a deliberate act: never edit
+a migration that has already been applied anywhere; add a new one.
 
 ## Step 8 - CI integration
 
 ```yaml
 - uses: ariga/setup-atlas@v0
-- name: Lint migrations
-  run: atlas migrate lint --dir "file://migrations" \
-    --dev-url "docker://postgres/17/dev?search_path=public" \
-    --latest 1
+- name: Validate and lint (gate)
+  run: |
+    atlas migrate validate --dir "file://migrations" \
+      --dev-url "docker://postgres/17/dev?search_path=public"
+    atlas migrate lint --dir "file://migrations" \
+      --dev-url "docker://postgres/17/dev?search_path=public" \
+      --git-base origin/main
 - name: Apply migrations to staging
+  if: github.ref == 'refs/heads/main'
   run: atlas migrate apply --url "${{ secrets.STAGING_DB_URL }}"
 ```
 
-GitHub Action `ariga/setup-atlas@v0` provides Atlas in the runner;
-the `atlas-action` orchestrator provides PR-comment integration with
-diff visualization.
+`--git-base` lints every migration the branch adds compared with the
+base branch, instead of a fixed `--latest N` ([lint docs][at-lint]).
+`ariga/setup-atlas` puts the CLI on the runner ([at-gha][at-gha]).
+
+[at-lint]: https://atlasgo.io/versioned/lint
+[at-an]: https://atlasgo.io/lint/analyzers
+[at-cli]: https://atlasgo.io/cli-reference
 
 ## Step 9 - Composition with sister tools
 
-Beyond `atlas migrate lint`, apply adversarial review with
-team-specific risk policies that Atlas's built-in lint doesn't
-capture (e.g., "no `DROP TABLE` without DBA approval").
+Atlas lint knows SQL patterns, not your data volumes or release
+order. Run the `migration-blast-radius-reviewer` agent on the PR for
+team policies such as "no `DROP TABLE` without DBA approval", and use
+`migration-operation-taxonomy` to classify each operation's lock and
+rollback risk.
 
 ## Worked example
 
@@ -166,12 +195,13 @@ Add a `NOT NULL` column `status` to a 40M-row `users` table:
 2. `atlas migrate diff add_status --to file://schema.sql --dev-url
    "docker://postgres/17/dev?search_path=public"` writes
    `migrations/20260506120000_add_status.sql`.
-3. `atlas migrate lint --dev-url "docker://postgres/17/dev?search_path=public"
-   --latest 1` passes because the `NOT NULL` add ships a `DEFAULT`
-   (a `NOT NULL` add with no default is flagged).
-4. CI runs the same lint on the PR, then
-   `atlas migrate apply --url "$STAGING_DB_URL"` records the
-   migration in `atlas_schema_revisions`.
+3. Step 5 gate: `atlas migrate validate` and `atlas migrate lint
+   --latest 1` with the `data_depend` analyzer set to error. Without the
+   `DEFAULT`, MF103 (adding a non-nullable column) fails the lint; with
+   it, the gate passes.
+4. CI runs the same gate on the PR; after merge,
+   `atlas migrate apply --dry-run` then `atlas migrate apply` against
+   staging records the version in `atlas_schema_revisions`.
 5. A teammate later edits that applied file; their
    `atlas migrate apply` fails on hash mismatch until an intentional
    `atlas migrate hash` re-sync - the tamper guard working as
@@ -191,10 +221,11 @@ requiring a real DBMS, paid Atlas Cloud) are catalogued in
 - [at-start][at-start] - getting-started, install commands,
   example schema, all `atlas` commands, supported databases
 - [at-gha][at-gha] - `ariga/setup-atlas` GitHub Action
+- [at-lint][at-lint] - `migrate lint` flags (`--latest`, `--git-base`), Atlas Pro requirement from v0.38
+- [at-an][at-an] - analyzers, check codes, which fail by default, `error = true`
+- [at-cli][at-cli] - `migrate apply --dry-run`, `migrate validate`
 - atlasgo.io/docs - full documentation
 - github.com/ariga/atlas - repository
-- `flyway-migrations`,
-  `liquibase-migrations`,
-  `sqlmesh-migrations` - sister
-  tools (Flyway / Liquibase = imperative versioned; SQLMesh =
-  data-pipeline + schema)
+- `flyway-migrations`, `liquibase-migrations` - sister tools
+  (imperative versioned migrations); `migration-operation-taxonomy`
+  and `migration-blast-radius-reviewer` for risk review

@@ -1,9 +1,9 @@
 {
   "name": "testland/mailpit-testing",
-  "description": "The email-testing home: configures and runs Mailpit - modern dev-mailbox server for SMTP testing with built-in REST API for assertions; default SMTP `1025` + Web UI `8025`; Chaos mode (configurable SMTP errors for resilience testing), message tagging, search filters. Carries the end-to-end email-flow workflow (multipart body, link-rewrite resolution, unsubscribe per RFC 8058, bounce + complaint webhooks) in references/email-flows.md and the legacy MailHog capture patterns + migration path in references/mailhog-legacy.md. Use when developing or testing email-sending code locally / in CI - SMTP capture, full-flow assertions, or migrating an existing MailHog deployment.",
+  "description": "Captures and tests outgoing email with Mailpit, a local SMTP server that catches test emails and exposes them through a REST API for assertions; default SMTP `1025` + Web UI `8025`; Chaos mode (configurable SMTP errors for resilience testing), message tagging, search filters. Carries the end-to-end email-flow workflow (multipart body, link-rewrite resolution, unsubscribe per RFC 8058, bounce + complaint webhooks) in references/email-flows.md and the legacy MailHog capture patterns + migration path in references/mailhog-legacy.md. Use when developing or testing email-sending code locally / in CI - SMTP capture, full-flow assertions, or migrating an existing MailHog deployment.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.12"
+  "version": "1.2.13"
 }

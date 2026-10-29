@@ -1,6 +1,6 @@
 ---
 name: exploratory-charter-author
-description: "Authoring workflow that turns a feature spec, risk area, or bug cluster into a session-based exploratory testing charter per Jonathan and James Bach's SBTM - frames the one-sentence mission, scopes 3-7 areas, picks a 60 / 90 / 120 min time-box, suggests tours, and wires the PROOF debrief deliverables. Per Bach, exploratory testing is \"performing tests while learning things that may influence the testing\" - the charter sets the mission while leaving exact steps to the tester's judgment. Use when a feature has too many unknowns to script (new feature / refactor blast-radius / bug cluster) and a session-based exploration is the right approach. Authors the charter only: the ready-to-fill charter card, session vocabulary, debrief template, and session review live in the exploratory-testing skill this workflow composes with."
+description: "Authoring workflow that turns a feature spec, risk area, or bug cluster into an exploratory testing charter (a session plan for unscripted testing) per Jonathan and James Bach's Session-Based Test Management (SBTM) - frames the one-sentence mission, scopes 3-7 areas, picks a 60 / 90 / 120 min time-box, suggests tours, wires the PROOF debrief deliverables, and checks the result against halt rules. Use when a feature has too many unknowns to script (new feature / refactor blast-radius / bug cluster) and the team needs an exploratory test plan instead of step-by-step test cases. Authors the charter only: the full charter card template, session vocabulary, debrief template, and session review live in the exploratory-testing skill this workflow composes with."
 ---
 
 # exploratory-charter-author
@@ -62,13 +62,60 @@ The charter's deliverables block names three things:
 
 ## Step 4 - Fill the charter card
 
-Assemble mission (Step 1), areas + time-box + suggested tours (Step 2), and
-deliverables (Step 3) into the card format from the `exploratory-testing`
-charter-template reference,
-adding the source artifact ("Created from: story / diff / incident"), the
-target build / SHA, and an explicit out-of-scope list (performance / load →
-`k6-load-testing`;
-a11y → `qa-accessibility`; cross-browser → `qa-web-e2e`).
+Write `charters/<YYYY-MM-DD>-<kebab-feature>.md`. The minimal card
+(the full one, with oracle and SFDPOT sections, is the charter-template
+reference in `exploratory-testing`):
+
+```markdown
+# Charter - 2026-11-03 - promo-code-apply
+
+**Mission:** Explore the promo-code apply flow at checkout with boundary
+inputs and stacked codes to discover discount-calculation defects and
+error-state gaps.
+**Created from:** STORY-482
+**Target build / SHA:** (tester fills before session)
+**Time-box:** 90 min
+**Tester:** ________  **Date:** ________
+
+## Areas (3-7)
+- Code entry and validation messages
+- Discount math with stacked codes
+- Expiry at the boundary minute
+- Cart edits after a code is applied
+
+## Suggested tours
+- Bad-data tour (payloads: `malicious-payload-bank`)
+- Money tour
+
+## Out of scope
+- Load / performance (`k6-load-testing`), accessibility
+  (`qa-accessibility`), cross-browser (`qa-web-e2e`)
+
+## Deliverables
+- PROOF debrief at session end
+- Defects as BUG-* via `bug-repro-builder`
+- Coverage notes: areas with time / areas without
+```
+
+The mission uses the SBTM "Explore <area> with <resources> to discover
+<what to learn>" pattern (cited in the `exploratory-testing` charter
+template). Bach defines exploratory testing as testing while learning
+([satisfice.com][sbtm]), so the "to discover" clause is what makes it a
+mission.
+
+## Step 5 - Validate against the halt rules
+
+Re-read the card against each halt rule below. For every hit, fix the
+card and check again; emit it only when none apply:
+
+| Check | Fix |
+|---|---|
+| Mission has no "to discover" clause | Rewrite it to name what to learn |
+| Mission joins two goals with "and also" / two areas of the product | Split into two charters |
+| Fewer than 3 or more than 7 areas | Merge narrow areas or split the charter |
+| Time-box over 120 min | Split into two charters |
+| An area was explored last session | Link that session's PROOF debrief and narrow the area to what it left open, or drop it |
+| No out-of-scope list | Add one, even if it says "none" |
 
 ## Halt rules
 
@@ -95,7 +142,9 @@ Do **not** emit a charter that violates any of these:
 ## References
 
 - Bach J. + Bach J., "Session-Based Test Management" - charter, session,
-  debrief vocabulary: https://www.satisfice.com/exploratory-testing
+  debrief vocabulary: [satisfice.com][sbtm]
 - `exploratory-testing` - owns the charter
   card template, tour catalog, session sheet, and PROOF debrief this workflow
   fills.
+
+[sbtm]: https://www.satisfice.com/exploratory-testing

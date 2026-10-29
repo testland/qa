@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "qa-test-reporting",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Test reporting and coverage analytics: JUnit XML, LCOV and Cobertura parsing, Allure reports, coverage diffs, and test run summaries for pull requests. Also covers JaCoCo and coverage.py analysis, risk-ranked coverage targets, TestRail / Xray / Zephyr Scale result sync, and Currents analytics. Agents (daily-test-suite-aggregator, release-quality-report-agent) roll up daily results across suites and assemble a release-quality go / no-go report. Jest and Vitest coverage lives in qa-unit-tests-js.",
   "author": {
     "name": "testland",

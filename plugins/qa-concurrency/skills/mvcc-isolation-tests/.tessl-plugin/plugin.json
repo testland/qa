@@ -1,9 +1,9 @@
 {
   "name": "testland/mvcc-isolation-tests",
-  "description": "Build per-database MVCC isolation-level tests - Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; analogous patterns for MySQL InnoDB, SQL Server, and DynamoDB. Use when two concurrent transactions can touch the same rows (balance debit, seat booking, stock decrement), or before changing a service's default isolation level.",
+  "description": "Build per-database MVCC transaction isolation-level tests for database concurrency and locking bugs - Read Uncommitted vs Read Committed vs Repeatable Read vs Serializable; verify which anomalies are prevented at each level (dirty read, non-repeatable read, phantom read, serialization anomaly, write skew). Per PostgreSQL transaction isolation docs; with MySQL InnoDB and SQL Server differences. Use when two concurrent transactions can touch the same rows (balance debit, seat booking, stock decrement), or before changing a service's default isolation level. Deadlock detection is out of scope (deadlock-detection-harness); in-process races are race-condition-test-author.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.13"
+  "version": "1.2.14"
 }
