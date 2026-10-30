@@ -236,8 +236,8 @@
     ]
   },
   "testland-web": {
-    "version": "1.0.1",
-    "hash": "66411ee0b61d9e070695de2db1a6e62479509d6a882b8ad8a29601aa37afca77",
+    "version": "1.0.2",
+    "hash": "d16fb25d01f1c914eb7ebd6de2bbc1ae79eb51511d39dd0483d283f33c9b9853",
     "skills": [
       "browser-matrix-strategy-reference",
       "cloud-grid-e2e",
@@ -287,8 +287,8 @@
     ]
   },
   "testland-unit-testing": {
-    "version": "1.0.1",
-    "hash": "1ca9a194e9d76d80d39c52bacd33451b20607dc5a88a38d7b6f6e6d4153a6211",
+    "version": "1.0.2",
+    "hash": "189daaba933ccc8e5557e5aa4bfa4d175a7cd87530005a58392fe69291431328",
     "skills": [
       "js-unit-tests",
       "pytest-asyncio-patterns",

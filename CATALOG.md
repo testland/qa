@@ -28,7 +28,7 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.11.6 | 8 skills + 2 agents | 10 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.11.7 | 8 skills + 2 agents | 10 |
 | [qa-mobile](plugins/qa-mobile/) | 1.6.7 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.9.5 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.3 | 7 skills + 1 agents | 8 |
@@ -37,7 +37,7 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 | [qa-embedded](plugins/qa-embedded/) | 1.4.3 | 6 skills + 1 agents | 7 |
 | [qa-desktop](plugins/qa-desktop/) | 1.3.4 | 5 skills + 1 agents | 6 |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.4 | 6 skills + 0 agents | 6 |
-| [qa-property-based](plugins/qa-property-based/) | 1.2.22 | 4 skills + 2 agents | 6 |
+| [qa-property-based](plugins/qa-property-based/) | 1.2.23 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.2 | 2 skills + 0 agents | 2 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.6 | 2 skills + 0 agents | 2 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.6 | 1 skills + 0 agents | 1 |
