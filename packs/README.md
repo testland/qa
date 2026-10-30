@@ -51,6 +51,25 @@ scripts/packs-eval.sh testland-api 3   # builds the packs, runs each case 3 time
 Write prompts that stand alone: the run starts in an empty directory, so a
 prompt about "our repository" makes Claude look for code instead of a skill.
 
+Case folders starting `r-` are a random sample, eight skills per pack picked
+with the seed `testland-pilot-<pack>`, so every pack is measured the same way;
+`p-` cases in `testland-web` cover Playwright, Cypress and Selenium. Run one
+group with `claude plugin eval . --case 'r-*'` from `build/packs/<pack>` after
+copying the cases in, as the script does. Results on 30 Oct 2026, as skills
+loaded out of runs (3 runs per case; ai counted after fixing one prompt that
+pointed at a missing file):
+
+| Pack | Random sample |
+|---|---|
+| api, web, unit-testing, ai, performance, manual-testing, leadership | 24 / 24 |
+| mobile-desktop | 23 / 24 |
+| security | 21 / 24 |
+| backend | 20 / 24 |
+| essentials | 13 / 24 |
+
+A miss with one turn and no tool call means Claude answered from its own
+knowledge: the description needs a sharper trigger.
+
 ## Publishing
 
 `.github/workflows/packs-sync.yml` runs on a published release (or by hand). It
