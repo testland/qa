@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: "Authors and remediates Playwright E2E tests across Chromium, Firefox, WebKit - `npm init playwright@latest` scaffolding, `playwright.config.ts` browser projects, accessibility-first locators (`getByRole`/`getByLabelText`) to replace brittle CSS selectors, web-first assertions to eliminate `waitForTimeout` flakiness, Page Object pattern, trace viewer debugging, sharded parallel execution with merged HTML reporting, mobile-web emulation via the `devices` catalog (viewport / DPR / touch per-device projects), the cross-browser matrix with branded channels (chrome / msedge) in references/browser-matrix.md, and GitHub Actions CI integration. Use for new test authoring, flakiness remediation, mobile-breakpoint regression, cross-browser matrix setup, and CI setup; for reviewing codegen output specifically, use a dedicated codegen-review pass."
+description: "Use whenever the task is to write, fix or speed up Playwright tests, even one quick test or a flaky one: role-based locators, web-first assertions instead of waitForTimeout, page objects, config and browser projects, traces, sharding and CI. Has the anti-pattern table for flaky Playwright tests."
 ---
 
 # playwright-testing
