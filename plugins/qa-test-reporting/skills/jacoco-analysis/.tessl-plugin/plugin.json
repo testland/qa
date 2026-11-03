@@ -1,9 +1,9 @@
 {
   "name": "testland/jacoco-analysis",
-  "description": "Use when a Java, Kotlin, Scala or Groovy build (Maven or Gradle) needs code coverage. Sets up JaCoCo: the agent, HTML, XML and CSV reports, check rules that fail the build below a minimum, the six counters, and converting JaCoCo XML to LCOV or Cobertura for other tools.",
+  "description": "Use whenever a Java, Kotlin, Scala or Groovy project on Gradle or Maven needs code coverage or a coverage gate: JaCoCo agent setup, HTML, XML and CSV reports, check rules that fail the build below a minimum such as 80% lines, the six counters, and JaCoCo XML to LCOV or Cobertura.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.11"
+  "version": "1.4.12"
 }

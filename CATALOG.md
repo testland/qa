@@ -14,8 +14,8 @@ _Test process and strategy, test data, environments, reporting, impact analysis,
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.12.9 | 12 skills + 3 agents | 15 |
-| [qa-test-data](plugins/qa-test-data/) | 1.4.8 | 12 skills + 2 agents | 14 |
-| [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.9 | 10 skills + 2 agents | 12 |
+| [qa-test-data](plugins/qa-test-data/) | 1.4.9 | 12 skills + 2 agents | 14 |
+| [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.10 | 10 skills + 2 agents | 12 |
 | [qa-test-review](plugins/qa-test-review/) | 1.8.8 | 7 skills + 4 agents | 11 |
 | [qa-test-environment](plugins/qa-test-environment/) | 1.4.5 | 4 skills + 2 agents | 6 |
 | [qa-team-management](plugins/qa-team-management/) | 1.3.4 | 4 skills + 1 agents | 5 |
@@ -29,7 +29,7 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.11.7 | 8 skills + 2 agents | 10 |
-| [qa-mobile](plugins/qa-mobile/) | 1.6.7 | 8 skills + 1 agents | 9 |
+| [qa-mobile](plugins/qa-mobile/) | 1.6.8 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.9.5 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.3 | 7 skills + 1 agents | 8 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.7.9 | 6 skills + 1 agents | 7 |
@@ -64,8 +64,8 @@ _SAST, DAST, SCA, secrets and SBOM scanning, infrastructure as code, fuzzing, co
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-security-scanning](plugins/qa-security-scanning/) | 1.1.1 | 17 skills + 1 agents | 18 |
-| [qa-compliance](plugins/qa-compliance/) | 1.4.4 | 6 skills + 0 agents | 6 |
+| [qa-security-scanning](plugins/qa-security-scanning/) | 1.1.2 | 17 skills + 1 agents | 18 |
+| [qa-compliance](plugins/qa-compliance/) | 1.4.5 | 6 skills + 0 agents | 6 |
 | [qa-iac](plugins/qa-iac/) | 1.2.3 | 4 skills + 1 agents | 5 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.3.3 | 4 skills + 0 agents | 4 |
 | [qa-multi-tenancy](plugins/qa-multi-tenancy/) | 1.4.1 | 2 skills + 1 agents | 3 |
@@ -92,9 +92,9 @@ _DB migrations, async jobs, caching, concurrency, distributed tracing, saga and 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-async-jobs](plugins/qa-async-jobs/) | 1.3.12 | 8 skills + 1 agents | 9 |
-| [qa-cache-testing](plugins/qa-cache-testing/) | 1.4.1 | 4 skills + 1 agents | 5 |
+| [qa-cache-testing](plugins/qa-cache-testing/) | 1.4.2 | 4 skills + 1 agents | 5 |
 | [qa-concurrency](plugins/qa-concurrency/) | 1.2.23 | 4 skills + 1 agents | 5 |
-| [qa-db-migrations](plugins/qa-db-migrations/) | 1.3.5 | 4 skills + 1 agents | 5 |
+| [qa-db-migrations](plugins/qa-db-migrations/) | 1.3.6 | 4 skills + 1 agents | 5 |
 | [qa-distributed-tracing](plugins/qa-distributed-tracing/) | 1.2.6 | 4 skills + 1 agents | 5 |
 | [qa-serverless](plugins/qa-serverless/) | 1.5.1 | 4 skills + 1 agents | 5 |
 | [qa-saga-cqrs](plugins/qa-saga-cqrs/) | 1.3.3 | 3 skills + 1 agents | 4 |

@@ -1,6 +1,6 @@
 ---
 name: cache-key-discriminator-audit
-description: "Use when a cache key is designed or changed, a per-user or per-tenant response is about to go into a shared cache or CDN, or someone saw another user's data. Checks the key holds every value the response depends on (tenant, user, scope, locale) and writes the fixed key and Vary header."
+description: "Use whenever a user saw another user's or tenant's data, or a per-user response goes through a shared cache, Redis or a CDN, or a cache key is designed or changed. Checks the key holds every value the response depends on (tenant, user, scope, locale), writes the fixed key, Vary header and tests."
 ---
 
 # cache-key-discriminator-audit

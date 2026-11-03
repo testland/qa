@@ -1,9 +1,9 @@
 {
   "name": "testland/pci-dss-control-test-author",
-  "description": "Use when a system handling payment card data needs PCI DSS v4.0 tests or an SAQ level: cardholder data environment boundaries, network segmentation, no stored CVV, track data or PIN, key management, encrypted transmission, and scope reduction with hosted fields or tokens.",
+  "description": "Use whenever tests must prove payment card handling meets PCI DSS v4.0: no stored or logged CVV, full card number (PAN), track data or PIN, card data only over strong TLS, cardholder data environment boundaries and segmentation, key management, SAQ level, scope reduction with hosted fields.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.14"
+  "version": "1.3.15"
 }
