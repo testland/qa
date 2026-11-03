@@ -1,9 +1,9 @@
 {
   "name": "testland/synthetic-data-toolkit",
-  "description": "Use when tests need typed factories beyond plain Faker values: FactoryBot for Ruby (traits, associations), Mimesis for Python bulk data, Bogus for .NET Faker<T> builders, or a decision on which generator fits. Shows the same fixture in each tool; faker-data stays the default for simple values.",
+  "description": "Use whenever someone asks for test factories or a FactoryBot setup, even a quick one: factories with traits and associations (Ruby, Rails), Mimesis bulk data (Python), Bogus Faker<T> builders (.NET), or which generator fits. Same fixture in each tool; plain fake values stay with faker-data.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

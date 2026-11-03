@@ -1,7 +1,7 @@
 {
   "testland-essentials": {
-    "version": "1.0.1",
-    "hash": "e68eefe72ffd212761e3b502aa486f6f39588b92d2607083b37e42c12b7dd937",
+    "version": "1.0.3",
+    "hash": "5eb408b4f1fb10519ff392f72aa38aa4b6173cfe4b5a8bc414eabd6b7f523b53",
     "skills": [
       "attack-surface-test-checklist",
       "definition-of-done",
@@ -77,8 +77,8 @@
     ]
   },
   "testland-backend": {
-    "version": "1.0.1",
-    "hash": "864506d0cab7e2e04a51a7219f22c70a195facfd5031039b17d47f51064c8ab1",
+    "version": "1.0.2",
+    "hash": "ac3f812d24d1c70527bb5e5d448bdcb7a73c9b4b14e75fbd2d5c062863debf50",
     "skills": [
       "bullmq-tests",
       "celery-tests",
@@ -190,8 +190,8 @@
     ]
   },
   "testland-security": {
-    "version": "1.0.1",
-    "hash": "62e66c851957ca8dfe5de8f49dc576e475cbd7be79dc8fb781c0f13af2f35a9f",
+    "version": "1.0.2",
+    "hash": "eb8e967ad59f0be5dc719ee8bf809cd5521420eb305668f698468c1ab8bad423",
     "skills": [
       "codeql-queries",
       "cve-exploitability-triage",
@@ -368,8 +368,8 @@
     ]
   },
   "testland-mobile-desktop": {
-    "version": "1.0.1",
-    "hash": "240d896e34eb1b76fa19c352b4486a370f6b10781ed49d98ec514772f10dc119",
+    "version": "1.0.2",
+    "hash": "12a46cd5057266d0a97ca9ba4a9e309ffdc94bc6571a308309db47d6f87a8872",
     "skills": [
       "appium-testing",
       "detox-testing",

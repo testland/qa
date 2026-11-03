@@ -1,9 +1,9 @@
 ---
 name: reachability-analyzer
-description: "Use when dependency vulnerability scan output is too noisy and CVEs in code that is never loaded should be set aside. Finds unused dependencies with depcheck or knip (JS), vulture (Python) and cargo-machete (Rust) and downranks their findings. EPSS and KEV ranking is cve-exploitability-triage."
+description: "Use whenever npm audit, OSV-Scanner or Snyk reports too many vulnerabilities and only the ones that matter should count. Finds dependencies the code never uses with knip or depcheck (JS), vulture (Python) or cargo-machete (Rust) and downranks their CVEs. EPSS and KEV: cve-exploitability-triage."
 metadata:
   keywords: "reachability, dead-dependencies, sca, depcheck, knip, vulture, cargo-machete, prioritization"
-  version: "1.2.10"
+  version: "1.2.11"
 ---
 
 # reachability-analyzer

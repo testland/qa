@@ -1,6 +1,6 @@
 ---
 name: migration-operation-taxonomy
-description: "Use when a database migration appears in a diff or review queue and someone must decide which statements are safe before it hits a large production table. Classifies each statement (additive, locking, breaking, data-loss and more) with the lock and rewrite behavior of PostgreSQL or MySQL."
+description: "Use whenever someone asks if a database migration is safe to run in production: rename or drop a column, add NOT NULL or a default, add an index or foreign key, change a type on a large PostgreSQL or MySQL table. Classifies each statement (additive, locking, breaking, data-loss) by lock and rewrite."
 ---
 
 # Migration operation taxonomy

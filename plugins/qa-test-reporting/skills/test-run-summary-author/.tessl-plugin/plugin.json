@@ -1,9 +1,9 @@
 {
   "name": "testland/test-run-summary-author",
-  "description": "Use when a release note, status update or stand-up post needs a readable summary of one test run. Turns JUnit XML, Allure JSON or a TestRail, Xray or Zephyr export plus release context into a short narrative in markdown.",
+  "description": "Use whenever someone asks to write a test-run summary, release test status or Slack post from test results, even from a few numbers: pass, fail and skip counts, JUnit XML, Allure JSON, a TestRail, Xray or Zephyr export. Writes the markdown narrative: a pass/fail lead, deltas and failure owners.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.13"
+  "version": "1.4.14"
 }

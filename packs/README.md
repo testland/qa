@@ -55,17 +55,18 @@ Case folders starting `r-` are a random sample, eight skills per pack picked
 with the seed `testland-pilot-<pack>`, so every pack is measured the same way;
 `p-` cases in `testland-web` cover Playwright, Cypress and Selenium. Run one
 group with `claude plugin eval . --case 'r-*'` from `build/packs/<pack>` after
-copying the cases in, as the script does. Results on 30 Oct 2026, as skills
-loaded out of runs (3 runs per case; ai counted after fixing one prompt that
-pointed at a missing file):
+copying the cases in, as the script does. Results as skills loaded out of runs
+(3 runs per case; ai counted after fixing one prompt that pointed at a missing
+file). The 3 Nov column is after the trigger-first rewrite of eight weak
+descriptions:
 
-| Pack | Random sample |
-|---|---|
-| api, web, unit-testing, ai, performance, manual-testing, leadership | 24 / 24 |
-| mobile-desktop | 23 / 24 |
-| security | 21 / 24 |
-| backend | 20 / 24 |
-| essentials | 13 / 24 |
+| Pack | 30 Oct 2026 | 3 Nov 2026 |
+|---|---|---|
+| api, web, unit-testing, ai, performance, manual-testing, leadership | 24 / 24 | not rerun |
+| mobile-desktop | 23 / 24 | 24 / 24 |
+| backend | 20 / 24 | 24 / 24 |
+| security | 21 / 24 | 23 / 24 |
+| essentials | 13 / 24 | 20 / 24 |
 
 A miss with one turn and no tool call means Claude answered from its own
 knowledge: the description needs a sharper trigger.
