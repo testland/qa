@@ -14,6 +14,12 @@ filtering, concurrency, and secrets. Start with the minimal pattern in
 Step 1.
 
 [gha]: https://docs.github.com/en/actions/using-workflows/about-workflows
+[syntax]: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
+[events]: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+[limits]: https://docs.github.com/en/actions/reference/limits
+[billing]: https://docs.github.com/en/billing/concepts/product-billing/github-actions
+[jest-shard]: https://jestjs.io/docs/cli#--shard
+[retry]: https://github.com/nick-fields/retry
 
 ## When to use
 
@@ -57,9 +63,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: '24' }
       - run: npm ci
       - run: npm test
 ```
@@ -77,17 +83,25 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node: [20, 22]
+        node: [22, 24]
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with: { node-version: ${{ matrix.node }} }
       - run: npm ci
       - run: npm test
 ```
 
-`fail-fast: false` ensures one matrix failure doesn't cancel
-others. Matrix size is OS × Node = 3 × 2 = 6 jobs.
+Per [workflow syntax][syntax], when `fail-fast` is true GitHub "will
+cancel all in-progress and queued jobs in the matrix if any job in the
+matrix fails", and "This property defaults to `true`". Set it to `false`
+explicitly so every OS and runtime reports. Matrix size is OS × Node =
+3 × 2 = 6 jobs; per [limits][limits], "A job matrix can generate a
+maximum of 256 jobs per workflow run."
+
+To let one experimental target fail without cancelling the rest, mark
+it with `continue-on-error: ${{ matrix.experimental }}`, which per
+[workflow syntax][syntax] "applies to a single job".
 
 Runner pinning, per-language runtime matrices (Node / Python / Java /
 .NET), OS-specific quirks (path separators, line endings, case
@@ -107,12 +121,15 @@ jobs:
         shard: [1, 2, 3, 4]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: npx jest --shard=${{ matrix.shard }}/4
 ```
 
-4 parallel jobs, each running 1/4 of the test suite. Faster than
-serial execution; cost-equivalent (same total CPU-time).
+4 parallel jobs, each running 1/4 of the test suite. Per
+[jest-cli][jest-shard], `--shard` takes `shardIndex/shardCount`, both
+"1-based, positive numbers". Wall-clock time drops; billed minutes stay
+about the same plus each job's setup time. Playwright (`--shard=1/4`)
+and pytest-xdist splitting follow the same matrix shape.
 
 ## Service containers and reporting
 
@@ -125,7 +142,8 @@ summaries are in
 
 GitHub Actions doesn't ship native test-retry; use the framework's
 retry mechanism (e.g., Playwright's `retries` config) or a wrapper
-action:
+action such as [nick-fields/retry][retry], which takes
+`timeout_minutes` (or `timeout_seconds`), `max_attempts` and `command`:
 
 ```yaml
 - uses: nick-fields/retry@v3
@@ -167,7 +185,23 @@ on:
 ```
 
 Path filters skip workflows when only docs change - saves CI
-budget.
+budget. Per [workflow syntax][syntax], "Use the paths-ignore filter when
+you only want to exclude file path patterns"; to include and exclude in
+one list, use `paths` with `!` prefixes.
+
+Per [events][events], "By default, scheduled workflows run in UTC", "The
+shortest interval you can run scheduled workflows is once every 5
+minutes", "Scheduled workflows run on the latest commit on the default
+branch", and the event "can be delayed during periods of high loads".
+Don't schedule a nightly run at minute 0 if timing matters; pick an odd
+minute.
+
+Per [workflow syntax][syntax], the filter decides "if a workflow should
+run" from the changed files. A workflow that doesn't run posts no status
+for its jobs, so if a branch rule requires one of those jobs, a PR that
+only touches docs waits for a check that never arrives. Keep path filters off
+workflows whose jobs are required checks, or filter inside the job
+instead.
 
 ## Step 8 - Concurrency control
 
@@ -178,7 +212,12 @@ concurrency:
 ```
 
 When a PR receives multiple pushes, the older runs cancel -
-saves CI cost on superseded commits.
+saves CI cost on superseded commits. Per [workflow syntax][syntax], a
+new run only replaces a pending one by default; "To also cancel any
+currently running job or workflow in the same concurrency group,
+specify cancel-in-progress: true". Don't use this group on `main`
+pushes that deploy: a cancelled deploy can leave an environment half
+updated.
 
 ## Step 9 - Secrets + env
 
@@ -219,9 +258,9 @@ full run against PostgreSQL.
 3. A separate `integration` job (Linux only) declares a
    `postgres:15` service with a `pg_isready` healthcheck and
    passes `DATABASE_URL` into `npm test`.
-4. Tests emit `test-results/junit.xml`; `actions/upload-artifact@v4`
+4. Tests emit `test-results/junit.xml`; `actions/upload-artifact@v7`
    with `if: always()` keeps the report even when tests fail, and
-   `dorny/test-reporter@v1` renders it in the PR check summary.
+   `dorny/test-reporter@v3` renders it in the PR check summary.
 5. A `concurrency` group keyed on the ref cancels superseded runs,
    so rapid pushes don't pile up billable minutes.
 
@@ -239,20 +278,39 @@ their JUnit report.
 | Hardcoded secrets in YAML                                              | Secret leak; revocation needed.                                           | `secrets.X` references (Step 9). |
 | Massive single workflow file                                            | Hard to navigate; merge conflicts.                                        | Split per concern (test.yml, deploy.yml, lint.yml). |
 | Missing `actions/checkout` step                                         | Job can't access repo files.                                              | First step always (Step 1). |
+| No `timeout-minutes` on the test job                                   | A hung test burns up to the 360-minute default.                           | `timeout-minutes: 20` (or the suite's p99 plus margin). |
+| Path filter on a workflow that runs a required check                   | The check never reports; docs-only PRs stay blocked.                       | Filter inside the job, or keep the workflow unfiltered (Step 7). |
 
 ## Limitations
 
-- **Runner cost.** macOS / Windows runners 5x-10x more expensive
-  than Linux (after free quota). Budget accordingly.
-- **Per-job 6h timeout.** Long jobs need splitting.
-- **Service containers Linux-only.** macOS / Windows runners don't
-  support `services:` block.
-- **JUnit reporting requires a third-party action.** No native.
+- **Runner cost.** Per [billing][billing], "jobs that run on Windows and
+  macOS runners hosted by GitHub cost more to run than jobs on Linux
+  runners"; its example prices Linux at $0.006 per minute and Windows at
+  $0.010. Run the full OS matrix on `main` or nightly, Linux on PRs.
+- **Per-job 6h timeout.** Per [limits][limits], "Each job in a workflow
+  can run for up to 6 hours of execution time", and per [workflow
+  syntax][syntax] `timeout-minutes` defaults to 360. Set a much lower
+  `timeout-minutes` on test jobs so a hung test fails in minutes, not
+  hours.
+- **Service containers Linux-only.** Per [workflow syntax][syntax],
+  service containers need a Linux runner ("If you are using GitHub-hosted
+  runners, you must use an Ubuntu runner").
+- **No built-in JUnit XML viewer.** Upload the XML as an artifact and
+  render it with a reporter action such as `dorny/test-reporter`.
 
 ## References
 
 - [gha][gha] - GitHub Actions workflow basics: events + jobs +
   steps; YAML in `.github/workflows/`.
+- [syntax][syntax] - workflow syntax: `fail-fast` default, `continue-on-error`,
+  `paths-ignore`, `concurrency` and `cancel-in-progress`,
+  `timeout-minutes` default, Linux-only service containers.
+- [events][events] - `schedule` (UTC, 5-minute minimum, default branch,
+  delays) and `workflow_dispatch`.
+- [limits][limits] - 6-hour job limit, 256-job matrix limit.
+- [billing][billing] - per-minute runner rates by OS.
+- [jest-shard][jest-shard] - Jest `--shard` format.
+- [retry][retry] - `nick-fields/retry` inputs.
 - [references/os-matrix.md](references/os-matrix.md) - OS / runtime matrix depth + per-OS quirks.
 - [references/services-and-reporting.md](references/services-and-reporting.md) - service container + JUnit reporting recipes.
 - `gitlab-ci-test-jobs`,

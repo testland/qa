@@ -11,6 +11,8 @@ Per [docs.pytest.org/en/stable][pt-docs]:
 
 [pt-docs]: https://docs.pytest.org/en/stable/
 [pt-raises]: https://docs.pytest.org/en/stable/how-to/assert.html#assertions-about-expected-exceptions
+[pt-config]: https://docs.pytest.org/en/stable/reference/customize.html
+[pt-changelog]: https://docs.pytest.org/en/stable/changelog.html
 
 pytest is the de facto Python test framework. Unlike stdlib `unittest`, it
 uses function-style tests (no `TestCase`), fixture-based dependency
@@ -38,7 +40,7 @@ code hygiene (assertions, AAA, mocking anti-patterns) is in
 ## Step 1 - Install
 
 ```bash
-pip install pytest
+pip install "pytest>=9"
 # Common plugins:
 pip install pytest-cov pytest-asyncio pytest-mock pytest-xdist
 ```
@@ -63,25 +65,47 @@ pytest auto-discovers via `test_*.py` / `*_test.py` filenames and `test_*` /
 
 ## Step 3 - Configuration
 
-`pytest.ini` (or `pyproject.toml` `[tool.pytest.ini_options]` / `setup.cfg`
-`[tool:pytest]`):
+pytest 9 (2025-11-05) reads native TOML. Per [pt-config][pt-config]:
+"Use `[tool.pytest]` to leverage native TOML types (supported since
+pytest 9.0)". New projects on pytest 9+ use that table:
 
 ```toml
-# pyproject.toml
-[tool.pytest.ini_options]
+# pyproject.toml (pytest 9+)
+[tool.pytest]
+minversion = "9.0"
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = "-ra --strict-markers --strict-config"
+addopts = ["-ra"]
+strict = true
 markers = [
     "slow: marks tests as slow (deselect with -m 'not slow')",
     "integration: marks tests requiring DB/external resources",
 ]
 ```
 
-`--strict-markers` rejects undeclared marker names - catches typos like
+Per the [changelog][pt-changelog], `strict = true` enables
+`strict_config`, `strict_markers`, `strict_parametrization_ids` and
+`strict_xfail` in one switch, and future strictness options join it.
+Strict markers reject undeclared names, which catches typos like
 `@pytest.mark.skipp` (silently skipped before).
+
+Other config locations, and what to keep when a project already has one:
+
+| File and table | pytest version | Notes |
+|---|---|---|
+| `pyproject.toml` `[tool.pytest]` | 9.0+ | Native TOML lists, booleans and numbers. |
+| `pyproject.toml` `[tool.pytest.ini_options]` | 6.0+ | INI-style string values (`addopts = "-ra -q"`). Per the changelog it "can't be used alongside `[tool.pytest]`": convert, don't add a second table. |
+| `pytest.toml` or `.pytest.toml` `[pytest]` | 9.0+ | Per [pt-config][pt-config], "`pytest.toml` files take precedence over other files, even when empty." |
+| `pytest.ini`, `tox.ini` `[pytest]`, `setup.cfg` `[tool:pytest]` | all | Older INI formats; still read. |
+
+Per [pt-config][pt-config], "Options from multiple `configfiles`
+candidates are never merged - the first match wins", so a stray
+`pytest.ini` silently hides the `pyproject.toml` table. Check which file
+pytest picked from the `configfile:` line in the run header.
+
+On pytest 8 or older, keep `[tool.pytest.ini_options]` with
+`addopts = "-ra --strict-markers --strict-config"`; the `strict` switch
+does not exist there.
 
 ## Step 4 - Fixtures
 
@@ -203,7 +227,7 @@ drops never-coverable lines from the denominator.
 ```yaml
 - run: pip install -e .[dev]
 - run: pytest --cov --cov-report=xml --cov-fail-under=80 --junitxml=junit.xml
-- uses: codecov/codecov-action@v4
+- uses: codecov/codecov-action@v7
   with: { files: coverage.xml }
 ```
 
@@ -212,7 +236,25 @@ qa-test-reporting); `--cov-report=xml` emits `coverage.xml` for the
 uploader. Parallel: `pytest -n auto` via pytest-xdist distributes tests
 across workers; pytest-cov merges per-worker data automatically.
 
-## Step 10 - Fast-feedback flags
+## Step 10 - Subtests for one test over many items
+
+pytest 9 adds a `subtests` fixture. Per the [changelog][pt-changelog], its
+`subtests.test()` context manager "reports each failing subtest
+separately", and the feature is marked experimental. Use it when one
+test checks many items and every failure should show, not only the
+first:
+
+```python
+def test_every_price_rounds_to_cents(subtests, catalog):
+    for item in catalog:
+        with subtests.test(msg=item.sku):
+            assert round(item.price, 2) == item.price
+```
+
+Prefer `@pytest.mark.parametrize` when the inputs are known at
+collection time; subtests fit data produced at run time.
+
+## Step 11 - Fast-feedback flags
 
 ```bash
 pytest --lf            # only re-run last-failed tests
@@ -226,8 +268,9 @@ pytest -s              # don't capture stdout (see print() output)
 
 When authoring a new unit test in an existing project:
 
-1. **Detect the framework, never assume.** Check `pyproject.toml`
-   (`[tool.pytest.ini_options]` or pytest in dev-deps), `setup.cfg`
+1. **Detect the framework, never assume.** Check `pytest.toml`,
+   `pyproject.toml` (`[tool.pytest]`, `[tool.pytest.ini_options]` or
+   pytest in dev-deps), `setup.cfg`
    (`[tool:pytest]`), `tox.ini` (`[pytest]`); then grep existing tests -
    `unittest.TestCase` subclasses → unittest; otherwise default to pytest.
    Doctest is opt-in per-module, only when the spec explicitly asks for
@@ -263,7 +306,10 @@ When authoring a new unit test in an existing project:
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | `setUp` / `tearDown` (TestCase style) in new pytest code | Loses dependency-injection benefits | Fixtures (Step 4) |
-| Skip `--strict-markers` | Marker typos silently skip tests | Always set in config (Step 3) |
+| Skip strict mode (`strict = true` on pytest 9, `--strict-markers` before) | Marker typos silently skip tests | Always set in config (Step 3) |
+| Both `[tool.pytest]` and `[tool.pytest.ini_options]` in one `pyproject.toml` | pytest 9 refuses the combination | Convert to one table (Step 3) |
+| A leftover `pytest.ini` next to a `pyproject.toml` table | First config file wins; the other is ignored without warning | Keep one config file (Step 3) |
+| Passing `ids`, `indirect` or `scope` positionally to `parametrize` | Raises `TypeError` since pytest 9.2 ([changelog][pt-changelog]) | Pass them as keywords |
 | `scope='session'` fixtures for stateful resources | State leaks across tests | Function scope unless setup is expensive |
 | `pytest -k 'expr'` in CI to skip slow tests | Brittle string match | `-m` markers (Step 6) |
 | Skip `--cov-fail-under` in CI | Coverage drops silently over time | Always gate coverage (Step 8) |
@@ -281,6 +327,10 @@ When authoring a new unit test in an existing project:
 ## References
 
 - [pt-docs][pt-docs] - official pytest documentation
+- [pt-config][pt-config] - config files: `[tool.pytest]`, `pytest.toml`,
+  precedence, first match wins
+- [pt-changelog][pt-changelog] - pytest 9.0 native TOML, `strict`,
+  subtests; 9.2 keyword-only `parametrize` arguments
 - docs.pytest.org/en/stable/how-to/fixtures.html - fixtures
 - docs.pytest.org/en/stable/how-to/parametrize.html - parametrize
 - [pt-raises][pt-raises] - `pytest.raises` and `match` for expected exceptions
