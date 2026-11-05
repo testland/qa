@@ -25,7 +25,7 @@ jobs:
         image: redis:7
         ports: [6379:6379]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: npm ci
       - run: npm test
         env:
@@ -42,13 +42,13 @@ DB is ready.
 ```yaml
 - run: npm test -- --reporters=default --reporters=jest-junit
 
-- uses: actions/upload-artifact@v4
+- uses: actions/upload-artifact@v7
   if: always()
   with:
     name: test-results
     path: test-results/
 
-- uses: dorny/test-reporter@v1
+- uses: dorny/test-reporter@v3
   if: always()
   with:
     name: Test results

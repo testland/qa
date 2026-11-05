@@ -1,6 +1,6 @@
 ---
 name: restassured-testing
-description: "Use whenever Java/JVM API tests need writing or fixing: loose assertions that let an empty 200 pass, slow sequential suites, or hand-rolled HTTP clients. Writes REST Assured given/when/then tests with status, JSON and XML path assertions, auth, JUnit 5, Maven or Gradle and CI reports."
+description: "Use whenever Java/JVM API tests need writing or fixing: loose assertions that let an empty 200 pass, slow sequential suites, or hand-rolled HTTP clients. Writes REST Assured given/when/then tests: status, JSON and XML path checks, auth, reusable specs, schema checks, Maven or Gradle and CI reports."
 ---
 
 # restassured-testing
@@ -15,6 +15,7 @@ content types via path expressions backed by Hamcrest matchers
 
 [readme]: https://github.com/rest-assured/rest-assured
 [usage]: https://github.com/rest-assured/rest-assured/wiki/Usage
+[changelog]: https://github.com/rest-assured/rest-assured/blob/master/changelog.txt
 
 This is the JVM-native counterpart to
 `postman-collections`. Use REST
@@ -37,28 +38,61 @@ If the team is non-JVM, evaluate
 
 ## Install
 
+REST Assured 6.3.0 (2026-10-23) is current; per the [changelog][changelog],
+6.0.0 set the "New minimum Java baseline" to 17.
+
 ### Maven
 
 ```xml
 <dependency>
     <groupId>io.rest-assured</groupId>
     <artifactId>rest-assured</artifactId>
-    <version>6.0.0</version>
+    <version>6.3.0</version>
+    <scope>test</scope>
+</dependency>
+<!-- Optional: body(matchesJsonSchemaInClasspath(..)) -->
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>json-schema-validator</artifactId>
+    <version>6.3.0</version>
     <scope>test</scope>
 </dependency>
 ```
 
-(Per [restassured-usage][usage].)
-
-For JSON Schema validation, add `json-schema-validator` from the
-same group; for path-style assertions on JSON, the core dependency
-is enough.
+(Per [restassured-usage][usage].) Keep every `io.rest-assured` module on
+the same version: with two or more modules, import
+`io.rest-assured:rest-assured-bom` in `dependencyManagement` instead of
+repeating the version. Spring Boot's dependency management can pin an
+older REST Assured; set the `rest-assured.version` property to override
+it.
 
 ### Gradle
 
-```groovy
-testImplementation 'io.rest-assured:rest-assured:6.0.0'
+```kotlin
+testImplementation(platform("io.rest-assured:rest-assured-bom:6.3.0"))
+testImplementation("io.rest-assured:rest-assured")
+testImplementation("io.rest-assured:json-schema-validator")
 ```
+
+### Upgrading from 5.x
+
+Per the [changelog][changelog]:
+
+- **6.0.0** raises the baselines to Java 17 and Groovy 5.x and adds
+  Jackson 3 object mapping.
+- **6.2.0** changes specification behavior. A spec from
+  `RequestSpecBuilder.build()` can no longer send a request itself
+  (`spec.when().get(..)` throws `IllegalStateException`; use
+  `given(spec)`), and per [usage][usage], merging a spec "only overwrites
+  values that the merged specification sets itself" where "Before REST
+  Assured 6.2.0 values such as the base URI, port and authentication were
+  reset by a merge". Re-run suites that layer several specs.
+- **6.3.0** adds an OpenRewrite recipe,
+  `io.restassured.MigrateRestAssured6Deprecations`, in the
+  `rest-assured-openrewrite` module, that moves code off APIs deprecated
+  in 6.x. It also publishes `json-path-gpath` and `xml-path-gpath`, the
+  REST Assured 7.0.0 names of `json-path` and `xml-path`; switch
+  explicit `json-path` dependencies to them before 7.0.
 
 ## Authoring
 
@@ -125,6 +159,72 @@ then().body("greeting.firstName", equalTo("John"));
 ```
 
 (Per [restassured-usage][usage].)
+
+### Reuse request and response specifications
+
+Per [usage][usage] (Specification Re-use), build shared setup once with
+`RequestSpecBuilder` and shared expectations with `ResponseSpecBuilder`:
+
+```java
+RequestSpecification api = new RequestSpecBuilder()
+    .setBaseUri(System.getProperty("api.baseURI", "http://localhost:8080"))
+    .setContentType(ContentType.JSON)
+    .addHeader("Authorization", "Bearer " + System.getenv("API_TOKEN"))
+    .build();
+
+ResponseSpecification okJson = new ResponseSpecBuilder()
+    .expectStatusCode(200)
+    .expectContentType(ContentType.JSON)
+    .build();
+
+given(api).
+when().get("/orders/42").
+then().spec(okJson).body("status", equalTo("shipped"));
+```
+
+Per-test values set on `given()` merge on top of the spec. Since 6.2.0 a
+merge keeps values the spec does not set (see "Upgrading from 5.x").
+
+### Extract values for the next call
+
+Per [usage][usage], `extract()` returns a value after validation, which
+chains a create call into a read call without a second client:
+
+```java
+String id =
+    given(api).body(Map.of("sku", "BOOK0001", "qty", 1)).
+    when().post("/orders").
+    then().statusCode(201).extract().path("id");
+
+given(api).when().get("/orders/{id}", id).then().spec(okJson);
+```
+
+### Validate against a JSON Schema
+
+With the `json-schema-validator` module, per [usage][usage]:
+
+```java
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
+get("/products").then().assertThat().body(matchesJsonSchemaInClasspath("products-schema.json"));
+```
+
+The schema file lives in `src/test/resources/`. A schema check catches a
+renamed or dropped field that field-by-field assertions never looked at.
+
+### Log only when a check fails
+
+Per [usage][usage] ("Log if validation fails"), log the request and the
+response only for failing tests, so CI output shows the failing exchange
+without flooding passing runs:
+
+```java
+// Per request
+given().log().ifValidationFails().when().get("/orders/42").then().log().ifValidationFails();
+
+// Once for the whole suite
+RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+```
 
 ### Combined status + body assertion
 
@@ -226,9 +326,9 @@ jobs:
   restassured:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -244,7 +344,7 @@ jobs:
 
       - name: Surface JUnit results
         if: always()
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         with:
           name: REST Assured tests
           path: target/failsafe-reports/TEST-*.xml
@@ -252,7 +352,7 @@ jobs:
 
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: failsafe-reports
           path: target/failsafe-reports/
@@ -271,7 +371,10 @@ format as Newman's `--reporter-junit-export`.
 | Hard-coded `RestAssured.baseURI` in source                 | Tests bind to one environment; can't run against staging vs local.   | Read from system property: `RestAssured.baseURI = System.getProperty("api.baseURI", default);`. |
 | Inline tokens in source                                    | Secrets leak; PRs flag; rotation pain.                              | Read from env var: `System.getenv("API_TOKEN")`. |
 | `.basic()` without `.preemptive()`                         | Sends an unauthorized request first; doubles round trips and may fail on APIs that don't issue WWW-Authenticate. | Use `auth().preemptive().basic(...)`. |
-| Asserting only status code without body shape              | Status 200 with garbage body still passes. | Always assert at least one body field, ideally schema-validated. |
+| Asserting only status code without body shape              | Status 200 with garbage body still passes. | Always assert at least one body field, ideally schema-validated (`matchesJsonSchemaInClasspath`). |
+| Copying base URI, auth and content type into every test     | One header change means editing every test.                          | `RequestSpecBuilder` + `ResponseSpecBuilder` specs. |
+| Mixed `io.rest-assured` module versions                     | Mismatched modules fail at run time.                                  | `rest-assured-bom`. |
+| Logging every request and response in CI                    | Logs bury the one failing exchange.                                   | `enableLoggingOfRequestAndResponseIfValidationFails()`. |
 | One mega-assertion `body(equalTo(jsonString))`             | Diff is uninterpretable on failure.                                  | Multiple field-level `body(path, matcher)` calls; fail-fast naming surfaces which field is wrong. |
 | Mixing unit-test (`*Test.java`) and integration (`*IT.java`) by name only | Maven Surefire vs Failsafe gets confused; integration tests run during the unit-test phase. | Strict naming: `*Test.java` for unit (`mvn test`); `*IT.java` for integration (`mvn verify`). |
 
@@ -293,7 +396,10 @@ format as Newman's `--reporter-junit-export`.
   + Maven groupId.
 - [restassured-usage][usage] - full DSL reference: Maven dep XML,
   imports, status code, JSON/XML path, OAuth2, preemptive Basic,
-  API-key header.
+  API-key header, specification re-use and 6.2.0 merge rules,
+  `extract()`, JSON Schema validation, log if validation fails.
+- [changelog][changelog] - 6.0.0 Java 17 baseline, 6.2.0 specification
+  changes, 6.3.0 OpenRewrite recipe and `json-path-gpath` names.
 - `postman-collections` - 
   JSON-driven counterpart for non-JVM teams.
 - `schemathesis-fuzzing` - 

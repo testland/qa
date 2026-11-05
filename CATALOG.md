@@ -13,7 +13,7 @@ _Test process and strategy, test data, environments, reporting, impact analysis,
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-process](plugins/qa-process/) | 1.12.9 | 12 skills + 3 agents | 15 |
+| [qa-process](plugins/qa-process/) | 1.12.10 | 12 skills + 3 agents | 15 |
 | [qa-test-data](plugins/qa-test-data/) | 1.4.9 | 12 skills + 2 agents | 14 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.10 | 10 skills + 2 agents | 12 |
 | [qa-test-review](plugins/qa-test-review/) | 1.8.8 | 7 skills + 4 agents | 11 |
@@ -28,20 +28,20 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.11.7 | 8 skills + 2 agents | 10 |
-| [qa-mobile](plugins/qa-mobile/) | 1.6.8 | 8 skills + 1 agents | 9 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.12.0 | 8 skills + 2 agents | 10 |
+| [qa-mobile](plugins/qa-mobile/) | 1.7.0 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.9.5 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.3 | 7 skills + 1 agents | 8 |
-| [qa-api-testing](plugins/qa-api-testing/) | 1.7.9 | 6 skills + 1 agents | 7 |
+| [qa-api-testing](plugins/qa-api-testing/) | 1.7.10 | 6 skills + 1 agents | 7 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.11 | 5 skills + 2 agents | 7 |
 | [qa-embedded](plugins/qa-embedded/) | 1.4.3 | 6 skills + 1 agents | 7 |
 | [qa-desktop](plugins/qa-desktop/) | 1.3.4 | 5 skills + 1 agents | 6 |
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.4 | 6 skills + 0 agents | 6 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.23 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.2 | 2 skills + 0 agents | 2 |
-| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.6 | 2 skills + 0 agents | 2 |
+| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.7 | 2 skills + 0 agents | 2 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.6 | 1 skills + 0 agents | 1 |
-| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.2 | 1 skills + 0 agents | 1 |
+| [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.3 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.2 | 1 skills + 0 agents | 1 |
 
 ## Quality engineering
@@ -132,7 +132,7 @@ _CI integration, CLI tool testing, code-quality gates and manual testing._
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-manual-testing](plugins/qa-manual-testing/) | 1.10.10 | 6 skills + 1 agents | 7 |
-| [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.3 | 4 skills + 1 agents | 5 |
+| [qa-ci-integration](plugins/qa-ci-integration/) | 1.2.4 | 4 skills + 1 agents | 5 |
 | [qa-code-quality](plugins/qa-code-quality/) | 1.2.4 | 4 skills + 1 agents | 5 |
 | [qa-cli-tools](plugins/qa-cli-tools/) | 1.1.13 | 4 skills + 0 agents | 4 |
 

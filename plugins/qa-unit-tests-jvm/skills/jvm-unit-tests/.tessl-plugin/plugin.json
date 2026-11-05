@@ -1,9 +1,9 @@
 {
   "name": "testland/jvm-unit-tests",
-  "description": "Use whenever the task is to write, add, fix or review JVM unit tests in Java, Kotlin, Scala or Groovy: JUnit 5 by default, plus Kotest, Spock, ScalaTest and TestNG. Covers parameterized tests, lifecycle hooks, Mockito, AssertJ, JaCoCo coverage and Maven or Gradle CI.",
+  "description": "Use whenever the task is to write, add, fix or review JVM unit tests in Java, Kotlin, Scala or Groovy: JUnit 6 (Jupiter) by default and JUnit 5 upgrades, plus Kotest, Spock, ScalaTest and TestNG. Covers parameterized tests, lifecycle hooks, Mockito, AssertJ, JaCoCo coverage and Maven or Gradle CI.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

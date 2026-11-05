@@ -12,7 +12,17 @@ we're testing the right things?" Without it, test investment is
 gut-feel; with it, the team has a defensible artifact tying test
 work to risk and business goals.
 
-This skill produces the document.
+The ISTQB glossary defines a test strategy as "A high-level description
+of the test levels to be performed and the testing within those levels"
+([istqb-strategy][istqb-strategy]). This skill produces that document,
+then the per-feature risk-based plan under it (Step 5).
+
+[istqb-strategy]: https://istqb-glossary.page/test-strategy/
+[istqb-exit]: https://istqb-glossary.page/exit-criteria/
+[istqb-rbt]: https://istqb-glossary.page/risk-based-testing/
+[pyramid]: https://martinfowler.com/articles/practical-test-pyramid.html
+[wcag22]: https://www.w3.org/TR/WCAG22/
+[owasp-top10]: https://owasp.org/www-project-top-ten/
 
 ## When to use
 
@@ -60,16 +70,18 @@ larger horizons.
 
 ## 3. Test types per layer (the pyramid)
 
-Per the test pyramid (`test-pyramid-balancer`):
+Per the test pyramid (`test-pyramid-balancer`). The coverage targets
+below are example values to replace with the team's own; no standard
+fixes them.
 
-| Layer       | Coverage target | Tools | Owner |
+| Layer       | Coverage target (example) | Tools | Owner |
 |-------------|----------------:|-------|-------|
 | Unit         |       80%       | Jest, pytest, JUnit | Devs |
 | Integration  |       60%       | Testcontainers, supertest | Devs |
 | Contract     |       100% of consumer-provider pairs | Pact | Devs |
 | E2E          |       Critical paths (5-10 flows) | Playwright | QA |
 | Performance  |       Critical endpoints | k6 + Lighthouse CI | QA + SRE |
-| Security     |       OWASP Top 10 | Schemathesis + manual pen test | Security |
+| Security     |       OWASP Top 10 (2025) | Schemathesis + manual pen test | Security |
 | A11y         |       WCAG 2.2 AA | axe + manual review | QA |
 
 ## 4. Tooling
@@ -138,6 +150,31 @@ Release ships when:
 - [ ] Product manager
 - [ ] Security (if applicable)
 ```
+
+Sources behind the template sections:
+
+- **Section 2 (risk basis).** ISTQB defines risk-based testing as an
+  approach "to reduce the level of product risks and inform stakeholders
+  of their status", which "involves the identification of product risks
+  and the use of risk levels to guide the test process"
+  ([istqb-rbt][istqb-rbt]). That is why every layer's investment in
+  Section 3 traces back to a risk row.
+- **Section 3 (layers).** The pyramid's two rules from
+  [practical-test-pyramid][pyramid]: "Write tests with different
+  granularity" and "The more high-level you get the fewer tests you
+  should have". Keep E2E to the critical paths; per the same article,
+  "Due to their high maintenance cost you should aim to reduce the number
+  of end-to-end tests to a bare minimum."
+- **Section 3 (security and a11y rows).** "The OWASP Top 10 is the
+  reference standard for the most critical web application security
+  risks" ([owasp-top10][owasp-top10]); WCAG 2.2 is a W3C Recommendation
+  (12 December 2024) with "three levels of conformance ... A (lowest),
+  AA, and AAA (highest)" ([wcag22][wcag22]). Write down which level the
+  product must meet and who set it (a law, a contract, a policy).
+- **Section 7 (exit criteria).** ISTQB: exit criteria are conditions
+  "agreed upon with the stakeholders", and "Exit criteria are used to
+  report against and to plan when to stop testing" ([istqb-exit][istqb-exit]).
+  That is why each one must be measurable and signed off in Approval.
 
 ## Step 1a - Validate the draft before approval
 
@@ -234,7 +271,8 @@ silently rewriting prior versions.
 | No "risks NOT addressed" section in the plan                           | Audit gap; prioritization indistinguishable from neglect.                | Always include it (Step 5). |
 | Strategy authored once; never reviewed                                | Becomes obsolete; team distrusts.                                        | Quarterly cadence (Step 3). |
 | No exit criteria                                                       | "Done" is subjective; release decisions arbitrary.                       | Section 7 - explicit + measurable. |
-| Strategy = test plan                                                   | Strategy is high-level; per-feature plans are detailed (different artifact). | Use `risk-matrix` for per-feature. |
+| Strategy = test plan                                                   | Per [istqb-strategy][istqb-strategy] a strategy is "high-level"; per-feature plans are detailed (different artifact). | Use Step 5 and `risk-matrix` for per-feature plans. |
+| Copying the example coverage targets as if they were a standard        | 80% / 60% are placeholders; the right number depends on the codebase and risk. | Set targets from the risk matrix and current baseline. |
 | Owner column missing                                                   | Activities slip; "everyone owns it = nobody."                            | Section 8 explicit owners. |
 | Strategy in slides, not version-controlled                             | History lost; updates invisible.                                          | Markdown + git. |
 
@@ -249,6 +287,13 @@ silently rewriting prior versions.
 
 ## References
 
+- [istqb-strategy][istqb-strategy] - ISTQB glossary: test strategy.
+- [istqb-rbt][istqb-rbt] - ISTQB glossary: risk-based testing.
+- [istqb-exit][istqb-exit] - ISTQB glossary: exit criteria.
+- [pyramid][pyramid] - Martin Fowler site, "The Practical Test Pyramid":
+  test granularity, fewer high-level tests.
+- [owasp-top10][owasp-top10] - OWASP Top 10 (2025 edition).
+- [wcag22][wcag22] - WCAG 2.2, W3C Recommendation, conformance levels.
 - `risk-matrix` - feeds Section 2.
 - `test-pyramid-balancer` - 
   feeds Section 3.
