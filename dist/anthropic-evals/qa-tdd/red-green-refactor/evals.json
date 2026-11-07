@@ -1,0 +1,40 @@
+{
+  "skill_name": "red-green-refactor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Discount codes\n\n## Problem Description\n\nThe shop needs discount codes at checkout. Product wants `apply_discount(total,\ncode)` in `pricing.py`: SAVE10 takes 10% off, FLAT5 takes 5.00 off but the result\nnever goes below zero, and any other code raises ValueError. Amounts are\n`Decimal`.\n\n## Output Specification\n\nImplement `apply_discount` with tests, and tell us when it works.",
+      "expected_output": "Implement `apply_discount` with tests, and tell us when it works.",
+      "files": [
+        "evals/discount-codes-feature/files/pricing.py",
+        "evals/discount-codes-feature/files/tests/test_pricing.py",
+        "evals/discount-codes-feature/files/pyproject.toml"
+      ],
+      "assertions": [
+        "The existing suite is run before any change and its result noted.",
+        "At least one new test is run and seen failing on its assertion (or on a not-implemented stub) before apply_discount is implemented. Tests that are only ever seen passing score zero.",
+        "Tests cover SAVE10, FLAT5, FLAT5 on a total under 5.00 returning zero, and an unknown code raising ValueError (pytest.raises). Missing the floor-at-zero case or the error case scores at most half.",
+        "The implementation does not hard-code test inputs, and no expected value was copied from the code's output to make a test pass.",
+        "The final message names the test command and the real counts (for example '6 passed, was 2'), mentions the red run, and lists anything not verified. 'Should work' without a run scores zero."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# Split bill loses a cent\n\n## Problem Description\n\nSupport forwarded a ticket: splitting a $100.00 bill (10000 cents) three ways\nwith `split_bill` gives everyone 3333 cents, so the shares add up to 9999 and a\ncent goes missing. The existing tests pass.\n\n## Output Specification\n\nFix the bug in `billing.py`. When you report back, show how you know the fix\nworks.",
+      "expected_output": "Fix the bug in `billing.py`. When you report back, show how you know the fix\nworks.",
+      "files": [
+        "evals/split-bill-loses-a-cent/files/billing.py",
+        "evals/split-bill-loses-a-cent/files/tests/test_billing.py",
+        "evals/split-bill-loses-a-cent/files/pyproject.toml"
+      ],
+      "assertions": [
+        "A test for the reported case (10000 cents, 3 people) is written and run before billing.py is changed, and that run fails with the reported symptom (shares summing to 9999, or a list of three 3333s). Writing the test after the fix, or never running it before the fix, scores zero.",
+        "After the fix, the shares for (10000, 3) sum to 10000 and differ by at most one cent; test_even_split and test_rejects_zero_people still pass unchanged.",
+        "The full test suite is run after the change, not only the new test, and the result is reported with real counts.",
+        "The final message quotes the red run (command and failure) and the green run (command and pass count). A report that only says 'fixed' or 'should work' scores zero.",
+        "The reproduction test stays in the suite with a name describing the behavior (for example test_shares_add_up_to_total), not only a ticket number.",
+        "MUST NOT change the expected values of the existing tests."
+      ]
+    }
+  ]
+}

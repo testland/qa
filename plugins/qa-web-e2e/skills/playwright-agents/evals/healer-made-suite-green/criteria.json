@@ -1,0 +1,31 @@
+{
+  "context": "A healer diff mixing one good fix with three changes that hide product bugs. Predicted baseline failure: the reviewer accepts the locator fix, may question the toBeVisible change, but treats the $80.00 to $100.00 edit as the healer 'updating to current behavior' and counts the test.fixme as a reasonable skip, so a broken coupon and a broken gift-card checkout ship with a green suite.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Not approved as is",
+      "max_score": 10,
+      "description": "The review does not approve the diff as a whole."
+    },
+    {
+      "name": "Expected-value change flagged as a likely product bug",
+      "max_score": 30,
+      "description": "The apply-coupon edit from $80.00 to $100.00 is called out as the coupon no longer being applied, a product bug the healer hid, to be reverted unless the pricing rule changed on purpose."
+    },
+    {
+      "name": "Loosened assertion rejected",
+      "max_score": 20,
+      "description": "The shipping change from toHaveText to toBeVisible is rejected because it no longer checks the message."
+    },
+    {
+      "name": "test.fixme treated as a bug report",
+      "max_score": 25,
+      "description": "The gift-card test.fixme is treated as a bug to file or fix, with the test kept, not as a healed test."
+    },
+    {
+      "name": "Good locator fix accepted",
+      "max_score": 15,
+      "description": "The address change from #addr-line-1 to getByLabel('Address line 1') is accepted."
+    }
+  ]
+}

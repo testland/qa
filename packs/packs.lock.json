@@ -236,12 +236,13 @@
     ]
   },
   "testland-web": {
-    "version": "1.0.3",
-    "hash": "5d87b7ff43979fae3cc905652ce4d74e82a05def1d305b6314d6f9ca8cb5ba97",
+    "version": "1.1.0",
+    "hash": "79f6218873d476ac65af1698983d660f98f8850b9850f96ab33ca46f18167066",
     "skills": [
       "browser-matrix-strategy-reference",
       "cloud-grid-e2e",
       "cypress-testing",
+      "playwright-agents",
       "playwright-testing",
       "selenium-grid-4-runner",
       "selenium-testing",
@@ -287,9 +288,10 @@
     ]
   },
   "testland-unit-testing": {
-    "version": "1.0.3",
-    "hash": "209f5123f45576e0499862ffc0ec550caa38e6f13f621b35dea31607e8339758",
+    "version": "1.1.1",
+    "hash": "1c2ca7b379741d857b0653582efcd28a45f5f5dd9c949c267a632085f4be8d63",
     "skills": [
+      "red-green-refactor",
       "js-unit-tests",
       "pytest-asyncio-patterns",
       "python-unit-tests",

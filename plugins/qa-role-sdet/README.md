@@ -1,10 +1,10 @@
 # SDET (role bundle)
 
-SDET role bundle: one-command install of the full automation-engineer stack plus per-language unit testing (JS/TS, Python, JVM, .NET, Go/Rust), contract testing, mutation testing, code quality, test impact analysis, and load testing.
+SDET role bundle: one-command install of the full automation-engineer stack plus test-driven development, per-language unit testing (JS/TS, Python, JVM, .NET, Go/Rust), contract testing, mutation testing, code quality, test impact analysis, and load testing.
 
 Unlike the tech-domain bundles (`qa-role-frontend`, `qa-role-backend`), this bundle is organized around the **job role**: an SDET builds and owns test infrastructure across layers - frameworks and harnesses, unit/integration depth in product languages, contract and mutation testing, performance scripting, and suite economics - on top of everything a test automation engineer does. If you only automate on top of an existing framework, `qa-role-automation-engineer` is the lighter install; work in a single language? Install just that language's unit-test plugin individually.
 
-Installing this one plugin installs all 19 member plugins below in a single command.
+Installing this one plugin installs all 20 member plugins below in a single command.
 
 ## Install
 
@@ -31,6 +31,7 @@ The automation-engineer stack:
 
 Plus the SDET depth:
 
+- **qa-tdd** - Test-driven development: red-green-refactor, failing-test-first bug fixes, test evidence before "done"
 - **qa-unit-tests-js** - JS/TS unit testing (Jest, Vitest, Mocha, AVA, Jasmine)
 - **qa-unit-tests-python** - Python unit testing (pytest, unittest, doctest, nose2)
 - **qa-unit-tests-jvm** - JVM unit testing (JUnit 5, Kotest, Spock, TestNG, ScalaTest)

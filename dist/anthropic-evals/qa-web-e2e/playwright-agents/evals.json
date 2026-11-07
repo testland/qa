@@ -1,0 +1,42 @@
+{
+  "skill_name": "playwright-agents",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "# Agent browser for a monorepo\n\n## Problem Description\n\nClaude Code works in a large monorepo all day. Now and then it needs to open a\nstaging page to check a UI change it just made. A colleague proposes adding the\nPlaywright MCP server for that. The team also wants generated E2E tests later,\nusing Playwright's own agents.\n\n## Output Specification\n\nWrite `browser-setup.md` with a recommendation for the occasional page checks\nand the exact setup commands, then the setup for Playwright's test-writing\nagents, including what has to happen when Playwright is upgraded.",
+      "expected_output": "Write `browser-setup.md` with a recommendation for the occasional page checks\nand the exact setup commands, then the setup for Playwright's test-writing\nagents, including what has to happen when Playwright is upgraded.",
+      "assertions": [
+        "Recommends playwright-cli (@playwright/cli) for occasional checks from Claude Code, with MCP positioned for long-running or MCP-only loops.",
+        "Explains that MCP tool schemas and accessibility snapshots load into the conversation, while the CLI keeps them out.",
+        "Gives `npm install -g @playwright/cli@latest` (or the bundled `npx playwright cli`) and, if MCP is mentioned, `claude mcp add playwright npx @playwright/mcp@latest`.",
+        "Gives `npx playwright init-agents --loop=claude` and names what it writes: planner, generator and healer definitions under .claude/agents/, .mcp.json, seed.spec.ts.",
+        "Says to put the real setup (fixtures, sign-in) in seed.spec.ts and to re-run init-agents whenever @playwright/test is upgraded.",
+        "Says healer changes need human review, because it may change expected values or mark tests test.fixme."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "# CI trace without a display\n\n## Problem Description\n\n`tests/checkout/apply-coupon.spec.ts` (Playwright 1.65) failed on CI only. The CI\nartifact is downloaded and the trace is at\n`test-results/checkout-apply-coupon-chromium/trace.zip`. The coding agent that\nwill investigate runs in a terminal with no display.\n\n## Output Specification\n\nWrite `debug-plan.md` listing the exact commands, in order, to find the failing\nstep, see expected versus received, and look at the page at that moment, plus\nhow to step through the test live if the trace is not enough.",
+      "expected_output": "Write `debug-plan.md` listing the exact commands, in order, to find the failing\nstep, see expected versus received, and look at the page at that moment, plus\nhow to step through the test live if the trace is not enough.",
+      "assertions": [
+        "The plan uses `npx playwright trace open <zip>`, then `trace actions` (optionally with --grep) and `trace action <n>` to read the error with expected vs received.",
+        "The plan uses `npx playwright trace snapshot <n> --name after` (or before) to see the DOM at the failing step.",
+        "show-trace or trace.playwright.dev appear only as an optional human step, not as the agent's method.",
+        "For live stepping, the plan uses `npx playwright test <file> --debug=cli` and attaches with `playwright-cli attach <id>`, rather than --debug or --ui, which open windows.",
+        "Mentions keeping traces of passing and failing attempts (for example trace: 'retain-on-failure-and-retries') to compare them."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# Healer made the suite green\n\n## Problem Description\n\nThe team runs Playwright's healer agent overnight. This morning the suite is\ngreen again and the healer left the diff below. The team lead wants to know\nwhether to merge it.\n\n## Output Specification\n\nReview the diff and give a merge decision for each changed file, with the reason.",
+      "expected_output": "Review the diff and give a merge decision for each changed file, with the reason.",
+      "assertions": [
+        "The review does not approve the diff as a whole.",
+        "The apply-coupon edit from $80.00 to $100.00 is called out as the coupon no longer being applied, a product bug the healer hid, to be reverted unless the pricing rule changed on purpose.",
+        "The shipping change from toHaveText to toBeVisible is rejected because it no longer checks the message.",
+        "The gift-card test.fixme is treated as a bug to file or fix, with the test kept, not as a healed test.",
+        "The address change from #addr-line-1 to getByLabel('Address line 1') is accepted."
+      ]
+    }
+  ]
+}
