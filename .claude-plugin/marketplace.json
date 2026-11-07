@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Quality engineering plugin marketplace for modern software teams: data quality, visual regression, contract testing, flake triage, bug reproduction, manual testing, BDD, property-based, chaos, shift-left, shift-right, security testing (SAST/DAST/SCA/SBOM/secrets/compliance), LLM evaluation, ML model testing, distributed tracing, real-time protocols, PDF/print, search relevance, concurrency, saga/CQRS, charts, resilience drills, and more. Every component is rating-gated before merge.",
-    "version": "5.5.0"
+    "version": "5.6.0"
   },
   "plugins": [
     {
@@ -181,7 +181,7 @@
     {
       "name": "qa-web-e2e",
       "source": "./plugins/qa-web-e2e",
-      "description": "Web E2E testing with Playwright, Cypress, Selenium and WebdriverIO, plus cloud grids, a self-hosted Selenium Grid 4, and cross-browser test matrices. Covers BrowserStack, Sauce Labs and LambdaTest, traffic-based T1/T2/T3 browser tiers, and a framework decision guide. Agents (playwright-codegen-reviewer, automation-harness-bootstrapper) refactor recorded Playwright or Cypress Studio specs and scaffold a full E2E harness for a repo with no suite.",
+      "description": "Web E2E testing with Playwright, Cypress, Selenium and WebdriverIO, plus cloud grids, a self-hosted Selenium Grid 4, and cross-browser test matrices. Covers BrowserStack, Sauce Labs and LambdaTest, traffic-based T1/T2/T3 browser tiers, a framework decision guide, and Playwright's agent tooling (playwright-cli, Playwright MCP, planner/generator/healer Test Agents). Agents (playwright-codegen-reviewer, automation-harness-bootstrapper) refactor recorded Playwright or Cypress Studio specs and scaffold a full E2E harness for a repo with no suite.",
       "strict": true,
       "category": "functional-testing"
     },
@@ -545,9 +545,16 @@
     {
       "name": "qa-role-sdet",
       "source": "./plugins/qa-role-sdet",
-      "description": "SDET role bundle: one-command install of the full automation-engineer stack plus per-language unit testing (JS/TS, Python, JVM, .NET, Go/Rust), contract testing, mutation testing, code quality, test impact analysis, and load testing. Organized around the job role, not a technology stack.",
+      "description": "SDET role bundle: one-command install of the full automation-engineer stack plus test-driven development, per-language unit testing (JS/TS, Python, JVM, .NET, Go/Rust), contract testing, mutation testing, code quality, test impact analysis, and load testing. Organized around the job role, not a technology stack.",
       "strict": true,
       "category": "role-bundles"
+    },
+    {
+      "name": "qa-tdd",
+      "source": "./plugins/qa-tdd",
+      "description": "Test-driven development for people and coding agents: red-green-refactor one test at a time, reproduce bugs with a failing test first, and prove a change works with test evidence before calling it done.",
+      "strict": true,
+      "category": "functional-testing"
     }
   ]
 }

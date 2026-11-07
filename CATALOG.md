@@ -3,7 +3,7 @@
 Auto-generated from `.claude-plugin/marketplace.json` and per-plugin manifests.
 Do not edit by hand - run `make catalog` (or `npm run catalog`).
 
-**77 plugins · 400 components**
+**78 plugins · 402 components**
 
 Within each category, plugins are sorted by **Total** (skills + agents); larger plugins cover more of an area.
 
@@ -28,7 +28,7 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.12.0 | 8 skills + 2 agents | 10 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.13.0 | 9 skills + 2 agents | 11 |
 | [qa-mobile](plugins/qa-mobile/) | 1.7.0 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.9.5 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.3 | 7 skills + 1 agents | 8 |
@@ -40,6 +40,7 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 | [qa-property-based](plugins/qa-property-based/) | 1.2.23 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.2 | 2 skills + 0 agents | 2 |
 | [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.7 | 2 skills + 0 agents | 2 |
+| [qa-tdd](plugins/qa-tdd/) | 1.0.0 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.6 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.3 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.2 | 1 skills + 0 agents | 1 |
@@ -150,7 +151,7 @@ _One-command role installs: each bundle pulls in the plugins one QA role needs, 
 | [qa-role-manual-tester](plugins/qa-role-manual-tester/) | 1.0.4 | 0 skills + 0 agents | 0 |
 | [qa-role-mobile-desktop](plugins/qa-role-mobile-desktop/) | 1.0.3 | 0 skills + 0 agents | 0 |
 | [qa-role-performance](plugins/qa-role-performance/) | 1.1.1 | 0 skills + 0 agents | 0 |
-| [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.5 | 0 skills + 0 agents | 0 |
+| [qa-role-sdet](plugins/qa-role-sdet/) | 1.0.6 | 0 skills + 0 agents | 0 |
 | [qa-role-security](plugins/qa-role-security/) | 1.1.1 | 0 skills + 0 agents | 0 |
 | [qa-starter](plugins/qa-starter/) | 1.0.2 | 0 skills + 0 agents | 0 |
 
@@ -217,6 +218,7 @@ _One-command role installs: each bundle pulls in the plugins one QA role needs, 
 - [qa-shift-left](plugins/qa-shift-left/)
 - [qa-shift-right](plugins/qa-shift-right/)
 - [qa-starter](plugins/qa-starter/)
+- [qa-tdd](plugins/qa-tdd/)
 - [qa-team-management](plugins/qa-team-management/)
 - [qa-test-data](plugins/qa-test-data/)
 - [qa-test-data-privacy](plugins/qa-test-data-privacy/)

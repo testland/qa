@@ -74,7 +74,7 @@
         "Run mutation testing on this package and show which tests are too weak.",
         "Add property-based tests for this date-parsing function."
       ],
-      "plugins": ["qa-unit-tests-js", "qa-unit-tests-python", "qa-unit-tests-jvm", "qa-unit-tests-net", "qa-unit-tests-go-rust", "qa-mutation-testing", "qa-property-based", "qa-bdd", "qa-cli-tools"]
+      "plugins": ["qa-tdd", "qa-unit-tests-js", "qa-unit-tests-python", "qa-unit-tests-jvm", "qa-unit-tests-net", "qa-unit-tests-go-rust", "qa-mutation-testing", "qa-property-based", "qa-bdd", "qa-cli-tools"]
     },
     {
       "name": "testland-ai",

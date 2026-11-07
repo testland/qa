@@ -1,0 +1,31 @@
+{
+  "context": "Playwright 1.59 added a terminal trace CLI and a CLI debugger for agents. Predicted baseline failure: the plan opens the trace with `npx playwright show-trace` or trace.playwright.dev, both of which need a browser UI, or unzips the archive and greps raw JSON.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Terminal trace CLI used",
+      "max_score": 35,
+      "description": "The plan uses `npx playwright trace open <zip>`, then `trace actions` (optionally with --grep) and `trace action <n>` to read the error with expected vs received."
+    },
+    {
+      "name": "Page state at the failing step",
+      "max_score": 20,
+      "description": "The plan uses `npx playwright trace snapshot <n> --name after` (or before) to see the DOM at the failing step."
+    },
+    {
+      "name": "No GUI on the main path",
+      "max_score": 20,
+      "description": "show-trace or trace.playwright.dev appear only as an optional human step, not as the agent's method."
+    },
+    {
+      "name": "Live debugging from the terminal",
+      "max_score": 15,
+      "description": "For live stepping, the plan uses `npx playwright test <file> --debug=cli` and attaches with `playwright-cli attach <id>`, rather than --debug or --ui, which open windows."
+    },
+    {
+      "name": "Flaky-run comparison",
+      "max_score": 10,
+      "description": "Mentions keeping traces of passing and failing attempts (for example trace: 'retain-on-failure-and-retries') to compare them."
+    }
+  ]
+}

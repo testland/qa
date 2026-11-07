@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "qa-tdd",
+  "version": "1.0.0",
+  "description": "Test-driven development for people and coding agents: red-green-refactor one test at a time, reproduce bugs with a failing test first, and prove a change works with test evidence before calling it done.",
+  "author": {
+    "name": "testland",
+    "url": "https://testland.io/"
+  },
+  "homepage": "https://testland.io/plugins/qa-tdd",
+  "repository": "https://github.com/testland/qa",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "tdd",
+    "red-green-refactor",
+    "bug-reproduction"
+  ]
+}

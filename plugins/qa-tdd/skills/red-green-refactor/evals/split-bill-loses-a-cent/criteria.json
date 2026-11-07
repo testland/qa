@@ -1,0 +1,36 @@
+{
+  "context": "A one-line integer-division bug with a clear reported symptom. Predicted baseline failure: the agent reads the function, fixes it directly, then adds a regression test that it only ever sees passing, and reports 'fixed' with a short description of the change. Nothing shows the new test could fail, and the report carries no run output.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Reproduced with a failing test before the fix",
+      "max_score": 30,
+      "description": "A test for the reported case (10000 cents, 3 people) is written and run before billing.py is changed, and that run fails with the reported symptom (shares summing to 9999, or a list of three 3333s). Writing the test after the fix, or never running it before the fix, scores zero."
+    },
+    {
+      "name": "Fix keeps the total and the existing behavior",
+      "max_score": 20,
+      "description": "After the fix, the shares for (10000, 3) sum to 10000 and differ by at most one cent; test_even_split and test_rejects_zero_people still pass unchanged."
+    },
+    {
+      "name": "Whole suite run after the fix",
+      "max_score": 15,
+      "description": "The full test suite is run after the change, not only the new test, and the result is reported with real counts."
+    },
+    {
+      "name": "Evidence in the final report",
+      "max_score": 20,
+      "description": "The final message quotes the red run (command and failure) and the green run (command and pass count). A report that only says 'fixed' or 'should work' scores zero."
+    },
+    {
+      "name": "Regression test kept and named for the behavior",
+      "max_score": 10,
+      "description": "The reproduction test stays in the suite with a name describing the behavior (for example test_shares_add_up_to_total), not only a ticket number."
+    },
+    {
+      "name": "Existing tests not edited to pass",
+      "max_score": 5,
+      "description": "MUST NOT change the expected values of the existing tests."
+    }
+  ]
+}

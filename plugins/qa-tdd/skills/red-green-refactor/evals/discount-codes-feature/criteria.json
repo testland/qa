@@ -1,0 +1,31 @@
+{
+  "context": "A small feature with two rules and an error case. Predicted baseline failure: the agent writes the function and a batch of tests together, runs them once, sees them pass and reports success. No test is ever seen failing, and the floor-at-zero edge for FLAT5 is often untested.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Baseline suite run first",
+      "max_score": 10,
+      "description": "The existing suite is run before any change and its result noted."
+    },
+    {
+      "name": "Test seen failing before the implementation",
+      "max_score": 30,
+      "description": "At least one new test is run and seen failing on its assertion (or on a not-implemented stub) before apply_discount is implemented. Tests that are only ever seen passing score zero."
+    },
+    {
+      "name": "Rules and edges covered",
+      "max_score": 25,
+      "description": "Tests cover SAVE10, FLAT5, FLAT5 on a total under 5.00 returning zero, and an unknown code raising ValueError (pytest.raises). Missing the floor-at-zero case or the error case scores at most half."
+    },
+    {
+      "name": "No test special-cases",
+      "max_score": 10,
+      "description": "The implementation does not hard-code test inputs, and no expected value was copied from the code's output to make a test pass."
+    },
+    {
+      "name": "Evidence in the final report",
+      "max_score": 25,
+      "description": "The final message names the test command and the real counts (for example '6 passed, was 2'), mentions the red run, and lists anything not verified. 'Should work' without a run scores zero."
+    }
+  ]
+}

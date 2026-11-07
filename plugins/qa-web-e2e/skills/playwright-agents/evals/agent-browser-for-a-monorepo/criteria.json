@@ -1,0 +1,36 @@
+{
+  "context": "Playwright ships a CLI for coding agents, an MCP server, and planner/generator/healer Test Agents. Predicted baseline failure: the answer adds Playwright MCP as asked, without weighing context cost, and either does not know `npx playwright init-agents --loop=claude` or skips the seed test and the regenerate-on-upgrade rule.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "CLI recommended for occasional checks",
+      "max_score": 25,
+      "description": "Recommends playwright-cli (@playwright/cli) for occasional checks from Claude Code, with MCP positioned for long-running or MCP-only loops."
+    },
+    {
+      "name": "Reason is context cost",
+      "max_score": 15,
+      "description": "Explains that MCP tool schemas and accessibility snapshots load into the conversation, while the CLI keeps them out."
+    },
+    {
+      "name": "Correct install commands",
+      "max_score": 15,
+      "description": "Gives `npm install -g @playwright/cli@latest` (or the bundled `npx playwright cli`) and, if MCP is mentioned, `claude mcp add playwright npx @playwright/mcp@latest`."
+    },
+    {
+      "name": "Test Agents setup",
+      "max_score": 20,
+      "description": "Gives `npx playwright init-agents --loop=claude` and names what it writes: planner, generator and healer definitions under .claude/agents/, .mcp.json, seed.spec.ts."
+    },
+    {
+      "name": "Seed and upgrade rules",
+      "max_score": 15,
+      "description": "Says to put the real setup (fixtures, sign-in) in seed.spec.ts and to re-run init-agents whenever @playwright/test is upgraded."
+    },
+    {
+      "name": "Healer output reviewed",
+      "max_score": 10,
+      "description": "Says healer changes need human review, because it may change expected values or mark tests test.fixme."
+    }
+  ]
+}

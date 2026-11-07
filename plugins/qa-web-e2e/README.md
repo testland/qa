@@ -1,6 +1,6 @@
 # qa-web-e2e
 
-Web E2E framework wrappers (per-framework skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Cloud browser grids (BrowserStack / Sauce Labs / LambdaTest) live in one umbrella skill, the self-hosted Selenium Grid 4 runner and the browser-matrix strategy reference (tiering + compatibility budget + review checklist) cover cross-browser planning and execution, one agent scaffolds a from-zero harness skeleton, and one agent reviews raw codegen recordings (Playwright codegen + Cypress Studio).
+Web E2E framework wrappers (per-framework skills). Full lifecycle per framework: author + run + traces + flake debug + CI integration. Cloud browser grids (BrowserStack / Sauce Labs / LambdaTest) live in one umbrella skill, the self-hosted Selenium Grid 4 runner and the browser-matrix strategy reference (tiering + compatibility budget + review checklist) cover cross-browser planning and execution, one skill covers Playwright's agent tooling (CLI, MCP, Test Agents), one agent scaffolds a from-zero harness skeleton, and one agent reviews raw codegen recordings (Playwright codegen + Cypress Studio).
 
 ## Components
 
@@ -8,6 +8,7 @@ Web E2E framework wrappers (per-framework skills). Full lifecycle per framework:
 | --- | --- | --- |
 | Skill | [web-e2e-overview](skills/web-e2e-overview/SKILL.md) | Teaches web E2E testing from first principles - what browser-driven E2E covers, a repo-observation decision table for choosing between Playwright, Cypress, Selenium, WebdriverIO and the cloud grids, first-run commands per tool, and the flakiness traps that sink new suites. |
 | Skill | [playwright-testing](skills/playwright-testing/SKILL.md) | Authors Playwright E2E tests across Chromium, Firefox, WebKit - scaffolding, browser projects, accessibility-first locators, web-first assertions, Page Objects, trace viewer, sharding, mobile-web emulation via the `devices` catalog, CI integration. |
+| Skill | [playwright-agents](skills/playwright-agents/SKILL.md) | Playwright for coding agents: choose playwright-cli or Playwright MCP, set up the planner, generator and healer Test Agents, review healer diffs before merging, debug failing tests from the terminal with the trace CLI, and leave screenshot or video receipts. |
 | Skill | [cypress-testing](skills/cypress-testing/SKILL.md) | Authors Cypress E2E tests - `npm install cypress`, `cypress.config.ts` setup, `cy.*` command chains, automatic-waiting commands, time-travel debugging, custom commands, CI integration. |
 | Skill | [selenium-testing](skills/selenium-testing/SKILL.md) | Authors Selenium WebDriver tests in any of its 6+ supported languages (Java, Python, JavaScript, C#, Ruby, Kotlin, PHP) - picks the appropriate binding per project stack. |
 | Skill | [webdriverio-testing](skills/webdriverio-testing/SKILL.md) | Authors WebdriverIO E2E tests - `npm init wdio@latest` scaffolding, services architecture (sauce, browserstack, appium, devtools), reporters, CI integration. |
