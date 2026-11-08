@@ -1,9 +1,9 @@
 {
   "name": "testland/golden-file-conventions",
-  "description": "Reference catalog for snapshot / golden file management - naming conventions, directory layout, when to add / update / remove a baseline, sanitization (timestamps, IDs, PII), per-OS / per-runtime variant strategy, and review workflow for snapshot diffs in PRs. Use when designing a snapshot-testing convention or auditing an existing one for drift.",
+  "description": "Use when snapshot or golden-file tests are noisy or untrusted: snapshots accepted without review, diffs full of timestamps, IDs or PII, baselines that differ per OS or runtime, or no rule for where snapshots live. Sets naming and directory layout, when to add, update or remove a baseline, sanitization, per-OS and per-runtime variants, and the PR review workflow for snapshot diffs.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.6"
+  "version": "1.3.7"
 }

@@ -1,6 +1,6 @@
 ---
 name: msw-handlers
-description: "Authors Mock Service Worker (MSW) request handlers for both browser and Node.js test environments using the `http.get` / `http.post` / `HttpResponse.json` API, wires them via `setupWorker` (browser) or `setupServer` (Node), and manages the test lifecycle (`server.listen` / `resetHandlers` / `close`). Use when the project uses JavaScript / TypeScript and needs to mock fetch / XHR at the network layer for both Vitest / Jest unit tests and Cypress / Playwright integration tests."
+description: "Use when JavaScript or TypeScript tests need to mock fetch or XHR calls to an HTTP API, such as replacing hand-rolled fetch mocks or testing loading and error responses, in Vitest or Jest and in Cypress or Playwright: writes Mock Service Worker handlers (`http.get`, `http.post`, `HttpResponse.json`), wires `setupServer` (Node) or `setupWorker` (browser), and manages the `listen` / `resetHandlers` / `close` lifecycle."
 ---
 
 # msw-handlers

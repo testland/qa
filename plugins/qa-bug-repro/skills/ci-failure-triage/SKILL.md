@@ -1,6 +1,6 @@
 ---
 name: ci-failure-triage
-description: "Decides what kind of failure a red CI test is before anyone starts fixing it. Extracts seven failure signals from the runner output, stack trace, run history, and environment metadata, then walks an ordered first-match-wins rule set to exactly one verdict: flaky-known, environment-drift, defect, timeout, flaky-pre-incident, or flake-of-unknown-cause. Emits the verdict together with the alternatives that were rejected and the specific condition each one failed, so the triage decision is auditable rather than asserted. Use when a test has just gone red and the next action depends on whether the cause is a product defect, a non-deterministic test, or drifted infrastructure."
+description: "Decides what kind of failure a red CI test is before anyone starts fixing it. Extracts seven failure signals from the runner output, stack trace, run history, and environment metadata, then walks an ordered first-match-wins rule set to exactly one verdict per red test: flaky-known, environment-drift, defect, timeout, flaky-pre-incident, or flake-of-unknown-cause, or undetermined when a lone log with no run history cannot support any verdict. Emits the verdict together with the alternatives that were rejected and the specific condition each one failed, so the triage decision is auditable rather than asserted. Use when a test has just gone red and the next action depends on whether the cause is a product defect, a non-deterministic test, or drifted infrastructure."
 ---
 
 # CI failure triage
@@ -103,7 +103,45 @@ obligation plainly for reviewers: read and understand the change before acting
 on it (Google eng-practices). A diff you only counted commits in does not
 satisfy S6.
 
-## Step 2 - Walk the rules, first match wins
+## Step 2 - Check there is enough material to classify
+
+Before any rule, look at which signals you actually have. When **S2 is
+unavailable** (no run history for this test) **and S5 or S6 is unavailable
+too** (no environment metadata to compare, or no diff for the window), the
+material cannot support any verdict. A single log of a single run is the
+usual case.
+
+Return `undetermined` and stop. Do not walk R1 to R6 to reach the R6 fallback:
+R6 says "the evidence was weighed and nothing matched", while `undetermined`
+says "there was not enough evidence to weigh". Calling a run flaky with no
+second run to compare against is a guess with a label on it.
+
+An `undetermined` report:
+
+- **Leads with the limitation**, in its first line: this material does not
+  settle what kind of failure this is. Not a caveat at the end of a body that
+  reads as a diagnosis.
+- **Names each missing artefact concretely** and what it would decide, for
+  example: the resolved dependency set (lockfile or `npm ls` output) for this
+  run and for the last green run, the test's pass/fail history over a stated
+  window, the actual diff for the window rather than commit subjects, the last
+  green run's log, the runner image digest for both runs.
+- **Still records what the log does show** (S1 mode, co-failures, anything
+  that rules a verdict out) so the re-triage starts from it.
+
+New tests are the exception: they have no S2 by definition, but S5 and S6 are
+usually available, so they go through the rules and usually land on R6 (see
+Confidence and limits).
+
+### One verdict per failure, not per build
+
+When a run has several red tests, triage each one separately (Confidence and
+limits, "one failure per pass"). A build-level answer such as "build 8842
+failed because the docs service was down" hides any red test the outage does
+not explain. Group failures only when each one has its own signals showing the
+same cause, and list any failure the group does not explain on its own line.
+
+## Step 3 - Walk the rules, first match wins
 
 The verdicts are mutually exclusive and single-valued. Evaluate R1 through R6
 in order and stop at the first rule whose conditions all hold. A failure with
@@ -210,7 +248,7 @@ R3 sits ahead of R5 on purpose too: when there is code-change proximity, an
 async-wait timeout is more likely a product that got slower than a test that
 got unlucky.
 
-## Step 3 - Emit the verdict
+## Step 4 - Emit the verdict
 
 One fixed shape. The **Not classified as** block is mandatory, including when
 the verdict is high-confidence.
@@ -218,7 +256,7 @@ the verdict is high-confidence.
 ```markdown
 ## Failure classification - `<test-id>`
 
-**Verdict:** <flaky-known | environment-drift | defect | timeout | flaky-pre-incident | flake-of-unknown-cause>
+**Verdict:** <flaky-known | environment-drift | defect | timeout | flaky-pre-incident | flake-of-unknown-cause | undetermined>
 **Confidence:** <high | medium | low>
 **Windows used:** <e.g. last 50 runs, 7 days of history, N=5 green-run threshold>
 

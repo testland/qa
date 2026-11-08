@@ -1,9 +1,9 @@
 {
   "name": "testland/flake-pattern-reference",
-  "description": "Reference catalog of the eight flake patterns - async/timing, test ordering, shared parallel state, resource leaks, network, locator drift, environment variance, randomness - with detection heuristics, remediation per pattern, and the concrete code-level fixes: replacing fixed sleeps with framework auto-waits, isolating state in beforeEach fixtures, per-worker DB schemas via workerIndex, try/finally teardown, mocking network + clock at the boundary, stable role-based locators, TZ pinning, and RNG seeding. Use when triaging an unknown flake to identify the category before bisecting, or when a classified flake needs the specific code change to apply.",
+  "description": "Use when a test fails only some of the time and a re-run goes green: only in CI and never on a laptop, only at night or in another time zone, only when test files run in parallel (EADDRINUSE, duplicate keys, counts a little short), or about once a week with no local repro. Matches the failure to one of eight flake patterns (async timing, test order, shared parallel state, resource leaks, network, locator drift, environment variance, randomness) and gives the code fix for each, such as framework auto-waits instead of sleeps, per-worker DB schemas via workerIndex, try/finally teardown, mocked network and clock, TZ pinning and RNG seeding. Not for quarantine policy (flaky-test-quarantine) or classifying a red CI run (ci-failure-triage).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.7"
+  "version": "1.2.8"
 }

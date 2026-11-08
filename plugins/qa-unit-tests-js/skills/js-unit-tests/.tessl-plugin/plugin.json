@@ -1,9 +1,9 @@
 {
   "name": "testland/js-unit-tests",
-  "description": "Sets up and repairs JavaScript / TypeScript unit tests - a suite that cannot resolve the project's path aliases (`@lib/...` declared in jsconfig or tsconfig), a regression that shipped because the tests asserted too little, or a module dependency that needs mocking, spying, or fake timers. Jest and Vitest as co-primary frameworks: install, config (`jest.config.js` / `vite.config.ts` test block), mocking (`jest.fn`/`jest.mock`/`jest.spyOn`, `vi.fn`/`vi.mock`/`vi.spyOn`, `__mocks__/`, fake timers), coverage (Istanbul/babel vs v8 providers, `coverageThreshold` gating), watch mode, and CI (`jest --ci`, `vitest run`, JUnit XML). Use when authoring, configuring, or repairing unit tests in a JS/TS project.",
+  "description": "Use when writing, configuring or fixing JavaScript or TypeScript unit tests with Jest or Vitest: a suite that cannot resolve path aliases (`@lib/...` from jsconfig or tsconfig), mocking a module, spying or faking timers (`jest.mock`, `vi.mock`, `vi.spyOn`, fake timers), coverage thresholds, or tests that stayed green while a regression shipped because they asserted too little. Covers install, config (`jest.config.js`, the `vite.config.ts` test block), coverage providers, watch mode and CI (`jest --ci`, `vitest run`, JUnit XML).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.0.5"
+  "version": "1.0.6"
 }
