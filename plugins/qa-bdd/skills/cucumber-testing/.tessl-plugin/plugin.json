@@ -1,9 +1,9 @@
 {
   "name": "testland/cucumber-testing",
-  "description": "Use when writing or fixing BDD tests in Gherkin: `.feature` files, Given/When/Then steps, undefined or ambiguous step definitions, or wiring Cucumber into a Java, Kotlin, JavaScript or Ruby build. Covers Cucumber-JVM (JUnit 5), Cucumber-JS and Cucumber-Ruby: feature files, step definitions in the host language, the runner, and JUnit XML reports.",
+  "description": "Use for any question or task about Cucumber or Gherkin in Java, Kotlin, JavaScript or Ruby, including quick how-to questions: setting up Cucumber-JVM with JUnit 5, Cucumber-JS or Cucumber-Ruby, writing .feature files and step definitions, undefined or ambiguous steps and Cucumber expression mismatches, tags, and JUnit XML reports.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.7.10"
+  "version": "1.7.11"
 }

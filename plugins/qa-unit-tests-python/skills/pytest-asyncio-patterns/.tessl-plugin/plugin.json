@@ -1,9 +1,9 @@
 {
   "name": "testland/pytest-asyncio-patterns",
-  "description": "Use when async Python tests are skipped or fail with event-loop errors, or when testing FastAPI or aiohttp endpoints: configures pytest-asyncio (asyncio_mode auto vs strict, event-loop scope), async fixtures with @pytest_asyncio.fixture, AsyncMock for coroutines, httpx.AsyncClient with ASGITransport, and the aiohttp_client fixture. Not for general fixture, parametrize or conftest.py design without an asyncio problem: use python-unit-tests.",
+  "description": "Use for any question or task about testing async Python code, including how to test an async function, async tests that are skipped or fail with event-loop errors, and tests for FastAPI or aiohttp endpoints: pytest-asyncio modes and loop scopes, async fixtures, AsyncMock (assert_awaited), httpx.AsyncClient with ASGITransport and aiohttp_client.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.18"
+  "version": "1.2.19"
 }

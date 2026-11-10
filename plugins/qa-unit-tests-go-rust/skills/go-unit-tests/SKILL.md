@@ -1,6 +1,6 @@
 ---
 name: go-unit-tests
-description: "Use whenever the task is to write, add, fix or review Go tests, even a quick table-driven test for one function: t.Run subtests, t.Parallel, helpers, fuzz tests, benchmarks, race detection and coverage with go test, plus Ginkgo and gomock or testify mocks."
+description: "Use for any question or task about Go tests, including quick how-to questions and one table-driven test: t.Run subtests, t.Parallel, helpers, data races that fail in CI (go test -race), fuzz tests, benchmarks and coverage, plus testify, gomock and Ginkgo. Has Go test idioms, CI flags and anti-patterns."
 ---
 
 # go-unit-tests

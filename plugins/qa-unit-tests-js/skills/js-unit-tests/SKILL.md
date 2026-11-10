@@ -1,6 +1,6 @@
 ---
 name: js-unit-tests
-description: "Use when writing, configuring or fixing JavaScript or TypeScript unit tests with Jest or Vitest: a suite that cannot resolve path aliases (`@lib/...` from jsconfig or tsconfig), mocking a module, spying or faking timers (`jest.mock`, `vi.mock`, `vi.spyOn`, fake timers), coverage thresholds, or tests that stayed green while a regression shipped because they asserted too little. Covers install, config (`jest.config.js`, the `vite.config.ts` test block), coverage providers, watch mode and CI (`jest --ci`, `vitest run`, JUnit XML)."
+description: "Use for any question or task about JavaScript or TypeScript unit tests with Jest or Vitest, including quick how-to questions and tests for one function: mocking a module (jest.mock, vi.mock, vi.hoisted), spies and fake timers, path aliases that fail only in tests (`Cannot find module '@/...'`), coverage thresholds, watch mode and CI. Has authoring conventions and anti-patterns."
 ---
 
 # js-unit-tests

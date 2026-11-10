@@ -1,6 +1,6 @@
 ---
 name: behave-testing
-description: "Use when a Python project wants BDD scenarios with Behave: Gherkin .feature files, step implementations in features/steps, environment.py hooks, tags and behave runs in CI. The Python member of the Cucumber family."
+description: "Use for any question or task about BDD in Python, including quick how-to questions: Behave .feature files, step implementations in features/steps, environment.py hooks (sharing a browser or database between scenarios), tags, reports and CI runs, plus the pytest-bdd alternative. Has Behave layout, hook and anti-pattern notes."
 ---
 
 # behave-testing

@@ -1,6 +1,6 @@
 ---
 name: reqnroll-testing
-description: "Use when a .NET project starts BDD, migrates from SpecFlow (end-of-life 2024-12-31) or maintains a legacy SpecFlow suite. Configures Reqnroll: Gherkin .feature files, [Given/When/Then] C# bindings, hooks and dotnet test runs."
+description: "Use for any question or task about BDD in .NET or C#: starting with Gherkin feature files, moving off SpecFlow (end-of-life 2024-12-31), or writing [Given/When/Then] C# step bindings. Configures Reqnroll with hooks, async steps, tags and dotnet test runs, and has a SpecFlow migration path."
 ---
 
 # reqnroll-testing

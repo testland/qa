@@ -71,6 +71,29 @@ descriptions:
 A miss with one turn and no tool call means Claude answered from its own
 knowledge: the description needs a sharper trigger.
 
+### Short prompts (`l-` cases)
+
+`l-<skill>-<n>` cases in `testland-unit-testing` give every skill in the pack
+three short prompts of the kind users type: a how-to question, a task with a
+few lines of code, and a symptom that does not name the tool. A fourth prompt
+(`-4`) was written after the descriptions were tuned and is the held-out check.
+Run them with:
+
+```bash
+claude plugin eval . --case 'l-*' --runs 2   # from build/packs/testland-unit-testing
+```
+
+Results for the 19 skills that loaded in under half their runs on 10 Nov 2026:
+
+| | Before | After the rewrite |
+| --- | --- | --- |
+| Prompts 1-3, first pass | 20 / 57 | 87 / 114 (2 runs) |
+| Held-out prompt 4 | - | 26 / 38 (2 runs) |
+
+No run loaded the wrong skill: every miss was Claude answering from its own
+knowledge. Descriptions that load reliably open with "Use for any ... question
+or task, including quick how-to questions" and name the symptoms users report.
+
 ## Publishing
 
 `.github/workflows/packs-sync.yml` runs on a published release (or by hand). It

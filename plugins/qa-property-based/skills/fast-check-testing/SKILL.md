@@ -1,6 +1,6 @@
 ---
 name: fast-check-testing
-description: "Use whenever the task mentions property-based, generative or invariant tests in JavaScript or TypeScript (fast-check): fc.assert and fc.property, arbitraries and composite inputs, map, chain and filter, shrinking and seeds, with Jest, Vitest or Mocha. Has a worked example to start from."
+description: "Use for any question or task about property-based or generated-input tests in JavaScript or TypeScript, including quick how-to questions, round-trip checks like decode(encode(x)), and edge cases example tests keep missing: fast-check with fc.assert and fc.property, arbitraries, shrinking and seeds, in Jest, Vitest or Mocha. Has a worked example."
 ---
 
 # fast-check-testing

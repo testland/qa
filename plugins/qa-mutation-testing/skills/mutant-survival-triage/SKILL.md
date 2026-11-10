@@ -1,6 +1,6 @@
 ---
 name: mutant-survival-triage
-description: "Use when a mutation testing run (StrykerJS, PIT, mutmut or Mull) has finished and surviving mutants need explaining. Classifies each survivor (missing case, weak assertion, equivalent, unreachable, flaky) and drafts the test that would kill it, without rewriting tests automatically."
+description: "Use when a mutation testing run (StrykerJS, PIT, mutmut or Mull) has surviving mutants, a low mutation score, or a large report to work through: classifies each survivor (missing case, weak assertion, equivalent, unreachable, flaky), drafts the test or assertion that kills it, and states the mutation score with its formula. Does not rewrite tests automatically."
 ---
 
 # mutant-survival-triage

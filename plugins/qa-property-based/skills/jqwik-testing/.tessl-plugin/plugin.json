@@ -1,9 +1,9 @@
 {
   "name": "testland/jqwik-testing",
-  "description": "Use when a Java or Kotlin project needs property-based tests: invariants, round-trip properties or edge cases example tests miss. Sets up jqwik on JUnit 5: @Property, @ForAll, Arbitraries, custom @Provide generators and shrinking, alongside normal unit tests.",
+  "description": "Use for any question about property-based or generated-input tests in Java or Kotlin, including quick how-to questions, invariants like commutativity or adding zero, and edge cases nobody thought of: jqwik on JUnit 5 with @Property, @ForAll, Arbitraries, @Provide generators, shrinking and statistics.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.16"
+  "version": "1.2.17"
 }

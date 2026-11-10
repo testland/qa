@@ -1,6 +1,6 @@
 ---
 name: python-unit-tests
-description: "Use whenever the task is to write, add, fix or review Python tests, even quick pytest tests for a single function: edge cases, fixtures and conftest.py, parametrize tables, mocking, markers, coverage gates and CI. Has the pytest checklist for edge cases and weak assertions."
+description: "Use for any question or task about Python tests, including quick how-to questions and tests for one function: pytest fixtures and conftest.py, parametrize, mocking, markers, slow or untrusted suites, coverage gates and CI. Has pytest 9 config and strict mode, subtests, and a checklist for edge cases and weak assertions."
 ---
 
 # python-unit-tests

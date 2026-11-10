@@ -1,6 +1,6 @@
 ---
 name: gherkin-from-stories
-description: "Use whenever user stories, acceptance criteria, manual test steps or a spec section need to become Gherkin .feature files. Maps criteria to scenarios, finds Scenario Outlines and Background, reuses existing steps and flags hidden preconditions. Writes Gherkin only, not step code."
+description: "Use whenever user stories, acceptance criteria, manual test steps or a spec need to become Gherkin, or when asked how to write good acceptance scenarios: maps each criterion to scenarios, finds Scenario Outlines and Background, reuses existing steps and flags hidden preconditions. Writes .feature files only, not step code."
 ---
 
 # gherkin-from-stories

@@ -1,9 +1,9 @@
 {
   "name": "testland/dotnet-unit-tests",
-  "description": "Use whenever the task is to write, add, fix or review .NET unit tests in C#, F# or VB.NET, even a quick test for one method: xUnit.net by default, plus NUnit and MSTest. Covers Fact and Theory tables, fixtures, mocking, FluentAssertions, async tests and coverage with dotnet test.",
+  "description": "Use for any question or task about .NET tests in C#, F# or VB.NET, including quick how-to questions and choosing between xUnit, NUnit and MSTest: Fact and Theory tables, fixtures and shared state between tests, parallel runs, mocking, async tests, output, and coverage with dotnet test. Has authoring conventions and anti-patterns for xUnit.net.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
