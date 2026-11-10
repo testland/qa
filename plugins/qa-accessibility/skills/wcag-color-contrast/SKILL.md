@@ -1,6 +1,6 @@
 ---
 name: wcag-color-contrast
-description: "Use when designing a color palette, reviewing a component's colors or auditing CSS for contrast: WCAG 2.2 text, large-text and non-text contrast ratios (4.5:1, 3:1) at AA and AAA, the measurement formula and bulk checks over design tokens."
+description: "Use for any question about color contrast or whether colors pass WCAG, including quick checks of a few hex values and hard-to-read text: WCAG 2.2 text, large-text and non-text contrast ratios (4.5:1, 3:1) at AA and AAA, the measurement formula, palette and component reviews, and bulk checks over CSS and design tokens."
 ---
 
 # wcag-color-contrast

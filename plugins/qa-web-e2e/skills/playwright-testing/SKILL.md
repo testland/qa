@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: "Use whenever the task is to write, fix or speed up Playwright tests, even one quick test or a flaky one: role-based locators, web-first assertions instead of waitForTimeout, page objects, config and browser projects, traces, sharding and CI. Has the anti-pattern table for flaky Playwright tests."
+description: "Use for any question or task about Playwright tests, including quick how-to questions, one login or form test, and one flaky pasted test: role-based locators, web-first assertions instead of waitForTimeout, page objects, config and browser projects, traces, sharding a slow suite in CI. Has the anti-pattern table for flaky Playwright tests."
 ---
 
 # playwright-testing

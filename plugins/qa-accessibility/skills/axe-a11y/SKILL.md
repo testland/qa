@@ -1,6 +1,6 @@
 ---
 name: axe-a11y
-description: "Use whenever pages or components need automated accessibility scanning: axe-core via axe.run(), @axe-core/playwright or the CLI on every PR, rule configuration and CI-gateable results, plus pa11y, Lighthouse CI accessibility, WAVE and IBM Equal Access (Section 508) in its references."
+description: "Use for any request to check accessibility automatically, including adding a scan to an existing Playwright, Cypress or unit test, or stopping missing labels and contrast errors from shipping: axe-core via axe.run(), @axe-core/playwright or the CLI on every PR, rule configuration and CI-gateable results, plus pa11y, Lighthouse CI, WAVE and IBM Equal Access in its references."
 ---
 
 # axe-a11y

@@ -135,8 +135,8 @@
     ]
   },
   "testland-api": {
-    "version": "1.0.2",
-    "hash": "87f522c309991a8c3205f2d34bf320b53512c0d17cd16ae87327114031a13b31",
+    "version": "1.0.3",
+    "hash": "bb30863afa8fafeb2d297a11ce5c9a453c366bbc4b4d6e26159d0b992bdea934",
     "skills": [
       "api-chaos-runner",
       "karate-testing",
@@ -236,8 +236,8 @@
     ]
   },
   "testland-web": {
-    "version": "1.1.0",
-    "hash": "79f6218873d476ac65af1698983d660f98f8850b9850f96ab33ca46f18167066",
+    "version": "1.1.1",
+    "hash": "ebd73029dc85d8e1b7ad2ce8bdd961142ea2f57b63d5721257f7971da42d22bc",
     "skills": [
       "browser-matrix-strategy-reference",
       "cloud-grid-e2e",

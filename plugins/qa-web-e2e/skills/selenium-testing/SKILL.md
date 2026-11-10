@@ -1,6 +1,6 @@
 ---
 name: selenium-testing
-description: "Use when a project is already on Selenium WebDriver and needs tests written, fixed or upgraded in Java, Python, C# or other bindings: Selenium Manager drivers, locators, explicit waits, page objects, BiDi console errors, Grid in Docker, JUnit XML. New projects usually pick Playwright."
+description: "Use for any question or task about Selenium WebDriver tests in Java, Python, C# or other bindings, including quick how-to questions and one pasted test to fix: explicit waits instead of sleeps, stable locators instead of absolute XPath, driver version errors (Selenium Manager), page objects, BiDi console errors, Grid in Docker and JUnit XML. New projects usually pick Playwright."
 ---
 
 # selenium-testing
