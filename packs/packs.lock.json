@@ -1,7 +1,7 @@
 {
   "testland-essentials": {
-    "version": "1.0.4",
-    "hash": "3211eb2e317d33334292ff3ea6578caf0ee86d01fa126c145871ac983e79d4ff",
+    "version": "1.0.6",
+    "hash": "42d1b0f52866c8836943ab25c4e2f020b3f2cac47063dcfd91bebb28089f4003",
     "skills": [
       "attack-surface-test-checklist",
       "definition-of-done",
@@ -288,8 +288,8 @@
     ]
   },
   "testland-unit-testing": {
-    "version": "1.1.1",
-    "hash": "1c2ca7b379741d857b0653582efcd28a45f5f5dd9c949c267a632085f4be8d63",
+    "version": "1.1.2",
+    "hash": "4fcf08c95b5ce3c56f1d893546dc7e8a33781571dce6516c495277b2993dc1fd",
     "skills": [
       "red-green-refactor",
       "js-unit-tests",
@@ -436,8 +436,8 @@
     ]
   },
   "testland-manual-testing": {
-    "version": "1.0.1",
-    "hash": "a7a12d4f63be1db2c3ec5ff10e790ee0e111c289a7460082a4663b257bd7f56d",
+    "version": "1.0.2",
+    "hash": "3ced4a372cd3a20b89431893701701b9dc2505266fb8d25cadaf52c6c721ff21",
     "skills": [
       "bug-bash-facilitator",
       "decision-table-test-design",

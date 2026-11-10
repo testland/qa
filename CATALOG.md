@@ -14,10 +14,10 @@ _Test process and strategy, test data, environments, reporting, impact analysis,
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-process](plugins/qa-process/) | 1.12.10 | 12 skills + 3 agents | 15 |
-| [qa-test-data](plugins/qa-test-data/) | 1.4.9 | 12 skills + 2 agents | 14 |
+| [qa-test-data](plugins/qa-test-data/) | 1.4.10 | 12 skills + 2 agents | 14 |
 | [qa-test-reporting](plugins/qa-test-reporting/) | 1.6.10 | 10 skills + 2 agents | 12 |
 | [qa-test-review](plugins/qa-test-review/) | 1.8.8 | 7 skills + 4 agents | 11 |
-| [qa-test-environment](plugins/qa-test-environment/) | 1.4.5 | 4 skills + 2 agents | 6 |
+| [qa-test-environment](plugins/qa-test-environment/) | 1.4.6 | 4 skills + 2 agents | 6 |
 | [qa-team-management](plugins/qa-team-management/) | 1.3.4 | 4 skills + 1 agents | 5 |
 | [qa-test-management](plugins/qa-test-management/) | 1.3.4 | 3 skills + 2 agents | 5 |
 | [qa-test-impact-analysis](plugins/qa-test-impact-analysis/) | 1.2.2 | 2 skills + 1 agents | 3 |
@@ -30,7 +30,7 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 |---|---|---|---:|
 | [qa-web-e2e](plugins/qa-web-e2e/) | 1.13.0 | 9 skills + 2 agents | 11 |
 | [qa-mobile](plugins/qa-mobile/) | 1.7.0 | 8 skills + 1 agents | 9 |
-| [qa-bdd](plugins/qa-bdd/) | 1.9.5 | 6 skills + 2 agents | 8 |
+| [qa-bdd](plugins/qa-bdd/) | 1.9.6 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.3 | 7 skills + 1 agents | 8 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.7.10 | 6 skills + 1 agents | 7 |
 | [qa-contract-testing](plugins/qa-contract-testing/) | 1.1.11 | 5 skills + 2 agents | 7 |
@@ -39,9 +39,9 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.4 | 6 skills + 0 agents | 6 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.23 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.2 | 2 skills + 0 agents | 2 |
-| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.7 | 2 skills + 0 agents | 2 |
+| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.8 | 2 skills + 0 agents | 2 |
 | [qa-tdd](plugins/qa-tdd/) | 1.0.0 | 1 skills + 0 agents | 1 |
-| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.6 | 1 skills + 0 agents | 1 |
+| [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.7 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.3 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-net](plugins/qa-unit-tests-net/) | 1.2.2 | 1 skills + 0 agents | 1 |
 
@@ -80,9 +80,9 @@ _Flaky-test triage, bug reproduction, defect management, load testing, resilienc
 |---|---|---|---:|
 | [qa-load-testing](plugins/qa-load-testing/) | 1.9.4 | 9 skills + 0 agents | 9 |
 | [qa-resilience](plugins/qa-resilience/) | 1.0.3 | 7 skills + 0 agents | 7 |
-| [qa-bug-repro](plugins/qa-bug-repro/) | 1.8.6 | 3 skills + 3 agents | 6 |
-| [qa-flake-triage](plugins/qa-flake-triage/) | 1.5.5 | 4 skills + 2 agents | 6 |
-| [qa-defect-management](plugins/qa-defect-management/) | 1.7.1 | 2 skills + 2 agents | 4 |
+| [qa-bug-repro](plugins/qa-bug-repro/) | 1.9.0 | 3 skills + 3 agents | 6 |
+| [qa-flake-triage](plugins/qa-flake-triage/) | 1.5.6 | 4 skills + 2 agents | 6 |
+| [qa-defect-management](plugins/qa-defect-management/) | 1.8.0 | 2 skills + 2 agents | 4 |
 | [qa-shift-right](plugins/qa-shift-right/) | 1.5.1 | 3 skills + 1 agents | 4 |
 | [qa-shift-left](plugins/qa-shift-left/) | 1.5.3 | 3 skills + 0 agents | 3 |
 

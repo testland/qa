@@ -1,6 +1,6 @@
 ---
 name: confirmation-testing-workflow
-description: "Procedure for proving that a claimed defect fix actually reached the build under test and actually works. Covers the merge-base ancestry check that proves the running build contains the fix commit rather than trusting a version label, the priority order for choosing which reproduction to re-run, and the VERIFIED / NOT FIXED / BLOCKED verdict table whose governing rule is that any ambiguous, flaky, or unreproducible result resolves to BLOCKED and is never guessed. Scoped to ISTQB confirmation testing (does this specific fix work?), not regression testing (did the fix break something else?), and not triage or severity assignment. Use when a developer has marked a defect Fixed and someone must decide whether it moves to Verified or back to Reopened."
+description: "Procedure for proving that a claimed defect fix actually reached the build under test and actually works. Covers the merge-base ancestry check that proves the running build contains the fix commit rather than trusting a version label (re-run, or recorded with both SHAs), the priority order for choosing which reproduction to re-run, and the VERIFIED / NOT FIXED / BLOCKED verdict table whose governing rule is that any ambiguous, flaky, or unreproducible result resolves to BLOCKED and is never guessed. Scoped to ISTQB confirmation testing (does this specific fix work?), not regression testing (did the fix break something else?), and not triage or severity assignment. Use when a developer has marked a defect Fixed and someone must decide whether it moves to Verified or back to Reopened."
 ---
 
 # confirmation-testing-workflow
@@ -90,6 +90,33 @@ Two common traps this catches:
 - **The branch moved.** Check ancestry against the **exact SHA the environment
   is running**, not against the branch tip, which may have advanced past it.
 
+### When you cannot run the check yourself
+
+A shallow CI checkout or a copied working directory may hold no history for
+either SHA. That makes the check impossible to *re-run* here, not the
+containment question unanswerable. Recorded evidence answers it when it names
+both exact SHAs:
+
+- the captured command and exit status of `git merge-base --is-ancestor`,
+  run by CI or release engineering against the exact build SHA, or
+- a `git log` started at the build SHA that lists the fix SHA. `git log` lists
+  only "commits that are reachable by following the parent links from the
+  given commit(s)" ([git-scm.com/docs/git-log](https://git-scm.com/docs/git-log)),
+  so a log that starts at the build SHA and contains the fix SHA proves
+  ancestry. A log of a branch tip proves it only when the branch history is
+  linear and the build SHA appears in it above the fix SHA.
+
+Quote the evidence, say who produced it, and mark it **recorded, not re-run**
+in the report. Then carry on to Step 2 exactly as if you had run it. Do not
+return BLOCKED only because the check came from a record. Containment stays
+unanswered (BLOCKED) when no record names both SHAs, or when two records
+disagree and nothing in the material explains why.
+
+A record that names a different SHA answers a different question. The usual
+case is a squash merge: a check run with the PR branch's head SHA exits 1
+because that commit never landed on the target branch (see Limitations). Find
+the SHA that landed, re-ask the question with it, and state both answers.
+
 When the check exits 1, stop and name the gap concretely, for example: staging
 is on `3f1d0aa`, and fix `9c4e7b2` is not an ancestor of it. Re-running the
 reproduction there would only re-confirm the original failure and would produce
@@ -125,7 +152,9 @@ Two disqualifiers apply regardless of tier:
 - **A reproduction that never failed before the fix proves nothing.** If nobody
   can show the artifact red on a pre-fix commit, it is not a reproduction of
   this defect. Confirm the red state on the fix commit's parent before trusting
-  the green state on the fix commit.
+  the green state on the fix commit. A recorded red run of that same artifact
+  on the parent (a CI run, or the failing output pasted in the defect report
+  with its commit) counts, marked as recorded, just as in Step 1.
 
 Run **exactly** that artifact, nothing wider. A broader suite dilutes the
 signal and drags unrelated failures into the verdict.
@@ -146,7 +175,8 @@ the evidence does not support a clean classification. Specifically:
 - A run whose output cannot be tied to the defect's original symptom is
   BLOCKED, not VERIFIED.
 - A pass on a build whose containment could not be proven is BLOCKED, not
-  VERIFIED.
+  VERIFIED. Containment proven from a record that names both SHAs (Step 1)
+  is proven: do not downgrade it to BLOCKED for being recorded.
 - A failure on a build proven **not** to contain the fix is BLOCKED, not NOT
   FIXED. Blaming the fix for a deployment gap costs a real reopen cycle.
 
@@ -164,7 +194,7 @@ verification gate exists to prevent.
 **Verdict:** VERIFIED | NOT FIXED | BLOCKED
 **Fix commit:** `<sha>` on `<branch>`
 **Environment:** <env>, build `<sha>`
-**Containment check:** `git merge-base --is-ancestor <fix-sha> <build-sha>` exit <0|1|other>
+**Containment check:** `git merge-base --is-ancestor <fix-sha> <build-sha>` exit <0|1|other> (<re-run here | recorded by <who>, quoted below>)
 **Reproduction:** <tier 1 test path | tier 2 manual script | tier 3 recording>
 **Pre-fix state of that reproduction:** <red at <parent-sha> | attested by reporter>
 
