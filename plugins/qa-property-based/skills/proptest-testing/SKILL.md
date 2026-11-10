@@ -1,6 +1,6 @@
 ---
 name: proptest-testing
-description: "Use when a Rust project needs property-based tests, especially for parsers, serializers and functions with structured input. Sets up proptest: the proptest! macro, strategies for collections, regex strings and any, shrinking and the persisted regression file."
+description: "Use for any question or task about property-based or generated-input tests in Rust, including quick how-to questions, round-trip checks and parsers that crash on fuzzed input: proptest with the proptest! macro, strategies for collections, regex strings and any, shrinking, and the persisted regression file."
 ---
 
 # proptest-testing

@@ -1,9 +1,9 @@
 {
   "name": "testland/rust-unit-tests",
-  "description": "Use whenever the task is to write, add, fix or review Rust tests, even one quick #[test]: assert macros, should_panic, Result-returning tests, integration and doc tests, rstest parametrization, mockall, coverage with cargo-llvm-cov and Criterion benchmarks.",
+  "description": "Use for any question or task about Rust tests, including quick how-to questions and one #[test]: where tests live, assert macros, should_panic with an expected message, Result-returning tests, integration and doc tests, rstest, mockall, coverage with cargo-llvm-cov and Criterion benchmarks. Has Rust test layout conventions and anti-patterns.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

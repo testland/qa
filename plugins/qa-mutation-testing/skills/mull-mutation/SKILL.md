@@ -1,6 +1,6 @@
 ---
 name: mull-mutation
-description: "Use when a C or C++ project built with Clang needs mutation testing. Sets up Mull: the version-matched package, -fpass-plugin build flags, mull-runner, mutators, path filters and GitHub Actions. Other languages: stryker-mutation, stryker-net-mutation, pitest-mutation, mutmut-mutation."
+description: "Use for any question about mutation testing in C or C++, or when a C/C++ suite has high coverage but bugs still ship: sets up Mull for Clang builds (version-matched package, -fpass-plugin flags, CMake, mull-runner, mutators, path filters) and runs it in GitHub Actions. Other languages: stryker-mutation, stryker-net-mutation, pitest-mutation, mutmut-mutation."
 ---
 
 # mull-mutation

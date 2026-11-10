@@ -1,6 +1,6 @@
 ---
 name: red-green-refactor
-description: "Use before fixing a bug or adding a feature in any language, even a one-line fix: reproduce it with a failing test first, watch it fail for the right reason, make the smallest change that passes, refactor, and show the test output before saying it is fixed or works."
+description: "Use before changing code to fix a bug or add behavior, in any language, even when the user just says \"fix it\" or pastes a one-line function: reproduce the problem with a failing test first, watch it fail for the right reason, make the smallest change that passes, refactor, and show the test output before saying it is fixed or works."
 ---
 
 # red-green-refactor

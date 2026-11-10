@@ -1,6 +1,6 @@
 ---
 name: stryker-net-mutation
-description: "Use when a .NET (C#) test suite needs mutation testing to show whether the tests catch bugs. Sets up Stryker.NET: the dotnet-stryker tool, project scoping, xUnit, NUnit or MSTest, stryker-config.json thresholds and CI runs."
+description: "Use for any question about mutation testing in .NET or C#, or when a .NET suite passes with good coverage but may assert nothing: sets up Stryker.NET (dotnet-stryker tool, project and solution scoping, xUnit, NUnit or MSTest, stryker-config.json thresholds) and runs it in CI. Has a worked example and mutator levels."
 ---
 
 # stryker-net-mutation

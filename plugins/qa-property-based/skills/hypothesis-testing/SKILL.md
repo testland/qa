@@ -1,6 +1,6 @@
 ---
 name: hypothesis-testing
-description: "Use whenever the task mentions property-based, generative or invariant tests in Python (Hypothesis), e.g. parse/format or encode/decode pairs: @given strategies, composite strategies, assume and filters, settings and CI. Has round-trip and metamorphic property templates to start from."
+description: "Use for any question or task about property-based or generated-input tests in Python, including quick how-to questions, round-trip checks like parse(format(x)), and inputs that break code in production: Hypothesis @given strategies, composite strategies, assume and filtering, settings, reproducibility and CI. Has round-trip and metamorphic property templates."
 ---
 
 # hypothesis-testing
