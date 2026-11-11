@@ -3,7 +3,7 @@ name: flaui-tests
 description: "Use for any task that writes, fixes or reviews UI tests for a Windows desktop app (WPF or WinForms) in C# or .NET, even a single test, including tests that click before the window is ready: FlaUI UIA2 and UIA3 packages, launching or attaching to the app, ConditionFactory locators by AutomationId, Retry waits and xUnit, NUnit or MSTest. For the WebDriver protocol use winappdriver."
 metadata:
   keywords: "flaui, uia, dotnet, windows, wpf, winforms"
-  version: "1.2.21"
+  version: "1.2.22"
 ---
 
 # flaui-tests

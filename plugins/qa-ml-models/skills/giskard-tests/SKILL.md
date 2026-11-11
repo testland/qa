@@ -3,7 +3,7 @@ name: giskard-tests
 description: "Use for any question or task about testing a trained tabular or NLP model before it ships, including robustness to small input changes, data leakage and fairness, or a pre-merge check after a feature or hyperparameter change. Runs Giskard scan and its test catalog for performance, robustness, fairness, data leakage and ethical issues, and emits suites that pass or fail in CI."
 metadata:
   keywords: "giskard, ml-testing, model-vulnerabilities, fairness-testing, tabular-models"
-  version: "1.3.6"
+  version: "1.3.7"
 ---
 
 # giskard-tests

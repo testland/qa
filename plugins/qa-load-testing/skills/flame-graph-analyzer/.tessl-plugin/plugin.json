@@ -1,9 +1,9 @@
 {
   "name": "testland/flame-graph-analyzer",
-  "description": "Use when a performance regression is traced to a commit but the hot path inside it is unclear. Reads flame graphs from py-spy, async-profiler, Go pprof or clinic.js, finds the hottest frames, tells CPU-bound from lock contention or allocation pressure and suggests the next step.",
+  "description": "Use for any question or task about reading a flame graph or CPU profile, including finding the hot path after a slow release or a regression traced to one commit. Reads flame graphs and profiles from py-spy, async-profiler, Go pprof or clinic.js, finds the hottest frames, tells CPU-bound from lock contention or allocation pressure and suggests the next step.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.8.8"
+  "version": "1.8.9"
 }

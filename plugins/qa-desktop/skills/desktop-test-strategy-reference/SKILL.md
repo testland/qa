@@ -3,7 +3,7 @@ name: desktop-test-strategy-reference
 description: "Use for any question about how to test or automate a desktop GUI app on Windows, macOS or Linux, including which tool to pick for WPF, WinForms, Qt or Electron apps and tests that break because they click by coordinates. Maps each app to a driver (FlaUI, WinAppDriver, Playwright for Electron, QtTest, XCUITest, AT-SPI) and covers accessibility-first locators, waits and elevation hazards."
 metadata:
   keywords: "desktop, ui-automation, xctest, at-spi, electron, qt"
-  version: "1.2.16"
+  version: "1.2.17"
 ---
 
 # desktop-test-strategy-reference

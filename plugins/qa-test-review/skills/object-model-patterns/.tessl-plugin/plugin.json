@@ -1,9 +1,9 @@
 {
   "name": "testland/object-model-patterns",
-  "description": "Use when designing, reviewing or migrating a test framework's object model: Page Object, Screenplay, Component Object, App Actions, Service Object, Repository and Screen Object for desktop and mobile. Explains what each pattern is, when it fits, mixes to avoid, with citations and examples.",
+  "description": "Use for any question or task about structuring UI test code, including quick ones such as Page Objects vs Screenplay or refactoring raw selector calls into an object model: Page Object, Screenplay, Component Object, App Actions, Service Object, Repository and Screen Object for desktop and mobile. Explains what each pattern is, when it fits and mixes to avoid, with citations and examples.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.6.15"
+  "version": "1.6.16"
 }

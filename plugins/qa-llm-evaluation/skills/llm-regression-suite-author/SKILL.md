@@ -3,7 +3,7 @@ name: llm-regression-suite-author
 description: "Use for any question or task about catching LLM quality regressions, including checking a new model version or provider against the old one and prompt tweaks that break other cases. Builds a versioned golden dataset, deterministic runs, exact, semantic, judge and rubric checks, and a pass-rate CI gate with a baseline diff across model versions."
 metadata:
   keywords: "llm-regression, golden-dataset, model-upgrade, promptfoo, deepeval, pass-rate, deterministic-eval"
-  version: "1.3.8"
+  version: "1.3.9"
 ---
 
 # llm-regression-suite-author

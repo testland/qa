@@ -1,9 +1,9 @@
 {
   "name": "testland/semgrep-rules",
-  "description": "Use when a team runs Semgrep or wants a low-friction static analysis (SAST) gate without building a code database: Registry rulesets and custom YAML rules, semgrep ci with diff-aware baselines, nosemgrep suppressions, path filters, severity filters and JSON, SARIF, GitLab or JUnit output.",
+  "description": "Use for any question or task about Semgrep, writing a rule that flags a code pattern, or a lighter static analysis (SAST) gate than CodeQL that needs no code database: Registry rulesets and custom YAML rules, semgrep ci with diff-aware baselines, nosemgrep suppressions, path filters, severity filters and JSON, SARIF, GitLab or JUnit output.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.11"
+  "version": "1.2.12"
 }

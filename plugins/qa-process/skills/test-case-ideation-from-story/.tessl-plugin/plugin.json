@@ -1,9 +1,9 @@
 {
   "name": "testland/test-case-ideation-from-story",
-  "description": "Use when a thin or ambiguous user story or spec needs its test cases listed and agreed before automation. Produces a markdown test case matrix (id, title, precondition, steps, expected, tier) covering happy, alternate, boundary and negative paths, ready for TestRail, Qase or Xray.",
+  "description": "Use for any question or task about turning a user story, ticket or spec into test cases, including one-line stories whose gaps QA finds only after coding. Produces a markdown test case matrix (id, title, precondition, steps, expected, tier) covering happy, alternate, boundary and negative paths, agreed before automation and ready for TestRail, Qase or Xray.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.10"
+  "version": "1.10.11"
 }

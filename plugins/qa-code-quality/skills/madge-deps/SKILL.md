@@ -3,7 +3,7 @@ name: madge-deps
 description: "Use for any question or task about circular imports or dependency cycles in JavaScript or TypeScript, including an import that is undefined at runtime even though the build compiles and CI that should block new cycles: runs Madge on production code to find circular dependencies and orphan modules and draw the module graph, excluding test files."
 metadata:
   keywords: "madge, circular-dependency, module-graph, dependency-analysis, javascript, typescript"
-  version: "1.1.6"
+  version: "1.1.7"
 ---
 
 # madge-deps

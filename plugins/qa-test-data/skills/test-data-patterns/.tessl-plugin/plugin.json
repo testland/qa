@@ -1,9 +1,9 @@
 {
   "name": "testland/test-data-patterns",
-  "description": "Use when choosing how a test suite builds its test data, or when fixtures have drifted into shared mutable state. Explains Test Data Builder, Factory, Object Mother, fixture composition, snapshots and production-data anonymization, and when each fits, before picking a tool.",
+  "description": "Use for any question or task about how tests build their data, including Object Mother vs Test Data Builder, long constructor calls repeated across tests, and shared fixtures that one test changes and ten others break on. Explains Test Data Builder, Factory, Object Mother, fixture composition, snapshots and production-data anonymization, and when each fits, before picking a tool.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.12"
+  "version": "1.3.13"
 }

@@ -3,7 +3,7 @@ name: evidently-monitoring
 description: "Use for any question or task about data drift or quality monitoring for a production ML model, including a fired drift alert and metrics such as precision that degrade slowly unnoticed: Evidently reports with tests for data drift, target drift and performance regression as a CI gate or scheduled job, and a playbook to pick rollback, retrain, quarantine or alert re-tuning."
 metadata:
   keywords: "evidently, data-drift, model-monitoring, drift-detection, production-monitoring"
-  version: "1.3.9"
+  version: "1.3.10"
 ---
 
 # evidently-monitoring

@@ -3,7 +3,7 @@ name: lizard-complexity
 description: "Use for any question or task about measuring or limiting code complexity, including cyclomatic complexity across several languages and functions that have grown too long to review: runs Lizard (30+ languages) on production code to enforce per-function cyclomatic complexity, length and parameter-count thresholds as a CI gate, excluding tests."
 metadata:
   keywords: "lizard, cyclomatic-complexity, ccn, code-metrics, quality-gate"
-  version: "1.1.6"
+  version: "1.1.7"
 ---
 
 # lizard-complexity

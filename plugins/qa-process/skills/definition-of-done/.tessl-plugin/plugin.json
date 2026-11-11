@@ -1,9 +1,9 @@
 {
   "name": "testland/definition-of-done",
-  "description": "Use when a team has no Definition of Done, wants to revise it, or is about to mark a story or PR done without checking it. Drafts a starter DoD and a per-PR checklist, and audits work line by line against an existing DoD with repository evidence, never on self-attestation.",
+  "description": "Use for any question or task about a Definition of Done, including what one should include, checking a PR or story against it, and stories marked done that bounce back from QA. Drafts a starter DoD and a per-PR checklist, and audits work line by line against an existing DoD with repository evidence, never on self-attestation.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.8"
+  "version": "1.10.9"
 }

@@ -3,7 +3,7 @@ name: unity-test-framework-c
 description: "Use for any question or task about unit tests for pure C code on 8-bit MCUs, Cortex-M or embedded Linux, even tests for one function, including which framework fits a tiny-memory target: ThrowTheSwitch Unity (not the Unity game engine) with TEST_ASSERT families, setUp and tearDown, RUN_TEST, the test runner generator, config defines and CI via Ceedling JUnit XML."
 metadata:
   keywords: "unity, throwtheswitch, c, embedded, unit-testing, arm, avr, cortex-m"
-  version: "1.3.11"
+  version: "1.3.12"
 ---
 
 # unity-test-framework-c

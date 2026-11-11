@@ -1,9 +1,9 @@
 {
   "name": "testland/giskard-tests",
-  "description": "Use when a trained tabular or NLP model is about to ship with no tests of its own, or a feature or hyperparameter change needs a pre-merge check. Runs Giskard scan and its test catalog for performance, robustness, fairness, data leakage and ethical issues, and emits suites that pass or fail in CI.",
+  "description": "Use for any question or task about testing a trained tabular or NLP model before it ships, including robustness to small input changes, data leakage and fairness, or a pre-merge check after a feature or hyperparameter change. Runs Giskard scan and its test catalog for performance, robustness, fairness, data leakage and ethical issues, and emits suites that pass or fail in CI.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.3.6"
+  "version": "1.3.7"
 }
