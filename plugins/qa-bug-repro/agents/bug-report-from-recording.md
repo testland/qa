@@ -1,6 +1,6 @@
 ---
 name: bug-report-from-recording
-description: "Action-taking agent that ingests a Playwright trace.zip (and/or a HAR file plus console logs and screenshots) and emits a structured bug report matching the `bug-report-template` schema - verbatim error messages, repro steps reconstructed from the recorded actions, environment block populated from the trace metadata, expected-vs-actual filled from the recorded assertions and observed responses. Distinct from `bug-report-template` (which fills the same template from chat / voice / informal text) and from `bug-repro-builder` (which converts the report into a failing test). Use when a manual tester or CI run captured a Playwright trace and the team needs a triageable issue without round-tripping for missing fields."
+description: "Use proactively whenever a Playwright trace.zip, HAR file, console log or screenshots from a failed run must become a bug report. Emits a report in the bug-report-template schema: verbatim errors, repro steps from the recorded actions, environment from the trace, expected vs actual."
 tools: "Read, Grep, Glob, Bash(unzip *), Bash(jq *), Bash(npx playwright show-trace *)"
 model: sonnet
 skills:

@@ -1,6 +1,6 @@
 ---
 name: time-handling-critic
-description: "Adversarial critic that scans source code for time-handling anti-patterns: naive now()/new Date() calls without timezone context, implicit local-time arithmetic, DST-unsafe string construction (e.g. building 02:30 on a spring-forward date), naive date storage, and missing ZonedDateTime/ZoneInfo/Temporal usage. Reads diffs and source files; emits a structured finding list with severity and BLOCK/PASS verdict. Use when reviewing PRs that touch time, date, scheduling, cron, billing, or timestamp serialisation code."
+description: "Use proactively whenever a PR touches dates, times, scheduling, cron, billing or timestamp serialization. Flags naive now() calls, local-time arithmetic, DST-unsafe construction, naive date storage and missing zone-aware types, with severity and a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

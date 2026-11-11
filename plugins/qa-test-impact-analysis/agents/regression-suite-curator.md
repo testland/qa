@@ -1,6 +1,6 @@
 ---
 name: regression-suite-curator
-description: "Action-taking agent that curates the regression suite at two grains. Quarterly signal-history pass: reviews per-test signal/noise history and recommends keep/fold/delete decisions - keeps tests that have caught real regressions, folds two tests into one when they share most setup and assertions, deletes only when a test has been zero-signal AND is duplicated by a higher-coverage test AND the coverage map confirms its source paths are exercised elsewhere. Sprint-grain scan mode: finds duplicates, tautologies, trivial tests, dead-signal tests (zero failures while the files they cover churn), and orphans with file:line evidence for a test-debt sprint. Every disposition routes through test-removal-criteria's four-condition delete gate; outputs a curated diff with rationale per decision and never auto-merges. Use as a quarterly suite-health pass or a periodic test-debt sprint tool when the suite has grown faster than its signal value."
+description: "Use proactively for a quarterly suite review or a test-debt sprint when the regression suite has grown faster than its value. Finds duplicates, tautologies, dead-signal and orphan tests with evidence and proposes keep, fold or delete through a four-condition delete gate. Never auto-merges."
 tools: "Read, Edit, Grep, Glob, Bash(git log *), Bash(git blame *), Bash(npx jest --listTests), Bash(pytest --collect-only *), Bash(go test -list *)"
 model: sonnet
 skills:

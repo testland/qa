@@ -1,6 +1,6 @@
 ---
 name: mobile-test-author
-description: "Action-taking agent that authors mobile UI tests end to end: Step 1 detects the driver from project markers (package.json + detox, pubspec.yaml, *.xcodeproj, app/build.gradle, .maestro/) or accepts an override; if no test harness exists yet, scaffold mode emits a from-zero project skeleton (.detoxrc.js + e2e/, XCUITest target stub, androidTest/ module, .maestro/ flows) with failing INPUT NEEDED placeholders; then it authors ONE XCUITest, Espresso, Detox, Flutter, Appium, or Maestro test file per behavior spec in the driver's idiomatic patterns. Sibling of qa-desktop/desktop-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding a mobile UI test - whether the test project already exists or must be scaffolded first."
+description: "Use proactively whenever a mobile UI test should be written, even when no test project exists yet. Detects XCUITest, Espresso, Detox, Flutter, Appium or Maestro from the project, scaffolds the harness if needed and writes one test per behavior in that driver's idiom."
 tools: "Read, Write, Edit, Grep, Glob, Bash(xcodebuild *), Bash(gradle *), Bash(./gradlew *), Bash(detox *), Bash(flutter test *), Bash(maestro test *), Bash(appium *), Bash(jq *)"
 model: inherit
 skills:

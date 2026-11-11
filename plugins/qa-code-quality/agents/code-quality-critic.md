@@ -1,6 +1,6 @@
 ---
 name: code-quality-critic
-description: "Adversarial reviewer of production code quality findings across SonarQube, Qlty, Lizard, Madge, and Knip. Synthesizes per-tool reports, dedupes overlapping findings (e.g., Lizard CCN + SonarQube cognitive complexity on the same function), separates \"fix now\" from \"ratchet later\", and refuses to mark a PR ready when net new debt is introduced. Use proactively before merging refactor PRs or releasing a new module."
+description: "Use proactively before merging a refactor PR or releasing a new module, when SonarQube, Qlty, Lizard, Madge or Knip reports need one decision. Merges and dedupes their findings, separates fix-now from ratchet-later, and refuses to mark the PR ready while it adds net new debt."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(git *)"
 model: sonnet
 skills:

@@ -1,6 +1,6 @@
 ---
 name: security-finding-triager
-description: "Adversarial cross-domain unifier of security scanner output - one gate agent for six finding domains: SAST (Semgrep / SonarQube / CodeQL / Bandit / gosec), DAST (ZAP / Burp / NightVision), secrets (gitleaks / TruffleHog / Kingfisher), SCA dependency CVEs (Snyk / OSV-Scanner / npm-pip-maven audit), container + SBOM CVEs (Grype / Trivy / Snyk container / OSV SBOM mode), and IaC policy (Checkov / tfsec / KICS). Normalizes each report onto the canonical Finding schema, deduplicates on the per-domain key with `caught_by` consensus, enforces waivers requiring `expires:` + `approved_by:` + `reason:`, enriches CVE findings with EPSS + CISA KEV (a KEV CVE is never waivable), and emits one severity-bucketed PR comment with a BLOCK / PASS verdict per domain. Refuses to pass with unwaived critical findings, unwaived Verified secrets, or unwaived Fix-Now CVEs. Use after any subset of security scanners runs in CI and the PR needs a single actionable decision instead of per-tool reports."
+description: "Use proactively whenever several security scanners (SAST, DAST, secrets, SCA, container or SBOM, IaC) ran on a PR and it needs one decision. Normalizes and dedupes findings, enforces waivers with expiry and approver, adds EPSS and CISA KEV, and posts one PR comment with a BLOCK or PASS per domain."
 tools: "Read, Grep, Glob, Bash(jq *), WebFetch"
 model: sonnet
 skills:

@@ -1,6 +1,6 @@
 ---
 name: regression-bisector
-description: "Orchestrates `git bisect` against a target test or build script to identify the introducing commit of a regression. Wraps the bad/good marking, the `git bisect run` script, the 125 exit code for unbuildable revisions, and the final culprit report. Includes a perf-measurement mode that bisects on a perf metric threshold instead of pass/fail - a per-commit k6 or Lighthouse CI run with a single budget assertion - and hands the culprit's hot path to flame-graph or query-plan analysis. Use when a test that previously passed has started failing 100% of the time on the trunk, or when load testing / Lighthouse CI shows a perf regression whose introducing commit is unclear."
+description: "Use proactively whenever a test that used to pass now fails every time on trunk, or a k6 or Lighthouse run shows a performance regression with no known cause. Drives git bisect (including a perf-threshold mode) to the introducing commit and reports the culprit."
 tools: "Read, Grep, Glob, Bash(git bisect *), Bash(git log *), Bash(git show *), Bash(npx playwright test *), Bash(jest *), Bash(npm test *), Bash(make *), Bash(k6 run *), Bash(npx lhci *), Bash(jq *)"
 model: sonnet
 skills:

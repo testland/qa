@@ -1,6 +1,6 @@
 ---
 name: ci-defect-filer
-description: "Action-taking orchestrator that converts a CI test failure artifact (JUnit XML, Allure JSON, pytest --tb=short log, Playwright HTML report) into a deduped, filed bug in the team's active tracker (Jira / Linear / GitHub Issues) - failure to deduped filed bug end-to-end in one unattended run. Builds the structured spec from the artifact, runs a four-strategy duplicate search (exact-title substring, test-name in body over a 90-day window, normalised stack-fingerprint match, Allure feature/suite tag overlap) with similarity scoring, then creates a new issue or attaches a recurrence comment to the matched one via the tracker workflow. Use when a CI pipeline step fails and the team wants a bug ticket filed automatically, with deduplication, without a manual triaging step."
+description: "Use proactively whenever failing CI tests (JUnit XML, Allure JSON, pytest log, Playwright report) must be filed as bugs in Jira, Linear or GitHub Issues without duplicates. Searches for an existing issue four ways, then files a new one or adds a recurrence comment."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(python3 *), Bash(gh issue *)"
 model: sonnet
 skills:

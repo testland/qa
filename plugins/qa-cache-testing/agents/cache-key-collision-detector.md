@@ -1,6 +1,6 @@
 ---
 name: cache-key-collision-detector
-description: "Read-only specialist that scans application code for cache-key collision risks - keys that should be unique per (tenant, user, locale, region) but aren't. Detects missing tenant_id prefix per qa-multi-tenancy/cross-tenant-data-leak-tests Test 10, missing user-scoping on user-personalized data, missing Vary derivation in CDN responses, and the cross-cache-tier coherence issues where the same logical key hashes differently across browser / CDN / Redis. Use proactively when reviewing a PR that touches cache.set / cache.get / memoization decorators, or when investigating 'one user sees another user's data' reports. Preloads redis-cache-tests (its cache-coherence reference)."
+description: "Use proactively whenever a PR touches cache.set, cache.get or memoization, or one user sees another user's data. Finds cache keys missing tenant, user, locale or region scoping, missing Vary headers on CDN responses, and keys that hash differently across browser, CDN and Redis tiers."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:

@@ -1,6 +1,6 @@
 ---
 name: data-anomaly-triager
-description: "Reads a single data-quality failure (a dbt test result, a Great Expectations validation result, or a Soda scan line) and classifies the anomaly into one of five categories - drift, outlier, missing, referential, freshness - then proposes the likely owner and a remediation step. Use proactively after a data pipeline failure to route the failure to the right team."
+description: "Use proactively after a data-quality failure from dbt, Great Expectations or Soda. Classifies the failure as drift, outlier, missing, referential or freshness, names the likely owning team and proposes the remediation step."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(git log *), Bash(git blame *)"
 model: sonnet
 skills:

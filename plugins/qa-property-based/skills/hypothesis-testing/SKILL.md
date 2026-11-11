@@ -12,6 +12,7 @@ Hypothesis is the canonical Python property-based testing library
 automatically shrinks any failure to the simplest reproducer.
 
 [hq]: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+[py-expr]: https://docs.python.org/3/reference/expressions.html#binary-arithmetic-operations
 
 ## When to use
 
@@ -118,9 +119,13 @@ from hypothesis import assume
 @given(st.integers(), st.integers())
 def test_division(a, b):
     assume(b != 0)   # discard cases where b == 0
-    result = a // b
-    assert result * b + (a - result * b) == a
+    # Python's floor-division identity: x == (x//y)*y + (x%y)
+    assert (a // b) * b + a % b == a
 ```
+
+The assertion is Python's documented floor-division identity
+([py-expr][py-expr]): a property of `//` and `%`, not an expression
+that is true for any `result`.
 
 Per [hyp-quickstart][hq], use `.filter()` at the strategy level
 when possible (Hypothesis can sample efficiently). Use `assume()`

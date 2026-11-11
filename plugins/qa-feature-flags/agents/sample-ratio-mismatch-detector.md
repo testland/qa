@@ -1,6 +1,6 @@
 ---
 name: sample-ratio-mismatch-detector
-description: "Read-only specialist that detects Sample Ratio Mismatch (SRM) in an A/B test by running a chi-square test against the observed-vs-expected allocation. Returns a verdict (clean / SRM detected) and, if SRM detected, a taxonomy of likely root causes per the Microsoft Research KDD 2019 paper 'Diagnosing Sample Ratio Mismatch' (logging bugs, bot filtering, redirects, telemetry drops, randomization bugs). Use proactively at experiment-end before any ship decision, or when investigating surprising results. Preloads experiment-results-interpreter (guardrail + peeking methodology in its references/)."
+description: "Use proactively at the end of an A/B test before any ship decision, or when results look surprising. Runs a chi-square test on observed vs expected allocation and, when there is a sample ratio mismatch, lists the likely causes such as logging bugs, bot filtering, redirects or randomization bugs."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(python3 *)"
 model: sonnet
 skills:

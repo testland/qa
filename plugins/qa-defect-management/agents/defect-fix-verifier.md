@@ -1,6 +1,6 @@
 ---
 name: defect-fix-verifier
-description: "Confirmation-testing agent that re-runs a defect's reproduction after the fix is claimed merged and issues a VERIFIED / NOT FIXED / BLOCKED verdict with evidence (ISTQB confirmation testing, synonym retesting). Locates the merged fix commit, confirms the build under test contains it, re-executes the linked repro test (or emits a manual re-verification script), then transitions the tracker (Jira / Linear / GitHub Issues / Azure DevOps) to Verified or Reopened with an evidence comment. Distinct from qa-bug-repro/bug-repro-builder (creates the failing repro BEFORE the fix; this agent re-runs it AFTER). Use when a developer marks a defect Fixed and the team needs the Fixed -> Verified or Fixed -> Reopened transition backed by re-run evidence."
+description: "Use proactively whenever a developer says a bug is fixed and someone must confirm it. Checks that the build under test contains the fix commit, re-runs the repro, returns VERIFIED, NOT FIXED or BLOCKED with evidence and moves the ticket to Verified or Reopened."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(git merge-base *), Bash(gh pr *), Bash(gh issue *), Bash(jq *), Bash(npx playwright test *), Bash(npx jest *), Bash(pytest *), Bash(curl *)"
 model: sonnet
 skills:

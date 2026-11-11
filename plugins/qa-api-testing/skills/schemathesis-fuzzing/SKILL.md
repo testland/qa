@@ -64,6 +64,7 @@ uvx schemathesis run <schema-url>
 for one-off tool execution.)
 
 [docs]: https://schemathesis.readthedocs.io/en/stable/
+[cli]: https://schemathesis.readthedocs.io/en/stable/reference/cli/
 
 ## Running via CLI
 
@@ -80,27 +81,29 @@ schemathesis run <schema-url>
 
 ### Key flags
 
-Per [schemathesis-readme][readme]:
+Per the [CLI reference][cli] (Schemathesis 4):
 
 | Flag                              | Purpose                                                |
 |-----------------------------------|--------------------------------------------------------|
-| `--base-url <url>`                | Override the API base URL (test against staging vs prod). |
-| `--checks <name>` (repeatable)    | Restrict to specific validations.                      |
-| `--hypothesis-max-examples <N>`   | Number of generated cases per endpoint.                |
-| `--workers <N>`                   | Parallel workers; speeds up large schemas.             |
-| `--header 'X-API-KEY: ...'`       | Inject auth header on every generated request.         |
-| `--auth user:pass`                | HTTP Basic Auth.                                        |
-| `--cassette-har <path>`           | Record / replay using HAR files (debug aid).            |
+| `-u, --url <url>`                 | API base URL (test against staging vs prod); required for a file-based schema. |
+| `-c, --checks <a,b>`              | Comma-separated checks to run; the default is all checks. |
+| `-n, --max-examples <N>`          | Number of generated cases per operation.               |
+| `-w, --workers <N\|auto>`         | Parallel workers (1-64 or `auto`); speeds up large schemas. |
+| `-H, --header 'X-API-KEY: ...'`   | Inject a header on every generated request (repeatable). |
+| `-a, --auth user:pass`            | HTTP Basic Auth.                                        |
+| `--report junit,har,vcr`          | Write reports (default directory `schemathesis-report`); paths via `--report-junit-path`, `--report-har-path`, `--report-vcr-path`. |
+
+The 3.x flags `--base-url`, `--hypothesis-max-examples`, `--junit-xml`
+and `--cassette-path` are not in the current CLI ([cli][cli]); old
+blog posts and CI files still use them.
 
 ### Worked example
 
 ```bash
 schemathesis run https://api.example.com/openapi.json \
-  --base-url https://staging.example.com \
-  --checks status_code_conformance \
-  --checks response_schema_conformance \
-  --checks not_a_server_error \
-  --hypothesis-max-examples 200 \
+  --url https://staging.example.com \
+  --checks status_code_conformance,response_schema_conformance,not_a_server_error \
+  --max-examples 200 \
   --workers 4 \
   --header "Authorization: Bearer $API_TOKEN"
 ```
@@ -117,7 +120,7 @@ Per [schemathesis-readme][readme], the canonical checks:
 | `response_headers_conformance`      | Response headers conform to the schema's `headers` declaration. |
 | `not_a_server_error`                | The response is **not** in the 5xx range; any 5xx is a hard fail. |
 
-Run all checks (default), or restrict via repeated `--checks`:
+Run all checks (default), or restrict with a comma-separated `--checks` list:
 
 ```bash
 # Strict: every check active
@@ -158,8 +161,8 @@ post-processing, use `before_call` hooks - see
 ## Operating in CI
 
 Gate PRs on Schemathesis with a shallow per-PR run
-(`--hypothesis-max-examples 50`) and a deeper nightly cron (200+), always
-against staging via `--base-url`. Hypothesis shrinks any failure to a
+(`--max-examples 50`) and a deeper nightly cron (200+), always
+against staging via `--url`. Hypothesis shrinks any failure to a
 minimal reproducer, so a 50-example PR run catches most regressions while
 the nightly depth surfaces the rare ones. The full GitHub Actions workflow
 (JUnit reporting, artifact upload) and the per-PR / nightly / weekly cadence
@@ -170,8 +173,8 @@ table live in [references/ci-and-pytest-integration.md](references/ci-and-pytest
 | Anti-pattern                                                    | Why it fails                                                | Fix |
 |-----------------------------------------------------------------|-------------------------------------------------------------|-----|
 | Running with `--checks not_a_server_error` only and calling it done | 5xx detection misses 4xx-with-wrong-content cases.         | Run all default checks; 5xx-only is a smoke check, not coverage. |
-| `--hypothesis-max-examples 5` to keep CI fast                     | Coverage too thin; flaky-looking results.                  | 50+ on PR; if too slow, parallelize via `--workers`. |
-| Targeting production URL                                          | Generated requests can mutate prod data; 5xx alerts trigger oncall. | Always `--base-url <staging>`; production should never see fuzz traffic. |
+| `--max-examples 5` to keep CI fast                                | Coverage too thin; flaky-looking results.                  | 50+ on PR; if too slow, parallelize via `--workers`. |
+| Targeting production URL                                          | Generated requests can mutate prod data; 5xx alerts trigger oncall. | Always `--url <staging>`; production should never see fuzz traffic. |
 | Stale schema URL                                                  | Schemathesis fuzzes the schema's authoritative version, not what the deploy actually serves; false negatives mask bugs. | CI fetches the schema from the PR's deployed staging artifact, not from a checked-in copy. |
 | Ignoring shrunk failures                                          | A `not_a_server_error` failure with a 5-byte input is a real bug, not noise. | Triage every failure; close as "won't fix" only with a documented schema-amendment plan. |
 

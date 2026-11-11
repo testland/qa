@@ -1,6 +1,6 @@
 ---
 name: automation-harness-bootstrapper
-description: "Scaffolds a test-automation framework skeleton for a repo that has none - given the app's stack and entry points, generates the folder layout, base fixtures, a page-object (or screenplay) base class, one example smoke test, and the CI job that runs it. Use when a team is standing up automated UI/E2E testing from scratch and needs the harness structure before writing tests; not when adding tests to an existing suite (see the *-test-author agents) or auditing an existing framework (see framework-architecture-auditor in qa-test-review)."
+description: "Use proactively whenever a repo has no UI or E2E test automation yet and needs a framework skeleton: folder layout, base fixtures, a page-object or screenplay base class, one example smoke test and the CI job. Not for adding tests to an existing suite or auditing one."
 tools: "Read, Grep, Glob, Write, Bash(npx playwright *), Bash(npm init *)"
 model: sonnet
 skills:

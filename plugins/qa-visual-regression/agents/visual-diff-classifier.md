@@ -1,6 +1,6 @@
 ---
 name: visual-diff-classifier
-description: "Adversarial reviewer of visual regression diffs. Classifies each diff in a build (Percy / Chromatic / Playwright snapshot report) into one of three categories - intentional, incidental, or regression - with rationale and recommended action; on large builds (20+ diffs) it also emits a per-PR summary-comment report mode that clusters diffs by component / route, separates intent-aligned changes from cascade / regression suspects, and points the reviewer at the screenshots that need actual eyes. Use when reviewing a visual-test build that the team is about to accept; surfaces \"looks intentional but isn't\" cases that human reviewers rubber-stamp."
+description: "Use proactively whenever a Percy, Chromatic or Playwright visual build is about to be accepted. Classifies each diff as intentional, incidental or regression with a reason and action, and on large builds clusters diffs by component or route so reviewers check the right screenshots."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:

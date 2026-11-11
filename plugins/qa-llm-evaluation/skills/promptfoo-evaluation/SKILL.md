@@ -179,7 +179,7 @@ defaultTest:
     - type: llm-rubric
       value: does not describe self as AI
   options:
-    provider: openai:gpt-5-mini-0613
+    provider: openai:gpt-5-mini   # in CI, pin a dated snapshot id from the provider's model page
 
 tests:
   - vars:
@@ -248,6 +248,7 @@ branch. Caching reuses LLM responses for unchanged tests (per
 [promptfoo.dev/docs/configuration/caching/][pf-cache]).
 
 [pf-cache]: https://promptfoo.dev/docs/configuration/caching/
+[oa-models]: https://developers.openai.com/api/docs/models/gpt-5-mini
 
 ## Anti-patterns
 
@@ -257,7 +258,7 @@ branch. Caching reuses LLM responses for unchanged tests (per
 | Single provider in config | Misses cross-provider regression | At least 2 providers per eval (Step 2) |
 | No cost / latency caps | Eval cost balloons per PR | `cost` + `latency` asserts (Step 4) |
 | `assert-set` with `threshold: 0` | Effectively disables grouping | Pick a real threshold (Step 7) |
-| Fresh provider model on every run without pinning | Output drifts when vendor updates model | Pin specific snapshot (e.g., `openai:gpt-5-mini-0613`) |
+| Fresh provider model on every run without pinning | Output drifts when vendor updates model | Pin a dated snapshot id from the provider's model page ([OpenAI's lists them per model][oa-models]), not a moving alias |
 | Skip caching in CI | Re-runs every test on every PR | `cache-path` in GHA action (Step 8) |
 
 ## Limitations

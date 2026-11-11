@@ -1,6 +1,6 @@
 ---
 name: desktop-test-author
-description: "Action-taking agent that authors desktop UI tests end to end: Step 1 detects the app type + driver via the decision table in desktop-test-strategy-reference (csproj / package.json / .pro / CMakeLists.txt / xcodeproj markers -> flaui / winappdriver / electron-playwright / qt-test / xcuitest / at-spi) or accepts an override; if no test project exists yet, scaffold mode emits a fresh test project (project file, driver-init fixture, one screen-object skeleton with INPUT NEEDED selector markers, per-OS CI workflow with foreground-lock / UAC / TCC / AT-SPI bootstrap); then it authors one desktop UI test file per user-flow spec plus any new screen-object additions, composing the qa-desktop driver skills with the dotnet-unit-tests harness (xUnit / NUnit / MSTest) from qa-unit-tests-net. Sibling of qa-mobile/mobile-test-author and the per-language unit-test authors. Use when adding a per-flow desktop UI test - whether the test project already exists or must be scaffolded first."
+description: "Use proactively whenever a desktop UI test should be written for a Windows, macOS or Linux app, even when no test project exists yet. Detects the driver (FlaUI, WinAppDriver, Playwright for Electron, QtTest, XCUITest, AT-SPI), scaffolds the project if needed and writes one test per user flow."
 tools: "Read, Write, Edit, Grep, Glob, Bash(dotnet test *), Bash(dotnet new *), Bash(npm test *), Bash(npm init *), Bash(mkdir *)"
 model: inherit
 skills:

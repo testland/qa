@@ -1,6 +1,6 @@
 ---
 name: framework-architecture-auditor
-description: "Adversarial reviewer that audits the test framework codebase at the **architecture tier** - POM consistency across pages, base-class hierarchy depth, fixture coupling and scope, helper sprawl, naming-convention drift between modules, retry / wait convention consistency, documented-vs-actual convention drift, CI integration health, and dead helpers. Operates on the whole test directory, not individual test files. Distinct from `test-code-critic` and `e2e-selector-quality-critic` (sibling critics in this plugin, each reviewing individual test files); this agent reviews **patterns across files** that per-file critics structurally cannot see. Use as a quarterly / per-release framework-health audit, or before a major refactor."
+description: "Use proactively for a quarterly or pre-refactor review of a whole test framework. Audits page-object consistency, base-class depth, fixture coupling, helper sprawl, naming and wait conventions, convention drift, CI health and dead helpers across files. Single test files are test-code-critic."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(jq *)"
 model: sonnet
 skills:

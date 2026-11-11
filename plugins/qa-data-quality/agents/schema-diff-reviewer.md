@@ -1,6 +1,6 @@
 ---
 name: schema-diff-reviewer
-description: "Reviews a database-schema diff (PR migration files or `dbt run-operation` output) for breaking changes vs additive changes, missing data tests on new/changed columns, and downstream consumer impact. Use proactively before merging schema migrations. Returns a Critical / Warning / Info findings table with file:line references. Reviews the change for data-test coverage and consumer impact; migration-blast-radius-reviewer (in the qa-db-migrations plugin) reviews the same PR for locking, downtime, and rollback safety."
+description: "Use proactively before merging a schema migration or dbt model change. Separates breaking from additive changes, finds new or changed columns with no data tests and lists downstream consumers affected. Locking and rollback safety is migration-blast-radius-reviewer."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(git show *)"
 model: sonnet
 skills:

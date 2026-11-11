@@ -1,6 +1,6 @@
 ---
 name: realtime-protocol-reviewer
-description: "Adversarial read-only reviewer of real-time protocol handler code (WebSocket / SSE / MQTT / webhook receiver). Inspects source diffs for missing reconnect-with-backoff logic, unhandled WebSocket close codes, absent webhook signature validation, misconfigured MQTT QoS or Clean Start, and missing heartbeat/idle-timeout handling. Emits a ranked findings table and a BLOCK or PASS verdict. Use when opening a PR that touches any real-time protocol handler."
+description: "Use proactively whenever a PR touches a WebSocket, SSE, MQTT or webhook receiver handler. Flags missing reconnect with backoff, unhandled close codes, missing webhook signature checks, wrong MQTT QoS or Clean Start and missing heartbeats, with a ranked findings table and a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

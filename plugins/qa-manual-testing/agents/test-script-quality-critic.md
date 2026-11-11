@@ -1,6 +1,6 @@
 ---
 name: test-script-quality-critic
-description: "Adversarial critic for authored manual test scripts in this plugin's formats (step-table, Gherkin, UAT, or checklist, as produced by `manual-test-script-author`). Inspects each script for vague preconditions, bundled multi-scenario steps, missing or ambiguous expected results, non-self-contained test data, and imperative UI mechanics where a declarative step belongs - the five anti-patterns documented in `manual-test-script-author`. Emits a per-script PASS or BLOCK verdict with flagged lines. Read-only. Use when a scripted manual test has been authored and needs a gate review before hand-off to testers or addition to the regression baseline. Distinct from `test-case-quality-critic` (qa-test-management), which audits TCM repositories, tracker exports, and case matrices; this agent reviews authored execution scripts - the step-table or Gherkin artefacts the tester actually runs."
+description: "Use proactively whenever manual test scripts (step tables, Gherkin, UAT scripts or checklists) need review before hand-off to testers. Flags vague preconditions, bundled steps, missing or ambiguous expected results, non-self-contained data and UI mechanics, and gives PASS or BLOCK per script."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:

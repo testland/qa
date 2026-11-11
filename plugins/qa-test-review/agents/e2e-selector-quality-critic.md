@@ -1,6 +1,6 @@
 ---
 name: e2e-selector-quality-critic
-description: "Adversarial reviewer specialized for E2E test selector fragility only - flags brittle CSS class selectors / nth-child / XPath / position-based selectors and recommends `getByRole` / `getByLabelText` / accessibility-first equivalents per Testing Library's priority order. Per Playwright best practices: \"automated tests should verify that the application code works for the end users, and avoid relying on implementation details.\" For non-web-first assertion style (`.isVisible()` checked synchronously vs the `await expect(...).toBeVisible()` form) and matcher specificity, see `test-code-critic` (its §4 assertion dimension). Use against any E2E test files (Playwright / Cypress / Selenium / WebdriverIO) when the concern is selector fragility."
+description: "Use proactively whenever Playwright, Cypress, Selenium or WebdriverIO tests may rely on brittle selectors. Flags CSS class, nth-child, XPath and position selectors and proposes getByRole, getByLabel and other accessibility-first locators. Assertion style is test-code-critic."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:

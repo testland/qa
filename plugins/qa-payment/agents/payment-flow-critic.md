@@ -1,6 +1,6 @@
 ---
 name: payment-flow-critic
-description: "Adversarial read-only reviewer of payment-integration code (PR diff or files). Inspects for the five highest-incident payment defects: missing charge idempotency keys (per docs.stripe.com/api/idempotent_requests: retrying without a key risks creating a second charge); unverified webhook signatures (per docs.stripe.com/webhooks: skipping lets attackers trigger fulfillment with fake events); PAN or CVV in logs (per PCI DSS v4.0 §3.2.1: prohibited post-authorisation); unhandled requires_action / 3DS-incomplete states (per docs.stripe.com/payments/payment-intents/verifying-status: fulfillment must not proceed from a synchronous return); and double-charge race risk from concurrent retries. Emits per-finding severity (Critical / High), remediation, and a BLOCK or PASS verdict. Use proactively when reviewing any PR that touches payment-integration code."
+description: "Use proactively whenever a PR touches payment integration code. Checks for missing idempotency keys on charges, unverified webhook signatures, card data in logs, unhandled 3DS requires_action states and double-charge races, with severity, fixes and a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

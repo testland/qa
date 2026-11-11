@@ -1,6 +1,6 @@
 ---
 name: stale-flag-detector
-description: "Read-only specialist that scans a codebase for stale feature flags - flags at 100% rollout for long enough to remove, kill-switches that haven't been touched in months, experiments that have already shipped, and orphan flags (referenced in code but not in the platform, or vice versa) - and returns a ranked removal-candidate list plus the safe-removal runbook for each (pre-removal verification, code + platform-side removal steps, post-removal checks, rollback plan). Use proactively monthly / quarterly as flag-debt audit, or as a pre-flight check before a major refactor. Preloads openfeature-sdk-testing (its flag test-matrix reference)."
+description: "Use proactively for a monthly or quarterly feature-flag debt audit, or before a major refactor. Finds flags at 100% rollout, untouched kill switches, shipped experiments and orphan flags, ranks them for removal and gives a safe removal runbook for each."
 tools: "Read, Grep, Glob, Bash(git log *)"
 model: sonnet
 skills:

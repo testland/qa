@@ -1,6 +1,6 @@
 ---
 name: notification-delivery-critic
-description: "Read-only adversarial critic that reviews a PR diff or code change, not a live system, for delivery-reliability defects across email, SMS, push, and outbound-webhook send paths: missing idempotency keys, absent bounce/unsubscribe handlers, missing DKIM/SPF/DMARC alignment, missing retry/backoff, and absent dead-letter handling after retry exhaustion. Emits a finding table and a BLOCK or PASS verdict. Use when reviewing any PR that touches a notification send path, an email/SMS/push dispatch layer, or a webhook emitter. Differs from webhook-delivery-tester (which designs and runs delivery tests against a running system) by operating purely on static code in a diff."
+description: "Use proactively whenever a PR touches an email, SMS, push or outbound-webhook send path. Flags missing idempotency keys, bounce and unsubscribe handling, DKIM, SPF and DMARC alignment, retry with backoff and dead-letter handling, with a BLOCK or PASS verdict. Reviews code only, not a live system."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

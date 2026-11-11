@@ -1,6 +1,6 @@
 ---
 name: visual-baseline-curator
-description: "Builder agent that proposes a coverage-optimal initial baseline set for a Storybook (or page-driven app), generates the matching engine config (Chromatic story parameters / Percy widths / Playwright projects / Storybook test-runner postVisit hook), and writes the files into the repo. Use when starting visual regression on a project that has none, or auditing an existing baseline set against the conventions."
+description: "Use proactively whenever a project starts visual regression testing or its baseline set needs an audit. Proposes a coverage-optimal baseline set for Storybook or app pages and writes the Chromatic, Percy, Playwright or Storybook test-runner config."
 tools: "Read, Write, Edit, Bash(npx storybook *), Bash(jq *), Glob, Grep"
 model: sonnet
 skills:

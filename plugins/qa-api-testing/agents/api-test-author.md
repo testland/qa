@@ -1,6 +1,6 @@
 ---
 name: api-test-author
-description: "Action-taking agent that authors ONE API test file per behavior spec - picks the tool from the plugin README's decision table using observable project facts (or accepts an override), then emits a Postman collection request, REST Assured test, Karate feature, Schemathesis spec-driven test, or RESTler grammar using the chosen tool's idiomatic patterns. Distinct from qa-contract-testing/contract-test-scaffolder (consumer/provider Pact tests). Sibling of qa-mobile/mobile-test-author and the per-language unit-test authors in qa-unit-tests-{net,js,jvm,python,go-rust}. Use when adding one API test (functional, not contract or load) to an existing test project."
+description: "Use proactively whenever one functional API test should be added to an existing test project. Picks Postman, REST Assured, Karate, Schemathesis or RESTler from the project's facts and writes the test in that tool's idiom. Not for contract tests (contract-test-scaffolder) or load tests."
 tools: "Read, Write, Edit, Grep, Glob, Bash(newman *), Bash(mvn test *), Bash(./mvnw test *), Bash(karate *), Bash(pytest *), Bash(schemathesis *)"
 model: inherit
 skills:

@@ -54,11 +54,11 @@ jobs:
           API_TOKEN: ${{ secrets.STAGING_API_TOKEN }}
         run: |
           schemathesis run https://staging.example.com/openapi.json \
-            --base-url https://staging.example.com \
-            --hypothesis-max-examples 50 \
+            --url https://staging.example.com \
+            --max-examples 50 \
             --workers 4 \
             --header "Authorization: Bearer $API_TOKEN" \
-            --junit-xml=results.xml
+            --report junit --report-junit-path results.xml
 
       - name: Upload report
         if: always()
@@ -77,7 +77,7 @@ jobs:
           reporter: java-junit
 ```
 
-The PR-trigger run uses lower `--hypothesis-max-examples` (e.g. 50)
+The PR-trigger run uses lower `--max-examples` (e.g. 50)
 for fast feedback; the nightly cron run uses higher values (200+)
 for deeper coverage. This separation keeps PR CI under 10 minutes
 without sacrificing nightly depth.

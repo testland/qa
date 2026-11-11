@@ -1,6 +1,6 @@
 ---
 name: concurrency-critic
-description: "Adversarial static pass over concurrency-heavy code (threads, goroutines, async/await) that inspects for unguarded shared mutable state, lock-ordering inconsistency (deadlock risk), missing happens-before / memory-visibility, and check-then-act races. Reads the diff and surrounding context; reuses the shared-state checklist from race-condition-test-author and the lock-graph method from deadlock-detection-harness; emits a findings table plus a BLOCK or PASS verdict. Use when reviewing any PR that adds or modifies concurrent code paths."
+description: "Use proactively whenever a PR adds or changes concurrent code: threads, goroutines or async/await. Looks for unguarded shared mutable state, inconsistent lock ordering (deadlock risk), missing memory visibility and check-then-act races, with a findings table and a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

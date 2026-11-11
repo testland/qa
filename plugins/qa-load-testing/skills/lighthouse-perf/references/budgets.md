@@ -42,6 +42,12 @@ INP ≤200ms, CLS ≤0.1) and adjust per traffic class:
 | **Form-heavy** (input + validation)    | ≤2.5s | ≤100ms | ≤0.05 | INP matters more - every keystroke is an interaction. CLS strict because forms must not jump. |
 | **Media-heavy** (images / video)       | ≤2.5s | ≤200ms | ≤0.1 | LCP via priority hints + `loading=eager` on hero. |
 
+The INP column is a field target: track it with the `web-vitals` library
+in production. Lighthouse CI's navigation runs can't measure INP (the
+audit is timespan-only), so the lab gate below uses `total-blocking-time`
+as the proxy, starting at Lighthouse's "fast" band (200 ms mobile, 150 ms
+desktop) on every route.
+
 For a team's first pass, **start lenient** (Web Vitals defaults across the
 board) and **tighten one route at a time** as evidence accumulates that the
 route is consistently faster than the default.
@@ -94,7 +100,7 @@ module.exports = {
           matchingUrlPattern: '^http://[^/]+/(pricing)?$',
           assertions: {
             'largest-contentful-paint': ['error', { maxNumericValue: 1500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 100 }],
+            'total-blocking-time':       ['error', { maxNumericValue: 200 }],
             'cumulative-layout-shift':   ['error', { maxNumericValue: 0.1 }],
           },
         },
@@ -103,7 +109,7 @@ module.exports = {
           matchingUrlPattern: '/dashboard',
           assertions: {
             'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 200 }],
+            'total-blocking-time':       ['error', { maxNumericValue: 200 }],
             'cumulative-layout-shift':   ['error', { maxNumericValue: 0.1 }],
           },
         },
@@ -112,7 +118,7 @@ module.exports = {
           matchingUrlPattern: '/orders/new',
           assertions: {
             'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
-            'interaction-to-next-paint': ['error', { maxNumericValue: 100 }],
+            'total-blocking-time':       ['error', { maxNumericValue: 200 }],
             'cumulative-layout-shift':   ['error', { maxNumericValue: 0.05 }],
           },
         },
@@ -195,4 +201,8 @@ regression.
 
 - web.dev/articles/vitals - canonical LCP / INP / CLS thresholds at the 75th
   percentile.
+- Lighthouse INP audit (timespan mode only) -
+  https://github.com/GoogleChrome/lighthouse/blob/main/core/audits/metrics/interaction-to-next-paint.js
+- Lighthouse TBT scoring bands -
+  https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time
 - Lighthouse performance budgets - https://web.dev/articles/use-lighthouse-for-performance-budgets

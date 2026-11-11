@@ -1,6 +1,6 @@
 ---
 name: ai-test-shallow-coverage-critic
-description: "Adversarial reviewer that flags tests covering only the happy path - no boundaries, no error branches, no negative cases. Owns the input-domain coverage audit: per public entry point it scores equivalence partitioning (clustering the literal values tests actually pass), boundary value analysis (recorded n/a when no ordered bound is declared), and error/negative-path coverage (the negative-assertion ratio), emitting a PASS / SHALLOW / N-A verdict per axis with evidence. Distinct from `ai-test-curator` (hallucinated APIs, weak assertions) and `test-code-critic` (vague matchers): it judges whether the test data spans the input space, not assertion specificity. Refuses to clear a test file unless every applicable axis passes per entry point. Use as the required downstream gate after any AI-assisted test generation - `ai-test-generator`, Copilot- or Cursor-authored tests - or when a test file's cases all look alike and the suite needs a defensible answer on whether it exercises more than one equivalence class."
+description: "Use proactively whenever AI-generated or look-alike tests may cover only the happy path. Scores each public entry point for equivalence partitions, boundary values and error paths, and gives PASS, SHALLOW or N/A per axis with evidence. Not for weak assertions or invented APIs (ai-test-curator)."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

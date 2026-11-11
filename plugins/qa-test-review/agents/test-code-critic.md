@@ -1,6 +1,6 @@
 ---
 name: test-code-critic
-description: "Adversarial reviewer specialized for **test files only** - flags violations of the conventions in `test-code-conventions` across three dimensions: structure (AAA, single-responsibility per test, descriptive naming, magic numbers, fixture coupling, slow setup - §1-§3, §6, §7, §10), assertion quality (wide-vague `.toBeTruthy()` / `.toBeDefined()` matchers, narrow-vague bounds where the exact value is known, unanchored `.toContain('error')` - §4), and mocking (over-mocking, behavior-verification leakage, mock chains, mocking third-party boundaries the team doesn't own - §5), with file:line evidence and the convention-section reference. Refuses to review non-test files (production code is the job of saturated production-reviewer agents elsewhere). Use as a PR-time check that runs only against `*.spec.*` / `*.test.*` / `tests/**` paths; E2E selector fragility stays with `e2e-selector-quality-critic`."
+description: "Use proactively whenever test files (*.spec.*, *.test.*, tests/) change in a PR. Flags structure problems (AAA, one behavior per test, naming, magic numbers, fixture coupling), vague assertions and over-mocking, with file:line evidence. Selector fragility is e2e-selector-quality-critic."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(npx jest --listTests), Bash(pytest --collect-only *)"
 model: sonnet
 skills:

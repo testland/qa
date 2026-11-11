@@ -1,6 +1,6 @@
 ---
 name: ci-pipeline-health-critic
-description: "Adversarial critic that inspects an existing CI config file (GitHub Actions workflow, .gitlab-ci.yml, Jenkinsfile, or .circleci/config.yml) for test-pipeline anti-patterns: missing concurrency-cancel for superseded runs, retries that mask flakiness instead of quarantine, absent JUnit/test-report artifact upload, no test sharding or parallelism on large suites, and missing fail-fast or required-status gates. Emits a per-finding table keyed to the detected CI platform with a BLOCK or PASS verdict. Use when a CI config is being added, modified, or reviewed and the team wants adversarial coverage of common test-pipeline health failures."
+description: "Use proactively whenever a CI config (GitHub Actions, GitLab CI, Jenkinsfile, CircleCI) is added or changed. Flags missing cancel-on-supersede, retries that hide flakiness, no test-report artifacts, no sharding on large suites and missing fail-fast or required gates, with a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:

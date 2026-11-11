@@ -7,8 +7,8 @@ description: "Use for any question or task about RAG or agent evaluation metrics
 
 [rg-gh]: https://github.com/explodinggradients/ragas
 
-The model: assemble a dataset (question + answer + retrieval
-contexts + ground truth), import the metrics relevant to the
+The model: assemble a dataset (`user_input` + `response` +
+`retrieved_contexts` + `reference`), import the metrics relevant to the
 evaluation goal, run `evaluate()`, and inspect per-metric per-row
 scores (per [rg-gh][rg-gh]).
 
@@ -95,16 +95,36 @@ Full per-family catalog with each metric's use:
 
 ## Step 4 - Dataset shape
 
-Ragas accepts a Hugging Face `Dataset` or `pandas.DataFrame` with
-columns matching the metrics being run:
+Each row is a `SingleTurnSample`; build the set with
+`EvaluationDataset.from_list([...])` ([rg-sample][rg-sample],
+[rg-start][rg-start]). The fields match the metrics being run:
 
-| Column | Required by |
+| Field | Required by |
 |---|---|
-| `question` | All RAG metrics |
-| `answer` | Response Relevancy, Faithfulness, NL Comparison |
-| `contexts` (list of strings) | Context Precision/Recall, Faithfulness |
-| `ground_truth` | Context Recall, Factual Correctness, Answer Accuracy |
+| `user_input` (the question) | All RAG metrics |
+| `response` (the generated answer) | Response Relevancy, Faithfulness, NL Comparison |
+| `retrieved_contexts` (list of strings) | Context Precision/Recall, Faithfulness |
+| `reference` (the ground-truth answer) | Context Recall, Factual Correctness, Answer Accuracy |
 | `reference_contexts` | Context-comparison metrics |
+
+Older tutorials use `question`, `answer`, `contexts` and `ground_truth`;
+the current sample fields are the names above.
+
+```python
+from ragas import EvaluationDataset
+
+dataset = EvaluationDataset.from_list([
+    {
+        "user_input": "When was the refund window extended?",
+        "retrieved_contexts": ["Refunds are accepted within 60 days since March 2026."],
+        "response": "In March 2026, to 60 days.",
+        "reference": "March 2026",
+    },
+])
+```
+
+[rg-sample]: https://docs.ragas.io/en/stable/concepts/components/eval_sample/
+[rg-start]: https://docs.ragas.io/en/stable/getstarted/rag_eval/
 
 See the per-metric pages on [docs.ragas.io][rg-docs] for exact
 required-column lists.
@@ -114,8 +134,8 @@ required-column lists.
 ## Step 5 - Integration with retrieval frameworks
 
 Ragas integrates with LangChain + LlamaIndex retrieval pipelines - 
-the integration code captures `contexts` from the retriever and
-`answer` from the generator into the evaluation dataset
+the integration code captures `retrieved_contexts` from the retriever and
+`response` from the generator into the evaluation dataset
 automatically. Consult the per-framework integration docs on
 [docs.ragas.io][rg-docs] when wiring; APIs evolve faster than this
 skill body and the canonical doc is the source of truth.
@@ -140,7 +160,7 @@ assert result["answer_relevancy"] >= 0.80
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | Run all 30+ metrics on every PR | Cost + latency explode | Pick 3 - 5 metrics per pipeline (Step 3) |
-| Faithfulness without `contexts` column | Metric returns NaN / errors | Pass `contexts` per dataset spec (Step 4) |
+| Faithfulness without `retrieved_contexts` | Metric returns NaN / errors | Pass `retrieved_contexts` per dataset spec (Step 4) |
 | Pin nothing | Ragas + judge-model versions both drift | Pin both in requirements + CI env |
 | Skip Aspect Critic for product-specific concerns | Built-in metrics miss the requirement | Custom Aspect Critic + rubric (Step 3) |
 

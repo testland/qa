@@ -19,7 +19,8 @@ metrics).
 
 Per [semgrep.dev/docs/cli-reference][sg-cli]:
 
-[sg-cli]: https://semgrep.dev/docs/cli-reference
+[sg-cli]: https://docs.semgrep.dev/cli-reference
+[sg-test]: https://docs.semgrep.dev/writing-rules/testing-rules
 
 > "**`semgrep scan`:** Local scans without account requirement;
 > doesn't return failing codes by default.
@@ -68,7 +69,7 @@ registry based on project." Specific rulesets:
 ```bash
 semgrep scan --config p/owasp-top-ten     # OWASP Top 10
 semgrep scan --config p/default            # broad community ruleset
-semgrep scan --config p/python p/javascript   # multiple
+semgrep scan --config p/python --config p/javascript   # multiple: repeat --config
 ```
 
 ## Step 3 - Custom rule authoring
@@ -95,12 +96,39 @@ semgrep validate --config .semgrep.yml
 
 (Per [sg-cli][sg-cli] subcommand list.)
 
+### Test the rule before it gates CI
+
+Keep custom rules in `rules/`, one file per rule, and put a test file
+next to each with the same basename (`rules/hardcoded-jwt-secret.yaml` →
+`rules/hardcoded-jwt-secret.js`). Each annotation is a comment on the
+line just before the code it describes: `ruleid:` must match (guards
+against false negatives), `ok:` must not (guards against false
+positives) ([sg-test][sg-test]):
+
+```javascript
+// ruleid: hardcoded-jwt-secret
+jwt.sign(payload, "s3cr3t");
+
+// ok: hardcoded-jwt-secret
+jwt.sign(payload, process.env.JWT_SECRET);
+```
+
+```bash
+semgrep --test rules/
+```
+
+Add one `ruleid:` line per variant the rule must catch (aliased import,
+template literal, wrapped call). `todoruleid:` / `todook:` record known
+gaps without failing the run ([sg-test][sg-test]).
+
 ## Step 4 - CI integration with baseline diff
 
-Per [sg-cli][sg-cli]: "`--baseline-commit=VAL` - Show only findings
-not in specified commit". Diff-aware mode fails only NEW findings on
-the PR; pre-existing findings are tracked but don't block - critical
-for legacy adoption.
+Per [sg-cli][sg-cli]: "`--baseline-commit=VAL` - Only show results that
+are not found in this commit hash". Diff-aware mode fails only NEW
+findings on the PR; pre-existing findings are tracked but don't block -
+critical for legacy adoption. The baseline commit must exist locally,
+so check out full history. `semgrep scan` exits 0 on findings unless
+`--error` is set ("Exit 1 if there are findings").
 
 ```yaml
 jobs:
@@ -110,11 +138,22 @@ jobs:
       image: semgrep/semgrep
     steps:
       - uses: actions/checkout@v5
-      - run: semgrep ci --baseline-ref=main --sarif --output=semgrep.sarif
+        with:
+          fetch-depth: 0
+      - run: >
+          semgrep scan --config p/default --config rules/
+          --baseline-commit "${{ github.event.pull_request.base.sha }}"
+          --error --sarif --output semgrep.sarif
       - uses: github/codeql-action/upload-sarif@v3
         if: always()
         with: { sarif_file: semgrep.sarif }
 ```
+
+With a Semgrep AppSec Platform token, `semgrep ci` runs the rules
+configured there, takes the same `--baseline-commit`, and fails on
+findings by default; it does not accept `--config` ([sg-cli][sg-cli]).
+There is no `--baseline-ref` flag.
+
 
 ## Step 5 - False-positive triage (MANDATORY)
 
@@ -125,7 +164,7 @@ Suppression mechanisms in priority order:
 | Per-line `nosemgrep` comment | `# nosemgrep: hardcoded-password` | Justified single-line exception |
 | `nosemgrep` block | `# nosemgrep: rule-id` above a code block | Multi-line exception |
 | `paths.exclude` in config | `exclude: ["**/*_pb.go"]` | Generated files / vendored code |
-| Baseline ref | `--baseline-commit=main` (Step 4) | Legacy debt; ratchet |
+| Baseline ref | `--baseline-commit <PR base SHA>` (Step 4) | Legacy debt; ratchet |
 | Organization-level rule disable | Semgrep AppSec Platform UI | Team-wide policy |
 
 **Justification template (mandatory in code):**
@@ -160,7 +199,8 @@ table are in [references/cli-reference.md](references/cli-reference.md).
 |---|---|---|
 | `--config=auto` everywhere | Rulesets drift; no ownership | Pin specific rulesets (Step 2) |
 | `nosemgrep` without justification | Becomes invisible debt | Required justification template (Step 5) |
-| No baseline ref | Every legacy finding blocks; team disables | `--baseline-commit=main` (Step 4) |
+| No baseline ref | Every legacy finding blocks; team disables | `--baseline-commit <PR base SHA>` (Step 4) |
+| Custom rule with no `ruleid:` / `ok:` test file | A pattern edit silently stops matching a variant | `semgrep --test rules/` in CI (Step 3) |
 | `semgrep scan` in CI | Doesn't return failing exit code by default | Use `semgrep ci` (Step 1 quote) |
 | Mix `--severity ERROR` with `--baseline-commit` poorly | Can mask real new findings | Severity filter at output stage, not scan stage |
 
