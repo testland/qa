@@ -94,6 +94,18 @@ No run loaded the wrong skill: every miss was Claude answering from its own
 knowledge. Descriptions that load reliably open with "Use for any ... question
 or task, including quick how-to questions" and name the symptoms users report.
 
+`testland-web` and `testland-api` got the same three prompts per skill on
+10 Nov 2026 (1 run): web loaded the expected skill in 87 of 111 runs, api in 84
+of 117. The 17 skills under two of three were rewritten the same way:
+
+| 17 weak skills | Before | After the rewrite |
+| --- | --- | --- |
+| Prompts 1-3 | 14 / 51 | 89 / 102 (2 runs) |
+| Held-out prompt 4 | - | 16 / 34 (2 runs) |
+
+Held-out misses are quick factual questions ("which Stripe card declines for
+insufficient funds?") that Claude answers in one turn without a skill.
+
 ## Publishing
 
 `.github/workflows/packs-sync.yml` runs on a published release (or by hand). It

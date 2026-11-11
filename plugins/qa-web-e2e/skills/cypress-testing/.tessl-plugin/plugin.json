@@ -1,9 +1,9 @@
 {
   "name": "testland/cypress-testing",
-  "description": "Use whenever a project writes, fixes or upgrades Cypress E2E tests: cypress.config.ts, replacing cy.wait sleeps with assertions, cy.intercept network stubs, fixtures and cy.task, cy.clock, cy.origin logins, cy.session commands, the Cypress 16 upgrade, and Cloud parallel runs.",
+  "description": "Use for any question or task about Cypress tests, including quick how-to questions and one pasted test to fix: stubbing API calls with cy.intercept, replacing cy.wait sleeps with assertions, tests that pass locally but fail in CI, fixtures and cy.task, cy.clock, cy.origin and cy.session logins, cypress.config.ts, the Cypress 16 upgrade and Cloud parallel runs.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.9.10"
+  "version": "1.9.11"
 }

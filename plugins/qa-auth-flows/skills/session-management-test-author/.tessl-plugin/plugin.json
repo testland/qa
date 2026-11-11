@@ -1,9 +1,9 @@
 {
   "name": "testland/session-management-test-author",
-  "description": "Use whenever a web app's session layer needs tests, in any framework: cookie flags (Secure, HttpOnly, SameSite), session ID regeneration on login, idle and absolute timeouts, concurrent-session limits, logout on all devices, CSRF tokens and session binding, per OWASP ASVS V3.",
+  "description": "Use for any question or task about testing sessions, login or logout security in a web app, in any framework, including one login handler and old cookies that still work after logout: cookie flags (Secure, HttpOnly, SameSite), session ID regeneration on login, idle and absolute timeouts, concurrent-session limits, logout on all devices, CSRF tokens and session binding, per OWASP ASVS V3.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.17"
+  "version": "1.2.18"
 }

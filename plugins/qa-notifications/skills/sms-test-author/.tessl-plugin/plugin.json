@@ -1,9 +1,9 @@
 {
   "name": "testland/sms-test-author",
-  "description": "Use when an SMS flow sent through Twilio needs tests: Twilio magic numbers and test credentials for safe runs, GSM-7 vs UCS-2 segment counts, rate limits, STOP and HELP opt-out keywords, and sender ID vs short code vs 10DLC differences.",
+  "description": "Use for any question or task about testing SMS sending, including one Twilio sender and runs that must not text real phones: Twilio magic numbers and test credentials, GSM-7 vs UCS-2 segment counts (emoji messages that cost more), rate limits, STOP and HELP opt-out keywords, and sender ID vs short code vs 10DLC differences.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.11"
+  "version": "1.2.12"
 }

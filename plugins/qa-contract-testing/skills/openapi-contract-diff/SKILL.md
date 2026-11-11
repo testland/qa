@@ -1,6 +1,6 @@
 ---
 name: openapi-contract-diff
-description: "Use when a pull request or release changes an OpenAPI spec and breaking changes must be caught: removed endpoints, deleted schemas, narrowed enums, changed responses. Runs oasdiff breaking, grades findings ERR, WARN or INFO and gates CI with --fail-on."
+description: "Use for any question about whether an OpenAPI or Swagger spec change breaks clients, including one pasted diff and a partner integration that broke: removed endpoints, deleted schemas, narrowed enums, changed responses. Runs oasdiff breaking, grades findings ERR, WARN or INFO and gates CI with --fail-on."
 ---
 
 # openapi-contract-diff

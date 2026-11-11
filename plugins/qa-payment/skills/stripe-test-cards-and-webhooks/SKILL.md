@@ -1,6 +1,6 @@
 ---
 name: stripe-test-cards-and-webhooks
-description: "Use whenever code that takes payments with Stripe needs tests: test-mode keys, test cards for success, declines and 3D Secure, stripe listen to forward webhooks locally, stripe trigger fixtures, and Stripe-Signature verification."
+description: "Use for any question or task about testing Stripe payments, including one webhook handler and checkout that fails for 3D Secure cards: test-mode keys, test cards for success, declines and 3D Secure, stripe listen to forward webhooks locally, stripe trigger fixtures, and Stripe-Signature verification."
 ---
 
 # stripe-test-cards-and-webhooks

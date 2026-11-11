@@ -1,6 +1,6 @@
 ---
 name: graphql-schema-regression
-description: "Use when a pull request changes a GraphQL schema, or a Federation supergraph may have drifted. Diffs the schemas with graphql-inspector, classifies changes as breaking, dangerous or safe, applies rules such as deprecated-field removal and usage checks, and gates CI."
+description: "Use for any question about whether a GraphQL schema change is safe, including one pasted diff and a field change that broke a client: diffs schemas with graphql-inspector, classifies changes as breaking, dangerous or safe (removed fields, narrowed types, deprecated-field removal with usage checks), checks Federation supergraph drift and gates CI."
 ---
 
 # graphql-schema-regression

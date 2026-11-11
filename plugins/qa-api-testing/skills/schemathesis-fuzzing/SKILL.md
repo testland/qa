@@ -1,6 +1,6 @@
 ---
 name: schemathesis-fuzzing
-description: "Use whenever an API has an OpenAPI or GraphQL schema and needs tests generated from it: fuzzing every endpoint for 5xx errors and schema violations. Runs Schemathesis from the CLI or pytest, picks the conformance checks and gates CI on failures as the API evolves."
+description: "Use for any request to generate API tests from an OpenAPI or GraphQL schema, or to find inputs that make an API return 500 that hand-written tests miss: Schemathesis fuzzes every endpoint for 5xx errors and schema violations from the CLI or pytest, picks the conformance checks and gates CI as the API evolves."
 ---
 
 # schemathesis-fuzzing

@@ -1,6 +1,6 @@
 ---
 name: protobuf-compat-checking
-description: "Use when a pull request changes .proto files for gRPC services, Buf Schema Registry modules or message-bus payloads, and consumers must not break. Runs buf breaking against a past version, picks the FILE, PACKAGE, WIRE_JSON or WIRE category, sets exemptions and gates CI."
+description: "Use for any question about whether a .proto change is safe for consumers, including one pasted diff (a removed field, a reused field number, a changed type) and a gRPC or message-bus consumer that broke after a schema change: runs buf breaking against a past version, picks the FILE, PACKAGE, WIRE_JSON or WIRE category, sets exemptions and gates CI."
 ---
 
 # protobuf-compat-checking

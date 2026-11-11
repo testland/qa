@@ -1,6 +1,6 @@
 ---
 name: mailpit-testing
-description: "Use whenever code sends email and tests must check it: capture messages in Mailpit's local SMTP server (port 1025) and assert on them through its REST API, test SMTP failures with chaos mode, follow multipart, link, unsubscribe and bounce flows, or migrate from MailHog."
+description: "Use for any question or task about testing email your code sends, including one password-reset or signup email and broken links in sent mail: capture messages in Mailpit's local SMTP server (port 1025), assert on subject, body and links through its REST API, test SMTP failures with chaos mode, multipart, unsubscribe and bounce flows, or migrate from MailHog."
 ---
 
 # mailpit-testing

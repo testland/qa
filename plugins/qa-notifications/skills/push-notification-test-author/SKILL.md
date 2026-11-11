@@ -1,6 +1,6 @@
 ---
 name: push-notification-test-author
-description: "Use when push or in-app notifications need tests: Web Push with VAPID, Apple APNs and Firebase FCM subscription, payload encryption, badge, sound and click actions, expired subscriptions, silent vs alert pushes and topic routing, plus in-app delivery over WebSocket or SSE with read state."
+description: "Use for any question or task about testing push notifications, including iOS and Android pushes and one FCM or APNs sender: Firebase FCM, Apple APNs and Web Push with VAPID, payload encryption, badge, sound and click actions, expired or unregistered tokens, silent vs alert pushes and topic routing, plus in-app delivery over WebSocket or SSE with read state."
 ---
 
 # push-notification-test-author
