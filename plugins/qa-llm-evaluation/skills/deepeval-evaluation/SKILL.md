@@ -1,6 +1,6 @@
 ---
 name: deepeval-evaluation
-description: "Use when LLM or RAG evaluation should run as pytest tests: DeepEval LLMTestCase, built-in metrics such as G-Eval, answer relevancy, faithfulness, contextual recall and precision, hallucination, bias and toxicity, deepeval test run with assert_test, and the Confident AI dashboard."
+description: "Use for any question or task about testing an LLM or RAG app with pytest, including hallucination checks in CI and answers that invent facts missing from the retrieved documents: DeepEval LLMTestCase, built-in metrics such as G-Eval, answer relevancy, faithfulness, contextual recall and precision, hallucination, bias and toxicity, deepeval test run with assert_test, and the Confident AI dashboard."
 ---
 
 # deepeval-evaluation

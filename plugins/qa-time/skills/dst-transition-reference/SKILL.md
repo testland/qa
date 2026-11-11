@@ -1,6 +1,6 @@
 ---
 name: dst-transition-reference
-description: "Use when designing or auditing time-handling code or its tests around daylight saving time: skipped and repeated hours, jurisdiction differences, the IANA tz database, cron jobs that fire zero or two times, billing and meetings on transition days, plus leap seconds and clock smearing."
+description: "Use for any question or task about daylight saving time in code or tests, including quick ones: what breaks on DST transition days, naive datetimes plus a duration, jobs or reports an hour off after the clocks change, cron jobs that fire zero or two times. Covers skipped and repeated hours, jurisdiction differences, the IANA tz database, billing and meetings on transition days, leap seconds and clock smearing."
 ---
 
 # dst-transition-reference

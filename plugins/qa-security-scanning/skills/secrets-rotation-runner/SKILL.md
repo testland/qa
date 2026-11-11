@@ -1,6 +1,6 @@
 ---
 name: secrets-rotation-runner
-description: "Use when a secret is found in code or history, or for scheduled rotation: identify the provider, rotate the credential through its API (AWS IAM, GitHub, Stripe, GCP, Azure, Twilio, Slack and more), revoke the old one, log the audit trail and link the post-mortem. Scrubbing git history is not enough."
+description: "Use for any question or task about a leaked secret, API key or token found in code or git history, including what to do next and whether scrubbing history is enough (it is not), or scheduled rotation: identify the provider, rotate the credential through its API (AWS IAM, GitHub, Stripe, GCP, Azure, Twilio, Slack and more), revoke the old one, log the audit trail and link the post-mortem."
 ---
 
 # secrets-rotation-runner

@@ -1,6 +1,6 @@
 ---
 name: framework-choice-advisor
-description: "Use when picking a test automation framework or QA tool before adopting it: Playwright vs Cypress vs Selenium, Appium vs Espresso/XCUITest, RestAssured vs Karate, k6 vs Locust. Compares tradeoffs, matches project needs to a choice, covers commercial vendor evaluation and records the decision."
+description: "Use for any question about which test automation framework or QA tool to pick, including quick ones such as Playwright or Cypress for a new app, or a stack for web, API and mobile: Playwright vs Cypress vs Selenium, Appium vs Espresso/XCUITest, RestAssured vs Karate, k6 vs Locust. Compares tradeoffs, matches project needs to a choice, covers commercial vendor evaluation and records the decision."
 ---
 
 # framework-choice-advisor

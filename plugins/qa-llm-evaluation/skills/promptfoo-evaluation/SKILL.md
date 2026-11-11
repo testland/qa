@@ -1,6 +1,6 @@
 ---
 name: promptfoo-evaluation
-description: "Use when LLM prompts or RAG pipelines need eval-driven regression tests with Promptfoo: promptfooconfig.yaml providers, prompts and tests, deterministic, semantic, model-graded, latency and cost assertions, promptfoo eval and view, and CI gating."
+description: "Use for any question or task about Promptfoo or adding quick regression checks for prompts or RAG pipelines in CI, including turning written requirements into assertions: promptfooconfig.yaml providers, prompts and tests, deterministic, semantic, model-graded, latency and cost assertions, promptfoo eval and view, and CI gating."
 ---
 
 # promptfoo-evaluation

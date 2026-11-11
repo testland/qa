@@ -1,6 +1,6 @@
 ---
 name: atlas-migrations
-description: "Use when a team wants declarative, Terraform-style database schema management or migration linting beyond Flyway and Liquibase: Atlas schema apply, migrate diff against a dev database, migrate lint for destructive or locking changes, and migrate hash, across a dozen databases."
+description: "Use for any question or task about Atlas or declarative, Terraform-style database schema management, including how it compares with Flyway and Liquibase: Atlas schema apply, migrate diff against a dev database, migrate lint for destructive or locking changes, and migrate hash, across a dozen databases."
 ---
 
 # atlas-migrations

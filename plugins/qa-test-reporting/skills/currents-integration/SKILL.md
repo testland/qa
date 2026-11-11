@@ -1,6 +1,6 @@
 ---
 name: currents-integration
-description: "Use when a Playwright suite needs hosted analytics across runs: flakiness over time, slowest tests and pass-rate trends. Sets up Currents.dev with @currents/playwright, currents.config.ts, the reporter, traces, videos and screenshots, and runs via npx pwc."
+description: "Use for any question about seeing Playwright flakiness, slowest tests or pass-rate trends across CI runs, or which tool tracks them. Sets up Currents.dev with @currents/playwright, currents.config.ts, the reporter, traces, videos and screenshots, and runs via npx pwc."
 ---
 
 # currents-integration

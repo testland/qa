@@ -1,6 +1,6 @@
 ---
 name: liquibase-migrations
-description: "Use whenever a schema is managed with Liquibase: changelogs and changesets in XML, YAML, JSON or SQL, update, status, rollback and tag, preconditions, contexts and labels, and the changelog lock tables, for portable migrations across databases with fine rollback control."
+description: "Use for any question or task about Liquibase, including quick ones such as rolling back a changeset or adding a rollback block: changelogs and changesets in XML, YAML, JSON or SQL, update, status, rollback and tag, preconditions, contexts and labels, and the changelog lock tables, for portable migrations across databases."
 ---
 
 # liquibase-migrations

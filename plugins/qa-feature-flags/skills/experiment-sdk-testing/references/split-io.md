@@ -306,8 +306,8 @@ flags is in [split-io-example.md](split-io-example.md).
 ## References
 
 - Node.js SDK docs (Harness FME):
-  [developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/server-side-sdks/nodejs-sdk](https://developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/server-side-sdks/nodejs-sdk)
+  [developer.harness.io/feature-management-experimentation/new-to-fme/sdks-and-customer-deployed-components/server-side-sdks/nodejs-sdk](https://developer.harness.io/feature-management-experimentation/new-to-fme/sdks-and-customer-deployed-components/server-side-sdks/nodejs-sdk)
 - JavaScript SDK docs (Harness FME):
-  [developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk](https://developer.harness.io/docs/feature-management-experimentation/sdks-and-infrastructure/client-side-sdks/javascript-sdk)
+  [developer.harness.io/feature-management-experimentation/new-to-fme/sdks-and-customer-deployed-components/client-side-sdks/client-side-standard-sdks/javascript-sdk](https://developer.harness.io/feature-management-experimentation/new-to-fme/sdks-and-customer-deployed-components/client-side-sdks/client-side-standard-sdks/javascript-sdk)
 - Companion: `ab-test-validity-checklist`; result-trust references (peeking, guardrails) live in `experiment-results-interpreter`
 - Sibling vendor references: [statsig.md](statsig.md), [optimizely.md](optimizely.md), [amplitude.md](amplitude.md), [vwo.md](vwo.md)

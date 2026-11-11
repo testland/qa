@@ -1,6 +1,6 @@
 ---
 name: coverage-py-analysis
-description: "Use when a Python project (pytest or unittest) needs code coverage: coverage run, branch coverage, combining parallel xdist data, .coveragerc source, omit and fail_under settings, and terminal, HTML, Cobertura XML, LCOV or JSON reports for CI."
+description: "Use for any question or task about Python code coverage with pytest or unittest, including quick how-to questions, a CI gate on a minimum, and coverage that drops when tests run in parallel with xdist: coverage run, branch coverage, combining parallel data, .coveragerc source, omit and fail_under, and terminal, HTML, Cobertura XML, LCOV or JSON reports for CI."
 ---
 
 # coverage-py-analysis

@@ -1,9 +1,9 @@
 ---
 name: trivy-config
-description: "Use when adopting one IaC misconfiguration scanner for Terraform, CloudFormation, Kubernetes, Helm, Dockerfiles and ARM, or migrating off tfsec: trivy config with severity gating, .trivyignore suppressions, custom Rego checks and SARIF for GitHub code scanning. Legacy tfsec is in its references."
+description: "Use for any question or task about scanning infrastructure code for misconfigurations with one tool, including Kubernetes manifests, Terraform, CloudFormation, Helm, ARM and Dockerfiles that run as root, or migrating off tfsec: trivy config with severity gating, .trivyignore suppressions, custom Rego checks and SARIF for GitHub code scanning. Legacy tfsec is in its references."
 metadata:
   keywords: "trivy, iac, misconfiguration, terraform, kubernetes, dockerfile, helm, cloudformation, rego, sarif, security"
-  version: "1.1.19"
+  version: "1.1.20"
 ---
 
 # trivy-config

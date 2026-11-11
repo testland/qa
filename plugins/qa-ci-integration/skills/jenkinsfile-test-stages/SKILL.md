@@ -1,6 +1,6 @@
 ---
 name: jenkinsfile-test-stages
-description: "Use whenever the task is to run tests in Jenkins: declarative Jenkinsfile test stages, parallel stages across agents, post always/failure actions, JUnit report publishing and lockable resources for shared test infrastructure."
+description: "Use for any question or task about running tests in Jenkins, including quick ones such as running tests in parallel or publishing JUnit results when tests fail: declarative Jenkinsfile test stages, parallel stages across agents, post always/failure actions, JUnit report publishing and lockable resources for shared test infrastructure."
 ---
 
 # jenkinsfile-test-stages

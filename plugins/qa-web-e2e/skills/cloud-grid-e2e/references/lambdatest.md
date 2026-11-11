@@ -3,7 +3,7 @@
 Deep reference for `cloud-grid-e2e`. LambdaTest is a newer cloud-grid
 provider with strong real-device coverage and a SmartUI visual-testing
 add-on; like the others it exposes a W3C-compliant endpoint. Per
-[lambdatest.com/support/docs/getting-started-with-lambdatest-automation](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/)
+[lambdatest.com/support/docs/python-with-selenium-running-python-automation-scripts-on-lambdatest-selenium-grid](https://www.lambdatest.com/support/docs/python-with-selenium-running-python-automation-scripts-on-lambdatest-selenium-grid/)
 (Cloudflare-protected; cite by stable URL).
 
 ## Auth + hub URL

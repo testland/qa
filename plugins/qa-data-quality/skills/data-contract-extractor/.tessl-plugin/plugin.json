@@ -1,9 +1,9 @@
 {
   "name": "testland/data-contract-extractor",
-  "description": "Use when scoping a new data product or formalizing checks on an existing one. Reads a data PRD, dataset README or lineage doc and writes a data contract: schema with types, nullability and PII flags, freshness SLA, volume bounds, distribution rules and owner, for dbt, Great Expectations or Soda.",
+  "description": "Use for any question or task about data contracts, including what one should include and formalizing what a dataset promises after an upstream change such as a renamed column broke consumers. Reads a data PRD, dataset README or lineage doc and writes the contract: schema with types, nullability and PII flags, freshness SLA, volume bounds, distribution rules and owner, for dbt, Great Expectations or Soda.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.4.8"
+  "version": "1.4.9"
 }

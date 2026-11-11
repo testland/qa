@@ -1,6 +1,6 @@
 ---
 name: langfuse-tracing
-description: "Use when an LLM app needs production tracing, monitoring or debugging of model calls, or production traces should feed offline eval datasets. Adds Langfuse with @observe or startActiveObservation, records metadata, cost and latency, scores traces and manages prompts as code."
+description: "Use for any question or task about tracing, monitoring or debugging LLM calls in production, including having no record of what the model saw for a bad answer, or turning production traces into eval datasets. Adds Langfuse with @observe or startActiveObservation, records metadata, cost and latency, scores traces and manages prompts as code."
 ---
 
 # langfuse-tracing

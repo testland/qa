@@ -1,6 +1,6 @@
 ---
 name: toxiproxy-chaos
-description: "Use when tests or dev environments need TCP-level network faults without Kubernetes or paid tools. Runs Toxiproxy between client and upstream and applies latency, bandwidth, slow close, timeout, slicer, data limit and reset toxics through its control API."
+description: "Use for any question or task about simulating network faults such as latency, timeouts or dropped connections in integration tests or dev environments, including adding Toxiproxy to a compose file, without Kubernetes or paid tools. Runs Toxiproxy between client and upstream and applies latency, bandwidth, slow close, timeout, slicer, data limit and reset toxics through its control API."
 ---
 
 # toxiproxy-chaos

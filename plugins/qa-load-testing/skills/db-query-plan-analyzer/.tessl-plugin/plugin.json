@@ -1,9 +1,9 @@
 {
   "name": "testland/db-query-plan-analyzer",
-  "description": "Use when load tests or production telemetry show the database is the bottleneck. Reads EXPLAIN or EXPLAIN ANALYZE output from PostgreSQL, MySQL or SQLite, finds the main cost (sequential scans, nested loops, sort spills, missing or unusable indexes) and proposes the index or query rewrite.",
+  "description": "Use for any question or task about a slow SQL query or a database bottleneck, including how to read EXPLAIN or EXPLAIN ANALYZE output and database CPU that saturates under load. Reads plans from PostgreSQL, MySQL or SQLite, finds the main cost (sequential scans, nested loops, sort spills, missing or unusable indexes) and proposes the index or query rewrite.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.8.8"
+  "version": "1.8.9"
 }

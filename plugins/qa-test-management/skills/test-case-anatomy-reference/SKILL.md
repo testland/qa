@@ -291,7 +291,6 @@ blob is now a complete, runnable, verifiable case.
 - ISTQB Certified Tester Foundation Level Syllabus v4.0 (2023-04-21),
   sections 1.4.4, 4.2.1, 4.2.2:
   https://istqb.org/wp-content/uploads/2024/11/ISTQB_CTFL_Syllabus_v4.0.1.pdf
-  (mirror used for quotation: https://www.gasq.org/files/content/gasq/downloads/certification/ISTQB/Foundation%20Level/ISTQB_CTFL_Syllabus-v4.0%20.pdf)
 - Cucumber documentation, Writing better Gherkin (declarative vs imperative):
   https://cucumber.io/docs/bdd/better-gherkin/
 - TestRail Cases API reference - 

@@ -1,6 +1,6 @@
 ---
 name: maestro-flows
-description: "Use when a team uses or wants Maestro YAML flows for mobile or web UI tests that non-engineers can read: .maestro/*.yaml with tapOn, inputText, assertVisible and swipe, for iOS, Android, Flutter, React Native and web, with nested flows and JavaScript hooks."
+description: "Use for any question or task about Maestro, even writing one short flow, or a mobile UI test format that product managers and other non-engineers can read and edit: .maestro/*.yaml with tapOn, inputText, assertVisible and swipe, for iOS, Android, Flutter, React Native and web, with nested flows and JavaScript hooks."
 ---
 
 # maestro-flows

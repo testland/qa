@@ -1,6 +1,6 @@
 ---
 name: test-design-scorecard
-description: "Use when a test diff needs a graded coaching review rather than a merge verdict: onboarding a new engineer, ramping up test discipline, or a quarterly per-author trend. Scores tests 1-5 on six design axes with explicit anchors and writes growth-framed feedback."
+description: "Use for any question or task about giving feedback on someone's tests or measuring a team's test quality over time, such as coaching a junior engineer or a quarterly per-author trend, rather than a merge verdict. Scores tests 1-5 on six design axes with explicit anchors and writes growth-framed feedback."
 ---
 
 # test-design-scorecard

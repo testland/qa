@@ -49,7 +49,7 @@ Fixture + screen-object shape (FlaUI / xUnit example): an `AppFixture` that owns
 
 - **Windows**: `reg add "HKCU\Control Panel\Desktop" /v ForegroundLockTimeout /t REG_DWORD /d 0 /f` + fail-fast elevation check (UAC secure desktop is unreachable per [WinAppDriver #306](https://github.com/microsoft/WinAppDriver/issues/306)).
 - **macOS**: `tccutil reset` for Automation / Accessibility / ScreenCapture on the bundle id - TCC prompts are unreachable from XCUITest per [Jamf TCC](https://docs.jamf.com/technical-articles/Resetting_Transparency_Consent_and_Control_Prompts_on_macOS.html).
-- **Linux**: `apt-get install at-spi2-core dbus-x11 xvfb python3-pyatspi`, `Xvfb` + `dbus-launch`, then `gsettings set org.gnome.desktop.interface toolkit-accessibility true` BEFORE the AUT launches - AT-SPI is off by default per [Ubuntu DogtailTutorial](https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial).
+- **Linux**: `apt-get install at-spi2-core dbus-x11 xvfb python3-pyatspi`, `Xvfb` + `dbus-launch`, then `gsettings set org.gnome.desktop.interface toolkit-accessibility true` BEFORE the AUT launches - the key's default is still FALSE and legacy toolkits such as GTK2 follow it, per [GNOME: Accessibility on by default](https://wiki.gnome.org/ThreePointFive/Features/AccessibilityOnByDefault).
 
 Scaffold rules: every placeholder carries `INPUT NEEDED` and must fail until selectors are confirmed; never emit a Linux runner for FlaUI / WinAppDriver (UIA is Windows-only); never overwrite an existing test project (halt and ask whether to append); never bundle every driver's deps into one scaffold. End with a hand-off README: replace markers, run the failing placeholder, then return here for per-flow tests.
 

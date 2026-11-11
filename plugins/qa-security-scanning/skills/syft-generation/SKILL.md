@@ -1,6 +1,6 @@
 ---
 name: syft-generation
-description: "Use when a team needs SBOMs for compliance (US EO 14028, EU CRA, FDA), SBOM-based vulnerability scanning or drift checks between releases. Generates CycloneDX or SPDX SBOMs with Syft from images or folders, scans them with Grype, diffs SBOMs in CI and explains how to choose a format."
+description: "Use for any question or task about SBOMs, including generating one for a container image or folder, adding SBOM generation and vulnerability scanning to a release job, compliance (US EO 14028, EU CRA, FDA) or drift between releases. Generates CycloneDX or SPDX SBOMs with Syft, scans them with Grype, diffs SBOMs in CI and explains how to choose a format."
 ---
 
 # syft-generation

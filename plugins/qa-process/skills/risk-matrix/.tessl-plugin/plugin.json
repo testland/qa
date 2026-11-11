@@ -1,9 +1,9 @@
 {
   "name": "testland/risk-matrix",
-  "description": "Use for any risk-based testing artifact: a risk matrix or register with likelihood x impact scores, a risk-storming session, calibrating ratings against real defects, or mapping each risk to the tests and monitors that cover it. Supports light and heavy methods (FMEA, Cost of Exposure).",
+  "description": "Use for any question or task about risk-based testing or deciding what to test first when there is no time to test everything: a risk matrix or register with likelihood x impact scores for a release, a risk-storming session, calibrating ratings against real defects, or mapping each risk to the tests and monitors that cover it. Supports light and heavy methods (FMEA, Cost of Exposure).",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.10.12"
+  "version": "1.10.13"
 }

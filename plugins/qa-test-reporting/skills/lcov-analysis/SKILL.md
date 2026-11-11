@@ -1,6 +1,6 @@
 ---
 name: lcov-analysis
-description: "Use when a coverage gate must work across languages from LCOV .info or Cobertura XML files (gcov, llvm-cov, coverage.py, JaCoCo, Jest, nyc, coverlet). Parses per-file line, function and branch metrics, compares with a baseline and returns per-file pass or fail verdicts."
+description: "Use for any question or task about LCOV .info or Cobertura XML coverage files, including reading one or finding which files fail a line gate. Parses per-file line, function and branch metrics from gcov, llvm-cov, coverage.py, JaCoCo, Jest, nyc or coverlet output, compares with a baseline and returns per-file pass or fail verdicts for a cross-language gate."
 ---
 
 # lcov-analysis

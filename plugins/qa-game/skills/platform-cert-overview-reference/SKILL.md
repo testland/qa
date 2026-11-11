@@ -3,7 +3,7 @@ name: platform-cert-overview-reference
 description: "Use when planning a game test pass or certification calendar across Xbox (XR), PlayStation (TRC), Nintendo (Lotcheck) and Steam: the six game QA test categories, submission workflows, severity terms and SLAs, mapping QA findings to platform terms and building a pre-submission checklist."
 metadata:
   keywords: "xbox-cert, xr, playstation-trc, nintendo-lotcheck, steam-direct, submission, certification, release"
-  version: "1.4.18"
+  version: "1.4.19"
 ---
 
 # platform-cert-overview-reference

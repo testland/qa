@@ -1,6 +1,6 @@
 ---
 name: trivy-image
-description: "Use when container images need one scanner for vulnerabilities, secrets, misconfigurations and licenses: trivy image with severity filters, SARIF or JSON output, .trivyignore suppressions, --ignore-unfixed and scanner toggles. For a standalone SBOM use syft-generation."
+description: "Use for any question or task about scanning a container or Docker image for vulnerabilities, secrets, misconfigurations or licenses, including failing CI only on fixable critical CVEs and base-image CVEs with no fix: trivy image with severity filters, SARIF or JSON output, .trivyignore suppressions, --ignore-unfixed and scanner toggles. For a standalone SBOM use syft-generation."
 ---
 
 # trivy-image

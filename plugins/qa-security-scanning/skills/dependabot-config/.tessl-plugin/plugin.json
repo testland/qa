@@ -1,9 +1,9 @@
 {
   "name": "testland/dependabot-config",
-  "description": "Use when writing or reviewing .github/dependabot.yml for a GitHub repo: required keys, ecosystems, directories and schedules, plus ignore rules, grouped PRs, allow lists, labels, PR limits, target branches, versioning strategy and security-only updates.",
+  "description": "Use for any question or task about Dependabot or .github/dependabot.yml, including grouping updates into one PR and taming too many update PRs: required keys, ecosystems, directories and schedules, plus ignore rules, grouped PRs, allow lists, labels, PR limits, target branches, versioning strategy and security-only updates.",
   "private": false,
   "skills": [
     "."
   ],
-  "version": "1.2.10"
+  "version": "1.2.11"
 }

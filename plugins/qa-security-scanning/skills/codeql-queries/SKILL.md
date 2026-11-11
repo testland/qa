@@ -1,6 +1,6 @@
 ---
 name: codeql-queries
-description: "Use when a GitHub-hosted repo needs deep semantic static analysis (SAST) beyond pattern matching, such as cross-file taint and data flow: codeql database create and analyze per language, query packs, SARIF upload to code scanning, and suppressions."
+description: "Use for any question or task about CodeQL or deep semantic static analysis (SAST) on a GitHub repo, including setting up code scanning and finding injection that flows through helper functions across files: codeql database create and analyze per language, query packs, SARIF upload to code scanning, and suppressions."
 ---
 
 # codeql-queries

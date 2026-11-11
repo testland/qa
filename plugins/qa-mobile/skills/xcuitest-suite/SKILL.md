@@ -1,6 +1,6 @@
 ---
 name: xcuitest-suite
-description: "Use whenever an iOS, iPadOS, tvOS or macOS app needs UI tests in Apple's XCUITest: XCUIApplication, XCUIElement and queries, accessibility identifiers in app code, xcodebuild test with a destination, and reading the xcresult bundle, plus macOS specifics such as privacy permission resets."
+description: "Use for any task that writes, fixes or reviews XCUITest UI tests for an iOS, iPadOS, tvOS or macOS app, even one test for a SwiftUI view, including locators that break after localization: XCUIApplication, XCUIElement and queries, accessibility identifiers in app code, xcodebuild test with a destination, and reading the xcresult bundle, plus macOS privacy permission resets."
 ---
 
 # xcuitest-suite

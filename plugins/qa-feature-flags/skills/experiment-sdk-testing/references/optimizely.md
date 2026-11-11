@@ -125,7 +125,7 @@ the whole decision.
 
 - Optimizely Python SDK:
   [docs.developers.optimizely.com/feature-experimentation/docs/python-sdk](https://docs.developers.optimizely.com/feature-experimentation/docs/python-sdk).
-- Forced decisions:
-  [docs.developers.optimizely.com/feature-experimentation/docs/forced-decision-methods](https://docs.developers.optimizely.com/feature-experimentation/docs/forced-decision-methods).
+- Forced decisions (Python SDK):
+  [docs.optimizely.com/feature-experimentation/docs/forced-decision-methods-python](https://docs.optimizely.com/feature-experimentation/docs/forced-decision-methods-python).
 - Companion: `ab-test-validity-checklist`; result-trust references (peeking, guardrails) live in `experiment-results-interpreter`.
 - Sibling vendor references: [statsig.md](statsig.md), [split-io.md](split-io.md), [amplitude.md](amplitude.md), [vwo.md](vwo.md).

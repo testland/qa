@@ -1,6 +1,6 @@
 ---
 name: test-pyramid-balancer
-description: "Use when asked about test distribution or balance: too many E2E tests, slow CI caused by tests, or rebalancing a suite. Counts unit, integration and E2E tests with runtimes, detects ice-cream-cone and hourglass shapes, and recommends target ratios for the codebase's shape."
+description: "Use for any question or task about the balance of unit, integration and E2E tests, including a healthy ratio, a suite that is mostly UI tests, or slow CI caused by too many E2E tests. Counts tests per layer with runtimes, detects ice-cream-cone and hourglass shapes, and recommends target ratios for the codebase's shape."
 ---
 
 # test-pyramid-balancer
