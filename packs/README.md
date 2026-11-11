@@ -9,6 +9,7 @@ Claude plugin directory reads. That repo is generated: nobody edits it by hand.
 | `packs.json` | The pack map: each pack's name, description, keywords, three example prompts and source plugins, plus the role recipes. Moving a plugin is a one-line change here. |
 | `packs.lock.json` | Each pack's version, content hash and skill and agent list. Written by `make packs`; commit it. |
 | `icon.png` | The listing icon copied into every pack. The directory keeps the icon from a plugin's first submission, so change it only before then. |
+| `banner.png` | The image at the top of the generated README, written to `.github/banner.png` in testland/qa-skills. |
 
 ## Build
 
