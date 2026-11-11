@@ -1,6 +1,6 @@
 ---
 name: migration-operation-taxonomy
-description: "Use whenever someone asks if a database migration is safe to run in production: rename or drop a column, add NOT NULL or a default, add an index or foreign key, change a type on a large PostgreSQL or MySQL table. Classifies each statement (additive, locking, breaking, data-loss) by lock and rewrite."
+description: "Use for any question about whether a database migration is safe to run in production, including quick ones (is adding a NOT NULL column to a big Postgres table safe?) and after a migration locked a table: rename or drop a column, add a default, index or foreign key, change a type on a large PostgreSQL or MySQL table. Classifies each statement (additive, locking, breaking, data-loss) by lock and rewrite."
 ---
 
 # Migration operation taxonomy

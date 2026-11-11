@@ -1,6 +1,6 @@
 ---
 name: flyway-migrations
-description: "Use whenever a schema is managed with Flyway: versioned, repeatable and undo migration files, migrate, info, validate, baseline and repair, the schema history table, migration ordering questions, and CI gates on schema changes, via CLI, Maven, Gradle or Docker."
+description: "Use for any question or task about Flyway, including errors such as a checksum mismatch, a failed validate or an edited old migration: versioned, repeatable and undo migration files, migrate, info, validate, baseline and repair, the schema history table, migration ordering, and CI gates on schema changes, via CLI, Maven, Gradle or Docker."
 ---
 
 # flyway-migrations

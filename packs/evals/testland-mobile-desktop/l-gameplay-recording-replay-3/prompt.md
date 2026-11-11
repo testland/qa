@@ -1,0 +1,10 @@
+---
+description: Short prompt that should load gameplay-recording-replay with the whole pack installed.
+runs: 1
+max_turns: 4
+timeout_seconds: 240
+allowed_tools: [Read, Glob, Grep, Skill]
+tags: [load-test, short-prompt]
+---
+
+Testers report a crash that happens after 20 minutes of play and we can never reproduce it. How do we capture the exact session?

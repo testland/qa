@@ -208,7 +208,7 @@ key) to the plan limit, and tier the matrix per
 - Sauce Labs test config options -
   [docs.saucelabs.com/dev/test-configuration-options](https://docs.saucelabs.com/dev/test-configuration-options/).
 - LambdaTest automated web testing -
-  [lambdatest.com/support/docs/getting-started-with-lambdatest-automation](https://www.lambdatest.com/support/docs/getting-started-with-lambdatest-automation/).
+  [lambdatest.com/support/docs/python-with-selenium-running-python-automation-scripts-on-lambdatest-selenium-grid](https://www.lambdatest.com/support/docs/python-with-selenium-running-python-automation-scripts-on-lambdatest-selenium-grid/).
 - W3C WebDriver specification -
   [w3.org/TR/webdriver2/](https://www.w3.org/TR/webdriver2/).
 - [Selenium options] - Selenium 4 browser-options classes;

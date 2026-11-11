@@ -1,6 +1,6 @@
 ---
 name: test-framework-architecture-audit
-description: "Use when a test automation framework has grown without structural review, before a big refactor, or when its written conventions may no longer match the code. Grades eight axes PASS, WARN or FAIL: page objects, base classes, fixtures, helpers, naming, waits and retries, convention drift and CI."
+description: "Use for any question or task about reviewing a test automation framework's structure, such as before a big refactor or after years of growth without review, when its written conventions may no longer match the code. Grades eight axes PASS, WARN or FAIL: page objects, base classes, fixtures, helpers, naming, waits and retries, convention drift and CI."
 ---
 
 # test-framework-architecture-audit

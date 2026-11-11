@@ -1,6 +1,6 @@
 ---
 name: post-mortem-author
-description: "Use after any user-visible incident to write a blameless post-mortem: a sourced timeline, root cause (what and why, not who), impact on users, revenue and SLOs, action items with owners, dates and success criteria, and what went well."
+description: "Use for any question or task about incident post-mortems or incident reviews, including how to write a blameless one or reviews that keep turning into blame: a sourced timeline, root cause (what and why, not who), impact on users, revenue and SLOs, action items with owners, dates and success criteria, and what went well."
 ---
 
 # post-mortem-author

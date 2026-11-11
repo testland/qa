@@ -1,6 +1,6 @@
 ---
 name: ai-test-generator
-description: "Use when tests should be generated from acceptance criteria, user stories or requirements with an LLM. Scores confidence per test case (self-assessment plus assertion, naming and completeness checks), batches uncertain cases for human review and emits tests in the team's existing framework."
+description: "Use for any question or task about generating tests with an LLM from acceptance criteria, user stories or requirements, including whether it works and why generated tests assert the wrong thing. Scores confidence per test case (self-assessment plus assertion, naming and completeness checks), batches uncertain cases for human review and emits tests in the team's existing framework."
 ---
 
 # ai-test-generator

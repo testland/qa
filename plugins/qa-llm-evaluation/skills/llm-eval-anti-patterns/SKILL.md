@@ -1,6 +1,6 @@
 ---
 name: llm-eval-anti-patterns
-description: "Use when an LLM eval suite already gates a release, model swap or prompt change and nobody has audited how it was built. Checks eight methodology errors (too few cases, exact match on open text, no baseline, unpinned models, no adversarial cases and more) and how to validate an LLM judge."
+description: "Use for any question about mistakes in LLM evals or auditing an eval suite that gates a release, model swap or prompt change, including evals that pass while users say the model got worse. Checks eight methodology errors (too few cases, exact match on open text, no baseline, unpinned models, no adversarial cases and more) and how to validate an LLM judge."
 ---
 
 # llm-eval-anti-patterns

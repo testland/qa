@@ -1,6 +1,6 @@
 ---
 name: timezone-test-matrix-builder
-description: "Use when a codebase needs time zone, DST and leap-year test coverage derived from its own date and time code. Finds where times are stored, computed, displayed, scheduled or billed, picks the edge cases that matter and writes test stubs using the language's fake-clock library."
+description: "Use for any question or task about which time zones, DST dates and leap-year cases to test, including bugs such as dates shown a day early or late for users in another zone. Finds where the codebase stores, computes, displays, schedules or bills times, picks the edge cases that matter and writes test stubs with the language's fake-clock library."
 ---
 
 # timezone-test-matrix-builder

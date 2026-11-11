@@ -1,6 +1,6 @@
 ---
 name: bug-report-template
-description: "Use when someone reports a problem informally, a CI failure (JUnit XML, Allure, pytest or Playwright output) must become a bug report, or a draft needs a quality check before filing. Fills summary, environment, steps, expected vs actual and severity rationale, then checks each field is usable."
+description: "Use for any question or task about bug reports, including what makes a good one, turning an informal complaint or a CI failure (JUnit XML, Allure, pytest or Playwright output) into a report, and reports closed as cannot reproduce. Fills summary, environment, steps, expected vs actual and severity rationale, then checks each field is usable."
 ---
 
 # bug-report-template

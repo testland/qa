@@ -1,6 +1,6 @@
 ---
 name: test-strategy-author
-description: "Use when a project, release or feature needs a test strategy or master test plan that stakeholders sign off: scope, test types per layer, risk-based prioritization, tools, environments, exit criteria and ownership, plus a budgeted per-risk test plan with owners and effort."
+description: "Use for any question or task about a test strategy or master test plan, including what one contains or teams that test inconsistently so nobody knows what was tested: scope, test types per layer, risk-based prioritization, tools, environments, exit criteria and ownership, plus a budgeted per-risk test plan with owners and effort, for stakeholder sign-off."
 ---
 
 # test-strategy-author

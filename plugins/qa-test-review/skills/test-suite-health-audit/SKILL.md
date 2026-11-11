@@ -1,6 +1,6 @@
 ---
 name: test-suite-health-audit
-description: "Use when a test suite has grown for a year or more without review and someone needs to know if it is healthy before deleting or rewriting tests. Classifies files by tier, checks the pyramid ratio and flake rate per layer, measures ROI per tier and gives one verdict."
+description: "Use for any question or task about whether a test suite is healthy, including a verdict from numbers such as test counts, E2E share, flake rates, CI time and long-skipped tests, before deleting or rewriting tests. Classifies files by tier, checks the pyramid ratio and flake rate per layer, measures ROI per tier and gives one verdict."
 ---
 
 # test-suite-health-audit

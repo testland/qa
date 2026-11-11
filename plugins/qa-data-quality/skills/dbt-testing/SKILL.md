@@ -1,6 +1,6 @@
 ---
 name: dbt-testing
-description: "Use whenever a dbt project needs data tests or CI gates: generic, singular and custom-macro tests, model assertions, reading failures from run_results.json and gating dbt build on the results."
+description: "Use for any question or task about testing dbt models, including adding tests to a model's YAML and bad data such as duplicate IDs that a passing dbt build missed: generic, singular and custom-macro tests, model assertions, reading failures from run_results.json and gating dbt build on the results in CI."
 ---
 
 # dbt-testing

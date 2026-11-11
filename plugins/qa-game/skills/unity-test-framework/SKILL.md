@@ -1,6 +1,6 @@
 ---
 name: unity-test-framework
-description: "Use whenever C# code in a Unity game-engine project needs tests that use the Unity runtime or editor: Unity Test Framework EditMode vs PlayMode tests, [Test] and [UnityTest], assembly definitions, the Test Runner window, batch-mode command-line runs and CI. Not the ThrowTheSwitch C library."
+description: "Use for any question or task about testing C# code in a Unity game-engine project, even a single PlayMode test for a MonoBehaviour: Unity Test Framework EditMode vs PlayMode tests, [Test] and [UnityTest], assembly definitions, the Test Runner window, batch-mode command-line runs and CI. Not the ThrowTheSwitch C library."
 metadata:
   keywords: "unity, unity3d, test-framework, utf, edit-mode, play-mode, nunit, csharp, game-engine"
   version: "1.4.18"

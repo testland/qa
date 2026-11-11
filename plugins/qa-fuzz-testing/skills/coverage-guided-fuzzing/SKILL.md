@@ -1,6 +1,6 @@
 ---
 name: coverage-guided-fuzzing
-description: "Use when a project needs fuzz testing, a fuzz campaign must be written or maintained, or fuzzer crashes need triage. Picks libFuzzer, AFL++, cargo-fuzz, Go fuzzing, Atheris or Jazzer by language, then covers fuzz targets, seed corpora, dictionaries, sanitizers, crash triage and CI smoke fuzzing."
+description: "Use for any question or task about fuzz testing, including adding fuzzing to a Go, Rust, C/C++, Python or Java project, writing a fuzz target for a parser, and finding crashes on malformed input that unit tests miss. Picks libFuzzer, AFL++, cargo-fuzz, Go fuzzing, Atheris or Jazzer by language, then covers fuzz targets, seed corpora, dictionaries, sanitizers, crash triage and CI smoke fuzzing."
 ---
 
 # coverage-guided-fuzzing

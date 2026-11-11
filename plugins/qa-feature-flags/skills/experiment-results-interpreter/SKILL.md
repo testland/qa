@@ -1,6 +1,6 @@
 ---
 name: experiment-results-interpreter
-description: "Use when an A/B test result is read for a ship decision, especially off a dashboard, a small sample or many metrics. Computes significance per metric with multiple-comparison correction, reads confidence intervals, checks novelty, interactions, Simpson's paradox, guardrails and stop-early rules."
+description: "Use for any question about reading an A/B test or experiment result, including quick ones: is it significant, should we ship variant B, why a week-one win faded. Computes significance per metric with multiple-comparison correction, reads confidence intervals, and checks novelty, interactions, Simpson's paradox, guardrails and stop-early rules before a ship decision."
 metadata:
   keywords: "experiment, a/b testing, statistical significance, practical significance, confidence intervals, novelty effect, primacy effect, interaction effects, simpsons paradox, guardrails, results interpretation"
   version: "1.1.20"

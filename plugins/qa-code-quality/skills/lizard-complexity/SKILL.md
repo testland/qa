@@ -1,6 +1,6 @@
 ---
 name: lizard-complexity
-description: "Use when a multi-language codebase needs one complexity gate, or a function has grown unreviewable and CI needs a number. Runs Lizard (30+ languages) on production code to enforce per-function cyclomatic complexity, length and parameter-count thresholds, excluding tests."
+description: "Use for any question or task about measuring or limiting code complexity, including cyclomatic complexity across several languages and functions that have grown too long to review: runs Lizard (30+ languages) on production code to enforce per-function cyclomatic complexity, length and parameter-count thresholds as a CI gate, excluding tests."
 metadata:
   keywords: "lizard, cyclomatic-complexity, ccn, code-metrics, quality-gate"
   version: "1.1.6"

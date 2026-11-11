@@ -77,13 +77,16 @@ Preferences Policy Control) profile so the prompt never appears.
 
 ### Linux: AT-SPI requires session-wide accessibility on
 
-Per [dogtail on GitLab][dogtail] and the [Ubuntu DogtailTutorial][ubuntudogtail]:
+[dogtail][dogtail] and other AT-SPI drivers read the tree that each
+toolkit exposes. Since GNOME 3.6, "GTK3 apps and gnome-shell has the
+accessibility always on", but the "'toolkit-accessibility' default value
+is still FALSE", and legacy toolkits such as GTK2 still follow that key
+([GNOME: Accessibility on by default][gnomea11y]). Set it session-wide
+**before** launching the AUT so every toolkit loads its accessibility
+modules:
 
 [dogtail]: https://gitlab.com/dogtail/dogtail
-[ubuntudogtail]: https://wiki.ubuntu.com/Testing/Automation/DogtailTutorial
-
-On modern GNOME (X11 or Wayland), AT-SPI is off by default. Enable
-it session-wide **before** launching the AUT:
+[gnomea11y]: https://wiki.gnome.org/ThreePointFive/Features/AccessibilityOnByDefault
 
 ```bash
 gsettings set org.gnome.desktop.interface toolkit-accessibility true

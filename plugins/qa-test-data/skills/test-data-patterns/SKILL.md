@@ -1,6 +1,6 @@
 ---
 name: test-data-patterns
-description: "Use when choosing how a test suite builds its test data, or when fixtures have drifted into shared mutable state. Explains Test Data Builder, Factory, Object Mother, fixture composition, snapshots and production-data anonymization, and when each fits, before picking a tool."
+description: "Use for any question or task about how tests build their data, including Object Mother vs Test Data Builder, long constructor calls repeated across tests, and shared fixtures that one test changes and ten others break on. Explains Test Data Builder, Factory, Object Mother, fixture composition, snapshots and production-data anonymization, and when each fits, before picking a tool."
 ---
 
 # test-data-patterns
@@ -279,7 +279,7 @@ Fowler prefers rebuilding state per test because failures are easier to trace, a
 ## References
 
 - Nat Pryce - *Test Data Builders* (the canonical reference for the Builder pattern as applied to test data): http://www.natpryce.com/articles/000714.html
-- Nat Pryce and Steve Freeman - *Growing Object-Oriented Software, Guided by Tests* (2009), chapter 22: https://www.growing-object-oriented-software.com/
+- Nat Pryce and Steve Freeman - *Growing Object-Oriented Software, Guided by Tests* (2009, ISBN 978-0321503626), chapter 22 "Constructing Complex Test Data": https://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626
 - Martin Fowler - *Object Mother* (canonical reference for the Object Mother pattern): https://martinfowler.com/bliki/ObjectMother.html
 - Martin Fowler - *Eradicating Non-Determinism in Tests* (Fresh Fixture vs Shared Fixture trade-off, the load-bearing quote on test isolation): https://martinfowler.com/articles/nonDeterminism.html
 - Gerard Meszaros - *xUnit Test Patterns: Refactoring Test Code* (2007) (the seminal reference for fixture patterns; cite by book ISBN 978-0131495050).

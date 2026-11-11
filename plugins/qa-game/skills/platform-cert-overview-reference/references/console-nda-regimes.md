@@ -37,8 +37,11 @@ to the Xbox XR list:
 
 ### Submission workflow
 
-Sony documents its high-level publishing workflow publicly via
-[playstation.com/en-us/develop](https://www.playstation.com/en-us/develop/);
+Sony documents only the public entry steps: register on PlayStation
+Partners, then, after approval and signing the Global Developer and
+Publisher Agreement, "unlock access to our full ecosystem: development
+tools, publishing resources, documentation"
+([Showing your game to PlayStation](https://sonyinteractive.com/en/news/blog/showing-your-game-to-playstation/));
 the per-step TRC details are NDA.
 
 1. **QA pre-cert** - partner runs internal TRC dry pass.

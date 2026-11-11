@@ -1,6 +1,6 @@
 ---
 name: gitlab-ci-test-jobs
-description: "Use whenever the task is to run tests in GitLab CI/CD: test stages in .gitlab-ci.yml, parallel matrix jobs, junit and coverage artifact reports, Postgres or Redis services, needs between jobs, rules for triggers and retry policy."
+description: "Use for any question or task about running tests in GitLab CI/CD, including quick ones such as showing test results in a merge request or skipping tests on docs-only changes: test stages in .gitlab-ci.yml, parallel matrix jobs, junit and coverage artifact reports, Postgres or Redis services, needs between jobs, rules for triggers and retry policy."
 ---
 
 # gitlab-ci-test-jobs

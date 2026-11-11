@@ -1,6 +1,6 @@
 ---
 name: giskard-llm
-description: "Use when an LLM app needs adversarial or red-team tests on top of functional evals. Runs giskard.scan on any model wrapped as giskard.Model to probe hallucination, harmful content, prompt injection, sensitive data disclosure, stereotypes, robustness and sycophancy, with an HTML report."
+description: "Use for any question or task about red-teaming or adversarial testing of an LLM app or chatbot, including prompt injection, system-prompt or data leaks, and harmful output before release. Runs giskard.scan on any model wrapped as giskard.Model to probe hallucination, harmful content, prompt injection, sensitive data disclosure, stereotypes, robustness and sycophancy, with an HTML report."
 ---
 
 # giskard-llm

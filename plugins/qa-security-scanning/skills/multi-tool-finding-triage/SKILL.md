@@ -283,7 +283,7 @@ run (https://cli.github.com/manual/gh_pr_comment), so the pull request carries
 exactly one live verdict.
 
 Refresh the EPSS and KEV feeds per run, or pin a dated snapshot for
-reproducibility. EPSS republishes daily (https://www.first.org/epss/model), so an
+reproducibility. EPSS republishes daily (https://www.first.org/epss/data.html), so an
 unpinned rerun of the same commit can legitimately produce different priority
 buckets.
 

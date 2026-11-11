@@ -1,6 +1,6 @@
 ---
 name: appium-testing
-description: "Use whenever one mobile UI test suite must run on iOS and Android (native or React Native apps), or an Appium suite fails, flakes or breaks after an upgrade: XCUITest, UiAutomator2 and Espresso drivers, capabilities, clients in JS, Python, Java, Ruby or .NET, simulators, emulators and device farms."
+description: "Use for any question or task about Appium mobile UI tests, even a quick fix, including tests that break after an Appium upgrade and suites that pass on Android but fail on iOS: one suite for iOS and Android (native or React Native) with XCUITest, UiAutomator2 and Espresso drivers, capabilities, clients in JS, Python, Java, Ruby or .NET, simulators, emulators and device farms."
 ---
 
 # appium-testing

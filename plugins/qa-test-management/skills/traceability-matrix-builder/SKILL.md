@@ -1,6 +1,6 @@
 ---
 name: traceability-matrix-builder
-description: "Use for test coverage audits, finding requirements without tests, sprint-end coverage reviews or compliance documentation. Builds a requirements-to-tests traceability matrix from a test case repository and Jira, Linear or GitHub Issues, with orphaned cases and requirements and a coverage summary."
+description: "Use for any question or task about a traceability matrix or requirements test coverage, including building one from a list of requirements and tests, finding requirements without tests, and proof for an auditor. Builds a requirements-to-tests matrix from a test case repository and Jira, Linear or GitHub Issues, with orphaned cases and requirements and a coverage summary."
 ---
 
 # traceability-matrix-builder

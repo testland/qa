@@ -1,6 +1,6 @@
 ---
 name: checkov-policy
-description: "Use when infrastructure code (Terraform, CloudFormation, Kubernetes, Helm, ARM, Serverless, CDK) needs security scanning with the broadest built-in rule set: Checkov with custom Python checks, SARIF and JUnit output, and a baseline so CI fails only on new findings. Single-tool option: trivy-config."
+description: "Use for any question or task about Checkov or scanning infrastructure code (Terraform, CloudFormation, Kubernetes, Helm, ARM, Serverless, CDK) with the broadest built-in rule set, including custom security checks written in Python: SARIF and JUnit output, and a baseline so CI fails only on new findings. Single-tool option: trivy-config."
 ---
 
 # checkov-policy

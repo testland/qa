@@ -1,6 +1,6 @@
 ---
 name: playwright-fixture-builder
-description: "Use when a Playwright suite has copy-pasted beforeEach setup that should be a fixture, or needs shared login, database or feature-flag setup across many specs. Builds test.extend fixtures with the right test or worker scope, setup and teardown, and per-worker isolation."
+description: "Use for any question or task about sharing setup across Playwright tests, including reusing login, copy-pasted beforeEach blocks, and test users that collide between parallel workers. Builds test.extend fixtures with the right test or worker scope, setup and teardown, and per-worker isolation for login, database or feature-flag setup."
 ---
 
 # playwright-fixture-builder

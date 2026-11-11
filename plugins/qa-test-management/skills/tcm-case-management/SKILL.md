@@ -1,6 +1,6 @@
 ---
 name: tcm-case-management
-description: "Use when managing test cases in TestRail, Xray, Zephyr Scale, Allure TestOps or Qase: writing cases from a spec, organizing suites, steps with expected results, linking requirements, bulk importing from CSV or JSON, migrating between tools or mass edits. Pushing run results is test-management-sync."
+description: "Use for any question or task about managing test cases in TestRail, Xray, Zephyr Scale, Allure TestOps or Qase, including organizing suites, importing cases from CSV or JSON, linking them to requirements and migrating between tools without losing steps: writing cases from a spec, steps with expected results and mass edits. Pushing run results is test-management-sync."
 ---
 
 # tcm-case-management

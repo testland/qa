@@ -1,6 +1,6 @@
 ---
 name: ragas-evaluation
-description: "Use when a RAG pipeline (retriever plus generator) or an agent needs the widest set of evaluation metrics: Ragas faithfulness, response relevancy, context precision and recall, noise sensitivity, factual correctness, tool-call accuracy, agent goal accuracy and rubric scoring."
+description: "Use for any question or task about RAG or agent evaluation metrics, including which metrics to use, scoring an answer against its contexts, and telling retrieval problems from generation problems after a change such as chunk size: Ragas faithfulness, response relevancy, context precision and recall, noise sensitivity, factual correctness, tool-call accuracy, agent goal accuracy and rubric scoring."
 ---
 
 # ragas-evaluation
