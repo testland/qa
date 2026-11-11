@@ -29,6 +29,7 @@ const ROOT = process.cwd();
 const MAP_PATH = join(ROOT, 'packs', 'packs.json');
 const LOCK_PATH = join(ROOT, 'packs', 'packs.lock.json');
 const ICON_PATH = join(ROOT, 'packs', 'icon.png'); // the directory listing icon, fixed at first submission
+const BANNER_PATH = join(ROOT, 'packs', 'banner.png'); // the image at the top of the generated README
 const SITE = 'https://testland.io';
 const MAX_PACK_FILES = 512;
 
@@ -276,6 +277,8 @@ function packReadme(map: PackMap, built: BuiltPack): string {
 function rootReadme(map: PackMap, built: BuiltPack[]): string {
   const src = map.sourceRepository.replace('https://github.com/', '');
   const lines = [
+    '<img src=".github/banner.png" alt="Testland QA skills: eleven non-overlapping packs for Claude" width="100%">',
+    '',
     '# Testland QA skills',
     '',
     `Skills and agents for software testing and quality engineering, packaged as ${built.length} Claude plugins. Each skill is in exactly one pack, so installing several packs never loads a skill twice.`,
@@ -433,6 +436,7 @@ function main(): void {
   }
   write('.claude-plugin/marketplace.json', marketplace(map, built, versions));
   write('README.md', rootReadme(map, built));
+  write('.github/banner.png', readFileSync(BANNER_PATH).toString('latin1'), true);
   write('LICENSE', readFileSync(join(ROOT, 'LICENSE'), 'utf8'));
   writeFileSync(LOCK_PATH, lockText);
 

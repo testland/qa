@@ -1,3 +1,5 @@
+<img src=".github/assets/banner.png" alt="testland/qa: quality engineering for Claude Code, one command away" width="100%">
+
 # testland-qa
 
 [![validate](https://github.com/testland/qa/actions/workflows/validate.yml/badge.svg)](https://github.com/testland/qa/actions/workflows/validate.yml)
