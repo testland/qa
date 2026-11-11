@@ -1,7 +1,7 @@
 {
   "testland-essentials": {
-    "version": "1.0.6",
-    "hash": "42d1b0f52866c8836943ab25c4e2f020b3f2cac47063dcfd91bebb28089f4003",
+    "version": "1.0.7",
+    "hash": "4ffb86d8a830bf2e708330db461cc35a8ccf1ec2e27bb886172f1afd1966cec0",
     "skills": [
       "attack-surface-test-checklist",
       "definition-of-done",
@@ -77,8 +77,8 @@
     ]
   },
   "testland-backend": {
-    "version": "1.0.2",
-    "hash": "ac3f812d24d1c70527bb5e5d448bdcb7a73c9b4b14e75fbd2d5c062863debf50",
+    "version": "1.0.3",
+    "hash": "afa83d99edf569d41bf0dbb9737ebd7efcfdc89bc0b04bc7f500f2fca2571726",
     "skills": [
       "bullmq-tests",
       "celery-tests",
@@ -135,8 +135,8 @@
     ]
   },
   "testland-api": {
-    "version": "1.0.3",
-    "hash": "bb30863afa8fafeb2d297a11ce5c9a453c366bbc4b4d6e26159d0b992bdea934",
+    "version": "1.0.4",
+    "hash": "915658e76bcd236fb60a2141cc84363963ee95fa3f8d2e2ec537f63a17a562bd",
     "skills": [
       "api-chaos-runner",
       "karate-testing",
@@ -190,8 +190,8 @@
     ]
   },
   "testland-security": {
-    "version": "1.0.2",
-    "hash": "eb8e967ad59f0be5dc719ee8bf809cd5521420eb305668f698468c1ab8bad423",
+    "version": "1.0.3",
+    "hash": "28d1f51973d521daf021d2c8630c8f012a59ba580271edffda0337cc09e37f8c",
     "skills": [
       "codeql-queries",
       "cve-exploitability-triage",
@@ -236,8 +236,8 @@
     ]
   },
   "testland-web": {
-    "version": "1.1.1",
-    "hash": "ebd73029dc85d8e1b7ad2ce8bdd961142ea2f57b63d5721257f7971da42d22bc",
+    "version": "1.1.2",
+    "hash": "ba3a885f43ea8f9bad5849238d66d3caaaba6f1323590a47e4dc35f42b4cf69b",
     "skills": [
       "browser-matrix-strategy-reference",
       "cloud-grid-e2e",
@@ -288,8 +288,8 @@
     ]
   },
   "testland-unit-testing": {
-    "version": "1.1.4",
-    "hash": "8cf0d1340b5d6df37ba525515bd972335bf334cf06d00da9894d40e0bb5ecc60",
+    "version": "1.1.5",
+    "hash": "680b0d91d8a78576c044f4c1583bd0bb7d8a85aa1c10428e281e1aee4cc69708",
     "skills": [
       "red-green-refactor",
       "js-unit-tests",
@@ -328,8 +328,8 @@
     ]
   },
   "testland-ai": {
-    "version": "1.0.1",
-    "hash": "aefb200942c1e28bed52862a7ebe8b152ba9016065793a6bcfb776fe64f0b816",
+    "version": "1.0.2",
+    "hash": "485e7062e8c915973ffbbbb96a3176937cf3d5974beb9480ac2b1531244e22e6",
     "skills": [
       "deepeval-evaluation",
       "giskard-llm",
@@ -370,8 +370,8 @@
     ]
   },
   "testland-mobile-desktop": {
-    "version": "1.0.3",
-    "hash": "57b9eeb4d0c53c4ebda965cb1b86b5b7ac55330f107befda9086fb0dfe7bb4de",
+    "version": "1.0.4",
+    "hash": "71c8207fbd2a703f5cde1c3934c597a9fdea725cb5a5116b38629654924aea2a",
     "skills": [
       "appium-testing",
       "detox-testing",
@@ -408,8 +408,8 @@
     ]
   },
   "testland-performance": {
-    "version": "1.0.1",
-    "hash": "561d60d2da674a2f0d581c2b491006edf7b5b9f458cede6a1d0c982c4000675b",
+    "version": "1.0.2",
+    "hash": "8309253a746509c27eb89e238b33ee254556cece328256e91fd78308eb21dd40",
     "skills": [
       "db-query-plan-analyzer",
       "flame-graph-analyzer",
@@ -436,8 +436,8 @@
     ]
   },
   "testland-manual-testing": {
-    "version": "1.0.2",
-    "hash": "3ced4a372cd3a20b89431893701701b9dc2505266fb8d25cadaf52c6c721ff21",
+    "version": "1.0.3",
+    "hash": "f891b14faa792106796ff46214eaea475fe2c07a8f297ae162da4c75ce35ed69",
     "skills": [
       "bug-bash-facilitator",
       "decision-table-test-design",
@@ -466,8 +466,8 @@
     ]
   },
   "testland-leadership": {
-    "version": "1.0.1",
-    "hash": "61d95e32be595fb4823128612d8b428fce6e114818044253e34600e74c401993",
+    "version": "1.0.2",
+    "hash": "c32d9c7d029b7f0c33d7c5d80ef3ee461ff075d84710249751649349186182c0",
     "skills": [
       "exec-quality-narrative",
       "qa-hiring-kit",

@@ -11,6 +11,7 @@ Claude plugin directory reads. That repo is generated: nobody edits it by hand.
 | `icon.png` | The listing icon copied into every pack. The directory keeps the icon from a plugin's first submission, so change it only before then. |
 | `banner.png` | The image at the top of the generated README, written to `.github/banner.png` in testland/qa-skills. |
 | `scripts/ts/build-packs.ts` `contributing()` | The Contributing section of the generated README and its `CONTRIBUTING.md`. Both send issues, pull requests and security reports to testland/qa, since testland/qa-skills takes none. |
+| `scripts/ts/build-packs.ts` `directoryFrontmatter()` | Cuts copied frontmatter to what the Claude directory accepts from an organization that isn't Verified: skills keep `name` and `description`, agents also keep `tools` and `model`. An agent's `skills` preload becomes a first body line naming the skills to load, and `Skill` is added to its tools. The qa sources keep their full frontmatter. |
 
 ## Build
 

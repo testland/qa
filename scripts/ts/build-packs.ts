@@ -10,6 +10,12 @@
 // another pack or outside the copied files points at its testland.io page, and
 // anything outside plugins/ points at the file on GitHub.
 //
+// Frontmatter is cut to what the Claude directory accepts from an organization
+// that isn't Verified (refusal code LOCAL_CODE_FRONTMATTER_KEY): a skill keeps
+// `name` and `description`; an agent also keeps `tools` and `model`, and its
+// `skills` preload becomes a first body line telling it which skills to load,
+// with `Skill` added to its tools.
+//
 // Pack versions live in packs/packs.lock.json with a hash of each pack's files.
 // A pack's version moves only when its files change: minor when a skill or
 // agent is added or removed, patch otherwise.
@@ -160,6 +166,56 @@ export function sitePage(repoPath: string): string | null {
   if (kind === 'skills' && name) return `${SITE}/plugins/${plugin}/skills/${name}`;
   if (kind === 'agents' && name) return `${SITE}/plugins/${plugin}/agents/${name.replace(/\.md$/, '')}`;
   return `${SITE}/plugins/${plugin}`;
+}
+
+const SKILL_KEYS = new Set(['name', 'description']);
+const AGENT_KEYS = new Set(['name', 'description', 'tools', 'model']);
+
+/**
+ * Cuts a copied SKILL.md or agent file's frontmatter to the keys the directory
+ * accepts (see the header). `skillPack` maps a skill name to the pack that ships
+ * it, so an agent's preloaded skills get their plugin-qualified names.
+ */
+export function directoryFrontmatter(text: string, dest: string, skillPack: Map<string, string>): string {
+  const isSkill = /^skills\/[^/]+\/SKILL\.md$/.test(dest);
+  const isAgent = /^agents\/[^/]+\.md$/.test(dest);
+  if (!isSkill && !isAgent) return text;
+  const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/.exec(text);
+  if (!m) return text;
+  const fields: { key: string; lines: string[] }[] = [];
+  for (const line of m[1]!.split(/\r?\n/)) {
+    const k = /^([A-Za-z0-9_-]+):/.exec(line);
+    if (k) fields.push({ key: k[1]!, lines: [line] });
+    else if (fields.length) fields[fields.length - 1]!.lines.push(line);
+  }
+  const keep = isSkill ? SKILL_KEYS : AGENT_KEYS;
+  const preload: string[] = [];
+  if (isAgent) {
+    const skills = fields.find((f) => f.key === 'skills');
+    for (const l of skills?.lines ?? []) {
+      const inline = /^skills:\s*\[(.*)\]\s*$/.exec(l);
+      if (inline) preload.push(...inline[1]!.split(',').map((x) => x.trim().replace(/^["']|["']$/g, '')).filter(Boolean));
+      const item = /^\s*-\s*["']?([^"'\s]+)["']?\s*$/.exec(l);
+      if (item) preload.push(item[1]!);
+    }
+  }
+  const kept = fields.filter((f) => keep.has(f.key));
+  if (preload.length) {
+    const tools = kept.find((f) => f.key === 'tools');
+    if (tools && tools.lines.length === 1 && !/\bSkill\b/.test(tools.lines[0]!)) {
+      tools.lines[0] = tools.lines[0]!.replace(/^tools:\s*(["']?)(.*?)\1\s*$/, (_m, q: string, v: string) => `tools: ${q}${v}, Skill${q}`);
+    }
+  }
+  const front = kept.flatMap((f) => f.lines).join('\n');
+  let body = text.slice(m[0].length).replace(/^(\r?\n)+/, '');
+  if (preload.length) {
+    const names = preload.map((n) => {
+      const pack = skillPack.get(n);
+      return pack ? `\`${pack}:${n}\`` : `\`${n}\``;
+    });
+    body = `Before you start, load ${names.length === 1 ? 'this skill' : 'these skills'} with the Skill tool: ${names.join(', ')}.\n\n${body}`;
+  }
+  return `---\n${front}\n---\n\n${body}`;
 }
 
 /** Rewrites one relative link target found in `src` (copied to `dest` in `pack`). */
@@ -400,6 +456,8 @@ function main(): void {
     for (const s of c.skills) where.set(`plugins/${s.plugin}/skills/${s.name}`, { pack: c.def.name, dest: `skills/${s.name}` });
   }
   const fileExists = (p: string) => exists(join(ROOT, p));
+  const skillPack = new Map<string, string>();
+  for (const c of collected) for (const s of c.skills) skillPack.set(s.name, c.def.name);
 
   const built: BuiltPack[] = collected.map((c) => {
     const files = new Map<string, string>();
@@ -407,7 +465,7 @@ function main(): void {
       const raw = readFileSync(join(ROOT, f.src));
       if (f.src.endsWith('.md')) {
         const text = rewriteLinks(raw.toString('utf8'), (t) => rewriteTarget(t, f.src, f.dest, c.def.name, where, map.sourceRepository, fileExists));
-        files.set(f.dest, text);
+        files.set(f.dest, directoryFrontmatter(text, f.dest, skillPack));
       } else {
         files.set(f.dest, raw.toString('latin1'));
       }

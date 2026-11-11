@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkMap, nextVersion, rewriteLinks, rewriteTarget, sitePage, type PackMap } from './build-packs.ts';
+import { checkMap, directoryFrontmatter, nextVersion, rewriteLinks, rewriteTarget, sitePage, type PackMap } from './build-packs.ts';
 
 const where = new Map([
   ['plugins/qa-a/skills/one/SKILL.md', { pack: 'p1', dest: 'skills/one/SKILL.md' }],
@@ -75,5 +75,24 @@ describe('nextVersion', () => {
   it('bumps patch for edits and minor for added or removed components', () => {
     expect(nextVersion(prev, 'h2', ['a'], [])).toBe('1.2.4');
     expect(nextVersion(prev, 'h2', ['a', 'b'], [])).toBe('1.3.0');
+  });
+});
+
+describe('directoryFrontmatter', () => {
+  const packs = new Map([['wcag-color-contrast', 'testland-web'], ['ci-failure-triage', 'testland-manual-testing']]);
+  it('keeps only name and description on a skill', () => {
+    const src = '---\nname: one\ndescription: "Use for one."\nmetadata:\n  keywords:\n    - a\n  version: 1.0.0\n---\n\n# one\n';
+    expect(directoryFrontmatter(src, 'skills/one/SKILL.md', packs)).toBe('---\nname: one\ndescription: "Use for one."\n---\n\n# one\n');
+  });
+  it('turns an agent skills preload into a body line and adds Skill to its tools', () => {
+    const src = '---\nname: critic\ndescription: "Reviews."\ntools: "Read, Grep"\nmodel: sonnet\nskills:\n  - wcag-color-contrast\n  - ci-failure-triage\n---\n\nBody.\n';
+    expect(directoryFrontmatter(src, 'agents/critic.md', packs)).toBe(
+      '---\nname: critic\ndescription: "Reviews."\ntools: "Read, Grep, Skill"\nmodel: sonnet\n---\n\n' +
+        'Before you start, load these skills with the Skill tool: `testland-web:wcag-color-contrast`, `testland-manual-testing:ci-failure-triage`.\n\nBody.\n',
+    );
+  });
+  it('leaves references and other files alone', () => {
+    const src = '---\nfoo: bar\n---\ntext\n';
+    expect(directoryFrontmatter(src, 'skills/one/references/x.md', packs)).toBe(src);
   });
 });
