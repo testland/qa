@@ -287,6 +287,7 @@ function rootReadme(map: PackMap, built: BuiltPack[]): string {
       `[![skills](https://img.shields.io/badge/skills-${built.reduce((n, b) => n + b.skills.length, 0)}-5fbfff.svg)](#packs)`,
       `[![built from ${src}](https://img.shields.io/badge/built%20from-${src.replace('/', '%2F').replace(/-/g, '--')}-555.svg)](${map.sourceRepository})`,
       `[![testland.io](https://img.shields.io/badge/web-testland.io-5fbfff.svg)](https://testland.io/plugins)`,
+      `[![backed up by Cloudback](https://img.shields.io/badge/backed%20up%20by-Cloudback-5fbfff.svg)](https://cloudback.it)`,
     ].join('\n'),
     '',
     `Skills and agents for software testing and quality engineering, packaged as ${built.length} Claude plugins. Each skill is in exactly one pack, so installing several packs never loads a skill twice.`,

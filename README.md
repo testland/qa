@@ -7,6 +7,7 @@
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![marketplace version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Ftestland%2Fqa%2Fmain%2F.claude-plugin%2Fmarketplace.json&query=%24.metadata.version&label=marketplace&color=5fbfff)](.claude-plugin/marketplace.json)
 [![testland.io](https://img.shields.io/badge/web-testland.io-5fbfff.svg)](https://testland.io/plugins)
+[![backed up by Cloudback](https://img.shields.io/badge/backed%20up%20by-Cloudback-5fbfff.svg)](https://cloudback.it)
 
 > A rigorously curated quality-engineering plugin marketplace for Claude Code;
 > its skills also install into any agent via the skills.sh CLI. Every component
