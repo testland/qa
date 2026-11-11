@@ -287,12 +287,12 @@ function rootReadme(map: PackMap, built: BuiltPack[]): string {
       `[![skills](https://img.shields.io/badge/skills-${built.reduce((n, b) => n + b.skills.length, 0)}-5fbfff.svg)](#packs)`,
       `[![built from ${src}](https://img.shields.io/badge/built%20from-${src.replace('/', '%2F').replace(/-/g, '--')}-555.svg)](${map.sourceRepository})`,
       `[![testland.io](https://img.shields.io/badge/web-testland.io-5fbfff.svg)](https://testland.io/plugins)`,
-      `[![backed up by Cloudback](https://img.shields.io/badge/backed%20up%20by-Cloudback-5fbfff.svg)](https://cloudback.it)`,
+      `[![Cloudback backup status](https://app.cloudback.it/badge/${map.repository.replace('https://github.com/', '')})](https://cloudback.it)`,
     ].join('\n'),
     '',
     `Skills and agents for software testing and quality engineering, packaged as ${built.length} Claude plugins. Each skill is in exactly one pack, so installing several packs never loads a skill twice.`,
     '',
-    `This repository is generated from [${src}](${map.sourceRepository}) on every release. Please star, open issues and send pull requests there; changes made here are overwritten.`,
+    `This repository is generated from [${src}](${map.sourceRepository}) on every release. Please star it there, and see [Contributing](#contributing) to report a problem or change a skill.`,
     '',
     '## Install',
     '',
@@ -309,8 +309,23 @@ function rootReadme(map: PackMap, built: BuiltPack[]): string {
   for (const b of built) lines.push(`| [${b.def.displayName}](${b.def.name}/) | ${b.skills.length} | ${b.agents.length} | ${cell(b.def.description)} |`);
   lines.push('', '## Role recipes', '', '| Role | Packs |', '| --- | --- |');
   for (const r of map.recipes) lines.push(`| ${r.role} | ${r.packs.join(' + ')} |`);
-  lines.push('', `More at [testland.io](${map.homepage}). MIT licensed.`, '');
+  lines.push('', ...contributing(map.sourceRepository, 2), '', `More at [testland.io](${map.homepage}). MIT licensed.`, '');
   return lines.join('\n');
+}
+
+// How to report problems and send changes. This repository is generated and
+// takes no issues or pull requests, so everything points to the source repo.
+function contributing(source: string, level: number): string[] {
+  const src = source.replace('https://github.com/', '');
+  return [
+    `${'#'.repeat(level)} Contributing`,
+    '',
+    `This repository is generated from [${src}](${source}) on every release, so it does not take issues or pull requests, and changes made here are overwritten. All work happens in ${src}:`,
+    '',
+    `- **Report a bug or ask for a skill:** [open an issue in ${src}](${source}/issues/new/choose).`,
+    `- **Fix or improve a skill or agent:** edit it under \`plugins/<plugin>/\` in ${src} and open a pull request there. Each pack's README names the plugins it is built from, and [the contributing guide](${source}/blob/main/docs/CONTRIBUTING.md) explains the review every change goes through.`,
+    `- **Report a security problem:** use [private vulnerability reporting in ${src}](${source}/security/advisories/new), not a public issue.`,
+  ];
 }
 
 function marketplace(map: PackMap, built: BuiltPack[], versions: Map<string, string>): string {
@@ -447,6 +462,7 @@ function main(): void {
   write('README.md', rootReadme(map, built));
   write('.github/banner.png', readFileSync(BANNER_PATH).toString('latin1'), true);
   write('LICENSE', readFileSync(join(ROOT, 'LICENSE'), 'utf8'));
+  write('CONTRIBUTING.md', [...contributing(map.sourceRepository, 1), ''].join('\n'));
   writeFileSync(LOCK_PATH, lockText);
 
   for (const b of built) {
