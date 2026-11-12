@@ -39,7 +39,7 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 | [qa-mutation-testing](plugins/qa-mutation-testing/) | 1.3.5 | 6 skills + 0 agents | 6 |
 | [qa-property-based](plugins/qa-property-based/) | 1.2.25 | 4 skills + 2 agents | 6 |
 | [qa-unit-tests-go-rust](plugins/qa-unit-tests-go-rust/) | 1.3.3 | 2 skills + 0 agents | 2 |
-| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.9 | 2 skills + 0 agents | 2 |
+| [qa-unit-tests-python](plugins/qa-unit-tests-python/) | 1.4.10 | 2 skills + 0 agents | 2 |
 | [qa-tdd](plugins/qa-tdd/) | 1.0.1 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-js](plugins/qa-unit-tests-js/) | 1.3.8 | 1 skills + 0 agents | 1 |
 | [qa-unit-tests-jvm](plugins/qa-unit-tests-jvm/) | 1.3.3 | 1 skills + 0 agents | 1 |
