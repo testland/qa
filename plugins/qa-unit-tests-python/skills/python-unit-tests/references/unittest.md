@@ -93,7 +93,7 @@ with patch('mymodule.fetch_user') as mock_fetch:
 
 # Patch an attribute / a dictionary
 @patch.object(SomeClass, 'method', return_value='mocked')
-@patch.dict('os.environ', {'API_KEY': 'test-key'})
+@patch.dict('os.environ', {'APP_ENV': 'test'})
 ```
 
 **Patch target rule:** patch where the function is *used*, not where it's

@@ -288,8 +288,8 @@
     ]
   },
   "testland-unit-testing": {
-    "version": "1.1.7",
-    "hash": "c56882025bcb8da57dbb795e5be91e6a33fa23eccfde463116aa26959864d64a",
+    "version": "1.1.8",
+    "hash": "a1b2c0c52965023d0107ee7c0d8dff1e403eceb0be3ebef6a470760cb1f7764c",
     "skills": [
       "red-green-refactor",
       "js-unit-tests",
