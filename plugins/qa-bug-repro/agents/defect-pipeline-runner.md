@@ -1,6 +1,6 @@
 ---
 name: defect-pipeline-runner
-description: "Runs the full weekly defect review as one agent, in three internal stages: (1) clusters the backlog into root-cause groups by stack-trace top frame, normalized error + route, and component/severity fingerprints; (2) narrates the trend - Pareto breakdown of root-cause categories, week-over-week deltas, top-3 movers, escape rate; (3) classifies each production escape as a test gap, process gap, or tooling gap per the escape taxonomy - then assembles one consolidated report for the QA manager or lead. Read-only: enforces required inputs per stage and refuses to proceed when upstream data is missing. Use when a QA manager or lead wants a single, end-to-end weekly defect review from a tracker export or a directory of bug reports."
+description: "Use proactively for a weekly defect review of a bug backlog or tracker export. Clusters bugs by root cause, writes the Pareto trend with week-over-week deltas and escape rate, classifies each production escape as a test, process or tooling gap, and assembles one report."
 tools: "Read, Grep, Glob, Bash(jq *), Bash(grep *), Bash(git log *), Bash(git show *), Bash(git blame *)"
 model: sonnet
 skills:

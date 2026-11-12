@@ -28,18 +28,20 @@ handling) runs the real code paths.
 ### Install
 
 ```bash
-npm install --save-dev launchdarkly-node-server-sdk
+npm install --save-dev @launchdarkly/node-server-sdk
 pip install launchdarkly-server-sdk
 ```
 
 ### Initialize with TestData
 
 ```typescript
-import * as LaunchDarkly from 'launchdarkly-node-server-sdk';
+// Node.js server SDK v8+ (@launchdarkly/node-server-sdk); TestData lives in /integrations
+import { init } from '@launchdarkly/node-server-sdk';
+import { TestData } from '@launchdarkly/node-server-sdk/integrations';
 
-const td = LaunchDarkly.TestData.dataSource();
-const client = LaunchDarkly.init('sdk-test-key', {
-  updateProcessor: td,
+const td = new TestData();
+const client = init('sdk-test-key', {
+  updateProcessor: td.getFactory(),
   sendEvents: false,         // No event uploads in tests
 });
 
@@ -98,11 +100,13 @@ test('rollout is deterministic per user', async () => {
 For fixture-shared tests:
 
 ```typescript
-const fileSource = LaunchDarkly.FileDataSource({
+import { FileDataSourceFactory } from '@launchdarkly/node-server-sdk/integrations';
+
+const fileData = new FileDataSourceFactory({
   paths: ['./tests/fixtures/ld-flags.json'],
 });
-const client = LaunchDarkly.init('sdk-test-key', {
-  updateProcessor: fileSource,
+const client = init('sdk-test-key', {
+  updateProcessor: fileData.getFactory(),
   sendEvents: false,
 });
 ```

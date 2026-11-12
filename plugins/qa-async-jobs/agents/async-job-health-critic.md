@@ -1,6 +1,6 @@
 ---
 name: async-job-health-critic
-description: "Adversarial read-only critic for queue and worker code across BullMQ, Celery, Sidekiq, SQS, and RabbitMQ. Scans changed files for four cross-cutting at-least-once reliability defects: missing retry limits, absent dead-letter routing, uncapped or infinite backoff, and missing idempotency guards on handlers. Emits a per-defect findings table and a BLOCK or PASS verdict. Use when reviewing a PR that adds or modifies queue producers, worker processors, job definitions, or broker configuration."
+description: "Use proactively whenever a PR adds or changes queue producers, workers, job definitions or broker config (BullMQ, Celery, Sidekiq, SQS, RabbitMQ). Flags missing retry limits, no dead-letter routing, unbounded backoff and non-idempotent handlers, with a findings table and a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

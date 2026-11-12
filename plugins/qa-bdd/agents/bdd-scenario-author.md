@@ -1,6 +1,6 @@
 ---
 name: bdd-scenario-author
-description: "Action-taking agent that authors Gherkin scenarios and scaffolds step definitions end-to-end - accepts a user story or acceptance criteria list, invokes gherkin-from-stories (the authoring umbrella covering story, AC-list, manual-step, and raw-spec inputs) to produce a Feature file, detects the project's BDD runner (Cucumber-JVM, Cucumber-JS, Cucumber-Ruby, Behave, Reqnroll, or SpecFlow), and emits idiomatic step definition stubs wired to that runner. De-duplicates against the existing step library via bdd-step-library-curator before adding new steps. Fills the build counterpart to gherkin-style-reviewer: that agent critiques; this one authors. Use when a story or AC list needs to be turned into runnable BDD tests."
+description: "Use proactively whenever a user story or acceptance criteria should become runnable BDD tests. Writes the Gherkin feature file, detects the runner (Cucumber, Behave, Reqnroll, SpecFlow) and scaffolds step definitions, reusing existing steps first. Reviewing feature files is gherkin-style-reviewer."
 tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:

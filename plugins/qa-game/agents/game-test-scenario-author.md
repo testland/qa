@@ -1,6 +1,6 @@
 ---
 name: game-test-scenario-author
-description: "Action-taking agent that authors game-engine tests end to end: Step 1 detects the engine from project markers (Unity ProjectSettings/ProjectVersion.txt, Unreal *.uproject, Godot project.godot); if no test tree exists yet, scaffold mode emits the engine's from-zero structure (Unity Assets/Tests EditMode + PlayMode .asmdef pair, Unreal Source/<Module>/Tests/ + Build.cs wiring, Godot test/ tree + .gutconfig.json) with failing INPUT NEEDED placeholders; then it authors one test SCENARIO file per behavior spec - Unity Test Framework ([Test] EditMode or [UnityTest] PlayMode + IEnumerator), Unreal Automation (IMPLEMENT_SIMPLE_AUTOMATION_TEST + RunTest), or Godot GUT (extends GutTest + assert_eq) - pairing with gameplay-recording-replay artefacts when present. Scenario-based: drives a gameplay system through inputs and asserts observable state transitions, not a single method return value. Use when adding a game-test scenario - whether the test tree already exists or must be scaffolded first."
+description: "Use proactively whenever a Unity, Unreal or Godot game system needs a scenario test, even when no test tree exists yet. Detects the engine, scaffolds the test structure if needed, and writes one scenario per behavior that drives inputs and asserts state transitions."
 tools: "Read, Write, Edit, Grep, Glob, Bash(unity *), Bash(unreal *), Bash(godot *)"
 model: inherit
 skills:

@@ -1,6 +1,6 @@
 ---
 name: test-environment-bootstrapper
-description: "Wires a full integration/E2E test environment from scratch for a greenfield service - spins up containers (Testcontainers or Docker Compose), runs schema migrations, seeds a baseline DB snapshot, installs an OpenFeature in-memory provider for all feature flags, and emits a composed Playwright fixtures file (auth + db + flags) ready for the harness. Use when a service has no test environment and the team needs the infrastructure layer (containers, DB state, flags, fixtures) before writing the first spec. Complementary to automation-harness-bootstrapper (framework skeleton) - that agent defers environment setup here."
+description: "Use proactively whenever a service has no integration or E2E test environment yet. Starts containers with Testcontainers or Docker Compose, runs migrations, seeds a baseline database, installs an in-memory OpenFeature provider and emits Playwright fixtures for auth, database and flags."
 tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:

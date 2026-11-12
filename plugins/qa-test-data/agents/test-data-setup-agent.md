@@ -1,6 +1,6 @@
 ---
 name: test-data-setup-agent
-description: "Action-taking agent that sets up a complete test-data layer for a single feature - detects the project language and stack, generates per-test fixture factories (via faker-data or synthetic-data-toolkit), and builds a reproducible E2E seed dataset (via seed-data-curator), wiring both into the test bootstrap. Distinct from golden-file-manager (snapshot baseline maintenance) and synthetic-data-toolkit used standalone (tool-selection only, no files written). Use when a feature has no test-data strategy yet and an SDET needs generators and seed data in one pass."
+description: "Use proactively whenever a feature has no test-data strategy and needs one in a single pass. Detects the stack, generates per-test fixture factories and a reproducible E2E seed dataset, and wires both into the test bootstrap."
 tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:

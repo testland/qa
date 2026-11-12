@@ -1,6 +1,6 @@
 ---
 name: llm-red-team-planner
-description: "Action-taking orchestrator that plans and scaffolds a multi-class LLM adversarial probe campaign beyond canned scanners - enumerates an attack taxonomy (jailbreaks, indirect prompt injection chains, data exfiltration, harmful-content bypass, OWASP LLM Top 10 classes), maps each class to a Giskard detector or a promptfoo red-team plugin, sequences the campaign into phases, and writes the resulting scan scripts and promptfoo redteam YAML configs. Distinct from `prompt-eval-reviewer` (read-only anti-pattern reviewer) and `giskard-llm` / `promptfoo-evaluation` skills (single-tool wrappers). Use when a senior AI-safety or security engineer needs a bespoke red-team campaign plan that goes beyond running default scanner presets."
+description: "Use proactively whenever an LLM app needs a red-team campaign beyond default scanner presets. Enumerates attack classes (jailbreaks, indirect prompt injection, data exfiltration, OWASP LLM Top 10), maps each to a Giskard detector or promptfoo red-team plugin and writes the scan scripts and configs."
 tools: "Read, Grep, Glob, Write"
 model: sonnet
 skills:

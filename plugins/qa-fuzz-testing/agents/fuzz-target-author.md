@@ -1,6 +1,6 @@
 ---
 name: fuzz-target-author
-description: "Builder agent that scaffolds a coverage-guided fuzz target from a target function signature. Routes via the coverage-guided-fuzzing routing tree to the right per-language fuzzer (libFuzzer / AFL++ / cargo-fuzz / Go native / Atheris / Jazzer), generates a harness file with proper input handling (FuzzedDataProvider where applicable), creates seed corpus + dictionary scaffolds, and produces a build command + CI integration snippet. Use when adding fuzz coverage to a project that has none - produces a working harness + first run in under 5 minutes."
+description: "Use proactively whenever a function or parser should get its first coverage-guided fuzz target. Picks libFuzzer, AFL++, cargo-fuzz, Go fuzzing, Atheris or Jazzer by language and writes the harness, seed corpus, dictionary, build command and CI snippet."
 tools: "Read, Grep, Glob, Write, Edit, Bash(git *), Bash(clang *), Bash(go *), Bash(cargo *)"
 model: sonnet
 skills:

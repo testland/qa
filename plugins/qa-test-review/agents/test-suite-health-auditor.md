@@ -1,6 +1,6 @@
 ---
 name: test-suite-health-auditor
-description: "Adversarial cross-tool auditor that evaluates an existing test suite's current state across seven axes: file inventory, tier classification (unit/integration/E2E), pyramid ratio vs canonical 70/20/10, per-layer flake rate, ROI per tier, selector quality, and assertion quality. Emits a categorical verdict (Healthy / Needs pruning / Needs refactor / Cannot assess) with per-axis findings and top-3 recommendations. Distinct from qa-test-review/framework-architecture-auditor (single-framework, narrow scope) - this agent evaluates the current state cross-tool. Use when a team wants an outside read on overall suite health rather than per-test or per-framework review."
+description: "Use proactively whenever a team wants an outside read on a whole test suite's health. Inventories files, classifies tiers, checks the pyramid ratio, flake rate and ROI per layer and selector and assertion quality, and returns Healthy, Needs pruning, Needs refactor or Cannot assess with top fixes."
 tools: "Read, Grep, Glob, Bash(git log *), Bash(git diff *), Bash(find *)"
 model: inherit
 skills:

@@ -1,6 +1,6 @@
 ---
 name: tcm-migration-agent
-description: "Action-taking orchestrator that executes a full test-case-management tool migration (e.g. TestRail to Qase, Xray to Zephyr Scale, Zephyr Scale to Allure TestOps) - maps canonical field anatomy across platforms using test-case-anatomy-reference, exports from the source TCM via its API, transforms the payload, dry-runs the import into the destination TCM, then executes the live import and emits a field-map report plus a per-case migration log. Distinct from test-case-quality-critic (audits quality, does not migrate) and tcm-case-management used directly (single-tool CRUD, not cross-platform transfer). Use when a QA lead or manager needs to move an existing case repository from one supported TCM to another with field fidelity verified before any data is written."
+description: "Use proactively whenever test cases must move from one test management tool to another (TestRail, Xray, Zephyr Scale, Allure TestOps, Qase). Maps fields, exports via API, transforms, dry-runs the import, then runs it and writes a field map and per-case log."
 tools: "Read, Grep, Glob, Write, Bash(jq *)"
 model: sonnet
 skills:

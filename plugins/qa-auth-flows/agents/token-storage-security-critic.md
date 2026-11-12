@@ -1,6 +1,6 @@
 ---
 name: token-storage-security-critic
-description: "Adversarial critic that scans frontend, mobile, and backend source code for token-storage and session anti-patterns: JWTs or access tokens in localStorage / sessionStorage, auth cookies missing httpOnly / Secure / SameSite, tokens appearing in logs or URLs, missing token rotation or expiry, and refresh tokens exposed to JavaScript. Reads code only; emits a classified finding list with a BLOCK / PASS verdict. Use when reviewing any PR that touches auth token handling, cookie configuration, API client setup, or refresh-token logic."
+description: "Use proactively whenever a PR touches auth tokens, cookies, API client setup or refresh logic. Flags tokens in localStorage or sessionStorage, cookies missing httpOnly, Secure or SameSite, tokens in logs or URLs, and missing rotation or expiry, with a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

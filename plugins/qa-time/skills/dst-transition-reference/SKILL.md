@@ -50,8 +50,8 @@ ambiguous or invalid results depending on library:
 
 | Library | Behaviour at non-existent local time |
 |---|---|
-| Python `pytz` (legacy) | `pytz.exceptions.NonExistentTimeError` |
-| Python `zoneinfo` (3.9+) | Returns the "would-be" time + 1h (=03:30 EDT) |
+| Python `pytz` (legacy) | `localize(dt, is_dst=None)` raises `NonExistentTimeError`; the default `localize(dt)` guesses instead of raising |
+| Python `zoneinfo` (3.9+) | Keeps the wall time 02:30; `fold=0` uses the pre-transition offset (`02:30-05:00` EST), which is 03:30 EDT once converted (PEP 495) |
 | Java `ZonedDateTime` | Constructor takes a resolver: STRICT / SMART_BACKWARD / SMART_FORWARD |
 | JS Intl | Browsers vary; often returns the post-transition time |
 
@@ -63,7 +63,7 @@ twice** - once as EDT (UTC-4), once as EST (UTC-5).
 
 `2026-11-01 01:30 America/New_York` is ambiguous. Libraries
 either:
-- Pick one (typically the first occurrence in pytz/zoneinfo)
+- Pick one: `zoneinfo` defaults to `fold=0`, the first occurrence (EDT); pytz's default `localize(dt)` guesses (its docs example gives `01:30:00 EST-0500`, the second occurrence) and warns of "a 50% chance of it being out by one hour"
 - Raise an error
 - Take an `is_dst` / `fold` flag (Python 3.6+ has `fold=0|1`)
 
@@ -78,9 +78,13 @@ deterministically.
 2. Construct `2026-03-08 02:30 America/New_York` in the code path.
 3. Assert against the library's documented behaviour (from the table
    above):
-   - Python `zoneinfo` normalises to 03:30 EDT - assert the
-     normalised value, never 02:30.
-   - Python `pytz` raises `NonExistentTimeError` - assert the raise.
+   - Python `zoneinfo` keeps 02:30 and, with the default `fold=0`,
+     attaches the pre-transition offset: assert
+     `dt.utcoffset() == timedelta(hours=-5)` and that
+     `dt.astimezone(timezone.utc)` is 07:30 UTC (03:30 EDT once
+     converted back). Never assert that the object itself reads 03:30.
+   - Python `pytz` raises `NonExistentTimeError` only with
+     `localize(dt, is_dst=None)` - pass `is_dst=None` and assert the raise.
    - Java `ZonedDateTime` applies its resolver - assert per the
      chosen STRICT / SMART_FORWARD rule.
 4. Repeat for fall-back: `2026-11-01 01:30 America/New_York` occurs
@@ -138,8 +142,9 @@ Mitigation: distinguish "24 hours from now" (Duration) from
 
 "Every Monday at 09:00 local time":
 
-- Crosses DST boundary → still 09:00 local, but **2 minutes
-  before or after the UTC equivalent** of the previous week.
+- Crosses DST boundary → still 09:00 local, but **one hour earlier
+  or later in UTC** than the previous week (09:00 EST is 14:00 UTC;
+  09:00 EDT is 13:00 UTC).
 - Calendar systems handle this; custom scheduling code often
   doesn't.
 
@@ -196,6 +201,11 @@ the test matrix combines (zone, transition-type, library-version).
   [en.wikipedia.org/wiki/Daylight_saving_time](https://en.wikipedia.org/wiki/Daylight_saving_time).
 - Python zoneinfo:
   [docs.python.org/3/library/zoneinfo.html](https://docs.python.org/3/library/zoneinfo.html).
+- PEP 495 "Mind the Gap" (a time in a gap uses the rules before the
+  transition when `fold=0`, after it when `fold=1`):
+  [peps.python.org/pep-0495](https://peps.python.org/pep-0495/).
+- pytz `localize()` and `is_dst=None`:
+  [pypi.org/project/pytz](https://pypi.org/project/pytz/).
 - Deep references (with their own citations): per-jurisdiction rules +
   fixtures in [references/jurisdictions-and-fixtures.md](references/jurisdictions-and-fixtures.md);
   leap-second mechanics + bug classes in

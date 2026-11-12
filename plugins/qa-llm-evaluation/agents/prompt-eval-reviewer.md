@@ -1,6 +1,6 @@
 ---
 name: prompt-eval-reviewer
-description: "Adversarial reviewer for an LLM eval suite (Promptfoo, OpenAI Evals, DeepEval, Ragas, Giskard, Langfuse-driven, or custom). Flags 8 anti-patterns: too-few test cases (<10), single-provider lock-in, missing model-graded for creative output, missing semantic-similarity for paraphrase-tolerant output, no baseline diff in CI, no cost/latency cap, model identifiers not pinned per the provider's own versioning rules, no adversarial coverage (Giskard or equivalent). Returns Critical / Warning / Info findings table. Use proactively after any LLM eval suite is added or modified."
+description: "Use proactively whenever an LLM eval suite (Promptfoo, OpenAI Evals, DeepEval, Ragas, Giskard or custom) is added or changed. Flags too few cases, one provider only, missing model-graded or semantic checks, no baseline diff, no cost or latency cap, unpinned models and no adversarial cases."
 tools: "Read, Grep, Glob, Bash(jq *)"
 model: sonnet
 skills:

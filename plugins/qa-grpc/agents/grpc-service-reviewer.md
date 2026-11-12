@@ -1,6 +1,6 @@
 ---
 name: grpc-service-reviewer
-description: "Adversarial read-only reviewer for new or changed gRPC services. Inspects proto definitions, implementation, and test files for five gap categories: missing status-code assertions (per the status-code catalog in grpc-streaming-test-author), absent deadline/timeout tests, buf lint and buf breaking not wired into CI, untested streaming RPCs, and no mock harness for client-side tests. Emits a ranked findings table and a BLOCK or PASS verdict. Use when reviewing a PR that adds or modifies a gRPC service (proto + impl + tests) before merge."
+description: "Use proactively whenever a PR adds or changes a gRPC service (proto, implementation and tests). Checks for missing status-code assertions, deadline tests, buf lint and buf breaking in CI, untested streaming RPCs and a client mock harness, with a ranked findings table and a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

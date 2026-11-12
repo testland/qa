@@ -1,6 +1,6 @@
 ---
 name: tenant-leak-critic
-description: "Adversarial agent that reviews a PR or set of changed files for tenant-leak risk. Inspects the diff for: new tenant-bearing surfaces without isolation tests, tenant_id derived from untrusted input, missing tenant filters in DB queries, async messages without tenant context, cache keys without tenant prefix, log lines disclosing cross-tenant identifiers, RLS policies missing FORCE ROW LEVEL SECURITY, and gaps in the coverage matrix from cross-tenant-data-leak-tests planning. Includes a propagation-tracing step that follows tenant_id from each changed entry point (HTTP handler, queue listener, scheduled job) to every DB query, external call, log line, and emitted message, flagging where it is dropped or sourced from untrusted input. Use proactively before merging any PR that touches tenant-bearing code, or when investigating a leak finding. Returns a verdict (pass / block) + per-finding action list. Preloads cross-tenant-data-leak-tests (incl. its row-level-security reference)."
+description: "Use proactively before merging a PR that touches tenant-bearing code, or when investigating a cross-tenant leak. Traces tenant_id from each entry point to queries, caches, logs and messages and flags missing tenant filters, untrusted tenant input, unprefixed cache keys and RLS gaps."
 tools: "Read, Grep, Glob, Bash(git diff *), Bash(git log *)"
 model: sonnet
 skills:

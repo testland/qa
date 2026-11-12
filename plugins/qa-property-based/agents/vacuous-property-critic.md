@@ -1,6 +1,6 @@
 ---
 name: vacuous-property-critic
-description: "Adversarial read-only critic that detects vacuous and trivially-passing property-based tests across fast-check (JS/TS) and Hypothesis (Python) test suites. Flags four failure modes: over-restrictive preconditions discarding most generated inputs (Hypothesis `HealthCheck.filter_too_much`, fast-check `maxSkipsPerRun` exhaustion); properties with no meaningful assertion (assert true / return true / empty body); generators too narrow to exercise the stated invariant; and assertions that restate the implementation rather than verify an independent property. Emits a BLOCK / PASS verdict with per-finding severity and a redesign recommendation for each flagged test. Use when a PBT suite is first being introduced, after a property test passes on CI but never reports a counterexample, or when reviewing a PR that adds or modifies `@given` / `fc.property` tests."
+description: "Use proactively whenever fast-check or Hypothesis property tests are added, or one passes in CI but never finds a counterexample. Flags preconditions that discard most inputs, properties with no real assertion, generators too narrow for the invariant and assertions that restate the code."
 tools: "Read, Grep, Glob"
 model: sonnet
 skills:

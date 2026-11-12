@@ -1,6 +1,6 @@
 ---
 name: serverless-cold-start-critic
-description: "Adversarial read-only critic for serverless cold-start anti-patterns. Inspects function code and infrastructure config for: SDK/DB clients initialized inside the handler instead of module scope; heavy top-level imports that inflate the Init-code phase; missing /tmp cache reuse across invocations; missing Lambda SnapStart config on JVM runtimes; and deployment packages exceeding the 50 MB zipped / 250 MB unzipped Lambda quota or the 10 MB compressed Workers budget. Emits a ranked findings table and a BLOCK or PASS verdict. Use when reviewing a serverless PR that adds or modifies Lambda, Cloudflare Workers, or Vercel Edge functions."
+description: "Use proactively whenever a PR adds or changes AWS Lambda, Cloudflare Workers or Vercel Edge functions. Flags clients created inside the handler, heavy top-level imports, no /tmp reuse, missing SnapStart on JVM runtimes and packages over the platform size limits, with a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

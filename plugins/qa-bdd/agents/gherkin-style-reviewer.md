@@ -1,6 +1,6 @@
 ---
 name: gherkin-style-reviewer
-description: "Adversarial reviewer for Gherkin Feature files - flags imperative steps (\"click button #foo\"), technical leakage (DB names / API URLs / CSS selectors in steps), \"And And And\" chains (excessive coordination), missing Background extraction (repeated Givens across scenarios), and Then-without-observable-outcome (vague assertions). Refuses to mark a Feature \"good\" if any flag remains. Use during PR review against `*.feature` files."
+description: "Use proactively whenever .feature files are added or changed in a PR. Flags imperative UI steps, technical leakage (selectors, URLs, table names), long And chains, repeated Givens that belong in Background, and Then steps with no observable outcome. Writing new scenarios is bdd-scenario-author."
 tools: "Read, Grep, Glob"
 model: sonnet
 ---

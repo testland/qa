@@ -1,6 +1,6 @@
 ---
 name: golden-file-manager
-description: "Action-taking agent that maintains snapshot / golden file health across a project - adds new baselines for previously-uncovered tests, updates baselines after intentional changes (refusing to update if the diff doesn't match the PR's stated intent), prunes orphaned baselines whose tests no longer exist, and applies sanitization rules from the golden-file-conventions catalog. Use as a periodic maintenance pass or after a refactor that touches many snapshot tests."
+description: "Use proactively for snapshot or golden-file maintenance, such as after a refactor touches many snapshot tests. Adds missing baselines, updates baselines only when the diff matches the PR's stated intent, prunes orphaned ones and applies the sanitization rules."
 tools: "Read, Write, Edit, Grep, Glob, Bash(git diff *), Bash(git log *), Bash(npm test *), Bash(npx vitest *), Bash(npx jest *), Bash(pytest *)"
 model: sonnet
 skills:

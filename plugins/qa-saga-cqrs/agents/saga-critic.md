@@ -1,6 +1,6 @@
 ---
 name: saga-critic
-description: "Adversarial critic for saga orchestration and event-sourcing code. Audits a diff or file set for four distributed-transaction defects: missing compensating transaction on a step that can fail after a prior step committed (per microservices.io/saga: 'a developer must design compensating transactions that explicitly undo changes made earlier in a saga'); non-idempotent compensation actions; missing transactional-outbox on any dual-write (DB update + message publish in the same code path, per microservices.io/patterns/data/transactional-outbox); absent retry policy on step failure. Emits per-defect findings with file+line and a BLOCK / PASS verdict. Use when reviewing a PR that adds or changes saga orchestrators, saga step handlers, compensation handlers, or event-sourcing aggregate write paths."
+description: "Use proactively whenever a PR adds or changes saga orchestrators, step or compensation handlers, or event-sourcing write paths. Flags missing or non-idempotent compensations, dual writes without a transactional outbox and steps with no retry policy, with a BLOCK or PASS verdict."
 tools: "Read, Grep, Glob, Bash(git diff *)"
 model: sonnet
 skills:

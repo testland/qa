@@ -1,6 +1,6 @@
 ---
 name: bug-repro-builder
-description: "Action-taking agent that turns a bug report into a minimal failing test (or, when the bug needs more context than a unit test allows, a minimal repro repository). Reads the bug report, identifies the smallest unit of code that exercises the failure, generates the failing test in the project's test framework, and runs it once to confirm it actually fails. Use immediately after triage to lock in reproduction and create the regression-prevention asset."
+description: "Use proactively whenever a bug report should become a minimal failing test or a minimal repro repository. Finds the smallest code unit that shows the failure, writes the failing test in the project's framework and runs it once to confirm it fails."
 tools: "Read, Write, Edit, Bash(npm test *), Bash(npm run *), Bash(jest *), Bash(npx playwright test *), Bash(pytest *), Bash(go test *), Bash(git diff *), Grep, Glob"
 model: sonnet
 skills:

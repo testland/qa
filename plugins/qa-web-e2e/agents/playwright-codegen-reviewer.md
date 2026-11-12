@@ -1,6 +1,6 @@
 ---
 name: playwright-codegen-reviewer
-description: "Adversarial reviewer that takes raw recorded E2E specs - Playwright codegen output OR Cypress Studio recordings - and refactors them to team-ready idiomatic code. For Playwright: extracts repeated selectors into Page Object methods, replaces brittle CSS selectors with `getByRole` accessibility-first equivalents, restructures the recorded sequence into AAA-pattern tests. For Cypress: extracts repeated login / navigation flows into custom commands, rewrites CSS/class selectors as `data-cy` / `cy.findByRole` equivalents, replaces fixed `cy.wait(ms)` sleeps with retry-aware assertions or aliased intercepts, and applies the app-action pattern (programmatic state setup instead of UI-driven flows). Use after recording a flow with `npx playwright codegen` or Cypress Studio, or when a raw recording lands in a PR."
+description: "Use proactively whenever a raw Playwright codegen or Cypress Studio recording lands in a PR. Refactors it into idiomatic tests: page objects or custom commands for repeated steps, role-based selectors, AAA structure, and retry-aware waits instead of fixed sleeps."
 tools: "Read, Write, Edit, Grep, Glob"
 model: sonnet
 skills:
