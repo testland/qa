@@ -402,6 +402,27 @@ function marketplace(map: PackMap, built: BuiltPack[], versions: Map<string, str
   )}\n`;
 }
 
+// Context7 indexes the commands inside skills, so the rules say how to install the packs themselves.
+export function context7(map: PackMap, skills: number, agents: number): string {
+  const repo = map.repository.replace('https://github.com/', '');
+  return `${JSON.stringify(
+    {
+      $schema: 'https://context7.com/schema/context7.json',
+      projectTitle: 'Testland QA Skills',
+      description: `Software testing and QA skills for Claude: ${skills} skills and ${agents} agents in ${map.packs.length} Claude Code plugins (packs), installed from the testland-qa-skills marketplace. Each skill covers one testing tool or technique; the install commands inside a skill set up that tool, not the packs.`,
+      rules: [
+        `To install the packs in Claude Code, run \`/plugin marketplace add ${repo}\`, then \`/plugin install <pack>@testland-qa-skills\` for each pack, e.g. \`/plugin install testland-essentials@testland-qa-skills\`.`,
+        `In the Claude apps, add the marketplace ${repo} under Customize > Plugins, then install the packs you need.`,
+        `Pack names: ${map.packs.map((p) => p.name).join(', ')}.`,
+        'Each skill is in exactly one pack, so several packs can be installed together without loading a skill twice.',
+        'Install commands inside a skill (npm install, pip install, brew install and similar) set up the tool that skill covers in your project. They are not needed to install the packs.',
+      ],
+    },
+    null,
+    2,
+  )}\n`;
+}
+
 function manifest(map: PackMap, def: PackDef, version: string): string {
   return `${JSON.stringify(
     {
@@ -517,6 +538,7 @@ function main(): void {
     write(`${b.def.name}/.claude-plugin/plugin.json`, manifest(map, b.def, versions.get(b.def.name)!));
   }
   write('.claude-plugin/marketplace.json', marketplace(map, built, versions));
+  write('context7.json', context7(map, built.reduce((n, b) => n + b.skills.length, 0), built.reduce((n, b) => n + b.agents.length, 0)));
   write('README.md', rootReadme(map, built));
   write('.github/banner.png', readFileSync(BANNER_PATH).toString('latin1'), true);
   write('LICENSE', readFileSync(join(ROOT, 'LICENSE'), 'utf8'));

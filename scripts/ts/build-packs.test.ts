@@ -1,5 +1,7 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { checkMap, directoryFrontmatter, nextVersion, rewriteLinks, rewriteTarget, sitePage, type PackMap } from './build-packs.ts';
+import { checkMap, context7, directoryFrontmatter, nextVersion, rewriteLinks, rewriteTarget, sitePage, type PackMap } from './build-packs.ts';
 
 const where = new Map([
   ['plugins/qa-a/skills/one/SKILL.md', { pack: 'p1', dest: 'skills/one/SKILL.md' }],
@@ -63,6 +65,24 @@ describe('checkMap', () => {
     expect(problems).toContain('plugin qa-b is in both p1 and p2');
     expect(problems).toContain('plugin qa-c is in no pack; add it to packs/packs.json');
     expect(problems).toContain('recipe R names unknown pack p3');
+  });
+});
+
+describe('context7', () => {
+  const map = JSON.parse(readFileSync(join(process.cwd(), 'packs', 'packs.json'), 'utf8')) as PackMap;
+  const cfg = JSON.parse(context7(map, 329, 73)) as { projectTitle: string; description: string; rules: string[] };
+  it('stays inside the Context7 schema limits', () => {
+    expect(cfg.projectTitle.length).toBeLessThanOrEqual(100);
+    expect(cfg.description.length).toBeGreaterThanOrEqual(10);
+    expect(cfg.description.length).toBeLessThanOrEqual(500);
+    expect(cfg.rules.length).toBeLessThanOrEqual(50);
+    for (const r of cfg.rules) expect(r.length).toBeLessThanOrEqual(255);
+  });
+  it('tells agents how to install the packs and names every pack', () => {
+    const rules = cfg.rules.join('\n');
+    expect(rules).toContain('/plugin marketplace add testland/qa-skills');
+    expect(rules).toContain('/plugin install testland-essentials@testland-qa-skills');
+    for (const p of map.packs) expect(rules).toContain(p.name);
   });
 });
 
