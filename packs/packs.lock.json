@@ -1,7 +1,7 @@
 {
   "testland-essentials": {
-    "version": "1.0.11",
-    "hash": "e908b80e754218bcaa0646a260f24c3d40459613cd7ecd2419f546d635fea385",
+    "version": "1.0.12",
+    "hash": "3fd98540cabdc35c7f88a595cdf593c0d12e083eadae4b5c5af314ee0066c80a",
     "skills": [
       "attack-surface-test-checklist",
       "definition-of-done",
@@ -77,8 +77,8 @@
     ]
   },
   "testland-backend": {
-    "version": "1.0.7",
-    "hash": "f4e83e71057f20a7ea95a5b665de1e8862c578eb233cb575b0b0d8cdbda81f2b",
+    "version": "1.0.8",
+    "hash": "fe2270b45f08b1fc0adf691b25ef343c6ed7e2b1676af2ed896ffca1430a0a74",
     "skills": [
       "bullmq-tests",
       "celery-tests",
@@ -135,8 +135,8 @@
     ]
   },
   "testland-api": {
-    "version": "1.0.7",
-    "hash": "0c7240f40e8ee7aabd2a65a11c32b1b859e50eba1fd31c74d0754cd2c0099aff",
+    "version": "1.0.8",
+    "hash": "6729908bb1ab72bc58b559b490afef06e138d267d14996f173ee65e2f4189bdd",
     "skills": [
       "api-chaos-runner",
       "karate-testing",
@@ -190,8 +190,8 @@
     ]
   },
   "testland-security": {
-    "version": "1.0.6",
-    "hash": "d8c689f6b96107d83b2df8bc46f7479b3ddd44be90e81da53aed76abab6247f6",
+    "version": "1.0.7",
+    "hash": "a7a940ed90b6cfb0243d04c6c53971aafe6e4c27700826c1a193cc03db418137",
     "skills": [
       "codeql-queries",
       "cve-exploitability-triage",
@@ -236,8 +236,8 @@
     ]
   },
   "testland-web": {
-    "version": "1.1.4",
-    "hash": "cddc7c1ef158d68b10efa669fb065e4cbc92852013265eb24a130677309f8cb5",
+    "version": "1.1.5",
+    "hash": "5273e58d755c68925350ec177afbea88e3824ff1a342fc5653e1626115da4f27",
     "skills": [
       "browser-matrix-strategy-reference",
       "cloud-grid-e2e",
@@ -328,8 +328,8 @@
     ]
   },
   "testland-ai": {
-    "version": "1.0.6",
-    "hash": "c2b6d8ae585a5641bb66e669876b754d21b606d1c349636a379cdbb1846e529b",
+    "version": "1.0.7",
+    "hash": "c010e3b37094fa7c5bf2ea81b3eff8d4d15716b228d1acf34a2de468db6b015d",
     "skills": [
       "deepeval-evaluation",
       "giskard-llm",
@@ -370,8 +370,8 @@
     ]
   },
   "testland-mobile-desktop": {
-    "version": "1.0.6",
-    "hash": "b95840e7231db6ca9ff311bd2ad5935ff4da673079dfc0a040a90d25e287f5f9",
+    "version": "1.0.7",
+    "hash": "0ff32f4b156a13aab7a483e3f0cef760c30bc45fe19985617d931b0c06c76b00",
     "skills": [
       "appium-testing",
       "detox-testing",

@@ -64,7 +64,7 @@ passes.
 
 Chromatic snapshots whatever your Storybook indexes, so authoring is
 "add a story." Per-story knobs that affect snapshots are passed in the
-story's `parameters.chromatic` block (e.g. `viewports`, `delay`, `pauseAnimationAtEnd`).
+story's `parameters.chromatic` block (e.g. `modes`, `delay`, `pauseAnimationAtEnd`).
 
 ### Authoring tests (Playwright / Cypress mode)
 
@@ -74,6 +74,92 @@ snapshots from your existing Playwright / Cypress test runs
 matching framework's archive output through Chromatic.
 
 [cli]: https://www.chromatic.com/docs/cli/
+
+### Stories that change on every build: fix the source, not the threshold
+
+A story that renders `new Date()`, `Math.random()`, live data or a
+running animation produces a new diff on every build. Raising
+`diffThreshold` to silence it makes every comparison less sensitive,
+so real regressions pass too; the default is `0.063`
+([threshold][threshold]). Make the input fixed instead:
+
+| Source of change | Fix in the story or component |
+|---|---|
+| Current time ("2 minutes ago", today's date) | Pass a fixed timestamp as an arg, or mock `Date` in a decorator |
+| Random colours, IDs, shuffled order | Derive them from the data (hash of a name), or seed the generator |
+| Network data | Fixture args or a request mock, never a live API |
+| CSS animations and transitions | Chromatic pauses them at the end of the cycle; set `pauseAnimationAtEnd: false` to capture the first frame instead ([animations][animations]) |
+| JavaScript animations (`requestAnimationFrame`, timers, animation libraries) | Chromatic does not control them; branch on `isChromatic()` and render the final state ([animations][animations]) |
+
+```tsx
+import isChromatic from 'chromatic/isChromatic';
+
+export function ProgressRing({ value }: { value: number }) {
+  const [shown, setShown] = useState(isChromatic() ? value : 0);
+  useEffect(() => {
+    if (isChromatic()) return;            // snapshot shows the final value
+    const id = requestAnimationFrame(() => setShown(value));
+    return () => cancelAnimationFrame(id);
+  }, [value]);
+  return <svg aria-label={`${shown}%`}>{/* ... */}</svg>;
+}
+```
+
+Do not paper over it with a long `delay` or by disabling snapshots for
+the story: the first only moves the race, the second removes the
+coverage. After the fix, put `diffThreshold` back to the default.
+
+### Themes and viewports: modes
+
+Modes replace the older per-story `chromatic.viewports` parameter. A
+mode is a named combination of globals (viewport, theme, locale), and
+"Chromatic treats each mode as an individual entity, with its own
+unique baselines and specific approvals" ([modes][modes]). Define them
+once in `.storybook/modes.ts` and apply them in
+`.storybook/preview.ts` so every story gets them:
+
+```ts
+// .storybook/modes.ts
+export const allModes = {
+  'compact light': { viewport: 'compact', theme: 'light' },
+  'compact dark':  { viewport: 'compact', theme: 'dark' },
+  'wide light':    { viewport: 'wide', theme: 'light' },
+  'wide dark':     { viewport: 'wide', theme: 'dark' },
+} as const;
+```
+
+```ts
+// .storybook/preview.ts
+import { allModes } from './modes';
+
+const preview = {
+  parameters: {
+    viewport: {
+      options: {                         // Storybook 9 viewport options
+        compact: { name: 'Compact', styles: { width: '390px', height: '844px' } },
+        wide:    { name: 'Wide',    styles: { width: '1280px', height: '800px' } },
+      },
+    },
+    chromatic: { modes: allModes },
+  },
+  initialGlobals: { theme: 'light' },   // read by a theme decorator
+};
+export default preview;
+```
+
+- Use the same keys in the modes as in the viewport `options`
+  (`compact`, `wide` above); the `options` object needs Storybook 9,
+  and modes need Storybook 6.0 or later ([modes][modes]).
+- The theme global only changes the snapshot if a decorator or addon
+  reads it and switches the theme.
+- Each mode is a separate snapshot of every story: four modes mean
+  four snapshots per story, each with its own baseline and approval.
+  Override `parameters.chromatic.modes` per story to drop modes a
+  story does not need.
+
+[threshold]: https://www.chromatic.com/docs/threshold/
+[animations]: https://www.chromatic.com/docs/animations/
+[modes]: https://www.chromatic.com/docs/modes/
 
 ## Running
 
@@ -225,3 +311,8 @@ PR-vs-baseline commit ancestry ([turbosnap][turbosnap]).
 - [chromatic-cli][cli] - full CLI flag set + exit codes + config schema.
 - [chromatic-turbosnap][turbosnap] - TurboSnap mechanism, full-rebuild
   triggers, bundler requirements.
+- [chromatic-threshold][threshold] - `diffThreshold` and its default.
+- [chromatic-animations][animations] - CSS animations paused at the
+  end, `pauseAnimationAtEnd`, `isChromatic()` for JavaScript animations.
+- [chromatic-modes][modes] - modes file, project-wide modes, per-mode
+  baselines.

@@ -337,64 +337,70 @@ Per
 test fails if either assertion fails (count != 0, or INSERT
 succeeds).
 
-## Step 3 - CI integration
+### Test 11 - Tenant context on pooled connections
 
-```yaml
-# .github/workflows/tenant-isolation.yml
-name: tenant-isolation
-on:
-  pull_request:
-    paths:
-      - "**/*.py"
-      - "**/migrations/**"
-      - ".github/workflows/tenant-isolation.yml"
+RLS is only as good as the way the app sets `app.tenant_id`. Two bugs
+pass a test suite that opens a fresh connection per test:
 
-jobs:
-  cross-tenant-tests:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-        ports:
-          - 5432:5432
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install
-        run: pip install -e ".[test]"
-      - name: Create non-superuser role
-        env:
-          PGPASSWORD: ${{ secrets.CI_DB_PASSWORD }}
-          APP_DB_PASSWORD: ${{ secrets.CI_APP_DB_PASSWORD }}
-        run: |
-          psql -h localhost -U postgres -d postgres -c "
-            CREATE ROLE app_user LOGIN PASSWORD '$APP_DB_PASSWORD';
-          "
-      - name: Apply migrations
-        env:
-          DATABASE_URL: postgresql://postgres:${{ secrets.CI_DB_PASSWORD }}@localhost/test
-        run: python manage.py migrate
-      - name: Run cross-tenant suite
-        env:
-          DATABASE_URL: postgresql://app_user:${{ secrets.CI_APP_DB_PASSWORD }}@localhost/test
-        run: pytest tests/tenant_isolation/ --tb=short --no-header -v
+- **Session-level `SET` on a pooled connection.** `SET app.tenant_id = ...`
+  lasts for the session, so the next request that borrows the same
+  connection runs as the previous tenant. Set the tenant per transaction
+  instead: `set_config(setting_name, new_value, is_local)` with
+  `is_local = true` "will only apply during the current transaction"
+  ([Postgres admin functions][pg-admin]), the same as `SET LOCAL`. Behind
+  PgBouncer in transaction pooling, session `SET`/`RESET` is listed as
+  "Never" supported ([PgBouncer features][pgb]).
+- **A policy that fails open.** `current_setting('app.tenant_id', true)`
+  returns NULL when the setting is missing ([Postgres admin
+  functions][pg-admin]). A policy such as
+  `tenant_id::text = coalesce(current_setting('app.tenant_id', true), tenant_id::text)`
+  then matches every row for any code path (a job, a script) that forgot to
+  set a tenant. Write the policy so a missing or empty setting matches
+  nothing.
+
+```python
+# app/db.py - tenant set per transaction, as a bound parameter
+from contextlib import contextmanager
+
+@contextmanager
+def tenant_tx(pool, tenant_id: str):
+    with pool.connection() as conn, conn.transaction():
+        conn.execute("SELECT set_config('app.tenant_id', %s, true)", [tenant_id])
+        yield conn
 ```
 
-Both DB passwords come from repository secrets, which per the
-[GitHub Actions contexts reference](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts)
-are readable in service-container `env` and step `env`. Never write a
-literal DB password into the workflow, even for a throwaway CI database.
+```sql
+CREATE POLICY tenant_isolation ON invoices
+  USING (tenant_id = nullif(current_setting('app.tenant_id', true), '')::uuid);
+-- missing or empty setting -> NULL -> no row matches
+```
 
-Key: the **test job connects as `app_user`**, not as the
-postgres superuser. The migrations run as superuser; the tests
-run as the application role.
+Tests that catch both bugs force connection reuse:
+
+```python
+def test_pooled_connection_does_not_keep_previous_tenant(make_tenant):
+    a, b = make_tenant(), make_tenant()
+    pool = ConnectionPool(APP_DSN, min_size=1, max_size=1)   # every call reuses one connection
+    with tenant_tx(pool, a.id) as conn:
+        conn.execute("INSERT INTO invoices (tenant_id, total) VALUES (%s, 10)", [a.id])
+    with tenant_tx(pool, b.id) as conn:
+        assert conn.execute("SELECT count(*) FROM invoices WHERE tenant_id = %s", [a.id]).fetchone()[0] == 0
+    with pool.connection() as conn:                          # no tenant set at all
+        assert conn.execute("SELECT count(*) FROM invoices").fetchone()[0] == 0
+```
+
+Never build the `SET` statement with string formatting: the tenant id
+comes from a token or a header, so it is an injection point. Pass it as a
+parameter to `set_config`.
+
+## Step 3 - CI integration
+
+Run the suite on every pull request that touches application code or
+migrations, against a fresh Postgres service container. Apply
+migrations as the superuser, then **run the tests as the application
+role** (`app_user`, not a superuser and without `BYPASSRLS`), with both
+passwords from repository secrets. The full workflow is in
+[references/ci-workflow.md](references/ci-workflow.md).
 
 ## Step 4 - Diagnose a failure
 
@@ -452,3 +458,12 @@ When a leak test fails:
   skeletons: [references/framework-skeletons.md](references/framework-skeletons.md).
 - Isolation models (silo / pool / bridge):
   [references/isolation-models.md](references/isolation-models.md).
+- PostgreSQL - *System administration functions* (`set_config` with
+  `is_local`, `current_setting` with `missing_ok`; Test 11):
+  https://www.postgresql.org/docs/current/functions-admin.html
+- PgBouncer - *Features* (SQL features per pooling mode; `SET/RESET` not
+  supported in transaction pooling; Test 11):
+  https://www.pgbouncer.org/features.html
+
+[pg-admin]: https://www.postgresql.org/docs/current/functions-admin.html
+[pgb]: https://www.pgbouncer.org/features.html

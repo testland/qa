@@ -3,7 +3,7 @@ name: electron-playwright
 description: "Use whenever an Electron desktop app needs end-to-end tests, or a Spectron suite must be migrated: Playwright's _electron.launch, renderer windows as Pages, main-process checks via electronApp.evaluate, and IPC and DOM assertions from one suite."
 metadata:
   keywords: "electron, playwright, desktop, main-process, renderer"
-  version: "1.2.21"
+  version: "1.2.22"
 ---
 
 # electron-playwright
@@ -193,6 +193,63 @@ const [secondary] = await Promise.all([
 await expect(secondary.getByRole('heading', { name: /preferences/i })).toBeVisible();
 ```
 
+### Traps that make Electron tests hang or flake
+
+**1. `evaluate` functions cross a process boundary.** The function given
+to `electronApp.evaluate` is serialized and run in the main process, so
+it cannot see the test's local variables. Pass values as the second
+argument; the function receives them after the `electron` module
+([pwelectronapp][pwelectronapp]):
+
+```typescript
+const out = path.resolve('test-results/report.pdf');
+await electronApp.evaluate(({ dialog }, filePath) => {
+  dialog.showSaveDialog = async () => ({ canceled: false, filePath });
+}, out);                               // not a closure over `out`
+```
+
+**2. Native dialogs block the test.** Playwright cannot click an OS file
+picker, so a test that triggers one waits until it times out. Replace
+`dialog.showOpenDialog` / `showSaveDialog` in the main process (as
+above) before the click that opens it. The app's code for users stays
+unchanged.
+
+**3. `firstWindow()` is the first window, not the main one.** With a
+splash screen it returns the splash. Wait for the window you need:
+
+```typescript
+const main = await electronApp.waitForEvent('window', {
+  predicate: (p) => p.url().endsWith('/index.html'),
+});
+```
+
+For a window opened by a click, start waiting before the click
+(`Promise.all`, as in Step 6); reading `electronApp.windows()[1]` right
+after the click races the window creation.
+
+**4. Get a page's own `BrowserWindow`.** `BrowserWindow.getFocusedWindow()`
+returns `null` when no window has focus, which is common under
+`xvfb-run`. Use `electronApp.browserWindow(page)` (Step 5) to read the
+bounds or state of exactly that page's window.
+
+**5. No `require` in the renderer.** Context isolation is on by default
+since Electron 12 ([electron-isolation][eiso]), and an app without Node
+integration in the renderer has no `require` there, so
+`window.evaluate(() => require('fs'))` throws. Check side effects through the UI, the API the
+preload script exposes, Node's `fs` in the test process, or
+`electronApp.evaluate(({ app }) => app.getPath('userData'))`.
+
+**6. Web-first assertions.** `expect(await page.title()).toBe('Settings')`
+reads once and fails if the title is set a moment later.
+`await expect(page).toHaveTitle('Settings')` retries until the timeout
+([pwbest][pwbest]).
+
+**7. Always close the app,** in `afterEach` or a fixture, so a failed
+test does not leave Electron running and hold the user-data directory.
+
+[pwbest]: https://playwright.dev/docs/best-practices
+[eiso]: https://www.electronjs.org/docs/latest/tutorial/context-isolation
+
 ## Step 7 - Configuration
 
 ```typescript
@@ -268,6 +325,9 @@ GitHub-hosted runners are display-capable out of the box. Full workflow:
 | Tests that share a single `electronApp` across many tests without cleanup | One leaked window state contaminates the next test | Per-test `electronApp = await electron.launch(...)` + `await electronApp.close()` |
 | Running Electron tests with default `workers > 1` | GPU / user-data directory collisions; flaky launches | `workers: 1` (Step 7) |
 | Forgetting `xvfb-run` on hosted Linux CI | "Failed to initialize display" launch failure | `xvfb-run --auto-servernum` wrapper (Step 10) |
+| Capturing test variables inside `electronApp.evaluate` | The function runs in the main process; the variable is undefined there | Pass it as the second argument |
+| `firstWindow()` in an app with a splash screen | Returns the splash, so locators time out | `waitForEvent('window', { predicate })` |
+| `BrowserWindow.getFocusedWindow()` in tests | `null` under xvfb or when nothing has focus | `electronApp.browserWindow(page)` |
 | Probing main-process modules from `window.evaluate()` | `window.evaluate()` runs in the renderer; doesn't see main-process globals | Use `electronApp.evaluate()` ([pwelectronapp][pwelectronapp]) |
 | Mixing Spectron and Playwright assertions in the same suite | Two driver lifecycles compete for the same Electron process | Migrate file-by-file per [references/spectron-migration.md](references/spectron-migration.md) |
 | Asserting on Electron internal IDs (`__electron_id`) for locators | Internal; changes between Electron versions | Use accessibility-first locators (`getByRole` / `getByLabel`) per `playwright-testing` |
@@ -298,6 +358,8 @@ GitHub-hosted runners are display-capable out of the box. Full workflow:
 - Playwright `_electron` API - [pwelectron][pwelectron].
 - Playwright `ElectronApplication` API - [pwelectronapp][pwelectronapp].
 - Electron Automated Testing tutorial - [electrontest][electrontest].
+- Playwright best practices (web-first assertions) - [pwbest][pwbest].
+- Electron context isolation - [eiso][eiso].
 - Legacy migration reference:
   [references/spectron-migration.md](references/spectron-migration.md).
 - Strategic frame:

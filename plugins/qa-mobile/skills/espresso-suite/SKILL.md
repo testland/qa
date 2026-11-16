@@ -171,6 +171,67 @@ onView(withId(R.id.cart_list))
     .perform(RecyclerViewActions.scrollTo<MyViewHolder>(hasDescendant(withText("BOOK-001"))))
 ```
 
+## Intents: stub other apps instead of opening them
+
+A test that taps "Take photo", "Pick file" or "Choose contact" leaves
+the app under test: on CI the real camera or picker opens, Espresso
+cannot drive it, the test fails, and the foreign activity can stay on
+top for the next test. Espresso-Intents records outgoing intents and
+answers them with a canned result ([espresso-intents][intents]):
+
+```kotlin
+// app/build.gradle.kts
+androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+```
+
+```kotlin
+@RunWith(AndroidJUnit4::class)
+class AttachDocumentTest {
+    @get:Rule val scenario = ActivityScenarioRule(ComposeMessageActivity::class.java)
+
+    @Before fun setUp() = Intents.init()      // start recording before any action
+    @After fun tearDown() = Intents.release()  // always, or the next test inherits stubs
+
+    @Test fun attachingAPdfShowsItsName() {
+        val picked = Intent().setData(Uri.parse("content://test/docs/invoice.pdf"))
+        intending(hasAction(Intent.ACTION_OPEN_DOCUMENT))
+            .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, picked))  // 1. stub first
+
+        onView(withId(R.id.attach)).perform(click())                                 // 2. then act
+
+        intended(allOf(hasAction(Intent.ACTION_OPEN_DOCUMENT), hasType("application/pdf")))  // 3. verify
+        onView(withId(R.id.attachment_name)).check(matches(withText("invoice.pdf")))
+    }
+}
+```
+
+- **Init and release around every test.** The guide's `IntentsTestRule`
+  "initializes Espresso-Intents before each test annotated with `@Test`
+  and releases Espresso-Intents after each test run"
+  ([espresso-intents][intents]); with `ActivityScenario`, do the same
+  with `Intents.init()` / `Intents.release()` in `@Before` / `@After`.
+- **Stub before the action** that sends the intent, as in the guide's
+  example; a stub added after the click is too late.
+- **Return the data the activity reads.** If the result handler returns
+  early on a null `data` Intent or a missing extra, an empty
+  `ActivityResult` makes the test pass through the wrong branch. For
+  `MediaStore.ACTION_IMAGE_CAPTURE` without `EXTRA_OUTPUT`, the camera
+  app returns "a small `Bitmap` in the extras, under the key `"data"`"
+  ([photo-basics][mediastore]), so the stub must put one there.
+- **Verify with `intended()`,** which works like `Mockito.verify()`
+  ([espresso-intents][intents]), so the test proves the right intent
+  was sent rather than only that the UI changed.
+- **Runtime permissions** (camera, location, contacts) show a system
+  dialog Espresso cannot click. Grant them for the test with
+  `@get:Rule val perms: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA)`
+  ([grant-permission][grantperm]).
+- **No `Thread.sleep`** to wait for the result: the stubbed result is
+  delivered on the main thread and Espresso synchronizes on it.
+
+[intents]: https://developer.android.com/training/testing/espresso/intents
+[mediastore]: https://developer.android.com/media/camera/camera-deprecated/photobasics
+[grantperm]: https://developer.android.com/reference/androidx/test/rule/GrantPermissionRule
+
 ## Step 6 - Run
 
 ```bash
@@ -219,6 +280,8 @@ consumable by `junit-xml-analysis` (in the qa-test-reporting plugin).
 | `withText("Submit")` for buttons                                      | Translation breaks the test.                                              | `withId(R.id.submit_button)` or `withContentDescription`. |
 | Missing `closeSoftKeyboard()` after typing                            | Keyboard obscures next view; `click()` misses.                            | Chain `closeSoftKeyboard()` after `typeText`. |
 | Skipping `IdlingResource` for Retrofit / OkHttp                       | Network async invisible; flaky.                                            | Wire IdlingResource (Step 3) OR use OkHttp's IdlingResource bridge. |
+| Tapping a button that opens the camera, a picker or another app       | Leaves the app; CI has no way to drive the foreign activity.              | Espresso-Intents `intending(...).respondWith(...)` before the tap; `intended(...)` after. |
+| `Intents.init()` without `Intents.release()`                          | Recorded intents and stubs leak into the next test.                       | Release in `@After` (or use the rule). |
 | One mega-test that asserts 10 things                                  | One failure obscures others; debugging hard.                              | One assertion target per `@Test`. |
 | Skipping test orchestrator                                            | Tests share process; one test's state leaks.                              | Enable `ANDROIDX_TEST_ORCHESTRATOR` (Step 6). |
 
@@ -240,6 +303,10 @@ consumable by `junit-xml-analysis` (in the qa-test-reporting plugin).
   synchronization (message queue / AsyncTask / IdlingResource),
   package list (`-core`, `-web`, `-contrib`, `-idling-resource`,
   `-intents`, `-remote`).
+- [espresso-intents][intents] - Espresso-Intents setup, stubbing with
+  `intending`, verification with `intended`.
+- [photo-basics][mediastore] - `ACTION_IMAGE_CAPTURE` thumbnail in the `"data"` extra.
+- [grant-permission][grantperm] - `GrantPermissionRule`.
 - `xcuitest-suite` - iOS sibling.
 - `appium-testing` - cross-platform
   alternative.
