@@ -16,6 +16,7 @@ Step 1.
 [gha]: https://docs.github.com/en/actions/using-workflows/about-workflows
 [syntax]: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
 [events]: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+[secure]: https://docs.github.com/en/actions/reference/security/secure-use
 [limits]: https://docs.github.com/en/actions/reference/limits
 [billing]: https://docs.github.com/en/billing/concepts/product-billing/github-actions
 [jest-shard]: https://jestjs.io/docs/cli#--shard
@@ -234,6 +235,62 @@ steps:
 
 Secrets configured in repo settings; never committed.
 
+### Pull requests from forks
+
+Per [events][events], "With the exception of `GITHUB_TOKEN`, secrets
+are not passed to the runner when a workflow is triggered from a forked
+repository", and "The GITHUB_TOKEN has read-only permissions in pull
+requests from forked repositories". A test that needs a secret therefore fails on every fork PR.
+Two wrong fixes are common:
+
+- **Switching to `pull_request_target` and checking out the PR head.**
+  That event runs in the base repository's context, with secrets and a
+  write-capable token, so building or running the fork's code there
+  hands both to whoever opened the PR (a "pwn request"). The docs:
+  "Avoid using this event if you need to build or run code from the
+  pull request", and "Running untrusted code on the
+  pull_request_target trigger may lead to security vulnerabilities"
+  ([events][events], [secure use][secure]).
+- **Skipping the whole test job on forks,** which drops the tests that
+  never needed a secret.
+
+Instead, run untrusted code only under `pull_request`, keep the token
+read-only, and split the suite by what it needs:
+
+```yaml
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read            # least privilege for every job
+
+jobs:
+  test:                     # no secrets: runs on every PR, forks included
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm ci && npm test -- --testPathIgnorePatterns=sandbox
+
+  sandbox-tests:            # needs a secret: same-repo PRs and main only
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm ci && npm test -- sandbox
+        env:
+          SHIPPING_API_KEY: ${{ secrets.SHIPPING_API_KEY }}
+```
+
+Also make the secret-dependent tests skip themselves with a clear
+message when the variable is empty, so a local run without the key
+does not fail. Fork PRs then get the secret-free suite, and the
+secret suite runs after merge (or when a maintainer pushes the branch
+to the base repository).
+
 ## Verify before merge
 
 Run the workflow once before merging - push the branch or trigger it
@@ -275,6 +332,8 @@ their JUnit report.
 | `fail-fast: true` on matrix                                            | First failure cancels all; lose multi-target signal.                    | `fail-fast: false` (Step 2). |
 | No `concurrency` group                                                 | PRs with rapid pushes pile CI runs.                                       | Add concurrency cancel (Step 8). |
 | `if: always()` everywhere                                              | Some steps shouldn't run on failure (deploy).                            | Selective `if: always()` for upload steps only ([services-and-reporting](references/services-and-reporting.md)). |
+| `pull_request_target` + checkout of the PR head                       | Fork code runs with secrets and a write token.                            | `pull_request` for tests; secret jobs gated on same-repo or `push` (Step 9). |
+| Skipping all tests on fork PRs because some need secrets               | Contributors get no signal at all.                                        | Split jobs: secret-free tests run everywhere (Step 9). |
 | Hardcoded secrets in YAML                                              | Secret leak; revocation needed.                                           | `secrets.X` references (Step 9). |
 | Massive single workflow file                                            | Hard to navigate; merge conflicts.                                        | Split per concern (test.yml, deploy.yml, lint.yml). |
 | Missing `actions/checkout` step                                         | Job can't access repo files.                                              | First step always (Step 1). |
@@ -306,7 +365,10 @@ their JUnit report.
   `paths-ignore`, `concurrency` and `cancel-in-progress`,
   `timeout-minutes` default, Linux-only service containers.
 - [events][events] - `schedule` (UTC, 5-minute minimum, default branch,
-  delays) and `workflow_dispatch`.
+  delays), `workflow_dispatch`, secrets and token on fork PRs,
+  `pull_request_target` warning.
+- [secure][secure] - secure use of GitHub Actions (untrusted input,
+  least-privilege `GITHUB_TOKEN`).
 - [limits][limits] - 6-hour job limit, 256-job matrix limit.
 - [billing][billing] - per-minute runner rates by OS.
 - [jest-shard][jest-shard] - Jest `--shard` format.

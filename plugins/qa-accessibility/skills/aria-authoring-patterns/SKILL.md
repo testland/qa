@@ -187,6 +187,94 @@ form.
 (See `wcag-color-contrast` SC
 1.4.13 for the three conditions.)
 
+### Site navigation: disclosure, not menu roles
+
+A header with dropdowns is not an application menu. The APG disclosure
+navigation example "does not use the menu role because it does not
+provide the complex functionality that assistive technologies expect"
+from a menu ([apg-disclosure-nav][apg-dnav]). `role="menubar"`,
+`menu` and `menuitem` promise arrow-key navigation inside the menu and
+switch screen readers into menu mode, and plain links in a list do
+neither. Build each dropdown as a disclosure:
+
+```html
+<nav aria-label="Main">
+  <ul>
+    <li>
+      <button type="button" aria-expanded="false" aria-controls="sub-docs">Docs</button>
+      <ul id="sub-docs" hidden>
+        <li><a href="/docs/install">Install</a></li>
+        <li><a href="/docs/api" aria-current="page">API</a></li>
+      </ul>
+    </li>
+    <li><a href="/pricing">Pricing</a></li>
+  </ul>
+</nav>
+```
+
+| Key or event | Behaviour (per the APG example) |
+|---|---|
+| Enter / Space on the button | Toggles the list and `aria-expanded`; hover alone is not enough |
+| Tab / Shift+Tab | Moves through buttons and links in DOM order |
+| Escape while open | Closes the list and moves focus to its button |
+| Current page | The link carries `aria-current="page"`, not only a CSS class |
+
+Test it with keyboard events and roles: press Enter on the button,
+expect `aria-expanded="true"` and the links visible, press Escape,
+expect the list hidden and focus on the button, and expect no element
+with `role="menuitem"` in the header.
+
+### Toggle buttons: one label or one state, never both
+
+The APG button pattern: "Important: it is critical the label on a
+toggle does not change when its state changes"
+([apg-button][apg-btn]). A button that flips its text *and*
+`aria-pressed` is announced as "Unpin, toggle button, pressed", which
+contradicts itself. Pick one:
+
+```html
+<!-- Option A: fixed label, state in aria-pressed -->
+<button type="button" aria-pressed="false">Bold</button>
+
+<!-- Option B: changing label, no aria-pressed (a plain action button) -->
+<button type="button">Show details</button>
+```
+
+In Playwright, assert the state on the stable name:
+`await expect(page.getByRole('button', { name: 'Bold', pressed: true })).toBeVisible()`.
+
+### Live regions: present before the message, polite by default
+
+MDN: a live region must be in the DOM before the change it announces;
+assistive technology starts watching it when it appears, so a region
+created together with its text is often not read at all
+([mdn-live-regions][mdn-live]). Put an empty region in the initial
+markup and only change its text later:
+
+```html
+<div id="announcer" role="status"></div>   <!-- in the page from the start -->
+```
+
+```js
+function announce(text) {
+  document.getElementById('announcer').textContent = text;  // the region already exists
+}
+```
+
+| Role | Politeness | Use for |
+|---|---|---|
+| `status` | polite: announced at the next pause | Confirmations: "Draft saved", "3 results" |
+| `alert` | assertive: interrupts speech | Errors and time-critical warnings only |
+
+A `role="alert"` on every confirmation interrupts what the user is
+listening to. Test that the region exists on load
+(`getByRole('status')` before any action) and contains the message
+after the action.
+
+[apg-dnav]: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/
+[apg-btn]: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+[mdn-live]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Guides/Live_regions
+
 ## ARIA states reference
 
 The most-used `aria-*` states across patterns:
@@ -196,7 +284,7 @@ The most-used `aria-*` states across patterns:
 | `aria-expanded`        | Disclosure / Accordion / Combobox / Menu Button.       |
 | `aria-selected`        | Listbox / Tab.                                          |
 | `aria-checked`          | Checkbox / Radio.                                       |
-| `aria-pressed`          | Toggle button.                                          |
+| `aria-pressed`          | Toggle button (keep its label fixed; see above).        |
 | `aria-current`          | Current item in a set (page in pagination, item in breadcrumb). |
 | `aria-controls`         | Element that this trigger controls.                     |
 | `aria-labelledby`       | Reference to the labelling element.                    |
@@ -224,6 +312,9 @@ The most-used `aria-*` states across patterns:
 |---------------------------------------------------------------|---------------------------------------------------------------------|-----|
 | Inventing a custom pattern not in the APG                      | No screen-reader convention; users can't form expectations.       | Match an APG pattern exactly OR fall back to native HTML. |
 | Mixing native and ARIA semantics (`<button role="link">`)       | Confusing - element behaves like a button but says it's a link.   | One or the other; native is preferred. |
+| `role="menubar"` / `menuitem` on site navigation               | Promises application-menu keys that a list of links does not have. | Disclosure buttons with `aria-expanded` and plain links. |
+| Toggle that changes its label and sets `aria-pressed`          | Announced as a contradiction ("Unpin, pressed").                  | Fixed label + `aria-pressed`, or changing label alone. |
+| Creating a live region together with its message               | Screen readers miss the first message.                             | Empty region in the initial markup; change its text later. |
 | `tabindex="3"` to control sequence                              | Positive tabindex creates fragile order.                           | DOM order + `tabindex="0"` for custom focusables. |
 | Adding `aria-label` to every element "for accessibility"        | If the element has a visible label, `aria-label` overrides it. Many elements don't need a label at all. | Only add `aria-label` when there's no visible text label AND the element is interactive. |
 
@@ -232,6 +323,11 @@ The most-used `aria-*` states across patterns:
 - [apg-patterns][apg] - W3C ARIA Authoring Practices Guide
   (canonical patterns).
 - WAI-ARIA 1.2 Spec - https://www.w3.org/TR/wai-aria-1.2/
+- [APG disclosure navigation example][apg-dnav] - why site
+  navigation avoids menu roles; Escape and focus behaviour.
+- [APG button pattern][apg-btn] - toggle buttons and `aria-pressed`.
+- [MDN: ARIA live regions][mdn-live] - region before content;
+  `status` vs `alert`.
 - `wcag-keyboard-navigation` - Keyboard-interaction conformance underlying
   every APG pattern; its references/focus-trap.md is the Dialog pattern's
   focus-management deep dive.

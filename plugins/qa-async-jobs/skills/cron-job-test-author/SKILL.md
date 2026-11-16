@@ -168,6 +168,84 @@ def test_cron_runs_at_specified_tz():
 For Kubernetes CronJobs, schedule timezone is set via
 `.spec.timeZone` (Kubernetes 1.27+).
 
+### Kubernetes CronJob traps
+
+- **Day of month and day of week together.** "If both fields are
+  restricted (i.e., do not contain the "*" character), the command will be
+  run when either field matches the current time" ([crontab(5)][crontab5]).
+  `0 9 1 * 1` is therefore "the 1st of every month and every Monday", not
+  "the first Monday". Schedule one field and check the other in code:
+
+  ```yaml
+  schedule: "0 9 * * 1"        # every Monday 09:00
+  timeZone: "Asia/Nicosia"
+  ```
+
+  ```python
+  def is_first_monday(today: date) -> bool:
+      return today.weekday() == 0 and today.day <= 7
+  ```
+
+  Test the expression's next fire times with a parser (`croniter`) and the
+  guard with dates from several months, including a month that starts on
+  a Monday.
+- **Time zone goes in `timeZone`.** "Specifying a timezone using CRON_TZ or
+  TZ variables inside .spec.schedule is not officially supported"; use
+  `.spec.timeZone` ([Kubernetes CronJob][k8s-cron]).
+- **Two Jobs or none.** A CronJob creates a Job "approximately once per
+  execution time"; "there are certain circumstances where two Jobs might
+  be created, or no Job might be created" ([Kubernetes CronJob][k8s-cron]).
+  `concurrencyPolicy: Forbid` stops overlap, not duplicates, so the job
+  itself must claim its period before doing work:
+
+  ```python
+  def run_monthly_digest(db, today: date) -> bool:
+      if not is_first_monday(today):
+          return False
+      claimed = db.execute(
+          "INSERT INTO job_runs (job, period) VALUES ('digest', %s) "
+          "ON CONFLICT (job, period) DO NOTHING RETURNING 1",
+          [today.strftime("%Y-%m")]).fetchone()
+      if claimed is None:
+          return False          # a second Job for the same month sends nothing
+      send_digests(db)
+      return True
+  ```
+
+  Test: call it twice for the same month and assert one send; call it on
+  the 1st when the 1st is not a Monday and assert no send.
+- **Missed runs.** "If there are more than 100 missed schedules, then it
+  does not start the Job and logs the error"; with
+  `startingDeadlineSeconds` set, the controller only counts misses inside
+  that window ([Kubernetes CronJob][k8s-cron]). Set it so a run missed
+  during an outage still starts late (for a monthly job, hours or days),
+  and alert when a period has no `job_runs` row.
+
+### BullMQ: job schedulers, not repeatable jobs
+
+Job Schedulers "replace "repeatable jobs", and are available in v5.16.0
+and onwards" ([BullMQ job schedulers][bullmq-js]). `queue.add(name, data,
+{ repeat })` called on every boot creates a second repeatable job whenever
+the pattern changes; `upsertJobScheduler` "ensures the scheduler is
+updated or created without duplications", keyed by its id:
+
+```ts
+await queue.upsertJobScheduler(
+  'daily-report',                                    // stable id
+  { pattern: '0 7 * * *', tz: 'Europe/Berlin' },     // local time across DST
+  { name: 'daily-report', data: { kind: 'sales' } },
+);
+```
+
+Migrate once: list existing schedulers with `queue.getJobSchedulers()`
+and remove stale ones with `queue.removeJobScheduler(key)`
+([manage job schedulers][bullmq-manage]). Tests:
+
+- call the scheduling function twice against a test Redis and assert
+  `getJobSchedulers()` returns one entry with the new pattern and `tz`;
+- test the processor as a plain function with an injected clock or date,
+  never by waiting for the real schedule.
+
 ## Step 7 - End-to-end test recipe
 
 For each cron job in scope:
@@ -226,7 +304,13 @@ schedule to UTC so the DST window never applies (Step 2 recommendation).
 - crontab.guru - interactive cron-expression validator
 - pypi.org/project/croniter - Python cron parser
 - en.wikipedia.org/wiki/Cron - cron format spec
-- Kubernetes CronJob: kubernetes.io/docs/concepts/workloads/controllers/cron-jobs
+- Kubernetes CronJob (time zones, Job creation, missed schedules):
+  https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+- crontab(5) (day-of-month / day-of-week rule):
+  https://man7.org/linux/man-pages/man5/crontab.5.html
+- BullMQ - *Job Schedulers* and *Manage Job Schedulers*:
+  https://docs.bullmq.io/guide/job-schedulers ,
+  https://docs.bullmq.io/guide/job-schedulers/manage-job-schedulers
 - IANA TZ database: iana.org/time-zones
 - `bullmq-tests` Step 6 - BullMQ
   repeat-job pattern
@@ -235,3 +319,8 @@ schedule to UTC so the DST window never applies (Step 2 recommendation).
   critical companion (idempotency is the only safe answer to
   duplicate runs)
 - `synthetic-monitor-author` - heartbeat-based missed-run alerting
+
+[crontab5]: https://man7.org/linux/man-pages/man5/crontab.5.html
+[k8s-cron]: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+[bullmq-js]: https://docs.bullmq.io/guide/job-schedulers
+[bullmq-manage]: https://docs.bullmq.io/guide/job-schedulers/manage-job-schedulers
