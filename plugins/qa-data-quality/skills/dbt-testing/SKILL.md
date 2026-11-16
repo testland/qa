@@ -102,6 +102,76 @@ Reference once defined, then call by name in `data_tests:`. See
 shapes (range checks, conditional uniqueness, recency / freshness,
 external referential integrity).
 
+## What a green `dbt build` still lets through
+
+Check these before calling a model "tested". Each one passes silently by
+design, so a model can ship bad data with every test green.
+
+| Gap | Why the tests pass | Fix |
+|---|---|---|
+| NULLs in an `accepted_values` column | The test "validates that all of the non-`null` values in a column are present" in the list, so NULLs are never checked ([data-test-props][5]) | Add `not_null` beside it. Map unknown codes to a value the list rejects (`else status_code`), not to NULL, so a new code fails a test |
+| NULL foreign keys | `relationships` "automatically excludes `NULL` values from validation" ([data-test-props][5]) | Add `not_null`; if NULL is legitimate (guest checkout), map it to an explicit key or flag and test that |
+| A source that stopped loading | `dbt build` "does *not* include source freshness checks" ([freshness][6]) | Configure freshness on the source and run `dbt source freshness` as its own CI step before `dbt build` |
+| Late rows in an incremental model | A filter on the event's own timestamp (`where viewed_at > (select max(viewed_at) from {{ this }})`) drops rows that arrive late; data tests on the target never see the missing rows | Filter on the load timestamp (or a lookback window deduplicated by `unique_key`) and prove it with an incremental-mode unit test (below) |
+
+Source freshness, with both keys under `config:` (freshness moved to config
+in v1.9, `loaded_at_field` in v1.10) ([freshness-config][7]):
+
+```yaml
+sources:
+  - name: shop_raw
+    config:
+      loaded_at_field: _loaded_at
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
+    tables:
+      - name: orders
+```
+
+```bash
+dbt source freshness   # fails the job when error_after is exceeded
+dbt build
+```
+
+## Unit tests for incremental models
+
+Unit tests check transformation logic on fixed input rows ([unit-tests][8]).
+For an incremental model, test both modes by overriding the `is_incremental`
+macro, and give `this` as an input holding the rows already in the table.
+The `expect` rows are "the result of the materialization (what will be
+merged/inserted), not the resulting model itself" ([unit-tests][8]), so list
+only the rows the model's SELECT returns in that run:
+
+```yaml
+unit_tests:
+  - name: fct_page_views_includes_late_arrivals
+    model: fct_page_views
+    overrides:
+      macros:
+        is_incremental: true
+    given:
+      - input: ref('stg_page_views')
+        rows:
+          - {view_id: 10, viewed_at: 2026-03-02 08:00:00, loaded_at: 2026-03-02 08:01:00}
+          - {view_id: 11, viewed_at: 2026-02-27 17:30:00, loaded_at: 2026-03-02 09:00:00}  # arrived late
+      - input: this
+        rows:
+          - {view_id: 10, viewed_at: 2026-03-02 08:00:00, loaded_at: 2026-03-02 08:01:00}
+    expect:
+      rows:   # only what this run inserts or merges
+        - {view_id: 11, viewed_at: 2026-02-27 17:30:00, loaded_at: 2026-03-02 09:00:00}
+```
+
+Run unit tests in development and CI only. dbt Labs "strongly recommends
+only running unit tests in development or CI environments" because their
+inputs are static; exclude them from production builds ([unit-tests][8]):
+
+```bash
+dbt build --exclude-resource-type unit_test   # production job
+dbt test --select "test_type:unit"            # CI or local, on demand
+```
+
 ## Running
 
 `dbt test` runs data tests defined on models, sources, snapshots, seeds,
@@ -205,3 +275,12 @@ to changed nodes.
 - [dbt-test][2] - `dbt test` command reference.
 - [dbt-build][3] - `dbt build` command reference.
 - [run-results-json][4] - `run_results.json` artifact schema.
+- [data-test-props][5] - data test properties, including how `accepted_values` and `relationships` treat NULLs.
+- [freshness][6] - source freshness in jobs (`dbt build` does not run it).
+- [freshness-config][7] - `freshness` and `loaded_at_field` under `config:`.
+- [unit-tests][8] - unit tests, incremental mode and keeping them out of production.
+
+[5]: https://docs.getdbt.com/reference/resource-properties/data-tests
+[6]: https://docs.getdbt.com/docs/deploy/source-freshness
+[7]: https://docs.getdbt.com/reference/resource-properties/freshness
+[8]: https://docs.getdbt.com/docs/build/unit-tests

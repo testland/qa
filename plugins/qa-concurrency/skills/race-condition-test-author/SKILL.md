@@ -3,7 +3,7 @@ name: race-condition-test-author
 description: "Use when a bug only appears under load on shared in-process state (cache, counter, pool, lazy singleton), or a race needs a regression test before the fix. Forces interleavings with barriers and latches, and runs ThreadSanitizer, go test -race with goleak, or jcstress for the JVM."
 metadata:
   keywords: "race-condition, data-race, thread-sanitizer, jcstress, concurrency-testing"
-  version: "1.2.16"
+  version: "1.2.17"
 ---
 
 # race-condition-test-author
@@ -77,6 +77,61 @@ test serves before and after the fix.
 Assertions belong on the test thread. An assertion or `t.Fatal`
 inside a worker thread, goroutine or executor task can fail silently;
 collect results and errors and assert after `join()`.
+
+### When the shared state is not in process memory
+
+**A database row.** Read-then-write in application code (`SELECT` the
+balance, check it, `UPDATE` with the computed value) races across
+connections, processes and pods, so a Python or Java lock cannot fix it.
+
+- Test on the engine production uses, with two separate connections. SQLite
+  "implements serializable transactions by actually serializing the writes.
+  There can only be a single writer at a time" ([sqlite-iso]), and a test
+  that shares one connection (for example SQLAlchemy `StaticPool`)
+  serializes the calls anyway. Either setup passes a test that Postgres or
+  MySQL fails.
+- Force the interleaving the same way as above: a barrier or hook between
+  the read and the write, so both connections read before either writes.
+- Fix it in the database: one conditional statement
+  (`UPDATE coupons SET uses_left = uses_left - 1 WHERE code = :c AND uses_left > 0`,
+  then check the row count), or `SELECT ... FOR UPDATE` before the check. In
+  Postgres Read Committed, a blocked `UPDATE` re-evaluates its `WHERE` clause
+  on the committed row version ([pg-iso]). Under Repeatable Read the loser
+  gets "could not serialize access due to concurrent update" and must retry
+  the whole transaction ([pg-iso]). Isolation-level testing in depth:
+  `mvcc-isolation-tests`.
+
+**asyncio coroutines.** One event loop thread still races: a coroutine can
+only be interrupted at an `await`, so `if cache is None: cache = await
+load()` lets every caller that arrives during `load()` start its own load.
+
+- A fake that returns without awaiting never suspends, so no other coroutine
+  ever runs inside the window and the test cannot fail. Make the fake wait
+  on an `asyncio.Event` that the test sets once all callers are waiting,
+  rather than `asyncio.sleep(0.01)`, which is the timing bet from the
+  anti-patterns table in coroutine form.
+- Fix with an `asyncio.Lock` and re-check the state inside it (asyncio
+  primitives "are not thread-safe" and threading locks block the loop
+  ([asyncio-sync])), or share one in-flight `asyncio.Task` between callers.
+- If you share an in-flight task, clear it in `finally`. Otherwise a failed
+  load stays cached and every later caller gets the same exception until a
+  restart. Add a test where the first load raises and the next call
+  succeeds.
+
+```python
+import asyncio
+
+class ConfigCache:
+    def __init__(self, loader):
+        self._loader, self._value, self._lock = loader, None, asyncio.Lock()
+
+    async def get(self):
+        if self._value is None:
+            async with self._lock:
+                if self._value is None:        # re-check: another caller may have loaded it
+                    self._value = await self._loader()
+        return self._value
+```
 
 ## Step 3 - Detectors: TSan and Go `-race`
 
@@ -216,6 +271,8 @@ Keep at least one instrumented matrix leg; never mark it
 | Anti-pattern | Why it fails | Fix |
 |---|---|---|
 | `sleep()` to "force" interleaving | Flaky; passes on fast machines | Start gate or in-window hook (Step 2) |
+| Database race tested on SQLite or one shared connection | Writes are serialized, so the race never happens in the test | Production engine, two connections, fix in SQL (Step 2) |
+| Python lock around a read-then-write on a database row | Other processes and pods do not share the lock | Conditional `UPDATE` or `SELECT ... FOR UPDATE` (Step 2) |
 | Assertions inside worker threads / goroutines | Failures vanish; test passes | Collect, then assert on the test thread |
 | One green run after the fix | Races are probabilistic | Repeated runs (Step 6) |
 | Detector step `continue-on-error` or `exitcode=0` | Findings never fail the build | Blocking step (Step 7) |
@@ -246,8 +303,14 @@ Keep at least one instrumented matrix leg; never mark it
 - `async-ordering-tests` - 
   sister skill for async/await ordering
 - `mvcc-isolation-tests` - database transaction races
+- [SQLite isolation][sqlite-iso] - one writer at a time
+- [PostgreSQL transaction isolation][pg-iso] - concurrent `UPDATE` under Read Committed and Repeatable Read
+- [asyncio synchronization primitives][asyncio-sync] - `asyncio.Lock`, not thread-safe
 
 [tsan]: https://clang.llvm.org/docs/ThreadSanitizer.html
 [tsan-flags]: https://github.com/google/sanitizers/wiki/ThreadSanitizerFlags
 [go-race]: https://go.dev/doc/articles/race_detector
 [jcstress]: https://github.com/openjdk/jcstress
+[sqlite-iso]: https://www.sqlite.org/isolation.html
+[pg-iso]: https://www.postgresql.org/docs/current/transaction-iso.html
+[asyncio-sync]: https://docs.python.org/3/library/asyncio-sync.html

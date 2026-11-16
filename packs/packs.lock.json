@@ -1,7 +1,7 @@
 {
   "testland-essentials": {
-    "version": "1.0.10",
-    "hash": "b4a2ec6c518a829ad7c5217562da8b640617a1d2cb44ea38906477eda46c0707",
+    "version": "1.0.11",
+    "hash": "e908b80e754218bcaa0646a260f24c3d40459613cd7ecd2419f546d635fea385",
     "skills": [
       "attack-surface-test-checklist",
       "definition-of-done",
@@ -77,8 +77,8 @@
     ]
   },
   "testland-backend": {
-    "version": "1.0.6",
-    "hash": "114a193089390aefe13d70e9968578a113eaf0e8df7e0e0abe050962a747fb29",
+    "version": "1.0.7",
+    "hash": "f4e83e71057f20a7ea95a5b665de1e8862c578eb233cb575b0b0d8cdbda81f2b",
     "skills": [
       "bullmq-tests",
       "celery-tests",
@@ -135,8 +135,8 @@
     ]
   },
   "testland-api": {
-    "version": "1.0.6",
-    "hash": "e097d428fe8d9836d069e109a036740a2e8b1927f76b54e06b9c001430f3c1d3",
+    "version": "1.0.7",
+    "hash": "0c7240f40e8ee7aabd2a65a11c32b1b859e50eba1fd31c74d0754cd2c0099aff",
     "skills": [
       "api-chaos-runner",
       "karate-testing",
@@ -328,8 +328,8 @@
     ]
   },
   "testland-ai": {
-    "version": "1.0.5",
-    "hash": "04b3bfb8b8d256f1afdaea9c3017e281f1f079da69efd6a545f49e10a47fd799",
+    "version": "1.0.6",
+    "hash": "c2b6d8ae585a5641bb66e669876b754d21b606d1c349636a379cdbb1846e529b",
     "skills": [
       "deepeval-evaluation",
       "giskard-llm",

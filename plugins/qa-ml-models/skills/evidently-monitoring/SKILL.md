@@ -3,7 +3,7 @@ name: evidently-monitoring
 description: "Use for any question or task about data drift or quality monitoring for a production ML model, including a fired drift alert and metrics such as precision that degrade slowly unnoticed: Evidently reports with tests for data drift, target drift and performance regression as a CI gate or scheduled job, and a playbook to pick rollback, retrain, quarantine or alert re-tuning."
 metadata:
   keywords: "evidently, data-drift, model-monitoring, drift-detection, production-monitoring"
-  version: "1.3.10"
+  version: "1.3.11"
 ---
 
 # evidently-monitoring
@@ -24,14 +24,15 @@ API, and a lightweight visual interface"* per [Evidently docs].
 ## How to use
 
 1. `pip install evidently` into the CI or monitoring environment (Step 1).
-2. Load a pinned reference dataset and the current dataset as pandas
-   DataFrames (Step 2).
+2. Load a pinned reference dataset and the current dataset, and wrap both
+   in a `Dataset` with the same `DataDefinition` (Step 2).
 3. Run `Report([DataDriftPreset()])` with
    `run(reference_data=, current_data=)` and `save_html` for review (Step 3).
 4. For a CI gate, add `include_tests=True`, read `.dict()["tests"]`, and
    `raise SystemExit` on any `FAIL`/`ERROR` (Step 4).
-5. Add `RegressionPreset` / `ClassificationPreset` when `prediction` +
-   `target` columns exist, to catch performance regression (Step 5).
+5. For performance, map the task in the data definition (`BinaryClassification`
+   with `target`, `prediction_probas` and `pos_label`) and set the business
+   `probas_threshold` before trusting precision or recall (Step 5).
 6. Wrap the gated Report in a daily scheduled job comparing yesterday's
    traffic to the pinned reference, notifying on-call on failure (Step 6).
 7. Tune the per-column drift method (`psi`, etc.) and severity tiers so
@@ -62,6 +63,36 @@ import pandas as pd
 reference_df = pd.read_parquet("reference.parquet")
 current_df = pd.read_parquet("current.parquet")
 ```
+
+### Declare the columns before you compare them
+
+Without a data definition Evidently guesses each column's role, and two
+guesses cause most false or missing alerts ([Evidently data definition]):
+
+- **Every numeric dtype is treated as a numerical feature.** Integer codes
+  (a store number, a status enum) then get a numeric drift method computed on
+  the codes. Declare them in `categorical_columns`.
+- **Only a column named `id` is taken as the ID, and only one named
+  `timestamp` as the timestamp; both are ignored in drift.** A sequential
+  `account_number` or `order_id` under any other name is checked as a feature
+  and drifts every day by construction, because new IDs are always larger.
+  Declare it as `id_column` (or drop it).
+
+```python
+from evidently import Dataset, DataDefinition
+
+definition = DataDefinition(
+    id_column="account_number",
+    timestamp="event_time",
+    numerical_columns=["order_value", "items", "model_score"],
+    categorical_columns=["store_code", "channel"],
+)
+reference = Dataset.from_pandas(reference_df, data_definition=definition)
+current = Dataset.from_pandas(current_df, data_definition=definition)
+```
+
+Use the same definition for both datasets and pass the `Dataset` objects to
+`report.run(reference_data=reference, current_data=current)`.
 
 ## Step 3 - Run a drift Report
 
@@ -112,19 +143,47 @@ the preset or the dataset's data definition, per [Evidently drift preset].
 
 ## Step 5 - Model-performance presets
 
+Performance metrics need the task mapped in the data definition. Evidently
+otherwise looks for its default names: `target="target"`, predicted
+probabilities in `prediction`, and `pos_label=1` ([Evidently data
+definition]). With string labels such as `"yes"`/`"no"` and a probability
+column under another name, the default mapping does not measure the class
+you care about.
+
 ```python
-from evidently.presets import RegressionPreset, ClassificationPreset
+from evidently import BinaryClassification, DataDefinition, Dataset, Report
+from evidently.metrics import Recall
+from evidently.presets import ClassificationPreset
+from evidently.tests import gte
 
-# Regression
-report = Report([RegressionPreset()])
-report.run(reference_data=ref, current_data=cur).save_html("regression.html")
+definition = DataDefinition(
+    classification=[BinaryClassification(
+        target="churned",             # "yes" / "no"
+        prediction_probas="churn_score",  # model probability, 0-1
+        pos_label="yes",              # recall of the class the business acts on
+    )],
+    categorical_columns=["churned"],
+)
+cur = Dataset.from_pandas(cur_df, data_definition=definition)
+ref = Dataset.from_pandas(ref_df, data_definition=definition)
 
-# Classification
-report = Report([ClassificationPreset()])
-report.run(reference_data=ref, current_data=cur).save_html("classification.html")
+# probas_threshold = the business decision threshold, not the 0.5 default
+report = Report([
+    ClassificationPreset(probas_threshold=0.4),
+    Recall(probas_threshold=0.4, tests=[gte(0.7)]),
+])
+result = report.run(reference_data=ref, current_data=cur)
 ```
 
-Requires both `prediction` and `target` columns in both DataFrames.
+`ClassificationPreset`, `Recall` and the other classification metrics take
+`probas_threshold`, and any metric accepts test conditions such as `gte`
+([Evidently all metrics], [Evidently tests]). Gate on the result as in
+Step 4. Use `RegressionPreset` with a `Regression(...)` mapping for
+regression models.
+
+Labels often arrive late (chargebacks, returns, churn). Evaluate
+performance on a window whose labels have matured, and watch prediction
+drift for the most recent traffic in the meantime.
 
 ## Step 6 - Schedule in production
 
@@ -249,6 +308,7 @@ if failed:
 | Run only on training data | Training data is curated; never reflects real production distribution | Use real production samples (Step 6) |
 | Default thresholds for all metrics | Defaults are textbook; production tolerance differs | Tune per-feature thresholds (Step 4) |
 | Block deploy on every drift | High-traffic production shifts daily; team disables monitor | Severity tiers: critical drift blocks; minor drift alerts |
+| Integer codes or IDs left to type inference | Codes get numeric drift tests; a sequential ID drifts every day | Declare `categorical_columns` and `id_column` (Step 2) |
 | Skip target/prediction drift | Concept drift (inputs stable, output behavior changed) goes undetected | Include the target/prediction column in the drift check (Steps 3-4) |
 
 ## Limitations
@@ -265,9 +325,16 @@ if failed:
   the `.dict()` result shape (top-level `metrics` + `tests`, per-test status)
 - [Evidently drift preset] - DataDriftPreset and per-column drift method
   configuration
+- [Evidently data definition] - column-type inference, `id_column`,
+  `categorical_columns` and `BinaryClassification` mapping
+- [Evidently all metrics] and [Evidently tests] - `probas_threshold` and
+  test conditions such as `gte`
 - The [Evidently docs] llms.txt index lists current canonical per-preset
   documentation: https://docs.evidentlyai.com/llms.txt
 
 [Evidently docs]: https://docs.evidentlyai.com/
 [Evidently Report]: https://docs.evidentlyai.com/docs/library/report
 [Evidently drift preset]: https://docs.evidentlyai.com/metrics/preset_data_drift
+[Evidently data definition]: https://docs.evidentlyai.com/docs/library/data_definition
+[Evidently all metrics]: https://docs.evidentlyai.com/metrics/all_metrics
+[Evidently tests]: https://docs.evidentlyai.com/docs/library/tests
