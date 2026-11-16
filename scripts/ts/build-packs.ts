@@ -408,6 +408,8 @@ export function context7(map: PackMap, skills: number, agents: number): string {
   return `${JSON.stringify(
     {
       $schema: 'https://context7.com/schema/context7.json',
+      url: `https://context7.com/${repo}`, // with public_key: proves ownership of the library on Context7
+      public_key: 'pk_dJjFnwYHn9sw4sY7ScCG8',
       projectTitle: 'Testland QA Skills',
       description: `Software testing and QA skills for Claude: ${skills} skills and ${agents} agents in ${map.packs.length} Claude Code plugins (packs), installed from the testland-qa-skills marketplace. Each skill covers one testing tool or technique; the install commands inside a skill set up that tool, not the packs.`,
       rules: [

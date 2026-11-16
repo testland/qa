@@ -70,7 +70,10 @@ describe('checkMap', () => {
 
 describe('context7', () => {
   const map = JSON.parse(readFileSync(join(process.cwd(), 'packs', 'packs.json'), 'utf8')) as PackMap;
-  const cfg = JSON.parse(context7(map, 329, 73)) as { projectTitle: string; description: string; rules: string[] };
+  const cfg = JSON.parse(context7(map, 329, 73)) as { url: string; projectTitle: string; description: string; rules: string[] };
+  it('carries the claim url for the library', () => {
+    expect(cfg.url).toBe('https://context7.com/testland/qa-skills');
+  });
   it('stays inside the Context7 schema limits', () => {
     expect(cfg.projectTitle.length).toBeLessThanOrEqual(100);
     expect(cfg.description.length).toBeGreaterThanOrEqual(10);
