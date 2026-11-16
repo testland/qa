@@ -3,7 +3,7 @@ name: test-framework-blueprint
 description: "Use when designing a test automation framework from scratch or re-architecting one that grew organically. Walks seven steps from inventorying the app to runner, layout, fixtures, object model, data and mocks, reporting, CI and conventions, and outputs a written blueprint with a build order."
 metadata:
   keywords: "test-framework, framework-design, blueprint, fixtures, sdet, playwright, test-architecture"
-  version: "1.6.19"
+  version: "1.6.20"
 ---
 
 # test-framework-blueprint
@@ -136,6 +136,119 @@ The Playwright fixture mechanics to standardize (`test.extend`, `auto`,
 `mergeTests`, option fixtures) and the pytest mapping for Python teams live in
 [references/fixture-mechanics.md](references/fixture-mechanics.md).
 
+### Parallel workers: decide isolation before raising `-n` or `workers`
+
+Failures that appear only when parallelism goes up, and vanish with one
+worker, are shared-state bugs, not flake. The blueprint records how each
+worker is isolated before the worker count goes above 1.
+
+**pytest + pytest-xdist**
+
+- Each xdist worker is a separate process that "will perform its own
+  collection and execute a subset of all tests"
+  ([xdist how-to](https://pytest-xdist.readthedocs.io/en/stable/how-to.html)),
+  so a `scope="session"` fixture runs **once per worker**, not once per run.
+  A session fixture that truncates tables or inserts seed rows in one shared
+  database wipes rows other workers are using and hits duplicate keys on the
+  seed rows.
+- Give each worker its own database or schema, keyed on the `worker_id`
+  fixture (`gw0`, `gw1`, ...; `"master"` when xdist is off) or the
+  `PYTEST_XDIST_WORKER` environment variable; or run each test in a
+  transaction rolled back at teardown.
+- Work that must happen once across all workers (migrations, a template
+  database) runs as a CI step before pytest, or behind a `FileLock` in
+  `tmp_path_factory.getbasetemp().parent`, the directory all workers of one
+  run share (the xdist how-to's own pattern; `filelock` is a separate
+  package).
+- No test builds on data an earlier test created: xdist spreads tests across
+  processes, so `test_close_account` can run before or apart from
+  `test_open_account`. Each test creates what it needs through fixtures or
+  builders.
+- Remove blanket `@pytest.mark.flaky(reruns=N)` marks added after parallelism
+  was switched on. Reruns turn an isolation bug into a slower intermittent
+  pass; fix the isolation, then mark only a test with a known, tracked cause.
+
+Snippet (`_migrate` and the DSNs are placeholders):
+
+```python
+import psycopg
+import pytest
+from filelock import FileLock
+
+ADMIN_DSN = "postgresql://test:test@localhost:5432/postgres"
+
+@pytest.fixture(scope="session")
+def worker_dsn(worker_id, tmp_path_factory):
+    shared = tmp_path_factory.getbasetemp().parent  # same dir for every worker
+    name = f"inventory_test_{worker_id}"
+    with FileLock(str(shared / "db.lock")):  # one worker at a time
+        if not (shared / "template.done").exists():
+            _migrate("inventory_template")  # schema + reference rows, once per run
+            (shared / "template.done").touch()
+        with psycopg.connect(ADMIN_DSN, autocommit=True) as admin:
+            admin.execute(f'DROP DATABASE IF EXISTS "{name}"')
+            admin.execute(f'CREATE DATABASE "{name}" TEMPLATE inventory_template')
+    return f"postgresql://test:test@localhost:5432/{name}"
+
+@pytest.fixture
+def db(worker_dsn):
+    with psycopg.connect(worker_dsn) as conn:
+        yield conn
+        conn.rollback()  # nothing a test writes survives it
+```
+
+**Playwright Test**
+
+- Log in once, not in every `beforeEach`: a setup project
+  (`testMatch: /.*\.setup\.ts/`) listed in the test projects'
+  `dependencies`, saving `storageState` under `playwright/.auth/`. The
+  [Playwright auth docs](https://playwright.dev/docs/auth) recommend adding
+  `playwright/.auth` to `.gitignore`; a committed state file is a live
+  session credential.
+- Tests that change server-side state (create records, then assert a count
+  or a list) get **one account per parallel worker**: a worker-scoped fixture
+  that logs in the account picked by `test.info().parallelIndex`, which the
+  auth docs call "the recommended approach for tests that modify server-side
+  state". Or assert only on the records the test itself created.
+- No retry wrappers and no `page.waitForTimeout`: actions auto-wait for
+  actionability and web-first assertions such as
+  `await expect(locator).toHaveText('3 items')` wait "until the expected
+  condition is met"
+  ([best practices](https://playwright.dev/docs/best-practices)). A wrapper
+  that repeats a click can submit twice and hides real failures.
+- Test retries stay 0 (Step 6) with `trace: 'retain-on-failure'`. If a
+  migration period needs CI retries, cap them at 1 with
+  `trace: 'on-first-retry'`, so a test that passes only on retry is
+  reported as flaky with a trace
+  ([trace viewer](https://playwright.dev/docs/trace-viewer)); never
+  `retries: 3` with `trace: 'off'`.
+
+```ts
+// fixtures/auth.ts - one account per worker (adapted from the auth docs)
+import { test as base } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+
+export const test = base.extend<{}, { workerStorageState: string }>({
+  storageState: ({ workerStorageState }, use) => use(workerStorageState),
+  workerStorageState: [async ({ browser }, use) => {
+    const id = test.info().parallelIndex;
+    const file = path.resolve(test.info().project.outputDir, `.auth/${id}.json`);
+    if (!fs.existsSync(file)) {
+      const page = await browser.newPage({ storageState: undefined });
+      // log in as the account provisioned for worker `id`, then wait for a signed-in marker
+      await page.context().storageState({ path: file });
+      await page.close();
+    }
+    await use(file);
+  }, { scope: 'worker' }],
+});
+```
+
+**Decision output:** an isolation row per shared resource (database,
+accounts, queues, files): per-worker copy, per-test rollback, or read-only,
+plus where once-only setup runs.
+
 ## Step 4 - Object-model decision
 
 Pick exactly **one** object-model pattern; mixing two in one codebase is the
@@ -239,6 +352,8 @@ steps and ending with the implementation order lives in
 | One mega base-class every test inherits | Depth-3+ hierarchies break unpredictably on root changes (§A2); compose fixtures instead |
 | Choosing the runner before the team-skills inventory | Framework-language mismatch is the #1 maintenance cost per `framework-choice-advisor` |
 | Designing the CI matrix for scale on day one (8 shards, 3 retries) | Retries hide flake in a young suite; shards add cost below the `ci-test-job-conventions` §1 runtime thresholds |
+| Raising `-n` or `workers` on a suite with one shared database and a session-scoped truncate or seed | xdist runs session fixtures once per worker, so workers wipe each other's rows; isolate per worker first |
+| Rerun marks, retry wrappers or `retries: 3` added when parallel runs start failing | They hide the shared-state bug and slow the suite; a pass on retry is flake to fix, with a trace to fix it from |
 | Skipping the written blueprint ("the code is the doc") | Documented-vs-actual drift becomes undetectable; the drift check needs a documented side to compare against |
 
 ## Limitations
@@ -269,6 +384,17 @@ steps and ending with the implementation order lives in
 - GitHub Actions - *Events that trigger workflows* (`pull_request`, `push`
   branch filters, `schedule`):
   https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+- pytest-xdist - *How-tos* (session fixtures run per worker, `FileLock` in
+  `tmp_path_factory.getbasetemp().parent`, `worker_id`,
+  `PYTEST_XDIST_WORKER`):
+  https://pytest-xdist.readthedocs.io/en/stable/how-to.html
+- Playwright - *Authentication* (setup project, git-ignored
+  `playwright/.auth`, one account per parallel worker via `parallelIndex`):
+  https://playwright.dev/docs/auth
+- Playwright - *Best practices* (web-first assertions, auto-waiting, traces
+  on CI): https://playwright.dev/docs/best-practices
+- Playwright - *Trace viewer* (`on-first-retry`, `retain-on-failure`):
+  https://playwright.dev/docs/trace-viewer
 - pytest - *How to use fixtures* (five scopes, `conftest.py`, `yield`
   teardown, `autouse`):
   https://docs.pytest.org/en/stable/how-to/fixtures.html
