@@ -28,8 +28,8 @@ _API, contract, BDD, web E2E, mobile, desktop, embedded and game testing, mutati
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-web-e2e](plugins/qa-web-e2e/) | 1.13.3 | 9 skills + 2 agents | 11 |
-| [qa-mobile](plugins/qa-mobile/) | 1.7.3 | 8 skills + 1 agents | 9 |
+| [qa-web-e2e](plugins/qa-web-e2e/) | 1.13.4 | 9 skills + 2 agents | 11 |
+| [qa-mobile](plugins/qa-mobile/) | 1.7.4 | 8 skills + 1 agents | 9 |
 | [qa-bdd](plugins/qa-bdd/) | 1.9.8 | 6 skills + 2 agents | 8 |
 | [qa-game](plugins/qa-game/) | 1.5.5 | 7 skills + 1 agents | 8 |
 | [qa-api-testing](plugins/qa-api-testing/) | 1.7.13 | 6 skills + 1 agents | 7 |
@@ -52,10 +52,10 @@ _Accessibility, visual regression, data quality, localization, PDF and print out
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
 | [qa-visual-regression](plugins/qa-visual-regression/) | 1.4.6 | 7 skills + 2 agents | 9 |
-| [qa-accessibility](plugins/qa-accessibility/) | 1.4.7 | 7 skills + 1 agents | 8 |
+| [qa-accessibility](plugins/qa-accessibility/) | 1.4.8 | 7 skills + 1 agents | 8 |
 | [qa-data-quality](plugins/qa-data-quality/) | 1.1.6 | 6 skills + 2 agents | 8 |
 | [qa-pwa](plugins/qa-pwa/) | 1.3.5 | 5 skills + 1 agents | 6 |
-| [qa-localization](plugins/qa-localization/) | 1.2.3 | 4 skills + 0 agents | 4 |
+| [qa-localization](plugins/qa-localization/) | 1.2.4 | 4 skills + 0 agents | 4 |
 | [qa-browser-extension](plugins/qa-browser-extension/) | 1.4.2 | 2 skills + 1 agents | 3 |
 | [qa-pdf-print](plugins/qa-pdf-print/) | 1.2.3 | 3 skills + 0 agents | 3 |
 
@@ -65,7 +65,7 @@ _SAST, DAST, SCA, secrets and SBOM scanning, infrastructure as code, fuzzing, co
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-security-scanning](plugins/qa-security-scanning/) | 1.1.4 | 17 skills + 1 agents | 18 |
+| [qa-security-scanning](plugins/qa-security-scanning/) | 1.1.5 | 17 skills + 1 agents | 18 |
 | [qa-compliance](plugins/qa-compliance/) | 1.4.5 | 6 skills + 0 agents | 6 |
 | [qa-iac](plugins/qa-iac/) | 1.2.5 | 4 skills + 1 agents | 5 |
 | [qa-test-data-privacy](plugins/qa-test-data-privacy/) | 1.3.3 | 4 skills + 0 agents | 4 |
@@ -78,7 +78,7 @@ _Flaky-test triage, bug reproduction, defect management, load testing, resilienc
 
 | Plugin | Version | Components | Total |
 |---|---|---|---:|
-| [qa-load-testing](plugins/qa-load-testing/) | 1.9.6 | 9 skills + 0 agents | 9 |
+| [qa-load-testing](plugins/qa-load-testing/) | 1.9.7 | 9 skills + 0 agents | 9 |
 | [qa-resilience](plugins/qa-resilience/) | 1.0.4 | 7 skills + 0 agents | 7 |
 | [qa-bug-repro](plugins/qa-bug-repro/) | 1.9.2 | 3 skills + 3 agents | 6 |
 | [qa-flake-triage](plugins/qa-flake-triage/) | 1.5.8 | 4 skills + 2 agents | 6 |
@@ -113,7 +113,7 @@ _GraphQL, gRPC, real-time protocols, auth flows, notifications, payments, featur
 | [qa-grpc](plugins/qa-grpc/) | 1.2.19 | 5 skills + 1 agents | 6 |
 | [qa-notifications](plugins/qa-notifications/) | 1.3.8 | 4 skills + 1 agents | 5 |
 | [qa-payment](plugins/qa-payment/) | 1.6.4 | 4 skills + 1 agents | 5 |
-| [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.4.5 | 3 skills + 1 agents | 4 |
+| [qa-realtime-protocols](plugins/qa-realtime-protocols/) | 1.4.6 | 3 skills + 1 agents | 4 |
 
 ## AI & ML
 

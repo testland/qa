@@ -47,8 +47,9 @@ Common tag sets:
 
 | Tag set                                                    | Coverage                         |
 |------------------------------------------------------------|----------------------------------|
-| `['wcag2a', 'wcag2aa']`                                     | WCAG 2.0/2.1 A + AA. Default for most teams. |
-| `['wcag2a', 'wcag2aa', 'wcag22aa']`                          | Adds WCAG 2.2 AA criteria.       |
+| `['wcag2a', 'wcag2aa']`                                     | WCAG 2.0 A + AA only.            |
+| `['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']`               | WCAG 2.1 A + AA.                 |
+| `['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']`   | WCAG 2.2 A + AA (axe has a `wcag22aa` tag but no `wcag22a`). |
 | `['wcag2aaa']`                                              | AAA-only (rarely the gate).      |
 | `['best-practice']`                                          | Non-WCAG good practices.         |
 | `['experimental']`                                          | Beta rules.                      |

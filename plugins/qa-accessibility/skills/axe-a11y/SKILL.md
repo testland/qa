@@ -14,6 +14,10 @@ issues automatically** and flags items requiring human review as
 "incomplete" ([axe-core][readme]).
 
 [readme]: https://github.com/dequelabs/axe-core
+[axepw]: https://github.com/dequelabs/axe-core-npm/blob/develop/packages/playwright/README.md
+[axepwsrc]: https://github.com/dequelabs/axe-core-npm/blob/develop/packages/playwright/src/index.ts
+[axeapi]: https://github.com/dequelabs/axe-core/blob/develop/doc/API.md
+[axerules]: https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md
 
 The integration shape: load the engine into a page (via test
 fixture, browser extension, or framework adapter), call
@@ -99,12 +103,73 @@ test('checkout page passes axe scan', async ({ page }) => {
   await page.goto('/checkout');
 
   const accessibilityScanResults = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])     // limit to AA
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])   // WCAG 2.2 A + AA
     .analyze();
 
   expect(accessibilityScanResults.violations).toEqual([]);
 });
 ```
+
+### Traps that silently shrink a scan
+
+A green axe test can mean "axe looked at less than you think". Check
+these before trusting one.
+
+**AxeBuilder calls overwrite each other** (from the
+[@axe-core/playwright source][axepwsrc]):
+
+- `withTags()` and `withRules()` both set `runOnly`; the last call wins,
+  so `.withTags([...]).withRules(['region'])` runs only `region`.
+- `disableRules()` starts a fresh `rules` map on every call, so calling
+  it in a loop keeps only the last rule disabled.
+- `options(obj)` replaces the whole options object, wiping every
+  `withTags`, `withRules` and `disableRules` call made before it.
+
+To scan a tag set plus extra rules minus skipped ones, build one options
+object. Per the [axe API][axeapi], "By combining runOnly with type: tags
+and the rules option, a modified set can be defined":
+
+```typescript
+const results = await new AxeBuilder({ page })
+  .options({
+    runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] },
+    rules: {
+      region: { enabled: true },             // best-practice rules added on top
+      'frame-tested': { enabled: true },
+      'color-contrast': { enabled: false },  // skipped: reason + review date
+    },
+  })
+  .analyze();
+```
+
+Guard the helper itself: one test that scans a fixture page with a
+known problem (a missing label, content outside landmarks) and expects
+that rule in `violations`. A future chain-order mistake then fails a
+test instead of quietly shrinking every scan.
+
+**Frames.** [@axe-core/playwright][axepw] "automatically injects into
+all frames", including cross-origin ones such as a payment provider's
+card form. Injecting `axe-core` with `page.addScriptTag` and calling
+`axe.run` in `page.evaluate` runs in the top document only; axe cannot
+enter a cross-origin frame that has no axe loaded. The `frame-tested`
+rule reports frames that were not tested, but it is tagged
+`best-practice` ([rule list][axerules]), so a WCAG-only `runOnly` drops
+it. Enable it next to the tags (above) and fail on it. `setLegacyMode()`
+turns cross-origin frame testing off; use it only as a last resort.
+
+**`resultTypes` truncates everything you did not list.** Per the
+[axe API][axeapi], types not listed "will cause rules that fall under
+one of the missing types to show a maximum of one node". With
+`resultTypes: ['violations']` the `incomplete` list has at most one
+element per rule, so a manual review queue built from it is short.
+Drop the option or list `'incomplete'` too.
+
+**Gate on violations, route `incomplete` to review.** Fail the test on
+`violations` with a readable message (rule id, impact, targets), and
+write `incomplete` (the needs-review items, such as contrast over
+images) to a review file without failing. Things axe cannot decide at
+all, such as whether an error message is announced, stay on the manual
+screen-reader checklist (`screen-reader-test-author`).
 
 ### Cypress integration
 
@@ -211,6 +276,9 @@ JSON as a build artifact and pipe to
 | Scanning only the homepage                                      | Most a11y bugs hide in less-traveled flows.                       | Scan a representative URL set: home + 1 logged-in dashboard + 1 form-heavy + 1 long-content. |
 | Running axe in production                                       | Performance overhead; possible info leak via verbose error logging. | CI / staging only. |
 | Treating `incomplete` as `pass`                                 | Items needing human review go unreviewed; defects escape.         | Track `incomplete` separately; manual review per quarter. |
+| Chaining `withTags` + `withRules`, `disableRules` in a loop, or `options()` last | Each call overwrites the earlier ones; the scan runs a different rule set than the code reads. | One options object with `runOnly` + `rules` (Traps section). |
+| `addScriptTag` + `axe.run` on a page with cross-origin iframes | Frame content is never scanned; the test stays green. | `AxeBuilder`, plus `frame-tested` enabled and failing. |
+| `resultTypes: ['violations']` with a review export of `incomplete` | Every other type is capped at one node per rule. | Drop `resultTypes` or include `'incomplete'`. |
 | One mega-test that runs axe across every page                   | One failure = whole test fails; remediation hard.                 | One axe test per page; failure attribution clear. |
 
 ## Limitations
@@ -231,7 +299,12 @@ JSON as a build artifact and pipe to
 - [references/results-and-config.md](references/results-and-config.md) -
   results arrays, violation fields, tag sets, disable / exclude.
 - Deque rule documentation - https://dequeuniversity.com/rules/axe/
-- @axe-core/playwright - https://github.com/dequelabs/axe-core-npm/tree/master/packages/playwright
+- [axepw][axepw] - @axe-core/playwright: injects into all frames, `setLegacyMode`
+  and `frame-tested`.
+- [axepwsrc][axepwsrc] - AxeBuilder source: `withTags` / `withRules` set `runOnly`,
+  `disableRules` resets `rules`, `options` replaces the object.
+- [axeapi][axeapi] - axe API: `runOnly` with `rules`, `resultTypes`, `iframes`.
+- [axerules][axerules] - rule list with tags (`frame-tested`, `region` are best-practice).
 - W3C WCAG 2.2 - https://www.w3.org/TR/WCAG22/
 - `a11y-violation-gate` - 
   CI gate using axe results.
