@@ -11,6 +11,8 @@ description: "Use for any question or task about Appium mobile UI tests, even a 
 [wdiosel]: https://webdriver.io/docs/selectors
 [wdiosvc]: https://webdriver.io/docs/appium-service
 [imgplugin]: https://github.com/appium/appium/tree/master/packages/images-plugin
+[uia2drv]: https://github.com/appium/appium-uiautomator2-driver/blob/master/README.md
+[settings]: https://github.com/appium/appium/blob/master/packages/appium/docs/en/guides/settings.md
 
 The driver model is the load-bearing concept: Appium itself is the
 WebDriver protocol; per-platform automation is a **driver** (XCUITest
@@ -122,11 +124,50 @@ gray-box), `Mac2`, `Windows`.
 | `appium:platformVersion` | OS version (e.g. `14.0`)                             |
 | `appium:app`            | Path to .apk / .ipa                                   |
 | `appium:bundleId` / `appium:appPackage` | Pre-installed app                    |
-| `appium:noReset`        | Don't reinstall app between sessions                  |
+| `appium:noReset`        | `true`: don't stop the app or clear its data at session start (default `false`) |
+| `appium:fullReset`      | `true`: uninstall and reinstall the app for every session (default `false`; slow) |
 | `appium:newCommandTimeout` | Server idle timeout (default 60s)                  |
 
 For device-farm runs, capabilities also include the farm's
 authentication tokens / device-pool selection.
+
+### Android (UiAutomator2) traps: slow taps, cleanup, permissions, resets
+
+Per the [UiAutomator2 driver README][uia2drv]:
+
+- **Every command takes about 10 s on an animated screen.** UiAutomator
+  waits for the accessibility event stream to go idle before each
+  lookup; `waitForIdleTimeout` defaults to 10000 ms, and a looping
+  animation never goes idle. "`waitForIdleTimeout` is a setting, not a
+  capability", so `'appium:waitForIdleTimeout': 0` is silently ignored.
+  Set it as a setting: the capability form `'appium:settings[waitForIdleTimeout]': 500`
+  or an `'appium:settings': { waitForIdleTimeout: 500 }` object ([settings][settings]),
+  or `await driver.updateSettings({ waitForIdleTimeout: 500 })` around the
+  animated screen only. 0 disables the wait completely, but then "clicks
+  and other actions might happen at wrong places"; the better fix is a
+  test build with the animation disabled.
+- **Clearing app data needs no shell.** `mobile: shell` only works when
+  the server runs with the `uiautomator2:adb_shell` (or `*:adb_shell`)
+  feature. `mobile: clearApp` "Calls `adb shell pm clear` under the hood"
+  without it; the app "should not be running", so terminate it first:
+
+  ```javascript
+  afterEach(async () => {
+    await driver.terminateApp('com.example.app');
+    await driver.execute('mobile: clearApp', { appId: 'com.example.app' });
+    await driver.activateApp('com.example.app');
+  });
+  ```
+
+- **Permission dialogs differ by Android version** (button text and
+  layout change), so don't tap them by text. `appium:autoGrantPermissions: true`
+  grants every requested permission at session start (app
+  `targetSdkVersion` 23 or higher); for special permissions use
+  `mobile: changePermissions`.
+- **Resets.** `noReset: false` (the default) stops the app and clears its
+  data at session start; `fullReset: true` uninstalls and reinstalls the
+  APK every session, which is what makes a suite spend most of its time
+  installing. Keep `fullReset` for a nightly clean-install job.
 
 ## Step 5 - Selector strategies (cross-platform)
 
@@ -225,8 +266,33 @@ Per [migrating-2-to-3][mig3], the changes that break existing suites:
 | Insecure feature flags need a scope prefix | `--allow-insecure=adb_shell` becomes `uiautomator2:adb_shell` or `*:adb_shell`; server-scope features such as `session_discovery` need `*:`. |
 | Deprecated endpoints removed, e.g. `GET /sessions` | Use `GET /appium/sessions` (needs the `session_discovery` feature flag). |
 | `POST /session` no longer accepts `desiredCapabilities` / `requiredCapabilities` | Send W3C capabilities with the `appium:` vendor prefix (Step 4). Old clients that still send JSONWP payloads must be upgraded. |
+| Element value and alert text take `text`, not `value` | `POST /session/:id/element/:eid/value` with `{"text": "..."}`; the old `/appium/element/:eid/value` and `replace_value` routes are gone. |
+| JSONWP touch endpoints removed (`/touch/perform`, `/touch/multi/perform`, `/touch/click`, `/touch/scroll`, ...) | W3C actions (`POST /session/:id/actions` with a `pointer` source of `pointerType: touch`) or driver gestures such as `mobile: swipeGesture`, `mobile: scrollGesture`, `mobile: clickGesture` on Android. |
 | Older drivers | Run `appium driver update <name>` so driver versions support the new server. |
 | Appium Inspector "Attach to Session" | Inspector 2025.3.1 or later. |
+
+A script that talks to Appium over plain HTTP (no client library) needs
+every row above at once. The W3C shapes it must send:
+
+```python
+import requests
+A = "http://127.0.0.1:4723"
+caps = {"platformName": "Android", "appium:automationName": "UiAutomator2",
+        "appium:deviceName": "emulator-5554", "appium:app": "/builds/app.apk"}
+sid = requests.post(f"{A}/session", json={"capabilities": {"alwaysMatch": caps}}).json()["value"]["sessionId"]
+el = requests.post(f"{A}/session/{sid}/element",
+                   json={"using": "accessibility id", "value": "search"}).json()["value"]
+eid = el["element-6066-11e4-a52e-4f735466cecf"]          # W3C element key, not "ELEMENT"
+requests.post(f"{A}/session/{sid}/element/{eid}/value", json={"text": "shoes"})
+requests.post(f"{A}/session/{sid}/actions", json={"actions": [{
+    "type": "pointer", "id": "finger1", "parameters": {"pointerType": "touch"},
+    "actions": [{"type": "pointerMove", "duration": 0, "x": 540, "y": 1600},
+                {"type": "pointerDown", "button": 0},
+                {"type": "pause", "duration": 100},
+                {"type": "pointerMove", "duration": 600, "x": 540, "y": 400},
+                {"type": "pointerUp", "button": 0}]}]})
+# listing sessions: GET /appium/sessions, server started with --allow-insecure=*:session_discovery
+```
 
 Upgrade order that avoids a broken half-state: Node, then `appium@^3`,
 then every driver, then the client (WebdriverIO 10 or the matching Java,
@@ -239,7 +305,10 @@ Python, Ruby or .NET client), then fix flags and capabilities.
 | Per-platform separate test code                                       | Defeats Appium's reuse value.                                             | One test, multi-capability config (Step 6). |
 | XPath selectors as default                                            | Slowest selector strategy; brittle to UI tree changes.                   | Accessibility IDs first (Step 5). |
 | Hard-coded device name (`'iPhone 15'`) in shared config               | Test fails on a machine or runner where that simulator doesn't exist.    | Read device name and OS version from env vars per runner, and list the available simulators (`xcrun simctl list devices`) in CI before booting. |
-| Ignoring `noReset` between tests                                       | App state leaks; flaky.                                                  | `noReset: false` (default) reinstalls per session. |
+| Ignoring app state between tests                                       | App state leaks; flaky.                                                  | Default `noReset: false` clears data at session start; within a session, `terminateApp` + `mobile: clearApp` between tests. |
+| `fullReset: true` on every PR run                                      | Reinstalls the APK each session; most of the run is installing.          | Clear data instead; keep a nightly clean-install job. |
+| `appium:waitForIdleTimeout` as a capability                            | It is a setting; the capability is ignored and every command still waits up to 10 s. | `appium:settings[waitForIdleTimeout]` or `updateSettings`. |
+| Tapping the runtime permission dialog by its text                     | Text differs across Android versions.                                    | `appium:autoGrantPermissions: true`. |
 | One mega-test using `before` for the whole suite                      | Suite-long flake; one tiny issue restarts everything.                    | Per-test `beforeEach` reset; small focused tests. |
 | Mixing Appium 1.x, 2.x and 3.x docs and examples                      | Server URL, capability format and feature-flag syntax differ; failures are cryptic. | Pin `appium@^3` in `package.json`, follow the Appium 3 docs, migrate with the table above. |
 | Server upgraded, drivers left on old versions                         | Sessions fail to start or commands disappear after the upgrade.          | `appium driver update` after every server upgrade. |
@@ -265,7 +334,8 @@ Python, Ruby or .NET client), then fix flags and capabilities.
   desktop, TV), client libraries (JS / Python / Java / Ruby /
   .NET).
 - [mig3][mig3] - Appium 2 to 3 migration: Node and npm minimums,
-  removed endpoints, scoped feature flags.
+  removed endpoints (touch actions, `/sessions`), `text` instead of
+  `value`, scoped feature flags.
 - [uia2][uia2] - UiAutomator2 quickstart: driver install, `appium driver
   doctor`, Android SDK prerequisites.
 - [wdiosel][wdiosel] - WebdriverIO mobile selectors: accessibility ID,
@@ -273,6 +343,11 @@ Python, Ruby or .NET client), then fix flags and capabilities.
 - [wdiosvc][wdiosvc] - `@wdio/appium-service`: starts Appium in a child
   process; WebdriverIO 10 requires Appium 3.
 - [imgplugin][imgplugin] - images plugin install and `--use-plugins`.
+- [uia2drv][uia2drv] - UiAutomator2 driver: `waitForIdleTimeout` setting and its
+  10000 ms default, `mobile: clearApp`, `appium:autoGrantPermissions`,
+  `noReset` / `fullReset`.
+- [settings][settings] - Appium settings: `appium:settings[<name>]` and the
+  `appium:settings` object capability.
 - `xcuitest-suite`,
   `espresso-suite` - per-platform
   native alternatives.

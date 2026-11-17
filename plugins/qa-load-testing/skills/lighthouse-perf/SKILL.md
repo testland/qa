@@ -14,6 +14,11 @@ metrics ([web-vitals][webvitals]):
 [inp]: https://web.dev/articles/inp
 [lh-inp]: https://github.com/GoogleChrome/lighthouse/blob/main/core/audits/metrics/interaction-to-next-paint.js
 [lh-tbt]: https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time
+[lh-flows]: https://github.com/GoogleChrome/lighthouse/blob/main/docs/user-flows.md
+[lh-var]: https://github.com/GoogleChrome/lighthouse/blob/main/docs/variability.md
+[lh-thr]: https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md
+[lh-readme]: https://github.com/GoogleChrome/lighthouse/blob/main/readme.md
+[lh-emu]: https://github.com/GoogleChrome/lighthouse/blob/main/docs/emulation.md
 
 | Metric | Measures              | "Good" threshold        |
 |--------|-----------------------|--------------------------|
@@ -82,7 +87,7 @@ module.exports = {
       numberOfRuns: 3,
       // Lighthouse settings
       settings: {
-        preset: 'desktop',                       // or 'mobile' (default)
+        preset: 'desktop',   // desktop apps only; omit it for the default mobile run (there is no 'mobile' preset)
         chromeFlags: '--no-sandbox',              // CI-runner-friendly
       },
       // Use a static-server when running headless in CI
@@ -145,6 +150,81 @@ For a single PR-relevant audit:
 lhci collect --url=http://localhost:3000/dashboard --numberOfRuns=3
 lhci assert
 ```
+
+## Measuring INP in the lab: a user-flow timespan
+
+`lhci autorun` only runs navigations, and the `interaction-to-next-paint`
+audit has `supportedModes: ['timespan']` ([lh-inp][lh-inp]), so an INP
+assertion in `lighthouserc` never measures anything. To check an
+interaction in CI, script it with the Lighthouse user-flow API
+([lh-flows][lh-flows]): a timespan "analyzes an arbitrary period of time,
+typically containing user interactions", but it "Does not provide an
+overall performance score" and has no LCP.
+
+```js
+// perf/inp-flow.mjs - node perf/inp-flow.mjs (needs lighthouse + puppeteer)
+import puppeteer from 'puppeteer';
+import { startFlow } from 'lighthouse';
+
+const BUDGET_MS = 200;
+const browser = await puppeteer.launch();
+const page = await browser.newPage();
+await page.goto('http://localhost:3000/search');
+const flow = await startFlow(page);
+
+await flow.startTimespan();
+await page.type('#query', 'running shoes');           // the interaction under test
+await page.waitForSelector('#results li');
+await flow.endTimespan();
+
+const { steps } = await flow.createFlowResult();
+const audit = steps.at(-1).lhr.audits['interaction-to-next-paint'];
+await browser.close();
+if (audit.numericValue === undefined) throw new Error('no interaction was recorded');
+console.log(`INP ${Math.round(audit.numericValue)} ms (budget ${BUDGET_MS})`);
+if (audit.numericValue > BUDGET_MS) process.exit(1);
+```
+
+Keep `total-blocking-time` in `lighthouserc` as the navigation-mode
+proxy (TBT is "a reasonable proxy metric for INP, but it's not a
+substitute for INP", [inp][inp]). The timespan covers only the scripted
+interaction on one machine; the INP target itself is the 75th
+percentile of real users (CrUX or your RUM, see "Lab vs field").
+
+## Stable numbers on CI runners
+
+Score swings of 20-30 points on one commit usually come from the
+config and the machine, not the code:
+
+- **Desktop apps need the desktop preset.** The default run emulates a
+  mobile device (mobile screen emulation, user agent and throttling).
+  Per [emulation][lh-emu], `formFactor` "doesn't control emulation"; it
+  only sets scoring and which mobile-only audits run. So
+  `formFactor: 'desktop'` alone leaves the mobile screen emulation in
+  place, a mismatch Lighthouse rejects ("Screen emulation mobile setting
+  (true) does not match formFactor setting (desktop)"). The CLI help says
+  "For desktop, use --preset=desktop instead" ([lh-readme][lh-readme]);
+  in LHCI that is `collect.settings.preset: 'desktop'`, which sets
+  `formFactor`, screen emulation, user agent and desktop throttling
+  together.
+- **Keep simulated throttling on shared runners.** It is the default.
+  Per [variability][lh-var], for host hardware "_DevTools_ throttling
+  cannot do much to mitigate this issue. _Simulated_ throttling
+  partially mitigates this issue", and multi-tenant CI machines suffer
+  from resource contention, which simulated throttling also partially
+  mitigates. `throttlingMethod: 'devtools'` adds the runner's noise to
+  every metric.
+- **Several runs.** "The median Lighthouse score of 5 runs is twice as
+  stable as 1 run" ([lh-var][lh-var]); set `numberOfRuns: 5`.
+- **Check the machine.** Every report stores a `benchmarkIndex` ("CPU/Memory
+  Power"). Mobile runs apply a constant 4x CPU slowdown; when the
+  runner's `benchmarkIndex` is outside the expected range, calibrate
+  `throttling.cpuSlowdownMultiplier` ([lh-thr][lh-thr]). Better still,
+  run on dedicated hardware: the docs recommend at least 2 dedicated
+  cores and say to avoid "burstable" or "shared-core" instances.
+- **Assert metrics, not only the score.** Gate on
+  `largest-contentful-paint`, `total-blocking-time` and
+  `cumulative-layout-shift`; the category score mixes them.
 
 ## CI integration
 
@@ -209,9 +289,11 @@ LCP / INP thresholds are the same across mobile and desktop, but
 runs on a less-powerful CPU over a less-stable network.
 
 Common pattern: separate `.lighthouserc.mobile.js` and
-`.lighthouserc.desktop.js`, run both in CI. The mobile run uses
-`preset: 'mobile'` (default) which applies CPU + network throttling
-to simulate a mid-range Android device.
+`.lighthouserc.desktop.js`, run both in CI. The mobile run leaves
+`preset` unset: Lighthouse's defaults already emulate a mobile device
+with CPU and network throttling. The desktop run sets
+`preset: 'desktop'` (the CLI's presets are `perf`, `experimental` and
+`desktop`, per [lh-readme][lh-readme]).
 
 ```bash
 # Run both
@@ -226,7 +308,9 @@ npx lhci autorun --config=.lighthouserc.desktop.js
 |---------------------------------------------------------------|---------------------------------------------------------------------|-----|
 | `numberOfRuns: 1`                                              | Single-run measurements are noisy; flaky alerts.                  | Use 3 (canonical) or 5 for high-stakes pages; LHCI uses the median. |
 | Asserting on `first-input-delay` (FID)                          | FID was retired in 2024 ([web-vitals][webvitals]).                 | Gate on `total-blocking-time` in the lab and track INP in field data. |
-| Asserting on `interaction-to-next-paint` in `lhci autorun`      | The INP audit runs only in timespan mode ([lh-inp][lh-inp]), so a navigation run has no INP to check. | Gate on `total-blocking-time` (lab proxy, [inp][inp]); track INP with the `web-vitals` library in production. |
+| Asserting on `interaction-to-next-paint` in `lhci autorun`      | The INP audit runs only in timespan mode ([lh-inp][lh-inp]), so a navigation run has no INP to check. | Gate on `total-blocking-time` (lab proxy, [inp][inp]); script the interaction as a user-flow timespan; track INP with the `web-vitals` library in production. |
+| `formFactor: 'desktop'` without the desktop preset                 | Mobile screen emulation stays on (a mismatch Lighthouse rejects); desktop pages are not tested as desktop. | `preset: 'desktop'` (Stable numbers section). |
+| `throttlingMethod: 'devtools'` on shared CI runners                | Devtools throttling cannot mitigate host hardware variance.         | Default simulated throttling, 5 runs, dedicated runner. |
 | Hard error on every metric out of the box                       | Existing pages may not meet thresholds; team learns to ignore the gate. | Start with `warn` for everything; promote to `error` once green for 2 weeks. |
 | Auditing only the homepage                                     | The homepage is usually the most-optimized page; misses regressions on long-tail routes. | Audit a representative URL set: home + 1 logged-in dashboard + 1 long-form content + 1 form-heavy. |
 | Lighthouse score as the sole metric                             | Lighthouse score conflates multiple subscores; doesn't isolate which Web Vital regressed. | Assert on the individual metrics (`largest-contentful-paint`, `total-blocking-time` as the INP proxy, `cumulative-layout-shift`); category score is supplementary. |
@@ -258,6 +342,16 @@ one for the other.
   can't report it; TBT is a proxy, not a substitute.
 - [lh-tbt][lh-tbt] - Lighthouse TBT scoring bands (mobile 0-200 ms fast,
   desktop 0-150 ms fast).
+- [lh-flows][lh-flows] - user flows: navigation, timespan and snapshot modes,
+  `startFlow`, `startTimespan` / `endTimespan`; timespans have no score or LCP.
+- [lh-var][lh-var] - variability: simulated vs devtools throttling on shared
+  hardware, median of 5 runs, dedicated-hardware advice.
+- [lh-thr][lh-thr] - throttling: `benchmarkIndex`, 4x default CPU slowdown,
+  `cpuSlowdownMultiplier` calibration.
+- [lh-emu][lh-emu] - emulation: `formFactor` does not control emulation; the
+  desktop preset replaces it.
+- [lh-readme][lh-readme] - CLI options: `--preset` choices, "For desktop, use
+  --preset=desktop instead".
 - [lhci][lhci] - Lighthouse CI canonical install, `lhci autorun`,
   configuration shape, assertion levels.
 - [references/budgets.md](references/budgets.md) - drafting per-route

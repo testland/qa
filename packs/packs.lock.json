@@ -135,8 +135,8 @@
     ]
   },
   "testland-api": {
-    "version": "1.0.8",
-    "hash": "6729908bb1ab72bc58b559b490afef06e138d267d14996f173ee65e2f4189bdd",
+    "version": "1.0.9",
+    "hash": "211106c3f20ce083aa482c39e22b42e89bbe5b66911c7a548626dffa2356ce89",
     "skills": [
       "api-chaos-runner",
       "karate-testing",
@@ -190,8 +190,8 @@
     ]
   },
   "testland-security": {
-    "version": "1.0.7",
-    "hash": "a7a940ed90b6cfb0243d04c6c53971aafe6e4c27700826c1a193cc03db418137",
+    "version": "1.0.8",
+    "hash": "447d5e01eb4f3448483e15a53677b5ffa07bb8c3f5cdb84d42963f8a74950daa",
     "skills": [
       "codeql-queries",
       "cve-exploitability-triage",
@@ -236,8 +236,8 @@
     ]
   },
   "testland-web": {
-    "version": "1.1.5",
-    "hash": "5273e58d755c68925350ec177afbea88e3824ff1a342fc5653e1626115da4f27",
+    "version": "1.1.6",
+    "hash": "2da31ba92d5598bc6d4559875a664f4c951344b3b56ef1d1e908bdb5fe22fa07",
     "skills": [
       "browser-matrix-strategy-reference",
       "cloud-grid-e2e",
@@ -370,8 +370,8 @@
     ]
   },
   "testland-mobile-desktop": {
-    "version": "1.0.7",
-    "hash": "0ff32f4b156a13aab7a483e3f0cef760c30bc45fe19985617d931b0c06c76b00",
+    "version": "1.0.8",
+    "hash": "08fb97cbde96abb76a553dcd68d0e36b140ad9fe615168f8355662d396ce315e",
     "skills": [
       "appium-testing",
       "detox-testing",
@@ -408,8 +408,8 @@
     ]
   },
   "testland-performance": {
-    "version": "1.0.5",
-    "hash": "929eb841d5fa28bcbd5ea1e2d25a49e7b896b56510777cf694cff8775ccc1de0",
+    "version": "1.0.6",
+    "hash": "4e87312b2aac092faafd97fe0510cd2f9279d86423a7a0829c8801095d23aa95",
     "skills": [
       "db-query-plan-analyzer",
       "flame-graph-analyzer",

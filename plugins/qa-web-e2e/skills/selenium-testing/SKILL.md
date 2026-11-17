@@ -14,6 +14,8 @@ no longer downloads or configures a browser driver itself
 ([selenium-manager][sm]).
 
 [sm]: https://www.selenium.dev/documentation/selenium_manager/
+[rwd]: https://www.selenium.dev/documentation/webdriver/drivers/remote_webdriver/
+[gridcli]: https://www.selenium.dev/documentation/grid/configuration/cli_options/
 
 ## When to use
 
@@ -68,6 +70,52 @@ Upgrading an older suite: delete the `webdrivermanager` dependency,
 every `WebDriverManager.chromedriver().setup()` call and every
 `webdriver.chrome.driver` system property. They now fight Selenium
 Manager instead of helping.
+
+### Selenium Manager on locked-down CI
+
+Per [selenium-manager][sm]:
+
+- **It is only a fallback.** "Selenium Manager only operates as a
+  fallback: if no driver is provided". A `webdriver.chrome.driver`
+  property, WebDriverManager, or a `chromedriver` already on the `PATH`
+  wins, which is how a runner image that auto-updates Chrome ends in
+  "This version of ChromeDriver only supports Chrome version N". Remove
+  all three (or set `SE_SKIP_DRIVER_IN_PATH=true`).
+- **Pin the browser, not the driver.** `options.setBrowserVersion("131")`
+  (or `stable`, `beta`, `dev`) makes Selenium Manager use that Chrome
+  if installed, or download and cache Chrome for Testing 131, and
+  resolve the matching chromedriver. The tests then run on the version
+  QA signed off on, whatever the image updated to.
+- **Proxy for downloads only.** A proxy set in the browser options "is
+  used both by the browser and by Selenium Manager". When only the
+  downloads should go through it, set `SE_PROXY` (or `proxy` in
+  `se-config.toml`) instead.
+- **No network at test time.** Warm the cache in a stage that can
+  download, keep it in `SE_CACHE_PATH` (default `~/.cache/selenium`),
+  and run the tests with `SE_OFFLINE=true` ("disabling network requests
+  and downloads"). `SE_DRIVER_MIRROR_URL` / `SE_BROWSER_MIRROR_URL`
+  point at an internal mirror with the same layout.
+- **Usage statistics are on by default.** "Data collection is on by
+  default. To disable it, set the `SE_AVOID_STATS` environment variable
+  to `true`" (or `avoid-stats = true` in `se-config.toml`).
+
+```java
+ChromeOptions o = new ChromeOptions();
+o.setBrowserVersion("131");                     // the version QA signed off on
+o.addArguments("--headless=new");
+driver = new ChromeDriver(o);                    // no driver path, no WebDriverManager
+```
+
+```yaml
+# build stage (network allowed): warm the cache
+env: { SE_PROXY: "http://proxy.example:3128", SE_CACHE_PATH: "${{ github.workspace }}/.selenium-cache", SE_AVOID_STATS: "true" }
+# test stage (no network): same cache, offline
+env: { SE_OFFLINE: "true", SE_CACHE_PATH: "${{ github.workspace }}/.selenium-cache", SE_AVOID_STATS: "true" }
+```
+
+Warm the cache by running one throwaway session with the same browser
+version in the build stage. Run with `SE_DEBUG=true` when a
+resolution step is unclear.
 
 ## Step 2 - Author a test (Java)
 
@@ -284,6 +332,45 @@ before pointing `RemoteWebDriver` at the grid; if not, the hub or nodes
 haven't registered - check `docker compose -f docker-compose.grid.yml ps`
 and the node container logs.
 
+### Uploads and downloads on the Grid
+
+Per [remote-webdriver][rwd] and the [Grid CLI options][gridcli]:
+
+- **Uploads.** With a remote session, `sendKeys` on a file input sends
+  a path the *node* looks up on its own file system. A local file
+  detector bundles the file and sends it to the node. "Java does not
+  include a Local File Detector by default, so you must always add one
+  to do uploads"; the same holds for JavaScript. Python, .NET and Ruby
+  add one by default.
+- **Downloads.** A `download.default_directory` pref points at the
+  node's disk, so the test machine never sees the file. Use managed
+  downloads: the node runs with `--enable-managed-downloads true`
+  (docker-selenium: `SE_NODE_ENABLE_MANAGED_DOWNLOADS`, which current
+  images default to `true`), the test sets `setEnableDownloads(true)`
+  (the `se:downloadsEnabled` capability), and the Grid only matches such
+  sessions to nodes with the feature on.
+- **Selenium does not wait for a download.** `getDownloadableFiles()`
+  is "an immediate snapshot", so wait until the file is listed, then
+  copy it with `downloadFile`. The node deletes the session's download
+  directory when the session ends; `deleteDownloadableFiles()` clears it
+  mid-session.
+
+```java
+ChromeOptions o = new ChromeOptions();
+o.setEnableDownloads(true);                                   // se:downloadsEnabled
+RemoteWebDriver driver = new RemoteWebDriver(new URL(gridUrl), o);
+driver.setFileDetector(new LocalFileDetector());              // upload from the test machine
+
+driver.findElement(By.id("file")).sendKeys(Path.of("src/test/resources/data.csv").toAbsolutePath().toString());
+driver.findElement(By.id("export")).click();
+
+new WebDriverWait(driver, Duration.ofSeconds(20))
+    .until(d -> ((HasDownloads) d).getDownloadableFiles().contains("report.pdf"));
+Path dir = Files.createTempDirectory("downloads");
+((HasDownloads) driver).downloadFile("report.pdf", dir);
+assertTrue(Files.size(dir.resolve("report.pdf")) > 0);
+```
+
 ## Step 7 - Other language bindings
 
 The Java spine above ports 1:1 to Selenium's other official bindings.
@@ -360,6 +447,9 @@ grid.
 | `implicitlyWait` set alongside `WebDriverWait`                         | Timeouts stack unpredictably (10s + 15s can wait 20s).                   | Explicit waits only (Step 4). |
 | Assertions inside page objects                                        | Page objects stop being reusable; failures point at the wrong layer.     | Assert in the test (Step 5). |
 | Floating `selenium/node-chrome:latest` images                         | Browser and Grid change under the suite between runs.                    | Full date tag (Step 6). |
+| Chrome left to auto-update on the runner                              | Tests run on whatever version the image has today.                       | `setBrowserVersion(...)`; Selenium Manager fetches that Chrome for Testing (Step 1). |
+| Proxy in browser options just for driver downloads                    | The browser also goes through it.                                        | `SE_PROXY` for Selenium Manager only (Step 1). |
+| Upload path or download directory that only exists on the test machine, on Grid | The node looks on its own disk; Java and JavaScript add no file detector. | `LocalFileDetector`, managed downloads (Step 6). |
 
 ## Limitations
 
@@ -374,8 +464,11 @@ grid.
 
 ## References
 
-- [sm][sm] - Selenium Manager: bundled since 4.6, browser download,
-  `~/.cache/selenium`.
+- [sm][sm] - Selenium Manager: bundled since 4.6, fallback only, `browserVersion`,
+  `SE_PROXY`, `SE_CACHE_PATH`, `SE_OFFLINE`, `SE_AVOID_STATS`, `~/.cache/selenium`.
+- [rwd][rwd] - Remote WebDriver: local file detector per binding, managed
+  downloads (`HasDownloads`).
+- [gridcli][gridcli] - Grid CLI: `--enable-managed-downloads`, `se:downloadsEnabled`.
 - [waits][waits] - explicit waits, lambdas, `FluentWait`, no mixing with
   implicit waits.
 - [pom][pom] - page object model; no assertions in page objects.
