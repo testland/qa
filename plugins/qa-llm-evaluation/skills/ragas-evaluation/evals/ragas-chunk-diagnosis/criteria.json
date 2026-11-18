@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Per-question comparison'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT use the bot's own answer as the reference",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`reference` copied from the bot's own answer'. Any metric still scored against a reference filled from the model's response scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Reference is not the response",
+      "max_score": 10,
+      "description": "The answer explains that using the response as `reference` breaks the reference-based metrics: context recall then measures whether the answer is supported by the contexts (close to faithfulness, hence about 0.98) instead of whether retrieval found what the ground truth needs, and precision-with-reference is skewed the same way; the fix uses the real ground truth and leaves rows without one out of the reference-based metrics (or annotates them). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Diagnosis",
+      "max_score": 10,
+      "description": "The answer attributes the regression to retrieval or chunking: context precision fell sharply while faithfulness stayed flat, so answers are still grounded in what was retrieved but the larger chunks bring in irrelevant text, which shows up as lower answer relevancy; it adds that recall cannot be trusted until the reference is fixed. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Confirming the cause",
+      "max_score": 10,
+      "description": "The answer proposes a way to confirm it, such as a noise sensitivity metric, rerunning both chunk sizes on the same dataset with real references, or varying top-k or chunk size with everything else fixed. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Per-question comparison",
+      "max_score": 25,
+      "description": "The answer compares the two runs per question (not only averages) to find which questions regressed, with the same judge model and dataset for both runs. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

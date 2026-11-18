@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Disabled rules reset per call' (2 of 2 runs), 'Tags plus extra rules in one options object' (2 of 2 runs), 'Guard against regressions' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT disable rules without a reason in code",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Disabling rules without comment in code'. A rewritten helper that disables any rule without a comment saying why (and for which element) scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Chain overwrites explained",
+      "max_score": 10,
+      "description": "The answer explains from AxeBuilder's behaviour that `withRules` replaces the `runOnly` set by `withTags` (they cannot be combined) and that `options(...)` replaces the whole options object, wiping the tags, rules and disabled rules set before it. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Disabled rules reset per call",
+      "max_score": 25,
+      "description": "The answer explains that each `disableRules` call resets the rules map, so the loop keeps only the last rule (`aria-allowed-role`) and `color-contrast` runs again; the fix passes the whole array in one call or builds the `rules` object once. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tags plus extra rules in one options object",
+      "max_score": 25,
+      "description": "The fixed helper builds one options object combining `runOnly: { type: 'tag', values: [...] }` with `rules: { region: { enabled: true }, 'landmark-one-main': { enabled: true }, ...skipped: { enabled: false } }`, as axe documents for running a tag set plus extra rules. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Guard against regressions",
+      "max_score": 25,
+      "description": "The answer adds a check that the helper really applies its settings, for example a test page with a known landmark or contrast problem that must fail (or asserting `results.testEngine`/`toolOptions` contents), so a future chain-order mistake is caught. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

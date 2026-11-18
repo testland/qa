@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT skip or loosen signature verification",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Skip webhook signature verification'. Falling back to the parsed body when `constructEvent` fails, or a flag that turns verification off locally, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Raw body for verification",
+      "max_score": 15,
+      "description": "The answer explains that `constructEvent` must receive the exact raw request bytes and that `express.json()` plus `JSON.stringify` changes them; the fix uses `express.raw({ type: 'application/json' })` (or equivalent) on the webhook route without the JSON parser running first. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "CLI signing secret",
+      "max_score": 15,
+      "description": "The answer says `stripe listen` prints its own webhook signing secret for local forwarding, which differs from the Dashboard endpoint's secret, so local runs must use the CLI secret. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Idempotent fulfilment",
+      "max_score": 15,
+      "description": "The answer notes Stripe can deliver the same event more than once and makes fulfilment idempotent (store processed `event.id`s, or key fulfilment on the session/order) so a retry does not ship twice, and returns 2xx quickly. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Signed tests",
+      "max_score": 15,
+      "description": "The tests sign payloads with `stripe.webhooks.generateTestHeaderString` (or compute the `Stripe-Signature` header the same way) and post the exact payload string, covering a valid event, a tampered body or bad signature (400) and a duplicate delivery fulfilled once. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

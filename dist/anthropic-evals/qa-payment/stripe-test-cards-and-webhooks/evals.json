@@ -127,6 +127,64 @@
         "test/unit/ is unmodified and npm test passes. Scores zero if any unit test is edited, skipped or deleted.",
         "The workflow is changed, test/webhooks/forwarded-events.test.js is changed, and docs/ci-4102-fix.md exists. Scores zero if the document is missing."
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "# We ship unpaid orders and sometimes ship one twice\n\n## Problem Description\n\nWe ship orders that were never paid and sometimes ship the same order twice (`docs/incident.md`). Fix the webhook handling and fulfillment, and add tests for the cases that went wrong. Nothing can be installed or run here.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/stripe-delayed-payment/files/package.json",
+        "evals/stripe-delayed-payment/files/src/app.js",
+        "evals/stripe-delayed-payment/files/src/fulfill.js",
+        "evals/stripe-delayed-payment/files/src/db.js",
+        "evals/stripe-delayed-payment/files/src/warehouse.js",
+        "evals/stripe-delayed-payment/files/test/webhook.test.js",
+        "evals/stripe-delayed-payment/files/docs/incident.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Fulfilling on `checkout.session.completed` alone'. Any path that ships on that event without checking `payment_status` scores zero. Full points when the work avoids it.",
+        "Fulfillment ships only when the Checkout Session's `payment_status` shows it is paid (not 'unpaid'), because `checkout.session.completed` arrives while a delayed method such as SEPA or ACH is still processing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The handler fulfills on `checkout.session.async_payment_succeeded` and handles `checkout.session.async_payment_failed` without shipping (for example cancelling the order or notifying the customer). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Fulfillment is safe when the webhook and the success page call it at the same time for the same session: an atomic claim in the database (for example a conditional UPDATE from paid to fulfilling, or a unique fulfillment row) before shipping, not only a read-then-check of the status. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Tests cover a completed but unpaid session (nothing shipped), async success (shipped once), async failure (nothing shipped) and two concurrent or repeated fulfillments of one session (shipped once). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "# The Stripe webhook handler rejects real events\n\n## Problem Description\n\nFix the Stripe webhook handler in `server.js` (see `notes.md` and `.env.local`) and add tests for it.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/stripe-raw-body/files/server.js",
+        "evals/stripe-raw-body/files/.env.local",
+        "evals/stripe-raw-body/files/notes.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Skip webhook signature verification'. Falling back to the parsed body when `constructEvent` fails, or a flag that turns verification off locally, scores zero. Full points when the work avoids it.",
+        "The answer explains that `constructEvent` must receive the exact raw request bytes and that `express.json()` plus `JSON.stringify` changes them; the fix uses `express.raw({ type: 'application/json' })` (or equivalent) on the webhook route without the JSON parser running first. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer says `stripe listen` prints its own webhook signing secret for local forwarding, which differs from the Dashboard endpoint's secret, so local runs must use the CLI secret. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer notes Stripe can deliver the same event more than once and makes fulfilment idempotent (store processed `event.id`s, or key fulfilment on the session/order) so a retry does not ship twice, and returns 2xx quickly. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The tests sign payloads with `stripe.webhooks.generateTestHeaderString` (or compute the `Stripe-Signature` header the same way) and post the exact payload string, covering a valid event, a tampered body or bad signature (400) and a duplicate delivery fulfilled once. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "# Our subscription tests never really renew anything\n\n## Problem Description\n\nOur subscription tests in `test/billing.e2e.test.js` don't work (`docs/billing-tests.md`). Rewrite them against the Stripe sandbox so trial conversion, monthly renewals and a failed renewal payment are really exercised. Nothing can be installed or run here.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/stripe-renewal-clock/files/package.json",
+        "evals/stripe-renewal-clock/files/test/billing.e2e.test.js",
+        "evals/stripe-renewal-clock/files/docs/billing-tests.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Fake timers for renewals and trials'. Keeping Jest fake timers or mocked dates to move a subscription through its trial or renewal scores zero. Full points when the work avoids it.",
+        "The tests create a test clock (`stripe.testHelpers.testClocks.create` with a `frozen_time`), create the customer with `test_clock`, and move time with `testClocks.advance`; the answer explains that Jest fake timers do not change Stripe's time. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "After each advance the test waits until the clock's `status` is `ready` (polling `testClocks.retrieve` or the `test_helpers.test_clock.ready` event) before asserting. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The year test advances at most two billing intervals per call (looping month by month or two at a time), finds the invoices by customer or subscription (list calls omit test-clock objects otherwise), and allows for the renewal invoice staying a draft for about an hour before it is finalized and paid. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The failed-renewal test attaches a card that attaches successfully but fails when charged (4000 0000 0000 0341, or `pm_card_chargeCustomerFail`), because a card that is declined up front cannot be saved as the default payment method, and expects `invoice.payment_failed`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
     }
   ]
 }

@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Baseline instead of allowlisting values'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT treat a history rewrite as remediation",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Find leak; assume git-history scrub fixes it'. A rollout that rewrites history (filter-repo, BFG) as the fix for live secrets, without rotating them, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Baseline instead of allowlisting values",
+      "max_score": 25,
+      "description": "The rollout saves the first report as a baseline and runs with `--baseline-path`, so only new findings fail, instead of adding 214 values to allowlist regexes. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "History rewrite does not un-leak",
+      "max_score": 10,
+      "description": "The answer says real secrets among the 41 must be revoked and rotated, because rewriting history does not remove copies in clones, forks or CI logs. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Redacted output",
+      "max_score": 10,
+      "description": "CI runs with `--redact` so the job log and report artifacts do not print secrets. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Fixture handling",
+      "max_score": 10,
+      "description": "Fake values in fixtures are handled with a narrow, reviewed allowlist (path-scoped to `tests/fixtures`) or inline `gitleaks:allow`, not blanket regexes. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

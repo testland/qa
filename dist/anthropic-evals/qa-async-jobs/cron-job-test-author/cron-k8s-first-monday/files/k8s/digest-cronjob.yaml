@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: monthly-digest
+spec:
+  # first Monday of the month at 09:00 Cyprus time
+  schedule: "CRON_TZ=Asia/Nicosia 0 9 1 * 1"
+  concurrencyPolicy: Allow
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: digest
+              image: registry.example.com/digest:1.8.0
+              command: ["python", "-m", "digest.send"]

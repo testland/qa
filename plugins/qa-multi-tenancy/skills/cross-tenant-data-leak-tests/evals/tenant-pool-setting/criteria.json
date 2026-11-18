@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Tests reproduce both leaks' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT skip the background-job tenant context test",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'No async-job context-reload test'. Fixing the export job without a test that runs it for one tenant and checks it sees only that tenant's rows scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Tenant setting scoped to the transaction",
+      "max_score": 10,
+      "description": "The tenant is set per transaction, with `SET LOCAL` or `set_config('app.tenant_id', %s, true)` inside a transaction, because a session-level `SET` stays on the pooled connection for the next request (and PgBouncer transaction pooling does not support session `SET`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Fails closed",
+      "max_score": 10,
+      "description": "The policy returns no rows when the setting is missing or empty (no `coalesce` fallback to `tenant_id`), so a job without a tenant sees nothing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No string-built SQL",
+      "max_score": 10,
+      "description": "The tenant id is passed as a parameter (for example to `set_config`) instead of being formatted into the SQL string. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests reproduce both leaks",
+      "max_score": 25,
+      "description": "Tests use one pooled connection for a request as tenant A then a request as tenant B (or with no tenant) and assert no cross-tenant rows, and assert a query with no tenant set returns nothing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

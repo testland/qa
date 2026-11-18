@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Test report'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep a path filter on the required test workflow",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Path filter on a workflow that runs a required check'. Leaving `paths` or `paths-ignore` on the trigger, so a PR that skips the workflow waits on the required check, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "localhost for runner jobs",
+      "max_score": 10,
+      "description": "The answer explains the job runs directly on the runner (no `container:`), so the service is reached on `localhost` through a mapped port (`ports: ['5432:5432']`); the `postgres` hostname only resolves when the job itself runs in a container. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Health check, not sleep",
+      "max_score": 10,
+      "description": "The fix adds a service health check (`options: --health-cmd pg_isready --health-interval ... --health-timeout ... --health-retries ...`) so the job waits for a healthy database, and removes the sleep. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Required check with path filters",
+      "max_score": 10,
+      "description": "The answer explains a workflow skipped by `paths-ignore` never reports, so a required check stays pending; the fix always runs the workflow and skips the work inside (a changes job or path filter plus a job-level `if:`, since jobs skipped by a condition report success, or an always-running aggregate job as the required check). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Test report",
+      "max_score": 25,
+      "description": "The tests write JUnit XML and the workflow publishes it even when tests fail (`if: always()` or `!cancelled()` with upload-artifact, a test-report action or the job summary), so failing test names are visible. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

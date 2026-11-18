@@ -1,0 +1,3 @@
+- The same bot answer passes on one run and fails on the next.
+- Answers that drop the "store credit only" condition sometimes pass.
+- We set threshold=0.8 so that mostly-right answers pass, but now even good answers fail.

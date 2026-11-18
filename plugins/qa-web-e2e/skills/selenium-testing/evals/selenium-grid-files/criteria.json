@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Upload via a local file detector' (2 of 2 runs), 'No fixed sleep, clean session' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT use paths that exist only on the test machine",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Upload path or download directory that only exists on the test machine, on Grid'. Reading the downloaded file from a local directory, or sending a local path to the upload input without a file detector, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Upload via a local file detector",
+      "max_score": 25,
+      "description": "The answer explains that on Grid the driver looks for the path on the node's file system and that Java does not add a local file detector by default, and calls `((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector())` before `sendKeys`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Managed downloads enabled",
+      "max_score": 10,
+      "description": "The test sets `options.setEnableDownloads(true)` (the `se:downloadsEnabled` capability) instead of a download directory on the node, and the node runs with managed downloads (`--enable-managed-downloads true` / `SE_NODE_ENABLE_MANAGED_DOWNLOADS=true`, which current docker-selenium images default to true). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Files fetched through the driver",
+      "max_score": 10,
+      "description": "The test waits until `((HasDownloads) driver).getDownloadableFiles()` contains the PDF (Selenium does not wait for downloads to finish), then copies it with `downloadFile(name, targetDir)` and asserts on the local copy. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No fixed sleep, clean session",
+      "max_score": 25,
+      "description": "The `Thread.sleep` is replaced with an explicit wait, and the answer notes the node's download directory is per session and removed at the end of the session (or calls `deleteDownloadableFiles()` between steps). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

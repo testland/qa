@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Expect is what gets merged' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep selecting new rows by event_time alone",
+      "max_score": 15,
+      "description": "From the skill's table of what a green `dbt build` still lets through (the skill has no Anti-patterns section), row on late rows in an incremental model. A fixed model that still filters on `event_time > (select max(event_time) from {{ this }})`, even with a new unit test around it, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Unit test in incremental mode",
+      "max_score": 10,
+      "description": "A unit test overrides the `is_incremental` macro to true (`overrides: macros: is_incremental: true`) and gives `this` as an input holding rows already in the table. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Expect is what gets merged",
+      "max_score": 18,
+      "description": "In the incremental-mode test, `expect` lists the rows the model's SELECT returns in that run (what will be inserted or merged), not the final table contents after the merge. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Late events covered and fixed",
+      "max_score": 10,
+      "description": "The test includes an event whose `event_time` is older than the newest row in `this` but that arrived later, and the fixed model selects it (for example filtering on `ingested_at`, or a lookback window with the `event_id` unique key deduplicating). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Unit tests out of production",
+      "max_score": 10,
+      "description": "The hourly prod job no longer runs unit tests (for example `dbt build --exclude-resource-type unit_test`), while CI still runs them. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

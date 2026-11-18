@@ -1,0 +1,3 @@
+- 12 traces in eval/traces.jsonl. Context recall and precision always score close to 1.0.
+- After upgrading to the current Ragas, the script fails on imports and column names.
+- We want this in CI on every PR that touches the retriever or the prompt.

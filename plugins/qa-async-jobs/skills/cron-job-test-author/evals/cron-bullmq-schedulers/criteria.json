@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Tests' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT schedule in server-local time",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Schedule in local time without documenting TZ'. A scheduler with no explicit time zone, or a UTC pattern adjusted by hand for summer time, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Job scheduler upserted by id",
+      "max_score": 10,
+      "description": "Scheduling uses `queue.upsertJobScheduler('<id>', { pattern, tz }, template)` (BullMQ 5.16+ job schedulers), so restarts and pattern changes update one scheduler instead of adding another repeatable job. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Old schedule removed",
+      "max_score": 10,
+      "description": "A migration step removes the stale 06:00 schedule (for example via `getJobSchedulers` and `removeJobScheduler`, or the legacy repeatable-job removal API). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Time zone set",
+      "max_score": 10,
+      "description": "The scheduler sets `tz: 'Europe/Berlin'` so the run follows local time across daylight saving changes. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests",
+      "max_score": 25,
+      "description": "Tests show that scheduling twice leaves one scheduler (for example via `getJobSchedulers`) and test the processor with an injected clock or date rather than waiting for real time. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

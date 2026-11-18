@@ -1,0 +1,3 @@
+- Product goal: typing in the search filter must feel instant. Search Console shows INP "needs improvement" on /search.
+- Lighthouse CI never reports a value for interaction-to-next-paint; the job is flaky about it.
+- The filter box is `#filter`; results render into `#results` after each keystroke.

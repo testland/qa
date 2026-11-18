@@ -1,0 +1,4 @@
+One Mac mini, one Appium server, two iPhones on USB, both sessions started at the same time.
+[session 2] xcodebuild error: build.db: database is locked. Possibly there are two concurrent builds running in the same filesystem location.
+[session 2] Could not proxy command to the remote server. Original error: connect ECONNREFUSED 127.0.0.1:8100
+[session 1] screen recording shows frames from both phones

@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Test layers chosen from the inventory', 'Isolated data and pinned flags', 'Build order and conventions'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT design the CI matrix for scale on day one",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Designing the CI matrix for scale on day one'. A blueprint that starts with many shards, retries above one or a wide browser matrix before the first tests exist scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Test layers chosen from the inventory",
+      "max_score": 25,
+      "description": "The blueprint decides which checks run at API or component level and which few at UI end-to-end level, with reasons tied to the inventory (140 endpoints, roles, tenants), not a generic pyramid. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Auth without SSO in every test",
+      "max_score": 10,
+      "description": "UI tests do not log in through the Okta UI per test: the blueprint uses a programmatic token or session (stored auth state per role, or a test IdP/client-credentials path) and keeps one dedicated test for the real SSO flow. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Isolated data and pinned flags",
+      "max_score": 25,
+      "description": "Each test creates its own tenant or data through the API with unique ids and cleans up (no reliance on hand-edited staging data), and feature flags are pinned per test or per run (LaunchDarkly test data source, targeting a test context or local override), so tests run in parallel safely. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Build order and conventions",
+      "max_score": 25,
+      "description": "The blueprint ends with an ordered build plan (skeleton plus one smoke test in CI first) and conventions for naming, tagging, flaky-test handling and reporting (JUnit or HTML report, traces or screenshots on failure). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

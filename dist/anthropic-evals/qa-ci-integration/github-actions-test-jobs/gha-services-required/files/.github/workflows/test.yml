@@ -1,0 +1,20 @@
+name: tests
+on:
+  pull_request:
+    paths-ignore: ['docs/**', '**.md']
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+    env:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: sleep 15 && npm run migrate && npm test

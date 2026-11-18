@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+gitleaks protect --staged -v || {
+  echo "gitleaks found something. If it is a false positive add '#gitleaks:allow' to the line."
+  exit 1
+}

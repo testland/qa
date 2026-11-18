@@ -1,0 +1,5 @@
+name: product_analytics
+version: '1.0'
+config-version: 2
+profile: analytics
+require-dbt-version: [">=1.10.5", "<2.0.0"]

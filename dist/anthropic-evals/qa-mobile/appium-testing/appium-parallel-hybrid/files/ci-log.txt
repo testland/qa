@@ -1,0 +1,7 @@
+CI runs two emulators: emulator-5554 and emulator-5556 (Appium server 3.x, uiautomator2 driver).
+[appium] server failed to start: invalid value for --allow-insecure: chromedriver_autodownload
+--- earlier runs on Appium 2 ---
+[0-1] Error: Could not start UiAutomator2 server: port 8200 is already in use
+[0-0] session started on emulator-5554
+[0-1] session started on emulator-5554
+[0-0] NoSuchContextError: WEBVIEW_com.shop.app (contexts: NATIVE_APP)

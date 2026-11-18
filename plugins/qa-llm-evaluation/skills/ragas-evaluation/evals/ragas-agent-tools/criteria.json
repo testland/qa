@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Wrong argument makes it fail' (2 of 2 runs), 'Outcome checked too' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT gate tool-call accuracy at 0.5",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Gate `>= 0.5` on `ToolCallAccuracy`'. A gate loose enough that one wrong argument in the booking call still passes scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Tool calls are scored",
+      "max_score": 10,
+      "description": "The evaluation scores the agent's tool calls with Ragas `ToolCallAccuracy` against `reference_tool_calls` (expected `search_flights` with date 2026-12-12, then `book_flight`), not only the final text. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Conversation as Ragas messages",
+      "max_score": 10,
+      "description": "The trace is converted to Ragas messages (`HumanMessage`, `AIMessage` with `ToolCall`s, `ToolMessage` from `ragas.messages`) in a multi-turn sample. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Wrong argument makes it fail",
+      "max_score": 25,
+      "description": "The answer explains that arguments are compared (partial credit) and order is strict by default, and sets a threshold so the wrong date fails the case. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Outcome checked too",
+      "max_score": 25,
+      "description": "An outcome metric such as `AgentGoalAccuracyWithReference` (or an exact check that the booked flight matches the expected one) complements the tool-call metric. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Why menu roles are wrong here' (2 of 2 runs), 'Keyboard open and Escape' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT use menubar or menuitem roles on site navigation",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`role=\"menubar\"` / `menuitem` on site navigation'. Any `menubar`, `menu` or `menuitem` role left on, or added to, the header links scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Disclosure pattern, not menu roles",
+      "max_score": 10,
+      "description": "The menubar, menu and menuitem roles are removed; each dropdown is opened by a `<button>` with `aria-expanded` (and `aria-controls`), and the entries stay plain links in lists, as in the APG disclosure navigation example. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Why menu roles are wrong here",
+      "max_score": 25,
+      "description": "The answer explains that the menu roles promise application-style menu behaviour (arrow-key navigation, menu mode in screen readers) that site navigation does not provide, which is why the APG example avoids them. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Current page",
+      "max_score": 10,
+      "description": "The link to the current page carries `aria-current=\"page\"`, not only a CSS class. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Keyboard open and Escape",
+      "max_score": 25,
+      "description": "The dropdown opens from the keyboard (button activation with Enter or Space, not only hover), and Escape closes an open dropdown and returns focus to the button that controls it. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "question": "How long do I have to return shoes?",
+    "expected": "You can return shoes within 30 days of delivery for a full refund."
+  },
+  {
+    "question": "Do you ship to Norway?",
+    "expected": "Yes, we ship to Norway; delivery takes 3-5 working days."
+  },
+  {
+    "question": "Can I change my delivery address after ordering?",
+    "expected": "Yes, until the order is packed. Use Orders > Change address."
+  },
+  {
+    "question": "How do I reset my password?",
+    "expected": "Use 'Forgot password' on the sign-in page and follow the email link."
+  }
+]

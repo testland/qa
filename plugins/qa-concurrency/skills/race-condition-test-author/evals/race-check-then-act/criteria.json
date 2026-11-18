@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Deterministic interleaving', 'Error path and repeat runs'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT assert inside worker goroutines",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Assertions inside worker threads / goroutines'. Calling `t.Fatal`, `t.Error` or `require` from the spawned goroutines, instead of collecting results and asserting on the test goroutine, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Race detector cannot see it",
+      "max_score": 10,
+      "description": "The answer explains this is a check-then-act race: every map access is under the mutex, so there is no data race and `-race` stays green; the bug is that concurrent misses for the same key all call the loader. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Deterministic interleaving",
+      "max_score": 25,
+      "description": "The test starts many goroutines behind a start barrier (closed channel or similar), makes the loader block until all callers have missed (a channel or gate, not luck), counts loader calls atomically, and asserts exactly one call; it fails reliably on the old code. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Per-key single flight",
+      "max_score": 10,
+      "description": "The fix makes concurrent misses for the same key share one load (for example `golang.org/x/sync/singleflight` or a per-key in-flight entry) without holding one global lock across the slow load for every key. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Error path and repeat runs",
+      "max_score": 25,
+      "description": "The fix does not cache a failed load and waiting callers receive the error; the answer runs or recommends the test with `-race` and `-count` (or a loop) to show it is stable. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

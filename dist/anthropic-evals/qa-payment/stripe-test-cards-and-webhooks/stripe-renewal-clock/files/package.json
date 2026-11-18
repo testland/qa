@@ -1,0 +1,12 @@
+{
+  "name": "billing",
+  "scripts": {
+    "test:e2e": "jest test/billing.e2e.test.js"
+  },
+  "dependencies": {
+    "stripe": "^19.1.0"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0"
+  }
+}

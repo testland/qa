@@ -1,0 +1,3 @@
+- Messages are extracted with `formatjs extract 'src/**/*.tsx' --out-file lang/en.json`. App uses react-intl.
+- With lang/en-XA.json loaded, the cart crashes ("FORMAT_ERROR" / "Expected 'plural'") and the terms link disappears.
+- We'd also like to catch right-to-left problems before we add Arabic next quarter.

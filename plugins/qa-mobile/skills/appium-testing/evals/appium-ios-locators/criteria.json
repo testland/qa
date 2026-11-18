@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Why XPath is slow', 'Native locator syntax', 'System alert handling'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep XPath as the default locator",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'XPath selectors as default'. Leaving XPath (for example `//XCUIElementTypeButton[...]`) on elements that have, or can be given, an accessibility id scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Why XPath is slow",
+      "max_score": 25,
+      "description": "The answer explains XPath is slow on XCUITest because the driver must build and search the whole page source tree, while accessibility id, predicate string and class chain lookups run natively in XCTest. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Accessibility identifiers",
+      "max_score": 10,
+      "description": "The fix asks the app to set `accessibilityIdentifier`s and locates by accessibility id (`~login-email` style), explaining that label or name text changes with localization, so text-based locators break in German. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Native locator syntax",
+      "max_score": 25,
+      "description": "Where an identifier is not available the fix uses correct `-ios predicate string:` or `-ios class chain:` selectors (for example `type == 'XCUIElementTypeSecureTextField'`), not XPath. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "System alert handling",
+      "max_score": 25,
+      "description": "The fix handles the notification permission alert with the `appium:autoAcceptAlerts` capability or `mobile: alert` (accept), instead of clicking a localized Allow button by text. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

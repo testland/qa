@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Nondeterminism removed at the source' (2 of 2 runs), 'JavaScript animation disabled in Chromatic' (2 of 2 runs), 'No hiding' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT hide the changing stories",
+      "max_score": 15,
+      "description": "From the skill's section 'Stories that change on every build: fix the source, not the threshold' (the skill has no Anti-patterns section). Disabling snapshots for the flaky stories, a long `delay`, or ignoring the changing regions instead of fixing their inputs scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Nondeterminism removed at the source",
+      "max_score": 25,
+      "description": "The stories use fixed dates and fixed colours (for example a constant `at` timestamp and a deterministic avatar colour, or a mocked Date) instead of `new Date()` and `Math.random()`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Threshold back to normal",
+      "max_score": 10,
+      "description": "`diffThreshold` goes back to the default (0.063) or close to it, with the explanation that a high threshold hides real changes. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "JavaScript animation disabled in Chromatic",
+      "max_score": 25,
+      "description": "CountUp renders its final value when running in Chromatic, using `isChromatic()` from `chromatic/isChromatic` (or an equivalent flag), because Chromatic only controls CSS animations, not requestAnimationFrame animations. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No hiding",
+      "max_score": 18,
+      "description": "The fix does not rely on long `delay` values or on disabling snapshots for the affected stories. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

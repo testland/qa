@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Exit codes separated'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT let system errors end green",
+      "max_score": 15,
+      "description": "From the skill's exit-code table, which separates visual changes (1) from build and system errors. `|| true`, `continue-on-error`, or treating every non-zero code as 'changes pending review', so a Storybook or Git error passes, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Exit codes separated",
+      "max_score": 25,
+      "description": "The fix removes `|| true` and explains Chromatic's exit codes: 1 means visual changes to review, while codes such as 2 (component errors), 3 (build failed) and 21 or 23 (Storybook build failed or broken) are real failures; it uses `--exit-zero-on-changes` (or `exitZeroOnChanges`) so only visual changes pass the job and the Chromatic UI Tests or UI Review status check gates the merge. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Full git history",
+      "max_score": 10,
+      "description": "The fix checks out with `fetch-depth: 0` because Chromatic and TurboSnap need the git history to find the baseline build. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Squash merges",
+      "max_score": 10,
+      "description": "The fix adds `--auto-accept-changes` for `main` (or `autoAcceptChanges: main`) so builds on main after a squash or rebase merge accept changes already reviewed on the PR. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "TurboSnap externals",
+      "max_score": 10,
+      "description": "The fix adds `--externals` (for example `public/**` or the fonts folder) so changes to files outside the bundle graph disable TurboSnap for that build instead of being missed. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Built-in FormatJS pseudo-locales'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep a regex over ICU messages",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Regex over ICU messages'. Any replacement that still edits message strings with regular expressions, rather than the parsed AST, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Built-in FormatJS pseudo-locales",
+      "max_score": 25,
+      "description": "The answer replaces the regex script with the FormatJS CLI (`formatjs compile lang/en.json --ast --pseudo-locale en-XA --out-file ...`), explaining the regex rewrote ICU syntax (the `plural` keyword, argument names, the `<link>` tag) and that `--pseudo-locale` requires `--ast`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Loaded as AST in a QA-only locale",
+      "max_score": 10,
+      "description": "The compiled AST messages are passed to `IntlProvider` as `messages` for the pseudo locale only in development or QA builds (selected by a query parameter, environment variable or similar), never in production. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Bidi pseudo-locale too",
+      "max_score": 10,
+      "description": "The answer also generates `en-XB` (mirrored text with bidi control characters) for right-to-left checks and notes that layout mirroring still needs `dir=\"rtl\"` on the document. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Bugs in Cart.tsx",
+      "max_score": 10,
+      "description": "The answer lists the concatenated `'!'` outside the message, the hardcoded \"Checkout\" button text, and the fixed 96px button width that will truncate expanded text. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

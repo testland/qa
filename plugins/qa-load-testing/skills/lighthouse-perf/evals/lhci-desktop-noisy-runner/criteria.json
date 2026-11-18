@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Simulated throttling on shared runners' (1 of 2 runs), 'Several runs' (2 of 2 runs), 'Hardware checked' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT use devtools throttling on shared runners",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`throttlingMethod: 'devtools'` on shared CI runners'. Setting or keeping devtools throttling to stabilise the score scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Desktop preset",
+      "max_score": 10,
+      "description": "The config uses `\"preset\": \"desktop\"` in `collect.settings` (or `--preset=desktop`), and the answer explains that `formFactor: desktop` alone keeps the default mobile screen emulation (Lighthouse says to use the desktop preset for desktop). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Simulated throttling on shared runners",
+      "max_score": 18,
+      "description": "The answer drops `throttlingMethod: devtools` for the default simulated throttling, explaining that devtools throttling does not mitigate hardware variance on shared CI machines while simulated throttling partially does. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Several runs",
+      "max_score": 25,
+      "description": "`numberOfRuns` is raised (for example to 5), noting that the median of 5 runs is about twice as stable as a single run. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Hardware checked",
+      "max_score": 25,
+      "description": "The answer addresses the runner itself: check `benchmarkIndex` in the reports and calibrate `cpuSlowdownMultiplier` or use a dedicated, consistent runner, and asserts on metrics such as LCP and TBT rather than only the overall score. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

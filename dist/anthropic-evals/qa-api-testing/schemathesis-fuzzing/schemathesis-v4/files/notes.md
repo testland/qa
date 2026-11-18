@@ -1,0 +1,3 @@
+- We upgraded Schemathesis from 3.39 to 4.x and the CI job now fails while parsing options.
+- The 5-second request timeout matters: once a hung endpoint kept the job waiting, and 5 s is the limit we agreed on.
+- CI reads the JUnit file from reports/schemathesis.xml for the test report.

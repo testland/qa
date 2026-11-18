@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Web-first assertions'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT find the window with getFocusedWindow()",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`BrowserWindow.getFocusedWindow()` in tests'. Mapping the page to its window through the focused window, which is unset on headless CI, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Arguments, not closures",
+      "max_score": 10,
+      "description": "The value is passed as the second argument of `electronApp.evaluate` (the function runs in the Electron main process, so it cannot see the test's local variables). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Wait for the new window",
+      "max_score": 10,
+      "description": "The test starts `app.waitForEvent('window')` before clicking (for example with `Promise.all`) instead of reading `app.windows()[1]` right after the click. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Page mapped to its BrowserWindow",
+      "max_score": 10,
+      "description": "Bounds are read from the BrowserWindow that belongs to the preferences page, for example via `app.browserWindow(prefsPage)`, instead of `getFocusedWindow()`, which can be null when the window manager gives no focus (xvfb). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Web-first assertions",
+      "max_score": 25,
+      "description": "The title check uses a web-first assertion such as `await expect(prefs).toHaveTitle('Preferences')`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

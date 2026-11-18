@@ -1,0 +1,10 @@
+unit_tests:
+  - name: fct_events_copies_events
+    model: fct_events
+    given:
+      - input: ref('stg_events')
+        rows:
+          - {event_id: 1, user_id: 7, event_type: open, event_time: 2026-11-01 10:00:00, ingested_at: 2026-11-01 10:00:05}
+    expect:
+      rows:
+        - {event_id: 1, user_id: 7, event_type: open, event_time: 2026-11-01 10:00:00, ingested_at: 2026-11-01 10:00:05}

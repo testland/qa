@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Untested frames fail loudly', 'Gate vs review split'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT inject axe with addScriptTag on the checkout page",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`addScriptTag` + `axe.run` on a page with cross-origin iframes'. A fix that still injects axe by script tag and runs it in the top frame only scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Frames are scanned",
+      "max_score": 10,
+      "description": "The test switches to `@axe-core/playwright` `AxeBuilder` (which injects axe into every frame, including cross-origin ones) instead of `addScriptTag` plus `page.evaluate`, which only runs in the top document where axe cannot reach the cross-origin card iframe. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Untested frames fail loudly",
+      "max_score": 25,
+      "description": "The answer keeps the `frame-tested` rule running next to the WCAG tags (it is tagged best-practice, so the WCAG-only `runOnly` drops it), for example `options({ runOnly: {type: 'tag', values: [...]}, rules: { 'frame-tested': { enabled: true } } })`, and treats its result as a failure or blocker. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Review list is complete",
+      "max_score": 10,
+      "description": "The answer explains that `resultTypes: ['violations']` caps every other result type at one node per rule, which is why the review queue shows one element per rule, and either removes it or adds `'incomplete'`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Gate vs review split",
+      "max_score": 25,
+      "description": "Violations fail the test with readable output (rule id, impact, targets), while `incomplete` results are written to the review file without failing, and the answer notes what still needs a manual check (for example the announcement of the card form's error message). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

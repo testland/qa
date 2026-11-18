@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT verify over re-serialized JSON",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Verifying the signature over re-serialized JSON'. Computing the signature from a parsed and re-dumped body instead of the raw request bytes scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Signed content and key",
+      "max_score": 15,
+      "description": "The fix signs `webhook-id + '.' + webhook-timestamp + '.' + raw body` with HMAC-SHA256 using the secret base64-decoded after stripping the `whsec_` prefix, and compares base64 signatures (not hex). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Raw body",
+      "max_score": 15,
+      "description": "The fix verifies the raw request bytes (`request.get_data()`), not JSON re-serialized from the parsed body. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Multiple signatures, constant time",
+      "max_score": 15,
+      "description": "The fix parses `webhook-signature` as a space-separated list of `v1,<signature>` entries, accepts the request if any v1 signature matches, and compares with `hmac.compare_digest`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Replay window and tests",
+      "max_score": 15,
+      "description": "The fix rejects timestamps outside a tolerance (for example 5 minutes) and the tests cover a valid delivery, a tampered body, a wrong secret, an old timestamp, and rotation with two signatures where only one matches. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

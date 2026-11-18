@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. No baseline was measured: all three no-skill runs on 2026-11-17 stopped before writing ANSWER.md. Predicted baseline failure, from what the criteria test: the agent misses 'Inject after visit'; 'Scan after the dialog opens'; 'Readable CI output'; 'Impact-filtered gate'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT make the admin page unable to fail",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Disabling rules without comment in code'. `skipFailures: true` on admin, or disabling the rules behind its minor and moderate issues so nothing there can fail, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Inject after visit",
+      "max_score": 18,
+      "description": "The answer explains `cy.injectAxe()` must run after `cy.visit()` on every page load (a `before` hook before any visit leaves axe missing); the fix injects after each visit. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Scan after the dialog opens",
+      "max_score": 18,
+      "description": "The fix runs `checkA11y` after the dialog has opened (scoped to the dialog, waiting for it, optionally with `retries`/`interval`), since the old test scanned before the click. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Readable CI output",
+      "max_score": 18,
+      "description": "The fix passes a `violationCallback` that logs each violation's rule id, impact, help and node targets to the terminal (for example via `cy.task`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Impact-filtered gate",
+      "max_score": 18,
+      "description": "For admin the fix uses `includedImpacts: ['critical', 'serious']` without `skipFailures`, so those block, and tracks the minor and moderate issues separately instead of skipping every failure. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

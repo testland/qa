@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Role adherence' (1 of 2 runs), 'Memory and completeness' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT use one vague catch-all criterion",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Custom GEval criteria too vague'. A single conversational G-Eval such as 'the bot is helpful and correct' in place of separate checks for role, memory and completeness scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Current conversation API",
+      "max_score": 10,
+      "description": "The test builds `ConversationalTestCase(turns=[Turn(role='user', content=...), Turn(role='assistant', content=...), ...])` with `Turn` imported from `deepeval.test_case`, instead of `messages=[LLMTestCase(...)]`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Role adherence",
+      "max_score": 18,
+      "description": "Staying in role is checked with `RoleAdherenceMetric` and the `chatbot_role` field set on the ConversationalTestCase (the field that metric requires), or with an equivalent conversational G-Eval criterion. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Memory and completeness",
+      "max_score": 18,
+      "description": "The test checks that the bot remembers details already given and handles every request (for example KnowledgeRetentionMetric and ConversationCompletenessMetric, or ConversationalGEval criteria for each), so the forgotten booking reference and the ignored surname fix would fail. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Can actually fail",
+      "max_score": 10,
+      "description": "Every metric has an explicit threshold and the test asserts the result (assert_test or a failing evaluate), rather than only printing scores. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

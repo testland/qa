@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Session discovery and feature prefixes' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep any request in a form Appium 3 removed",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Mixing Appium 1.x, 2.x and 3.x docs and examples'. Leaving `desiredCapabilities`, `/touch/perform` or `/touch/multi/perform`, or an insecure feature without a driver prefix, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "W3C new-session body",
+      "max_score": 10,
+      "description": "The new-session request sends `{\"capabilities\": {\"alwaysMatch\": {...}}}` with `appium:`-prefixed vendor capabilities (`appium:automationName`, `appium:deviceName`, `appium:app`) because Appium 3 no longer accepts `desiredCapabilities`, and reads the session id from `value.sessionId`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Element value endpoint",
+      "max_score": 10,
+      "description": "Text is sent to `POST /session/{sid}/element/{eid}/value` with a `text` string (Appium 3 removed both the `/appium/element/.../value` route and the `value` parameter), and the element id is read from the W3C key `element-6066-11e4-a52e-4f735466cecf` rather than `ELEMENT`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Touch actions replaced",
+      "max_score": 10,
+      "description": "The removed `/touch/perform` call is replaced with W3C actions (`POST /session/{sid}/actions` with a touch pointer: pointerMove, pointerDown, pause, pointerMove, pointerUp) or the `mobile: swipeGesture` / `mobile: scrollGesture` execute method. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Session discovery and feature prefixes",
+      "max_score": 25,
+      "description": "Stale-session cleanup uses `GET /appium/sessions` (the replacement for `GET /sessions`), and the server is started with prefixed features: `--allow-insecure=*:session_discovery` (server features need the wildcard) and `uiautomator2:adb_shell` (or `*:adb_shell`) if shell is still needed, or the flag is dropped when nothing uses it. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

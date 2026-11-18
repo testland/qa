@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Test clocks, not fake timers' (1 of 2 runs), 'Wait for the clock' (1 of 2 runs), 'Advance limits and draft invoices' (1 of 2 runs), 'Card that fails on renewal' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT use fake timers for trials and renewals",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Fake timers for renewals and trials'. Keeping Jest fake timers or mocked dates to move a subscription through its trial or renewal scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Test clocks, not fake timers",
+      "max_score": 18,
+      "description": "The tests create a test clock (`stripe.testHelpers.testClocks.create` with a `frozen_time`), create the customer with `test_clock`, and move time with `testClocks.advance`; the answer explains that Jest fake timers do not change Stripe's time. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Wait for the clock",
+      "max_score": 18,
+      "description": "After each advance the test waits until the clock's `status` is `ready` (polling `testClocks.retrieve` or the `test_helpers.test_clock.ready` event) before asserting. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Advance limits and draft invoices",
+      "max_score": 18,
+      "description": "The year test advances at most two billing intervals per call (looping month by month or two at a time), finds the invoices by customer or subscription (list calls omit test-clock objects otherwise), and allows for the renewal invoice staying a draft for about an hour before it is finalized and paid. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Card that fails on renewal",
+      "max_score": 18,
+      "description": "The failed-renewal test attaches a card that attaches successfully but fails when charged (4000 0000 0000 0341, or `pm_card_chargeCustomerFail`), because a card that is declined up front cannot be saved as the default payment method, and expects `invoice.payment_failed`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

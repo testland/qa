@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Unanswerable questions tested' (1 of 2 runs), 'References not copied from the bot' (1 of 2 runs), 'Stable verdicts' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT rerun the judge until it passes",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Rerunning CI until the judge passes'. Retries, rerun marks, or 'pass if any of three runs passes' as the answer to the flipping verdict scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Faithfulness gets retrieval_context",
+      "max_score": 10,
+      "description": "The retrieved chunks are passed as `retrieval_context` (what FaithfulnessMetric judges the output against); `context` is for ground-truth reference text, as used by HallucinationMetric. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Unanswerable questions tested",
+      "max_score": 18,
+      "description": "The suite adds questions the docs cannot answer (such as the gift-card refund) and checks that the bot declines, says it does not know, or hands off, instead of only testing answerable questions. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "References not copied from the bot",
+      "max_score": 18,
+      "description": "The answer explains that expected outputs saved from the bot's own replies make the comparison circular, and requires human-written or human-checked expected answers. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Stable verdicts",
+      "max_score": 18,
+      "description": "The answer pins the judge model explicitly (`model=` on the metrics) and deals with the borderline flip, for example by repeating the measurement, keeping thresholds away from the noise band, or using deterministic checks where possible, instead of rerunning until green. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

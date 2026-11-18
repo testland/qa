@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Pseudo really switched on' (1 of 2 runs), 'Proves the locale is active' (2 of 2 runs), 'Automated text scan' (2 of 2 runs), 'Attributes, title and concatenation' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT rely on a screenshot baseline alone",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Relying on a screenshot baseline alone'. A check whose only signal is a visual snapshot of the pseudo-localized page scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Pseudo really switched on",
+      "max_score": 18,
+      "description": "The answer finds why pseudo text never appears: i18next-pseudo only runs when `postProcess: ['pseudo']` is set in `init`, and it only transforms the language named in `languageToPseudo` (so it must be `en-XA` with `en` as fallback, or the test must select that language), and the SPA's detector ignores the request header (it reads the query string, cookie, localStorage or `navigator`), so the test selects the language through `?lng=en-XA` or Playwright's `locale` option. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Proves the locale is active",
+      "max_score": 25,
+      "description": "The test first asserts that a known translated string renders transformed (for example with `wrapped: true` brackets), so a broken setup fails instead of passing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Automated text scan",
+      "max_score": 25,
+      "description": "The test walks the rendered page and fails on visible text that is not pseudo-localized (no brackets or accents), with an allowlist for user data, numbers and brand names, instead of relying on a screenshot. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Attributes, title and concatenation",
+      "max_score": 18,
+      "description": "The scan also checks `placeholder`, `aria-label`, `title`, `alt` and `document.title`, and the answer explains that concatenated messages such as the toast show up as text outside the pseudo markers, fixed by one message with interpolation. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

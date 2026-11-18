@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Run and results'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT wait with Thread.sleep",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`Thread.sleep` for async waits'. Any `Thread.sleep` or `SystemClock.sleep` left in, or added to, the test or its setup scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "RecyclerViewActions",
+      "max_score": 10,
+      "description": "The answer explains `onData` only works with AdapterView; the fix uses `onView(withId(R.id.products)).perform(RecyclerViewActions.actionOnItem<...>(hasDescendant(withText(\"Trail Shoes\")), click()))` (which scrolls to the item) and adds the `espresso-contrib` dependency. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "IdlingResource for network",
+      "max_score": 10,
+      "description": "The fix replaces the 3-second sleep with an IdlingResource for the app's background work (for example an OkHttp idling resource or a CountingIdlingResource around the load), registered with `IdlingRegistry` before the test and unregistered after. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Animations off",
+      "max_score": 10,
+      "description": "The fix disables animations for instrumented tests (for example `testOptions { animationsDisabled = true }` in Gradle, or the three animation scales set to 0) instead of sleeping for the snackbar. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Run and results",
+      "max_score": 25,
+      "description": "The answer runs the test with `./gradlew connectedAndroidTest` (or the variant task) and says where the JUnit XML results are written (under `app/build/outputs/androidTest-results/`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

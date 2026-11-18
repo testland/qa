@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT leave the handshake untested",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Skip handshake test (assume browser handles it)'. A fix with no test that a bad origin or missing ticket is refused at the upgrade scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Origin checked",
+      "max_score": 15,
+      "description": "The server checks the `Origin` header against an allowlist during the upgrade (cross-site WebSocket hijacking is possible because the cookie is sent automatically). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No headers or long-lived tokens from the browser",
+      "max_score": 15,
+      "description": "The answer explains that the browser `WebSocket` API cannot set custom headers, and replaces the query-string API token with the session cookie or a short-lived, single-use ticket fetched just before connecting. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Rejected before the handshake",
+      "max_score": 15,
+      "description": "Authentication happens in `server.on('upgrade')` with `noServer: true`, writing an HTTP 401/403 and destroying the socket for bad requests, instead of accepting and closing afterwards. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Handshake tests",
+      "max_score": 15,
+      "description": "Tests cover a foreign Origin (rejected), a missing or expired ticket (rejected) and a valid connection (accepted). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

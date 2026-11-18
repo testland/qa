@@ -1,0 +1,3 @@
+- The card fields live in a `<payment-form>` custom element with an open shadow root.
+- The 3-D Secure challenge loads in `<iframe id="threeds-frame">` a few seconds after Pay.
+- "Open receipt" opens the receipt in a new tab.

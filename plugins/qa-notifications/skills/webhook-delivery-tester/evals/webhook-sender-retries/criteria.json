@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Success and retry policy' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT change the id or reuse the signature on retries",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'New `webhook-id` per retry, or the first attempt's signature reused'. A sender that mints a new id per attempt, or resends the first attempt's timestamp and signature, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Same id on every attempt",
+      "max_score": 10,
+      "description": "One `webhook-id` is generated per event and reused on every retry, so receivers can deduplicate. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Signed per attempt",
+      "max_score": 10,
+      "description": "Each attempt is signed with that attempt's timestamp and the stable id (the signed content is `id.timestamp.body`), so retries pass signature and timestamp-tolerance checks. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Success and retry policy",
+      "max_score": 25,
+      "description": "Any 2xx counts as success; redirects are not followed; retries use exponential backoff with jitter over hours to days, and the endpoint is disabled (or the consumer notified) after sustained failure or a 410. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests with a fake clock",
+      "max_score": 10,
+      "description": "Tests use a fake clock or injected scheduler to assert the retry schedule, the stable id across attempts and a valid signature on each attempt. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

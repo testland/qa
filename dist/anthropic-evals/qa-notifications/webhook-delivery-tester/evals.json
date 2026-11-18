@@ -120,6 +120,57 @@
         "Entries whose version tag is absent or is not v1 are ignored rather than treated as candidate signatures. A parser that strips the tags and compares every whitespace-separated token scores zero here: it will accept a signature produced under a scheme the endpoint has never agreed to.",
         "docs/ticket-4471-response.md accepts asks (c) and (d) - logging the receiver's clock delta on every rejection, and alerting when one receiver's clock diverges from the fleet - and says what happens to the 341: re-sent from the Halcyon dashboard or API inside the 30-day window attachment 4 describes. Refusing or ignoring (c) and (d) along with (a) and (b) scores at most half; closing the ticket with no recovery path for the 341 scores zero."
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "# Billing webhooks sometimes apply twice or leave old state\n\n## Problem Description\n\nOur billing webhook receiver (`src/receiver.js`) sometimes applies an event twice and sometimes leaves subscriptions in an old state (`docs/incidents.md`). Fix it and add tests.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/webhook-receiver-dedupe-order/files/src/receiver.js",
+        "evals/webhook-receiver-dedupe-order/files/docs/incidents.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Receiver returns 200 before the event is stored'. Answering 2xx before the event is durably recorded, so a crash loses it, scores zero. Full points when the work avoids it.",
+        "Deduplication claims the event id atomically before side effects (for example `INSERT ... ON CONFLICT DO NOTHING` on a unique id and checking the result), not a select-then-insert after processing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The receiver verifies, records and returns 2xx quickly, then processes asynchronously (queue or background worker), so the provider's 15-second timeout does not trigger retries. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Out-of-order events are handled by comparing the event's timestamp or version with the stored subscription (or by refetching the current state from the provider), so an older event cannot overwrite a newer one. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Signature verification uses the raw request bytes instead of re-serialized JSON, and tests cover a duplicate delivered concurrently (applied once) and an older event arriving after a newer one (ignored). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "# Make our webhook sender follow Standard Webhooks\n\n## Problem Description\n\nFix our webhook sender (`src/sender.js`, partner complaints in `docs/partner-feedback.md`) so it follows Standard Webhooks, and write tests for it.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/webhook-sender-retries/files/src/sender.js",
+        "evals/webhook-sender-retries/files/docs/partner-feedback.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'New `webhook-id` per retry, or the first attempt's signature reused'. A sender that mints a new id per attempt, or resends the first attempt's timestamp and signature, scores zero. Full points when the work avoids it.",
+        "One `webhook-id` is generated per event and reused on every retry, so receivers can deduplicate. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Each attempt is signed with that attempt's timestamp and the stable id (the signed content is `id.timestamp.body`), so retries pass signature and timestamp-tolerance checks. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Any 2xx counts as success; redirects are not followed; retries use exponential backoff with jitter over hours to days, and the endpoint is disabled (or the consumer notified) after sustained failure or a 410. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Tests use a fake clock or injected scheduler to assert the retry schedule, the stable id across attempts and a valid signature on each attempt. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "# Verify Standard Webhooks signatures in our receiver\n\n## Problem Description\n\nMake `receiver/app.py` verify Standard Webhooks signatures correctly (`docs/provider.md`) and add tests, including the secret rotation.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/webhook-std-verify/files/receiver/app.py",
+        "evals/webhook-std-verify/files/docs/provider.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Verifying the signature over re-serialized JSON'. Computing the signature from a parsed and re-dumped body instead of the raw request bytes scores zero. Full points when the work avoids it.",
+        "The fix signs `webhook-id + '.' + webhook-timestamp + '.' + raw body` with HMAC-SHA256 using the secret base64-decoded after stripping the `whsec_` prefix, and compares base64 signatures (not hex). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The fix verifies the raw request bytes (`request.get_data()`), not JSON re-serialized from the parsed body. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The fix parses `webhook-signature` as a space-separated list of `v1,<signature>` entries, accepts the request if any v1 signature matches, and compares with `hmac.compare_digest`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The fix rejects timestamps outside a tolerance (for example 5 minutes) and the tests cover a valid delivery, a tampered body, a wrong secret, an old timestamp, and rotation with two signatures where only one matches. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
     }
   ]
 }

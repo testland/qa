@@ -1,0 +1,9 @@
+name: ci
+on: pull_request
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: pip install dbt-snowflake==1.10.*
+      - run: dbt build --target ci --select state:modified+ --state prod-artifacts

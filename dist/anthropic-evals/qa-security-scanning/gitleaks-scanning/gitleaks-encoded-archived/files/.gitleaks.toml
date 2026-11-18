@@ -1,0 +1,13 @@
+title = "acme"
+[extend]
+useDefault = true
+
+[[rules]]
+id = "acme-service-token"
+description = "Acme internal service token"
+regex = '''acme_(?=live|stg)[a-z]{3,4}_[A-Za-z0-9]{40}'''
+keywords = ["acme_"]
+
+[[allowlists]]
+description = "lockfiles and generated files"
+paths = ['''(.*?)(json|ya?ml|lock)$''']

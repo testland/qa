@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Decoding turned on', 'Proof with test inputs'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT add allowlist entries without a review date",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Allowlist without `Re-review-date`'. Any allowlist entry kept or added without a comment naming why it is safe and when it is re-reviewed scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Decoding turned on",
+      "max_score": 25,
+      "description": "The scan adds `--max-decode-depth` (for example 2 or 3), and the answer explains decoding is off by default (0), so base64 values such as a Kubernetes Secret's `data:` are never decoded and matched. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Archives scanned",
+      "max_score": 10,
+      "description": "The scan adds `--max-archive-depth` (for example 2), and the answer explains archive traversal is off by default (0), so secrets inside the committed zip are not seen. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Allowlist and rule fixed",
+      "max_score": 10,
+      "description": "The global path allowlist no longer hides every JSON/YAML file (narrowed to specific lockfiles or generated paths, or scoped with `targetRules`), and the custom rule drops the lookahead, which Go's regex engine does not support, for an RE2-compatible pattern (for example `acme_(?:live|stg)_[A-Za-z0-9]{40}`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Proof with test inputs",
+      "max_score": 25,
+      "description": "The answer proves the fix with fake but matching samples (a base64 value, a zipped file, a token) scanned with `gitleaks dir` or `gitleaks stdin` using the new flags, expecting a non-zero exit code, without committing real secrets. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

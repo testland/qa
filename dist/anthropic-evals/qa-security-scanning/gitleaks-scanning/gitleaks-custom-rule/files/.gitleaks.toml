@@ -1,0 +1,9 @@
+title = "acme gitleaks config"
+
+[[rules]]
+id = "acme-api-token"
+description = "Acme API token"
+regex = '''acme_(live|test)_[A-Za-z0-9]{32}'''
+
+[allowlist]
+paths = ['''tests/''']

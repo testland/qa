@@ -1,0 +1,4 @@
+- Each lookup takes 3 to 8 seconds on iOS; the whole login spec takes almost a minute.
+- Clicking "Allow" fails now and then.
+- The app is being translated to German next quarter; the tests must keep working.
+- The iOS developers can add accessibility identifiers if we tell them which ones.

@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Why the old test cannot fail' (2 of 2 runs), 'Failed refresh is not stuck' (1 of 2 runs), 'Red then green' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT use sleeps to force the interleaving",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`sleep()` to \"force\" interleaving'. A test that relies on `asyncio.sleep(0.1)`, `time.sleep` or timing luck to make callers overlap scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Why the old test cannot fail",
+      "max_score": 25,
+      "description": "The answer explains that the fake `fetch_token` returns without awaiting anything, so no coroutine ever suspends inside the check-then-fetch window, and the new fake suspends there (for example awaiting an asyncio.Event or gate) so the callers really interleave, without wall-clock sleeps. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Single refresh under concurrency",
+      "max_score": 10,
+      "description": "The fix serializes the refresh with an `asyncio.Lock` (not a threading lock) and re-checks the token inside the lock, or shares one in-flight refresh task, and the test asserts one fetch for many concurrent callers. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Failed refresh is not stuck",
+      "max_score": 18,
+      "description": "After a refresh raises (identity provider down), the waiting callers get the error and a later `get()` tries again; nothing caches the failure, and a test covers it. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Red then green",
+      "max_score": 25,
+      "description": "The answer shows pytest output with the new test failing on the original code and passing after the fix. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

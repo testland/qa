@@ -1,0 +1,20 @@
+name: test
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: ${{ matrix.node }} }
+      - run: npm ci
+      - run: npm test -- --reporter=junit --outputFile=reports/junit.xml
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: junit-results
+          path: reports/

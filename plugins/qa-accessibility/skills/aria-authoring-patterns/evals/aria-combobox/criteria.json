@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Tests'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT invent a picker pattern outside the APG",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Inventing a custom pattern not in the APG'. Moving DOM focus into the options list, or building the picker from `menu` roles or custom key handling instead of the APG combobox, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "ARIA 1.2 combobox on the input",
+      "max_score": 10,
+      "description": "The fix puts `role=\"combobox\"` on the input itself with `aria-controls` pointing to the listbox (not a wrapper div with `aria-owns`, the older pattern), keeps `aria-expanded` in sync with the popup, sets `aria-autocomplete=\"list\"`, and gives the input a real label (a placeholder is not a label). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "DOM focus stays on the input",
+      "max_score": 10,
+      "description": "Options are not focused: arrow keys move a visual highlight by setting `aria-activedescendant` on the input to the option's id and `aria-selected=\"true\"` on that option; options get ids and lose `tabindex`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Keyboard model",
+      "max_score": 10,
+      "description": "Down and Up move through the options (Down opens the list when closed), Enter accepts the highlighted option and closes the list, Escape closes the list, and typing keeps filtering. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests",
+      "max_score": 25,
+      "description": "The answer adds automated tests that drive the keyboard and assert `aria-expanded`, that `aria-activedescendant` references an existing option and that option has `aria-selected=\"true\"`, and the chosen value after Enter; it also names a manual screen reader check. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

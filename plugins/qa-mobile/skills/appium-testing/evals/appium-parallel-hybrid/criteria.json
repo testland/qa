@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT mix Appium 2 and Appium 3 forms",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Mixing Appium 1.x, 2.x and 3.x docs and examples'. Leaving an insecure feature without its driver prefix, or any server flag or capability in its Appium 2 form, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Insecure feature has a driver prefix",
+      "max_score": 15,
+      "description": "The `--allow-insecure` value names the driver or the wildcard, for example `uiautomator2:chromedriver_autodownload` or `*:chromedriver_autodownload`, because Appium requires a prefix on every insecure feature. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Separate ports per session",
+      "max_score": 15,
+      "description": "Each capability set gets its own `appium:systemPort` (the UiAutomator2 server port, 8200-8299 by default) and its own `appium:chromedriverPort` for the webview. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "One device per session",
+      "max_score": 15,
+      "description": "Each capability set pins its device with `appium:udid` (`emulator-5554` and `emulator-5556`), so two sessions cannot land on the same emulator. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Waits for the webview context",
+      "max_score": 15,
+      "description": "The fixed `driver.pause` is replaced by waiting until a `WEBVIEW` context appears in the list of contexts before switching to it. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

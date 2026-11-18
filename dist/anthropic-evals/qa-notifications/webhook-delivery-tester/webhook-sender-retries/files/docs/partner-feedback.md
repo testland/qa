@@ -1,0 +1,4 @@
+- Partner A: we receive the same event several times with different ids, so our dedupe fails.
+- Partner B: retries fail our signature check, and some events are rejected as too old.
+- Partner C: our endpoint answers 202 Accepted and you still retry.
+- Partner D: during our 2-hour outage you gave up after 3 seconds; events were lost.

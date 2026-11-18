@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Fast acknowledgement' (2 of 2 runs), 'Stale events ignored' (1 of 2 runs), 'Raw-body signature and tests' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT acknowledge before the event is stored",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Receiver returns 200 before the event is stored'. Answering 2xx before the event is durably recorded, so a crash loses it, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Atomic dedupe",
+      "max_score": 10,
+      "description": "Deduplication claims the event id atomically before side effects (for example `INSERT ... ON CONFLICT DO NOTHING` on a unique id and checking the result), not a select-then-insert after processing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Fast acknowledgement",
+      "max_score": 25,
+      "description": "The receiver verifies, records and returns 2xx quickly, then processes asynchronously (queue or background worker), so the provider's 15-second timeout does not trigger retries. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Stale events ignored",
+      "max_score": 18,
+      "description": "Out-of-order events are handled by comparing the event's timestamp or version with the stored subscription (or by refetching the current state from the provider), so an older event cannot overwrite a newer one. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Raw-body signature and tests",
+      "max_score": 25,
+      "description": "Signature verification uses the raw request bytes instead of re-serialized JSON, and tests cover a duplicate delivered concurrently (applied once) and an older event arriving after a newer one (ignored). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

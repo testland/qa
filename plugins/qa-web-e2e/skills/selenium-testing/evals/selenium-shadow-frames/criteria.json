@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT add implicit waits next to explicit waits",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`implicitlyWait` set alongside `WebDriverWait`'. Adding an implicit wait to get past the missing elements, while the test also uses `WebDriverWait`, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Shadow root",
+      "max_score": 15,
+      "description": "The card field is found through the host's shadow root (`getShadowRoot()` on the `payment-form` element, Selenium 4) with a CSS selector, not with an XPath that crosses the shadow boundary. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Frame switching",
+      "max_score": 15,
+      "description": "The test waits with `ExpectedConditions.frameToBeAvailableAndSwitchToIt` for the 3-D Secure iframe, clicks inside it, then returns with `switchTo().defaultContent()`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "New tab",
+      "max_score": 15,
+      "description": "The test waits for two window handles (for example `numberOfWindowsToBe(2)`), switches to the handle that is not the original, and asserts there. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Waits",
+      "max_score": 15,
+      "description": "`Thread.sleep` is removed and the implicit wait is not mixed with explicit waits. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

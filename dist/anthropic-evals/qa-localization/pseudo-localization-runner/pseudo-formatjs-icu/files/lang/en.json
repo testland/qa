@@ -1,0 +1,11 @@
+{
+  "cart.count": {
+    "defaultMessage": "{count, plural, one {# item} other {# items}} in your cart"
+  },
+  "cart.terms": {
+    "defaultMessage": "I accept the <link>terms of sale</link>"
+  },
+  "cart.greeting": {
+    "defaultMessage": "Hi {name}"
+  }
+}

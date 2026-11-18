@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Proof before and after'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT guard the read-then-write with a Python lock",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Python lock around a read-then-write on a database row'. A `threading.Lock`, asyncio lock or module-level mutex around `reserve` as the fix scores zero, since other processes and pods do not share it. Full points when the work avoids it."
+    },
+    {
+      "name": "Test runs on Postgres",
+      "max_score": 10,
+      "description": "The new test runs against Postgres (the compose service, testcontainers or a DATABASE_URL), and the answer explains why the SQLite setup cannot reproduce the race (one shared connection through StaticPool and SQLite's database-level write locking serialize the two calls). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Two connections, forced interleaving",
+      "max_score": 10,
+      "description": "The test uses two separate connections or transactions and forces both to read the stock before either writes (a barrier or event, or a hook between the SELECT and the UPDATE), without sleeps. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Atomic fix in the database",
+      "max_score": 10,
+      "description": "The fix makes the check and decrement atomic in the database, for example `UPDATE ... SET stock = stock - :qty WHERE sku = :sku AND stock >= :qty` with a rowcount check, or `SELECT ... FOR UPDATE`, not a Python lock (production runs many processes on several pods). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Proof before and after",
+      "max_score": 25,
+      "description": "The answer explains how the new test fails on the old code and passes after the fix, run repeatedly or with many concurrent clients, asserting reservations never exceed the starting stock. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

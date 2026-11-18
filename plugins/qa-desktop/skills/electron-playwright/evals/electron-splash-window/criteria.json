@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Serializable evaluate', 'Version checked against main process'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT take firstWindow() as the main window",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`firstWindow()` in an app with a splash screen'. Using `firstWindow()` or `windows()[0]` as the main window, without waiting for the window that matches it, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Right window",
+      "max_score": 10,
+      "description": "The answer explains that `windows()[0]` (or `firstWindow()`) can be the splash window, which closes after 1.5 s; the fix waits for the main window, for example `app.waitForEvent('window')` with a predicate or by matching the URL or title of `index.html`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Serializable evaluate",
+      "max_score": 25,
+      "description": "The answer explains `electronApp.evaluate` runs in the main process with the electron module as its first argument and must return a serializable value; the fix computes `isMaximized()` inside the callback (choosing the main window, not index 0) and returns the boolean. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Cleanup",
+      "max_score": 10,
+      "description": "The fix always closes the app (`app.close()` in a `finally`, `afterAll` or a fixture) so a failing test does not leave Electron running. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Version checked against main process",
+      "max_score": 25,
+      "description": "The version check compares the footer text with the real version from the main process (for example `app.evaluate(({ app }) => app.getVersion())`) rather than only a regex. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Current sample fields' (1 of 2 runs), 'Gate that can be trusted' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT leave the judge and versions unpinned",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Pin nothing'. A rewrite that leaves the judge model, the embeddings or the Ragas version unpinned scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Current sample fields",
+      "max_score": 18,
+      "description": "The rewrite uses the current field names `user_input`, `response`, `retrieved_contexts` and `reference`, not `question`, `answer`, `contexts` and `ground_truth`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Current metric classes with an explicit judge",
+      "max_score": 10,
+      "description": "Metrics are instantiated classes with an explicitly configured evaluator LLM (for example `from ragas.metrics.collections import Faithfulness` with `llm_factory(...)`, or the legacy `Faithfulness(llm=...)`), not the old lowercase metric singletons. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "References are real or the metric goes",
+      "max_score": 10,
+      "description": "The answer explains that copying the bot's answer into the reference makes context recall and reference-based precision meaningless (hence about 1.0), and either requires human-written references for those metrics or switches to reference-free ones (for example `LLMContextPrecisionWithoutReference` or `ContextUtilization`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Gate that can be trusted",
+      "max_score": 25,
+      "description": "The CI gate pins the judge model and compares against a stored baseline with a tolerance over a larger labelled set, rather than one absolute threshold on 12 rows. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

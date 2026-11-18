@@ -1,0 +1,3 @@
+- Screen reader users hear "edit text, City" with no hint that suggestions exist.
+- After pressing Down, VoiceOver leaves the field; typing more letters goes nowhere.
+- Escape does nothing, and Enter on a suggestion does nothing.

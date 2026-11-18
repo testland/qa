@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT treat incomplete results as passes",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Treating `incomplete` as `pass`'. Dropping or ignoring the needs-review results, or counting the run as clean while they exist unreviewed, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Scans the states users reach",
+      "max_score": 15,
+      "description": "The tests open the newsletter modal and submit the sign-up form with errors before running axe (or run axe in each of those states), instead of scanning only the page as loaded. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Handles needs-review results",
+      "max_score": 15,
+      "description": "The tests read `results.incomplete` (axe's needs-review results), at least for `color-contrast`, and fail or report them instead of ignoring everything outside `violations`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Why contrast over the photo is not a violation",
+      "max_score": 15,
+      "description": "The answer explains that axe cannot compute contrast for text over a background image or gradient, so it reports the hero headline as needs review rather than as a violation. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "What stays manual",
+      "max_score": 15,
+      "description": "The answer names what still needs manual testing, such as whether the form errors are announced by a screen reader. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

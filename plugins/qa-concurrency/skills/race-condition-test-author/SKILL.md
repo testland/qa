@@ -3,7 +3,7 @@ name: race-condition-test-author
 description: "Use when a bug only appears under load on shared in-process state (cache, counter, pool, lazy singleton), or a race needs a regression test before the fix. Forces interleavings with barriers and latches, and runs ThreadSanitizer, go test -race with goleak, or jcstress for the JVM."
 metadata:
   keywords: "race-condition, data-race, thread-sanitizer, jcstress, concurrency-testing"
-  version: "1.2.17"
+  version: "1.2.18"
 ---
 
 # race-condition-test-author

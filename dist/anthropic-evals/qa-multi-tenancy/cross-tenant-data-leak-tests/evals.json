@@ -60,6 +60,62 @@
         "The fixture section requires at least two disjoint tenants with non-colliding identifiers, and a session per tenant.",
         "MUST NOT invent findings. The tenant-prefixed object-storage key and the tenant-filtered findOne in getAttachment are not presented as scoping failures. Flagging either as a leak scores zero here."
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "# One tenant saw another tenant's invoices under load\n\n## Problem Description\n\nUnder load, a request for one tenant briefly returned another tenant's invoices, and a job exported every tenant's data (`docs/incident.md`), yet `tests/test_rls.py` passes. Fix `app/db.py` and `db/policies.sql`, and add tests that would have caught both.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/tenant-pool-setting/files/app/db.py",
+        "evals/tenant-pool-setting/files/db/policies.sql",
+        "evals/tenant-pool-setting/files/tests/test_rls.py",
+        "evals/tenant-pool-setting/files/docs/incident.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'No async-job context-reload test'. Fixing the export job without a test that runs it for one tenant and checks it sees only that tenant's rows scores zero. Full points when the work avoids it.",
+        "The tenant is set per transaction, with `SET LOCAL` or `set_config('app.tenant_id', %s, true)` inside a transaction, because a session-level `SET` stays on the pooled connection for the next request (and PgBouncer transaction pooling does not support session `SET`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The policy returns no rows when the setting is missing or empty (no `coalesce` fallback to `tenant_id`), so a job without a tenant sees nothing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The tenant id is passed as a parameter (for example to `set_config`) instead of being formatted into the SQL string. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Tests use one pooled connection for a request as tenant A then a request as tenant B (or with no tenant) and assert no cross-tenant rows, and assert a query with no tenant set returns nothing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "# The RLS test passed while one tenant could read another's rows\n\n## Problem Description\n\nFind out why the RLS test did not catch the leak in `notes.md`, then fix the policy setup and the tests.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/tenant-rls-owner/files/db/roles.sql",
+        "evals/tenant-rls-owner/files/db/migrations/007_rls.sql",
+        "evals/tenant-rls-owner/files/tests/test_rls.py",
+        "evals/tenant-rls-owner/files/notes.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Tests connect as superuser'. Tests that still connect as the table owner or a superuser, which bypass row-level security, score zero. Full points when the work avoids it.",
+        "The answer explains that the table owner (`app`) and superusers or BYPASSRLS roles bypass row-level security, so both production (`app` owns the table) and the test (connects as `postgres`) skip the policy; the fix uses `ALTER TABLE invoices FORCE ROW LEVEL SECURITY` and/or a separate non-owner runtime role without BYPASSRLS, and the tests connect as the runtime role. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer notes the test filters `WHERE tenant_id = A` itself, so it passes with no RLS at all; the fixed test seeds rows for both tenants, queries without a tenant filter as tenant A, asserts B's rows are absent, and checks that reading a B row by id returns nothing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Tests also cover writes: as tenant A, inserting a row with tenant B's id and updating a row to tenant B's id are rejected. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer tests a session that never sets `app.tenant_id` and requires zero rows or an error, never all rows (for example via `current_setting('app.tenant_id', true)` returning NULL). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "# Find cross-tenant leaks in our API before the pen test\n\n## Problem Description\n\nA pen test of our multi-tenant API is next week. Review `app/routes.py` (plus `docs/storage.md` and `db/schema.sql`) for ways one tenant can learn about or reach another tenant's data, fix them, and write the tests in `tests/test_tenant_isolation.py`.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/tenant-side-channels/files/app/routes.py",
+        "evals/tenant-side-channels/files/docs/storage.md",
+        "evals/tenant-side-channels/files/db/schema.sql"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern '403 used instead of 404 for unauthorised cross-tenant resources'. Any route that answers a foreign id differently from a missing one (403, a different message, or a different body) scores zero. Full points when the work avoids it.",
+        "The answer flags that the global email check (and global UNIQUE) tells tenant B that an address exists in tenant A, and fixes it (uniqueness scoped per tenant, or a response that does not reveal it), with a test. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The presign endpoint only signs keys under the caller's own `docs/<tenant_id>/` prefix, rejecting other prefixes and path tricks such as `..`, with a test that tenant B cannot presign tenant A's key. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The cache key includes the tenant id; the answer shows that tenant A's cached invoice is otherwise served to tenant B (the 403 check then leaks existence), with a test where A warms the cache and B gets 404. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Another tenant's invoice id returns the same 404 as a missing id, not 403. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
     }
   ]
 }
