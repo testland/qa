@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Both pseudo-locales'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT enable pseudo-locales on the release build",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Pseudo-loc in production'. Setting `pseudoLocalesEnabled` in `defaultConfig` or on the release build type scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Enabled on the debug build",
+      "max_score": 10,
+      "description": "`isPseudoLocalesEnabled = true` is added to the debug build type (Kotlin DSL). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Both pseudo-locales",
+      "max_score": 25,
+      "description": "The answer uses both English (XA) (accented, expanded, bracketed text; en-XA) and AR (XB) (right-to-left; ar-XB) and says how to switch the device or test to them. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "RTL problems",
+      "max_score": 10,
+      "description": "The answer flags `layout_marginLeft`, `paddingRight` and `gravity=\"left\"` (use start/end) and the missing `android:supportsRtl=\"true\"`, which AR (XB) would expose. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Strings problems",
+      "max_score": 10,
+      "description": "The answer flags the hard-coded `Remove` label, the `translatable=\"false\"` on a user-facing string, and the `\"$count items\"` string (use a `<plurals>` resource), plus the fixed 160dp width with maxLines 1 that expansion would truncate. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

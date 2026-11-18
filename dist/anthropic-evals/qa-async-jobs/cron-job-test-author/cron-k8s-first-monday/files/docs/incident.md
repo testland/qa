@@ -1,0 +1,4 @@
+- The cluster rejected the manifest after a Kubernetes upgrade (schedule validation error).
+- Before that: customers got the digest on Monday the 3rd and again on Wednesday the 1st.
+- One month two digests arrived 30 seconds apart.
+- After a two-day control-plane outage, that month's digest never went out.

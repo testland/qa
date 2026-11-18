@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Handler signature', 'Test isolation'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT drop the handshake tests to get green",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Skip handshake test (assume browser handles it)'. Deleting or skipping the tests that cover handshake rejection, instead of porting them, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Handler signature",
+      "max_score": 25,
+      "description": "The answer explains that since websockets 14 the new asyncio implementation calls the handler with one argument (the connection); the fix reads the room from `connection.request.path`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "process_request",
+      "max_score": 10,
+      "description": "The fix rewrites the health check for the new signature `process_request(connection, request)`, checks `request.path` and returns `connection.respond(http.HTTPStatus.OK, \"OK\\n\")` (or returns None to continue the handshake). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Client headers",
+      "max_score": 10,
+      "description": "The fix renames `extra_headers` to `additional_headers` in `websockets.connect`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Test isolation",
+      "max_score": 25,
+      "description": "The tests bind to port 0 and read the actual port from the server object, and reset the module-level `ROOMS` state between tests, so parallel runs do not collide. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

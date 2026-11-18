@@ -1,0 +1,10 @@
+{
+  "name": "reports",
+  "type": "module",
+  "dependencies": {
+    "bullmq": "^5.40.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.0"
+  }
+}

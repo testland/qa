@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'CI check covers fail status and exit code'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT promote every warning to an error",
+      "max_score": 15,
+      "description": "The skill has no Anti-patterns section; this is the tempting over-fix. Small orphan counts must stay warnings, so adding `--warn-error` (or warn-error options covering every test) to the build, or a threshold where a single orphan fails CI, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "severity warn skips error_if",
+      "max_score": 10,
+      "description": "The answer explains that with `severity: warn` dbt skips `error_if` entirely (the test can only ever warn), so 4,312 orphans only warned; the fix uses `severity: error` with `error_if: \">100\"` and a `warn_if` (for example `\">0\"`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Resulting behaviour stated",
+      "max_score": 10,
+      "description": "The answer states the resulting outcome by orphan count: 0 passes, 1 to 100 warns, more than 100 errors, and keeps small counts as warnings rather than promoting every warning with `--warn-error`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "CI check covers fail status and exit code",
+      "max_score": 25,
+      "description": "The answer notes that failing tests have status `fail` (not only `error`) in run_results.json and that `ci/dbt.sh` has no `set -e`, so a failing `dbt build` would still be followed by an exit-0 check; the fix stops on dbt's exit code and treats `fail` and `error` as blocking (optionally listing `warn` results with their `failures` counts). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Failing rows stored",
+      "max_score": 10,
+      "description": "The fix enables `store_failures` (config or `--store-failures`) so the failing rows are saved to an audit table for investigation, and says where they land or how to query them. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

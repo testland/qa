@@ -1,0 +1,15 @@
+name: test
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: npm ci
+      - run: npm test
+        env:
+          PAYMENTS_SANDBOX_KEY: ${{ secrets.PAYMENTS_SANDBOX_KEY }}

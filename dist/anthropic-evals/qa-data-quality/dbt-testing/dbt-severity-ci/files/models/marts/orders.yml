@@ -1,0 +1,22 @@
+version: 2
+models:
+  - name: orders
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        data_tests:
+          - relationships:
+              to: ref('customers')
+              field: customer_id
+              config:
+                severity: warn
+                error_if: ">100"     # a few late-arriving customers are fine, >100 orphans must break the build
+      - name: amount
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              config:
+                severity: warn

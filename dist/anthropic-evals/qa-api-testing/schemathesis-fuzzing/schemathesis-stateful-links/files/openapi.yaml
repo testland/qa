@@ -1,0 +1,37 @@
+openapi: 3.1.0
+info: { title: Orders, version: 1.0.0 }
+paths:
+  /orders:
+    post:
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sku, quantity]
+              properties:
+                sku: { type: string }
+                quantity: { type: integer, minimum: 1 }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: { id: { type: string } }
+  /orders/{orderId}:
+    parameters:
+      - { name: orderId, in: path, required: true, schema: { type: string } }
+    get:
+      operationId: getOrder
+      responses:
+        "200": { description: OK }
+        "404": { description: Not found }
+    delete:
+      operationId: deleteOrder
+      responses:
+        "204": { description: Deleted }
+        "404": { description: Not found }

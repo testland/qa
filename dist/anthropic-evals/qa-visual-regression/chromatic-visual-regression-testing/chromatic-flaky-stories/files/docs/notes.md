@@ -1,0 +1,2 @@
+- RecentActivity and the Dashboard stories (which use CountUp) show changes on almost every build.
+- We raised diffThreshold to 0.3 to stop the noise. Last week a 6 px padding regression on Button passed unnoticed.

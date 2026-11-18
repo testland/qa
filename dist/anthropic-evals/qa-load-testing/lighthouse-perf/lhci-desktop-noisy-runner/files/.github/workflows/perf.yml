@@ -1,0 +1,9 @@
+name: perf
+on: [pull_request]
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm ci && npm run build
+      - run: npx @lhci/cli@0.15.x autorun

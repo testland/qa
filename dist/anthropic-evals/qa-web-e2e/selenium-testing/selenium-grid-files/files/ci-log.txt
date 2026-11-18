@@ -1,0 +1,5 @@
+InvoiceTest > uploadsCsvAndDownloadsPdf() FAILED
+    org.openqa.selenium.InvalidArgumentException: invalid argument: File not found : /builds/acme/app/src/test/resources/invoices.csv
+(after hard-coding a path that exists on the node, the upload works but then:)
+    org.opentest4j.AssertionFailedError: expected: <true> but was: <false>   (InvoiceTest.java:31)
+Locally with ChromeDriver both steps pass.

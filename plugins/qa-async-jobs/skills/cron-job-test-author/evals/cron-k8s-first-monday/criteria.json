@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Duplicate-safe job' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT trust the cron expression without parsing it",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Trust the cron expression without parsing it'. A schedule change with no test that parses the expression and checks the dates it fires on scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Day-of-month OR day-of-week",
+      "max_score": 10,
+      "description": "The answer explains that a schedule restricting both day-of-month (`1`) and day-of-week (`1`) fires when either matches (the 1st and every Monday), and fixes it, for example `0 9 * * 1` plus a day-of-month <= 7 check in code (or `0 9 1-7 * *` plus a Monday check). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Time zone field",
+      "max_score": 10,
+      "description": "The time zone moves to `spec.timeZone: Asia/Nicosia`; `CRON_TZ` inside `schedule` is not supported. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Duplicate-safe job",
+      "max_score": 25,
+      "description": "The job is idempotent per month (for example a unique digest-period record claimed before sending), because a CronJob can create two Jobs or none for one schedule; `concurrencyPolicy: Forbid` is set. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Missed runs",
+      "max_score": 10,
+      "description": "`startingDeadlineSeconds` (or an equivalent catch-up check) is set so a run missed during an outage still starts or is detected, and tests cover the first-Monday logic across months and a second run in the same month sending nothing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

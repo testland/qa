@@ -1,0 +1,2 @@
+System dialog: "Allow Shop to take pictures and record video?" stays on screen.
+Camera app opened on the emulator. Test failed: avatar not displayed. Next test: IllegalStateException: #init was called twice in a row.

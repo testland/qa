@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Renamed options', 'Default behaviour changes'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT narrow the checks to server errors",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Running with `--checks not_a_server_error` only and calling it done'. A migrated command that runs fewer checks than the old flags did, for example only `not_a_server_error`, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Renamed options",
+      "max_score": 25,
+      "description": "The fix maps the removed v3 options to their v4 equivalents: `--base-url` to `--url`, `--hypothesis-max-examples` to `--max-examples`, `--hypothesis-seed` to `--seed`, `--exitfirst` to `--max-failures=1`, `--junit-xml` to `--report junit`, and `--stateful=links` to the stateful phase via `--phases`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Timeout unit",
+      "max_score": 10,
+      "description": "The answer says v4 measures `--request-timeout` in seconds and still accepts 5000 without an error (5000 seconds), so the value must become 5. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Default behaviour changes",
+      "max_score": 25,
+      "description": "The answer notes that v4 runs all checks and all generation modes (positive and negative) by default, so `--checks all` is redundant and new failures v3 never reported may appear. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "JUnit path kept",
+      "max_score": 10,
+      "description": "The JUnit report still ends up where CI reads it (reports/schemathesis.xml), via the v4 report path option or by updating the CI step to the new location. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

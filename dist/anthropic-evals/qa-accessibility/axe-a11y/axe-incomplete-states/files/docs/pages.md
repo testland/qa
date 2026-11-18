@@ -1,0 +1,2 @@
+- `/`: hero with a background photo and a gradient overlay; "Subscribe" opens a modal dialog.
+- `/signup`: form; errors appear under each field after submit.

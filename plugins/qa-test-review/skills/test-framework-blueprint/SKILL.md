@@ -3,7 +3,7 @@ name: test-framework-blueprint
 description: "Use when designing a test automation framework from scratch or re-architecting one that grew organically. Walks seven steps from inventorying the app to runner, layout, fixtures, object model, data and mocks, reporting, CI and conventions, and outputs a written blueprint with a build order."
 metadata:
   keywords: "test-framework, framework-design, blueprint, fixtures, sdet, playwright, test-architecture"
-  version: "1.6.20"
+  version: "1.6.21"
 ---
 
 # test-framework-blueprint

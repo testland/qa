@@ -1,0 +1,23 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3000/",
+        "http://localhost:3000/checkout",
+        "http://localhost:3000/blog/launch"
+      ]
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "budgetsFile": "budget.json",
+      "assertions": {
+        "largest-contentful-paint": [
+          "error",
+          {
+            "maxNumericValue": 2500
+          }
+        ]
+      }
+    }
+  }
+}

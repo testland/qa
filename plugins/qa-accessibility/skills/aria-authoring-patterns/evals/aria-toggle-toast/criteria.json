@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT change the toggle's label while setting aria-pressed",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Toggle that changes its label and sets `aria-pressed`'. A fix where the button text or `aria-label` still flips between Mute and Unmute alongside `aria-pressed` scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Toggle label does not change",
+      "max_score": 15,
+      "description": "The button keeps one label (\"Mute\") and conveys state only through `aria-pressed`, or it switches its label without `aria-pressed`; it never does both, per the APG button pattern. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Live region exists before the message",
+      "max_score": 15,
+      "description": "An empty live region is in the initial markup (or created well before use) and messages are inserted into it later, instead of creating the region and its text at the same moment. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Polite, not alert",
+      "max_score": 15,
+      "description": "Non-urgent confirmations use `role=\"status\"` (polite) rather than `role=\"alert\"`, which interrupts the user. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests assert state and region",
+      "max_score": 15,
+      "description": "The tests check the pressed state on the stable name (for example `getByRole('button', { name: 'Mute', pressed: true })` or the `aria-pressed` attribute) and check the message inside the status region. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

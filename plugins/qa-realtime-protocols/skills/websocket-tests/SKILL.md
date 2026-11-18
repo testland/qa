@@ -3,7 +3,7 @@ name: websocket-tests
 description: "Use whenever the task is to test a WebSocket endpoint or real-time server: connect, send and receive messages, ping/pong, close codes, reconnect after the server drops, subprotocols and backpressure, with ws, Python websockets or Playwright."
 metadata:
   keywords: "websocket, rfc6455, realtime-protocols, frame-testing, reconnection"
-  version: "1.3.9"
+  version: "1.3.10"
 ---
 
 # websocket-tests

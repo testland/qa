@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Columns mapped' (2 of 2 runs), 'Positive label is fraud' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep the default decision threshold",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Default thresholds for all metrics'. Computing recall at the library's default 0.5 cut-off instead of the business's 0.35 scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Columns mapped",
+      "max_score": 25,
+      "description": "The fix maps the task with a data definition: `BinaryClassification(target='chargeback', prediction_probas='score', ...)` (Evidently otherwise looks for its default column names such as `target` and `prediction`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Positive label is fraud",
+      "max_score": 25,
+      "description": "The fix sets `pos_label='fraud'` (Evidently's default positive label is 1), and the answer explains that the reported recall was not fraud recall. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Business threshold",
+      "max_score": 10,
+      "description": "Recall is computed at the 0.35 decision threshold the business uses (through the metric's probability-threshold setting or by deriving predicted labels from score >= 0.35), not at the default 0.5. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Fails below 0.75",
+      "max_score": 10,
+      "description": "The job exits non-zero when fraud recall is below 0.75, by reading the result (a test condition on recall or the metric value), not only by saving HTML. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

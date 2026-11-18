@@ -1,0 +1,6 @@
+{
+  "cart_title": "Your cart",
+  "items": "{{count}} item(s)",
+  "terms": "I accept the <1>terms of service</1>",
+  "greeting": "Hello"
+}

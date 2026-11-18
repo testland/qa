@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Once-only setup coordinated' (2 of 2 runs), 'Independent tests, no rerun cover' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep one shared database under parallel workers",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern on raising `-n` with one shared database and a session-scoped truncate. A blueprint that keeps the shared database and session truncate, and only reorders tests or adds reruns, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Session fixtures run per worker",
+      "max_score": 10,
+      "description": "The blueprint explains that with pytest-xdist every worker process runs session-scoped fixtures itself, so the truncate-and-seed fixture runs once per worker and wipes the data other workers are using. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Per-worker isolation",
+      "max_score": 10,
+      "description": "Each worker gets its own database or schema keyed on `worker_id` (or `PYTEST_XDIST_WORKER`), or each test runs inside a transaction that is rolled back, instead of one shared database. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Once-only setup coordinated",
+      "max_score": 25,
+      "description": "Setup that must happen once across workers (migrations, a template database) is either done before pytest starts or guarded with a lock, for example FileLock in `tmp_path_factory.getbasetemp().parent` as the xdist docs show. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Independent tests, no rerun cover",
+      "max_score": 25,
+      "description": "Tests do not depend on data from earlier tests (each creates what it needs through fixtures or factories), and the blanket `flaky(reruns=3)` marks are removed rather than used to hide the isolation bug. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

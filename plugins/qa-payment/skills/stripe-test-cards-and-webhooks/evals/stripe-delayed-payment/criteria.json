@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Ship once under concurrency' (1 of 2 runs), 'Tests for what went wrong' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT fulfil on checkout.session.completed alone",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Fulfilling on `checkout.session.completed` alone'. Any path that ships on that event without checking `payment_status` scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Check payment_status",
+      "max_score": 10,
+      "description": "Fulfillment ships only when the Checkout Session's `payment_status` shows it is paid (not 'unpaid'), because `checkout.session.completed` arrives while a delayed method such as SEPA or ACH is still processing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Async payment events",
+      "max_score": 10,
+      "description": "The handler fulfills on `checkout.session.async_payment_succeeded` and handles `checkout.session.async_payment_failed` without shipping (for example cancelling the order or notifying the customer). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Ship once under concurrency",
+      "max_score": 18,
+      "description": "Fulfillment is safe when the webhook and the success page call it at the same time for the same session: an atomic claim in the database (for example a conditional UPDATE from paid to fulfilling, or a unique fulfillment row) before shipping, not only a read-then-check of the status. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests for what went wrong",
+      "max_score": 25,
+      "description": "Tests cover a completed but unpaid session (nothing shipped), async success (shipped once), async failure (nothing shipped) and two concurrent or repeated fulfillments of one session (shipped once). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

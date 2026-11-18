@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Idle wait set as a setting'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT tap the permission dialog by its text",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Tapping the runtime permission dialog by its text'. Finding the Allow button by its label (or by a resource id of the permission controller) instead of granting the permission scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Idle wait set as a setting",
+      "max_score": 25,
+      "description": "The answer explains that `waitForIdleTimeout` is a UiAutomator2 setting, not a capability, so `appium:waitForIdleTimeout` has no effect, and sets it through `appium:settings[waitForIdleTimeout]` (or the `appium:settings` object capability) or `driver.updateSettings(...)`. It notes the 10 s default wait comes from the looping animation and warns that 0 lets taps land before the UI settles (or prefers disabling the animation in the test build). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Cleanup without adb shell",
+      "max_score": 10,
+      "description": "The cleanup uses `mobile: clearApp` (which runs `pm clear` itself) after terminating the app, or enables the feature with a driver prefix (`--allow-insecure=uiautomator2:adb_shell`), instead of calling `mobile: shell` on a server that lacks the feature. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Permissions granted, not tapped",
+      "max_score": 10,
+      "description": "The permission dialog is handled with `appium:autoGrantPermissions: true` (or `mobile: changePermissions`) instead of tapping a button whose text differs between Android versions. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No reinstall per session",
+      "max_score": 10,
+      "description": "`appium:fullReset: true` is dropped (for example `noReset` with an explicit clear between tests), and the answer explains it reinstalls the APK every session. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

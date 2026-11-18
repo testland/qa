@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'ID column excluded' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT switch the reference to a rolling window",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Use yesterday as reference (rolling window only)'. Quieting the alerts by comparing against yesterday's or last week's data instead of a pinned reference scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "ID column excluded",
+      "max_score": 25,
+      "description": "The answer explains that `customer_id` is a sequential ID that Evidently treats as a numeric feature (only a column named `id` is picked up as the ID automatically), so it drifts by construction, and declares it as the ID (`DataDefinition(id_column='customer_id')`) or drops it from the drift check. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Codes declared categorical",
+      "max_score": 10,
+      "description": "The answer explains that the integer `region_code` is inferred as numerical, so a numeric distance is computed on codes, and declares it in `categorical_columns`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Dataset with a data definition",
+      "max_score": 10,
+      "description": "Both reference and current data are wrapped with `Dataset.from_pandas(..., data_definition=...)` using the same definition before `report.run`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Real drift still pages",
+      "max_score": 10,
+      "description": "The job still pages on drift in genuine features such as basket_value and fraud_score: no global mute, no blanket threshold increase for every column. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Narrow allowlists', 'Proof with fake secrets'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT allowlist whole file types or broad paths",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Broad global path allowlist (`json`, `yaml`)'. A global allowlist on an extension or a whole directory, instead of the specific test fixture or value, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Default rules kept",
+      "max_score": 10,
+      "description": "The answer explains a custom config replaces the built-in rules unless it extends them; the fix adds `[extend]` with `useDefault = true` so AWS, Slack and the other default rules run again. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Keywords and entropy",
+      "max_score": 10,
+      "description": "The custom rule gets `keywords` (for example `acme_`) and an `entropy` threshold or a narrow allowlist for the documented all-zero sample, so the sample stops firing without disabling the rule. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Narrow allowlists",
+      "max_score": 25,
+      "description": "The fix removes the global `tests/` path allowlist that hid a real token and replaces it with a narrow rule-level allowlist (`[[rules.allowlists]]`) for a specific file or the sample value only. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Proof with fake secrets",
+      "max_score": 25,
+      "description": "The answer proves the config with fake secrets: files holding a fake acme_live token and an AWS-format key (and the documented sample) scanned with `gitleaks dir` (or stdin), expecting findings for the fakes and none for the sample, ideally as a CI step. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

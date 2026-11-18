@@ -1,0 +1,3 @@
+def answer(question: str) -> tuple[str, list[str]]:
+    """Returns the bot's reply and the text of the chunks the retriever returned."""
+    ...

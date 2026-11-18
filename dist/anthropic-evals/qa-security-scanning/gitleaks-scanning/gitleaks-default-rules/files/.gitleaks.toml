@@ -1,0 +1,11 @@
+title = "company rules"
+
+[[rules]]
+id = "internal-api-key"
+description = "Internal API key"
+regex = '''ik_[a-z0-9]{32}'''
+
+[allowlist]
+description = "test files and docs"
+paths = ['''.*test.*''', '''.*\.md''']
+regexes = ['''AKIA[0-9A-Z]{16}''']   # example keys in our docs

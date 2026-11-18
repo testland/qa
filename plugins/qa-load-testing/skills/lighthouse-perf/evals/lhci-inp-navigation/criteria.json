@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Lab proxy kept in LHCI', 'Field data is the real target'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT fall back to first-input-delay",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Asserting on `first-input-delay` (FID)'. Replacing the INP assertion with an FID assertion scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "INP needs a timespan",
+      "max_score": 10,
+      "description": "The answer explains that Lighthouse's `interaction-to-next-paint` audit only runs in timespan mode (navigation runs, which Lighthouse CI collect does, cannot produce it), so the LHCI assertion can never pass or measure anything and is removed or replaced. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "User flow script",
+      "max_score": 10,
+      "description": "A Node script uses the Lighthouse user-flow API (`startFlow(page)` with Puppeteer, `startTimespan()`, typing into `#filter` and waiting for `#results`, `endTimespan()`, then reading the INP audit from the flow result) and fails the job above the budget. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Lab proxy kept in LHCI",
+      "max_score": 25,
+      "description": "Total Blocking Time (`total-blocking-time`) stays as the navigation-mode lab proxy in `lighthouserc.json`, and the answer notes TBT is not INP. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Field data is the real target",
+      "max_score": 25,
+      "description": "The answer states that real INP is a field metric (75th percentile from CrUX or RUM) and the lab timespan only covers the scripted interaction, so the field data stays the source of truth. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

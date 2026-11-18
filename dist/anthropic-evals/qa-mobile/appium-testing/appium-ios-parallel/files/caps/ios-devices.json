@@ -1,0 +1,18 @@
+[
+  {
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:udid": "00008110-001A2B3C4D5E801E",
+    "appium:app": "./apps/Shop.ipa",
+    "appium:xcodeOrgId": "ABCDE12345",
+    "appium:xcodeSigningId": "Apple Development"
+  },
+  {
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:udid": "00008120-000F1E2D3C4B501E",
+    "appium:app": "./apps/Shop.ipa",
+    "appium:xcodeOrgId": "ABCDE12345",
+    "appium:xcodeSigningId": "Apple Development"
+  }
+]

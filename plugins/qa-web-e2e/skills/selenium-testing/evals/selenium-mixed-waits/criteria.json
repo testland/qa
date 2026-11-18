@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Do not mix waits', 'Why 40 seconds'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep implicit waits alongside explicit waits",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`implicitlyWait` set alongside `WebDriverWait`'. Any `implicitlyWait` above zero left in a driver that also uses `WebDriverWait` scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Do not mix waits",
+      "max_score": 25,
+      "description": "The answer cites the Selenium guidance not to mix implicit and explicit waits because it causes unpredictable wait times, and the fix removes `implicitlyWait` in favour of explicit waits. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Why 40 seconds",
+      "max_score": 25,
+      "description": "The answer explains the timing: with a 10-second implicit wait, each `findElement` inside or before the explicit wait can block up to 10 seconds, so the 5-second explicit wait ends up much longer. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Locator-based invisibility",
+      "max_score": 10,
+      "description": "The fix uses `ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(\".spinner\"))`, which also passes when the spinner is already gone, instead of `invisibilityOf(driver.findElement(...))`, which throws when it has vanished. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Stale element",
+      "max_score": 10,
+      "description": "The fix does not keep the old `total` reference across the re-render: it waits on a locator, for example `textToBe(By.id(\"total\"), \"$90.00\")` (optionally `stalenessOf` the old element first), and asserts on the re-located element. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

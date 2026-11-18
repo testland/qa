@@ -1,0 +1,11 @@
+name: prod
+on:
+  schedule:
+    - cron: '15 * * * *'
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: pip install dbt-snowflake==1.10.*
+      - run: dbt build --target prod

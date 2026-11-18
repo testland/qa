@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'No custom retry or fixed waits' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep retries to absorb parallel failures",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Rerun marks, retry wrappers or `retries: 3`'. A blueprint that keeps the custom retry wrapper or sets high CI retries to get green scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Log in once, keep state out of git",
+      "max_score": 10,
+      "description": "Authentication runs once (a setup project that the test projects depend on, or a worker-scoped fixture) and saves `storageState` for the tests to reuse, instead of a UI login in every `beforeEach`; the saved state lives in a git-ignored directory such as `playwright/.auth`, not a committed file. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "One account per parallel worker",
+      "max_score": 10,
+      "description": "Because tests create orders (server-side state) and assert counts, each parallel worker uses its own account (for example selected by `testInfo.parallelIndex`), or assertions no longer depend on shared totals. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No custom retry or fixed waits",
+      "max_score": 25,
+      "description": "The retry wrapper and `waitForTimeout` are removed in favour of Playwright's auto-waiting actions and web-first assertions such as `await expect(locator).toHaveText(...)`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Retries that surface flakiness",
+      "max_score": 10,
+      "description": "CI keeps retries low and records traces on retry (for example `trace: 'on-first-retry'`), so tests that pass only on retry show up as flaky and get fixed instead of being hidden. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

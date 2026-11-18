@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Proof and response'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT scan a shallow clone in CI",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`fetch-depth: 1` in CI'. A workflow whose checkout still fetches only the tip commit, so earlier commits in the push or PR are never scanned, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Default rules extended",
+      "max_score": 10,
+      "description": "The config adds `[extend]` with `useDefault = true`, because a custom config without it replaces gitleaks' built-in rules, so the AWS and Slack rules never ran. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Allowlists narrowed",
+      "max_score": 10,
+      "description": "The global `.*test.*` path allowlist and the `AKIA...` regex allowlist are removed or narrowed to specific example files or lines (for example a specific docs path, `[[allowlists]]` with `targetRules`, or inline `gitleaks:allow`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "CI sees every commit",
+      "max_score": 10,
+      "description": "The checkout uses `fetch-depth: 0` (or an explicit commit range), and the answer notes that gitleaks-action needs `GITLEAKS_LICENSE` for organization repositories, or runs the gitleaks CLI instead. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Proof and response",
+      "max_score": 25,
+      "description": "The answer proves detection with a canary (a fake key in a fixture scanned by `gitleaks dir` or `gitleaks git` in a test step) and says the leaked keys must be revoked and rotated. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

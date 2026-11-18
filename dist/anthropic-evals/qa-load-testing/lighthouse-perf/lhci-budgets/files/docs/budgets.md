@@ -1,0 +1,3 @@
+- JavaScript: at most 300 KB on `/` and `/checkout`; marketing pages under `/blog/` may use up to 500 KB.
+- LCP at most 2.5 s everywhere.
+- The assert step currently fails with a configuration error before checking anything.

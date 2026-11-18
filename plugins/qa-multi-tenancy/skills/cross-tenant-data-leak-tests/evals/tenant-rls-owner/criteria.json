@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Non-tautological assertion', 'Writes covered'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT run the isolation tests as owner or superuser",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Tests connect as superuser'. Tests that still connect as the table owner or a superuser, which bypass row-level security, score zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Owner and superuser bypass",
+      "max_score": 10,
+      "description": "The answer explains that the table owner (`app`) and superusers or BYPASSRLS roles bypass row-level security, so both production (`app` owns the table) and the test (connects as `postgres`) skip the policy; the fix uses `ALTER TABLE invoices FORCE ROW LEVEL SECURITY` and/or a separate non-owner runtime role without BYPASSRLS, and the tests connect as the runtime role. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Non-tautological assertion",
+      "max_score": 25,
+      "description": "The answer notes the test filters `WHERE tenant_id = A` itself, so it passes with no RLS at all; the fixed test seeds rows for both tenants, queries without a tenant filter as tenant A, asserts B's rows are absent, and checks that reading a B row by id returns nothing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Writes covered",
+      "max_score": 25,
+      "description": "Tests also cover writes: as tenant A, inserting a row with tenant B's id and updating a row to tenant B's id are rejected. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Unset tenant fails closed",
+      "max_score": 10,
+      "description": "The answer tests a session that never sets `app.tenant_id` and requires zero rows or an error, never all rows (for example via `current_setting('app.tenant_id', true)` returning NULL). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

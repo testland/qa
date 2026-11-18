@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT hard-error on every audit in the preset",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Hard error on every metric out of the box'. Keeping a full preset such as `lighthouse:recommended` with every audit as an error scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Preset scoped down",
+      "max_score": 15,
+      "description": "The answer explains `lighthouse:recommended` asserts nearly every audit (perfect scores outside performance, no flagged opportunities), and replaces it with targeted assertions such as the performance score and Core Web Vitals metrics, or turns off or downgrades the unwanted audits. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Runs and aggregation",
+      "max_score": 15,
+      "description": "The fix raises `numberOfRuns` (3 or 5) and sets an explicit `aggregationMethod` (median or median-run) on the metric assertions to reduce run-to-run noise. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No public reports",
+      "max_score": 15,
+      "description": "The answer says `temporary-public-storage` makes reports readable by anyone with the link, and switches to `filesystem` (uploaded as CI artifacts) or a self-hosted LHCI server. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No session in the URL",
+      "max_score": 15,
+      "description": "The fix removes the session token from the collected URL (it leaks into reports and logs) and logs in another way, such as a `puppeteerScript` or a cookie or header passed through settings. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

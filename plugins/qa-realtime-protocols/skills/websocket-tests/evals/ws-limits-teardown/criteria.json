@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Compression decision', 'Limit tests at the boundary'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT leave the message size unlimited or at the default",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`maxPayload: 0`, or the 100 MiB default left on a public server'. A server that sets `maxPayload: 0` or keeps the library default scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Finite limit on the inflated size",
+      "max_score": 10,
+      "description": "`maxPayload` is set to the 64 KiB product limit (0 disables the limit; the ws default is 100 MiB), and the answer explains that ws counts the decompressed size against `maxPayload`, so an over-limit message, compressed or not, closes the connection with 1009. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Compression decision",
+      "max_score": 25,
+      "description": "The answer reconsiders `perMessageDeflate` on the server (ws disables it by default on the server because of performance and memory-fragmentation costs) and either turns it off or bounds it (for example `threshold`, `concurrencyLimit`), rather than leaving it on unexamined. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Limit tests at the boundary",
+      "max_score": 25,
+      "description": "Tests start the server on an ephemeral port (port 0), send a message at exactly the limit (delivered) and one byte over (the client sees close code 1009), and include a compressed message that inflates past the limit. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Teardown that ends",
+      "max_score": 10,
+      "description": "The answer explains that `wss.close()` does not close existing connections (and an external HTTP server must be closed separately), and the teardown terminates or closes every client (for example `for (const c of wss.clients) c.terminate()`) and closes the HTTP server, so Jest exits. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

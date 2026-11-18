@@ -1,0 +1,16 @@
+{
+  "name": "shop-api",
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "stripe": "^19.1.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0",
+    "supertest": "^7.1.0"
+  }
+}

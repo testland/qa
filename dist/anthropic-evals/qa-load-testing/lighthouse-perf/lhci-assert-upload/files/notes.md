@@ -1,0 +1,4 @@
+- PRs fail on dozens of audits nobody asked for (unminified CSS, image formats, and more).
+- LCP fails on one run and passes on the next with no code change.
+- Security asked why reports of our staging account page are reachable on a public URL.
+- The account page needs a logged-in user.

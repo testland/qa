@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Fixed good and bad cases'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT take expected outputs from the bot's own replies",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`expected_output` saved from the app's own replies'. Filling `expected_output` (or the fixed good case) by capturing the current bot's answers scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "evaluation_params match the criteria",
+      "max_score": 10,
+      "description": "The answer explains that the criteria and steps compare against the expected output but `EXPECTED_OUTPUT` is not in `evaluation_params`, so the judge never sees it, while `CONTEXT` is passed but unused; the fix lists only the params the criteria use (actual and expected output, input optional) and drops CONTEXT. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Criteria or steps, not both",
+      "max_score": 10,
+      "description": "The answer says G-Eval takes either `criteria` or `evaluation_steps`, not both, and the fix keeps one of them (steps are fine). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "strict_mode overrides the threshold",
+      "max_score": 10,
+      "description": "The answer explains that `strict_mode=True` makes the score binary (1 or 0) and sets the threshold to 1, so `threshold=0.8` has no effect and any imperfection fails; the fix chooses one behaviour. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Fixed good and bad cases",
+      "max_score": 25,
+      "description": "The answer adds test cases with fixed outputs (not live bot answers): a correct answer the metric must pass and a wrong one (for example missing the store-credit condition) it must fail, so the metric itself can be checked separately from the bot. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

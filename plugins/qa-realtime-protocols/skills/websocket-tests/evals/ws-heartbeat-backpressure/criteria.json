@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT close with the reserved code 1006",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Server test \"sends 1006\"'. Sending 1006 (or any reserved code) from the server, or a test that expects the server to send it, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Heartbeat",
+      "max_score": 15,
+      "description": "The server pings each client on an interval, marks it alive on `pong`, and calls `terminate()` on clients that missed the previous pong, clearing the interval on server close. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Backpressure",
+      "max_score": 15,
+      "description": "Before sending, the server checks `ws.bufferedAmount` and skips, coalesces or disconnects slow clients instead of queuing unbounded messages. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Valid close code",
+      "max_score": 15,
+      "description": "Unauthorized connections are closed with a code that may be sent, such as 1008 (policy violation) or an application code in 4000-4999, because 1006 is reserved and must not be sent in a Close frame (or the connection is rejected during the HTTP upgrade). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests for dead and slow peers",
+      "max_score": 15,
+      "description": "Tests simulate a peer that stops answering pings (or a socket destroyed without a close frame) and assert the server terminates it, and simulate a slow consumer and assert bounded buffering. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

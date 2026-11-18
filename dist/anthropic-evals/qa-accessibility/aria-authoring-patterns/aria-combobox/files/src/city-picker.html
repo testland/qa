@@ -1,0 +1,25 @@
+<div role="combobox" aria-owns="city-list" aria-haspopup="listbox">
+  <input id="city" type="text" placeholder="City" autocomplete="off">
+</div>
+<ul id="city-list" role="listbox" hidden></ul>
+
+<script>
+  const input = document.getElementById('city');
+  const list = document.getElementById('city-list');
+  const CITIES = ['Berlin', 'Bern', 'Bergen', 'Bilbao', 'Bologna'];
+
+  function render(items) {
+    list.innerHTML = items.map((c) => `<li role="option" tabindex="0">${c}</li>`).join('');
+  }
+  input.addEventListener('input', () => {
+    render(CITIES.filter((c) => c.toLowerCase().startsWith(input.value.toLowerCase())));
+    list.hidden = false;
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') list.querySelector('[role=option]')?.focus();
+  });
+  list.addEventListener('click', (e) => {
+    input.value = e.target.textContent;
+    list.hidden = true;
+  });
+</script>

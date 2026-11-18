@@ -1,0 +1,2 @@
+- onData fails with "No views in hierarchy found matching: is assignable from class: class android.widget.AdapterView".
+- On CI emulators the sleeps are sometimes too short; locally they just waste time.

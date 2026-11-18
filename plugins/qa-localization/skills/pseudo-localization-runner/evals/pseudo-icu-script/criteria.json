@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Parse, do not regex', 'Validation test'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT transform ICU messages with regular expressions",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Regex over ICU messages'. A script that still finds placeholders, plurals or tags with a regex instead of parsing the message scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Parse, do not regex",
+      "max_score": 25,
+      "description": "The answer explains the regex rewrites argument names (`firstName`), plural and select keywords (`one`, `other`, `plural`, `select`) and tag names (`link`), breaking ICU; the fix parses each message (for example with @formatjs/icu-messageformat-parser, or an AST-based tool such as the FormatJS CLI pseudo-locale) and transforms only literal text, including text inside plural and select branches and tag children, keeping `#`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Expansion",
+      "max_score": 10,
+      "description": "The fix lengthens strings (for example padding to about 30 to 40 percent longer, more for short strings), explaining that accents alone do not change length, which is why the clipped button was missed. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Brackets",
+      "max_score": 10,
+      "description": "The fix wraps each message in visible markers (for example `[...]`) so clipped and concatenated text shows up. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Validation test",
+      "max_score": 25,
+      "description": "The answer adds a test that parses every generated message, checks it has the same arguments and tags as the source, and formats each with sample values without throwing. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

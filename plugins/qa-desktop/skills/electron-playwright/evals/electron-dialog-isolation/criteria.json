@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT reach main-process modules from the renderer",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Probing main-process modules from `window.evaluate()`'. Stubbing the dialog or reading app state through `require('electron')` in a window's evaluate scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Native dialog stubbed in the main process",
+      "max_score": 15,
+      "description": "The test replaces `dialog.showOpenDialog` inside the main process through `electronApp.evaluate(({ dialog }, file) => { ... }, fixturePath)` so it resolves with the fixture path, since Playwright cannot drive native dialogs. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No require in the renderer",
+      "max_score": 15,
+      "description": "The test does not call `require` inside `window.evaluate` (the renderer has `contextIsolation` on and no Node integration); it checks the result through the UI, the exposed API, Node `fs` in the test process, or `electronApp.evaluate` (for example `app.getPath('userData')`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Right window",
+      "max_score": 15,
+      "description": "The test waits for the main window (for example `waitForEvent('window')` with a predicate on URL or title, or by checking windows) instead of `firstWindow()`, which returns the splash screen here. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Values passed as arguments and app closed",
+      "max_score": 15,
+      "description": "Values used inside `evaluate` are passed as its second argument rather than captured from the test's scope, and the app is closed at the end. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

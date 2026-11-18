@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'TTL versus runtime', 'Tests for both incidents'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT leave a missed night silent",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'No alerting on missed runs'. A fix with no way to notice a night the job did not run (a last-success check, heartbeat or catch-up record) scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Owner-checked release",
+      "max_score": 10,
+      "description": "The lock value is a unique token per run and is released only if this run still holds it (compare-and-delete in a Lua script or equivalent), so a run whose lock expired cannot delete another run's lock. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "TTL versus runtime",
+      "max_score": 25,
+      "description": "The answer explains the 300-second TTL expired during the 9-minute run, letting a second run start; the fix renews the lock while the job runs (with an owner check) or uses a TTL above the worst case, and makes generation idempotent per billing date as a second line of defence. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Missed run recovered",
+      "max_score": 10,
+      "description": "A run lost to a crashed holder is not silently skipped: the job records the last completed date and catches up (retries within the window after the lock expires, or the next run processes missed dates). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests for both incidents",
+      "max_score": 25,
+      "description": "Tests use two simulated workers with controlled time or short TTLs (fake Redis or a real one) and cover: a run outliving its TTL does not lead to a second run or to the first run deleting the second's lock, and a crashed holder whose lock expires is followed by a successful catch-up run. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

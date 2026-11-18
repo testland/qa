@@ -1,0 +1,2 @@
+- Since release 2.4 (moved the report from 06:00 to 07:00) the report runs at 06:00 and at 07:00.
+- The team is in Berlin. Since the clocks changed in late October the report arrives an hour early.

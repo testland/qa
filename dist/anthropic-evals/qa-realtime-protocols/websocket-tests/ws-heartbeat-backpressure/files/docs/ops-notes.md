@@ -1,0 +1,4 @@
+- Server memory climbs for hours, then the process is OOM-killed.
+- After phones lose signal, their connections stay in wss.clients for hours ("ghost" clients).
+- Some clients on slow networks fall minutes behind on prices.
+- The unauthorized close throws an error in the logs.

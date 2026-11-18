@@ -120,6 +120,95 @@
         "The drained socket is allowed to acknowledge the close frame before the connection is abandoned - a bounded grace period, or waiting on the close event - and the hub does not forget the socket before it has finished closing. Writing the close frame and then immediately terminating, or leaving `this.sockets.clear()` in the same tick so the close handler has nothing left to remove, scores at most half.",
         "npm test passes and test/hub.basic.test.js is still present and unmodified. Leaving the suite failing, or deleting or editing an existing test to get green, scores zero."
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "# Make the chat server work with websockets 15\n\n## Problem Description\n\nMake `chat/server.py` and `tests/test_chat.py` work with websockets 15 (`notes.md`).\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/websockets-py-upgrade/files/chat/server.py",
+        "evals/websockets-py-upgrade/files/tests/test_chat.py",
+        "evals/websockets-py-upgrade/files/notes.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Skip handshake test (assume browser handles it)'. Deleting or skipping the tests that cover handshake rejection, instead of porting them, scores zero. Full points when the work avoids it.",
+        "The answer explains that since websockets 14 the new asyncio implementation calls the handler with one argument (the connection); the fix reads the room from `connection.request.path`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The fix rewrites the health check for the new signature `process_request(connection, request)`, checks `request.path` and returns `connection.respond(http.HTTPStatus.OK, \"OK\\n\")` (or returns None to continue the handshake). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The fix renames `extra_headers` to `additional_headers` in `websockets.connect`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The tests bind to port 0 and read the actual port from the server object, and reset the module-level `ROOMS` state between tests, so parallel runs do not collide. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "# Fix the WebSocket authentication flagged in the security review\n\n## Problem Description\n\nA security review flagged our WebSocket authentication (`server.js`, `public/client.js`, findings in `docs/review.md`). Fix it and write tests for the handshake.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/ws-auth-origin/files/server.js",
+        "evals/ws-auth-origin/files/public/client.js",
+        "evals/ws-auth-origin/files/docs/review.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Skip handshake test (assume browser handles it)'. A fix with no test that a bad origin or missing ticket is refused at the upgrade scores zero. Full points when the work avoids it.",
+        "The server checks the `Origin` header against an allowlist during the upgrade (cross-site WebSocket hijacking is possible because the cookie is sent automatically). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer explains that the browser `WebSocket` API cannot set custom headers, and replaces the query-string API token with the session cookie or a short-lived, single-use ticket fetched just before connecting. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Authentication happens in `server.on('upgrade')` with `noServer: true`, writing an HTTP 401/403 and destroying the socket for bad requests, instead of accepting and closing afterwards. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Tests cover a foreign Origin (rejected), a missing or expired ticket (rejected) and a valid connection (accepted). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "# Our live-updates client caused a reconnect storm\n\n## Problem Description\n\nOur live-updates client caused a reconnect storm and has a logout bug that our tests miss (`src/live.js`, `test/live.test.js`, `docs/incident.md`). Fix the client and its tests.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/ws-browser-reconnect/files/src/live.js",
+        "evals/ws-browser-reconnect/files/test/live.test.js",
+        "evals/ws-browser-reconnect/files/docs/incident.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Fake `WebSocket` that accepts any `close()` code'. A test double whose `close()` accepts codes a browser rejects (anything but 1000 or 3000 to 4999) scores zero. Full points when the work avoids it.",
+        "Reconnects follow RFC 6455 section 7.2.3: the first attempt is delayed by a random amount and later attempts back off with growing (for example truncated exponential) delays up to a cap, with jitter so clients spread out; the delay resets after a stable connection. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The client does not reconnect after its own deliberate close or after the server's 4401 (and other policy codes such as 1008), but does reconnect after abnormal closure such as 1006. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer explains that the browser `WebSocket.close()` only accepts 1000 or 3000-4999 (so 1001 throws `InvalidAccessError`) and a reason of at most 123 UTF-8 bytes (longer throws `SyntaxError`); `stop()` uses 1000 or an application code in 4000-4999 with a short reason. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The fake socket enforces the browser close rules so the logout bug fails a test, fake timers and an injected random source check the backoff delays, and the answer notes 1006 is never sent by a server (it is reported locally when the connection drops, which a server-side test simulates with `terminate()`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "# The price WebSocket server leaks memory and keeps ghost clients\n\n## Problem Description\n\nOur price WebSocket server (`server.js`) leaks memory and keeps ghost clients after phones lose signal (`docs/ops-notes.md`). Fix it and write tests for these behaviours.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/ws-heartbeat-backpressure/files/server.js",
+        "evals/ws-heartbeat-backpressure/files/docs/ops-notes.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern 'Server test \"sends 1006\"'. Sending 1006 (or any reserved code) from the server, or a test that expects the server to send it, scores zero. Full points when the work avoids it.",
+        "The server pings each client on an interval, marks it alive on `pong`, and calls `terminate()` on clients that missed the previous pong, clearing the interval on server close. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Before sending, the server checks `ws.bufferedAmount` and skips, coalesces or disconnects slow clients instead of queuing unbounded messages. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Unauthorized connections are closed with a code that may be sent, such as 1008 (policy violation) or an application code in 4000-4999, because 1006 is reserved and must not be sent in a Close frame (or the connection is rejected during the HTTP upgrade). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Tests simulate a peer that stops answering pings (or a socket destroyed without a close frame) and assert the server terminates it, and simulate a slow consumer and assert bounded buffering. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "# Fix the chat server's pen-test finding and the hanging tests\n\n## Problem Description\n\nFix our chat WebSocket server after the pen-test finding and make the test suite stop hanging (`src/server.js`, `test/chat.test.js`, `docs/pentest.md`). Add tests for the new limit.\n\n## Output Specification\n\nDo the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "expected_output": "Do the task on the files in the working directory, changing them in place and adding a file only where the task needs one.\n\nThen write `ANSWER.md` in the working directory with everything you would tell us in your reply (findings, explanations, the reasons for your changes), followed by the full final content of every file you created or changed, each under a heading with its path. Name any file you deleted.",
+      "files": [
+        "evals/ws-limits-teardown/files/src/server.js",
+        "evals/ws-limits-teardown/files/test/chat.test.js",
+        "evals/ws-limits-teardown/files/docs/pentest.md"
+      ],
+      "assertions": [
+        "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed.",
+        "From the skill's anti-pattern '`maxPayload: 0`, or the 100 MiB default left on a public server'. A server that sets `maxPayload: 0` or keeps the library default scores zero. Full points when the work avoids it.",
+        "`maxPayload` is set to the 64 KiB product limit (0 disables the limit; the ws default is 100 MiB), and the answer explains that ws counts the decompressed size against `maxPayload`, so an over-limit message, compressed or not, closes the connection with 1009. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer reconsiders `perMessageDeflate` on the server (ws disables it by default on the server because of performance and memory-fragmentation costs) and either turns it off or bounds it (for example `threshold`, `concurrencyLimit`), rather than leaving it on unexamined. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "Tests start the server on an ephemeral port (port 0), send a message at exactly the limit (delivered) and one byte over (the client sees close code 1009), and include a compressed message that inflates past the limit. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong.",
+        "The answer explains that `wss.close()` does not close existing connections (and an external HTTP server must be closed separately), and the teardown terminates or closes every client (for example `for (const c of wss.clients) c.terminate()`) and closes the HTTP server, so Jest exits. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+      ]
     }
   ]
 }

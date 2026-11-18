@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Randomised backoff' (1 of 2 runs), 'Stop on purpose and on auth' (2 of 2 runs), 'Browser close rules' (2 of 2 runs), 'Tests that model the protocol' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT test with a fake that accepts any close code",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Fake `WebSocket` that accepts any `close()` code'. A test double whose `close()` accepts codes a browser rejects (anything but 1000 or 3000 to 4999) scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Randomised backoff",
+      "max_score": 18,
+      "description": "Reconnects follow RFC 6455 section 7.2.3: the first attempt is delayed by a random amount and later attempts back off with growing (for example truncated exponential) delays up to a cap, with jitter so clients spread out; the delay resets after a stable connection. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Stop on purpose and on auth",
+      "max_score": 25,
+      "description": "The client does not reconnect after its own deliberate close or after the server's 4401 (and other policy codes such as 1008), but does reconnect after abnormal closure such as 1006. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Browser close rules",
+      "max_score": 25,
+      "description": "The answer explains that the browser `WebSocket.close()` only accepts 1000 or 3000-4999 (so 1001 throws `InvalidAccessError`) and a reason of at most 123 UTF-8 bytes (longer throws `SyntaxError`); `stop()` uses 1000 or an application code in 4000-4999 with a short reason. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Tests that model the protocol",
+      "max_score": 25,
+      "description": "The fake socket enforces the browser close rules so the logout bug fails a test, fake timers and an injected random source check the backoff delays, and the answer notes 1006 is never sent by a server (it is reported locally when the connection drops, which a server-side test simulates with `terminate()`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

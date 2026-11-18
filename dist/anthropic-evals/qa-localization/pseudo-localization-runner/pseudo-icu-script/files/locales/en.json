@@ -1,0 +1,7 @@
+{
+  "cart.items": "{count, plural, one {# item} other {# items}} in your cart",
+  "greeting": "Hello, {firstName}!",
+  "terms": "I agree to the <link>terms of service</link>",
+  "order.status": "{status, select, shipped {On its way} other {Processing}}",
+  "checkout.pay": "Pay now"
+}

@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Secret tests separated' (1 of 2 runs), 'Most tests still run on forks' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT check out the PR head under pull_request_target",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`pull_request_target` + checkout of the PR head'. Any job that runs fork code with secrets or a write token through `pull_request_target` scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Flags the pwn-request risk",
+      "max_score": 10,
+      "description": "The answer explains that `pull_request_target` plus checking out the PR's head runs untrusted fork code in a privileged context with access to secrets and a write-capable token, and stops doing that (switching the test job to `pull_request`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Secret tests separated",
+      "max_score": 18,
+      "description": "Tests that need `PAYMENTS_SANDBOX_KEY` are skipped when the secret is not available (fork PRs) and run where secrets are safe, for example on push to main or behind a maintainer approval such as an environment with required reviewers. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Least privilege",
+      "max_score": 10,
+      "description": "The workflow sets `permissions:` to the minimum (for example `contents: read`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Most tests still run on forks",
+      "max_score": 18,
+      "description": "The secret-free tests still run on every fork PR. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

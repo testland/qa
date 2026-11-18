@@ -1,0 +1,7 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal">
+    <TextView android:id="@+id/name" android:layout_width="160dp" android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp" android:gravity="left" android:maxLines="1" />
+    <Button android:id="@+id/remove" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Remove" android:paddingRight="8dp" />
+</LinearLayout>

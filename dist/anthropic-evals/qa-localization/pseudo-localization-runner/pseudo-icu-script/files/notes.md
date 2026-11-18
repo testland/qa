@@ -1,0 +1,4 @@
+- The QA build crashes on the cart page with an ICU formatting error.
+- The terms link disappeared in the pseudo-locale.
+- The pseudo-locale did not reveal a clipped "Pay now" button that German testers found later.
+- The app formats messages with an ICU MessageFormat runtime (intl-messageformat); it does not use react-intl.

@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Plurals'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep the pseudo text ASCII-only",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'ASCII-only pseudo-loc'. A transform that only brackets or repeats plain ASCII letters, with no accented characters, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Placeholders and tags preserved",
+      "max_score": 10,
+      "description": "The transform leaves `{{...}}` interpolation tokens and `<1>...</1>` Trans component tags untouched while transforming the surrounding text. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Expansion and brackets",
+      "max_score": 10,
+      "description": "Pseudo strings are lengthened (roughly 30-40%) and wrapped in visible brackets or markers, so truncation, clipping and concatenated pieces show up. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Plurals",
+      "max_score": 25,
+      "description": "`item(s)` is flagged and replaced with i18next plural keys using the JSON v4 suffixes (`items_one`, `items_other`) with `count`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Bugs it exposes",
+      "max_score": 10,
+      "description": "The answer lists the hard-coded `Checkout` label and the `greeting + ', ' + user.name + '!'` concatenation (fixed with an interpolated string such as `Hello, {{name}}!`). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+- The admin app is desktop-only (min width 1280px). The screenshots in the LHCI report look like a phone.
+- Performance score swings between 0.62 and 0.91 on the same commit; the team wants to stop rerunning jobs.
+- We switched to devtools throttling because "it is more realistic".

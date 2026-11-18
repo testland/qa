@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT find the button by its visible text",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`withText(\"Submit\")` for buttons'. Locating Pay by its label (`withText` or `onNodeWithText`) instead of an id or test tag scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Compose rule bound to the activity",
+      "max_score": 15,
+      "description": "The test uses `createAndroidComposeRule<CheckoutActivity>()` and Compose finders (`onNodeWithText`/`onNodeWithTag`) for composables, while keeping Espresso `onView` for the classic `total` View in the same test. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Test tags",
+      "max_score": 15,
+      "description": "Stable hooks are added with `Modifier.testTag(...)` and used through `onNodeWithTag`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Merged semantics handled",
+      "max_score": 15,
+      "description": "The answer accounts for Button merging its children's semantics: the price check uses `useUnmergedTree = true` or asserts on the merged button node (for example `hasText` on the button), instead of expecting a separate node for the inner Text. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No sleeps",
+      "max_score": 15,
+      "description": "`Thread.sleep` is replaced by the Compose rule's synchronization (for example `waitUntil` or `waitForIdle` for the async payment) and an assertion on \"Payment confirmed\". Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

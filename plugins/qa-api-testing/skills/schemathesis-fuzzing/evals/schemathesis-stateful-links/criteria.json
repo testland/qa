@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Stateful checks named' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT leave follow-up calls on random ids",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'No OpenAPI links'. A setup where the get, update and delete calls still receive random ids, with no links feeding created ids forward, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Links connect the operations",
+      "max_score": 10,
+      "description": "The spec gains OpenAPI `links` on the 201 response of createOrder to getOrder and deleteOrder, mapping `orderId` from `$response.body#/id`, so Schemathesis can chain create, delete and get. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Stateful checks named",
+      "max_score": 25,
+      "description": "The answer explains that the `use_after_free` check (resource still reachable after a successful DELETE) is what catches this bug and that it, like `ensure_resource_availability`, only works when links between operations exist. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Stateful testing runs",
+      "max_score": 10,
+      "description": "The run includes the stateful phase (the CLI uses it when links exist) or the pytest integration uses `schema.as_state_machine()`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Random ids explained",
+      "max_score": 10,
+      "description": "The answer explains why the current run only produced 404s: without links every path id is randomly generated. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

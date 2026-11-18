@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the rework pilot. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'NULL customer slips past relationships' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT treat accepted_values or relationships as NULL coverage",
+      "max_score": 15,
+      "description": "From the skill's table of what a green `dbt build` still lets through (the skill has no Anti-patterns section). Only adding 'C' to the accepted list, or widening the relationships test, without a `not_null` test or an explicit guest key, leaves both NULL gaps open and scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "NULL status slips past accepted_values",
+      "max_score": 10,
+      "description": "The answer explains that `accepted_values` only checks non-null values, so the NULL status produced by the unmapped `C` code passed, and adds a `not_null` test on `status`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "NULL customer slips past relationships",
+      "max_score": 25,
+      "description": "The answer explains that the `relationships` test skips NULL `customer_id` values, and adds a check that catches unattributed orders (for example `not_null` on customer_id, or mapping guests to an explicit guest key or flag and testing that). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Freshness needs its own command",
+      "max_score": 10,
+      "description": "The answer adds source freshness (a `loaded_at_field` of `_loaded_at` with `warn_after`/`error_after`) and a CI step that runs `dbt source freshness`, because `dbt build` does not check source freshness. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Cancelled is a real status",
+      "max_score": 10,
+      "description": "The model maps `C` to a value such as 'cancelled' (or fails loudly on unknown codes) and the accepted values list includes it, so new codes cannot turn into silent NULLs. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

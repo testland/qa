@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT put if: always() on every step",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`if: always()` everywhere'. Adding `if: always()` to test or setup steps, rather than to the report upload alone, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "All legs run",
+      "max_score": 15,
+      "description": "`strategy.fail-fast: false` is set so one failing combination does not cancel the others. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Unique artifact names",
+      "max_score": 15,
+      "description": "Each leg uploads under a unique name built from the matrix values (for example `junit-${{ matrix.os }}-node${{ matrix.node }}`), because upload-artifact v4 artifacts are immutable and one name cannot be uploaded by several jobs. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Reports uploaded on failure",
+      "max_score": 15,
+      "description": "The upload step runs when tests fail, with `if: ${{ !cancelled() }}` or `if: always()` instead of `success()`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Time limit",
+      "max_score": 15,
+      "description": "A `timeout-minutes` is set on the job (or test step), since the default allows 360 minutes. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

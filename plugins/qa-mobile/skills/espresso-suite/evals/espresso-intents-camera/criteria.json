@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'No sleep, intent verified' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT let the click reach the real camera",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Tapping a button that opens the camera, a picker or another app'. Any version where the click can still launch the camera app, because no intent stub is in place before it, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Intents set up and torn down around the test",
+      "max_score": 10,
+      "description": "Espresso-Intents is initialised before the activity action and released after every test (`IntentsRule`/`IntentsTestRule`, or `Intents.init()` in `@Before` with `Intents.release()` in `@After`), and the `espresso-intents` dependency is added. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Stub before the click, with usable data",
+      "max_score": 10,
+      "description": "`intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(...)` is set up before clicking, and the stubbed result carries an Intent with a `data` Bitmap extra, since the activity returns early on null data. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Permission handled",
+      "max_score": 10,
+      "description": "The CAMERA permission prompt is removed from the run, for example with `GrantPermissionRule.grant(Manifest.permission.CAMERA)`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No sleep, intent verified",
+      "max_score": 25,
+      "description": "`Thread.sleep` is removed (Espresso synchronizes), and the test verifies the camera intent was sent with `intended(hasAction(...))`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

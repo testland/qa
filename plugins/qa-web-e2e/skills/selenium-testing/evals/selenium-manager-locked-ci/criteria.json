@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Selenium Manager takes over'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT hard-code a driver path or pin WebDriverManager",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Hardcoded ChromeDriver path or a pinned WebDriverManager'. Setting `webdriver.chrome.driver` to a fixed binary, or adding WebDriverManager with a pinned version, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Selenium Manager takes over",
+      "max_score": 25,
+      "description": "The fix removes the hardcoded `webdriver.chrome.driver` property and WebDriverManager, explaining that Selenium Manager (built in since 4.6) only resolves a matching driver when none is provided, so a pinned driver path or one on the PATH wins and causes the version mismatch. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Pinned browser version",
+      "max_score": 10,
+      "description": "The test pins `options.setBrowserVersion(\"131\")` (or `SE_BROWSER_VERSION`), so Selenium Manager uses Chrome for Testing 131 and its matching chromedriver instead of whatever Chrome the image updated to. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Proxy and offline split",
+      "max_score": 10,
+      "description": "Downloads happen in the build stage through `SE_PROXY` (not a browser-options proxy, which the browser would also use) into a cached `SE_CACHE_PATH`, and the test stage runs with `SE_OFFLINE=true` so nothing is fetched. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "No usage data",
+      "max_score": 10,
+      "description": "The answer sets `SE_AVOID_STATS=true` (or `avoid-stats = true` in `se-config.toml`), noting Selenium Manager sends usage statistics by default. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

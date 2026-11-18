@@ -1,0 +1,36 @@
+{
+  "context": "Held-out task, written on 2026-11-17 after the skill was frozen at marketplace 5.7.8; it was never used to revise the skill. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): predicted baseline failure is that the agent misses 'Sample size explains the alarms', 'Calibrated on history'. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT block or page on every drifted column",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Block deploy on every drift'. Keeping an 'any column drifted' trigger, or only raising the p-value cut-off for all columns, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Sample size explains the alarms",
+      "max_score": 25,
+      "description": "The answer explains that with tens of thousands of rows a KS p-value becomes tiny for practically irrelevant shifts, so almost every column is flagged; it notes that Evidently's default for more than 1000 rows uses a distance (Wasserstein for numerical, Jensen-Shannon for categorical) with a 0.1 threshold instead of a p-value test. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Effect-size method restored",
+      "max_score": 10,
+      "description": "The fix stops forcing KS on these sample sizes (back to the defaults or an explicit distance method per column) and gets the threshold semantics right: for distances drift means score at or above the threshold, for p-value tests at or below it. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Dataset-level rule",
+      "max_score": 10,
+      "description": "The fix replaces 'any column drifted' with a dataset-level rule, such as a share of drifted columns or drift on the most important features, and explains the choice. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Calibrated on history",
+      "max_score": 25,
+      "description": "The answer checks the new configuration against history or a control: it would not have fired on the known-quiet days (or on a reference-vs-reference split) and still fires on a deliberately shifted sample. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

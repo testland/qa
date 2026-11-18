@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 to screen this skill for the rework. The 2026-11-17 revision of the skill targeted harder tasks written for it. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 1 run, pass/fail per criterion): it passed all four criteria. Predicted baseline failure: none measured, so this scenario is expected near ceiling in both arms and mostly checks that the skill does not make the work worse; the MUST NOT item carries the risk the skill warns about. Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT keep a single run per URL",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`numberOfRuns: 1`'. A config that still collects one run per URL, or asserts on a single run, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Logs in with a puppeteerScript",
+      "max_score": 15,
+      "description": "The config sets `collect.puppeteerScript` to a script that logs in (credentials from environment variables, not committed). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Login survives Lighthouse's storage reset",
+      "max_score": 15,
+      "description": "The config sets `settings.disableStorageReset: true` (the token lives in localStorage, which Lighthouse otherwise clears before auditing), as the LHCI docs suggest pairing with a login script. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Several runs, aggregated",
+      "max_score": 15,
+      "description": "`numberOfRuns` is 3 or more (3 is the default), with assertions aggregated (for example `aggregationMethod: median-run` or median), instead of one run. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Reports kept private",
+      "max_score": 15,
+      "description": "Upload no longer uses `temporary-public-storage` (reports are public to anyone with the link and these pages show customer data); it uses `filesystem` or an LHCI server. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

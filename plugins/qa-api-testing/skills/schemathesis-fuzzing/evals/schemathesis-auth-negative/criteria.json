@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-16 for the second rework batch. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-16 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Negative data tested' (2 of 2 runs), 'All checks, not just 5xx' (1 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT pass a fixed bearer token on a long run",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern 'Bearer token passed with `--header` on a long run'. Keeping a token fetched once and sent with `--header` (or a longer-lived token) as the fix scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Token refreshed during the run",
+      "max_score": 10,
+      "description": "Auth uses Schemathesis dynamic auth: an auth class with `get`/`set` registered with `@schemathesis.auth()` and loaded as a hook, or `[auth.dynamic.openapi.<scheme>]` in `schemathesis.toml`, fetching from /auth/token and refreshing before the 10-minute expiry (the default cache is 300 seconds). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Negative data tested",
+      "max_score": 25,
+      "description": "The run includes negative testing (`--mode all`, the default, or `negative`), so `negative_data_rejection` flags a 2xx for invalid input, and the spec gains `minimum: 1` on `quantity` so -3 counts as invalid. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "All checks, not just 5xx",
+      "max_score": 18,
+      "description": "The `--checks not_a_server_error` restriction is removed, since all checks run by default and the narrowed list hides conformance and auth failures. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Secrets handled",
+      "max_score": 10,
+      "description": "Client credentials come from repository secrets in the workflow, not a token pasted by hand. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}

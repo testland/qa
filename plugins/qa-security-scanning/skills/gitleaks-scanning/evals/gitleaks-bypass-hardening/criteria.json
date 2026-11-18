@@ -1,0 +1,36 @@
+{
+  "context": "Written on 2026-11-17 for the third rework round. The skill was then revised against this task, so its with-skill score here is partly by construction. Measured without the skill on 2026-11-17 (Sonnet agent and Sonnet judge, 2 runs, pass/fail per criterion): predicted baseline failure is that the agent misses 'Current commands' (1 of 2 runs), 'Inline allows ignored in the gate' (2 of 2 runs). Converted from a four-criterion pass/fail screen; per EVALS.md, run a sham arm before quoting a lift from it.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deliverables produced",
+      "max_score": 4,
+      "description": "ANSWER.md exists and holds the findings plus the final content of every file the agent created or changed. Scores zero if ANSWER.md is missing or no file the task needs was created or changed."
+    },
+    {
+      "name": "MUST NOT let the CI scan pass on findings",
+      "max_score": 15,
+      "description": "From the skill's anti-pattern '`continue-on-error` or `--log-opts=-1` in the PR job'. A CI step that can end green while it reports a leak, or that scans only the last commit, scores zero. Full points when the work avoids it."
+    },
+    {
+      "name": "Current commands",
+      "max_score": 18,
+      "description": "The hook and CI use the current commands: `gitleaks git --pre-commit --staged` (as the official pre-commit hook does) instead of the deprecated `protect --staged`, and `gitleaks git` instead of the deprecated `detect`. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Inline allows ignored in the gate",
+      "max_score": 25,
+      "description": "The CI scan runs with `--ignore-gitleaks-allow`, so `#gitleaks:allow` comments cannot hide findings in the gate, and the five hidden real credentials are treated as leaks (rotated). Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "Reviewed exceptions",
+      "max_score": 10,
+      "description": "Sanctioned exceptions move to `.gitleaksignore` fingerprints (or a baseline file) protected by CODEOWNERS or required security review, instead of inline comments anyone can add. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    },
+    {
+      "name": "CI is the enforced gate",
+      "max_score": 10,
+      "description": "The answer says the local hook can always be skipped, so CI is the control: no `continue-on-error`, a required status check, full history (`fetch-depth: 0`) and a scan of every commit in the PR (for example `--log-opts` with the base..head range), with redacted output. Full points only if the answer and the changed files do all of this. Half if it names the problem but the fix or the explanation is incomplete. Scores zero if it is missing or wrong."
+    }
+  ]
+}
