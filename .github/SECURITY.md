@@ -5,7 +5,7 @@
 `testland-qa` is a Claude Code plugin marketplace. The repo ships:
 
 - The marketplace manifest (`.claude-plugin/marketplace.json`)
-- 78 plugins under `plugins/`, each containing skills, agents, and
+- <!-- count:plugins -->78<!-- /count --> plugins under `plugins/`, each containing skills, agents, and
   documentation that wrap third-party tools
 - Validation tooling under `scripts/`
 

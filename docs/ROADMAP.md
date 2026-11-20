@@ -43,7 +43,7 @@ roadmap of what we want to land next.
 
 ## Current coverage snapshot
 
-The catalog ships **78 plugins / 402 components** across ten categories
+The catalog ships **<!-- count:plugins -->78<!-- /count --> plugins / <!-- count:components -->402<!-- /count --> components** across ten categories
 (foundations, functional testing, quality engineering, security &
 compliance, operations & resilience, backend & distributed systems,
 integrations & protocols, AI & ML, tooling, and role bundles). The role

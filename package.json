@@ -10,7 +10,7 @@
   "scripts": {
     "validate": "tsx scripts/ts/validate.ts .",
     "compose": "tsx scripts/ts/composition-graph.ts",
-    "catalog": "tsx scripts/ts/generate-catalog.ts",
+    "catalog": "tsx scripts/ts/generate-catalog.ts && tsx scripts/ts/doc-counts.ts && tsx scripts/ts/composition-graph.ts --write > /dev/null",
     "inventory": "tsx scripts/ts/inventory.ts",
     "drift": "tsx scripts/ts/check-description-drift.ts",
     "tessl-check": "tsx scripts/ts/check-tessl-manifests.ts",

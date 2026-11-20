@@ -1,8 +1,8 @@
 # Claude Code instructions - testland-qa
 
 This is **testland-qa**, a Pattern B2 multi-plugin Claude Code marketplace.
-78 plugins / 402 components (run `npm run catalog` for the
-current count - `CATALOG.md` is authoritative). Every component is
+<!-- count:plugins -->78<!-- /count --> plugins / <!-- count:components -->402<!-- /count --> components (`npm run catalog`
+rewrites these counts; `CATALOG.md` is authoritative). Every component is
 reviewed against the D1-D6 quality rubric before merge.
 
 If you're using Claude Code to contribute to this repo, this file tells you
@@ -188,16 +188,22 @@ update** - the "silent no-update" trap.
 
 `testland-web` (testland.io) publishes this marketplace, and **users must be
 able to install exactly the version shown there.** A marketplace change is not
-complete until testland-web is resynced and shipped in lockstep:
+complete until testland-web is resynced and shipped in lockstep.
+
+This is automatic. When a change to `plugins/**`, `.claude-plugin/**` or
+`CATALOG.md` lands on main, `.github/workflows/web-sync.yml` sends testland/web
+a `qa-updated` event (secret `WEB_SYNC_TOKEN`). Its `Sync plugins` workflow
+regenerates the catalog from this repo's main, builds the site as a gate and
+pushes the result to its main; a daily run there catches a missed event. Check
+that run went green after a merge.
+
+To resync by hand (or to preview a change before it merges):
 
 1. In `testland-web/`: `npm run sync:plugins` - regenerates `content/plugins/**`
    and `public/plugins-index.json` from this repo's sibling checkout.
 2. `npm run build` - runs typecheck, lint, and the `check-plugin-links` gate.
 3. Commit the regenerated content and push, so the site's displayed versions
    match the installable ones exactly.
-
-Never push a plugin or version change here without the matching testland-web
-resync; the two repos ship together.
 
 ## Directory packs
 
@@ -238,6 +244,11 @@ make all
 | Build-an-X workflow skills | [`plugins/qa-resilience/`](plugins/qa-resilience/) |
 
 ## Common pitfalls
+
+- **Typed counts**: never type a plugin, skill or agent count into a doc.
+  Mark it as `<!-- count:skills -->N<!-- /count -->` (keys and the file list
+  are in `scripts/ts/doc-counts.ts`); `npm run catalog` rewrites it and CI fails
+  while it is stale. `docs/COMPOSITION.md` is generated whole.
 
 - **`agents/` placement**: lives at plugin root, **not** inside
   `.claude-plugin/`. Same for `skills/`, `commands/`, `hooks/`.

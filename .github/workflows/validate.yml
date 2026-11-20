@@ -34,10 +34,10 @@ jobs:
       - name: Validate composition graph (agent -> skill preloads)
         run: npm run compose
 
-      - name: Regenerate CATALOG.md and check for drift
+      - name: Regenerate CATALOG.md and the doc counts, and check for drift
         run: |
           npm run catalog
-          git diff --exit-code CATALOG.md
+          git diff --exit-code -- CATALOG.md docs/COMPOSITION.md CLAUDE.md CORE.md docs/ROADMAP.md .github/SECURITY.md
 
       - name: Check eval manifests are in sync with their scenarios
         run: npm run evals:check
